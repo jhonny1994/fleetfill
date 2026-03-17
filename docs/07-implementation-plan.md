@@ -23,36 +23,36 @@ Rules:
 
 ### Flutter App Foundation
 
-- [ ] Create the Flutter project with the agreed folder structure from `docs/03-technical-architecture.md`
-- [ ] Configure Flutter flavors or environment selection for local, staging, and production
-- [ ] Add core packages: Riverpod, Freezed, json_serializable, GoRouter, Supabase Flutter, flutter-intl, SharedPreferences, secure storage, notifications, PDF/viewer support as needed
-- [ ] Configure code generation for Freezed, JSON, and localization
-- [ ] Set up root app bootstrap flow for config loading, auth/session restoration, theme restoration, and locale restoration
-- [ ] Implement global error model and error presentation strategy
-- [ ] Implement app-wide logging hooks and crash reporting integration points
-- [ ] Define the final GoRouter route tree from `docs/08-screen-map-and-routing.md`
-- [ ] Define parent navigator keys, shell navigator keys, and route names for shared above-shell detail routes
-- [ ] Define guard providers for bootstrap, auth, onboarding, role, verification, payout-account, and admin step-up access
-- [ ] Define router redirect ordering, unknown-route handling, and redirect-loop protection strategy
+- [x] Create the Flutter project with the agreed folder structure from `docs/03-technical-architecture.md`
+- [x] Configure Flutter flavors or environment selection for local, staging, and production
+- [x] Add core packages: Riverpod, Freezed, json_serializable, GoRouter, Supabase Flutter, flutter-intl, SharedPreferences, secure storage, notifications, PDF/viewer support as needed
+- [x] Configure code generation for Freezed, JSON, and localization
+- [x] Set up root app bootstrap flow for config loading, auth/session restoration, theme restoration, and locale restoration
+- [x] Implement global error model and error presentation strategy
+- [x] Implement app-wide logging hooks and crash reporting integration points
+- [x] Define the final GoRouter route tree from `docs/08-screen-map-and-routing.md`
+- [x] Define parent navigator keys, shell navigator keys, and route names for shared above-shell detail routes
+- [x] Define guard providers for bootstrap, auth, onboarding, role, verification, payout-account, and admin step-up access
+- [x] Define router redirect ordering, unknown-route handling, and redirect-loop protection strategy
 
 ### Design System Foundation
 
-- [ ] Create Material 3 theme foundation with `ColorScheme` for light and dark modes
-- [ ] Define design tokens for color, spacing, typography, radius, elevation, borders, icons, and motion
-- [ ] Create shared app scaffolds, section headers, list cards, money summary components, and status chips
-- [ ] Implement theme persistence with no-flash startup behavior
-- [ ] Define responsive layout breakpoints and role-shell layout behavior
-- [ ] Define reusable UI patterns for bottom sheets, dialogs, snackbars, and confirmation prompts so microflows do not become one-off screens
+- [x] Create Material 3 theme foundation with `ColorScheme` for light and dark modes
+- [x] Define design tokens for color, spacing, typography, radius, elevation, borders, icons, and motion
+- [x] Create shared app scaffolds, section headers, list cards, money summary components, and status chips
+- [x] Implement theme persistence with no-flash startup behavior
+- [x] Define responsive layout breakpoints and role-shell layout behavior
+- [x] Define reusable UI patterns for bottom sheets, dialogs, snackbars, and confirmation prompts so microflows do not become one-off screens
 
 ### Localization And Accessibility Foundation
 
-- [ ] Configure `flutter-intl` / ARB-based localization for Arabic, French, and English
-- [ ] Implement deterministic locale fallback to English when locale is unsupported
-- [ ] Define bidi-safe formatting helpers for phone numbers, tracking IDs, payment references, prices, and plates
-- [ ] Define global accessibility checklist for semantics, 48dp targets, focus order, and large-text resilience
-- [ ] Add baseline widget tests for localization and accessibility guidelines
-- [ ] Create shared page-state widgets for loading, error, empty, retry, offline, forbidden, not-found, and verification-gate states
-- [ ] Define reduced-motion policy and keyboard/focus traversal rules for forms, dialogs, sheets, and larger-device layouts
+- [x] Configure `flutter-intl` / ARB-based localization for Arabic, French, and English
+- [x] Implement deterministic locale fallback to English when locale is unsupported
+- [x] Define bidi-safe formatting helpers for phone numbers, tracking IDs, payment references, prices, and plates
+- [x] Define global accessibility checklist for semantics, 48dp targets, focus order, and large-text resilience
+- [x] Add baseline widget tests for localization and accessibility guidelines
+- [x] Create shared page-state widgets for loading, error, empty, retry, offline, forbidden, not-found, and verification-gate states
+- [x] Define reduced-motion policy and keyboard/focus traversal rules for forms, dialogs, sheets, and larger-device layouts
 
 ## Phase 2 - Backend Schema And Security Foundation
 
