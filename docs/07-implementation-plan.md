@@ -1,0 +1,407 @@
+# FleetFill Implementation Plan
+
+This file is the execution checklist for building FleetFill from the canonical docs.
+
+Rules:
+
+- Keep this file updated as work progresses.
+- Mark tasks with `[x]` only when the work is complete and verified.
+- If a task changes product or domain truth, update the canonical docs first.
+- Do not skip foundational phases just to build UI faster.
+
+## Phase 0 - Delivery Setup And Working Agreement
+
+- [ ] Confirm Flutter, Dart, Android, Supabase, and Brevo accounts/environments are accessible
+- [ ] Confirm package strategy for Flutter app, admin surface, and shared code boundaries
+- [ ] Confirm repository structure, branch strategy, and environment naming (`local`, `staging`, `production`)
+- [ ] Create ADRs for the most irreversible decisions already captured in the docs
+- [ ] Define naming conventions for tables, enums, files, routes, providers, and storage paths
+- [ ] Define secrets ownership and where each secret is stored for local, staging, and production
+- [ ] Define release responsibilities for app, backend, storage, and operations changes
+
+## Phase 1 - Project Foundation
+
+### Flutter App Foundation
+
+- [ ] Create the Flutter project with the agreed folder structure from `docs/03-technical-architecture.md`
+- [ ] Configure Flutter flavors or environment selection for local, staging, and production
+- [ ] Add core packages: Riverpod, Freezed, json_serializable, GoRouter, Supabase Flutter, flutter-intl, SharedPreferences, secure storage, notifications, PDF/viewer support as needed
+- [ ] Configure code generation for Freezed, JSON, and localization
+- [ ] Set up root app bootstrap flow for config loading, auth/session restoration, theme restoration, and locale restoration
+- [ ] Implement global error model and error presentation strategy
+- [ ] Implement app-wide logging hooks and crash reporting integration points
+- [ ] Define the final GoRouter route tree from `docs/08-screen-map-and-routing.md`
+- [ ] Define parent navigator keys, shell navigator keys, and route names for shared above-shell detail routes
+- [ ] Define guard providers for bootstrap, auth, onboarding, role, verification, payout-account, and admin step-up access
+- [ ] Define router redirect ordering, unknown-route handling, and redirect-loop protection strategy
+
+### Design System Foundation
+
+- [ ] Create Material 3 theme foundation with `ColorScheme` for light and dark modes
+- [ ] Define design tokens for color, spacing, typography, radius, elevation, borders, icons, and motion
+- [ ] Create shared app scaffolds, section headers, list cards, money summary components, and status chips
+- [ ] Implement theme persistence with no-flash startup behavior
+- [ ] Define responsive layout breakpoints and role-shell layout behavior
+- [ ] Define reusable UI patterns for bottom sheets, dialogs, snackbars, and confirmation prompts so microflows do not become one-off screens
+
+### Localization And Accessibility Foundation
+
+- [ ] Configure `flutter-intl` / ARB-based localization for Arabic, French, and English
+- [ ] Implement deterministic locale fallback to English when locale is unsupported
+- [ ] Define bidi-safe formatting helpers for phone numbers, tracking IDs, payment references, prices, and plates
+- [ ] Define global accessibility checklist for semantics, 48dp targets, focus order, and large-text resilience
+- [ ] Add baseline widget tests for localization and accessibility guidelines
+- [ ] Create shared page-state widgets for loading, error, empty, retry, offline, forbidden, not-found, and verification-gate states
+- [ ] Define reduced-motion policy and keyboard/focus traversal rules for forms, dialogs, sheets, and larger-device layouts
+
+## Phase 2 - Backend Schema And Security Foundation
+
+### Database And Storage Foundation
+
+- [ ] Create Postgres enums and base tables from `docs/04-data-and-security-model.md` and `docs/09-supabase-implementation-notes.md`
+- [ ] Create `profiles`, `vehicles`, `payout_accounts`, `platform_payment_accounts`, `verification_documents`, `routes`, `route_revisions`, `oneoff_trips`, `shipments`, `shipment_items`, `bookings`, `payment_proofs`, `tracking_events`, `carrier_reviews`, `financial_ledger_entries`, `disputes`, `refunds`, `payouts`, `generated_documents`, `email_delivery_logs`, `email_outbox_jobs`, `notifications`, `user_devices`, `platform_settings`, and `admin_audit_logs`
+- [ ] Seed wilayas and communes from `docs/wilayas-with-municipalities.json`
+- [ ] Create indexes for search, booking, payment, document review, ledger, and email queue performance
+- [ ] Create private storage buckets for payment proofs, verification documents, and generated documents
+- [ ] Define canonical storage path patterns for each private file type
+- [ ] Implement DB constraints for one-of route vs one-off trip booking links and one-active-payout-account-per-carrier
+
+### Security And Access Control
+
+- [ ] Enable RLS on all public tables
+- [ ] Implement deny-by-default RLS policies per table for shipper, carrier, and admin access
+- [ ] Enforce server-only access for service-role credentials and critical privileged mutations
+- [ ] Implement signed URL issuance rules for private file viewing
+- [ ] Implement upload-session model with type validation, size validation, and storage-key hardening
+- [ ] Implement append-only protections for tracking events, ledger, audit logs, proofs, and verification history
+- [ ] Implement centralized input validation for all server-controlled mutations
+- [ ] Implement rate limiting and abuse controls for auth, booking, proof upload, dispute creation, and signed URL generation
+- [ ] Implement structured audit logging with actor, target, action, outcome, and reason fields
+- [ ] Protect admin-only and sensitive columns from client-side mutation, including role, activation, verification, and payout verification fields
+- [ ] Implement immutable/append-only enforcement for ledger, audit, tracking, proof, and verification history tables
+
+### Supabase Runtime And Automation Foundation
+
+- [ ] Confirm the actual Supabase scheduling mechanism, quotas, and reliability available on the target plan
+- [ ] Implement the chosen scheduled automation path from `docs/09-supabase-implementation-notes.md`
+- [ ] Define when FleetFill uses RPC, Edge Functions, triggers, `pg_cron`, `pg_net`, Vault, and Storage policies in concrete code structure
+- [ ] Validate secrets placement between Supabase project secrets and Vault
+
+## Phase 3 - Auth, Account, And Profile Systems
+
+### Authentication
+
+- [ ] Configure Supabase Auth for email/password login
+- [ ] Configure Google sign-in
+- [ ] Implement secure session storage and restoration
+- [ ] Implement role-aware auth bootstrap and route guards
+- [ ] Implement password reset and auth error handling UX
+- [ ] Implement session invalidation / logout behavior
+- [ ] Implement blocked-account, forbidden, and session-expired handling using route guards and inline/dialog UX where appropriate
+
+### Account Completion And Profiles
+
+- [ ] Build role selection and profile completion flow
+- [ ] Enforce mandatory phone number before operational actions
+- [ ] Build shipper profile edit flow
+- [ ] Build carrier profile edit flow
+- [ ] Build public carrier profile view with rating summary and comments
+- [ ] Add account suspension / inactive-state handling
+- [ ] Keep onboarding lean by using one role-aware `ProfileSetup` flow instead of fragmented setup screens
+
+## Phase 4 - Carrier Onboarding, Vehicles, And Verification
+
+### Carrier Verification Domain
+
+- [ ] Implement verification document domain models and repositories
+- [ ] Build vehicle CRUD flows
+- [ ] Build document upload flow for driver identity/license and truck documents
+- [ ] Support document replacement with preserved history
+- [ ] Show verification status and rejection reasons in carrier UX
+- [ ] Implement carrier verification gates before route, booking, or payout-relevant operational actions
+
+### Admin Verification Operations
+
+- [ ] Build grouped verification review packet for profile and vehicle
+- [ ] Build document-level review actions with reason capture
+- [ ] Build `Approve all` behavior with aggregate verification result and per-document audit entries
+- [ ] Build admin queue for pending verification packets
+
+## Phase 5 - Carrier Capacity Publication
+
+### Routes And Trips
+
+- [ ] Build recurring route CRUD
+- [ ] Build one-off trip CRUD
+- [ ] Support vehicle assignment to routes and one-off trips
+- [ ] Enforce capacity and operational field validation
+- [ ] Support active/inactive toggling
+- [ ] Implement route revision model so future-effective changes do not rewrite existing commitments
+- [ ] Implement weight-first and optional-volume matching exactly as defined in the canonical docs
+
+### Carrier Capacity UX
+
+- [ ] Build route list and trip list screens
+- [ ] Build reusable route/trip create-edit forms
+- [ ] Show upcoming capacity summary and booking utilization
+- [ ] Keep schedule, vehicle assignment, and capacity actions as sections or sheets where possible instead of separate routes
+
+## Phase 6 - Shipment Creation And Search
+
+### Shipment Domain
+
+- [ ] Build shipment CRUD for shipper drafts and active shipments
+- [ ] Support multiple shipment items inside one shipment
+- [ ] Enforce one shipment -> one booking rule in code and DB
+- [ ] Validate pickup window, weight, and required inputs
+
+### Search Engine And Results
+
+- [ ] Build server-driven exact-lane search endpoint/function
+- [ ] Include recurring route expansion by date and one-off trips
+- [ ] Compute remaining capacity safely
+- [ ] Implement `Recommended` ranking logic
+- [ ] Implement same-route nearest-date fallback when same-day exact result is empty
+- [ ] Return redefine-search result when no exact route exists
+- [ ] Implement pagination/cursoring for search results and other long-running collections
+- [ ] Implement debounced/cancellable search requests and stale-result protection
+
+### Search UX
+
+- [ ] Build shipment search form
+- [ ] Build search results list with lazy rendering
+- [ ] Build no-result and nearest-date fallback as inline page states, not separate routes
+- [ ] Build alternative sort options: `Top Rated`, `Lowest Price`, `Nearest Departure`
+- [ ] Build filters and sort controls as sheets instead of routed microflows
+
+## Phase 7 - Booking And Pricing Flow
+
+### Booking Domain
+
+- [ ] Build booking creation server flow with capacity enforcement and idempotency
+- [ ] Snapshot all commercial fields onto the booking
+- [ ] Generate tracking number and payment reference
+- [ ] Enforce booking and payment status transition rules
+- [ ] Implement transactional reservation/capacity protection for per-date bookable departures
+- [ ] Ensure booking, audit, and outbox side effects commit atomically
+
+### Pricing Logic
+
+- [ ] Implement price-per-kg route/trip pricing resolution
+- [ ] Implement `base_price`, `platform_fee`, `carrier_fee`, `insurance_fee`, `tax_fee`, `shipper_total`, and `carrier_payout` calculations
+- [ ] Implement optional insurance percentage with minimum fee floor
+- [ ] Build pricing breakdown presentation in shipper UI
+
+### Booking UX
+
+- [ ] Build booking confirmation screen
+- [ ] Show carrier reputation and trip details clearly before payment
+- [ ] Show total and detailed breakdown before payment proof step
+- [ ] Keep pricing breakdown and insurance choice as reusable sheets/sections inside the booking flow
+
+## Phase 8 - Payment Proof, Escrow, And Ledger
+
+### Payment Proof Flow
+
+- [ ] Build payment instructions for CCP, Dahabia, and bank transfer
+- [ ] Build secure payment proof upload flow
+- [ ] Support resubmission after rejection with history retained
+- [ ] Enforce exact amount matching rule for verification
+- [ ] Show payment proof statuses and rejection reasons clearly
+- [ ] Implement payment as one coherent flow screen with internal sections/states instead of many success/result pages
+- [ ] Model and implement payment-resubmission deadline handling with automatic cancellation and capacity release
+
+### Ledger And Escrow
+
+- [ ] Implement immutable ledger entry creation for secured payment, rejection, refund, and payout
+- [ ] Ensure booking/payment statuses never replace ledger truth
+- [ ] Generate payment receipt document when applicable
+- [ ] Generate invoice document when applicable
+
+### Admin Payment Operations
+
+- [ ] Build payment proof review queue
+- [ ] Build payment approval flow
+- [ ] Build payment rejection flow with mandatory reason
+- [ ] Build admin visibility into proof history and money summary
+- [ ] Capture submitted amount, verified amount, verified reference, and decision notes for audit-quality proof reviews
+
+## Phase 9 - Tracking, Delivery, And Completion
+
+### Tracking Domain
+
+- [ ] Implement append-only tracking event creation
+- [ ] Derive visible booking progress from authoritative events/statuses
+- [ ] Support milestone events: payment under review, confirmed, picked up, in transit, delivered pending review, completed, cancelled, disputed
+
+### Carrier Progress UX
+
+- [ ] Build carrier booking worklist
+- [ ] Build milestone update actions for `picked_up`, `in_transit`, and `delivered`
+- [ ] Add optional notes where allowed
+- [ ] Present milestone updates as sheets/actions from booking detail rather than separate standalone pages where possible
+
+### Delivery Confirmation
+
+- [ ] Implement `delivered_pending_review` grace window handling
+- [ ] Build shipper confirm-delivery action
+- [ ] Build auto-complete after grace period expires with no dispute
+- [ ] Record delivery confirmation timestamps and audit trail
+- [ ] Keep delivery confirmation, dispute opening, and rating entry attached to booking/tracking detail rather than scattered success routes
+- [ ] Implement durable scheduled/background execution for grace-window expiry
+
+## Phase 10 - Disputes, Refunds, And Payouts
+
+### Disputes
+
+- [ ] Build dispute creation flow from `delivered_pending_review`
+- [ ] Support evidence/notes attachment if included in scope
+- [ ] Build admin dispute review screen with booking, proof, tracking, and ledger context
+- [ ] Support dispute outcomes: complete, cancel, refund
+- [ ] Record all dispute outcomes in audit log and ledger where relevant
+- [ ] Build first-class dispute records with lifecycle, reason, notes, and resolution metadata
+
+### Payouts
+
+- [ ] Build payout account CRUD for carriers
+- [ ] Validate only one active payout account is operationally used at a time
+- [ ] Build payout eligibility checks
+- [ ] Build payout release flow for admin/ops
+- [ ] Update `payment_status` to `released_to_carrier` when payout is completed
+- [ ] Generate payout receipt or payout statement document when applicable
+- [ ] Build first-class payout records with account snapshot, external reference, failure handling, and retry-safe operations
+- [ ] Build first-class refund records with external reference and processing lifecycle
+
+## Phase 11 - Ratings, Notifications, And Support
+
+### Ratings
+
+- [ ] Allow one carrier review per completed booking
+- [ ] Build rating and comment submission flow
+- [ ] Recompute carrier rating aggregates safely
+- [ ] Surface public comments on carrier profile
+
+### Notifications
+
+- [ ] Build in-app notifications table consumption
+- [ ] Register and manage push device tokens
+- [ ] Trigger in-app and push notifications for critical lifecycle events
+- [ ] Build notifications center UI
+- [ ] Open notifications from shared routes or home/profile entry points rather than dedicated shipper/carrier bottom tabs
+
+### Email And Support
+
+- [ ] Integrate Brevo transactional email sending from secure server code
+- [ ] Build `email_outbox_jobs` processing worker
+- [ ] Build `email_delivery_logs` recording and update flow
+- [ ] Implement locale-aware template selection with English fallback
+- [ ] Build Brevo webhook/status handling for delivered, bounced, suppressed, and failed states
+- [ ] Build support acknowledgement email flow
+- [ ] Expose support email entry points in app
+- [ ] Implement webhook authenticity verification, idempotency, and out-of-order event handling
+- [ ] Define and implement the full transactional email event set from the canonical docs, not support acknowledgement only
+
+## Phase 12 - Admin Surface And Operations
+
+### Admin Core
+
+- [ ] Build secure admin shell and route guards
+- [ ] Build dashboards/queues for payment proofs, verification packets, disputes, payouts, email failures, and audit events
+- [ ] Build platform settings editor or controlled operational surface
+- [ ] Build search/filter tools for bookings, users, proofs, documents, and email logs
+- [ ] Keep mobile admin lean: use one queues page with segmented sections instead of many top-level admin tabs
+- [ ] Build typed client-settings response/API from `platform_settings` rather than raw client table reads
+
+### Admin Audit And Monitoring
+
+- [ ] Build admin audit log viewer
+- [ ] Build dead-letter email queue viewer and safe resend controls
+- [ ] Build monitoring views for payment review backlog, dispute backlog, payout backlog, and email backlog
+- [ ] Build monitoring for timed automations such as payment-resubmission expiry and delivery grace-window expiry
+
+## Phase 13 - Generated Documents
+
+- [ ] Build server-side PDF generation pipeline for booking invoices
+- [ ] Build payment receipt generation where applicable
+- [ ] Build payout receipt/statement generation where applicable
+- [ ] Store generated documents in private storage
+- [ ] Build secure in-app document viewing/downloading flow
+- [ ] Ensure email references to documents do not expose insecure public links
+
+## Phase 14 - Hardening, Testing, And Release Readiness
+
+### Automated Testing
+
+- [ ] Add unit tests for pricing, insurance, status transitions, locale formatting, and validation helpers
+- [ ] Add repository tests for key remote/local data flows
+- [ ] Add widget tests for forms, money summaries, timelines, and accessibility guidelines
+- [ ] Add integration tests for auth, shipment -> search -> booking -> payment proof, carrier progress updates, admin verification, dispute handling, and theme/locale restore
+
+### Security And Reliability
+
+- [ ] Validate RLS policies with role-specific test scenarios
+- [ ] Validate file upload restrictions and signed URL issuance
+- [ ] Validate audit logging for all sensitive actions
+- [ ] Validate rate limiting and abuse controls on high-risk endpoints
+- [ ] Validate email outbox dedupe, retry, dead-letter, and webhook reconciliation behavior
+- [ ] Validate transaction boundaries for booking, payment, dispute, payout, and outbox enqueue workflows
+
+### Performance And Quality Gates
+
+- [ ] Profile the app on a representative Android device in profile mode
+- [ ] Fix repeated jank in search lists, tracking timelines, and admin queues
+- [ ] Validate long-list lazy rendering and scroll-state preservation
+- [ ] Measure Android app size and investigate major regressions
+- [ ] Run manual accessibility checks with TalkBack and large text
+- [ ] Run manual Arabic/French/English localization QA
+- [ ] Validate shell navigation, back-stack behavior, and deep links for shared above-shell detail routes
+- [ ] Validate that microflows use sheets/dialogs/inline states instead of unnecessary full pages
+- [ ] Validate pagination/cursoring behavior for search, notifications, timelines, reviews, and admin queues
+
+## Phase 15 - Staging Launch And Production Readiness
+
+- [ ] Set up staging Supabase project and Brevo staging/test configuration
+- [ ] Seed staging reference data and platform settings
+- [ ] Run end-to-end staging rehearsals for shipper, carrier, and admin flows
+- [ ] Verify support email routing and operational playbooks
+- [ ] Verify payout and refund operational procedure with test data
+- [ ] Verify scheduled/background automation works reliably on the actual Supabase plan or document the operational fallback
+- [ ] Review release checklist, monitoring checklist, and rollback plan
+- [ ] Prepare Android production rollout
+- [ ] Keep iOS config and version policy ready even if public rollout remains disabled
+
+### CI/CD, GitHub, And Release Management
+
+- [ ] Configure the single long-lived protected branch workflow in GitHub
+- [ ] Define branch naming, tag naming, and changelog conventions
+- [ ] Create GitHub Actions workflows for Flutter quality checks and build validation
+- [ ] Create GitHub Actions workflows for controlled Supabase migration/function deployment validation
+- [ ] Create staging deployment workflow and release-candidate workflow
+- [ ] Ensure every release artifact is traceable to commit SHA and tag
+- [ ] Define mobile versioning rules for app version, Android `versionCode`, and iOS `buildNumber`
+- [ ] Define rollback procedure for app release and backend deployment failures
+- [ ] Define user-facing GitHub README and GitHub Releases writing guidelines
+
+### Compliance And Legal Surfaces
+
+- [ ] Implement user-facing Terms, Privacy, payment disclosure, and dispute policy surfaces before production launch
+
+## Phase 16 - Post-Launch Stabilization
+
+- [ ] Monitor booking, payment, dispute, payout, and email health metrics daily after launch
+- [ ] Triage dead-letter email jobs and bounced addresses
+- [ ] Review carrier verification bottlenecks and payment review bottlenecks
+- [ ] Review search quality and no-result patterns from real usage
+- [ ] Review support contact patterns and update templates/copy where needed
+- [ ] Schedule the first backlog of improvements without changing canonical domain truth casually
+
+## Cross-Phase Definition Of Done
+
+A major feature area is only done when all are true:
+
+- [ ] domain rules match the canonical docs
+- [ ] UI matches the approved UX and localization rules
+- [ ] security/RLS rules are implemented and verified
+- [ ] auditability is in place for sensitive operations
+- [ ] automated tests cover the critical path
+- [ ] staging verification has been completed where applicable
