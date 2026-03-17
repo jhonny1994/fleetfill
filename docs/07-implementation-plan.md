@@ -11,13 +11,13 @@ Rules:
 
 ## Phase 0 - Delivery Setup And Working Agreement
 
-- [ ] Confirm Flutter, Dart, Android, Supabase, and Brevo accounts/environments are accessible
-- [ ] Confirm package strategy for Flutter app, admin surface, and shared code boundaries
-- [ ] Confirm repository structure, branch strategy, and environment naming (`local`, `staging`, `production`)
-- [ ] Create ADRs for the most irreversible decisions already captured in the docs
-- [ ] Define naming conventions for tables, enums, files, routes, providers, and storage paths
-- [ ] Define secrets ownership and where each secret is stored for local, staging, and production
-- [ ] Define release responsibilities for app, backend, storage, and operations changes
+- [x] Confirm Flutter, Dart, Android, Supabase, and Brevo accounts/environments are accessible
+- [x] Confirm package strategy for Flutter app, admin surface, and shared code boundaries
+- [x] Confirm repository structure, branch strategy, and environment naming (`local`, `staging`, `production`)
+- [x] Create ADRs for the most irreversible decisions already captured in the docs
+- [x] Define naming conventions for tables, enums, files, routes, providers, and storage paths
+- [x] Define secrets ownership and where each secret is stored for local, staging, and production
+- [x] Define release responsibilities for app, backend, storage, and operations changes
 
 ## Phase 1 - Project Foundation
 

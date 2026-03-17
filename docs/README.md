@@ -4,19 +4,21 @@ This directory is the canonical source of truth for FleetFill.
 
 Read the files in this order:
 
-1. `docs/01-product-and-scope.md`
-2. `docs/02-domain-and-state-model.md`
-3. `docs/03-technical-architecture.md`
-4. `docs/04-data-and-security-model.md`
-5. `docs/05-ux-and-localization.md`
-6. `docs/06-operations-and-compliance.md`
-7. `docs/07-implementation-plan.md`
-8. `docs/08-screen-map-and-routing.md`
-9. `docs/09-supabase-implementation-notes.md`
+1. `docs/00-delivery-setup.md`
+2. `docs/01-product-and-scope.md`
+3. `docs/02-domain-and-state-model.md`
+4. `docs/03-technical-architecture.md`
+5. `docs/04-data-and-security-model.md`
+6. `docs/05-ux-and-localization.md`
+7. `docs/06-operations-and-compliance.md`
+8. `docs/07-implementation-plan.md`
+9. `docs/08-screen-map-and-routing.md`
+10. `docs/09-supabase-implementation-notes.md`
 
 Supporting assets:
 
 - `docs/wilayas-with-municipalities.json` - Algeria location seed data
+- `docs/adr/` - architecture decision records for the most irreversible decisions
 
 Rules for all future documentation updates:
 
