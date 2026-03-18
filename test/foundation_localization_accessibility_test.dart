@@ -23,7 +23,7 @@ Widget buildTestApp({
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Phase 1 localization foundation', () {
+  group('Localization foundation', () {
     testWidgets('uses generated supported locales', (tester) async {
       expect(
         S.delegate.supportedLocales.map((locale) => locale.languageCode),
@@ -54,7 +54,7 @@ void main() {
     });
   });
 
-  group('Phase 1 accessibility foundation', () {
+  group('Accessibility foundation', () {
     testWidgets('page state widgets expose user-facing localized copy', (
       tester,
     ) async {
@@ -64,12 +64,16 @@ void main() {
 
       expect(find.text('Verification required'), findsOneWidget);
       expect(
-        find.text('Complete the required verification steps before continuing.'),
+        find.text(
+          'Complete the required verification steps before continuing.',
+        ),
         findsOneWidget,
       );
     });
 
-    testWidgets('forbidden state can show admin step-up guidance', (tester) async {
+    testWidgets('forbidden state can show admin step-up guidance', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestApp(
           child: AppForbiddenState(
@@ -98,7 +102,9 @@ void main() {
       );
     });
 
-    testWidgets('navigation destinations keep accessible nav controls', (tester) async {
+    testWidgets('navigation destinations keep accessible nav controls', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestApp(
           child: AppShellScaffold(

@@ -38,7 +38,10 @@ class AdminShellScreen extends StatelessWidget {
           icon: Icons.inventory_outlined,
           label: s.adminQueuesNavLabel,
         ),
-        AppShellDestination(icon: Icons.group_outlined, label: s.adminUsersNavLabel),
+        AppShellDestination(
+          icon: Icons.group_outlined,
+          label: s.adminUsersNavLabel,
+        ),
         AppShellDestination(
           icon: Icons.settings_outlined,
           label: s.adminSettingsNavLabel,

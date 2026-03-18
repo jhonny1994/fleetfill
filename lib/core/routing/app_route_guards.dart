@@ -8,12 +8,15 @@ enum AppRedirectTarget {
   maintenance,
   updateRequired,
   signIn,
+  resetPassword,
+  home,
   roleSelection,
   profileSetup,
   phoneCompletion,
   verificationGate,
   payoutAccountGate,
   forbidden,
+  sessionExpired,
 }
 
 class RouteGuardDecision {
@@ -32,6 +35,7 @@ class AppRouteGuards {
 
   static RouteGuardDecision evaluate({
     required AppBootstrapState bootstrap,
+    required AuthSnapshot auth,
     required String location,
   }) {
     if (bootstrap.environment.maintenanceMode &&
@@ -44,10 +48,13 @@ class AppRouteGuards {
       return const RouteGuardDecision(target: AppRedirectTarget.updateRequired);
     }
 
-    final auth = bootstrap.auth;
     final inAuthFlow = location.startsWith('/auth');
     final inOnboarding = location.startsWith('/onboarding');
     final inPermissions = location.startsWith('/permissions');
+
+    if (auth.isSessionExpired && !inAuthFlow) {
+      return const RouteGuardDecision(target: AppRedirectTarget.sessionExpired);
+    }
 
     if (!auth.isAuthenticated &&
         auth.status != AuthStatus.unconfigured &&
@@ -64,6 +71,17 @@ class AppRouteGuards {
         target: AppRedirectTarget.forbidden,
         reason: 'suspended',
       );
+    }
+
+    if (auth.isPasswordRecovery &&
+        location != AppRoutePath.resetPassword &&
+        location != AppRoutePath.signIn &&
+        location != AppRoutePath.forgotPassword) {
+      return const RouteGuardDecision(target: AppRedirectTarget.resetPassword);
+    }
+
+    if (inAuthFlow && !auth.isPasswordRecovery) {
+      return const RouteGuardDecision(target: AppRedirectTarget.home);
     }
 
     if (auth.role == null && !inOnboarding) {
@@ -111,7 +129,10 @@ class AppRouteGuards {
     return const RouteGuardDecision.none();
   }
 
-  static String? redirectLocation(RouteGuardDecision decision) {
+  static String? redirectLocation(
+    RouteGuardDecision decision, {
+    required AuthSnapshot auth,
+  }) {
     switch (decision.target) {
       case AppRedirectTarget.none:
         return null;
@@ -120,7 +141,12 @@ class AppRouteGuards {
       case AppRedirectTarget.updateRequired:
         return AppRoutePath.updateRequired;
       case AppRedirectTarget.signIn:
+      case AppRedirectTarget.sessionExpired:
         return AppRoutePath.signIn;
+      case AppRedirectTarget.resetPassword:
+        return AppRoutePath.resetPassword;
+      case AppRedirectTarget.home:
+        return authenticatedEntryLocation(auth);
       case AppRedirectTarget.roleSelection:
         return AppRoutePath.roleSelection;
       case AppRedirectTarget.profileSetup:
@@ -128,193 +154,211 @@ class AppRouteGuards {
       case AppRedirectTarget.phoneCompletion:
         return AppRoutePath.phoneCompletion;
       case AppRedirectTarget.verificationGate:
-        return AppRoutePath.carrierProfile;
       case AppRedirectTarget.payoutAccountGate:
         return AppRoutePath.carrierProfile;
       case AppRedirectTarget.forbidden:
-        return null;
+        if (decision.reason == 'suspended') {
+          return AppRoutePath.signIn;
+        }
+
+        return homeLocation(auth);
     }
+  }
+
+  static String homeLocation(AuthSnapshot auth) {
+    return switch (auth.role) {
+      AppUserRole.carrier => AppRoutePath.carrierHome,
+      AppUserRole.admin => AppRoutePath.adminDashboard,
+      _ => AppRoutePath.shipperHome,
+    };
+  }
+
+  static String authenticatedEntryLocation(AuthSnapshot auth) {
+    if (auth.role == null) {
+      return AppRoutePath.roleSelection;
+    }
+
+    if (!auth.hasCompletedOnboarding) {
+      return AppRoutePath.profileSetup;
+    }
+
+    if (!auth.hasPhoneNumber && auth.role != AppUserRole.admin) {
+      return AppRoutePath.phoneCompletion;
+    }
+
+    return homeLocation(auth);
   }
 }
 
-final bootstrapGuardProvider = Provider.family<RouteGuardDecision, String>((
-  ref,
-  location,
-) {
-  final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
-  if (bootstrap == null) {
+final bootstrapGuardProvider = Provider.family<RouteGuardDecision, String>(
+  (ref, location) {
+    final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
+    if (bootstrap == null) {
+      return const RouteGuardDecision.none();
+    }
+
+    if (bootstrap.environment.maintenanceMode &&
+        location != AppRoutePath.maintenance) {
+      return const RouteGuardDecision(target: AppRedirectTarget.maintenance);
+    }
+
+    if (bootstrap.environment.forceUpdateRequired &&
+        location != AppRoutePath.updateRequired) {
+      return const RouteGuardDecision(target: AppRedirectTarget.updateRequired);
+    }
+
     return const RouteGuardDecision.none();
-  }
+  },
+);
 
-  if (bootstrap.environment.maintenanceMode &&
-      location != AppRoutePath.maintenance) {
-    return const RouteGuardDecision(target: AppRedirectTarget.maintenance);
-  }
+final authGuardProvider = Provider.family<RouteGuardDecision, String>(
+  (ref, location) {
+    final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    if (bootstrap == null || auth == null) {
+      return const RouteGuardDecision.none();
+    }
 
-  if (bootstrap.environment.forceUpdateRequired &&
-      location != AppRoutePath.updateRequired) {
-    return const RouteGuardDecision(target: AppRedirectTarget.updateRequired);
-  }
-
-  return const RouteGuardDecision.none();
-});
-
-final authGuardProvider = Provider.family<RouteGuardDecision, String>((
-  ref,
-  location,
-) {
-  final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
-  if (bootstrap == null) {
-    return const RouteGuardDecision.none();
-  }
-
-  final auth = bootstrap.auth;
-  final inAuthFlow = location.startsWith('/auth');
-
-  if (!auth.isAuthenticated &&
-      auth.status != AuthStatus.unconfigured &&
-      !inAuthFlow) {
-    return const RouteGuardDecision(target: AppRedirectTarget.signIn);
-  }
-
-  return const RouteGuardDecision.none();
-});
-
-final onboardingGuardProvider = Provider.family<RouteGuardDecision, String>((
-  ref,
-  location,
-) {
-  final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
-  if (bootstrap == null || !bootstrap.auth.isAuthenticated) {
-    return const RouteGuardDecision.none();
-  }
-
-  final auth = bootstrap.auth;
-  final inOnboarding = location.startsWith('/onboarding');
-
-  if (auth.role == null && !inOnboarding) {
-    return const RouteGuardDecision(target: AppRedirectTarget.roleSelection);
-  }
-
-  if (!auth.hasCompletedOnboarding && !inOnboarding) {
-    return const RouteGuardDecision(target: AppRedirectTarget.profileSetup);
-  }
-
-  return const RouteGuardDecision.none();
-});
-
-final roleGuardProvider = Provider.family<RouteGuardDecision, String>((
-  ref,
-  location,
-) {
-  final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
-  if (bootstrap == null || !bootstrap.auth.isAuthenticated) {
-    return const RouteGuardDecision.none();
-  }
-
-  final auth = bootstrap.auth;
-  if (auth.isSuspended) {
-    return const RouteGuardDecision(
-      target: AppRedirectTarget.forbidden,
-      reason: 'suspended',
+    return AppRouteGuards.evaluate(
+      bootstrap: bootstrap,
+      auth: auth,
+      location: location,
     );
-  }
+  },
+);
 
-  if (location.startsWith('/admin') && auth.role != AppUserRole.admin) {
-    return const RouteGuardDecision(
-      target: AppRedirectTarget.forbidden,
-      reason: 'admin_only',
+final onboardingGuardProvider = Provider.family<RouteGuardDecision, String>(
+  (ref, location) {
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    if (auth == null || !auth.isAuthenticated) {
+      return const RouteGuardDecision.none();
+    }
+
+    final inOnboarding = location.startsWith('/onboarding');
+
+    if (auth.role == null && !inOnboarding) {
+      return const RouteGuardDecision(target: AppRedirectTarget.roleSelection);
+    }
+
+    if (!auth.hasCompletedOnboarding && !inOnboarding) {
+      return const RouteGuardDecision(target: AppRedirectTarget.profileSetup);
+    }
+
+    return const RouteGuardDecision.none();
+  },
+);
+
+final roleGuardProvider = Provider.family<RouteGuardDecision, String>(
+  (ref, location) {
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    if (auth == null || !auth.isAuthenticated) {
+      return const RouteGuardDecision.none();
+    }
+
+    if (auth.isSuspended) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.forbidden,
+        reason: 'suspended',
+      );
+    }
+
+    if (location.startsWith('/admin') && auth.role != AppUserRole.admin) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.forbidden,
+        reason: 'admin_only',
+      );
+    }
+
+    return const RouteGuardDecision.none();
+  },
+);
+
+final verificationGuardProvider = Provider.family<RouteGuardDecision, String>(
+  (ref, location) {
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    if (auth == null || !auth.isAuthenticated) {
+      return const RouteGuardDecision.none();
+    }
+
+    final inPermissions = location.startsWith('/permissions');
+    final needsPhoneForOperationalAction =
+        (location.startsWith('/shipper') || location.startsWith('/carrier')) &&
+        !inPermissions;
+
+    if (needsPhoneForOperationalAction && !auth.hasPhoneNumber) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.phoneCompletion,
+      );
+    }
+
+    final needsCarrierVerification =
+        location.startsWith('/carrier/routes') ||
+        location.startsWith('/carrier/bookings');
+    if (needsCarrierVerification && !auth.isCarrierVerified) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.verificationGate,
+      );
+    }
+
+    return const RouteGuardDecision.none();
+  },
+);
+
+final payoutAccountGuardProvider = Provider.family<RouteGuardDecision, String>(
+  (ref, location) {
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    if (auth == null || !auth.isAuthenticated) {
+      return const RouteGuardDecision.none();
+    }
+
+    final needsPayoutAccount = location.startsWith('/carrier/bookings');
+    if (needsPayoutAccount && !auth.hasPayoutAccount) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.payoutAccountGate,
+      );
+    }
+
+    return const RouteGuardDecision.none();
+  },
+);
+
+final adminStepUpGuardProvider = Provider.family<RouteGuardDecision, String>(
+  (ref, location) {
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    if (auth == null || !auth.isAuthenticated) {
+      return const RouteGuardDecision.none();
+    }
+
+    final needsRecentAdminStepUp = location.startsWith(
+      AppRoutePath.adminAuditLog,
     );
-  }
 
-  return const RouteGuardDecision.none();
-});
+    if (needsRecentAdminStepUp && !auth.hasRecentAdminStepUp) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.forbidden,
+        reason: 'admin_step_up_required',
+      );
+    }
 
-final verificationGuardProvider = Provider.family<RouteGuardDecision, String>((
-  ref,
-  location,
-) {
-  final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
-  if (bootstrap == null || !bootstrap.auth.isAuthenticated) {
     return const RouteGuardDecision.none();
-  }
+  },
+);
 
-  final auth = bootstrap.auth;
-  final inPermissions = location.startsWith('/permissions');
-  final needsPhoneForOperationalAction =
-      (location.startsWith('/shipper') || location.startsWith('/carrier')) &&
-      !inPermissions;
+final routeGuardDecisionProvider = Provider.family<RouteGuardDecision, String>(
+  (ref, location) {
+    final decisions = <RouteGuardDecision>[
+      ref.watch(bootstrapGuardProvider(location)),
+      ref.watch(authGuardProvider(location)),
+      ref.watch(onboardingGuardProvider(location)),
+      ref.watch(roleGuardProvider(location)),
+      ref.watch(verificationGuardProvider(location)),
+      ref.watch(payoutAccountGuardProvider(location)),
+      ref.watch(adminStepUpGuardProvider(location)),
+    ];
 
-  if (needsPhoneForOperationalAction && !auth.hasPhoneNumber) {
-    return const RouteGuardDecision(target: AppRedirectTarget.phoneCompletion);
-  }
-
-  final needsCarrierVerification =
-      location.startsWith('/carrier/routes') ||
-      location.startsWith('/carrier/bookings');
-  if (needsCarrierVerification && !auth.isCarrierVerified) {
-    return const RouteGuardDecision(target: AppRedirectTarget.verificationGate);
-  }
-
-  return const RouteGuardDecision.none();
-});
-
-final payoutAccountGuardProvider = Provider.family<RouteGuardDecision, String>((
-  ref,
-  location,
-) {
-  final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
-  if (bootstrap == null || !bootstrap.auth.isAuthenticated) {
-    return const RouteGuardDecision.none();
-  }
-
-  final auth = bootstrap.auth;
-  final needsPayoutAccount = location.startsWith('/carrier/bookings');
-  if (needsPayoutAccount && !auth.hasPayoutAccount) {
-    return const RouteGuardDecision(target: AppRedirectTarget.payoutAccountGate);
-  }
-
-  return const RouteGuardDecision.none();
-});
-
-final adminStepUpGuardProvider = Provider.family<RouteGuardDecision, String>((
-  ref,
-  location,
-) {
-  final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
-  if (bootstrap == null || !bootstrap.auth.isAuthenticated) {
-    return const RouteGuardDecision.none();
-  }
-
-  final auth = bootstrap.auth;
-  final needsRecentAdminStepUp = location.startsWith(AppRoutePath.adminAuditLog);
-
-  if (needsRecentAdminStepUp && !auth.hasRecentAdminStepUp) {
-    return const RouteGuardDecision(
-      target: AppRedirectTarget.forbidden,
-      reason: 'admin_step_up_required',
+    return decisions.firstWhere(
+      (decision) => decision.hasRedirect,
+      orElse: RouteGuardDecision.none,
     );
-  }
-
-  return const RouteGuardDecision.none();
-});
-
-final routeGuardDecisionProvider = Provider.family<RouteGuardDecision, String>((
-  ref,
-  location,
-) {
-  final decisions = <RouteGuardDecision>[
-    ref.watch(bootstrapGuardProvider(location)),
-    ref.watch(authGuardProvider(location)),
-    ref.watch(onboardingGuardProvider(location)),
-    ref.watch(roleGuardProvider(location)),
-    ref.watch(verificationGuardProvider(location)),
-    ref.watch(payoutAccountGuardProvider(location)),
-    ref.watch(adminStepUpGuardProvider(location)),
-  ];
-
-  return decisions.firstWhere(
-    (decision) => decision.hasRedirect,
-    orElse: RouteGuardDecision.none,
-  );
-});
+  },
+);

@@ -67,6 +67,7 @@ class FleetFillApp extends ConsumerWidget {
       ],
       builder: (context, child) {
         final bootstrap = ref.watch(appBootstrapControllerProvider);
+        final authSession = ref.watch(authSessionControllerProvider);
         final currentLocale = Localizations.localeOf(context);
         final textDirection = currentLocale.languageCode == 'ar'
             ? TextDirection.rtl
@@ -76,7 +77,22 @@ class FleetFillApp extends ConsumerWidget {
           textDirection: textDirection,
           child: AppFocusTraversal.largeScreen(
             child: bootstrap.when(
-              data: (_) => child ?? const SizedBox.shrink(),
+              data: (_) => authSession.when(
+                data: (_) => child ?? const SizedBox.shrink(),
+                loading: () => const SplashScreen(),
+                error: (error, stackTrace) => AppErrorState(
+                  error: AppError(
+                    code: 'auth_session_failed',
+                    message: S.of(context).routeErrorMessage,
+                    technicalDetails: BidiFormatters.latinIdentifier(
+                      stackTrace.toString(),
+                    ),
+                  ),
+                  onRetry: () => unawaited(
+                    ref.read(authSessionControllerProvider.notifier).refresh(),
+                  ),
+                ),
+              ),
               loading: () => const SplashScreen(),
               error: (error, stackTrace) => AppErrorState(
                 error: AppError(

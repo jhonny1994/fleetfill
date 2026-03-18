@@ -1,4 +1,5 @@
 {
+  "@@locale": "ar",
   "appTitle": "FleetFill",
   "adminAuditLogDescription": "Audit visibility for sensitive operations lives here.",
   "adminAuditLogTitle": "Admin audit log",
@@ -15,16 +16,59 @@
   "adminUsersNavLabel": "Users",
   "adminUsersTitle": "Users",
   "authForgotPasswordDescription": "Password reset request handling belongs in the auth shell.",
+  "authForgotPasswordCta": "هل نسيت كلمة المرور؟",
   "authForgotPasswordTitle": "Forgot password",
+  "authCreateAccountAction": "إنشاء حساب",
+  "authCreateAccountCta": "إنشاء حساب جديد",
+  "authAuthenticationRequiredMessage": "سجّل الدخول لمتابعة هذا الإجراء.",
+  "authEmailHint": "you@example.com",
+  "authAccountCreatedMessage": "تم إنشاء الحساب. تابع عبر تسجيل الدخول.",
+  "authConfirmPasswordLabel": "تأكيد كلمة المرور",
+  "authEmailLabel": "البريد الإلكتروني",
+  "authEmailNotConfirmedMessage": "أكد بريدك الإلكتروني قبل تسجيل الدخول.",
+  "authGenericErrorMessage": "تعذر على FleetFill إكمال طلب التحقق هذا.",
+  "authGoogleAction": "المتابعة عبر Google",
+  "authGoogleStartedMessage": "بدأ تسجيل الدخول عبر Google. عد إلى هنا بعد الموافقة.",
+  "authKeepSignedInLabel": "إبقائي مسجّل الدخول",
+  "authHaveAccountCta": "لديك حساب بالفعل؟ سجّل الدخول",
+  "authInvalidCredentialsMessage": "تحقق من البريد الإلكتروني وكلمة المرور ثم أعد المحاولة.",
+  "authInvalidEmailMessage": "أدخل بريدا إلكترونيا صالحا.",
+  "authNetworkErrorMessage": "تم اكتشاف مشكلة في الشبكة. أعد المحاولة بعد قليل.",
+  "authNewPasswordLabel": "كلمة المرور الجديدة",
+  "authPasswordLabel": "كلمة المرور",
+  "authPasswordHint": "أدخل كلمة المرور",
+  "authCreatePasswordHint": "أنشئ كلمة مرور قوية",
+  "authConfirmPasswordHint": "أعد إدخال كلمة المرور",
+  "authPasswordMinLengthMessage": "استخدم 8 أحرف على الأقل.",
+  "authPasswordMismatchMessage": "كلمتا المرور غير متطابقتين.",
+  "authPasswordResetInfoMessage": "سيرسل FleetFill رابط إعادة التعيين إلى البريد الإلكتروني المسجل.",
+  "authPasswordUpdatedMessage": "تم تحديث كلمة المرور.",
+  "authRequiredFieldMessage": "هذا الحقل مطلوب.",
   "authResetPasswordDescription": "Password reset confirmation lives here.",
+  "authResetPasswordUnavailableMessage": "افتح هذه الشاشة من رابط استعادة كلمة المرور لتعيين كلمة مرور جديدة.",
+  "authResetEmailSentMessage": "تم إرسال تعليمات إعادة تعيين كلمة المرور.",
   "authResetPasswordTitle": "Reset password",
+  "authSendResetAction": "إرسال رابط إعادة التعيين",
+  "authContinueWithLabel": "أو المتابعة عبر",
+  "authSessionExpiredAction": "تسجيل الدخول مرة أخرى",
+  "authSessionExpiredMessage": "انتهت الجلسة. سجّل الدخول مرة أخرى للمتابعة بأمان.",
+  "authSessionExpiredTitle": "انتهت الجلسة",
   "authSignInDescription": "Email/password and Google sign-in entry points live here.",
+  "authSignInAction": "تسجيل الدخول",
+  "authSignInSuccess": "تم تسجيل الدخول بنجاح.",
   "authSignInTitle": "Sign in",
   "authSignUpDescription": "Lean account creation stays inside one auth shell.",
   "authSignUpTitle": "Create account",
+  "authUpdatePasswordAction": "تحديث كلمة المرور",
+  "authUserAlreadyRegisteredMessage": "يوجد حساب بالفعل لهذا البريد الإلكتروني.",
+  "authVerificationEmailSentMessage": "تحقق من بريدك الإلكتروني لتأكيد الحساب قبل تسجيل الدخول.",
   "bookingDetailDescription": "Shared booking detail routes sit above role shells.",
   "bookingDetailTitle": "Booking {bookingId}",
-  "@bookingDetailTitle": {"placeholders": {"bookingId": {}}},
+  "@bookingDetailTitle": {
+    "placeholders": {
+      "bookingId": {}
+    }
+  },
   "bookingReviewDescription": "Carrier reputation, trip detail, and pricing review live here before payment.",
   "bookingReviewTitle": "Booking review",
   "cancelLabel": "إلغاء",
@@ -39,11 +83,19 @@
   "carrierProfileTitle": "Carrier profile",
   "carrierPublicProfileDescription": "Public carrier reputation and trust cues live here.",
   "carrierPublicProfileTitle": "Carrier {carrierId}",
-  "@carrierPublicProfileTitle": {"placeholders": {"carrierId": {}}},
+  "@carrierPublicProfileTitle": {
+    "placeholders": {
+      "carrierId": {}
+    }
+  },
   "confirmLabel": "تأكيد",
   "documentViewerDescription": "Private document viewing belongs in one secure shared route.",
   "documentViewerTitle": "Document {documentId}",
-  "@documentViewerTitle": {"placeholders": {"documentId": {}}},
+  "@documentViewerTitle": {
+    "placeholders": {
+      "documentId": {}
+    }
+  },
   "editCarrierProfileDescription": "Carrier profile editing lives here.",
   "editCarrierProfileTitle": "Edit carrier profile",
   "editShipperProfileDescription": "Shipper profile editing lives here.",
@@ -51,11 +103,24 @@
   "errorTitle": "حدثت مشكلة",
   "generatedDocumentViewerDescription": "Generated invoice and receipt access stays deep-linkable above the shell.",
   "generatedDocumentViewerTitle": "Generated document {documentId}",
-  "@generatedDocumentViewerTitle": {"placeholders": {"documentId": {}}},
+  "@generatedDocumentViewerTitle": {
+    "placeholders": {
+      "documentId": {}
+    }
+  },
   "forbiddenMessage": "هذا القسم غير متاح لهذا الحساب.",
   "forbiddenTitle": "الوصول مقيّد",
   "forbiddenAdminStepUpMessage": "أعد تسجيل التحقق حديثا قبل فتح هذا القسم الإداري الحساس.",
   "languageSelectionDescription": "Arabic, French, and English selection belongs here.",
+  "languageSelectionCurrentMessage": "اللغة الحالية: {languageCode}",
+  "@languageSelectionCurrentMessage": {
+    "placeholders": {
+      "languageCode": {}
+    }
+  },
+  "languageOptionArabic": "العربية",
+  "languageOptionEnglish": "الإنجليزية",
+  "languageOptionFrench": "الفرنسية",
   "languageSelectionTitle": "Language selection",
   "loadingMessage": "يقوم FleetFill بتحضير مساحة العمل الخاصة بك.",
   "loadingTitle": "جار التحميل",
@@ -74,7 +139,11 @@
   "noExactResultsTitle": "لم يتم العثور على مسار مطابق",
   "notificationDetailDescription": "Notification details stay deep-linkable without becoming a tab.",
   "notificationDetailTitle": "Notification {notificationId}",
-  "@notificationDetailTitle": {"placeholders": {"notificationId": {}}},
+  "@notificationDetailTitle": {
+    "placeholders": {
+      "notificationId": {}
+    }
+  },
   "notificationsCenterDescription": "Shared notification history opens above the role shells.",
   "notificationsCenterTitle": "Notifications",
   "notificationsPermissionDescription": "Explain why tracking and booking updates matter before opening system settings.",
@@ -84,24 +153,48 @@
   "offlineMessage": "أنت غير متصل حاليا. بعض الإجراءات غير متاحة مؤقتا.",
   "oneOffTripDetailDescription": "One-off trip detail routes stay deep-linkable above the shell.",
   "oneOffTripDetailTitle": "One-off trip {tripId}",
-  "@oneOffTripDetailTitle": {"placeholders": {"tripId": {}}},
+  "@oneOffTripDetailTitle": {
+    "placeholders": {
+      "tripId": {}
+    }
+  },
   "paymentFlowDescription": "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
   "paymentFlowTitle": "Payment flow",
   "payoutAccountsDescription": "Carrier payout accounts stay grouped under the profile branch.",
   "payoutAccountsTitle": "Payout accounts",
   "phoneCompletionDescription": "Operational actions stay gated until a phone number is present.",
+  "phoneCompletionSaveAction": "حفظ رقم الهاتف",
+  "phoneCompletionSavedMessage": "تم حفظ رقم الهاتف.",
   "phoneCompletionTitle": "Phone completion",
   "profileSetupDescription": "Role-aware shipper/carrier profile completion stays in one guided flow.",
+  "profileCarrierVerificationHint": "يبقى إعداد الناقل خفيفا الآن، وستستكمل تفاصيل التحقق في المرحلة التالية.",
+  "profileCompanyNameLabel": "اسم الشركة",
+  "profileFullNameLabel": "الاسم الكامل",
+  "profilePhoneLabel": "رقم الهاتف",
+  "profileSetupSaveAction": "حفظ الملف الشخصي",
+  "profileSetupSavedMessage": "تم حفظ بيانات الملف الشخصي.",
   "profileSetupTitle": "Profile setup",
   "proofViewerDescription": "Private proof viewing belongs in one secure shared route.",
   "proofViewerTitle": "Proof {proofId}",
-  "@proofViewerTitle": {"placeholders": {"proofId": {}}},
+  "@proofViewerTitle": {
+    "placeholders": {
+      "proofId": {}
+    }
+  },
   "retryLabel": "إعادة المحاولة",
   "roleSelectionDescription": "One account selects one role before operational access begins.",
+  "roleSelectionCarrierDescription": "انشر الرحلات، وأدر الحجوزات، وتابع التحقق.",
+  "roleSelectionCarrierTitle": "المتابعة كناقل",
+  "roleSelectionShipperDescription": "أنشئ الشحنات، وقارن الرحلات المطابقة، وتابع التسليم.",
+  "roleSelectionShipperTitle": "المتابعة كمرسل",
   "roleSelectionTitle": "Role selection",
   "routeDetailDescription": "Shared route detail presentation sits above the role shells.",
   "routeDetailTitle": "Route {routeId}",
-  "@routeDetailTitle": {"placeholders": {"routeId": {}}},
+  "@routeDetailTitle": {
+    "placeholders": {
+      "routeId": {}
+    }
+  },
   "routeErrorMessage": "FleetFill could not open this route.",
   "searchTripsDescription": "The search form and exact-route results stay on one page with inline states.",
   "searchTripsNavLabel": "Search",
@@ -118,7 +211,11 @@
   "sampleTotalAmount": "DZD 13,700",
   "shipmentDetailDescription": "Shipment summary, items, and linked booking summary live here.",
   "shipmentDetailTitle": "Shipment {shipmentId}",
-  "@shipmentDetailTitle": {"placeholders": {"shipmentId": {}}},
+  "@shipmentDetailTitle": {
+    "placeholders": {
+      "shipmentId": {}
+    }
+  },
   "shipperHomeDescription": "Active bookings, recent notifications, quick actions, and support shortcut live here.",
   "shipperHomeNavLabel": "Home",
   "shipperHomeTitle": "Shipper home",
@@ -135,7 +232,11 @@
   "suspendedTitle": "الحساب موقوف",
   "trackingDetailDescription": "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
   "trackingDetailTitle": "Tracking {bookingId}",
-  "@trackingDetailTitle": {"placeholders": {"bookingId": {}}},
+  "@trackingDetailTitle": {
+    "placeholders": {
+      "bookingId": {}
+    }
+  },
   "updateRequiredDescription": "Minimum supported version gating lives here.",
   "updateRequiredTitle": "Update required",
   "userDetailDescription": "Shipper and carrier specifics remain section-based inside one user detail view.",

@@ -1,6 +1,7 @@
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/core/config/app_bootstrap.dart';
 import 'package:fleetfill/core/errors/app_error.dart';
+import 'package:fleetfill/core/localization/localization.dart';
 import 'package:fleetfill/core/permissions/permissions.dart';
 import 'package:fleetfill/core/routing/app_route_guards.dart';
 import 'package:fleetfill/core/routing/app_routes.dart';
@@ -30,20 +31,36 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final carrierNavigatorKey = ref.watch(carrierShellNavigatorKeyProvider);
   final adminNavigatorKey = ref.watch(adminShellNavigatorKeyProvider);
   final bootstrapState = ref.watch(appBootstrapControllerProvider);
+  ref.watch(authSessionControllerProvider);
 
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: AppRoutePath.splash,
     redirect: (context, state) {
       final resolvedBootstrap = bootstrapState.asData?.value;
+      final resolvedAuth = ref
+          .read(authSessionControllerProvider)
+          .asData
+          ?.value;
       if (resolvedBootstrap == null) {
         return state.matchedLocation == AppRoutePath.splash
             ? null
             : AppRoutePath.splash;
       }
 
-      final decision = ref.read(routeGuardDecisionProvider(state.matchedLocation));
-      final redirectLocation = AppRouteGuards.redirectLocation(decision);
+      if (resolvedAuth == null) {
+        return state.matchedLocation == AppRoutePath.splash
+            ? null
+            : AppRoutePath.splash;
+      }
+
+      final decision = ref.read(
+        routeGuardDecisionProvider(state.matchedLocation),
+      );
+      final redirectLocation = AppRouteGuards.redirectLocation(
+        decision,
+        auth: resolvedAuth,
+      );
       if (redirectLocation == null ||
           redirectLocation == state.matchedLocation) {
         return null;
@@ -58,6 +75,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     errorBuilder: (context, state) {
       final bootstrap = bootstrapState.asData?.value;
+      final authSnapshot = ref
+          .watch(authSessionControllerProvider)
+          .asData
+          ?.value;
       final decision = bootstrap == null
           ? const RouteGuardDecision.none()
           : ref.read(routeGuardDecisionProvider(state.matchedLocation));
@@ -67,13 +88,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return const AppSuspendedAccountState();
         }
 
+        if (decision.reason == 'admin_step_up_required') {
+          return AppForbiddenState(
+            message: S.of(context).forbiddenAdminStepUpMessage,
+          );
+        }
+
         return const AppForbiddenState();
+      }
+
+      if (decision.target == AppRedirectTarget.sessionExpired ||
+          authSnapshot?.isSessionExpired == true) {
+        return const SignInScreen();
       }
 
       return AppErrorState(
         error: AppError(
           code: 'route_error',
-          message: state.error?.toString() ?? 'Unknown route error',
+          message: S.of(context).routeErrorMessage,
+          technicalDetails: state.error?.toString(),
         ),
       );
     },

@@ -20,12 +20,18 @@ class ShipperShellScreen extends StatelessWidget {
       ),
       body: navigationShell,
       destinations: [
-        AppShellDestination(icon: Icons.home_outlined, label: s.shipperHomeNavLabel),
+        AppShellDestination(
+          icon: Icons.home_outlined,
+          label: s.shipperHomeNavLabel,
+        ),
         AppShellDestination(
           icon: Icons.inventory_2_outlined,
           label: s.myShipmentsNavLabel,
         ),
-        AppShellDestination(icon: Icons.search_rounded, label: s.searchTripsNavLabel),
+        AppShellDestination(
+          icon: Icons.search_rounded,
+          label: s.searchTripsNavLabel,
+        ),
         AppShellDestination(
           icon: Icons.person_outline_rounded,
           label: s.shipperProfileNavLabel,

@@ -20,8 +20,14 @@ class CarrierShellScreen extends StatelessWidget {
       ),
       body: navigationShell,
       destinations: [
-        AppShellDestination(icon: Icons.home_outlined, label: s.carrierHomeNavLabel),
-        AppShellDestination(icon: Icons.alt_route_rounded, label: s.myRoutesNavLabel),
+        AppShellDestination(
+          icon: Icons.home_outlined,
+          label: s.carrierHomeNavLabel,
+        ),
+        AppShellDestination(
+          icon: Icons.alt_route_rounded,
+          label: s.myRoutesNavLabel,
+        ),
         AppShellDestination(
           icon: Icons.local_shipping_outlined,
           label: s.carrierBookingsNavLabel,

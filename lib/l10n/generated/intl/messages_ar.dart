@@ -28,17 +28,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m3(documentId) => "Generated document ${documentId}";
 
-  static String m4(notificationId) => "Notification ${notificationId}";
+  static String m4(languageCode) => "اللغة الحالية: ${languageCode}";
 
-  static String m5(tripId) => "One-off trip ${tripId}";
+  static String m5(notificationId) => "Notification ${notificationId}";
 
-  static String m6(proofId) => "Proof ${proofId}";
+  static String m6(tripId) => "One-off trip ${tripId}";
 
-  static String m7(routeId) => "Route ${routeId}";
+  static String m7(proofId) => "Proof ${proofId}";
 
-  static String m8(shipmentId) => "Shipment ${shipmentId}";
+  static String m8(routeId) => "Route ${routeId}";
 
-  static String m9(bookingId) => "Tracking ${bookingId}";
+  static String m9(shipmentId) => "Shipment ${shipmentId}";
+
+  static String m10(bookingId) => "Tracking ${bookingId}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -73,11 +75,92 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminUsersNavLabel": MessageLookupByLibrary.simpleMessage("Users"),
     "adminUsersTitle": MessageLookupByLibrary.simpleMessage("Users"),
     "appTitle": MessageLookupByLibrary.simpleMessage("FleetFill"),
+    "authAccountCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم إنشاء الحساب. تابع عبر تسجيل الدخول.",
+    ),
+    "authAuthenticationRequiredMessage": MessageLookupByLibrary.simpleMessage(
+      "سجّل الدخول لمتابعة هذا الإجراء.",
+    ),
+    "authConfirmPasswordHint": MessageLookupByLibrary.simpleMessage(
+      "أعد إدخال كلمة المرور",
+    ),
+    "authConfirmPasswordLabel": MessageLookupByLibrary.simpleMessage(
+      "تأكيد كلمة المرور",
+    ),
+    "authContinueWithLabel": MessageLookupByLibrary.simpleMessage(
+      "أو المتابعة عبر",
+    ),
+    "authCreateAccountAction": MessageLookupByLibrary.simpleMessage(
+      "إنشاء حساب",
+    ),
+    "authCreateAccountCta": MessageLookupByLibrary.simpleMessage(
+      "إنشاء حساب جديد",
+    ),
+    "authCreatePasswordHint": MessageLookupByLibrary.simpleMessage(
+      "أنشئ كلمة مرور قوية",
+    ),
+    "authEmailHint": MessageLookupByLibrary.simpleMessage("you@example.com"),
+    "authEmailLabel": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
+    "authEmailNotConfirmedMessage": MessageLookupByLibrary.simpleMessage(
+      "أكد بريدك الإلكتروني قبل تسجيل الدخول.",
+    ),
+    "authForgotPasswordCta": MessageLookupByLibrary.simpleMessage(
+      "هل نسيت كلمة المرور؟",
+    ),
     "authForgotPasswordDescription": MessageLookupByLibrary.simpleMessage(
       "Password reset request handling belongs in the auth shell.",
     ),
     "authForgotPasswordTitle": MessageLookupByLibrary.simpleMessage(
       "Forgot password",
+    ),
+    "authGenericErrorMessage": MessageLookupByLibrary.simpleMessage(
+      "تعذر على FleetFill إكمال طلب التحقق هذا.",
+    ),
+    "authGoogleAction": MessageLookupByLibrary.simpleMessage(
+      "المتابعة عبر Google",
+    ),
+    "authGoogleStartedMessage": MessageLookupByLibrary.simpleMessage(
+      "بدأ تسجيل الدخول عبر Google. عد إلى هنا بعد الموافقة.",
+    ),
+    "authHaveAccountCta": MessageLookupByLibrary.simpleMessage(
+      "لديك حساب بالفعل؟ سجّل الدخول",
+    ),
+    "authInvalidCredentialsMessage": MessageLookupByLibrary.simpleMessage(
+      "تحقق من البريد الإلكتروني وكلمة المرور ثم أعد المحاولة.",
+    ),
+    "authInvalidEmailMessage": MessageLookupByLibrary.simpleMessage(
+      "أدخل بريدا إلكترونيا صالحا.",
+    ),
+    "authKeepSignedInLabel": MessageLookupByLibrary.simpleMessage(
+      "إبقائي مسجّل الدخول",
+    ),
+    "authNetworkErrorMessage": MessageLookupByLibrary.simpleMessage(
+      "تم اكتشاف مشكلة في الشبكة. أعد المحاولة بعد قليل.",
+    ),
+    "authNewPasswordLabel": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور الجديدة",
+    ),
+    "authPasswordHint": MessageLookupByLibrary.simpleMessage(
+      "أدخل كلمة المرور",
+    ),
+    "authPasswordLabel": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
+    "authPasswordMinLengthMessage": MessageLookupByLibrary.simpleMessage(
+      "استخدم 8 أحرف على الأقل.",
+    ),
+    "authPasswordMismatchMessage": MessageLookupByLibrary.simpleMessage(
+      "كلمتا المرور غير متطابقتين.",
+    ),
+    "authPasswordResetInfoMessage": MessageLookupByLibrary.simpleMessage(
+      "سيرسل FleetFill رابط إعادة التعيين إلى البريد الإلكتروني المسجل.",
+    ),
+    "authPasswordUpdatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تحديث كلمة المرور.",
+    ),
+    "authRequiredFieldMessage": MessageLookupByLibrary.simpleMessage(
+      "هذا الحقل مطلوب.",
+    ),
+    "authResetEmailSentMessage": MessageLookupByLibrary.simpleMessage(
+      "تم إرسال تعليمات إعادة تعيين كلمة المرور.",
     ),
     "authResetPasswordDescription": MessageLookupByLibrary.simpleMessage(
       "Password reset confirmation lives here.",
@@ -85,14 +168,42 @@ class MessageLookup extends MessageLookupByLibrary {
     "authResetPasswordTitle": MessageLookupByLibrary.simpleMessage(
       "Reset password",
     ),
+    "authResetPasswordUnavailableMessage": MessageLookupByLibrary.simpleMessage(
+      "افتح هذه الشاشة من رابط استعادة كلمة المرور لتعيين كلمة مرور جديدة.",
+    ),
+    "authSendResetAction": MessageLookupByLibrary.simpleMessage(
+      "إرسال رابط إعادة التعيين",
+    ),
+    "authSessionExpiredAction": MessageLookupByLibrary.simpleMessage(
+      "تسجيل الدخول مرة أخرى",
+    ),
+    "authSessionExpiredMessage": MessageLookupByLibrary.simpleMessage(
+      "انتهت الجلسة. سجّل الدخول مرة أخرى للمتابعة بأمان.",
+    ),
+    "authSessionExpiredTitle": MessageLookupByLibrary.simpleMessage(
+      "انتهت الجلسة",
+    ),
+    "authSignInAction": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "authSignInDescription": MessageLookupByLibrary.simpleMessage(
       "Email/password and Google sign-in entry points live here.",
+    ),
+    "authSignInSuccess": MessageLookupByLibrary.simpleMessage(
+      "تم تسجيل الدخول بنجاح.",
     ),
     "authSignInTitle": MessageLookupByLibrary.simpleMessage("Sign in"),
     "authSignUpDescription": MessageLookupByLibrary.simpleMessage(
       "Lean account creation stays inside one auth shell.",
     ),
     "authSignUpTitle": MessageLookupByLibrary.simpleMessage("Create account"),
+    "authUpdatePasswordAction": MessageLookupByLibrary.simpleMessage(
+      "تحديث كلمة المرور",
+    ),
+    "authUserAlreadyRegisteredMessage": MessageLookupByLibrary.simpleMessage(
+      "يوجد حساب بالفعل لهذا البريد الإلكتروني.",
+    ),
+    "authVerificationEmailSentMessage": MessageLookupByLibrary.simpleMessage(
+      "تحقق من بريدك الإلكتروني لتأكيد الحساب قبل تسجيل الدخول.",
+    ),
     "bookingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shared booking detail routes sit above role shells.",
     ),
@@ -156,6 +267,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Generated invoice and receipt access stays deep-linkable above the shell.",
     ),
     "generatedDocumentViewerTitle": m3,
+    "languageOptionArabic": MessageLookupByLibrary.simpleMessage("العربية"),
+    "languageOptionEnglish": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
+    "languageOptionFrench": MessageLookupByLibrary.simpleMessage("الفرنسية"),
+    "languageSelectionCurrentMessage": m4,
     "languageSelectionDescription": MessageLookupByLibrary.simpleMessage(
       "Arabic, French, and English selection belongs here.",
     ),
@@ -202,7 +317,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Notification details stay deep-linkable without becoming a tab.",
     ),
-    "notificationDetailTitle": m4,
+    "notificationDetailTitle": m5,
     "notificationsCenterDescription": MessageLookupByLibrary.simpleMessage(
       "Shared notification history opens above the role shells.",
     ),
@@ -221,7 +336,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
       "One-off trip detail routes stay deep-linkable above the shell.",
     ),
-    "oneOffTripDetailTitle": m5,
+    "oneOffTripDetailTitle": m6,
     "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
       "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
     ),
@@ -235,20 +350,54 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneCompletionDescription": MessageLookupByLibrary.simpleMessage(
       "Operational actions stay gated until a phone number is present.",
     ),
+    "phoneCompletionSaveAction": MessageLookupByLibrary.simpleMessage(
+      "حفظ رقم الهاتف",
+    ),
+    "phoneCompletionSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم حفظ رقم الهاتف.",
+    ),
     "phoneCompletionTitle": MessageLookupByLibrary.simpleMessage(
       "Phone completion",
     ),
+    "profileCarrierVerificationHint": MessageLookupByLibrary.simpleMessage(
+      "يبقى إعداد الناقل خفيفا الآن، وستستكمل تفاصيل التحقق في المرحلة التالية.",
+    ),
+    "profileCompanyNameLabel": MessageLookupByLibrary.simpleMessage(
+      "اسم الشركة",
+    ),
+    "profileFullNameLabel": MessageLookupByLibrary.simpleMessage(
+      "الاسم الكامل",
+    ),
+    "profilePhoneLabel": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
     "profileSetupDescription": MessageLookupByLibrary.simpleMessage(
       "Role-aware shipper/carrier profile completion stays in one guided flow.",
+    ),
+    "profileSetupSaveAction": MessageLookupByLibrary.simpleMessage(
+      "حفظ الملف الشخصي",
+    ),
+    "profileSetupSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم حفظ بيانات الملف الشخصي.",
     ),
     "profileSetupTitle": MessageLookupByLibrary.simpleMessage("Profile setup"),
     "proofViewerDescription": MessageLookupByLibrary.simpleMessage(
       "Private proof viewing belongs in one secure shared route.",
     ),
-    "proofViewerTitle": m6,
+    "proofViewerTitle": m7,
     "retryLabel": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
+    "roleSelectionCarrierDescription": MessageLookupByLibrary.simpleMessage(
+      "انشر الرحلات، وأدر الحجوزات، وتابع التحقق.",
+    ),
+    "roleSelectionCarrierTitle": MessageLookupByLibrary.simpleMessage(
+      "المتابعة كناقل",
+    ),
     "roleSelectionDescription": MessageLookupByLibrary.simpleMessage(
       "One account selects one role before operational access begins.",
+    ),
+    "roleSelectionShipperDescription": MessageLookupByLibrary.simpleMessage(
+      "أنشئ الشحنات، وقارن الرحلات المطابقة، وتابع التسليم.",
+    ),
+    "roleSelectionShipperTitle": MessageLookupByLibrary.simpleMessage(
+      "المتابعة كمرسل",
     ),
     "roleSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Role selection",
@@ -256,7 +405,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shared route detail presentation sits above the role shells.",
     ),
-    "routeDetailTitle": m7,
+    "routeDetailTitle": m8,
     "routeErrorMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill could not open this route.",
     ),
@@ -290,7 +439,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shipment summary, items, and linked booking summary live here.",
     ),
-    "shipmentDetailTitle": m8,
+    "shipmentDetailTitle": m9,
     "shipperHomeDescription": MessageLookupByLibrary.simpleMessage(
       "Active bookings, recent notifications, quick actions, and support shortcut live here.",
     ),
@@ -322,7 +471,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
-    "trackingDetailTitle": m9,
+    "trackingDetailTitle": m10,
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
       "Minimum supported version gating lives here.",
     ),

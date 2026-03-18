@@ -39,6 +39,7 @@ class PreparedAppDependencies {
     required this.initialLocale,
     required this.logger,
     required this.crashReporter,
+    required this.supabaseInitialized,
   });
 
   final SharedPreferences sharedPreferences;
@@ -48,6 +49,7 @@ class PreparedAppDependencies {
   final Locale? initialLocale;
   final AppLogger logger;
   final CrashReporter crashReporter;
+  final bool supabaseInitialized;
 }
 
 Future<PreparedAppDependencies> prepareAppDependencies() async {
@@ -58,6 +60,7 @@ Future<PreparedAppDependencies> prepareAppDependencies() async {
   final crashReporter = environmentConfig.crashReportingEnabled
       ? const DeferredCrashReporter()
       : const NoopCrashReporter();
+  final supabaseInitialized = await _initializeSupabase(environmentConfig);
 
   return PreparedAppDependencies(
     sharedPreferences: sharedPreferences,
@@ -71,7 +74,22 @@ Future<PreparedAppDependencies> prepareAppDependencies() async {
     ),
     logger: logger,
     crashReporter: crashReporter,
+    supabaseInitialized: supabaseInitialized,
   );
+}
+
+Future<bool> _initializeSupabase(AppEnvironmentConfig environment) async {
+  if (!environment.hasSupabaseConfig ||
+      AppBootstrapController.supabaseInitialized) {
+    return false;
+  }
+
+  await Supabase.initialize(
+    url: environment.supabaseUrl,
+    anonKey: environment.supabaseAnonKey,
+  );
+  AppBootstrapController.supabaseInitialized = true;
+  return true;
 }
 
 enum BootstrapStateStatus {
@@ -97,7 +115,7 @@ class AppBootstrapState {
 
 @riverpod
 class AppBootstrapController extends _$AppBootstrapController {
-  static bool _supabaseInitialized = false;
+  static bool supabaseInitialized = false;
 
   @override
   Future<AppBootstrapState> build() async {
@@ -105,7 +123,16 @@ class AppBootstrapController extends _$AppBootstrapController {
     final logger = ref.watch(appLoggerProvider);
 
     try {
-      final auth = await _restoreAuthSnapshot(environment, logger);
+      final auth = await ref
+          .read(authRepositoryProvider)
+          .buildSnapshot(
+            isPasswordRecovery: false,
+            isSessionExpired: false,
+          );
+
+      if (supabaseInitialized) {
+        logger.info('Supabase initialized for ${environment.environment.name}');
+      }
 
       return AppBootstrapState(
         status: BootstrapStateStatus.ready,
@@ -132,38 +159,5 @@ class AppBootstrapController extends _$AppBootstrapController {
   Future<void> retry() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(build);
-  }
-
-  Future<AuthSnapshot> _restoreAuthSnapshot(
-    AppEnvironmentConfig environment,
-    AppLogger logger,
-  ) async {
-    if (!environment.hasSupabaseConfig) {
-      logger.info(
-        'Supabase configuration not provided; skipping initialization',
-      );
-
-      return const AuthSnapshot(status: AuthStatus.unconfigured);
-    }
-
-    if (!_supabaseInitialized) {
-      await Supabase.initialize(
-        url: environment.supabaseUrl,
-        anonKey: environment.supabaseAnonKey,
-      );
-      _supabaseInitialized = true;
-      logger.info('Supabase initialized for ${environment.environment.name}');
-    }
-
-    final session = Supabase.instance.client.auth.currentSession;
-
-    if (session == null) {
-      return const AuthSnapshot(status: AuthStatus.unauthenticated);
-    }
-
-    return AuthSnapshot(
-      status: AuthStatus.authenticated,
-      userId: session.user.id,
-    );
   }
 }
