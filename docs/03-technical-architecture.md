@@ -15,7 +15,7 @@ Primary stack:
 - Supabase Auth for identity
 - Postgres for data and policies
 - Supabase Storage for private files
-- Brevo transactional email API for operational email delivery
+- transactional email provider API for operational email delivery
 - FCM plus in-app notifications for delivery
 
 ## 2. Client Architecture
@@ -86,7 +86,7 @@ Provider lifecycle rules:
 ### 2.3 Repository, Service, And Use-Case Boundaries
 
 - repositories expose domain-facing methods and coordinate remote/local data sources
-- services and data sources are stateless wrappers around Supabase, storage, PDF generation, Brevo, or local persistence APIs
+- services and data sources are stateless wrappers around Supabase, storage, PDF generation, email-provider, or local persistence APIs
 - use cases are added only where orchestration or policy becomes too complex for a repository method alone
 - controllers do not call Supabase or storage APIs directly; they talk to repositories or use cases
 
@@ -210,12 +210,12 @@ Recommended guard families:
 
 ### 3.5 Email Ownership Rules
 
-- Brevo is used for FleetFill transactional emails
-- email sending is server-controlled only; the client never talks to Brevo directly
+- FleetFill uses a server-controlled transactional email provider for outbound email
+- email sending is server-controlled only; the client never talks to the provider directly
 - template selection must be event-driven and locale-aware
 - email content must be generated from canonical booking, profile, payout, and support data rather than ad hoc client payloads
 - authentication emails that belong to Supabase Auth may remain on Supabase-managed auth flows unless intentionally replaced later
-- sender identities and final Brevo template IDs can remain placeholder configuration until business email domains are finalized
+- sender identities and final provider template IDs can remain placeholder configuration until business email domains are finalized
 
 ## 4. Server Control Strategy
 
@@ -403,7 +403,7 @@ Current channels:
 
 - push notifications
 - in-app notifications
-- email via Brevo
+- email via transactional provider
 
 Future channels can be added later without replacing the event model.
 
@@ -434,7 +434,7 @@ Recommended email events:
 
 ### 10.3 Email Delivery And Events
 
-- Brevo API calls should happen from secure server-controlled code
+- provider API calls should happen from secure server-controlled code
 - delivery failures, bounces, and suppression signals should be capturable for later operational handling
 - retries should be controlled and idempotent for critical events
 
@@ -443,7 +443,7 @@ Recommended send flow:
 1. canonical business event occurs
 2. server builds a normalized email job payload
 3. server chooses locale, template key, and recipient
-4. server calls Brevo
+4. server calls the configured transactional email provider
 5. server stores delivery log state
 6. retry worker or scheduled job re-attempts eligible transient failures
 
@@ -463,7 +463,7 @@ Recommended pattern:
 1. business transaction commits
 2. transactional email job is written to an outbox table
 3. background worker claims queued jobs in small batches
-4. worker sends through Brevo with rate-aware throttling
+4. worker sends through the configured provider with rate-aware throttling
 5. worker updates delivery log and queue state
 6. webhook events update final delivery outcomes asynchronously
 
@@ -491,7 +491,7 @@ Worker rules:
 
 Webhook rules:
 
-- verify Brevo webhook authenticity before ingesting status updates
+- verify provider webhook authenticity before ingesting status updates where applicable
 - treat webhook events as idempotent and possibly out of order
 - keep provider event references so duplicate deliveries do not corrupt final state
 
@@ -500,7 +500,7 @@ Supabase-compatible implementation path:
 - transactional write inserts business state and outbox row in the same database transaction
 - scheduled Edge Function or secure worker polls `email_outbox_jobs`
 - worker updates `email_delivery_logs` and queue state after each attempt
-- Brevo webhooks update final states like delivered, bounced, or suppressed
+- provider webhooks update final states like delivered, bounced, or suppressed when available
 - if load outgrows scheduled functions, move the worker loop to a dedicated background service without changing the outbox contract
 
 Initial production deployment for current budget constraints:
