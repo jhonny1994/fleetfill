@@ -11,7 +11,7 @@ Rules:
 
 ## Phase 0 - Delivery Setup And Working Agreement
 
-- [x] Confirm Flutter, Dart, Android, Supabase, and Brevo accounts/environments are accessible
+- [x] Confirm Flutter, Dart, Android, Supabase, and transactional email provider accounts/environments are accessible
 - [x] Confirm package strategy for Flutter app, admin surface, and shared code boundaries
 - [x] Confirm repository structure, branch strategy, and environment naming (`local`, `staging`, `production`)
 - [x] Create ADRs for the most irreversible decisions already captured in the docs
@@ -58,41 +58,41 @@ Rules:
 
 ### Database And Storage Foundation
 
-- [ ] Create Postgres enums and base tables from `docs/04-data-and-security-model.md` and `docs/09-supabase-implementation-notes.md`
-- [ ] Create `profiles`, `vehicles`, `payout_accounts`, `platform_payment_accounts`, `verification_documents`, `routes`, `route_revisions`, `oneoff_trips`, `shipments`, `shipment_items`, `bookings`, `payment_proofs`, `tracking_events`, `carrier_reviews`, `financial_ledger_entries`, `disputes`, `refunds`, `payouts`, `generated_documents`, `email_delivery_logs`, `email_outbox_jobs`, `notifications`, `user_devices`, `platform_settings`, and `admin_audit_logs`
-- [ ] Seed wilayas and communes from `docs/wilayas-with-municipalities.json`
-- [ ] Create indexes for search, booking, payment, document review, ledger, and email queue performance
-- [ ] Create private storage buckets for payment proofs, verification documents, and generated documents
-- [ ] Define canonical storage path patterns for each private file type
-- [ ] Implement DB constraints for one-of route vs one-off trip booking links and one-active-payout-account-per-carrier
+- [x] Create Postgres enums and base tables from `docs/04-data-and-security-model.md` and `docs/09-supabase-implementation-notes.md`
+- [x] Create `profiles`, `vehicles`, `payout_accounts`, `platform_payment_accounts`, `verification_documents`, `routes`, `route_revisions`, `oneoff_trips`, `shipments`, `shipment_items`, `bookings`, `payment_proofs`, `tracking_events`, `carrier_reviews`, `financial_ledger_entries`, `disputes`, `refunds`, `payouts`, `generated_documents`, `email_delivery_logs`, `email_outbox_jobs`, `notifications`, `user_devices`, `platform_settings`, and `admin_audit_logs`
+- [x] Seed wilayas and communes from `docs/wilayas-with-municipalities.json`
+- [x] Create indexes for search, booking, payment, document review, ledger, and email queue performance
+- [x] Create private storage buckets for payment proofs, verification documents, and generated documents
+- [x] Define canonical storage path patterns for each private file type
+- [x] Implement DB constraints for one-of route vs one-off trip booking links and one-active-payout-account-per-carrier
 
 ### Security And Access Control
 
-- [ ] Enable RLS on all public tables
-- [ ] Implement deny-by-default RLS policies per table for shipper, carrier, and admin access
-- [ ] Enforce server-only access for service-role credentials and critical privileged mutations
-- [ ] Implement signed URL issuance rules for private file viewing
-- [ ] Implement upload-session model with type validation, size validation, and storage-key hardening
-- [ ] Implement append-only protections for tracking events, ledger, audit logs, proofs, and verification history
-- [ ] Implement centralized input validation for all server-controlled mutations
-- [ ] Implement rate limiting and abuse controls for auth, booking, proof upload, dispute creation, and signed URL generation
-- [ ] Implement structured audit logging with actor, target, action, outcome, and reason fields
-- [ ] Protect admin-only and sensitive columns from client-side mutation, including role, activation, verification, and payout verification fields
-- [ ] Implement immutable/append-only enforcement for ledger, audit, tracking, proof, and verification history tables
+- [x] Enable RLS on all public tables
+- [x] Implement deny-by-default RLS policies per table for shipper, carrier, and admin access
+- [x] Enforce server-only access for service-role credentials and critical privileged mutations
+- [x] Implement signed URL issuance rules for private file viewing
+- [x] Implement upload-session model with type validation, size validation, and storage-key hardening
+- [x] Implement append-only protections for tracking events, ledger, audit logs, proofs, and verification history
+- [x] Implement centralized input validation for all server-controlled mutations
+- [x] Implement rate limiting and abuse controls for auth, booking, proof upload, dispute creation, and signed URL generation
+- [x] Implement structured audit logging with actor, target, action, outcome, and reason fields
+- [x] Protect admin-only and sensitive columns from client-side mutation, including role, activation, verification, and payout verification fields
+- [x] Implement immutable/append-only enforcement for ledger, audit, tracking, proof, and verification history tables
 
 ### Supabase Runtime And Automation Foundation
 
-- [ ] Confirm the actual Supabase scheduling mechanism, quotas, and reliability available on the target plan
-- [ ] Implement the chosen scheduled automation path from `docs/09-supabase-implementation-notes.md`
-- [ ] Define when FleetFill uses RPC, Edge Functions, triggers, `pg_cron`, `pg_net`, Vault, and Storage policies in concrete code structure
-- [ ] Validate secrets placement between Supabase project secrets and Vault
+- [x] Confirm the actual Supabase scheduling mechanism, quotas, and reliability available on the target plan
+- [x] Implement the chosen scheduled automation path from `docs/09-supabase-implementation-notes.md`
+- [x] Define when FleetFill uses RPC, Edge Functions, triggers, `pg_cron`, `pg_net`, Vault, and Storage policies in concrete code structure
+- [x] Validate secrets placement between Supabase project secrets and Vault
 
 ## Phase 3 - Auth, Account, And Profile Systems
 
 ### Authentication
 
-- [ ] Configure Supabase Auth for email/password login
-- [ ] Configure Google sign-in
+- [ ] Configure Supabase Auth for email/password login, including local CLI auth config and redirect URL setup
+- [ ] Configure Google sign-in, including local `[auth.external.google]` provider config and callback setup
 - [ ] Implement secure session storage and restoration
 - [ ] Implement role-aware auth bootstrap and route guards
 - [ ] Implement password reset and auth error handling UX
@@ -291,11 +291,11 @@ Rules:
 
 ### Email And Support
 
-- [ ] Integrate Brevo transactional email sending from secure server code
+- [ ] Integrate transactional email sending from secure server code with a provider-agnostic boundary
 - [ ] Build `email_outbox_jobs` processing worker
 - [ ] Build `email_delivery_logs` recording and update flow
 - [ ] Implement locale-aware template selection with English fallback
-- [ ] Build Brevo webhook/status handling for delivered, bounced, suppressed, and failed states
+- [ ] Build provider webhook/status handling for delivered, bounced, suppressed, and failed states where supported
 - [ ] Build support acknowledgement email flow
 - [ ] Expose support email entry points in app
 - [ ] Implement webhook authenticity verification, idempotency, and out-of-order event handling
@@ -360,7 +360,7 @@ Rules:
 
 ## Phase 15 - Staging Launch And Production Readiness
 
-- [ ] Set up staging Supabase project and Brevo staging/test configuration
+- [ ] Set up staging Supabase project and transactional email provider staging/test configuration
 - [ ] Seed staging reference data and platform settings
 - [ ] Run end-to-end staging rehearsals for shipper, carrier, and admin flows
 - [ ] Verify support email routing and operational playbooks

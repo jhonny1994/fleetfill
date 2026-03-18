@@ -96,8 +96,8 @@ These should be injected through environment-specific app config, not hardcoded 
 
 Use Supabase project secrets / Edge Function secrets for:
 
-- Brevo API key
-- Brevo webhook verification secret
+- transactional email provider API key
+- transactional email provider webhook verification secret where supported
 - any third-party integration secret used by Edge Functions
 
 ### 5.3 Database-Side Secrets

@@ -1,0 +1,55 @@
+project_id = "fleetfill"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[db.seed]
+enabled = false
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "10MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["fleetfill://auth-callback"]
+jwt_expiry = 3600
+
+[auth.external.google]
+enabled = false
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET)"
+skip_nonce_check = false
+
+[functions.scheduled-automation-tick]
+verify_jwt = true
+
+[functions.transactional-email-dispatch-worker]
+verify_jwt = true
+
+[functions.email-provider-webhook]
+verify_jwt = false
+
+[functions.signed-file-url]
+verify_jwt = true
+
+[functions.support-email-dispatch]
+verify_jwt = true

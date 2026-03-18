@@ -424,7 +424,7 @@ Recommended `document_type` values include:
 
 ### 2.15 `email_delivery_logs`
 
-Purpose: audit and operational visibility for Brevo transactional email delivery.
+Purpose: audit and operational visibility for transactional email delivery.
 
 Recommended fields:
 
@@ -435,9 +435,9 @@ Recommended fields:
 - `locale text`
 - `recipient_email text`
 - `subject_preview text null`
-- `brevo_message_id text null`
+- `provider_message_id text null`
 - `status text`
-- `provider text default 'brevo'`
+- `provider text`
 - `attempt_count integer default 0`
 - `last_attempt_at timestamptz null`
 - `next_retry_at timestamptz null`
@@ -672,7 +672,7 @@ Signed URL rules:
 
 ### 4.6 Email Security Rules
 
-- Brevo API keys must remain server-side only
+- transactional email provider API keys must remain server-side only
 - outbound email payloads must be built from validated server data
 - templates must avoid exposing internal-only identifiers or sensitive operational notes
 - delivery logs must not store secrets or signed URLs

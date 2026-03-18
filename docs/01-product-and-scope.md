@@ -227,7 +227,7 @@ There is no real-time in-app chat in the initial canonical product definition. S
 
 Transactional email is part of the platform communication model.
 
-FleetFill uses Brevo for outbound operational email such as:
+FleetFill uses a server-controlled transactional email provider for outbound operational email such as:
 
 - support acknowledgements
 - booking confirmation messages

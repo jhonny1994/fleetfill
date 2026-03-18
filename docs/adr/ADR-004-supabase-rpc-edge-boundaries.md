@@ -18,8 +18,8 @@ RPC owns:
 
 Edge Functions own:
 
-- Brevo dispatch
-- Brevo webhook handling
+- transactional email dispatch
+- email provider webhook handling
 - scheduled worker entrypoints
 - secure HTTP integration boundaries
 

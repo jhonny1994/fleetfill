@@ -34,7 +34,7 @@ On approval:
 - payment moves to `secured`
 - ledger entry is created
 - shipper and carrier notifications are created
-- payment confirmation email can be sent through Brevo when enabled
+- payment confirmation email can be sent through the configured transactional email provider when enabled
 
 On rejection:
 
@@ -44,7 +44,7 @@ On rejection:
 - if valid proof is re-submitted before the deadline, review may continue
 - if the deadline expires without valid proof, the booking is cancelled and capacity is released
 - rejection reason is stored and shown to the shipper
-- payment rejection email can be sent through Brevo when enabled
+- payment rejection email can be sent through the configured transactional email provider when enabled
 
 Amount mismatch policy:
 
@@ -217,7 +217,7 @@ Generated documents should be reproducible, retained when needed, and referenced
 
 ## 11. Transactional Email Operations
 
-FleetFill uses Brevo for outbound transactional email.
+FleetFill uses a server-controlled transactional email provider for outbound email.
 
 Operational rules:
 
@@ -279,7 +279,7 @@ Edge-case rules:
 
 - if a user changes email after an event is queued, sending should use the intended recipient captured for that event unless policy explicitly requires cancellation
 - if the same business event is emitted twice, deduplication must prevent duplicate mail unless a deliberate resend is requested
-- if Brevo is degraded, business state still completes and email retries continue asynchronously
+- if the chosen provider is degraded, business state still completes and email retries continue asynchronously
 - if an address bounces or is suppressed, automatic retries stop and support/admin visibility is required
 - if many bookings trigger emails at once, low-priority emails may be delayed rather than risking critical-email delivery health
 - webhook authenticity and idempotency checks are required before provider delivery events update internal state
@@ -313,7 +313,7 @@ Recommended retry policy:
 
 Recommended failure classification:
 
-- retryable: timeouts, temporary Brevo errors, transient network failures, short-lived rate limits
+- retryable: timeouts, temporary provider errors, transient network failures, short-lived rate limits
 - non-retryable: invalid address, bounced recipient, suppressed recipient, template misconfiguration requiring operator fix
 
 ## 14. Compliance And Legal Baseline

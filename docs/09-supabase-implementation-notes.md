@@ -31,7 +31,7 @@ The goal is to keep business correctness inside the database boundary wherever a
 | `Postgres tables` | bookings, shipments, routes, payouts, disputes, documents, notifications | authoritative business data | use constraints and indexes aggressively |
 | `RLS` | row isolation for shipper/carrier/admin access | defense in depth | deny by default |
 | `Database Functions / RPC` | atomic booking/payment/dispute/payout/settings workflows | strongest place for multi-write transactional logic | prefer for data-heavy critical flows |
-| `Edge Functions` | Brevo sending, webhook receivers, thin orchestration APIs, signed URL helpers | server-side TypeScript integration layer | keep them short-lived and idempotent |
+| `Edge Functions` | transactional email sending, provider webhooks, thin orchestration APIs, signed URL helpers | server-side TypeScript integration layer | keep them short-lived and idempotent |
 | `Storage` | payment proofs, verification documents, generated PDFs | secure file handling | private buckets only |
 | `Storage RLS` | upload/read restrictions on `storage.objects` | secure object access | bind by bucket, path, and actor |
 | `Signed URLs` | temporary proof/document/PDF viewing | avoids public files | short TTL only |
@@ -39,7 +39,7 @@ The goal is to keep business correctness inside the database boundary wherever a
 | `pg_cron` | periodic workers and timed automation ticks | native scheduling in Postgres | verify plan behavior in real project |
 | `pg_net` | scheduled HTTP calls and DB-triggered async networking | useful for cron-triggered Edge Function invocation | not a substitute for durable business state |
 | `Vault` | secrets for DB-side scheduled calls | encrypted secret storage usable from SQL | limit access carefully |
-| `Project secrets` | Edge Function secrets such as Brevo API key | standard server secret handling | never expose to client |
+| `Project secrets` | Edge Function secrets such as transactional email provider API keys | standard server secret handling | never expose to client |
 | `Logs / dashboard observability` | workflow debugging and ops visibility | baseline production support | complement with structured app logs |
 
 ## 3. When To Use SQL Functions vs Edge Functions
@@ -72,8 +72,8 @@ Use Edge Functions when the job crosses the database boundary or needs HTTP-faci
 
 Recommended FleetFill Edge Function candidates:
 
-- `brevo-dispatch-worker`
-- `brevo-webhook`
+- `transactional-email-dispatch-worker`
+- `email-provider-webhook`
 - `generate-signed-file-url`
 - `scheduled-automation-tick`
 - `support-email-dispatch`
@@ -387,8 +387,8 @@ Best rule:
 
 ### 12.2 Use Edge Function Project Secrets For
 
-- Brevo API keys
-- webhook verification secrets
+- transactional email provider API keys
+- webhook verification secrets where supported
 - any integration secrets consumed directly by Edge Functions
 
 ### 12.3 Secret Rule
@@ -397,17 +397,17 @@ Best rule:
 - never store secrets in app code
 - keep secret ownership explicit per runtime
 
-## 13. Brevo On Supabase
+## 13. Transactional Email On Supabase
 
 ### 13.1 Sending Strategy
 
 - outbox rows created in DB transaction
-- scheduled worker invokes Brevo from Edge Function
+- scheduled worker invokes the chosen transactional email provider from an Edge Function
 - Edge Function updates delivery records or calls RPC to do so
 
 ### 13.2 Webhook Strategy
 
-Brevo webhook handling should live in an Edge Function.
+Provider webhook handling should live in an Edge Function when the provider supports webhooks.
 
 Requirements:
 
@@ -434,8 +434,8 @@ Requirements:
 ### 14.2 Edge Functions
 
 - `scheduled-automation-tick`
-- `brevo-dispatch-worker`
-- `brevo-webhook`
+- `transactional-email-dispatch-worker`
+- `email-provider-webhook`
 - `signed-file-url`
 - `support-email-dispatch`
 
