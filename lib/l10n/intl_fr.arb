@@ -1,4 +1,5 @@
 {
+  "@@locale": "fr",
   "appTitle": "FleetFill",
   "adminAuditLogDescription": "Audit visibility for sensitive operations lives here.",
   "adminAuditLogTitle": "Admin audit log",
@@ -15,16 +16,59 @@
   "adminUsersNavLabel": "Users",
   "adminUsersTitle": "Users",
   "authForgotPasswordDescription": "Password reset request handling belongs in the auth shell.",
+  "authForgotPasswordCta": "Mot de passe oublie ?",
   "authForgotPasswordTitle": "Forgot password",
+  "authCreateAccountAction": "Creer un compte",
+  "authCreateAccountCta": "Creer un nouveau compte",
+  "authAuthenticationRequiredMessage": "Connectez-vous pour continuer cette action.",
+  "authEmailHint": "vous@exemple.com",
+  "authAccountCreatedMessage": "Votre compte a ete cree. Continuez en vous connectant.",
+  "authConfirmPasswordLabel": "Confirmer le mot de passe",
+  "authEmailLabel": "Adresse e-mail",
+  "authEmailNotConfirmedMessage": "Confirmez votre e-mail avant de vous connecter.",
+  "authGenericErrorMessage": "FleetFill n'a pas pu terminer cette action d'authentification.",
+  "authGoogleAction": "Continuer avec Google",
+  "authGoogleStartedMessage": "La connexion Google a commence. Revenez ici apres validation.",
+  "authKeepSignedInLabel": "Rester connecte",
+  "authHaveAccountCta": "Vous avez deja un compte ? Connectez-vous",
+  "authInvalidCredentialsMessage": "Verifiez votre e-mail et votre mot de passe, puis reessayez.",
+  "authInvalidEmailMessage": "Saisissez une adresse e-mail valide.",
+  "authNetworkErrorMessage": "Probleme reseau detecte. Reessayez dans un instant.",
+  "authNewPasswordLabel": "Nouveau mot de passe",
+  "authPasswordLabel": "Mot de passe",
+  "authPasswordHint": "Entrez votre mot de passe",
+  "authCreatePasswordHint": "Creez un mot de passe fort",
+  "authConfirmPasswordHint": "Repetez votre mot de passe",
+  "authPasswordMinLengthMessage": "Utilisez au moins 8 caracteres.",
+  "authPasswordMismatchMessage": "Les mots de passe ne correspondent pas.",
+  "authPasswordResetInfoMessage": "FleetFill enverra un lien de reinitialisation a l'adresse e-mail du compte.",
+  "authPasswordUpdatedMessage": "Votre mot de passe a ete mis a jour.",
+  "authRequiredFieldMessage": "Ce champ est obligatoire.",
   "authResetPasswordDescription": "Password reset confirmation lives here.",
+  "authResetPasswordUnavailableMessage": "Ouvrez cet ecran depuis le lien de recuperation pour definir un nouveau mot de passe.",
+  "authResetEmailSentMessage": "Les instructions de reinitialisation ont ete envoyees.",
   "authResetPasswordTitle": "Reset password",
+  "authSendResetAction": "Envoyer le lien de reinitialisation",
+  "authContinueWithLabel": "ou continuer avec",
+  "authSessionExpiredAction": "Se reconnecter",
+  "authSessionExpiredMessage": "Votre session a pris fin. Reconnectez-vous pour continuer en toute securite.",
+  "authSessionExpiredTitle": "Session expiree",
   "authSignInDescription": "Email/password and Google sign-in entry points live here.",
+  "authSignInAction": "Se connecter",
+  "authSignInSuccess": "Connexion reussie.",
   "authSignInTitle": "Sign in",
   "authSignUpDescription": "Lean account creation stays inside one auth shell.",
   "authSignUpTitle": "Create account",
+  "authUpdatePasswordAction": "Mettre a jour le mot de passe",
+  "authUserAlreadyRegisteredMessage": "Un compte existe deja pour cet e-mail.",
+  "authVerificationEmailSentMessage": "Verifiez votre e-mail pour confirmer le compte avant de vous connecter.",
   "bookingDetailDescription": "Shared booking detail routes sit above role shells.",
   "bookingDetailTitle": "Booking {bookingId}",
-  "@bookingDetailTitle": {"placeholders": {"bookingId": {}}},
+  "@bookingDetailTitle": {
+    "placeholders": {
+      "bookingId": {}
+    }
+  },
   "bookingReviewDescription": "Carrier reputation, trip detail, and pricing review live here before payment.",
   "bookingReviewTitle": "Booking review",
   "cancelLabel": "Annuler",
@@ -39,11 +83,19 @@
   "carrierProfileTitle": "Carrier profile",
   "carrierPublicProfileDescription": "Public carrier reputation and trust cues live here.",
   "carrierPublicProfileTitle": "Carrier {carrierId}",
-  "@carrierPublicProfileTitle": {"placeholders": {"carrierId": {}}},
+  "@carrierPublicProfileTitle": {
+    "placeholders": {
+      "carrierId": {}
+    }
+  },
   "confirmLabel": "Confirmer",
   "documentViewerDescription": "Private document viewing belongs in one secure shared route.",
   "documentViewerTitle": "Document {documentId}",
-  "@documentViewerTitle": {"placeholders": {"documentId": {}}},
+  "@documentViewerTitle": {
+    "placeholders": {
+      "documentId": {}
+    }
+  },
   "editCarrierProfileDescription": "Carrier profile editing lives here.",
   "editCarrierProfileTitle": "Edit carrier profile",
   "editShipperProfileDescription": "Shipper profile editing lives here.",
@@ -51,11 +103,24 @@
   "errorTitle": "Un probleme est survenu",
   "generatedDocumentViewerDescription": "Generated invoice and receipt access stays deep-linkable above the shell.",
   "generatedDocumentViewerTitle": "Generated document {documentId}",
-  "@generatedDocumentViewerTitle": {"placeholders": {"documentId": {}}},
+  "@generatedDocumentViewerTitle": {
+    "placeholders": {
+      "documentId": {}
+    }
+  },
   "forbiddenMessage": "This area is not available for your account.",
   "forbiddenTitle": "Access restricted",
   "forbiddenAdminStepUpMessage": "Re-authenticate recently before opening this sensitive admin surface.",
   "languageSelectionDescription": "Arabic, French, and English selection belongs here.",
+  "languageSelectionCurrentMessage": "Langue actuelle : {languageCode}",
+  "@languageSelectionCurrentMessage": {
+    "placeholders": {
+      "languageCode": {}
+    }
+  },
+  "languageOptionArabic": "Arabe",
+  "languageOptionEnglish": "Anglais",
+  "languageOptionFrench": "Francais",
   "languageSelectionTitle": "Language selection",
   "loadingMessage": "FleetFill is preparing your workspace.",
   "loadingTitle": "Loading",
@@ -74,7 +139,11 @@
   "noExactResultsTitle": "No exact route found",
   "notificationDetailDescription": "Notification details stay deep-linkable without becoming a tab.",
   "notificationDetailTitle": "Notification {notificationId}",
-  "@notificationDetailTitle": {"placeholders": {"notificationId": {}}},
+  "@notificationDetailTitle": {
+    "placeholders": {
+      "notificationId": {}
+    }
+  },
   "notificationsCenterDescription": "Shared notification history opens above the role shells.",
   "notificationsCenterTitle": "Notifications",
   "notificationsPermissionDescription": "Explain why tracking and booking updates matter before opening system settings.",
@@ -84,24 +153,48 @@
   "offlineMessage": "You are offline. Some actions are temporarily unavailable.",
   "oneOffTripDetailDescription": "One-off trip detail routes stay deep-linkable above the shell.",
   "oneOffTripDetailTitle": "One-off trip {tripId}",
-  "@oneOffTripDetailTitle": {"placeholders": {"tripId": {}}},
+  "@oneOffTripDetailTitle": {
+    "placeholders": {
+      "tripId": {}
+    }
+  },
   "paymentFlowDescription": "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
   "paymentFlowTitle": "Payment flow",
   "payoutAccountsDescription": "Carrier payout accounts stay grouped under the profile branch.",
   "payoutAccountsTitle": "Payout accounts",
   "phoneCompletionDescription": "Operational actions stay gated until a phone number is present.",
+  "phoneCompletionSaveAction": "Enregistrer le numero",
+  "phoneCompletionSavedMessage": "Numero de telephone enregistre.",
   "phoneCompletionTitle": "Phone completion",
   "profileSetupDescription": "Role-aware shipper/carrier profile completion stays in one guided flow.",
+  "profileCarrierVerificationHint": "La configuration transporteur reste legere pour l'instant. Les details de verification arrivent a la phase suivante.",
+  "profileCompanyNameLabel": "Nom de l'entreprise",
+  "profileFullNameLabel": "Nom complet",
+  "profilePhoneLabel": "Numero de telephone",
+  "profileSetupSaveAction": "Enregistrer le profil",
+  "profileSetupSavedMessage": "Les informations du profil ont ete enregistrees.",
   "profileSetupTitle": "Profile setup",
   "proofViewerDescription": "Private proof viewing belongs in one secure shared route.",
   "proofViewerTitle": "Proof {proofId}",
-  "@proofViewerTitle": {"placeholders": {"proofId": {}}},
+  "@proofViewerTitle": {
+    "placeholders": {
+      "proofId": {}
+    }
+  },
   "retryLabel": "Retry",
   "roleSelectionDescription": "One account selects one role before operational access begins.",
+  "roleSelectionCarrierDescription": "Publiez des trajets, gerez les reservations et suivez la verification.",
+  "roleSelectionCarrierTitle": "Continuer comme transporteur",
+  "roleSelectionShipperDescription": "Creez des expeditions, comparez les trajets exacts et suivez la livraison.",
+  "roleSelectionShipperTitle": "Continuer comme expediteur",
   "roleSelectionTitle": "Role selection",
   "routeDetailDescription": "Shared route detail presentation sits above the role shells.",
   "routeDetailTitle": "Route {routeId}",
-  "@routeDetailTitle": {"placeholders": {"routeId": {}}},
+  "@routeDetailTitle": {
+    "placeholders": {
+      "routeId": {}
+    }
+  },
   "routeErrorMessage": "FleetFill could not open this route.",
   "searchTripsDescription": "The search form and exact-route results stay on one page with inline states.",
   "searchTripsNavLabel": "Search",
@@ -118,7 +211,11 @@
   "sampleTotalAmount": "DZD 13,700",
   "shipmentDetailDescription": "Shipment summary, items, and linked booking summary live here.",
   "shipmentDetailTitle": "Shipment {shipmentId}",
-  "@shipmentDetailTitle": {"placeholders": {"shipmentId": {}}},
+  "@shipmentDetailTitle": {
+    "placeholders": {
+      "shipmentId": {}
+    }
+  },
   "shipperHomeDescription": "Active bookings, recent notifications, quick actions, and support shortcut live here.",
   "shipperHomeNavLabel": "Home",
   "shipperHomeTitle": "Shipper home",
@@ -135,7 +232,11 @@
   "suspendedTitle": "Account suspended",
   "trackingDetailDescription": "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
   "trackingDetailTitle": "Tracking {bookingId}",
-  "@trackingDetailTitle": {"placeholders": {"bookingId": {}}},
+  "@trackingDetailTitle": {
+    "placeholders": {
+      "bookingId": {}
+    }
+  },
   "updateRequiredDescription": "Minimum supported version gating lives here.",
   "updateRequiredTitle": "Update required",
   "userDetailDescription": "Shipper and carrier specifics remain section-based inside one user detail view.",

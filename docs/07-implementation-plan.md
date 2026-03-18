@@ -87,27 +87,45 @@ Rules:
 - [x] Define when FleetFill uses RPC, Edge Functions, triggers, `pg_cron`, `pg_net`, Vault, and Storage policies in concrete code structure
 - [x] Validate secrets placement between Supabase project secrets and Vault
 
+### Phase 2 Verification Coverage
+
+- [x] Add backend foundation contract tests for schema/security migrations with feature-based test naming
+
 ## Phase 3 - Auth, Account, And Profile Systems
 
 ### Authentication
 
-- [ ] Configure Supabase Auth for email/password login, including local CLI auth config and redirect URL setup
-- [ ] Configure Google sign-in, including local `[auth.external.google]` provider config and callback setup
-- [ ] Implement secure session storage and restoration
-- [ ] Implement role-aware auth bootstrap and route guards
-- [ ] Implement password reset and auth error handling UX
-- [ ] Implement session invalidation / logout behavior
-- [ ] Implement blocked-account, forbidden, and session-expired handling using route guards and inline/dialog UX where appropriate
+- [x] Configure Supabase Auth for email/password login, including local CLI auth config and redirect URL setup
+- [x] Configure Google sign-in, including local `[auth.external.google]` provider config and callback setup
+- [x] Implement secure session storage and restoration
+- [x] Implement role-aware auth bootstrap and route guards
+- [x] Implement password reset and auth error handling UX
+- [x] Implement session invalidation / logout behavior
+- [x] Implement blocked-account, forbidden, and session-expired handling using route guards and inline/dialog UX where appropriate
+
+Current implementation notes:
+
+- auth UI was upgraded to a trust-first card layout inspired by the provided reference image while keeping FleetFill product constraints
+- extracted visual patterns include rounded auth panel, soft neutral background, semantic icon-led fields, stronger CTA emphasis, and optional wide-screen preview deck
+- all newly introduced user-facing auth copy was moved into ARB localization keys (no hardcoded runtime strings)
+- auth error mapping now includes explicit `authentication_required` handling instead of empty exception messages
+- tests were renamed from phase-based naming to feature-based naming for maintainability (`foundation_localization_accessibility_test.dart`, `auth_routing_guard_test.dart`)
 
 ### Account Completion And Profiles
 
-- [ ] Build role selection and profile completion flow
-- [ ] Enforce mandatory phone number before operational actions
-- [ ] Build shipper profile edit flow
-- [ ] Build carrier profile edit flow
-- [ ] Build public carrier profile view with rating summary and comments
-- [ ] Add account suspension / inactive-state handling
-- [ ] Keep onboarding lean by using one role-aware `ProfileSetup` flow instead of fragmented setup screens
+- [x] Build role selection and profile completion flow
+- [x] Enforce mandatory phone number before operational actions
+- [x] Build shipper profile edit flow
+- [x] Build carrier profile edit flow
+- [x] Build public carrier profile view with rating summary and comments
+- [x] Add account suspension / inactive-state handling
+- [x] Keep onboarding lean by using one role-aware `ProfileSetup` flow instead of fragmented setup screens
+
+Verification notes:
+
+- auth/onboarding/profile redirects and gates are covered by feature tests in `test/auth_routing_guard_test.dart`
+- password recovery routes now preserve auth flow and enforce reset-password destination when recovery state is active
+- session-expired, suspended, forbidden, verification, onboarding, and phone-completion gate handling are validated via guard tests and UI state wiring
 
 ## Phase 4 - Carrier Onboarding, Vehicles, And Verification
 

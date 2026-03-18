@@ -194,6 +194,96 @@ class S {
     return Intl.message('Users', name: 'adminUsersTitle', desc: '', args: []);
   }
 
+  /// `Your account was created. Continue by signing in.`
+  String get authAccountCreatedMessage {
+    return Intl.message(
+      'Your account was created. Continue by signing in.',
+      name: 'authAccountCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm password`
+  String get authConfirmPasswordLabel {
+    return Intl.message(
+      'Confirm password',
+      name: 'authConfirmPasswordLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create account`
+  String get authCreateAccountAction {
+    return Intl.message(
+      'Create account',
+      name: 'authCreateAccountAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create a new account`
+  String get authCreateAccountCta {
+    return Intl.message(
+      'Create a new account',
+      name: 'authCreateAccountCta',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in to continue this action.`
+  String get authAuthenticationRequiredMessage {
+    return Intl.message(
+      'Sign in to continue this action.',
+      name: 'authAuthenticationRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `you@example.com`
+  String get authEmailHint {
+    return Intl.message(
+      'you@example.com',
+      name: 'authEmailHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email address`
+  String get authEmailLabel {
+    return Intl.message(
+      'Email address',
+      name: 'authEmailLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm your email before signing in.`
+  String get authEmailNotConfirmedMessage {
+    return Intl.message(
+      'Confirm your email before signing in.',
+      name: 'authEmailNotConfirmedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot your password?`
+  String get authForgotPasswordCta {
+    return Intl.message(
+      'Forgot your password?',
+      name: 'authForgotPasswordCta',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Password reset request handling belongs in the auth shell.`
   String get authForgotPasswordDescription {
     return Intl.message(
@@ -209,6 +299,196 @@ class S {
     return Intl.message(
       'Forgot password',
       name: 'authForgotPasswordTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill could not complete this auth request.`
+  String get authGenericErrorMessage {
+    return Intl.message(
+      'FleetFill could not complete this auth request.',
+      name: 'authGenericErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue with Google`
+  String get authGoogleAction {
+    return Intl.message(
+      'Continue with Google',
+      name: 'authGoogleAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google sign-in started. Return here after approval.`
+  String get authGoogleStartedMessage {
+    return Intl.message(
+      'Google sign-in started. Return here after approval.',
+      name: 'authGoogleStartedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep me signed in`
+  String get authKeepSignedInLabel {
+    return Intl.message(
+      'Keep me signed in',
+      name: 'authKeepSignedInLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already have an account? Sign in`
+  String get authHaveAccountCta {
+    return Intl.message(
+      'Already have an account? Sign in',
+      name: 'authHaveAccountCta',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check your email and password, then try again.`
+  String get authInvalidCredentialsMessage {
+    return Intl.message(
+      'Check your email and password, then try again.',
+      name: 'authInvalidCredentialsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a valid email address.`
+  String get authInvalidEmailMessage {
+    return Intl.message(
+      'Enter a valid email address.',
+      name: 'authInvalidEmailMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network issue detected. Try again in a moment.`
+  String get authNetworkErrorMessage {
+    return Intl.message(
+      'Network issue detected. Try again in a moment.',
+      name: 'authNetworkErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New password`
+  String get authNewPasswordLabel {
+    return Intl.message(
+      'New password',
+      name: 'authNewPasswordLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get authPasswordLabel {
+    return Intl.message(
+      'Password',
+      name: 'authPasswordLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your password`
+  String get authPasswordHint {
+    return Intl.message(
+      'Enter your password',
+      name: 'authPasswordHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create a strong password`
+  String get authCreatePasswordHint {
+    return Intl.message(
+      'Create a strong password',
+      name: 'authCreatePasswordHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Repeat your password`
+  String get authConfirmPasswordHint {
+    return Intl.message(
+      'Repeat your password',
+      name: 'authConfirmPasswordHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use at least 8 characters.`
+  String get authPasswordMinLengthMessage {
+    return Intl.message(
+      'Use at least 8 characters.',
+      name: 'authPasswordMinLengthMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The passwords do not match.`
+  String get authPasswordMismatchMessage {
+    return Intl.message(
+      'The passwords do not match.',
+      name: 'authPasswordMismatchMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill will send a reset link to the email address on file.`
+  String get authPasswordResetInfoMessage {
+    return Intl.message(
+      'FleetFill will send a reset link to the email address on file.',
+      name: 'authPasswordResetInfoMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your password was updated.`
+  String get authPasswordUpdatedMessage {
+    return Intl.message(
+      'Your password was updated.',
+      name: 'authPasswordUpdatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This field is required.`
+  String get authRequiredFieldMessage {
+    return Intl.message(
+      'This field is required.',
+      name: 'authRequiredFieldMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password reset instructions were sent.`
+  String get authResetEmailSentMessage {
+    return Intl.message(
+      'Password reset instructions were sent.',
+      name: 'authResetEmailSentMessage',
       desc: '',
       args: [],
     );
@@ -234,11 +514,91 @@ class S {
     );
   }
 
+  /// `Open this screen from the password recovery link to set a new password.`
+  String get authResetPasswordUnavailableMessage {
+    return Intl.message(
+      'Open this screen from the password recovery link to set a new password.',
+      name: 'authResetPasswordUnavailableMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send reset link`
+  String get authSendResetAction {
+    return Intl.message(
+      'Send reset link',
+      name: 'authSendResetAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `or continue with`
+  String get authContinueWithLabel {
+    return Intl.message(
+      'or continue with',
+      name: 'authContinueWithLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in again`
+  String get authSessionExpiredAction {
+    return Intl.message(
+      'Sign in again',
+      name: 'authSessionExpiredAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your session ended. Sign in again to continue safely.`
+  String get authSessionExpiredMessage {
+    return Intl.message(
+      'Your session ended. Sign in again to continue safely.',
+      name: 'authSessionExpiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session expired`
+  String get authSessionExpiredTitle {
+    return Intl.message(
+      'Session expired',
+      name: 'authSessionExpiredTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in`
+  String get authSignInAction {
+    return Intl.message(
+      'Sign in',
+      name: 'authSignInAction',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Email/password and Google sign-in entry points live here.`
   String get authSignInDescription {
     return Intl.message(
       'Email/password and Google sign-in entry points live here.',
       name: 'authSignInDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signed in successfully.`
+  String get authSignInSuccess {
+    return Intl.message(
+      'Signed in successfully.',
+      name: 'authSignInSuccess',
       desc: '',
       args: [],
     );
@@ -264,6 +624,36 @@ class S {
     return Intl.message(
       'Create account',
       name: 'authSignUpTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update password`
+  String get authUpdatePasswordAction {
+    return Intl.message(
+      'Update password',
+      name: 'authUpdatePasswordAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An account already exists for this email.`
+  String get authUserAlreadyRegisteredMessage {
+    return Intl.message(
+      'An account already exists for this email.',
+      name: 'authUserAlreadyRegisteredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check your email to confirm the account before signing in.`
+  String get authVerificationEmailSentMessage {
+    return Intl.message(
+      'Check your email to confirm the account before signing in.',
+      name: 'authVerificationEmailSentMessage',
       desc: '',
       args: [],
     );
@@ -394,6 +784,56 @@ class S {
     );
   }
 
+  /// `Carrier details`
+  String get carrierProfileSectionTitle {
+    return Intl.message(
+      'Carrier details',
+      name: 'carrierProfileSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification`
+  String get carrierProfileVerificationLabel {
+    return Intl.message(
+      'Verification',
+      name: 'carrierProfileVerificationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending`
+  String get carrierProfileVerificationPending {
+    return Intl.message(
+      'Pending',
+      name: 'carrierProfileVerificationPending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rejected`
+  String get carrierProfileVerificationRejected {
+    return Intl.message(
+      'Rejected',
+      name: 'carrierProfileVerificationRejected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verified`
+  String get carrierProfileVerificationVerified {
+    return Intl.message(
+      'Verified',
+      name: 'carrierProfileVerificationVerified',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Carrier profile`
   String get carrierProfileTitle {
     return Intl.message(
@@ -404,11 +844,61 @@ class S {
     );
   }
 
+  /// `Recent comments`
+  String get carrierPublicProfileCommentsTitle {
+    return Intl.message(
+      'Recent comments',
+      name: 'carrierPublicProfileCommentsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Public carrier reputation and trust cues live here.`
   String get carrierPublicProfileDescription {
     return Intl.message(
       'Public carrier reputation and trust cues live here.',
       name: 'carrierPublicProfileDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No review comments are visible yet.`
+  String get carrierPublicProfileNoCommentsMessage {
+    return Intl.message(
+      'No review comments are visible yet.',
+      name: 'carrierPublicProfileNoCommentsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Average rating`
+  String get carrierPublicProfileRatingLabel {
+    return Intl.message(
+      'Average rating',
+      name: 'carrierPublicProfileRatingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review count`
+  String get carrierPublicProfileReviewCountLabel {
+    return Intl.message(
+      'Review count',
+      name: 'carrierPublicProfileReviewCountLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carrier summary`
+  String get carrierPublicProfileSummaryTitle {
+    return Intl.message(
+      'Carrier summary',
+      name: 'carrierPublicProfileSummaryTitle',
       desc: '',
       args: [],
     );
@@ -459,6 +949,16 @@ class S {
     );
   }
 
+  /// `Carrier profile updated.`
+  String get editCarrierProfileSavedMessage {
+    return Intl.message(
+      'Carrier profile updated.',
+      name: 'editCarrierProfileSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Edit carrier profile`
   String get editCarrierProfileTitle {
     return Intl.message(
@@ -474,6 +974,16 @@ class S {
     return Intl.message(
       'Shipper profile editing lives here.',
       name: 'editShipperProfileDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipper profile updated.`
+  String get editShipperProfileSavedMessage {
+    return Intl.message(
+      'Shipper profile updated.',
+      name: 'editShipperProfileSavedMessage',
       desc: '',
       args: [],
     );
@@ -546,6 +1056,46 @@ class S {
       name: 'generatedDocumentViewerTitle',
       desc: '',
       args: [documentId],
+    );
+  }
+
+  /// `Arabic`
+  String get languageOptionArabic {
+    return Intl.message(
+      'Arabic',
+      name: 'languageOptionArabic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get languageOptionEnglish {
+    return Intl.message(
+      'English',
+      name: 'languageOptionEnglish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `French`
+  String get languageOptionFrench {
+    return Intl.message(
+      'French',
+      name: 'languageOptionFrench',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current language: {languageCode}`
+  String languageSelectionCurrentMessage(Object languageCode) {
+    return Intl.message(
+      'Current language: $languageCode',
+      name: 'languageSelectionCurrentMessage',
+      desc: '',
+      args: [languageCode],
     );
   }
 
@@ -839,6 +1389,26 @@ class S {
     );
   }
 
+  /// `Save phone number`
+  String get phoneCompletionSaveAction {
+    return Intl.message(
+      'Save phone number',
+      name: 'phoneCompletionSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone number saved.`
+  String get phoneCompletionSavedMessage {
+    return Intl.message(
+      'Phone number saved.',
+      name: 'phoneCompletionSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Phone completion`
   String get phoneCompletionTitle {
     return Intl.message(
@@ -849,11 +1419,71 @@ class S {
     );
   }
 
+  /// `Carrier setup stays lean now, and verification details will continue in the next phase.`
+  String get profileCarrierVerificationHint {
+    return Intl.message(
+      'Carrier setup stays lean now, and verification details will continue in the next phase.',
+      name: 'profileCarrierVerificationHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Company name`
+  String get profileCompanyNameLabel {
+    return Intl.message(
+      'Company name',
+      name: 'profileCompanyNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full name`
+  String get profileFullNameLabel {
+    return Intl.message(
+      'Full name',
+      name: 'profileFullNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone number`
+  String get profilePhoneLabel {
+    return Intl.message(
+      'Phone number',
+      name: 'profilePhoneLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Role-aware shipper/carrier profile completion stays in one guided flow.`
   String get profileSetupDescription {
     return Intl.message(
       'Role-aware shipper/carrier profile completion stays in one guided flow.',
       name: 'profileSetupDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save profile`
+  String get profileSetupSaveAction {
+    return Intl.message(
+      'Save profile',
+      name: 'profileSetupSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile details saved.`
+  String get profileSetupSavedMessage {
+    return Intl.message(
+      'Profile details saved.',
+      name: 'profileSetupSavedMessage',
       desc: '',
       args: [],
     );
@@ -894,11 +1524,51 @@ class S {
     return Intl.message('Retry', name: 'retryLabel', desc: '', args: []);
   }
 
+  /// `Publish trips, manage bookings, and keep verification moving.`
+  String get roleSelectionCarrierDescription {
+    return Intl.message(
+      'Publish trips, manage bookings, and keep verification moving.',
+      name: 'roleSelectionCarrierDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue as a carrier`
+  String get roleSelectionCarrierTitle {
+    return Intl.message(
+      'Continue as a carrier',
+      name: 'roleSelectionCarrierTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `One account selects one role before operational access begins.`
   String get roleSelectionDescription {
     return Intl.message(
       'One account selects one role before operational access begins.',
       name: 'roleSelectionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create shipments, compare exact trips, and follow delivery progress.`
+  String get roleSelectionShipperDescription {
+    return Intl.message(
+      'Create shipments, compare exact trips, and follow delivery progress.',
+      name: 'roleSelectionShipperDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue as a shipper`
+  String get roleSelectionShipperTitle {
+    return Intl.message(
+      'Continue as a shipper',
+      name: 'roleSelectionShipperTitle',
       desc: '',
       args: [],
     );
@@ -999,11 +1669,41 @@ class S {
     return Intl.message('Total', name: 'sampleTotalLabel', desc: '', args: []);
   }
 
+  /// `Account`
+  String get settingsAccountSectionTitle {
+    return Intl.message(
+      'Account',
+      name: 'settingsAccountSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Language, theme, support, and notification preferences stay inside shared settings.`
   String get settingsDescription {
     return Intl.message(
       'Language, theme, support, and notification preferences stay inside shared settings.',
       name: 'settingsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signed out.`
+  String get settingsSignedOutMessage {
+    return Intl.message(
+      'Signed out.',
+      name: 'settingsSignedOutMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign out`
+  String get settingsSignOutAction {
+    return Intl.message(
+      'Sign out',
+      name: 'settingsSignOutAction',
       desc: '',
       args: [],
     );
@@ -1129,6 +1829,16 @@ class S {
     return Intl.message(
       'Profile',
       name: 'shipperProfileNavLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipper details`
+  String get shipperProfileSectionTitle {
+    return Intl.message(
+      'Shipper details',
+      name: 'shipperProfileSectionTitle',
       desc: '',
       args: [],
     );

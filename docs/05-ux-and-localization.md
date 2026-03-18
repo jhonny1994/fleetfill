@@ -330,3 +330,28 @@ Use design tokens for:
 - motion durations and easing
 
 The visual style should remain sober and trust-first rather than flashy.
+
+## 16. Auth Surface Visual Contract
+
+The authentication surfaces should use a trust-forward visual language inspired by modern mobile auth cards while staying operational and lightweight.
+
+Rules:
+
+- keep one primary auth panel with soft rounded corners, subtle depth, and clear field grouping
+- use semantic iconography and avoid emoji/icons as decorative placeholders
+- use calm neutral backgrounds with muted teal accent gradients for trust cues
+- preserve high-contrast, sunlight-readable text and controls
+- keep primary action prominence on the sign-in / sign-up card
+- keep support actions (forgot password, alternate sign-in method) visible but clearly secondary
+- use optional preview visuals on medium/expanded layouts only; compact mobile layout should prioritize form completion
+- avoid auth UI patterns that imply unsupported product behavior (for example OTP keypad entry) unless backend/auth flow supports it
+
+Auth UI elements that are allowed in FleetFill:
+
+- email and password form rows with inline leading icons
+- password visibility toggle
+- remember-session checkbox label
+- primary submit button with loading state
+- localized divider text for alternate identity providers
+- localized provider continuation button(s) for configured providers
+- localized footer prompt to move between sign-in and sign-up

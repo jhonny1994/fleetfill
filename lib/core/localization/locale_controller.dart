@@ -40,4 +40,6 @@ class LocaleController extends Notifier<Locale?> {
 
     await preferences.setString(localeStorageKey, state!.languageCode);
   }
+
+  Future<void> updateLocale(Locale locale) => setLocale(locale);
 }

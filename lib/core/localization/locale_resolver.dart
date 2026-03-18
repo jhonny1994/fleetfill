@@ -26,7 +26,8 @@ class AppLocaleResolver {
 
     for (final locale in locales) {
       for (final supportedLocale in supportedLocales) {
-        final exactMatch = supportedLocale.languageCode == locale.languageCode &&
+        final exactMatch =
+            supportedLocale.languageCode == locale.languageCode &&
             supportedLocale.countryCode == locale.countryCode &&
             supportedLocale.scriptCode == locale.scriptCode;
 

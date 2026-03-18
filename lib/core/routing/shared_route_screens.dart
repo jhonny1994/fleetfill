@@ -1,6 +1,11 @@
+import 'package:fleetfill/core/errors/app_error.dart';
 import 'package:fleetfill/core/localization/localization.dart';
+import 'package:fleetfill/core/theme/design_tokens.dart';
+import 'package:fleetfill/features/profile/profile.dart';
+import 'package:fleetfill/shared/providers/providers.dart';
 import 'package:fleetfill/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -43,6 +48,28 @@ class ForceUpdateScreen extends StatelessWidget {
       title: s.updateRequiredTitle,
       description: s.updateRequiredDescription,
       showSummary: false,
+    );
+  }
+}
+
+class SessionExpiredScreen extends StatelessWidget {
+  const SessionExpiredScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+
+    return AppPageScaffold(
+      title: s.authSessionExpiredTitle,
+      child: AppStateMessage(
+        icon: Icons.lock_clock_outlined,
+        title: s.authSessionExpiredTitle,
+        message: s.authSessionExpiredMessage,
+        action: FilledButton(
+          onPressed: () => Navigator.of(context).maybePop(),
+          child: Text(s.authSessionExpiredAction),
+        ),
+      ),
     );
   }
 }
@@ -98,19 +125,87 @@ class BookingTrackingScreen extends StatelessWidget {
   }
 }
 
-class CarrierPublicProfileScreen extends StatelessWidget {
+class CarrierPublicProfileScreen extends ConsumerWidget {
   const CarrierPublicProfileScreen({required this.carrierId, super.key});
 
   final String carrierId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final profile = ref.watch(publicCarrierProfileProvider(carrierId));
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.carrierPublicProfileTitle(carrierId),
-      description: s.carrierPublicProfileDescription,
-      showSummary: false,
+      child: profile.when(
+        loading: () => const AppLoadingState(),
+        error: (error, stackTrace) {
+          final normalizedError = error.toString().toLowerCase();
+          if (normalizedError.contains('not found')) {
+            return const AppNotFoundState();
+          }
+
+          return AppErrorState(
+            error: AppError(
+              code: 'carrier_public_profile_failed',
+              message: s.routeErrorMessage,
+              technicalDetails: stackTrace.toString(),
+            ),
+          );
+        },
+        data: (carrier) {
+          return ListView(
+            children: [
+              AppSectionHeader(
+                title: carrier.displayName,
+                subtitle: s.carrierPublicProfileDescription,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ProfileSummaryCard(
+                title: s.carrierPublicProfileSummaryTitle,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.carrierPublicProfileRatingLabel,
+                    value: carrier.ratingAverage?.toStringAsFixed(1) ?? '-',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.carrierPublicProfileReviewCountLabel,
+                    value: carrier.ratingCount.toString(),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.carrierProfileVerificationLabel,
+                    value: verificationStatusLabel(
+                      s,
+                      carrier.verificationStatus,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Text(
+                s.carrierPublicProfileCommentsTitle,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              if (carrier.comments.isEmpty)
+                AppEmptyState(
+                  title: s.carrierPublicProfileCommentsTitle,
+                  message: s.carrierPublicProfileNoCommentsMessage,
+                )
+              else
+                ...carrier.comments.map(
+                  (comment) => Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: AppListCard(
+                      title: '${comment.score}/5',
+                      subtitle: comment.comment,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

@@ -1,32 +1,102 @@
-import 'package:fleetfill/core/localization/localization.dart';
-import 'package:fleetfill/shared/widgets/widgets.dart';
+import 'package:fleetfill/core/core.dart';
+import 'package:fleetfill/features/profile/presentation/profile_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    final locale = ref.watch(effectiveLocaleProvider);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.settingsTitle,
-      description: s.settingsDescription,
-      showSummary: false,
+      child: ListView(
+        children: [
+          AppSectionHeader(
+            title: s.settingsTitle,
+            subtitle: s.settingsDescription,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          ProfileSummaryCard(
+            title: s.settingsAccountSectionTitle,
+            rows: [
+              ProfileSummaryRow(
+                label: s.authEmailLabel,
+                value: auth?.email ?? '-',
+              ),
+              ProfileSummaryRow(
+                label: s.languageSelectionTitle,
+                value: locale.languageCode.toUpperCase(),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          const SignOutButton(),
+        ],
+      ),
     );
   }
 }
 
-class ShipperProfileScreen extends StatelessWidget {
+class ShipperProfileScreen extends ConsumerWidget {
   const ShipperProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final profile = ref
+        .watch(authSessionControllerProvider)
+        .asData
+        ?.value
+        .profile;
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.shipperProfileTitle,
-      description: s.shipperProfileDescription,
+      actions: [
+        IconButton(
+          onPressed: () => context.go('${AppRoutePath.shipperProfile}/edit'),
+          icon: const Icon(Icons.edit_outlined),
+          tooltip: s.editShipperProfileTitle,
+        ),
+      ],
+      child: ListView(
+        children: [
+          AppSectionHeader(
+            title: s.shipperProfileTitle,
+            subtitle: s.shipperProfileDescription,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          ProfileSummaryCard(
+            title: s.shipperProfileSectionTitle,
+            rows: [
+              ProfileSummaryRow(
+                label: s.profileFullNameLabel,
+                value: profile?.fullName ?? '-',
+              ),
+              ProfileSummaryRow(
+                label: s.profilePhoneLabel,
+                value: profile?.phoneNumber ?? '-',
+              ),
+              ProfileSummaryRow(
+                label: s.authEmailLabel,
+                value: profile?.email ?? '-',
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AppListCard(
+            title: s.settingsTitle,
+            subtitle: s.settingsDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.sharedSettings),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -38,25 +108,101 @@ class EditShipperProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return AppPlaceholderScreen(
+    return ProfileEditForm(
+      role: AppUserRole.shipper,
       title: s.editShipperProfileTitle,
       description: s.editShipperProfileDescription,
-      showSummary: false,
+      successMessage: s.editShipperProfileSavedMessage,
     );
   }
 }
 
-class CarrierProfileScreen extends StatelessWidget {
+class CarrierProfileScreen extends ConsumerWidget {
   const CarrierProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final profile = ref
+        .watch(authSessionControllerProvider)
+        .asData
+        ?.value
+        .profile;
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.carrierProfileTitle,
-      description: s.carrierProfileDescription,
+      actions: [
+        IconButton(
+          onPressed: () => context.go('${AppRoutePath.carrierProfile}/edit'),
+          icon: const Icon(Icons.edit_outlined),
+          tooltip: s.editCarrierProfileTitle,
+        ),
+      ],
+      child: ListView(
+        children: [
+          AppSectionHeader(
+            title: s.carrierProfileTitle,
+            subtitle: s.carrierProfileDescription,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          ProfileSummaryCard(
+            title: s.carrierProfileSectionTitle,
+            rows: [
+              ProfileSummaryRow(
+                label: s.profileFullNameLabel,
+                value: profile?.fullName ?? '-',
+              ),
+              ProfileSummaryRow(
+                label: s.profileCompanyNameLabel,
+                value: profile?.companyName ?? '-',
+              ),
+              ProfileSummaryRow(
+                label: s.profilePhoneLabel,
+                value: profile?.phoneNumber ?? '-',
+              ),
+              ProfileSummaryRow(
+                label: s.carrierProfileVerificationLabel,
+                value: _verificationLabel(s, profile?.verificationStatus),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AppListCard(
+            title: s.vehiclesTitle,
+            subtitle: s.vehiclesDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () =>
+                context.push('${AppRoutePath.carrierProfile}/vehicles'),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.payoutAccountsTitle,
+            subtitle: s.payoutAccountsDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(
+              '${AppRoutePath.carrierProfile}/payout-accounts',
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.settingsTitle,
+            subtitle: s.settingsDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.sharedSettings),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AuthInfoBanner(message: s.profileCarrierVerificationHint),
+        ],
+      ),
     );
+  }
+
+  String _verificationLabel(S s, AppVerificationState? state) {
+    return switch (state) {
+      AppVerificationState.verified => s.carrierProfileVerificationVerified,
+      AppVerificationState.rejected => s.carrierProfileVerificationRejected,
+      _ => s.carrierProfileVerificationPending,
+    };
   }
 }
 
@@ -67,10 +213,11 @@ class EditCarrierProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return AppPlaceholderScreen(
+    return ProfileEditForm(
+      role: AppUserRole.carrier,
       title: s.editCarrierProfileTitle,
       description: s.editCarrierProfileDescription,
-      showSummary: false,
+      successMessage: s.editCarrierProfileSavedMessage,
     );
   }
 }
@@ -82,10 +229,12 @@ class MyVehiclesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.vehiclesTitle,
-      description: s.vehiclesDescription,
-      showSummary: false,
+      child: AppEmptyState(
+        title: s.vehiclesTitle,
+        message: s.vehiclesDescription,
+      ),
     );
   }
 }
@@ -97,10 +246,12 @@ class VehicleDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.vehicleDetailTitle,
-      description: s.vehicleDetailDescription,
-      showSummary: false,
+      child: AppEmptyState(
+        title: s.vehicleDetailTitle,
+        message: s.vehicleDetailDescription,
+      ),
     );
   }
 }
@@ -112,10 +263,12 @@ class PayoutAccountsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.payoutAccountsTitle,
-      description: s.payoutAccountsDescription,
-      showSummary: false,
+      child: AppEmptyState(
+        title: s.payoutAccountsTitle,
+        message: s.payoutAccountsDescription,
+      ),
     );
   }
 }

@@ -22,23 +22,15 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
 
   factory AppEnvironmentConfig.fromDefines() {
     return AppEnvironmentConfig(
-      environment: _parseEnvironment(
-        const String.fromEnvironment('APP_ENV', defaultValue: 'local'),
-      ),
+      environment: _parseEnvironment(const String.fromEnvironment('APP_ENV')),
       maintenanceMode: _parseBool(
-        const String.fromEnvironment('MAINTENANCE_MODE', defaultValue: 'false'),
+        const String.fromEnvironment('MAINTENANCE_MODE'),
       ),
       forceUpdateRequired: _parseBool(
-        const String.fromEnvironment(
-          'FORCE_UPDATE_REQUIRED',
-          defaultValue: 'false',
-        ),
+        const String.fromEnvironment('FORCE_UPDATE_REQUIRED'),
       ),
       crashReportingEnabled: _parseBool(
-        const String.fromEnvironment(
-          'CRASH_REPORTING_ENABLED',
-          defaultValue: 'false',
-        ),
+        const String.fromEnvironment('CRASH_REPORTING_ENABLED'),
       ),
     );
   }
