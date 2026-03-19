@@ -1,8 +1,10 @@
 import {
   buildSubjectPreview,
+  createClient,
   createServiceClient,
   dispatchEmail,
   jsonResponse,
+  requiredEnv,
   type OutboxJob,
 } from '../_shared/email-runtime.ts'
 
@@ -13,21 +15,42 @@ Deno.serve(async (req) => {
 
   try {
     const payload = await req.json() as {
-      recipient_email?: string
       locale?: string
       subject?: string
       message?: string
-      profile_id?: string | null
     }
 
-    if (!payload.recipient_email || !payload.subject || !payload.message) {
-      return jsonResponse({ error: 'recipient_email, subject, and message are required' }, 400)
+    if (!payload.subject || !payload.message) {
+      return jsonResponse({ error: 'subject and message are required' }, 400)
+    }
+
+    const authorization = req.headers.get('Authorization')
+    if (!authorization) {
+      return jsonResponse({ error: 'Missing authorization header' }, 401)
+    }
+
+    const userClient = createClient(
+      requiredEnv('SUPABASE_URL'),
+      requiredEnv('SUPABASE_ANON_KEY'),
+      {
+        global: { headers: { Authorization: authorization } },
+      },
+    )
+
+    const {
+      data: { user },
+      error: authError,
+    } = await userClient.auth.getUser()
+
+    if (authError != null || user == null || !user.email?.trim()) {
+      return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 
     const serviceClient = createServiceClient()
-    const profileId = payload.profile_id ?? null
+    const profileId = user.id
     const locale = payload.locale?.trim() || 'en'
-    const dedupeKey = `support_ack:${payload.recipient_email}:${payload.subject}`
+    const recipientEmail = user.email.trim().toLowerCase()
+    const dedupeKey = `support_ack:${recipientEmail}:${payload.subject.trim()}`
 
     const { data: insertedJob, error: insertError } = await serviceClient
       .from('email_outbox_jobs')
@@ -37,7 +60,7 @@ Deno.serve(async (req) => {
         profile_id: profileId,
         template_key: 'support_acknowledgement',
         locale,
-        recipient_email: payload.recipient_email.trim().toLowerCase(),
+        recipient_email: recipientEmail,
         priority: 'high',
         status: 'queued',
         available_at: new Date().toISOString(),
