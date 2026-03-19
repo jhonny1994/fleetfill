@@ -46,6 +46,39 @@ final bookingDetailProvider =
       return ref.read(bookingRepositoryProvider).fetchBookingById(bookingId);
     });
 
+final paymentProofsForBookingProvider =
+    FutureProvider.autoDispose.family<List<PaymentProofRecord>, String>((
+      ref,
+      bookingId,
+    ) {
+      return ref
+          .read(paymentProofRepositoryProvider)
+          .fetchPaymentProofsForBooking(bookingId);
+    });
+
+final paymentProofDetailProvider =
+    FutureProvider.autoDispose.family<PaymentProofRecord?, String>((
+      ref,
+      proofId,
+    ) {
+      return ref.read(paymentProofRepositoryProvider).fetchPaymentProofById(proofId);
+    });
+
+final generatedDocumentsForBookingProvider =
+    FutureProvider.autoDispose.family<List<GeneratedDocumentRecord>, String>((
+      ref,
+      bookingId,
+    ) {
+      return ref
+          .read(paymentProofRepositoryProvider)
+          .fetchGeneratedDocumentsForBooking(bookingId);
+    });
+
+final pendingPaymentProofsProvider =
+    FutureProvider<List<AdminPaymentProofQueueItem>>((ref) {
+      return ref.read(paymentAdminRepositoryProvider).fetchPendingPaymentProofs();
+    });
+
 final clientSettingsProvider = FutureProvider<Map<String, dynamic>>((ref) {
   return ref.read(bookingRepositoryProvider).fetchClientSettings();
 });

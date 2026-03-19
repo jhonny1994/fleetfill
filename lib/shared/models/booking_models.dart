@@ -157,3 +157,91 @@ class BookingPricingQuote {
   final double shipperTotalDzd;
   final double carrierPayoutDzd;
 }
+
+class PaymentProofRecord {
+  const PaymentProofRecord({
+    required this.id,
+    required this.bookingId,
+    required this.storagePath,
+    required this.paymentRail,
+    required this.submittedReference,
+    required this.submittedAmountDzd,
+    required this.verifiedAmountDzd,
+    required this.verifiedReference,
+    required this.status,
+    required this.rejectionReason,
+    required this.reviewedBy,
+    required this.submittedAt,
+    required this.reviewedAt,
+    required this.decisionNote,
+    required this.version,
+  });
+
+  factory PaymentProofRecord.fromJson(Map<String, dynamic> json) {
+    return PaymentProofRecord(
+      id: json['id'] as String,
+      bookingId: json['booking_id'] as String,
+      storagePath: (json['storage_path'] as String?)?.trim() ?? '',
+      paymentRail: (json['payment_rail'] as String?)?.trim() ?? '',
+      submittedReference: (json['submitted_reference'] as String?)?.trim(),
+      submittedAmountDzd: (json['submitted_amount_dzd'] as num).toDouble(),
+      verifiedAmountDzd: (json['verified_amount_dzd'] as num?)?.toDouble(),
+      verifiedReference: (json['verified_reference'] as String?)?.trim(),
+      status: (json['status'] as String?)?.trim() ?? 'pending',
+      rejectionReason: (json['rejection_reason'] as String?)?.trim(),
+      reviewedBy: json['reviewed_by'] as String?,
+      submittedAt: DateTime.parse(json['submitted_at'] as String),
+      reviewedAt: DateTime.tryParse(json['reviewed_at'] as String? ?? ''),
+      decisionNote: (json['decision_note'] as String?)?.trim(),
+      version: (json['version'] as num?)?.toInt() ?? 1,
+    );
+  }
+
+  final String id;
+  final String bookingId;
+  final String storagePath;
+  final String paymentRail;
+  final String? submittedReference;
+  final double submittedAmountDzd;
+  final double? verifiedAmountDzd;
+  final String? verifiedReference;
+  final String status;
+  final String? rejectionReason;
+  final String? reviewedBy;
+  final DateTime submittedAt;
+  final DateTime? reviewedAt;
+  final String? decisionNote;
+  final int version;
+}
+
+class GeneratedDocumentRecord {
+  const GeneratedDocumentRecord({
+    required this.id,
+    required this.bookingId,
+    required this.documentType,
+    required this.storagePath,
+    required this.version,
+    required this.generatedBy,
+    required this.createdAt,
+  });
+
+  factory GeneratedDocumentRecord.fromJson(Map<String, dynamic> json) {
+    return GeneratedDocumentRecord(
+      id: json['id'] as String,
+      bookingId: json['booking_id'] as String?,
+      documentType: (json['document_type'] as String?)?.trim() ?? '',
+      storagePath: (json['storage_path'] as String?)?.trim() ?? '',
+      version: (json['version'] as num?)?.toInt() ?? 1,
+      generatedBy: json['generated_by'] as String?,
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+    );
+  }
+
+  final String id;
+  final String? bookingId;
+  final String documentType;
+  final String storagePath;
+  final int version;
+  final String? generatedBy;
+  final DateTime? createdAt;
+}

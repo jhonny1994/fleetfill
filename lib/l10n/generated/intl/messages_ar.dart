@@ -73,6 +73,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminDashboardTitle": MessageLookupByLibrary.simpleMessage(
       "Admin dashboard",
     ),
+    "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد إثباتات دفع تحتاج إلى مراجعة الآن.",
+    ),
+    "adminPaymentProofQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "مراجعة إثباتات الدفع",
+    ),
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
       "Payments, verification, disputes, payouts, and email queues stay segmented inside one page.",
     ),
@@ -451,6 +457,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "افتح الفواتير والإيصالات المولدة من مسار مشترك وآمن.",
     ),
     "generatedDocumentViewerTitle": m5,
+    "generatedDocumentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "ستظهر الفاتورة والإيصال المولدان هنا عند توفرهما.",
+    ),
+    "generatedDocumentsTitle": MessageLookupByLibrary.simpleMessage(
+      "المستندات المولدة",
+    ),
     "languageOptionArabic": MessageLookupByLibrary.simpleMessage("العربية"),
     "languageOptionEnglish": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
     "languageOptionFrench": MessageLookupByLibrary.simpleMessage("الفرنسية"),
@@ -621,6 +633,72 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment flow"),
     "paymentInstructionsTitle": MessageLookupByLibrary.simpleMessage(
       "تعليمات الدفع",
+    ),
+    "paymentProofAlreadyReviewedMessage": MessageLookupByLibrary.simpleMessage(
+      "تمت مراجعة إثبات الدفع هذا بالفعل.",
+    ),
+    "paymentProofAmountLabel": MessageLookupByLibrary.simpleMessage(
+      "المبلغ المرسل",
+    ),
+    "paymentProofApprovedMessage": MessageLookupByLibrary.simpleMessage(
+      "تمت الموافقة على إثبات الدفع.",
+    ),
+    "paymentProofDecisionNoteLabel": MessageLookupByLibrary.simpleMessage(
+      "ملاحظة القرار",
+    ),
+    "paymentProofEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "ارفع إثبات الدفع بعد إتمام الدفع الخارجي.",
+    ),
+    "paymentProofExactAmountRequiredMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "يجب أن يطابق المبلغ المتحقق منه إجمالي الحجز تماما.",
+        ),
+    "paymentProofLatestTitle": MessageLookupByLibrary.simpleMessage(
+      "آخر إثبات تم إرساله",
+    ),
+    "paymentProofPendingWindowMessage": MessageLookupByLibrary.simpleMessage(
+      "لا يمكن إرسال إثبات الدفع إلا ما دام الدفع ما يزال معلقا.",
+    ),
+    "paymentProofReferenceLabel": MessageLookupByLibrary.simpleMessage(
+      "المرجع المرسل",
+    ),
+    "paymentProofRejectedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم رفض إثبات الدفع.",
+    ),
+    "paymentProofRejectionReasonLabel": MessageLookupByLibrary.simpleMessage(
+      "سبب الرفض",
+    ),
+    "paymentProofRejectionReasonRequiredMessage":
+        MessageLookupByLibrary.simpleMessage("سبب الرفض مطلوب."),
+    "paymentProofResubmitAction": MessageLookupByLibrary.simpleMessage(
+      "إعادة إرسال الإثبات",
+    ),
+    "paymentProofSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "إثبات الدفع",
+    ),
+    "paymentProofStatusLabel": MessageLookupByLibrary.simpleMessage(
+      "حالة الإثبات",
+    ),
+    "paymentProofStatusPendingLabel": MessageLookupByLibrary.simpleMessage(
+      "بانتظار المراجعة",
+    ),
+    "paymentProofStatusRejectedLabel": MessageLookupByLibrary.simpleMessage(
+      "مرفوض",
+    ),
+    "paymentProofStatusVerifiedLabel": MessageLookupByLibrary.simpleMessage(
+      "تم التحقق منه",
+    ),
+    "paymentProofUploadAction": MessageLookupByLibrary.simpleMessage(
+      "رفع إثبات الدفع",
+    ),
+    "paymentProofUploadedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم رفع إثبات الدفع.",
+    ),
+    "paymentProofVerifiedAmountLabel": MessageLookupByLibrary.simpleMessage(
+      "المبلغ المتحقق منه",
+    ),
+    "paymentProofVerifiedReferenceLabel": MessageLookupByLibrary.simpleMessage(
+      "المرجع المتحقق منه",
     ),
     "paymentStatusProofSubmittedLabel": MessageLookupByLibrary.simpleMessage(
       "تم إرسال الإثبات",
