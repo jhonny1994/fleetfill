@@ -9,11 +9,15 @@ void main() {
 
     setUpAll(() {
       schemaMigration = File(
-        'supabase/migrations/20260317143000_phase_2_schema_foundation.sql',
-      ).readAsStringSync();
-      securityMigration = File(
-        'supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql',
-      ).readAsStringSync();
+        'supabase/migrations/20260317143200_create_marketplace_core_tables.sql',
+      ).readAsStringSync() +
+          File(
+            'supabase/migrations/20260317143400_create_communications_and_platform_tables.sql',
+          ).readAsStringSync();
+      securityMigration = [
+        'supabase/migrations/20260317150000_create_runtime_support_tables.sql',
+        'supabase/migrations/20260317150500_enable_rls_and_create_table_policies.sql',
+      ].map((path) => File(path).readAsStringSync()).join('\n');
     });
 
     test('keeps booking capacity exclusivity constraint', () {

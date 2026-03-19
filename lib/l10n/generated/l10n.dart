@@ -59,6 +59,16 @@ class S {
     return Intl.message('FleetFill', name: 'appTitle', desc: '', args: []);
   }
 
+  /// `FleetFill could not complete this action right now.`
+  String get appGenericErrorMessage {
+    return Intl.message(
+      'FleetFill could not complete this action right now.',
+      name: 'appGenericErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Review the latest sensitive admin actions and their outcomes.`
   String get adminAuditLogDescription {
     return Intl.message(
@@ -762,6 +772,26 @@ class S {
     return Intl.message(
       'Session expired',
       name: 'authSessionExpiredTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show password`
+  String get authShowPasswordAction {
+    return Intl.message(
+      'Show password',
+      name: 'authShowPasswordAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hide password`
+  String get authHidePasswordAction {
+    return Intl.message(
+      'Hide password',
+      name: 'authHidePasswordAction',
       desc: '',
       args: [],
     );
@@ -1662,6 +1692,156 @@ class S {
     );
   }
 
+  /// `Add payout account`
+  String get payoutAccountAddAction {
+    return Intl.message(
+      'Add payout account',
+      name: 'payoutAccountAddAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete payout account`
+  String get payoutAccountDeleteAction {
+    return Intl.message(
+      'Delete payout account',
+      name: 'payoutAccountDeleteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This payout account cannot be removed right now.`
+  String get payoutAccountDeleteBlockedMessage {
+    return Intl.message(
+      'This payout account cannot be removed right now.',
+      name: 'payoutAccountDeleteBlockedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove this payout account from FleetFill?`
+  String get payoutAccountDeleteConfirmationMessage {
+    return Intl.message(
+      'Remove this payout account from FleetFill?',
+      name: 'payoutAccountDeleteConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payout account removed.`
+  String get payoutAccountDeletedMessage {
+    return Intl.message(
+      'Payout account removed.',
+      name: 'payoutAccountDeletedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit payout account`
+  String get payoutAccountEditAction {
+    return Intl.message(
+      'Edit payout account',
+      name: 'payoutAccountEditAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account holder name`
+  String get payoutAccountHolderLabel {
+    return Intl.message(
+      'Account holder name',
+      name: 'payoutAccountHolderLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account number or identifier`
+  String get payoutAccountIdentifierLabel {
+    return Intl.message(
+      'Account number or identifier',
+      name: 'payoutAccountIdentifierLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bank or CCP name`
+  String get payoutAccountInstitutionLabel {
+    return Intl.message(
+      'Bank or CCP name',
+      name: 'payoutAccountInstitutionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save payout account`
+  String get payoutAccountSaveAction {
+    return Intl.message(
+      'Save payout account',
+      name: 'payoutAccountSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payout account saved.`
+  String get payoutAccountSavedMessage {
+    return Intl.message(
+      'Payout account saved.',
+      name: 'payoutAccountSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payout rail`
+  String get payoutAccountTypeLabel {
+    return Intl.message(
+      'Payout rail',
+      name: 'payoutAccountTypeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bank transfer`
+  String get payoutAccountTypeBankLabel {
+    return Intl.message(
+      'Bank transfer',
+      name: 'payoutAccountTypeBankLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CCP`
+  String get payoutAccountTypeCcpLabel {
+    return Intl.message(
+      'CCP',
+      name: 'payoutAccountTypeCcpLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dahabia`
+  String get payoutAccountTypeDahabiaLabel {
+    return Intl.message(
+      'Dahabia',
+      name: 'payoutAccountTypeDahabiaLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Operational actions stay gated until a phone number is present.`
   String get phoneCompletionDescription {
     return Intl.message(
@@ -2332,6 +2512,16 @@ class S {
     );
   }
 
+  /// `Delete this vehicle from FleetFill?`
+  String get vehicleDeleteConfirmationMessage {
+    return Intl.message(
+      'Delete this vehicle from FleetFill?',
+      name: 'vehicleDeleteConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vehicle removed.`
   String get vehicleDeletedMessage {
     return Intl.message(
@@ -2672,6 +2862,701 @@ class S {
     return Intl.message(
       'Language selection',
       name: 'languageSelectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add capacity`
+  String get myRoutesAddAction {
+    return Intl.message(
+      'Add capacity',
+      name: 'myRoutesAddAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active recurring routes`
+  String get myRoutesActiveRoutesLabel {
+    return Intl.message(
+      'Active recurring routes',
+      name: 'myRoutesActiveRoutesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active one-off trips`
+  String get myRoutesActiveTripsLabel {
+    return Intl.message(
+      'Active one-off trips',
+      name: 'myRoutesActiveTripsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add recurring route`
+  String get myRoutesCreateRouteAction {
+    return Intl.message(
+      'Add recurring route',
+      name: 'myRoutesCreateRouteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add one-off trip`
+  String get myRoutesCreateTripAction {
+    return Intl.message(
+      'Add one-off trip',
+      name: 'myRoutesCreateTripAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publish a recurring route or one-off trip to start offering capacity.`
+  String get myRoutesEmptyMessage {
+    return Intl.message(
+      'Publish a recurring route or one-off trip to start offering capacity.',
+      name: 'myRoutesEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off trips`
+  String get myRoutesOneOffTab {
+    return Intl.message(
+      'One-off trips',
+      name: 'myRoutesOneOffTab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Published capacity`
+  String get myRoutesPublishedCapacityLabel {
+    return Intl.message(
+      'Published capacity',
+      name: 'myRoutesPublishedCapacityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recurring routes`
+  String get myRoutesRecurringTab {
+    return Intl.message(
+      'Recurring routes',
+      name: 'myRoutesRecurringTab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reserved capacity`
+  String get myRoutesReservedCapacityLabel {
+    return Intl.message(
+      'Reserved capacity',
+      name: 'myRoutesReservedCapacityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recurring routes`
+  String get myRoutesRouteListTitle {
+    return Intl.message(
+      'Recurring routes',
+      name: 'myRoutesRouteListTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Capacity publication summary`
+  String get myRoutesSummaryTitle {
+    return Intl.message(
+      'Capacity publication summary',
+      name: 'myRoutesSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off trips`
+  String get myRoutesTripListTitle {
+    return Intl.message(
+      'One-off trips',
+      name: 'myRoutesTripListTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upcoming departures`
+  String get myRoutesUpcomingDeparturesLabel {
+    return Intl.message(
+      'Upcoming departures',
+      name: 'myRoutesUpcomingDeparturesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Utilization`
+  String get myRoutesUtilizationLabel {
+    return Intl.message(
+      'Utilization',
+      name: 'myRoutesUtilizationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Activate trip`
+  String get oneOffTripActivateAction {
+    return Intl.message(
+      'Activate trip',
+      name: 'oneOffTripActivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off trip activated.`
+  String get oneOffTripActivatedMessage {
+    return Intl.message(
+      'One-off trip activated.',
+      name: 'oneOffTripActivatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add one-off trip`
+  String get oneOffTripCreateTitle {
+    return Intl.message(
+      'Add one-off trip',
+      name: 'oneOffTripCreateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off trip added.`
+  String get oneOffTripCreatedMessage {
+    return Intl.message(
+      'One-off trip added.',
+      name: 'oneOffTripCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deactivate trip`
+  String get oneOffTripDeactivateAction {
+    return Intl.message(
+      'Deactivate trip',
+      name: 'oneOffTripDeactivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off trip deactivated.`
+  String get oneOffTripDeactivatedMessage {
+    return Intl.message(
+      'One-off trip deactivated.',
+      name: 'oneOffTripDeactivatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete trip`
+  String get oneOffTripDeleteAction {
+    return Intl.message(
+      'Delete trip',
+      name: 'oneOffTripDeleteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This trip cannot be deleted because it already has bookings.`
+  String get oneOffTripDeleteBlockedMessage {
+    return Intl.message(
+      'This trip cannot be deleted because it already has bookings.',
+      name: 'oneOffTripDeleteBlockedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off trip removed.`
+  String get oneOffTripDeletedMessage {
+    return Intl.message(
+      'One-off trip removed.',
+      name: 'oneOffTripDeletedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Departure`
+  String get oneOffTripDepartureLabel {
+    return Intl.message(
+      'Departure',
+      name: 'oneOffTripDepartureLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publish one dated trip with vehicle, lane, departure, and capacity details.`
+  String get oneOffTripEditorDescription {
+    return Intl.message(
+      'Publish one dated trip with vehicle, lane, departure, and capacity details.',
+      name: 'oneOffTripEditorDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit one-off trip`
+  String get oneOffTripEditTitle {
+    return Intl.message(
+      'Edit one-off trip',
+      name: 'oneOffTripEditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save trip`
+  String get oneOffTripSaveAction {
+    return Intl.message(
+      'Save trip',
+      name: 'oneOffTripSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off trip updated.`
+  String get oneOffTripSavedMessage {
+    return Intl.message(
+      'One-off trip updated.',
+      name: 'oneOffTripSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active`
+  String get publicationActiveLabel {
+    return Intl.message(
+      'Active',
+      name: 'publicationActiveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose an effective date and time that is now or later.`
+  String get publicationEffectiveDateFutureMessage {
+    return Intl.message(
+      'Choose an effective date and time that is now or later.',
+      name: 'publicationEffectiveDateFutureMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Inactive`
+  String get publicationInactiveLabel {
+    return Intl.message(
+      'Inactive',
+      name: 'publicationInactiveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No route revisions recorded yet.`
+  String get publicationNoRevisionsMessage {
+    return Intl.message(
+      'No route revisions recorded yet.',
+      name: 'publicationNoRevisionsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revision history`
+  String get publicationRevisionHistoryTitle {
+    return Intl.message(
+      'Revision history',
+      name: 'publicationRevisionHistoryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Origin and destination must be different communes.`
+  String get publicationSameLaneErrorMessage {
+    return Intl.message(
+      'Origin and destination must be different communes.',
+      name: 'publicationSameLaneErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search communes`
+  String get publicationSearchCommunesHint {
+    return Intl.message(
+      'Search communes',
+      name: 'publicationSearchCommunesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select`
+  String get publicationSelectValueAction {
+    return Intl.message(
+      'Select',
+      name: 'publicationSelectValueAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose one of your available vehicles for this publication.`
+  String get publicationVehicleUnavailableMessage {
+    return Intl.message(
+      'Choose one of your available vehicles for this publication.',
+      name: 'publicationVehicleUnavailableMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete carrier verification before publishing capacity.`
+  String get publicationVerifiedCarrierRequiredMessage {
+    return Intl.message(
+      'Complete carrier verification before publishing capacity.',
+      name: 'publicationVerifiedCarrierRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose a verified vehicle before publishing capacity.`
+  String get publicationVerifiedVehicleRequiredMessage {
+    return Intl.message(
+      'Choose a verified vehicle before publishing capacity.',
+      name: 'publicationVerifiedVehicleRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select at least one departure day.`
+  String get publicationWeekdaysRequiredMessage {
+    return Intl.message(
+      'Select at least one departure day.',
+      name: 'publicationWeekdaysRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Activate route`
+  String get routeActivateAction {
+    return Intl.message(
+      'Activate route',
+      name: 'routeActivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Route activated.`
+  String get routeActivatedMessage {
+    return Intl.message(
+      'Route activated.',
+      name: 'routeActivatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add recurring route`
+  String get routeCreateTitle {
+    return Intl.message(
+      'Add recurring route',
+      name: 'routeCreateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recurring route added.`
+  String get routeCreatedMessage {
+    return Intl.message(
+      'Recurring route added.',
+      name: 'routeCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deactivate route`
+  String get routeDeactivateAction {
+    return Intl.message(
+      'Deactivate route',
+      name: 'routeDeactivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Route deactivated.`
+  String get routeDeactivatedMessage {
+    return Intl.message(
+      'Route deactivated.',
+      name: 'routeDeactivatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete route`
+  String get routeDeleteAction {
+    return Intl.message(
+      'Delete route',
+      name: 'routeDeleteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This route cannot be deleted because it already has bookings.`
+  String get routeDeleteBlockedMessage {
+    return Intl.message(
+      'This route cannot be deleted because it already has bookings.',
+      name: 'routeDeleteBlockedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recurring route removed.`
+  String get routeDeletedMessage {
+    return Intl.message(
+      'Recurring route removed.',
+      name: 'routeDeletedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default departure time`
+  String get routeDepartureTimeLabel {
+    return Intl.message(
+      'Default departure time',
+      name: 'routeDepartureTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Activate this route for new bookings?`
+  String get routeActivateConfirmationMessage {
+    return Intl.message(
+      'Activate this route for new bookings?',
+      name: 'routeActivateConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deactivate this route for new bookings? Existing bookings will stay unchanged.`
+  String get routeDeactivateConfirmationMessage {
+    return Intl.message(
+      'Deactivate this route for new bookings? Existing bookings will stay unchanged.',
+      name: 'routeDeactivateConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete this recurring route from FleetFill?`
+  String get routeDeleteConfirmationMessage {
+    return Intl.message(
+      'Delete this recurring route from FleetFill?',
+      name: 'routeDeleteConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Destination commune`
+  String get routeDestinationLabel {
+    return Intl.message(
+      'Destination commune',
+      name: 'routeDestinationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publish a recurring lane with vehicle, schedule, and capacity details.`
+  String get routeEditorDescription {
+    return Intl.message(
+      'Publish a recurring lane with vehicle, schedule, and capacity details.',
+      name: 'routeEditorDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit recurring route`
+  String get routeEditTitle {
+    return Intl.message(
+      'Edit recurring route',
+      name: 'routeEditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Effective from`
+  String get routeEffectiveFromLabel {
+    return Intl.message(
+      'Effective from',
+      name: 'routeEffectiveFromLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Origin commune`
+  String get routeOriginLabel {
+    return Intl.message(
+      'Origin commune',
+      name: 'routeOriginLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price per kg (DZD)`
+  String get routePricePerKgLabel {
+    return Intl.message(
+      'Price per kg (DZD)',
+      name: 'routePricePerKgLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recurring days`
+  String get routeRecurringDaysLabel {
+    return Intl.message(
+      'Recurring days',
+      name: 'routeRecurringDaysLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save route`
+  String get routeSaveAction {
+    return Intl.message(
+      'Save route',
+      name: 'routeSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recurring route updated.`
+  String get routeSavedMessage {
+    return Intl.message(
+      'Recurring route updated.',
+      name: 'routeSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publication status`
+  String get routeStatusLabel {
+    return Intl.message(
+      'Publication status',
+      name: 'routeStatusLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assigned vehicle`
+  String get routeVehicleLabel {
+    return Intl.message(
+      'Assigned vehicle',
+      name: 'routeVehicleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Load more`
+  String get loadMoreLabel {
+    return Intl.message('Load more', name: 'loadMoreLabel', desc: '', args: []);
+  }
+
+  /// `DZD/kg`
+  String get pricePerKgUnitLabel {
+    return Intl.message(
+      'DZD/kg',
+      name: 'pricePerKgUnitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Activate this trip for new bookings?`
+  String get oneOffTripActivateConfirmationMessage {
+    return Intl.message(
+      'Activate this trip for new bookings?',
+      name: 'oneOffTripActivateConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deactivate this trip for new bookings? Existing bookings will stay unchanged.`
+  String get oneOffTripDeactivateConfirmationMessage {
+    return Intl.message(
+      'Deactivate this trip for new bookings? Existing bookings will stay unchanged.',
+      name: 'oneOffTripDeactivateConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete this one-off trip from FleetFill?`
+  String get oneOffTripDeleteConfirmationMessage {
+    return Intl.message(
+      'Delete this one-off trip from FleetFill?',
+      name: 'oneOffTripDeleteConfirmationMessage',
       desc: '',
       args: [],
     );
