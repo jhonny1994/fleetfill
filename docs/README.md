@@ -23,11 +23,15 @@ Supporting assets:
 Working audit docs:
 
 - `docs/10-audit-phases-0-to-4.md` - remediation checklist for issues found in already-completed phases
+- `docs/11-delivery-playbook.md` - execution persona, pickup rules, and apply-now vs defer guidance
+- `docs/12-polish-backlog.md` - deferred end-of-major-phase polish backlog
 
 Rules for all future documentation updates:
 
 - Do not create parallel truth sources for product rules, states, pricing, or schema.
 - Update the canonical file instead of adding overlapping notes elsewhere.
+- Use `docs/11-delivery-playbook.md` for delivery behavior and pickup guidance, not for changing product truth.
+- Use `docs/12-polish-backlog.md` only for deferred polish work, not for domain/security truth.
 - If a decision changes the domain, update `02-domain-and-state-model.md` first.
 - If a decision changes data ownership, RLS, or storage, update `04-data-and-security-model.md`.
 - If a decision changes user flows or UI behavior, update `05-ux-and-localization.md`.

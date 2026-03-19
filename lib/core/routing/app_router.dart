@@ -200,7 +200,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'booking-review',
                     name: AppRouteName.shipperBookingReview.name,
-                    builder: (context, state) => const BookingReviewScreen(),
+                    builder: (context, state) => BookingReviewScreen(
+                      selection: state.extra as BookingReviewSelection?,
+                    ),
                   ),
                   GoRoute(
                     path: 'payment-flow',
