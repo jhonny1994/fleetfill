@@ -11,6 +11,7 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     required AppEnvironment environment,
     @Default('') String supabaseUrl,
     @Default('') String supabaseAnonKey,
+    @Default(false) bool googleAuthEnabled,
     @Default(false) bool maintenanceMode,
     @Default(false) bool forceUpdateRequired,
     @Default(false) bool crashReportingEnabled,
@@ -23,6 +24,20 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
   factory AppEnvironmentConfig.fromDefines() {
     return AppEnvironmentConfig(
       environment: _parseEnvironment(const String.fromEnvironment('APP_ENV')),
+      supabaseUrl: _firstNonEmpty([
+        const String.fromEnvironment('SUPABASE_URL'),
+        const String.fromEnvironment('APP_SUPABASE_URL'),
+      ]),
+      supabaseAnonKey: _firstNonEmpty([
+        const String.fromEnvironment('SUPABASE_ANON_KEY'),
+        const String.fromEnvironment('APP_SUPABASE_ANON_KEY'),
+      ]),
+      googleAuthEnabled: _parseBool(
+        _firstNonEmpty([
+          const String.fromEnvironment('GOOGLE_AUTH_ENABLED'),
+          const String.fromEnvironment('APP_GOOGLE_AUTH_ENABLED'),
+        ]),
+      ),
       maintenanceMode: _parseBool(
         const String.fromEnvironment('MAINTENANCE_MODE'),
       ),
@@ -46,4 +61,15 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
   }
 
   static bool _parseBool(String value) => value.toLowerCase() == 'true';
+
+  static String _firstNonEmpty(List<String> values) {
+    for (final value in values) {
+      final trimmed = value.trim();
+      if (trimmed.isNotEmpty) {
+        return trimmed;
+      }
+    }
+
+    return '';
+  }
 }

@@ -67,6 +67,71 @@ class ProfileSummaryRow {
   final String value;
 }
 
+class ProfileDetailsFormFields extends StatelessWidget {
+  const ProfileDetailsFormFields({
+    required this.role,
+    required this.nameController,
+    required this.companyController,
+    required this.phoneController,
+    required this.isSubmitting,
+    required this.onSubmit,
+    super.key,
+  });
+
+  final AppUserRole? role;
+  final TextEditingController nameController;
+  final TextEditingController companyController;
+  final TextEditingController phoneController;
+  final bool isSubmitting;
+  final VoidCallback? onSubmit;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final isCarrier = role == AppUserRole.carrier;
+
+    String? requiredValidator(String? value) {
+      return (value ?? '').trim().isEmpty ? s.authRequiredFieldMessage : null;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AuthTextField(
+          controller: nameController,
+          label: s.profileFullNameLabel,
+          textInputAction: isCarrier ? TextInputAction.next : TextInputAction.done,
+          validator: requiredValidator,
+        ),
+        if (isCarrier) ...[
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(
+            controller: companyController,
+            label: s.profileCompanyNameLabel,
+            textInputAction: TextInputAction.next,
+            validator: requiredValidator,
+          ),
+        ],
+        const SizedBox(height: AppSpacing.md),
+        AuthTextField(
+          controller: phoneController,
+          label: s.profilePhoneLabel,
+          keyboardType: TextInputType.phone,
+          textInputAction: TextInputAction.done,
+          validator: requiredValidator,
+          onFieldSubmitted: (_) => onSubmit?.call(),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        AuthSubmitButton(
+          label: s.profileSetupSaveAction,
+          isLoading: isSubmitting,
+          onPressed: onSubmit,
+        ),
+      ],
+    );
+  }
+}
+
 class ProfileEditForm extends ConsumerStatefulWidget {
   const ProfileEditForm({
     required this.role,
@@ -103,7 +168,6 @@ class _ProfileEditFormState extends ConsumerState<ProfileEditForm> {
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
     final profile = auth?.profile;
 
@@ -124,49 +188,18 @@ class _ProfileEditFormState extends ConsumerState<ProfileEditForm> {
         children: [
           AppSectionHeader(title: widget.title, subtitle: widget.description),
           const SizedBox(height: AppSpacing.lg),
-          AuthCard(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AuthTextField(
-                    controller: _nameController,
-                    label: s.profileFullNameLabel,
-                    textInputAction: TextInputAction.next,
-                    validator: (value) => (value ?? '').trim().isEmpty
-                        ? s.authRequiredFieldMessage
-                        : null,
-                  ),
-                  if (widget.role == AppUserRole.carrier) ...[
-                    const SizedBox(height: AppSpacing.md),
-                    AuthTextField(
-                      controller: _companyController,
-                      label: s.profileCompanyNameLabel,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) => (value ?? '').trim().isEmpty
-                          ? s.authRequiredFieldMessage
-                          : null,
-                    ),
-                  ],
-                  const SizedBox(height: AppSpacing.md),
-                  AuthTextField(
-                    controller: _phoneController,
-                    label: s.profilePhoneLabel,
-                    keyboardType: TextInputType.phone,
-                    textInputAction: TextInputAction.done,
-                    validator: (value) => (value ?? '').trim().isEmpty
-                        ? s.authRequiredFieldMessage
-                        : null,
-                    onFieldSubmitted: (_) => unawaited(_save()),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  AuthSubmitButton(
-                    label: s.profileSetupSaveAction,
-                    isLoading: _isSaving,
-                    onPressed: () => unawaited(_save()),
-                  ),
-                ],
+          AppFocusTraversal.form(
+            child: AuthCard(
+              child: Form(
+                key: _formKey,
+                child: ProfileDetailsFormFields(
+                  role: widget.role,
+                  nameController: _nameController,
+                  companyController: _companyController,
+                  phoneController: _phoneController,
+                  isSubmitting: _isSaving,
+                  onSubmit: () => unawaited(_save()),
+                ),
               ),
             ),
           ),
