@@ -20,11 +20,7 @@ class AppFocusTraversal extends StatelessWidget {
   Widget build(BuildContext context) {
     return FocusTraversalGroup(
       policy: OrderedTraversalPolicy(),
-      child: Semantics(
-        container: true,
-        label: debugLabel,
-        child: child,
-      ),
+      child: child,
     );
   }
 }

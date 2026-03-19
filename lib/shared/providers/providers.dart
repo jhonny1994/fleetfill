@@ -1,10 +1,16 @@
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/features/admin/admin.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
+import 'package:fleetfill/shared/models/algeria_location.dart';
+import 'package:fleetfill/shared/providers/location_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final communesProvider = FutureProvider<List<AlgeriaCommune>>((ref) {
+  return ref.read(locationRepositoryProvider).fetchCommunes();
+});
+
 final publicCarrierProfileProvider =
-    FutureProvider.family<CarrierPublicProfileView, String>((ref, carrierId) {
+    FutureProvider.autoDispose.family<CarrierPublicProfileView, String>((ref, carrierId) {
       return ref
           .read(authRepositoryProvider)
           .fetchCarrierPublicProfile(carrierId);
@@ -14,12 +20,58 @@ final myVehiclesProvider = FutureProvider<List<CarrierVehicle>>((ref) {
   return ref.read(vehicleRepositoryProvider).fetchMyVehicles();
 });
 
-final vehicleDetailProvider = FutureProvider.family<CarrierVehicle?, String>((
+final myPayoutAccountsProvider = FutureProvider<List<CarrierPayoutAccount>>((ref) {
+  return ref.read(payoutAccountRepositoryProvider).fetchMyPayoutAccounts();
+});
+
+final vehicleDetailProvider = FutureProvider.autoDispose.family<CarrierVehicle?, String>((
   ref,
   vehicleId,
 ) {
   return ref.read(vehicleRepositoryProvider).fetchVehicleById(vehicleId);
 });
+
+final myCarrierRoutesProvider = FutureProvider.family<List<CarrierRoute>, int>((
+  ref,
+  limit,
+) {
+  return ref.read(carrierPublicationRepositoryProvider).fetchMyRoutes(limit: limit);
+});
+
+final carrierRouteDetailProvider = FutureProvider.autoDispose.family<CarrierRoute?, String>((
+  ref,
+  routeId,
+) {
+  return ref.read(carrierPublicationRepositoryProvider).fetchRouteById(routeId);
+});
+
+final routeRevisionsProvider =
+    FutureProvider.autoDispose.family<List<RouteRevisionRecord>, String>((ref, routeId) {
+      return ref
+          .read(carrierPublicationRepositoryProvider)
+          .fetchRouteRevisions(routeId);
+    });
+
+final myOneOffTripsProvider = FutureProvider.family<List<CarrierOneOffTrip>, int>((
+  ref,
+  limit,
+) {
+  return ref
+      .read(carrierPublicationRepositoryProvider)
+      .fetchMyOneOffTrips(limit: limit);
+});
+
+final oneOffTripDetailProvider =
+    FutureProvider.autoDispose.family<CarrierOneOffTrip?, String>((ref, tripId) {
+      return ref
+          .read(carrierPublicationRepositoryProvider)
+          .fetchOneOffTripById(tripId);
+    });
+
+final capacityPublicationSummaryProvider =
+    FutureProvider<CapacityPublicationSummary>((ref) {
+      return ref.read(carrierPublicationRepositoryProvider).fetchPublicationSummary();
+    });
 
 final myVerificationDocumentsProvider =
     FutureProvider<List<VerificationDocumentRecord>>((ref) {
@@ -27,7 +79,7 @@ final myVerificationDocumentsProvider =
     });
 
 final verificationDocumentDetailProvider =
-    FutureProvider.family<VerificationDocumentRecord?, String>((
+    FutureProvider.autoDispose.family<VerificationDocumentRecord?, String>((
       ref,
       documentId,
     ) {
@@ -37,7 +89,7 @@ final verificationDocumentDetailProvider =
     });
 
 final verificationDocumentsForEntityProvider =
-    FutureProvider.family<
+    FutureProvider.autoDispose.family<
       List<VerificationDocumentRecord>,
       ({
         VerificationEntityType entityType,
@@ -60,7 +112,7 @@ final pendingVerificationPacketsProvider =
     });
 
 final pendingVerificationPacketProvider =
-    FutureProvider.family<VerificationReviewPacket?, String>((ref, carrierId) {
+    FutureProvider.autoDispose.family<VerificationReviewPacket?, String>((ref, carrierId) {
       return ref
           .read(verificationAdminRepositoryProvider)
           .fetchPendingReviewPacketByCarrierId(carrierId);

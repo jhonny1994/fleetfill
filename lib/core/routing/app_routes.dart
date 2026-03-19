@@ -36,6 +36,12 @@ enum AppRouteName {
   carrierBookings,
   carrierProfile,
   carrierVerification,
+  carrierRouteCreate,
+  carrierRouteDetail,
+  carrierRouteEdit,
+  carrierOneOffTripCreate,
+  carrierOneOffTripDetail,
+  carrierOneOffTripEdit,
   carrierVehicleCreate,
   carrierVehicleDetail,
   carrierVehicleEdit,
@@ -92,6 +98,15 @@ abstract final class AppRoutePath {
   static const carrierBookings = '/carrier/bookings';
   static const carrierProfile = '/carrier/profile';
   static const carrierVerification = '/carrier/profile/verification';
+  static String carrierRouteCreate() => '$carrierRoutes/new-route';
+  static String carrierRouteDetail(String routeId) => '$carrierRoutes/route/$routeId';
+  static String carrierRouteEdit(String routeId) =>
+      '${carrierRouteDetail(routeId)}/edit';
+  static String carrierOneOffTripCreate() => '$carrierRoutes/new-trip';
+  static String carrierOneOffTripDetail(String tripId) =>
+      '$carrierRoutes/trip/$tripId';
+  static String carrierOneOffTripEdit(String tripId) =>
+      '${carrierOneOffTripDetail(tripId)}/edit';
   static String carrierProfileEdit() => '$carrierProfile/edit';
   static String carrierVehicles() => '$carrierProfile/vehicles';
   static String carrierVehicleCreate() => '${carrierVehicles()}/new';

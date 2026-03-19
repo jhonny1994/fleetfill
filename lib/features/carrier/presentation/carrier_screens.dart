@@ -116,20 +116,6 @@ class CarrierHomeScreen extends ConsumerWidget {
   }
 }
 
-class MyRoutesScreen extends StatelessWidget {
-  const MyRoutesScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final s = S.of(context);
-
-    return AppPlaceholderScreen(
-      title: s.myRoutesTitle,
-      description: s.myRoutesDescription,
-    );
-  }
-}
-
 class CarrierBookingsScreen extends StatelessWidget {
   const CarrierBookingsScreen({super.key});
 
@@ -383,7 +369,7 @@ class _VehicleEditorScreenState extends ConsumerState<VehicleEditorScreen> {
       }
     } on PostgrestException catch (error) {
       if (mounted) {
-        AppFeedback.showSnackBar(context, error.message);
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
       }
     } finally {
       if (mounted) {
@@ -393,8 +379,31 @@ class _VehicleEditorScreenState extends ConsumerState<VehicleEditorScreen> {
   }
 
   Future<void> _deleteVehicle(String vehicleId) async {
-    setState(() => _isSaving = true);
     final s = S.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AppFocusTraversal.dialog(
+        child: AlertDialog(
+          title: Text(s.vehicleDeleteAction),
+          content: Text(s.vehicleDeleteConfirmationMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(s.cancelLabel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(s.confirmLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (confirmed != true) {
+      return;
+    }
+
+    setState(() => _isSaving = true);
 
     try {
       await ref.read(vehicleRepositoryProvider).deleteVehicle(vehicleId);
@@ -406,7 +415,7 @@ class _VehicleEditorScreenState extends ConsumerState<VehicleEditorScreen> {
       context.pop();
     } on PostgrestException catch (error) {
       if (mounted) {
-        AppFeedback.showSnackBar(context, error.message);
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
       }
     } finally {
       if (mounted) {
@@ -621,7 +630,7 @@ class CarrierVerificationCenterScreen extends ConsumerWidget {
             error: (error, stackTrace) => AppErrorState(
               error: AppError(
                 code: 'vehicles_load_failed',
-                message: error.toString(),
+                message: mapAppErrorMessage(s, error),
                 technicalDetails: stackTrace.toString(),
               ),
               onRetry: () => ref.invalidate(myVehiclesProvider),
@@ -721,7 +730,7 @@ class _VerificationDocumentsSection extends ConsumerWidget {
           error: (error, stackTrace) => AppErrorState(
             error: AppError(
               code: 'verification_documents_failed',
-              message: error.toString(),
+              message: mapAppErrorMessage(s, error),
               technicalDetails: stackTrace.toString(),
             ),
             onRetry: () => ref.invalidate(
@@ -804,7 +813,7 @@ class _VerificationDocumentsSection extends ConsumerWidget {
       );
     } on PostgrestException catch (error) {
       if (context.mounted) {
-        AppFeedback.showSnackBar(context, error.message);
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
       }
     }
   }
@@ -831,7 +840,7 @@ class _VerificationDocumentsSection extends ConsumerWidget {
       );
     } on PostgrestException catch (error) {
       if (context.mounted) {
-        AppFeedback.showSnackBar(context, error.message);
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
       }
     }
   }

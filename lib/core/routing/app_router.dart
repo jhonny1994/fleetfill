@@ -249,6 +249,50 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: AppRoutePath.carrierRoutes,
                 name: AppRouteName.carrierRoutes.name,
                 builder: (context, state) => const MyRoutesScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'new-route',
+                    name: AppRouteName.carrierRouteCreate.name,
+                    builder: (context, state) => const RouteEditorScreen(),
+                  ),
+                  GoRoute(
+                    path: 'route/:routeId',
+                    name: AppRouteName.carrierRouteDetail.name,
+                    builder: (context, state) => CarrierRouteDetailScreen(
+                      routeId: state.pathParameters['routeId']!,
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: 'edit',
+                        name: AppRouteName.carrierRouteEdit.name,
+                        builder: (context, state) => RouteEditorScreen(
+                          routeId: state.pathParameters['routeId'],
+                        ),
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: 'new-trip',
+                    name: AppRouteName.carrierOneOffTripCreate.name,
+                    builder: (context, state) => const OneOffTripEditorScreen(),
+                  ),
+                  GoRoute(
+                    path: 'trip/:tripId',
+                    name: AppRouteName.carrierOneOffTripDetail.name,
+                    builder: (context, state) => CarrierOneOffTripDetailScreen(
+                      tripId: state.pathParameters['tripId']!,
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: 'edit',
+                        name: AppRouteName.carrierOneOffTripEdit.name,
+                        builder: (context, state) => OneOffTripEditorScreen(
+                          tripId: state.pathParameters['tripId'],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),

@@ -133,6 +133,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminVerificationRejectedMessage": MessageLookupByLibrary.simpleMessage(
       "تم رفض وثيقة التحقق.",
     ),
+    "appGenericErrorMessage": MessageLookupByLibrary.simpleMessage(
+      "تعذر على FleetFill إكمال هذا الإجراء حاليا.",
+    ),
     "appTitle": MessageLookupByLibrary.simpleMessage("FleetFill"),
     "authAccountCreatedMessage": MessageLookupByLibrary.simpleMessage(
       "تم إنشاء الحساب. تابع عبر تسجيل الدخول.",
@@ -186,6 +189,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authHaveAccountCta": MessageLookupByLibrary.simpleMessage(
       "لديك حساب بالفعل؟ سجّل الدخول",
+    ),
+    "authHidePasswordAction": MessageLookupByLibrary.simpleMessage(
+      "إخفاء كلمة المرور",
     ),
     "authInvalidCredentialsMessage": MessageLookupByLibrary.simpleMessage(
       "تحقق من البريد الإلكتروني وكلمة المرور ثم أعد المحاولة.",
@@ -244,6 +250,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authSessionExpiredTitle": MessageLookupByLibrary.simpleMessage(
       "انتهت الجلسة",
+    ),
+    "authShowPasswordAction": MessageLookupByLibrary.simpleMessage(
+      "إظهار كلمة المرور",
     ),
     "authSignInAction": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "authSignInDescription": MessageLookupByLibrary.simpleMessage(
@@ -379,6 +388,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Language selection",
     ),
+    "loadMoreLabel": MessageLookupByLibrary.simpleMessage("تحميل المزيد"),
     "loadingMessage": MessageLookupByLibrary.simpleMessage(
       "يقوم FleetFill بتحضير مساحة العمل الخاصة بك.",
     ),
@@ -396,11 +406,54 @@ class MessageLookup extends MessageLookupByLibrary {
       "Media upload permission",
     ),
     "moneySummaryTitle": MessageLookupByLibrary.simpleMessage("ملخص التسعير"),
+    "myRoutesActiveRoutesLabel": MessageLookupByLibrary.simpleMessage(
+      "المسارات المتكررة النشطة",
+    ),
+    "myRoutesActiveTripsLabel": MessageLookupByLibrary.simpleMessage(
+      "الرحلات الفردية النشطة",
+    ),
+    "myRoutesAddAction": MessageLookupByLibrary.simpleMessage("إضافة سعة"),
+    "myRoutesCreateRouteAction": MessageLookupByLibrary.simpleMessage(
+      "إضافة مسار متكرر",
+    ),
+    "myRoutesCreateTripAction": MessageLookupByLibrary.simpleMessage(
+      "إضافة رحلة فردية",
+    ),
     "myRoutesDescription": MessageLookupByLibrary.simpleMessage(
       "Recurring routes and one-off trips stay grouped in one branch.",
     ),
+    "myRoutesEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "انشر مسارا متكررا أو رحلة فردية لبدء عرض السعة.",
+    ),
     "myRoutesNavLabel": MessageLookupByLibrary.simpleMessage("Routes"),
+    "myRoutesOneOffTab": MessageLookupByLibrary.simpleMessage(
+      "الرحلات الفردية",
+    ),
+    "myRoutesPublishedCapacityLabel": MessageLookupByLibrary.simpleMessage(
+      "السعة المنشورة",
+    ),
+    "myRoutesRecurringTab": MessageLookupByLibrary.simpleMessage(
+      "المسارات المتكررة",
+    ),
+    "myRoutesReservedCapacityLabel": MessageLookupByLibrary.simpleMessage(
+      "السعة المحجوزة",
+    ),
+    "myRoutesRouteListTitle": MessageLookupByLibrary.simpleMessage(
+      "المسارات المتكررة",
+    ),
+    "myRoutesSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "ملخص نشر السعة",
+    ),
     "myRoutesTitle": MessageLookupByLibrary.simpleMessage("My routes"),
+    "myRoutesTripListTitle": MessageLookupByLibrary.simpleMessage(
+      "الرحلات الفردية",
+    ),
+    "myRoutesUpcomingDeparturesLabel": MessageLookupByLibrary.simpleMessage(
+      "الانطلاقات القادمة",
+    ),
+    "myRoutesUtilizationLabel": MessageLookupByLibrary.simpleMessage(
+      "معدل الاستخدام",
+    ),
     "myShipmentsDescription": MessageLookupByLibrary.simpleMessage(
       "Active, history, and draft shipment states stay inside this branch.",
     ),
@@ -435,14 +488,108 @@ class MessageLookup extends MessageLookupByLibrary {
     "offlineMessage": MessageLookupByLibrary.simpleMessage(
       "أنت غير متصل حاليا. بعض الإجراءات غير متاحة مؤقتا.",
     ),
+    "oneOffTripActivateAction": MessageLookupByLibrary.simpleMessage(
+      "تفعيل الرحلة",
+    ),
+    "oneOffTripActivateConfirmationMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "هل تريد تفعيل هذه الرحلة للحجوزات الجديدة؟",
+        ),
+    "oneOffTripActivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تفعيل الرحلة الفردية.",
+    ),
+    "oneOffTripCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "إضافة رحلة فردية",
+    ),
+    "oneOffTripCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تمت إضافة الرحلة الفردية.",
+    ),
+    "oneOffTripDeactivateAction": MessageLookupByLibrary.simpleMessage(
+      "إلغاء تفعيل الرحلة",
+    ),
+    "oneOffTripDeactivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "هل تريد إلغاء تفعيل هذه الرحلة للحجوزات الجديدة؟ ستبقى الحجوزات الحالية كما هي.",
+    ),
+    "oneOffTripDeactivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم إلغاء تفعيل الرحلة الفردية.",
+    ),
+    "oneOffTripDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "حذف الرحلة",
+    ),
+    "oneOffTripDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "لا يمكن حذف هذه الرحلة لأنها تحتوي بالفعل على حجوزات.",
+    ),
+    "oneOffTripDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "هل تريد حذف هذه الرحلة الفردية من FleetFill؟",
+    ),
+    "oneOffTripDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم حذف الرحلة الفردية.",
+    ),
+    "oneOffTripDepartureLabel": MessageLookupByLibrary.simpleMessage(
+      "الانطلاق",
+    ),
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
       "راجع تفاصيل هذه الرحلة الفردية قبل الحجز أو المتابعة التشغيلية.",
     ),
     "oneOffTripDetailTitle": m8,
+    "oneOffTripEditTitle": MessageLookupByLibrary.simpleMessage(
+      "تعديل الرحلة الفردية",
+    ),
+    "oneOffTripEditorDescription": MessageLookupByLibrary.simpleMessage(
+      "انشر رحلة بتاريخ محدد مع المركبة والمسار والانطلاق وتفاصيل السعة.",
+    ),
+    "oneOffTripSaveAction": MessageLookupByLibrary.simpleMessage("حفظ الرحلة"),
+    "oneOffTripSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تحديث الرحلة الفردية.",
+    ),
     "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
       "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
     ),
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment flow"),
+    "payoutAccountAddAction": MessageLookupByLibrary.simpleMessage(
+      "إضافة حساب تحويل",
+    ),
+    "payoutAccountDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "حذف الحساب",
+    ),
+    "payoutAccountDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "لا يمكن حذف هذا الحساب حاليا.",
+    ),
+    "payoutAccountDeleteConfirmationMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "هل تريد حذف حساب التحويل هذا من FleetFill؟",
+        ),
+    "payoutAccountDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم حذف حساب التحويل.",
+    ),
+    "payoutAccountEditAction": MessageLookupByLibrary.simpleMessage(
+      "تعديل الحساب",
+    ),
+    "payoutAccountHolderLabel": MessageLookupByLibrary.simpleMessage(
+      "اسم صاحب الحساب",
+    ),
+    "payoutAccountIdentifierLabel": MessageLookupByLibrary.simpleMessage(
+      "رقم الحساب أو المعرّف",
+    ),
+    "payoutAccountInstitutionLabel": MessageLookupByLibrary.simpleMessage(
+      "اسم البنك أو CCP",
+    ),
+    "payoutAccountSaveAction": MessageLookupByLibrary.simpleMessage(
+      "حفظ الحساب",
+    ),
+    "payoutAccountSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم حفظ حساب التحويل.",
+    ),
+    "payoutAccountTypeBankLabel": MessageLookupByLibrary.simpleMessage(
+      "تحويل بنكي",
+    ),
+    "payoutAccountTypeCcpLabel": MessageLookupByLibrary.simpleMessage("CCP"),
+    "payoutAccountTypeDahabiaLabel": MessageLookupByLibrary.simpleMessage(
+      "الذهبية",
+    ),
+    "payoutAccountTypeLabel": MessageLookupByLibrary.simpleMessage(
+      "وسيلة التحويل",
+    ),
     "payoutAccountsDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier payout accounts stay grouped under the profile branch.",
     ),
@@ -461,6 +608,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneCompletionTitle": MessageLookupByLibrary.simpleMessage(
       "Phone completion",
     ),
+    "pricePerKgUnitLabel": MessageLookupByLibrary.simpleMessage("دج/كلغ"),
     "profileCarrierVerificationHint": MessageLookupByLibrary.simpleMessage(
       "أكمل بيانات الناقل أولا، ثم ارفع وثائق التحقق المطلوبة من ملفك الشخصي.",
     ),
@@ -488,6 +636,38 @@ class MessageLookup extends MessageLookupByLibrary {
       "افتح هذا الإثبات من خلال مسار مشترك وآمن عندما يصبح الوصول جاهزا.",
     ),
     "proofViewerTitle": m9,
+    "publicationActiveLabel": MessageLookupByLibrary.simpleMessage("نشط"),
+    "publicationEffectiveDateFutureMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "اختر تاريخا ووقتا للسريان يساوي الآن أو بعده.",
+        ),
+    "publicationInactiveLabel": MessageLookupByLibrary.simpleMessage("غير نشط"),
+    "publicationNoRevisionsMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد مراجعات للمسار حتى الآن.",
+    ),
+    "publicationRevisionHistoryTitle": MessageLookupByLibrary.simpleMessage(
+      "سجل المراجعات",
+    ),
+    "publicationSameLaneErrorMessage": MessageLookupByLibrary.simpleMessage(
+      "يجب أن تكون بلديتا الانطلاق والوصول مختلفتين.",
+    ),
+    "publicationSearchCommunesHint": MessageLookupByLibrary.simpleMessage(
+      "ابحث عن بلدية",
+    ),
+    "publicationSelectValueAction": MessageLookupByLibrary.simpleMessage(
+      "اختر",
+    ),
+    "publicationVehicleUnavailableMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "اختر إحدى مركباتك المتاحة لهذا النشر.",
+        ),
+    "publicationVerifiedCarrierRequiredMessage":
+        MessageLookupByLibrary.simpleMessage("أكمل تحقق الناقل قبل نشر السعة."),
+    "publicationVerifiedVehicleRequiredMessage":
+        MessageLookupByLibrary.simpleMessage("اختر مركبة موثقة قبل نشر السعة."),
+    "publicationWeekdaysRequiredMessage": MessageLookupByLibrary.simpleMessage(
+      "اختر يوما واحدا على الأقل للانطلاق.",
+    ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
     "roleSelectionCarrierDescription": MessageLookupByLibrary.simpleMessage(
       "انشر الرحلات، وأدر الحجوزات، وتابع التحقق.",
@@ -505,12 +685,72 @@ class MessageLookup extends MessageLookupByLibrary {
       "المتابعة كمرسل",
     ),
     "roleSelectionTitle": MessageLookupByLibrary.simpleMessage("اختيار الدور"),
+    "routeActivateAction": MessageLookupByLibrary.simpleMessage("تفعيل المسار"),
+    "routeActivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "هل تريد تفعيل هذا المسار للحجوزات الجديدة؟",
+    ),
+    "routeActivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تفعيل المسار.",
+    ),
+    "routeCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "إضافة مسار متكرر",
+    ),
+    "routeCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تمت إضافة المسار المتكرر.",
+    ),
+    "routeDeactivateAction": MessageLookupByLibrary.simpleMessage(
+      "إلغاء تفعيل المسار",
+    ),
+    "routeDeactivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "هل تريد إلغاء تفعيل هذا المسار للحجوزات الجديدة؟ ستبقى الحجوزات الحالية كما هي.",
+    ),
+    "routeDeactivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم إلغاء تفعيل المسار.",
+    ),
+    "routeDeleteAction": MessageLookupByLibrary.simpleMessage("حذف المسار"),
+    "routeDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "لا يمكن حذف هذا المسار لأنه يحتوي بالفعل على حجوزات.",
+    ),
+    "routeDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "هل تريد حذف هذا المسار المتكرر من FleetFill؟",
+    ),
+    "routeDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم حذف المسار المتكرر.",
+    ),
+    "routeDepartureTimeLabel": MessageLookupByLibrary.simpleMessage(
+      "وقت الانطلاق الافتراضي",
+    ),
+    "routeDestinationLabel": MessageLookupByLibrary.simpleMessage(
+      "بلدية الوصول",
+    ),
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
       "راجع تفاصيل هذا المسار قبل الحجز أو المتابعة.",
     ),
     "routeDetailTitle": m10,
+    "routeEditTitle": MessageLookupByLibrary.simpleMessage(
+      "تعديل المسار المتكرر",
+    ),
+    "routeEditorDescription": MessageLookupByLibrary.simpleMessage(
+      "انشر مسارا متكررا مع المركبة والجدول وتفاصيل السعة.",
+    ),
+    "routeEffectiveFromLabel": MessageLookupByLibrary.simpleMessage("يسري من"),
     "routeErrorMessage": MessageLookupByLibrary.simpleMessage(
       "تعذر على FleetFill فتح هذه الشاشة.",
+    ),
+    "routeOriginLabel": MessageLookupByLibrary.simpleMessage("بلدية الانطلاق"),
+    "routePricePerKgLabel": MessageLookupByLibrary.simpleMessage(
+      "السعر لكل كلغ (دج)",
+    ),
+    "routeRecurringDaysLabel": MessageLookupByLibrary.simpleMessage(
+      "أيام التكرار",
+    ),
+    "routeSaveAction": MessageLookupByLibrary.simpleMessage("حفظ المسار"),
+    "routeSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تحديث المسار المتكرر.",
+    ),
+    "routeStatusLabel": MessageLookupByLibrary.simpleMessage("حالة النشر"),
+    "routeVehicleLabel": MessageLookupByLibrary.simpleMessage(
+      "المركبة المخصصة",
     ),
     "sampleBasePriceAmount": MessageLookupByLibrary.simpleMessage("DZD 12,500"),
     "sampleBasePriceLabel": MessageLookupByLibrary.simpleMessage(
@@ -600,6 +840,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "تمت إضافة المركبة.",
     ),
     "vehicleDeleteAction": MessageLookupByLibrary.simpleMessage("حذف المركبة"),
+    "vehicleDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "هل تريد حذف هذه المركبة من FleetFill؟",
+    ),
     "vehicleDeletedMessage": MessageLookupByLibrary.simpleMessage(
       "تم حذف المركبة.",
     ),

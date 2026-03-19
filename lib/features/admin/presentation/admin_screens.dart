@@ -97,7 +97,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             error: (error, stackTrace) => AppErrorState(
               error: AppError(
                 code: 'admin_dashboard_failed',
-                message: error.toString(),
+                message: mapAppErrorMessage(s, error),
                 technicalDetails: stackTrace.toString(),
               ),
               onRetry: () => ref.invalidate(pendingVerificationPacketsProvider),
@@ -182,7 +182,7 @@ class AdminQueuesScreen extends ConsumerWidget {
             error: (error, stackTrace) => AppErrorState(
               error: AppError(
                 code: 'verification_queue_failed',
-                message: error.toString(),
+                message: mapAppErrorMessage(s, error),
                 technicalDetails: stackTrace.toString(),
               ),
               onRetry: () => ref.invalidate(pendingVerificationPacketsProvider),
@@ -224,7 +224,7 @@ class AdminQueuesScreen extends ConsumerWidget {
             error: (error, stackTrace) => AppErrorState(
               error: AppError(
                 code: 'verification_audit_failed',
-                message: error.toString(),
+                message: mapAppErrorMessage(s, error),
                 technicalDetails: stackTrace.toString(),
               ),
               onRetry: () => ref.invalidate(verificationAuditProvider),
@@ -306,7 +306,7 @@ class AdminVerificationPacketScreen extends ConsumerWidget {
       AppFeedback.showSnackBar(context, s.adminVerificationApproveAllSuccess);
     } on PostgrestException catch (error) {
       if (context.mounted) {
-        AppFeedback.showSnackBar(context, error.message);
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
       }
     }
   }
@@ -400,6 +400,18 @@ class _AdminDocumentGroup extends ConsumerWidget {
                       Row(
                         children: [
                           Expanded(
+                            child: TextButton(
+                              onPressed: () => context.push(
+                                AppRoutePath.sharedDocumentViewer.replaceFirst(
+                                  ':id',
+                                  document.id,
+                                ),
+                              ),
+                              child: Text(s.documentViewerOpenAction),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
                             child: OutlinedButton(
                               onPressed: () => unawaited(
                                 _review(
@@ -472,7 +484,7 @@ class _AdminDocumentGroup extends ConsumerWidget {
       );
     } on PostgrestException catch (error) {
       if (context.mounted) {
-        AppFeedback.showSnackBar(context, error.message);
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
       }
     }
   }

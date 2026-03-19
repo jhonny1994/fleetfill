@@ -4,13 +4,52 @@ This directory holds the FleetFill backend foundation for Supabase.
 
 ## Migrations
 
-- `migrations/20260317143000_phase_2_schema_foundation.sql`
-  - base enums, base tables, primary constraints, and indexing foundation
-- `migrations/20260317150000_phase_2_security_and_runtime_foundation.sql`
-  - upload sessions, security helpers, RLS, storage policies, append-only protections, and server-side functions
+- migration history is change-oriented, not phase-oriented
+- use `YYYYMMDDHHMMSS_<verb>_<subject>.sql`
+- keep one concern per migration where practical: schema, helpers, user RPC, privileged RPC, RLS, storage, grants, backfills
+
+Current local baseline is split into:
+
+- `migrations/20260317143000_create_base_types_and_triggers.sql`
+- `migrations/20260317143100_create_reference_location_tables.sql`
+- `migrations/20260317143200_create_marketplace_core_tables.sql`
+- `migrations/20260317143300_create_finance_and_disputes_tables.sql`
+- `migrations/20260317143400_create_communications_and_platform_tables.sql`
+- `migrations/20260317150000_create_runtime_support_tables.sql`
+- `migrations/20260317150100_create_security_and_storage_helpers.sql`
+- `migrations/20260317150200_create_client_upload_and_finalize_rpc.sql`
+- `migrations/20260317150300_create_privileged_runtime_rpc.sql`
+- `migrations/20260317150400_create_storage_buckets.sql`
+- `migrations/20260317150500_enable_rls_and_create_table_policies.sql`
+- `migrations/20260317150600_create_storage_policies_and_security_triggers.sql`
+- `migrations/20260317150700_grant_runtime_function_access.sql`
+- `migrations/20260318130000_create_public_carrier_profile_rpc.sql`
+- `migrations/20260318170000_create_verification_effective_document_helpers.sql`
+- `migrations/20260318170100_create_verification_admin_review_actions.sql`
+- `migrations/20260318170200_create_verification_packet_approval.sql`
+- `migrations/20260319120000_add_capacity_publication_constraints.sql`
+- `migrations/20260319120100_backfill_route_revision_lane_history.sql`
+- `migrations/20260319120200_create_capacity_publication_access_helpers.sql`
+- `migrations/20260319120300_create_capacity_publication_integrity_guards.sql`
+- `migrations/20260319120400_create_capacity_publication_routes_rpc.sql`
+- `migrations/20260319120500_create_capacity_publication_oneoff_trip_rpc.sql`
+- `migrations/20260319120600_enable_capacity_publication_policies.sql`
+- `migrations/20260319120700_harden_verification_helper_access.sql`
+
+Rules:
+
+- do not rename or edit historical migrations once they become canonical outside local rebaseline work
+- avoid broad names like `phase_*`, `foundation`, or roadmap labels
+- keep backfills explicit and separate from unrelated schema changes when possible
+- keep user-callable and privileged/service-role functions separated
 
 ## Seed Data
 
+- target best practice is deterministic local seeding through `supabase/seed.sql` or `supabase/seeds/`
+- FleetFill seeds locations from `supabase/seeds/locations.sql`, generated from the canonical JSON in `docs/wilayas-with-municipalities.json`
+- regenerate the SQL seed with:
+  - `dart run tool/generate_supabase_location_seed.dart`
+- the importer below remains available as maintenance tooling, not the primary local bootstrap path
 - `tool/import_locations.dart`
   - reads `docs/wilayas-with-municipalities.json` directly
   - clears `public.communes` first, then `public.wilayas`
@@ -81,3 +120,8 @@ Edge Function responsibilities:
   - payment resubmission expiry
   - stale queue lock recovery
 - actual plan quotas and availability still need verification on the target Supabase project before production use
+
+## Database Regression Checks
+
+- baseline SQL contract checks live in `supabase/tests/contracts.sql`
+- run them after reset against the local database with your preferred `psql` workflow
