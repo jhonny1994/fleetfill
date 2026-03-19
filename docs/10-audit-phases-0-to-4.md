@@ -16,26 +16,26 @@ Rules for this file:
 ### Critical
 
 - [x] Fix Supabase runtime config wiring so the app actually loads `supabaseUrl` and `supabaseAnonKey` from environment defines and initializes reliably (`lib/core/config/app_environment.dart:23`, `lib/core/config/app_bootstrap.dart:81`)
-- [x] Close the profile insert privilege-escalation path so authenticated users cannot self-assign protected fields such as `role='admin'`, activation, verification, or ratings on first insert (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:928`)
-- [x] Close insert-time protection gaps for `vehicles` and `payout_accounts` so users cannot self-set verification-sensitive fields on create (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:946`, `supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:968`)
-- [x] Rework Phase 4 verification SQL so aggregate profile/vehicle verification state is computed from the latest effective document per type, not all historical rows (`supabase/migrations/20260318170000_phase_4_verification_review_functions.sql:54`)
-- [x] Rework `admin_approve_verification_packet(...)` so it only approves current effective documents and refuses incomplete packets instead of force-verifying everything (`supabase/migrations/20260318170000_phase_4_verification_review_functions.sql:192`)
+- [x] Close the profile insert privilege-escalation path so authenticated users cannot self-assign protected fields such as `role='admin'`, activation, verification, or ratings on first insert (`supabase/migrations/20260317150600_create_storage_policies_and_security_triggers.sql`)
+- [x] Close insert-time protection gaps for `vehicles` and `payout_accounts` so users cannot self-set verification-sensitive fields on create (`supabase/migrations/20260317150600_create_storage_policies_and_security_triggers.sql`)
+- [x] Rework Phase 4 verification SQL so aggregate profile/vehicle verification state is computed from the latest effective document per type, not all historical rows (`supabase/migrations/20260318170000_create_verification_effective_document_helpers.sql`, `supabase/migrations/20260318170200_create_verification_packet_approval.sql`)
+- [x] Rework `admin_approve_verification_packet(...)` so it only approves current effective documents and refuses incomplete packets instead of force-verifying everything (`supabase/migrations/20260318170200_create_verification_packet_approval.sql`)
 
 ### High
 
 - [x] Replace placeholder runtime automation functions with real production behavior or roll back the completed checklist claims for Phase 2 automation (`supabase/functions/scheduled-automation-tick/index.ts:1`, `supabase/functions/transactional-email-dispatch-worker/index.ts:1`, `supabase/functions/email-provider-webhook/index.ts:1`, `supabase/functions/support-email-dispatch/index.ts:1`)
 - [x] Align Google sign-in truth across config, UI, and docs so it is either fully enabled and working or not exposed/claimed as complete (`supabase/config.toml:36`, `lib/core/auth/auth_repository.dart:84`, `lib/core/auth/auth_screens.dart:104`)
-- [x] Narrow payment proof visibility so carriers cannot access shipper payment evidence unless the product explicitly requires that exposure (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:1187`, `supabase/functions/signed-file-url/index.ts:67`)
-- [x] Harden file upload finalization so server truth verifies stored object integrity instead of trusting client-declared metadata too much (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:382`, `supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:702`)
+- [x] Narrow payment proof visibility so carriers cannot access shipper payment evidence unless the product explicitly requires that exposure (`supabase/migrations/20260317150500_enable_rls_and_create_table_policies.sql`, `supabase/functions/signed-file-url/index.ts:67`)
+- [x] Harden file upload finalization so server truth verifies stored object integrity instead of trusting client-declared metadata too much (`supabase/migrations/20260317150200_create_client_upload_and_finalize_rpc.sql`)
 - [x] Make admin verification queue loading scalable with server-side packet shaping or pagination/windowing instead of loading everything client-side (`lib/features/admin/infrastructure/verification_admin_repository.dart:23`, `lib/shared/providers/providers.dart:55`, `lib/features/admin/presentation/admin_screens.dart:237`)
 - [x] Turn the shared document viewer into a real production document open/view/download experience instead of exposing a signed URL string as the main UX (`lib/core/routing/shared_route_screens.dart:264`)
 
 ### Progress Notes
 
 - runtime config now reads Supabase keys from compile-time defines with supported fallback names, so app bootstrap can actually initialize Supabase from repository-controlled configuration (`lib/core/config/app_environment.dart`)
-- sensitive profile, vehicle, and payout-account fields are now protected on insert as well as update, including an explicit block against direct admin-profile creation (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql`)
-- Phase 4 verification review now introduces current-effective-document helpers and incomplete-packet rejection so server truth is closer to the intended versioned-history model (`supabase/migrations/20260318170000_phase_4_verification_review_functions.sql`)
-- payment proof access is now shipper-or-admin only, and finalize flows now verify object existence plus storage metadata before metadata rows are recorded (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql`)
+- sensitive profile, vehicle, and payout-account fields are now protected on insert as well as update, including an explicit block against direct admin-profile creation (`supabase/migrations/20260317150600_create_storage_policies_and_security_triggers.sql`)
+- Phase 4 verification review now introduces current-effective-document helpers and incomplete-packet rejection so server truth is closer to the intended versioned-history model (`supabase/migrations/20260318170000_create_verification_effective_document_helpers.sql`, `supabase/migrations/20260318170200_create_verification_packet_approval.sql`)
+- payment proof access is now shipper-or-admin only, and finalize flows now verify object existence plus storage metadata before metadata rows are recorded (`supabase/migrations/20260317150200_create_client_upload_and_finalize_rpc.sql`, `supabase/migrations/20260317150500_enable_rls_and_create_table_policies.sql`)
 - supporting contract checks were expanded in `test/verification_workflows_test.dart`
 - transactional email worker, scheduled automation tick, provider webhook handler, and support acknowledgement dispatcher now have real secured implementations instead of placeholder JSON responders (`supabase/functions/`)
 - Google sign-in is now enabled in local Supabase config and gated in the app by explicit environment config so UI and runtime truth stay aligned (`supabase/config.toml`, `lib/core/config/app_environment.dart`, `lib/core/auth/auth_screens.dart`)
@@ -99,17 +99,17 @@ Rules for this file:
 ### Critical
 
 - Supabase environment wiring is incomplete in repo code, so completed phases still depend on runtime setup that the repository itself does not fully express (`lib/core/config/app_environment.dart:23`, `lib/core/config/app_bootstrap.dart:81`)
-- profile insert policy allows self-assignment of protected fields on first insert, including admin role escalation (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:928`)
-- vehicle and payout-account insert policies do not protect verification-sensitive fields on create (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:946`, `supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:968`)
-- Phase 4 verification SQL computes status from all historical document rows instead of current effective rows, which breaks the intended replacement-with-history model (`supabase/migrations/20260318170000_phase_4_verification_review_functions.sql:54`)
-- `Approve all` logic can wrongly verify incomplete or historically rejected packets (`supabase/migrations/20260318170000_phase_4_verification_review_functions.sql:192`)
+- profile insert policy allows self-assignment of protected fields on first insert, including admin role escalation (`supabase/migrations/20260317150600_create_storage_policies_and_security_triggers.sql`)
+- vehicle and payout-account insert policies do not protect verification-sensitive fields on create (`supabase/migrations/20260317150600_create_storage_policies_and_security_triggers.sql`)
+- Phase 4 verification SQL computes status from all historical document rows instead of current effective rows, which breaks the intended replacement-with-history model (`supabase/migrations/20260318170000_create_verification_effective_document_helpers.sql`)
+- `Approve all` logic can wrongly verify incomplete or historically rejected packets (`supabase/migrations/20260318170200_create_verification_packet_approval.sql`)
 
 ### High
 
 - Phase 2 automation/runtime foundations are marked done, but several Edge Functions are still placeholders that only return descriptive JSON (`supabase/functions/scheduled-automation-tick/index.ts:1`, `supabase/functions/transactional-email-dispatch-worker/index.ts:1`, `supabase/functions/email-provider-webhook/index.ts:1`, `supabase/functions/support-email-dispatch/index.ts:1`)
 - Google sign-in is exposed in product/docs/UI but disabled in local Supabase config, so the completed auth claim is overstated (`supabase/config.toml:36`, `lib/core/auth/auth_screens.dart:104`)
-- proof-file access is too broad for the product trust model because carriers can reach shipper proof evidence (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:1187`, `supabase/functions/signed-file-url/index.ts:67`)
-- upload/finalize flow does not verify stored-object truth strongly enough for sensitive file workflows (`supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:382`, `supabase/migrations/20260317150000_phase_2_security_and_runtime_foundation.sql:702`)
+- proof-file access is too broad for the product trust model because carriers can reach shipper proof evidence (`supabase/migrations/20260317150500_enable_rls_and_create_table_policies.sql`, `supabase/functions/signed-file-url/index.ts:67`)
+- upload/finalize flow does not verify stored-object truth strongly enough for sensitive file workflows (`supabase/migrations/20260317150200_create_client_upload_and_finalize_rpc.sql`)
 - admin verification packet loading is not production-scalable because packet shaping happens client-side after large fetches (`lib/features/admin/infrastructure/verification_admin_repository.dart:21`)
 - document viewing route exists, but the UX is still a signed-URL exposure flow rather than a true user-facing document experience (`lib/core/routing/shared_route_screens.dart:264`)
 

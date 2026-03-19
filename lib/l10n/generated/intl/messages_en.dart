@@ -136,6 +136,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminVerificationRejectedMessage": MessageLookupByLibrary.simpleMessage(
       "Verification document rejected.",
     ),
+    "appGenericErrorMessage": MessageLookupByLibrary.simpleMessage(
+      "FleetFill could not complete this action right now.",
+    ),
     "appTitle": MessageLookupByLibrary.simpleMessage("FleetFill"),
     "authAccountCreatedMessage": MessageLookupByLibrary.simpleMessage(
       "Your account was created. Continue by signing in.",
@@ -189,6 +192,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authHaveAccountCta": MessageLookupByLibrary.simpleMessage(
       "Already have an account? Sign in",
+    ),
+    "authHidePasswordAction": MessageLookupByLibrary.simpleMessage(
+      "Hide password",
     ),
     "authInvalidCredentialsMessage": MessageLookupByLibrary.simpleMessage(
       "Check your email and password, then try again.",
@@ -247,6 +253,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authSessionExpiredTitle": MessageLookupByLibrary.simpleMessage(
       "Session expired",
+    ),
+    "authShowPasswordAction": MessageLookupByLibrary.simpleMessage(
+      "Show password",
     ),
     "authSignInAction": MessageLookupByLibrary.simpleMessage("Sign in"),
     "authSignInDescription": MessageLookupByLibrary.simpleMessage(
@@ -403,6 +412,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Language selection",
     ),
+    "loadMoreLabel": MessageLookupByLibrary.simpleMessage("Load more"),
     "loadingMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill is preparing your workspace.",
     ),
@@ -422,11 +432,52 @@ class MessageLookup extends MessageLookupByLibrary {
     "moneySummaryTitle": MessageLookupByLibrary.simpleMessage(
       "Pricing summary",
     ),
+    "myRoutesActiveRoutesLabel": MessageLookupByLibrary.simpleMessage(
+      "Active recurring routes",
+    ),
+    "myRoutesActiveTripsLabel": MessageLookupByLibrary.simpleMessage(
+      "Active one-off trips",
+    ),
+    "myRoutesAddAction": MessageLookupByLibrary.simpleMessage("Add capacity"),
+    "myRoutesCreateRouteAction": MessageLookupByLibrary.simpleMessage(
+      "Add recurring route",
+    ),
+    "myRoutesCreateTripAction": MessageLookupByLibrary.simpleMessage(
+      "Add one-off trip",
+    ),
     "myRoutesDescription": MessageLookupByLibrary.simpleMessage(
       "Recurring routes and one-off trips stay grouped in one branch.",
     ),
+    "myRoutesEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Publish a recurring route or one-off trip to start offering capacity.",
+    ),
     "myRoutesNavLabel": MessageLookupByLibrary.simpleMessage("Routes"),
+    "myRoutesOneOffTab": MessageLookupByLibrary.simpleMessage("One-off trips"),
+    "myRoutesPublishedCapacityLabel": MessageLookupByLibrary.simpleMessage(
+      "Published capacity",
+    ),
+    "myRoutesRecurringTab": MessageLookupByLibrary.simpleMessage(
+      "Recurring routes",
+    ),
+    "myRoutesReservedCapacityLabel": MessageLookupByLibrary.simpleMessage(
+      "Reserved capacity",
+    ),
+    "myRoutesRouteListTitle": MessageLookupByLibrary.simpleMessage(
+      "Recurring routes",
+    ),
+    "myRoutesSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Capacity publication summary",
+    ),
     "myRoutesTitle": MessageLookupByLibrary.simpleMessage("My routes"),
+    "myRoutesTripListTitle": MessageLookupByLibrary.simpleMessage(
+      "One-off trips",
+    ),
+    "myRoutesUpcomingDeparturesLabel": MessageLookupByLibrary.simpleMessage(
+      "Upcoming departures",
+    ),
+    "myRoutesUtilizationLabel": MessageLookupByLibrary.simpleMessage(
+      "Utilization",
+    ),
     "myShipmentsDescription": MessageLookupByLibrary.simpleMessage(
       "Active, history, and draft shipment states stay inside this branch.",
     ),
@@ -461,14 +512,108 @@ class MessageLookup extends MessageLookupByLibrary {
     "offlineMessage": MessageLookupByLibrary.simpleMessage(
       "You are offline. Some actions are temporarily unavailable.",
     ),
+    "oneOffTripActivateAction": MessageLookupByLibrary.simpleMessage(
+      "Activate trip",
+    ),
+    "oneOffTripActivateConfirmationMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Activate this trip for new bookings?",
+        ),
+    "oneOffTripActivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "One-off trip activated.",
+    ),
+    "oneOffTripCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "Add one-off trip",
+    ),
+    "oneOffTripCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "One-off trip added.",
+    ),
+    "oneOffTripDeactivateAction": MessageLookupByLibrary.simpleMessage(
+      "Deactivate trip",
+    ),
+    "oneOffTripDeactivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Deactivate this trip for new bookings? Existing bookings will stay unchanged.",
+    ),
+    "oneOffTripDeactivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "One-off trip deactivated.",
+    ),
+    "oneOffTripDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Delete trip",
+    ),
+    "oneOffTripDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "This trip cannot be deleted because it already has bookings.",
+    ),
+    "oneOffTripDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Delete this one-off trip from FleetFill?",
+    ),
+    "oneOffTripDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "One-off trip removed.",
+    ),
+    "oneOffTripDepartureLabel": MessageLookupByLibrary.simpleMessage(
+      "Departure",
+    ),
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Review this one-off trip before booking or operational follow-up.",
     ),
     "oneOffTripDetailTitle": m8,
+    "oneOffTripEditTitle": MessageLookupByLibrary.simpleMessage(
+      "Edit one-off trip",
+    ),
+    "oneOffTripEditorDescription": MessageLookupByLibrary.simpleMessage(
+      "Publish one dated trip with vehicle, lane, departure, and capacity details.",
+    ),
+    "oneOffTripSaveAction": MessageLookupByLibrary.simpleMessage("Save trip"),
+    "oneOffTripSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "One-off trip updated.",
+    ),
     "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
       "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
     ),
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment flow"),
+    "payoutAccountAddAction": MessageLookupByLibrary.simpleMessage(
+      "Add payout account",
+    ),
+    "payoutAccountDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Delete payout account",
+    ),
+    "payoutAccountDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "This payout account cannot be removed right now.",
+    ),
+    "payoutAccountDeleteConfirmationMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Remove this payout account from FleetFill?",
+        ),
+    "payoutAccountDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "Payout account removed.",
+    ),
+    "payoutAccountEditAction": MessageLookupByLibrary.simpleMessage(
+      "Edit payout account",
+    ),
+    "payoutAccountHolderLabel": MessageLookupByLibrary.simpleMessage(
+      "Account holder name",
+    ),
+    "payoutAccountIdentifierLabel": MessageLookupByLibrary.simpleMessage(
+      "Account number or identifier",
+    ),
+    "payoutAccountInstitutionLabel": MessageLookupByLibrary.simpleMessage(
+      "Bank or CCP name",
+    ),
+    "payoutAccountSaveAction": MessageLookupByLibrary.simpleMessage(
+      "Save payout account",
+    ),
+    "payoutAccountSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Payout account saved.",
+    ),
+    "payoutAccountTypeBankLabel": MessageLookupByLibrary.simpleMessage(
+      "Bank transfer",
+    ),
+    "payoutAccountTypeCcpLabel": MessageLookupByLibrary.simpleMessage("CCP"),
+    "payoutAccountTypeDahabiaLabel": MessageLookupByLibrary.simpleMessage(
+      "Dahabia",
+    ),
+    "payoutAccountTypeLabel": MessageLookupByLibrary.simpleMessage(
+      "Payout rail",
+    ),
     "payoutAccountsDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier payout accounts stay grouped under the profile branch.",
     ),
@@ -487,6 +632,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneCompletionTitle": MessageLookupByLibrary.simpleMessage(
       "Phone completion",
     ),
+    "pricePerKgUnitLabel": MessageLookupByLibrary.simpleMessage("DZD/kg"),
     "profileCarrierVerificationHint": MessageLookupByLibrary.simpleMessage(
       "Add your carrier details now, then upload the required verification documents from your profile.",
     ),
@@ -512,6 +658,44 @@ class MessageLookup extends MessageLookupByLibrary {
       "Open this proof from a secure shared route when access is ready.",
     ),
     "proofViewerTitle": m9,
+    "publicationActiveLabel": MessageLookupByLibrary.simpleMessage("Active"),
+    "publicationEffectiveDateFutureMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Choose an effective date and time that is now or later.",
+        ),
+    "publicationInactiveLabel": MessageLookupByLibrary.simpleMessage(
+      "Inactive",
+    ),
+    "publicationNoRevisionsMessage": MessageLookupByLibrary.simpleMessage(
+      "No route revisions recorded yet.",
+    ),
+    "publicationRevisionHistoryTitle": MessageLookupByLibrary.simpleMessage(
+      "Revision history",
+    ),
+    "publicationSameLaneErrorMessage": MessageLookupByLibrary.simpleMessage(
+      "Origin and destination must be different communes.",
+    ),
+    "publicationSearchCommunesHint": MessageLookupByLibrary.simpleMessage(
+      "Search communes",
+    ),
+    "publicationSelectValueAction": MessageLookupByLibrary.simpleMessage(
+      "Select",
+    ),
+    "publicationVehicleUnavailableMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Choose one of your available vehicles for this publication.",
+        ),
+    "publicationVerifiedCarrierRequiredMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Complete carrier verification before publishing capacity.",
+        ),
+    "publicationVerifiedVehicleRequiredMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Choose a verified vehicle before publishing capacity.",
+        ),
+    "publicationWeekdaysRequiredMessage": MessageLookupByLibrary.simpleMessage(
+      "Select at least one departure day.",
+    ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Retry"),
     "roleSelectionCarrierDescription": MessageLookupByLibrary.simpleMessage(
       "Publish trips, manage bookings, and keep verification moving.",
@@ -531,12 +715,78 @@ class MessageLookup extends MessageLookupByLibrary {
     "roleSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Role selection",
     ),
+    "routeActivateAction": MessageLookupByLibrary.simpleMessage(
+      "Activate route",
+    ),
+    "routeActivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Activate this route for new bookings?",
+    ),
+    "routeActivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Route activated.",
+    ),
+    "routeCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "Add recurring route",
+    ),
+    "routeCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Recurring route added.",
+    ),
+    "routeDeactivateAction": MessageLookupByLibrary.simpleMessage(
+      "Deactivate route",
+    ),
+    "routeDeactivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Deactivate this route for new bookings? Existing bookings will stay unchanged.",
+    ),
+    "routeDeactivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Route deactivated.",
+    ),
+    "routeDeleteAction": MessageLookupByLibrary.simpleMessage("Delete route"),
+    "routeDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "This route cannot be deleted because it already has bookings.",
+    ),
+    "routeDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Delete this recurring route from FleetFill?",
+    ),
+    "routeDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "Recurring route removed.",
+    ),
+    "routeDepartureTimeLabel": MessageLookupByLibrary.simpleMessage(
+      "Default departure time",
+    ),
+    "routeDestinationLabel": MessageLookupByLibrary.simpleMessage(
+      "Destination commune",
+    ),
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shared route detail presentation sits above the role shells.",
     ),
     "routeDetailTitle": m10,
+    "routeEditTitle": MessageLookupByLibrary.simpleMessage(
+      "Edit recurring route",
+    ),
+    "routeEditorDescription": MessageLookupByLibrary.simpleMessage(
+      "Publish a recurring lane with vehicle, schedule, and capacity details.",
+    ),
+    "routeEffectiveFromLabel": MessageLookupByLibrary.simpleMessage(
+      "Effective from",
+    ),
     "routeErrorMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill could not open this route.",
+    ),
+    "routeOriginLabel": MessageLookupByLibrary.simpleMessage("Origin commune"),
+    "routePricePerKgLabel": MessageLookupByLibrary.simpleMessage(
+      "Price per kg (DZD)",
+    ),
+    "routeRecurringDaysLabel": MessageLookupByLibrary.simpleMessage(
+      "Recurring days",
+    ),
+    "routeSaveAction": MessageLookupByLibrary.simpleMessage("Save route"),
+    "routeSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Recurring route updated.",
+    ),
+    "routeStatusLabel": MessageLookupByLibrary.simpleMessage(
+      "Publication status",
+    ),
+    "routeVehicleLabel": MessageLookupByLibrary.simpleMessage(
+      "Assigned vehicle",
     ),
     "sampleBasePriceAmount": MessageLookupByLibrary.simpleMessage("DZD 12,500"),
     "sampleBasePriceLabel": MessageLookupByLibrary.simpleMessage("Base price"),
@@ -632,6 +882,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "vehicleDeleteAction": MessageLookupByLibrary.simpleMessage(
       "Delete vehicle",
+    ),
+    "vehicleDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Delete this vehicle from FleetFill?",
     ),
     "vehicleDeletedMessage": MessageLookupByLibrary.simpleMessage(
       "Vehicle removed.",

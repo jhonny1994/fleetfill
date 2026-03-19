@@ -157,20 +157,31 @@ Verification notes:
 
 ### Routes And Trips
 
-- [ ] Build recurring route CRUD
-- [ ] Build one-off trip CRUD
-- [ ] Support vehicle assignment to routes and one-off trips
-- [ ] Enforce capacity and operational field validation
-- [ ] Support active/inactive toggling
-- [ ] Implement route revision model so future-effective changes do not rewrite existing commitments
-- [ ] Implement weight-first and optional-volume matching exactly as defined in the canonical docs
+- [x] Build recurring route CRUD
+- [x] Build one-off trip CRUD
+- [x] Support vehicle assignment to routes and one-off trips
+- [x] Enforce capacity and operational field validation
+- [x] Support active/inactive toggling
+- [x] Implement route revision model so future-effective changes do not rewrite existing commitments
+- [x] Implement weight-first and optional-volume matching exactly as defined in the canonical docs
 
 ### Carrier Capacity UX
 
-- [ ] Build route list and trip list screens
-- [ ] Build reusable route/trip create-edit forms
-- [ ] Show upcoming capacity summary and booking utilization
-- [ ] Keep schedule, vehicle assignment, and capacity actions as sections or sheets where possible instead of separate routes
+- [x] Build route list and trip list screens
+- [x] Build reusable route/trip create-edit forms
+- [x] Show upcoming capacity summary and booking utilization
+- [x] Keep schedule, vehicle assignment, and capacity actions as sections or sheets where possible instead of separate routes
+
+Phase 5 notes:
+
+- carrier routes now support recurring routes and one-off trips with dedicated list, detail, create, edit, activate/deactivate, and delete flows inside the carrier routes branch
+- recurring route writes now use trusted SQL publication functions so critical edits create append-only `route_revisions` instead of bypassing revision history
+- recurring routes now store optional volume capacity in addition to required weight capacity, and SQL constraints enforce positive capacity, positive pricing, distinct lanes, valid weekday arrays, verified-carrier publication gates, and verified-vehicle assignment rules
+- route and trip forms now use shared commune selection, vehicle assignment, localized validation, destructive-action confirmation, and bounded list loading while keeping create-type choice in a sheet instead of extra micro-routes
+- carrier payout account management now exists as a real in-app CRUD flow so payout-related gates no longer dead-end at an empty screen
+- shared route and one-off trip detail screens now resolve to actual read-only detail views instead of placeholders, keeping deep-link behavior aligned with the routing docs
+- verification helper grants and support-email dispatch were tightened so Phase 0-5 production hardening stays consistent with the product and security model
+- supporting coverage was added in `test/capacity_publication_test.dart` and validation should include `dart analyze`, `flutter test`, `supabase db lint`, and `supabase db reset --yes`
 
 ## Phase 6 - Shipment Creation And Search
 
