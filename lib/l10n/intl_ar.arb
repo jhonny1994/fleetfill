@@ -476,5 +476,41 @@
   "searchTripsResultsTitle": "نتائج البحث ({count})",
   "@searchTripsResultsTitle": {"placeholders": {"count": {}}},
   "searchTripsRecurringLabel": "مسار متكرر",
-  "searchTripsOneOffLabel": "رحلة فردية"
+  "searchTripsOneOffLabel": "رحلة فردية",
+  "bookingConfirmAction": "تأكيد الحجز",
+  "bookingCreatedMessage": "تم إنشاء الحجز. تابع إلى تعليمات الدفع.",
+  "bookingInsuranceAction": "خيار التأمين",
+  "bookingInsuranceLabel": "التأمين",
+  "bookingInsuranceDescription": "التأمين اختياري ويُحسب كنسبة مئوية مع حد أدنى للرسوم.",
+  "bookingInsuranceIncludedLabel": "مضاف",
+  "bookingInsuranceNotIncludedLabel": "غير مضاف",
+  "bookingPricingBreakdownAction": "تفصيل السعر",
+  "bookingBasePriceLabel": "السعر الأساسي",
+  "bookingPlatformFeeLabel": "رسوم المنصة",
+  "bookingCarrierFeeLabel": "رسوم الناقل",
+  "bookingInsuranceFeeLabel": "رسوم التأمين",
+  "bookingTaxFeeLabel": "الضريبة",
+  "bookingCarrierPayoutLabel": "مستحق الناقل",
+  "bookingTotalLabel": "الإجمالي النهائي",
+  "bookingPaymentReferenceLabel": "مرجع الدفع",
+  "bookingTrackingNumberLabel": "رقم التتبع",
+  "paymentInstructionsTitle": "تعليمات الدفع",
+  "searchCarrierRatingLabel": "تقييم الناقل",
+  "searchResultTypeLabel": "نوع السعة"
+  ,"bookingStatusPendingPaymentLabel": "بانتظار الدفع"
+  ,"bookingStatusPaymentUnderReviewLabel": "الدفع قيد المراجعة"
+  ,"bookingStatusConfirmedLabel": "مؤكد"
+  ,"bookingStatusPickedUpLabel": "تم الاستلام"
+  ,"bookingStatusInTransitLabel": "في الطريق"
+  ,"bookingStatusDeliveredPendingReviewLabel": "تم التسليم وبانتظار المراجعة"
+  ,"bookingStatusCompletedLabel": "مكتمل"
+  ,"bookingStatusCancelledLabel": "ملغى"
+  ,"bookingStatusDisputedLabel": "متنازع عليه"
+  ,"paymentStatusUnpaidLabel": "غير مدفوع"
+  ,"paymentStatusProofSubmittedLabel": "تم إرسال الإثبات"
+  ,"paymentStatusUnderVerificationLabel": "قيد التحقق"
+  ,"paymentStatusSecuredLabel": "مؤمّن"
+  ,"paymentStatusRejectedLabel": "مرفوض"
+  ,"paymentStatusRefundedLabel": "تم رد المبلغ"
+  ,"paymentStatusReleasedToCarrierLabel": "تم تحويله إلى الناقل"
 }

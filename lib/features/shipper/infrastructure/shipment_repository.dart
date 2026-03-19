@@ -125,6 +125,12 @@ class ShipmentRepository {
         'p_requested_date': _dateOnly(query.requestedDate),
         'p_total_weight_kg': query.totalWeightKg,
         'p_total_volume_m3': query.totalVolumeM3,
+        'p_sort': switch (query.sort) {
+          SearchSortOption.topRated => 'top_rated',
+          SearchSortOption.lowestPrice => 'lowest_price',
+          SearchSortOption.nearestDeparture => 'nearest_departure',
+          SearchSortOption.recommended => 'recommended',
+        },
         'p_limit': query.limit,
         'p_offset': query.offset,
       },

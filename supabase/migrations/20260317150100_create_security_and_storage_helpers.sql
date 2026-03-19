@@ -327,7 +327,8 @@ security definer
 set search_path = public
 as $$
 begin
-  if public.is_service_role() and current_setting('app.trusted_operation', true) = 'true' then
+  if current_setting('app.trusted_operation', true) = 'true'
+     and (public.is_admin() or public.is_service_role()) then
     return case when tg_op = 'DELETE' then old else new end;
   end if;
 

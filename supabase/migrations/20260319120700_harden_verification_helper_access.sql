@@ -157,6 +157,7 @@ as $$
 declare
   v_target_status text := 'pending';
   v_target_reason text;
+  v_vehicle_docs_complete boolean := true;
 begin
   if not public.is_admin() and not public.is_service_role() then
     raise exception 'Verification status refresh requires privileged access';
@@ -188,6 +189,35 @@ begin
     limit 1
   )
   into v_target_status, v_target_reason;
+
+  if p_entity_type = 'vehicle' and v_target_status = 'verified' then
+    with effective_docs as (
+      select *
+      from public.current_effective_verification_documents(
+        p_owner_profile_id,
+        p_entity_type,
+        p_entity_id
+      )
+    )
+    select
+      exists (
+        select 1 from effective_docs where document_type = 'truck_registration'
+      )
+      and exists (
+        select 1 from effective_docs where document_type = 'truck_insurance'
+      )
+      and exists (
+        select 1 from effective_docs where document_type = 'truck_technical_inspection'
+      )
+      and exists (
+        select 1 from effective_docs where document_type = 'transport_license'
+      )
+    into v_vehicle_docs_complete;
+
+    if not coalesce(v_vehicle_docs_complete, false) then
+      v_target_status := 'pending';
+    end if;
+  end if;
 
   if p_entity_type = 'profile' then
     update public.profiles
