@@ -74,6 +74,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminDashboardTitle": MessageLookupByLibrary.simpleMessage(
       "Admin dashboard",
     ),
+    "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Aucune preuve de paiement a revoir pour le moment.",
+    ),
+    "adminPaymentProofQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "Revue des preuves de paiement",
+    ),
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
       "Payments, verification, disputes, payouts, and email queues stay segmented inside one page.",
     ),
@@ -460,6 +466,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ouvrez les factures et recus generes depuis une route partagee securisee.",
     ),
     "generatedDocumentViewerTitle": m5,
+    "generatedDocumentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Les factures et recus generes apparaitront ici lorsqu\'ils seront disponibles.",
+    ),
+    "generatedDocumentsTitle": MessageLookupByLibrary.simpleMessage(
+      "Documents generes",
+    ),
     "languageOptionArabic": MessageLookupByLibrary.simpleMessage("Arabe"),
     "languageOptionEnglish": MessageLookupByLibrary.simpleMessage("Anglais"),
     "languageOptionFrench": MessageLookupByLibrary.simpleMessage("Francais"),
@@ -634,6 +646,71 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment flow"),
     "paymentInstructionsTitle": MessageLookupByLibrary.simpleMessage(
       "Instructions de paiement",
+    ),
+    "paymentProofAlreadyReviewedMessage": MessageLookupByLibrary.simpleMessage(
+      "Cette preuve de paiement a deja ete revue.",
+    ),
+    "paymentProofAmountLabel": MessageLookupByLibrary.simpleMessage(
+      "Montant soumis",
+    ),
+    "paymentProofApprovedMessage": MessageLookupByLibrary.simpleMessage(
+      "Preuve de paiement approuvee.",
+    ),
+    "paymentProofDecisionNoteLabel": MessageLookupByLibrary.simpleMessage(
+      "Note de decision",
+    ),
+    "paymentProofEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Televersez une preuve de paiement apres avoir paye en externe.",
+    ),
+    "paymentProofExactAmountRequiredMessage": MessageLookupByLibrary.simpleMessage(
+      "Le montant verifie doit correspondre exactement au total de la reservation.",
+    ),
+    "paymentProofLatestTitle": MessageLookupByLibrary.simpleMessage(
+      "Derniere preuve soumise",
+    ),
+    "paymentProofPendingWindowMessage": MessageLookupByLibrary.simpleMessage(
+      "La preuve de paiement ne peut etre soumise que tant que le paiement est en attente.",
+    ),
+    "paymentProofReferenceLabel": MessageLookupByLibrary.simpleMessage(
+      "Reference soumise",
+    ),
+    "paymentProofRejectedMessage": MessageLookupByLibrary.simpleMessage(
+      "Preuve de paiement rejetee.",
+    ),
+    "paymentProofRejectionReasonLabel": MessageLookupByLibrary.simpleMessage(
+      "Motif du rejet",
+    ),
+    "paymentProofRejectionReasonRequiredMessage":
+        MessageLookupByLibrary.simpleMessage("Un motif de rejet est requis."),
+    "paymentProofResubmitAction": MessageLookupByLibrary.simpleMessage(
+      "Renvoyer la preuve",
+    ),
+    "paymentProofSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Preuve de paiement",
+    ),
+    "paymentProofStatusLabel": MessageLookupByLibrary.simpleMessage(
+      "Statut de la preuve",
+    ),
+    "paymentProofStatusPendingLabel": MessageLookupByLibrary.simpleMessage(
+      "En attente de revue",
+    ),
+    "paymentProofStatusRejectedLabel": MessageLookupByLibrary.simpleMessage(
+      "Rejetee",
+    ),
+    "paymentProofStatusVerifiedLabel": MessageLookupByLibrary.simpleMessage(
+      "Verifiee",
+    ),
+    "paymentProofUploadAction": MessageLookupByLibrary.simpleMessage(
+      "Televerser la preuve",
+    ),
+    "paymentProofUploadedMessage": MessageLookupByLibrary.simpleMessage(
+      "Preuve de paiement televersee.",
+    ),
+    "paymentProofVerifiedAmountLabel": MessageLookupByLibrary.simpleMessage(
+      "Montant verifie",
+    ),
+    "paymentProofVerifiedReferenceLabel": MessageLookupByLibrary.simpleMessage(
+      "Reference verifiee",
     ),
     "paymentStatusProofSubmittedLabel": MessageLookupByLibrary.simpleMessage(
       "Preuve soumise",

@@ -64,6 +64,7 @@ class AdminDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final queueAsync = ref.watch(pendingVerificationPacketsProvider);
+    final paymentProofsAsync = ref.watch(pendingPaymentProofsProvider);
 
     return AppPageScaffold(
       title: s.adminDashboardTitle,
@@ -92,6 +93,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                       )
                       .toString(),
                 ),
+                ProfileSummaryRow(
+                  label: s.adminPaymentProofQueueTitle,
+                  value: paymentProofsAsync.asData?.value.length.toString() ?? '-',
+                ),
               ],
             ),
             loading: () => const AppLoadingState(),
@@ -118,6 +123,7 @@ class AdminQueuesScreen extends ConsumerWidget {
     final s = S.of(context);
     final packetsAsync = ref.watch(pendingVerificationPacketsProvider);
     final auditAsync = ref.watch(verificationAuditProvider);
+    final paymentProofsAsync = ref.watch(pendingPaymentProofsProvider);
 
     return AppPageScaffold(
       title: s.adminQueuesTitle,
@@ -188,6 +194,52 @@ class AdminQueuesScreen extends ConsumerWidget {
                 technicalDetails: stackTrace.toString(),
               ),
               onRetry: () => ref.invalidate(pendingVerificationPacketsProvider),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          Text(
+            s.adminPaymentProofQueueTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          paymentProofsAsync.when(
+            data: (items) {
+              if (items.isEmpty) {
+                return AppEmptyState(
+                  title: s.adminPaymentProofQueueTitle,
+                  message: s.adminPaymentProofQueueEmptyMessage,
+                );
+              }
+              return Column(
+                children: items
+                    .map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: AppListCard(
+                          title: item.booking.trackingNumber,
+                          subtitle: '${_formatDate(item.proof.submittedAt)} • ${BidiFormatters.latinIdentifier(item.proof.submittedAmountDzd.toStringAsFixed(0))}',
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: () => unawaited(
+                            showModalBottomSheet<void>(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => _PaymentProofReviewSheet(item: item),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(growable: false),
+              );
+            },
+            loading: () => const AppLoadingState(),
+            error: (error, stackTrace) => AppErrorState(
+              error: AppError(
+                code: 'payment_proof_queue_failed',
+                message: mapAppErrorMessage(s, error),
+                technicalDetails: stackTrace.toString(),
+              ),
+              onRetry: () => ref.invalidate(pendingPaymentProofsProvider),
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
@@ -603,4 +655,152 @@ String _formatDate(DateTime value) {
   return BidiFormatters.latinIdentifier(
     '${value.year}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}',
   );
+}
+
+class _PaymentProofReviewSheet extends ConsumerStatefulWidget {
+  const _PaymentProofReviewSheet({required this.item});
+
+  final AdminPaymentProofQueueItem item;
+
+  @override
+  ConsumerState<_PaymentProofReviewSheet> createState() => _PaymentProofReviewSheetState();
+}
+
+class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewSheet> {
+  late final TextEditingController _amountController;
+  late final TextEditingController _referenceController;
+  final TextEditingController _reasonController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController = TextEditingController(
+      text: widget.item.booking.shipperTotalDzd.toStringAsFixed(0),
+    );
+    _referenceController = TextEditingController(
+      text: widget.item.proof.submittedReference ?? widget.item.booking.paymentReference,
+    );
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _referenceController.dispose();
+    _reasonController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final item = widget.item;
+    return Padding(
+      padding: EdgeInsets.only(
+        left: AppSpacing.md,
+        right: AppSpacing.md,
+        top: AppSpacing.md,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Text(s.adminPaymentProofQueueTitle, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.md),
+          ProfileSummaryCard(
+            title: item.booking.trackingNumber,
+            rows: [
+              ProfileSummaryRow(label: s.bookingPaymentReferenceLabel, value: item.booking.paymentReference),
+              ProfileSummaryRow(label: s.paymentProofAmountLabel, value: BidiFormatters.latinIdentifier(item.proof.submittedAmountDzd.toStringAsFixed(0))),
+              ProfileSummaryRow(label: s.paymentProofReferenceLabel, value: item.proof.submittedReference ?? '-'),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => context.push(
+                    AppRoutePath.sharedProofViewer.replaceFirst(':id', item.proof.id),
+                  ),
+                  child: Text(s.documentViewerOpenAction),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(controller: _amountController, label: s.paymentProofVerifiedAmountLabel, keyboardType: const TextInputType.numberWithOptions(decimal: true)),
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(controller: _referenceController, label: s.paymentProofVerifiedReferenceLabel),
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(controller: _noteController, label: s.paymentProofDecisionNoteLabel),
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(controller: _reasonController, label: s.paymentProofRejectionReasonLabel),
+          const SizedBox(height: AppSpacing.lg),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _isSubmitting ? null : () => unawaited(_reject()),
+                  child: Text(s.adminVerificationRejectAction),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: FilledButton(
+                  onPressed: _isSubmitting ? null : () => unawaited(_approve()),
+                  child: Text(s.adminVerificationApproveAction),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _approve() async {
+    final s = S.of(context);
+    setState(() => _isSubmitting = true);
+    try {
+      await ref.read(adminPaymentWorkflowControllerProvider).approvePaymentProof(
+            proofId: widget.item.proof.id,
+            verifiedAmountDzd: double.parse(_amountController.text.trim()),
+            verifiedReference: _referenceController.text,
+            decisionNote: _noteController.text,
+          );
+      if (!mounted) return;
+      AppFeedback.showSnackBar(context, s.paymentProofApprovedMessage);
+      Navigator.of(context).pop();
+    } on PostgrestException catch (error) {
+      if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  Future<void> _reject() async {
+    final s = S.of(context);
+    if (_reasonController.text.trim().isEmpty) {
+      AppFeedback.showSnackBar(context, s.paymentProofRejectionReasonRequiredMessage);
+      return;
+    }
+    setState(() => _isSubmitting = true);
+    try {
+      await ref.read(adminPaymentWorkflowControllerProvider).rejectPaymentProof(
+            proofId: widget.item.proof.id,
+            rejectionReason: _reasonController.text,
+            decisionNote: _noteController.text,
+          );
+      if (!mounted) return;
+      AppFeedback.showSnackBar(context, s.paymentProofRejectedMessage);
+      Navigator.of(context).pop();
+    } on PostgrestException catch (error) {
+      if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
 }
