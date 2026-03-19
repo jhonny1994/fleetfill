@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/core/errors/app_error.dart';
+import 'package:fleetfill/core/errors/app_error_messages.dart';
 import 'package:fleetfill/core/localization/localization.dart';
 import 'package:fleetfill/core/routing/app_routes.dart';
 import 'package:fleetfill/core/theme/design_tokens.dart';
@@ -549,20 +550,63 @@ class OneOffTripDetailScreen extends ConsumerWidget {
   }
 }
 
-class ProofViewerScreen extends StatelessWidget {
+class ProofViewerScreen extends ConsumerWidget {
   const ProofViewerScreen({required this.proofId, super.key});
 
   final String proofId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final formattedProofId = BidiFormatters.latinIdentifier(proofId);
+    final proofAsync = ref.watch(paymentProofDetailProvider(proofId));
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.proofViewerTitle(formattedProofId),
-      description: s.proofViewerDescription,
-      showSummary: false,
+      child: AppAsyncStateView<PaymentProofRecord?>(
+        value: proofAsync,
+        onRetry: () => ref.invalidate(paymentProofDetailProvider(proofId)),
+        data: (proof) {
+          if (proof == null) {
+            return const AppNotFoundState();
+          }
+          return FutureBuilder<String>(
+            future: ref.read(paymentProofRepositoryProvider).createSignedPaymentProofUrl(proof),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const AppLoadingState();
+              }
+              if (snapshot.hasError || !snapshot.hasData) {
+                return AppErrorState(
+                  error: AppError(
+                    code: 'payment_proof_signed_url_failed',
+                    message: mapAppErrorMessage(s, snapshot.error ?? Exception('unknown')),
+                    technicalDetails: snapshot.error?.toString(),
+                  ),
+                  onRetry: () => ref.invalidate(paymentProofDetailProvider(proofId)),
+                );
+              }
+              return AppStateMessage(
+                icon: Icons.receipt_long_outlined,
+                title: s.proofViewerTitle(formattedProofId),
+                message: s.verificationDocumentOpenPreparedMessage,
+                action: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: () => unawaited(_openExternal(snapshot.data!)),
+                      icon: const Icon(Icons.open_in_new_rounded),
+                      label: Text(s.documentViewerOpenAction),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    SelectableText(snapshot.data!),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -677,6 +721,11 @@ String _sharedLaneLabel(
   final destination = communeMap[destinationId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(destinationId.toString());
   return '$origin -> $destination';
+}
+
+Future<void> _openExternal(String url) async {
+  final uri = Uri.parse(url);
+  await launchUrl(uri, mode: LaunchMode.externalApplication);
 }
 
 String _sharedShipmentLaneLabel(

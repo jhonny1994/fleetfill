@@ -38,16 +38,21 @@ Deno.serve(async (req) => {
       { p_lock_age_seconds: 900 },
     )
 
-    if (recoveryError != null) {
+    const { data: expiredRejectedBookings, error: paymentExpiryError } = await serviceClient.rpc(
+      'expire_payment_resubmission_deadlines',
+    )
+
+    if (recoveryError != null || paymentExpiryError != null) {
       console.error('recover_stale_email_outbox_jobs failed', recoveryError)
-      return jsonResponse({ error: 'Failed to recover stale email jobs' }, 500)
+      console.error('expire_payment_resubmission_deadlines failed', paymentExpiryError)
+      return jsonResponse({ error: 'Failed to run scheduled maintenance' }, 500)
     }
 
     return jsonResponse({
       email_dispatch: workerPayload,
       recovered_stale_jobs: recoveredJobs ?? 0,
       delivery_grace_window_expiry: 'not_implemented_yet',
-      payment_resubmission_expiry: 'not_implemented_yet',
+      payment_resubmission_expiry: expiredRejectedBookings ?? 0,
     })
   } catch (error) {
     console.error('scheduled-automation-tick failed', error)

@@ -4227,6 +4227,266 @@ class S {
     );
   }
 
+  /// `Payment proof review`
+  String get adminPaymentProofQueueTitle {
+    return Intl.message(
+      'Payment proof review',
+      name: 'adminPaymentProofQueueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No payment proofs need review right now.`
+  String get adminPaymentProofQueueEmptyMessage {
+    return Intl.message(
+      'No payment proofs need review right now.',
+      name: 'adminPaymentProofQueueEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment proof`
+  String get paymentProofSectionTitle {
+    return Intl.message(
+      'Payment proof',
+      name: 'paymentProofSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Latest submitted proof`
+  String get paymentProofLatestTitle {
+    return Intl.message(
+      'Latest submitted proof',
+      name: 'paymentProofLatestTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload a payment proof after completing your external payment.`
+  String get paymentProofEmptyMessage {
+    return Intl.message(
+      'Upload a payment proof after completing your external payment.',
+      name: 'paymentProofEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload payment proof`
+  String get paymentProofUploadAction {
+    return Intl.message(
+      'Upload payment proof',
+      name: 'paymentProofUploadAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resubmit payment proof`
+  String get paymentProofResubmitAction {
+    return Intl.message(
+      'Resubmit payment proof',
+      name: 'paymentProofResubmitAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment proof uploaded.`
+  String get paymentProofUploadedMessage {
+    return Intl.message(
+      'Payment proof uploaded.',
+      name: 'paymentProofUploadedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submitted amount`
+  String get paymentProofAmountLabel {
+    return Intl.message(
+      'Submitted amount',
+      name: 'paymentProofAmountLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submitted reference`
+  String get paymentProofReferenceLabel {
+    return Intl.message(
+      'Submitted reference',
+      name: 'paymentProofReferenceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Proof status`
+  String get paymentProofStatusLabel {
+    return Intl.message(
+      'Proof status',
+      name: 'paymentProofStatusLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending review`
+  String get paymentProofStatusPendingLabel {
+    return Intl.message(
+      'Pending review',
+      name: 'paymentProofStatusPendingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verified`
+  String get paymentProofStatusVerifiedLabel {
+    return Intl.message(
+      'Verified',
+      name: 'paymentProofStatusVerifiedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rejected`
+  String get paymentProofStatusRejectedLabel {
+    return Intl.message(
+      'Rejected',
+      name: 'paymentProofStatusRejectedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verified amount`
+  String get paymentProofVerifiedAmountLabel {
+    return Intl.message(
+      'Verified amount',
+      name: 'paymentProofVerifiedAmountLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verified reference`
+  String get paymentProofVerifiedReferenceLabel {
+    return Intl.message(
+      'Verified reference',
+      name: 'paymentProofVerifiedReferenceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Decision note`
+  String get paymentProofDecisionNoteLabel {
+    return Intl.message(
+      'Decision note',
+      name: 'paymentProofDecisionNoteLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rejection reason`
+  String get paymentProofRejectionReasonLabel {
+    return Intl.message(
+      'Rejection reason',
+      name: 'paymentProofRejectionReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A rejection reason is required.`
+  String get paymentProofRejectionReasonRequiredMessage {
+    return Intl.message(
+      'A rejection reason is required.',
+      name: 'paymentProofRejectionReasonRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment proof approved.`
+  String get paymentProofApprovedMessage {
+    return Intl.message(
+      'Payment proof approved.',
+      name: 'paymentProofApprovedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment proof rejected.`
+  String get paymentProofRejectedMessage {
+    return Intl.message(
+      'Payment proof rejected.',
+      name: 'paymentProofRejectedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generated documents`
+  String get generatedDocumentsTitle {
+    return Intl.message(
+      'Generated documents',
+      name: 'generatedDocumentsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generated invoice and receipt documents will appear here when available.`
+  String get generatedDocumentsEmptyMessage {
+    return Intl.message(
+      'Generated invoice and receipt documents will appear here when available.',
+      name: 'generatedDocumentsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment proof can only be submitted while payment is still pending.`
+  String get paymentProofPendingWindowMessage {
+    return Intl.message(
+      'Payment proof can only be submitted while payment is still pending.',
+      name: 'paymentProofPendingWindowMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The verified payment amount must match the booking total exactly.`
+  String get paymentProofExactAmountRequiredMessage {
+    return Intl.message(
+      'The verified payment amount must match the booking total exactly.',
+      name: 'paymentProofExactAmountRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This payment proof has already been reviewed.`
+  String get paymentProofAlreadyReviewedMessage {
+    return Intl.message(
+      'This payment proof has already been reviewed.',
+      name: 'paymentProofAlreadyReviewedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Carrier rating`
   String get searchCarrierRatingLabel {
     return Intl.message(

@@ -38,6 +38,22 @@ String mapAppErrorMessage(S s, Object error) {
   if (message.contains('trip has active bookings')) {
     return s.oneOffTripDeleteBlockedMessage;
   }
+  if (message.contains('payment proof can only be submitted while payment is pending')) {
+    return s.paymentProofPendingWindowMessage;
+  }
+  if (message.contains('payment proof cannot be submitted for this booking state')) {
+    return s.paymentProofPendingWindowMessage;
+  }
+  if (message.contains('verified amount must match the expected booking amount exactly')) {
+    return s.paymentProofExactAmountRequiredMessage;
+  }
+  if (message.contains('payment proof rejection requires a reason')) {
+    return s.paymentProofRejectionReasonRequiredMessage;
+  }
+  if (message.contains('only pending payment proofs can be approved') ||
+      message.contains('only pending payment proofs can be rejected')) {
+    return s.paymentProofAlreadyReviewedMessage;
+  }
   if (message.contains('payout account has operational usage')) {
     return s.payoutAccountDeleteBlockedMessage;
   }

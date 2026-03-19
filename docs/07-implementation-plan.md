@@ -263,28 +263,37 @@ Phase 7 progress notes:
 
 ### Payment Proof Flow
 
-- [ ] Build payment instructions for CCP, Dahabia, and bank transfer
-- [ ] Build secure payment proof upload flow
-- [ ] Support resubmission after rejection with history retained
-- [ ] Enforce exact amount matching rule for verification
-- [ ] Show payment proof statuses and rejection reasons clearly
-- [ ] Implement payment as one coherent flow screen with internal sections/states instead of many success/result pages
-- [ ] Model and implement payment-resubmission deadline handling with automatic cancellation and capacity release
+- [x] Build payment instructions for CCP, Dahabia, and bank transfer
+- [x] Build secure payment proof upload flow
+- [x] Support resubmission after rejection with history retained
+- [x] Enforce exact amount matching rule for verification
+- [x] Show payment proof statuses and rejection reasons clearly
+- [x] Implement payment as one coherent flow screen with internal sections/states instead of many success/result pages
+- [x] Model and implement payment-resubmission deadline handling with automatic cancellation and capacity release
 
 ### Ledger And Escrow
 
-- [ ] Implement immutable ledger entry creation for secured payment, rejection, refund, and payout
-- [ ] Ensure booking/payment statuses never replace ledger truth
-- [ ] Generate payment receipt document when applicable
-- [ ] Generate invoice document when applicable
+- [x] Implement immutable ledger entry creation for secured payment, rejection, refund, and payout
+- [x] Ensure booking/payment statuses never replace ledger truth
+- [x] Generate payment receipt document when applicable
+- [x] Generate invoice document when applicable
 
 ### Admin Payment Operations
 
-- [ ] Build payment proof review queue
-- [ ] Build payment approval flow
-- [ ] Build payment rejection flow with mandatory reason
-- [ ] Build admin visibility into proof history and money summary
-- [ ] Capture submitted amount, verified amount, verified reference, and decision notes for audit-quality proof reviews
+- [x] Build payment proof review queue
+- [x] Build payment approval flow
+- [x] Build payment rejection flow with mandatory reason
+- [x] Build admin visibility into proof history and money summary
+- [x] Capture submitted amount, verified amount, verified reference, and decision notes for audit-quality proof reviews
+
+Phase 8 progress notes:
+
+- payment flow now includes platform payment instructions, secure proof upload, latest proof status, rejection visibility, generated document visibility, and resubmission support inside one coherent screen
+- payment proof submission now updates booking payment state through `finalize_payment_proof(...)` instead of only storing files without workflow truth
+- admin payment operations now include a real payment proof review queue with approval/rejection decisions, exact amount enforcement, verified references, and decision notes
+- approval and rejection now create immutable ledger entries and generated document records while moving booking/payment states through the escrow flow
+- scheduled automation now expires rejected bookings after the configured resubmission deadline and releases reserved capacity
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql` and `test/payment_proof_flow_contract_test.dart`
 
 ## Phase 9 - Tracking, Delivery, And Completion
 

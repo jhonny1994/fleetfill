@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fleetfill/core/core.dart';
+import 'package:fleetfill/features/carrier/carrier.dart';
 import 'package:fleetfill/features/profile/presentation/profile_components.dart';
 import 'package:fleetfill/features/shipper/shipper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -740,20 +743,29 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
   }
 }
 
-class PaymentFlowScreen extends ConsumerWidget {
+class PaymentFlowScreen extends ConsumerStatefulWidget {
   const PaymentFlowScreen({super.key, this.bookingId});
 
   final String? bookingId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PaymentFlowScreen> createState() => _PaymentFlowScreenState();
+}
+
+class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
+  bool _isUploading = false;
+
+  @override
+  Widget build(BuildContext context) {
     final s = S.of(context);
-    final id = bookingId;
+    final id = widget.bookingId;
     if (id == null) {
       return AppPageScaffold(title: s.paymentFlowTitle, child: const AppNotFoundState());
     }
     final bookingAsync = ref.watch(bookingDetailProvider(id));
     final settingsAsync = ref.watch(clientSettingsProvider);
+    final proofsAsync = ref.watch(paymentProofsForBookingProvider(id));
+    final documentsAsync = ref.watch(generatedDocumentsForBookingProvider(id));
 
     return AppPageScaffold(
       title: s.paymentFlowTitle,
@@ -763,6 +775,7 @@ class PaymentFlowScreen extends ConsumerWidget {
         data: (booking) {
           if (booking == null) return const AppNotFoundState();
           final paymentAccounts = _paymentAccountsFromSettings(settingsAsync.asData?.value);
+          final latestProof = proofsAsync.asData?.value.firstOrNull;
           return ListView(
             key: const PageStorageKey<String>('shipper-payment-flow-screen'),
             children: [
@@ -802,6 +815,89 @@ class PaymentFlowScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.lg),
+              Text(s.paymentProofSectionTitle, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: AppSpacing.md),
+              if (latestProof != null)
+                ProfileSummaryCard(
+                  title: s.paymentProofLatestTitle,
+                  rows: [
+                    ProfileSummaryRow(
+                      label: s.paymentProofStatusLabel,
+                      value: _paymentProofStatusLabel(s, latestProof.status),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.paymentProofAmountLabel,
+                      value: _money(s, latestProof.submittedAmountDzd),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.paymentProofReferenceLabel,
+                      value: latestProof.submittedReference ?? '-',
+                    ),
+                    if ((latestProof.rejectionReason ?? '').isNotEmpty)
+                      ProfileSummaryRow(
+                        label: s.paymentProofRejectionReasonLabel,
+                        value: latestProof.rejectionReason!,
+                      ),
+                  ],
+                )
+              else
+                AppStateMessage(
+                  icon: Icons.receipt_long_outlined,
+                  title: s.paymentProofLatestTitle,
+                  message: s.paymentProofEmptyMessage,
+                ),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: _isUploading ? null : () => unawaited(_uploadProof(context, booking)),
+                      child: Text(
+                        latestProof == null || latestProof.status != 'rejected'
+                            ? s.paymentProofUploadAction
+                            : s.paymentProofResubmitAction,
+                      ),
+                    ),
+                  ),
+                  if (latestProof != null) ...[
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: OutlinedButton(
+                          onPressed: () => context.push(
+                            AppRoutePath.sharedProofViewer.replaceFirst(':id', latestProof.id),
+                          ),
+                        child: Text(s.documentViewerOpenAction),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              proofsAsync.when(
+                data: (proofs) => proofs.isEmpty
+                    ? const SizedBox.shrink()
+                    : Column(
+                        children: proofs
+                            .map(
+                              (proof) => Padding(
+                                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                                child: AppListCard(
+                                  title: '${_paymentProofStatusLabel(s, proof.status)} • ${_money(s, proof.submittedAmountDzd)}',
+                                  subtitle: _formatDateTime(context, proof.submittedAt),
+                                  onTap: () => context.push(
+                                    AppRoutePath.sharedProofViewer.replaceFirst(':id', proof.id),
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(growable: false),
+                      ),
+                loading: () => const AppLoadingState(),
+                error: (error, stackTrace) => AppErrorState(
+                  error: AppError(code: 'payment_proofs_load_failed', message: mapAppErrorMessage(s, error)),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
               Text(s.paymentInstructionsTitle, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: AppSpacing.md),
               ...paymentAccounts.map(
@@ -813,11 +909,148 @@ class PaymentFlowScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: AppSpacing.lg),
+              Text(s.generatedDocumentsTitle, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: AppSpacing.md),
+              documentsAsync.when(
+                data: (documents) => documents.isEmpty
+                    ? AppStateMessage(
+                        icon: Icons.description_outlined,
+                        title: s.generatedDocumentsTitle,
+                        message: s.generatedDocumentsEmptyMessage,
+                      )
+                    : Column(
+                        children: documents
+                            .map(
+                              (document) => Padding(
+                                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                                child: AppListCard(
+                                  title: document.documentType,
+                                  subtitle: document.storagePath,
+                                  onTap: () => context.push(
+                                    AppRoutePath.sharedGeneratedDocumentViewer.replaceFirst(':id', document.id),
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(growable: false),
+                      ),
+                loading: () => const AppLoadingState(),
+                error: (error, stackTrace) => AppErrorState(
+                  error: AppError(code: 'generated_documents_load_failed', message: mapAppErrorMessage(s, error)),
+                ),
+              ),
             ],
           );
         },
       ),
     );
+  }
+
+  Future<void> _uploadProof(BuildContext context, BookingRecord booking) async {
+    final s = S.of(context);
+    final settings = ref.read(clientSettingsProvider).asData?.value;
+    final paymentAccounts = _paymentAccountsFromSettings(settings);
+    var paymentRail = paymentAccounts.firstOrNull?.displayName.toLowerCase().contains('dahab') == true
+        ? 'dahabia'
+        : paymentAccounts.firstOrNull?.displayName.toLowerCase().contains('bank') == true
+            ? 'bank'
+            : 'ccp';
+    final amountController = TextEditingController(text: booking.shipperTotalDzd.toStringAsFixed(0));
+    final referenceController = TextEditingController(text: booking.paymentReference);
+
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Padding(
+          padding: EdgeInsets.only(
+            left: AppSpacing.md,
+            right: AppSpacing.md,
+            top: AppSpacing.md,
+            bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(s.paymentProofUploadAction, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: AppSpacing.md),
+              DropdownButtonFormField<String>(
+                initialValue: paymentRail,
+                items: const [
+                  DropdownMenuItem(value: 'ccp', child: Text('CCP')),
+                  DropdownMenuItem(value: 'dahabia', child: Text('Dahabia')),
+                  DropdownMenuItem(value: 'bank', child: Text('Bank')),
+                ],
+                onChanged: (value) {
+                  if (value != null) setModalState(() => paymentRail = value);
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AuthTextField(controller: amountController, label: s.paymentProofAmountLabel, keyboardType: const TextInputType.numberWithOptions(decimal: true)),
+              const SizedBox(height: AppSpacing.md),
+              AuthTextField(controller: referenceController, label: s.paymentProofReferenceLabel),
+              const SizedBox(height: AppSpacing.md),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(s.confirmLabel),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (confirmed != true) {
+      amountController.dispose();
+      referenceController.dispose();
+      return;
+    }
+
+    setState(() => _isUploading = true);
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        withData: kIsWeb,
+        type: FileType.custom,
+        allowedExtensions: const ['jpg', 'jpeg', 'png', 'pdf'],
+      );
+      if (result == null) return;
+      final file = result.files.single;
+      final extension = (file.extension ?? '').toLowerCase();
+      final contentType = switch (extension) {
+        'jpg' || 'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        _ => 'application/pdf',
+      };
+      final draft = VerificationUploadDraft(
+        path: file.path ?? file.name,
+        filename: file.name,
+        extension: extension,
+        contentType: contentType,
+        byteSize: file.size,
+        bytes: file.bytes,
+      );
+      await ref.read(paymentProofRepositoryProvider).uploadPaymentProof(
+            bookingId: booking.id,
+            paymentRail: paymentRail,
+            draft: draft,
+            submittedAmountDzd: double.parse(amountController.text.trim()),
+            submittedReference: referenceController.text,
+          );
+      ref
+        ..invalidate(paymentProofsForBookingProvider(booking.id))
+        ..invalidate(bookingDetailProvider(booking.id));
+      if (!mounted) return;
+      AppFeedback.showSnackBar(this.context, s.paymentProofUploadedMessage);
+    } on PostgrestException catch (error) {
+      if (mounted) {
+        AppFeedback.showSnackBar(this.context, mapAppErrorMessage(s, error));
+      }
+    } finally {
+      amountController.dispose();
+      referenceController.dispose();
+      if (mounted) setState(() => _isUploading = false);
+    }
   }
 }
 
@@ -1436,6 +1669,14 @@ List<_PlatformPaymentAccountView> _paymentAccountsFromSettings(Map<String, dynam
         ),
       )
       .toList(growable: false);
+}
+
+String _paymentProofStatusLabel(S s, String status) {
+  return switch (status) {
+    'verified' => s.paymentProofStatusVerifiedLabel,
+    'rejected' => s.paymentProofStatusRejectedLabel,
+    _ => s.paymentProofStatusPendingLabel,
+  };
 }
 
 class _PlatformPaymentAccountView {
