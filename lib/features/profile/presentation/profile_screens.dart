@@ -20,6 +20,7 @@ class SettingsScreen extends ConsumerWidget {
     return AppPageScaffold(
       title: s.settingsTitle,
       child: ListView(
+        key: const PageStorageKey<String>('settings-screen-list'),
         children: [
           AppSectionHeader(
             title: s.settingsTitle,
@@ -266,6 +267,7 @@ class PayoutAccountsScreen extends ConsumerWidget {
           }
 
           return ListView.separated(
+            key: const PageStorageKey<String>('payout-accounts-list'),
             itemCount: accounts.length,
             separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
             itemBuilder: (context, index) {

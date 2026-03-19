@@ -1,6 +1,7 @@
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/features/admin/admin.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
+import 'package:fleetfill/features/shipper/shipper.dart';
 import 'package:fleetfill/shared/models/algeria_location.dart';
 import 'package:fleetfill/shared/providers/location_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +24,19 @@ final myVehiclesProvider = FutureProvider<List<CarrierVehicle>>((ref) {
 final myPayoutAccountsProvider = FutureProvider<List<CarrierPayoutAccount>>((ref) {
   return ref.read(payoutAccountRepositoryProvider).fetchMyPayoutAccounts();
 });
+
+final myShipperShipmentsProvider =
+    FutureProvider<List<ShipmentDraftRecord>>((ref) {
+      return ref.read(shipmentRepositoryProvider).fetchMyShipments();
+    });
+
+final shipmentDetailProvider =
+    FutureProvider.autoDispose.family<ShipmentDraftRecord?, String>((
+      ref,
+      shipmentId,
+    ) {
+      return ref.read(shipmentRepositoryProvider).fetchShipmentById(shipmentId);
+    });
 
 final vehicleDetailProvider = FutureProvider.autoDispose.family<CarrierVehicle?, String>((
   ref,

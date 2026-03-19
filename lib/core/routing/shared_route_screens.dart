@@ -6,6 +6,7 @@ import 'package:fleetfill/core/localization/localization.dart';
 import 'package:fleetfill/core/theme/design_tokens.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
 import 'package:fleetfill/features/profile/profile.dart';
+import 'package:fleetfill/features/shipper/shipper.dart';
 import 'package:fleetfill/shared/models/algeria_location.dart';
 import 'package:fleetfill/shared/providers/providers.dart';
 import 'package:fleetfill/shared/widgets/widgets.dart';
@@ -80,20 +81,100 @@ class SessionExpiredScreen extends StatelessWidget {
   }
 }
 
-class ShipmentDetailScreen extends StatelessWidget {
+class ShipmentDetailScreen extends ConsumerWidget {
   const ShipmentDetailScreen({required this.shipmentId, super.key});
 
   final String shipmentId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final formattedShipmentId = BidiFormatters.trackingId(shipmentId);
+    final shipmentAsync = ref.watch(shipmentDetailProvider(shipmentId));
+    final communesAsync = ref.watch(communesProvider);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.shipmentDetailTitle(formattedShipmentId),
-      description: s.shipmentDetailDescription,
-      showSummary: false,
+      child: AppAsyncStateView<ShipmentDraftRecord?>(
+        value: shipmentAsync,
+        onRetry: () => ref.invalidate(shipmentDetailProvider(shipmentId)),
+        data: (shipment) {
+          if (shipment == null) {
+            return const AppNotFoundState();
+          }
+          if (communesAsync.isLoading) {
+            return const AppLoadingState();
+          }
+          final communeMap = {
+            for (final commune in communesAsync.requireValue) commune.id: commune,
+          };
+          return ListView(
+            children: [
+              AppSectionHeader(
+                title: _sharedShipmentLaneLabel(context, communeMap, shipment),
+                subtitle: s.shipmentDetailDescription,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ProfileSummaryCard(
+                title: s.searchShipmentSummaryTitle,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.shipmentCategoryLabel,
+                    value: shipment.category,
+                  ),
+                  ProfileSummaryRow(
+                    label: s.shipmentPickupStartLabel,
+                    value: _sharedFormatDate(shipment.pickupWindowStart),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.shipmentPickupEndLabel,
+                    value: _sharedFormatDate(shipment.pickupWindowEnd),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.vehicleCapacityWeightLabel,
+                    value:
+                        '${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.vehicleCapacityVolumeLabel,
+                    value: shipment.totalVolumeM3 == null
+                        ? '-'
+                        : BidiFormatters.latinIdentifier(
+                            shipment.totalVolumeM3!.toStringAsFixed(1),
+                          ),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routeStatusLabel,
+                    value: switch (shipment.status) {
+                      ShipmentStatus.booked => s.shipmentStatusBookedLabel,
+                      ShipmentStatus.cancelled => s.shipmentStatusCancelledLabel,
+                      ShipmentStatus.draft => s.shipmentStatusDraftLabel,
+                    },
+                  ),
+                ],
+              ),
+              if (shipment.items.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.lg),
+                Text(
+                  s.shipmentItemsTitle,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                ...shipment.items.map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: AppListCard(
+                      title: item.label,
+                      subtitle:
+                          '${BidiFormatters.latinIdentifier(item.quantity.toString())} • ${item.notes ?? ''}',
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -548,6 +629,19 @@ String _sharedLaneLabel(
   final destination = communeMap[destinationId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(destinationId.toString());
   return '$origin -> $destination';
+}
+
+String _sharedShipmentLaneLabel(
+  BuildContext context,
+  Map<int, AlgeriaCommune> communeMap,
+  ShipmentDraftRecord shipment,
+) {
+  return _sharedLaneLabel(
+    context,
+    communeMap,
+    shipment.originCommuneId,
+    shipment.destinationCommuneId,
+  );
 }
 
 String _sharedFormatDate(DateTime value) {

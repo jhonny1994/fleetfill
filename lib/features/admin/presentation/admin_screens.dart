@@ -68,6 +68,7 @@ class AdminDashboardScreen extends ConsumerWidget {
     return AppPageScaffold(
       title: s.adminDashboardTitle,
       child: ListView(
+        key: const PageStorageKey<String>('admin-dashboard-list'),
         children: [
           AppSectionHeader(
             title: s.adminDashboardTitle,
@@ -121,6 +122,7 @@ class AdminQueuesScreen extends ConsumerWidget {
     return AppPageScaffold(
       title: s.adminQueuesTitle,
       child: ListView(
+        key: const PageStorageKey<String>('admin-audit-log-list'),
         children: [
           AppSectionHeader(
             title: s.adminQueuesTitle,

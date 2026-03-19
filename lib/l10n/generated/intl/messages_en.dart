@@ -43,14 +43,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(routeId) => "Route ${routeId}";
 
-  static String m11(shipmentId) => "Shipment ${shipmentId}";
+  static String m11(dates) =>
+      "No same-day exact result is available. Showing nearest exact dates: ${dates}";
 
-  static String m12(bookingId) => "Tracking ${bookingId}";
+  static String m12(count) => "Search results (${count})";
 
-  static String m13(reason) =>
+  static String m13(shipmentId) => "Shipment ${shipmentId}";
+
+  static String m14(index) => "Item ${index}";
+
+  static String m15(bookingId) => "Tracking ${bookingId}";
+
+  static String m16(reason) =>
       "Vehicle verification needs attention: ${reason}";
 
-  static String m14(reason) => "Rejected: ${reason}";
+  static String m17(reason) => "Rejected: ${reason}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -632,6 +639,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneCompletionTitle": MessageLookupByLibrary.simpleMessage(
       "Phone completion",
     ),
+    "priceCurrencyLabel": MessageLookupByLibrary.simpleMessage("DZD"),
     "pricePerKgUnitLabel": MessageLookupByLibrary.simpleMessage("DZD/kg"),
     "profileCarrierVerificationHint": MessageLookupByLibrary.simpleMessage(
       "Add your carrier details now, then upload the required verification documents from your profile.",
@@ -798,10 +806,65 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sampleTotalAmount": MessageLookupByLibrary.simpleMessage("DZD 13,700"),
     "sampleTotalLabel": MessageLookupByLibrary.simpleMessage("Total"),
+    "searchCarrierLabel": MessageLookupByLibrary.simpleMessage("Carrier"),
+    "searchDepartureLabel": MessageLookupByLibrary.simpleMessage("Departure"),
+    "searchEstimatedPriceLabel": MessageLookupByLibrary.simpleMessage(
+      "Estimated total",
+    ),
+    "searchRequestedDateLabel": MessageLookupByLibrary.simpleMessage(
+      "Requested departure date",
+    ),
+    "searchShipmentSelectorLabel": MessageLookupByLibrary.simpleMessage(
+      "Shipment draft",
+    ),
+    "searchShipmentSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Shipment summary",
+    ),
+    "searchSortLowestPriceLabel": MessageLookupByLibrary.simpleMessage(
+      "Lowest price",
+    ),
+    "searchSortNearestDepartureLabel": MessageLookupByLibrary.simpleMessage(
+      "Nearest departure",
+    ),
+    "searchSortRecommendedLabel": MessageLookupByLibrary.simpleMessage(
+      "Recommended",
+    ),
+    "searchSortTopRatedLabel": MessageLookupByLibrary.simpleMessage(
+      "Top rated",
+    ),
+    "searchTripsAction": MessageLookupByLibrary.simpleMessage(
+      "Search exact capacity",
+    ),
+    "searchTripsControlsAction": MessageLookupByLibrary.simpleMessage(
+      "Sort and filters",
+    ),
     "searchTripsDescription": MessageLookupByLibrary.simpleMessage(
       "The search form and exact-route results stay on one page with inline states.",
     ),
+    "searchTripsFilterEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No result matches the current sort and filter selection.",
+    ),
     "searchTripsNavLabel": MessageLookupByLibrary.simpleMessage("Search"),
+    "searchTripsNearestDateMessage": m11,
+    "searchTripsNearestDateTitle": MessageLookupByLibrary.simpleMessage(
+      "Nearest exact dates found",
+    ),
+    "searchTripsNoRouteMessage": MessageLookupByLibrary.simpleMessage(
+      "No exact route exists for this lane in the nearby search window.",
+    ),
+    "searchTripsNoRouteTitle": MessageLookupByLibrary.simpleMessage(
+      "Redefine your search",
+    ),
+    "searchTripsOneOffLabel": MessageLookupByLibrary.simpleMessage(
+      "One-off trip",
+    ),
+    "searchTripsRecurringLabel": MessageLookupByLibrary.simpleMessage(
+      "Recurring route",
+    ),
+    "searchTripsRequiresDraftMessage": MessageLookupByLibrary.simpleMessage(
+      "Create at least one shipment draft to search exact lane capacity.",
+    ),
+    "searchTripsResultsTitle": m12,
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage("Search trips"),
     "settingsAccountSectionTitle": MessageLookupByLibrary.simpleMessage(
       "Account",
@@ -820,10 +883,77 @@ class MessageLookup extends MessageLookupByLibrary {
     "sharedScaffoldPreviewTitle": MessageLookupByLibrary.simpleMessage(
       "Shared foundation preview",
     ),
+    "shipmentAddItemAction": MessageLookupByLibrary.simpleMessage("Add item"),
+    "shipmentCategoryLabel": MessageLookupByLibrary.simpleMessage("Category"),
+    "shipmentCreateAction": MessageLookupByLibrary.simpleMessage(
+      "Create shipment",
+    ),
+    "shipmentCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "Create shipment draft",
+    ),
+    "shipmentDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Delete shipment",
+    ),
+    "shipmentDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Delete this shipment draft from FleetFill?",
+    ),
+    "shipmentDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "Shipment draft removed.",
+    ),
+    "shipmentDescriptionLabel": MessageLookupByLibrary.simpleMessage(
+      "Description",
+    ),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shipment summary, items, and linked booking summary live here.",
     ),
-    "shipmentDetailTitle": m11,
+    "shipmentDetailTitle": m13,
+    "shipmentEditAction": MessageLookupByLibrary.simpleMessage("Edit shipment"),
+    "shipmentEditTitle": MessageLookupByLibrary.simpleMessage(
+      "Edit shipment draft",
+    ),
+    "shipmentItemLabelField": MessageLookupByLibrary.simpleMessage(
+      "Item label",
+    ),
+    "shipmentItemNotesLabel": MessageLookupByLibrary.simpleMessage(
+      "Item notes",
+    ),
+    "shipmentItemQuantityLabel": MessageLookupByLibrary.simpleMessage(
+      "Quantity",
+    ),
+    "shipmentItemTitle": m14,
+    "shipmentItemVolumeLabel": MessageLookupByLibrary.simpleMessage(
+      "Item volume (m3)",
+    ),
+    "shipmentItemWeightLabel": MessageLookupByLibrary.simpleMessage(
+      "Item weight (kg)",
+    ),
+    "shipmentItemsTitle": MessageLookupByLibrary.simpleMessage(
+      "Shipment items",
+    ),
+    "shipmentPickupEndLabel": MessageLookupByLibrary.simpleMessage(
+      "Pickup window end",
+    ),
+    "shipmentPickupStartLabel": MessageLookupByLibrary.simpleMessage(
+      "Pickup window start",
+    ),
+    "shipmentPickupWindowOrderMessage": MessageLookupByLibrary.simpleMessage(
+      "Pickup window end must be after pickup window start.",
+    ),
+    "shipmentRemoveItemAction": MessageLookupByLibrary.simpleMessage(
+      "Remove item",
+    ),
+    "shipmentSaveAction": MessageLookupByLibrary.simpleMessage("Save shipment"),
+    "shipmentSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Shipment draft saved.",
+    ),
+    "shipmentStatusBookedLabel": MessageLookupByLibrary.simpleMessage("Booked"),
+    "shipmentStatusCancelledLabel": MessageLookupByLibrary.simpleMessage(
+      "Cancelled",
+    ),
+    "shipmentStatusDraftLabel": MessageLookupByLibrary.simpleMessage("Draft"),
+    "shipmentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Create a shipment draft before searching exact capacity.",
+    ),
     "shipperHomeDescription": MessageLookupByLibrary.simpleMessage(
       "Active bookings, recent notifications, quick actions, and support shortcut live here.",
     ),
@@ -858,7 +988,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
-    "trackingDetailTitle": m12,
+    "trackingDetailTitle": m15,
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
       "Update FleetFill to continue with the latest supported version.",
     ),
@@ -914,7 +1044,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vehicleVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
       "Vehicle verification documents",
     ),
-    "vehicleVerificationRejectedBanner": m13,
+    "vehicleVerificationRejectedBanner": m16,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
       "Vehicles remain under the carrier profile branch.",
     ),
@@ -938,7 +1068,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
       "Uploaded and waiting for admin review.",
     ),
-    "verificationDocumentRejectedMessage": m14,
+    "verificationDocumentRejectedMessage": m17,
     "verificationDocumentReplacedMessage": MessageLookupByLibrary.simpleMessage(
       "Verification document replaced.",
     ),

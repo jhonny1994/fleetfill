@@ -106,6 +106,23 @@ Do not silently mix approximate routes into the exact result list.
 
 Long result lists must use lazy rendering, clear loading states, empty states, and error recovery states.
 
+### 4.5 Loading UX
+
+- use skeleton loading for result cards, shipment summaries, carrier summaries, and other structured content where layout is already known
+- prefer skeleton or shimmer placeholders over generic spinners when loading replaces a content list, summary card, or detail page body
+- use simple progress indicators only for short blocking actions such as submit, approve, delete, or upload
+- keep skeleton layouts close to final content shape so users can predict what is loading
+- avoid flashing between skeleton, empty, and loaded states; use stable transitions where possible
+
+Recommended skeleton targets in FleetFill:
+
+- search result cards
+- shipment summary cards
+- route and one-off trip detail summaries
+- carrier public profile summary and review list
+- admin verification packet detail and queue cards
+- payout account list and route/trip list summaries
+
 ## 5. Shipment Creation UX
 
 ### 5.1 Shipment Form
@@ -136,6 +153,41 @@ Users may add multiple package lines, but the screen must reinforce that all ite
 - respect keyboard `viewInsets` so forms, sheets, and dialogs stay usable during text entry
 - adapt modal presentation by available width: bottom sheets on compact layouts, dialog or side-sheet style presentation on wider layouts when useful
 - foldable and multi-window specializations may be deferred, but layouts must still fail gracefully using width and safe-area rules
+
+## 6.1 Cross-Phase UX Polish Rules
+
+These improvements should be treated as cross-cutting finish work applied after most major phases are operationally complete.
+
+Already appropriate to apply during completed phases:
+
+- request debouncing for search/filter inputs
+- stale-result protection and request cancellation where searches can overlap
+- lazy rendering for long lists and result sets
+- inline recovery states instead of disruptive success/error route hops
+- destructive-action confirmation for delete/deactivate/cancel flows
+- consistent offline, retry, and not-found states
+- page storage keys for long-lived scrollable lists that keep the same layout and benefit from preserved position
+
+Better deferred to the end-of-major-phase polish pass:
+
+- skeleton loading for known-content layouts
+- progressive reveal and light transition polish using reduced-motion-safe patterns
+- image optimization through constrained dimensions, compression, and thumbnails where media-heavy screens exist
+- final accessibility pass for semantics, focus order, large text, and keyboard traversal
+- final bidi and localization pass for identifiers, mixed Arabic/French content, and user-facing status copy
+
+Project-scale terms to use in planning and review:
+
+- loading strategy
+- skeleton loading / shimmer loading
+- progressive disclosure
+- debounce / throttling / request cancellation
+- stale-result protection
+- lazy rendering / virtualization
+- payload minimization
+- image optimization
+- accessibility release pass
+- localization polish pass
 
 ## 7. Payment UX
 

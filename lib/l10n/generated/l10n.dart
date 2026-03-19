@@ -3561,6 +3561,491 @@ class S {
       args: [],
     );
   }
+
+  /// `DZD`
+  String get priceCurrencyLabel {
+    return Intl.message('DZD', name: 'priceCurrencyLabel', desc: '', args: []);
+  }
+
+  /// `Create shipment`
+  String get shipmentCreateAction {
+    return Intl.message(
+      'Create shipment',
+      name: 'shipmentCreateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create shipment draft`
+  String get shipmentCreateTitle {
+    return Intl.message(
+      'Create shipment draft',
+      name: 'shipmentCreateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit shipment`
+  String get shipmentEditAction {
+    return Intl.message(
+      'Edit shipment',
+      name: 'shipmentEditAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit shipment draft`
+  String get shipmentEditTitle {
+    return Intl.message(
+      'Edit shipment draft',
+      name: 'shipmentEditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save shipment`
+  String get shipmentSaveAction {
+    return Intl.message(
+      'Save shipment',
+      name: 'shipmentSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipment draft saved.`
+  String get shipmentSavedMessage {
+    return Intl.message(
+      'Shipment draft saved.',
+      name: 'shipmentSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete shipment`
+  String get shipmentDeleteAction {
+    return Intl.message(
+      'Delete shipment',
+      name: 'shipmentDeleteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete this shipment draft from FleetFill?`
+  String get shipmentDeleteConfirmationMessage {
+    return Intl.message(
+      'Delete this shipment draft from FleetFill?',
+      name: 'shipmentDeleteConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipment draft removed.`
+  String get shipmentDeletedMessage {
+    return Intl.message(
+      'Shipment draft removed.',
+      name: 'shipmentDeletedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create a shipment draft before searching exact capacity.`
+  String get shipmentsEmptyMessage {
+    return Intl.message(
+      'Create a shipment draft before searching exact capacity.',
+      name: 'shipmentsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Category`
+  String get shipmentCategoryLabel {
+    return Intl.message(
+      'Category',
+      name: 'shipmentCategoryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get shipmentDescriptionLabel {
+    return Intl.message(
+      'Description',
+      name: 'shipmentDescriptionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pickup window start`
+  String get shipmentPickupStartLabel {
+    return Intl.message(
+      'Pickup window start',
+      name: 'shipmentPickupStartLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pickup window end`
+  String get shipmentPickupEndLabel {
+    return Intl.message(
+      'Pickup window end',
+      name: 'shipmentPickupEndLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pickup window end must be after pickup window start.`
+  String get shipmentPickupWindowOrderMessage {
+    return Intl.message(
+      'Pickup window end must be after pickup window start.',
+      name: 'shipmentPickupWindowOrderMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipment items`
+  String get shipmentItemsTitle {
+    return Intl.message(
+      'Shipment items',
+      name: 'shipmentItemsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Item {index}`
+  String shipmentItemTitle(Object index) {
+    return Intl.message(
+      'Item $index',
+      name: 'shipmentItemTitle',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `Add item`
+  String get shipmentAddItemAction {
+    return Intl.message(
+      'Add item',
+      name: 'shipmentAddItemAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove item`
+  String get shipmentRemoveItemAction {
+    return Intl.message(
+      'Remove item',
+      name: 'shipmentRemoveItemAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Item label`
+  String get shipmentItemLabelField {
+    return Intl.message(
+      'Item label',
+      name: 'shipmentItemLabelField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quantity`
+  String get shipmentItemQuantityLabel {
+    return Intl.message(
+      'Quantity',
+      name: 'shipmentItemQuantityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Item weight (kg)`
+  String get shipmentItemWeightLabel {
+    return Intl.message(
+      'Item weight (kg)',
+      name: 'shipmentItemWeightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Item volume (m3)`
+  String get shipmentItemVolumeLabel {
+    return Intl.message(
+      'Item volume (m3)',
+      name: 'shipmentItemVolumeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Item notes`
+  String get shipmentItemNotesLabel {
+    return Intl.message(
+      'Item notes',
+      name: 'shipmentItemNotesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Draft`
+  String get shipmentStatusDraftLabel {
+    return Intl.message(
+      'Draft',
+      name: 'shipmentStatusDraftLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booked`
+  String get shipmentStatusBookedLabel {
+    return Intl.message(
+      'Booked',
+      name: 'shipmentStatusBookedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancelled`
+  String get shipmentStatusCancelledLabel {
+    return Intl.message(
+      'Cancelled',
+      name: 'shipmentStatusCancelledLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create at least one shipment draft to search exact lane capacity.`
+  String get searchTripsRequiresDraftMessage {
+    return Intl.message(
+      'Create at least one shipment draft to search exact lane capacity.',
+      name: 'searchTripsRequiresDraftMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipment draft`
+  String get searchShipmentSelectorLabel {
+    return Intl.message(
+      'Shipment draft',
+      name: 'searchShipmentSelectorLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Requested departure date`
+  String get searchRequestedDateLabel {
+    return Intl.message(
+      'Requested departure date',
+      name: 'searchRequestedDateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipment summary`
+  String get searchShipmentSummaryTitle {
+    return Intl.message(
+      'Shipment summary',
+      name: 'searchShipmentSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search exact capacity`
+  String get searchTripsAction {
+    return Intl.message(
+      'Search exact capacity',
+      name: 'searchTripsAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sort and filters`
+  String get searchTripsControlsAction {
+    return Intl.message(
+      'Sort and filters',
+      name: 'searchTripsControlsAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommended`
+  String get searchSortRecommendedLabel {
+    return Intl.message(
+      'Recommended',
+      name: 'searchSortRecommendedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Top rated`
+  String get searchSortTopRatedLabel {
+    return Intl.message(
+      'Top rated',
+      name: 'searchSortTopRatedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lowest price`
+  String get searchSortLowestPriceLabel {
+    return Intl.message(
+      'Lowest price',
+      name: 'searchSortLowestPriceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nearest departure`
+  String get searchSortNearestDepartureLabel {
+    return Intl.message(
+      'Nearest departure',
+      name: 'searchSortNearestDepartureLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carrier`
+  String get searchCarrierLabel {
+    return Intl.message(
+      'Carrier',
+      name: 'searchCarrierLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated total`
+  String get searchEstimatedPriceLabel {
+    return Intl.message(
+      'Estimated total',
+      name: 'searchEstimatedPriceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Departure`
+  String get searchDepartureLabel {
+    return Intl.message(
+      'Departure',
+      name: 'searchDepartureLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nearest exact dates found`
+  String get searchTripsNearestDateTitle {
+    return Intl.message(
+      'Nearest exact dates found',
+      name: 'searchTripsNearestDateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No same-day exact result is available. Showing nearest exact dates: {dates}`
+  String searchTripsNearestDateMessage(Object dates) {
+    return Intl.message(
+      'No same-day exact result is available. Showing nearest exact dates: $dates',
+      name: 'searchTripsNearestDateMessage',
+      desc: '',
+      args: [dates],
+    );
+  }
+
+  /// `Redefine your search`
+  String get searchTripsNoRouteTitle {
+    return Intl.message(
+      'Redefine your search',
+      name: 'searchTripsNoRouteTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No exact route exists for this lane in the nearby search window.`
+  String get searchTripsNoRouteMessage {
+    return Intl.message(
+      'No exact route exists for this lane in the nearby search window.',
+      name: 'searchTripsNoRouteMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No result matches the current sort and filter selection.`
+  String get searchTripsFilterEmptyMessage {
+    return Intl.message(
+      'No result matches the current sort and filter selection.',
+      name: 'searchTripsFilterEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search results ({count})`
+  String searchTripsResultsTitle(Object count) {
+    return Intl.message(
+      'Search results ($count)',
+      name: 'searchTripsResultsTitle',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Recurring route`
+  String get searchTripsRecurringLabel {
+    return Intl.message(
+      'Recurring route',
+      name: 'searchTripsRecurringLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off trip`
+  String get searchTripsOneOffLabel {
+    return Intl.message(
+      'One-off trip',
+      name: 'searchTripsOneOffLabel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

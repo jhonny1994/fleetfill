@@ -43,13 +43,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(routeId) => "Route ${routeId}";
 
-  static String m11(shipmentId) => "Shipment ${shipmentId}";
+  static String m11(dates) =>
+      "لا توجد نتيجة مطابقة في اليوم نفسه. أقرب التواريخ المطابقة: ${dates}";
 
-  static String m12(bookingId) => "Tracking ${bookingId}";
+  static String m12(count) => "نتائج البحث (${count})";
 
-  static String m13(reason) => "تحقق المركبة يحتاج إلى إجراء: ${reason}";
+  static String m13(shipmentId) => "Shipment ${shipmentId}";
 
-  static String m14(reason) => "مرفوض: ${reason}";
+  static String m14(index) => "العنصر ${index}";
+
+  static String m15(bookingId) => "Tracking ${bookingId}";
+
+  static String m16(reason) => "تحقق المركبة يحتاج إلى إجراء: ${reason}";
+
+  static String m17(reason) => "مرفوض: ${reason}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -608,6 +615,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneCompletionTitle": MessageLookupByLibrary.simpleMessage(
       "Phone completion",
     ),
+    "priceCurrencyLabel": MessageLookupByLibrary.simpleMessage("دج"),
     "pricePerKgUnitLabel": MessageLookupByLibrary.simpleMessage("دج/كلغ"),
     "profileCarrierVerificationHint": MessageLookupByLibrary.simpleMessage(
       "أكمل بيانات الناقل أولا، ثم ارفع وثائق التحقق المطلوبة من ملفك الشخصي.",
@@ -764,10 +772,65 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sampleTotalAmount": MessageLookupByLibrary.simpleMessage("DZD 13,700"),
     "sampleTotalLabel": MessageLookupByLibrary.simpleMessage("الإجمالي"),
+    "searchCarrierLabel": MessageLookupByLibrary.simpleMessage("الناقل"),
+    "searchDepartureLabel": MessageLookupByLibrary.simpleMessage("الانطلاق"),
+    "searchEstimatedPriceLabel": MessageLookupByLibrary.simpleMessage(
+      "الإجمالي التقديري",
+    ),
+    "searchRequestedDateLabel": MessageLookupByLibrary.simpleMessage(
+      "تاريخ الانطلاق المطلوب",
+    ),
+    "searchShipmentSelectorLabel": MessageLookupByLibrary.simpleMessage(
+      "مسودة الشحنة",
+    ),
+    "searchShipmentSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "ملخص الشحنة",
+    ),
+    "searchSortLowestPriceLabel": MessageLookupByLibrary.simpleMessage(
+      "الأقل سعرا",
+    ),
+    "searchSortNearestDepartureLabel": MessageLookupByLibrary.simpleMessage(
+      "أقرب انطلاق",
+    ),
+    "searchSortRecommendedLabel": MessageLookupByLibrary.simpleMessage(
+      "موصى به",
+    ),
+    "searchSortTopRatedLabel": MessageLookupByLibrary.simpleMessage(
+      "الأعلى تقييما",
+    ),
+    "searchTripsAction": MessageLookupByLibrary.simpleMessage(
+      "ابحث عن سعة مطابقة",
+    ),
+    "searchTripsControlsAction": MessageLookupByLibrary.simpleMessage(
+      "الترتيب والفلاتر",
+    ),
     "searchTripsDescription": MessageLookupByLibrary.simpleMessage(
       "The search form and exact-route results stay on one page with inline states.",
     ),
+    "searchTripsFilterEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد نتائج تطابق الترتيب والفلاتر الحالية.",
+    ),
     "searchTripsNavLabel": MessageLookupByLibrary.simpleMessage("Search"),
+    "searchTripsNearestDateMessage": m11,
+    "searchTripsNearestDateTitle": MessageLookupByLibrary.simpleMessage(
+      "تم العثور على أقرب التواريخ المطابقة",
+    ),
+    "searchTripsNoRouteMessage": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد مسار مطابق لهذا الخط ضمن نافذة البحث القريبة.",
+    ),
+    "searchTripsNoRouteTitle": MessageLookupByLibrary.simpleMessage(
+      "أعد تعريف بحثك",
+    ),
+    "searchTripsOneOffLabel": MessageLookupByLibrary.simpleMessage(
+      "رحلة فردية",
+    ),
+    "searchTripsRecurringLabel": MessageLookupByLibrary.simpleMessage(
+      "مسار متكرر",
+    ),
+    "searchTripsRequiresDraftMessage": MessageLookupByLibrary.simpleMessage(
+      "أنشئ مسودة شحنة واحدة على الأقل للبحث عن سعة مطابقة.",
+    ),
+    "searchTripsResultsTitle": m12,
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage("Search trips"),
     "settingsDescription": MessageLookupByLibrary.simpleMessage(
       "أدر اللغة والمظهر والدعم وتفضيلات الإشعارات.",
@@ -782,10 +845,67 @@ class MessageLookup extends MessageLookupByLibrary {
     "sharedScaffoldPreviewTitle": MessageLookupByLibrary.simpleMessage(
       "معاينة الأساس المشترك",
     ),
+    "shipmentAddItemAction": MessageLookupByLibrary.simpleMessage("إضافة عنصر"),
+    "shipmentCategoryLabel": MessageLookupByLibrary.simpleMessage("الفئة"),
+    "shipmentCreateAction": MessageLookupByLibrary.simpleMessage("إنشاء شحنة"),
+    "shipmentCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "إنشاء مسودة شحنة",
+    ),
+    "shipmentDeleteAction": MessageLookupByLibrary.simpleMessage("حذف الشحنة"),
+    "shipmentDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "هل تريد حذف مسودة الشحنة هذه من FleetFill؟",
+    ),
+    "shipmentDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم حذف مسودة الشحنة.",
+    ),
+    "shipmentDescriptionLabel": MessageLookupByLibrary.simpleMessage("الوصف"),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
       "راجع ملخص الشحنة ومحتوياتها والحجز المرتبط بها.",
     ),
-    "shipmentDetailTitle": m11,
+    "shipmentDetailTitle": m13,
+    "shipmentEditAction": MessageLookupByLibrary.simpleMessage("تعديل الشحنة"),
+    "shipmentEditTitle": MessageLookupByLibrary.simpleMessage(
+      "تعديل مسودة الشحنة",
+    ),
+    "shipmentItemLabelField": MessageLookupByLibrary.simpleMessage(
+      "اسم العنصر",
+    ),
+    "shipmentItemNotesLabel": MessageLookupByLibrary.simpleMessage(
+      "ملاحظات العنصر",
+    ),
+    "shipmentItemQuantityLabel": MessageLookupByLibrary.simpleMessage("الكمية"),
+    "shipmentItemTitle": m14,
+    "shipmentItemVolumeLabel": MessageLookupByLibrary.simpleMessage(
+      "حجم العنصر (م3)",
+    ),
+    "shipmentItemWeightLabel": MessageLookupByLibrary.simpleMessage(
+      "وزن العنصر (كلغ)",
+    ),
+    "shipmentItemsTitle": MessageLookupByLibrary.simpleMessage("عناصر الشحنة"),
+    "shipmentPickupEndLabel": MessageLookupByLibrary.simpleMessage(
+      "نهاية نافذة الاستلام",
+    ),
+    "shipmentPickupStartLabel": MessageLookupByLibrary.simpleMessage(
+      "بداية نافذة الاستلام",
+    ),
+    "shipmentPickupWindowOrderMessage": MessageLookupByLibrary.simpleMessage(
+      "يجب أن تكون نهاية نافذة الاستلام بعد بدايتها.",
+    ),
+    "shipmentRemoveItemAction": MessageLookupByLibrary.simpleMessage(
+      "إزالة العنصر",
+    ),
+    "shipmentSaveAction": MessageLookupByLibrary.simpleMessage("حفظ الشحنة"),
+    "shipmentSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم حفظ مسودة الشحنة.",
+    ),
+    "shipmentStatusBookedLabel": MessageLookupByLibrary.simpleMessage("محجوزة"),
+    "shipmentStatusCancelledLabel": MessageLookupByLibrary.simpleMessage(
+      "ملغاة",
+    ),
+    "shipmentStatusDraftLabel": MessageLookupByLibrary.simpleMessage("مسودة"),
+    "shipmentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "أنشئ مسودة شحنة قبل البحث عن سعة مطابقة.",
+    ),
     "shipperHomeDescription": MessageLookupByLibrary.simpleMessage(
       "Active bookings, recent notifications, quick actions, and support shortcut live here.",
     ),
@@ -817,7 +937,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
-    "trackingDetailTitle": m12,
+    "trackingDetailTitle": m15,
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
       "حدّث FleetFill للمتابعة باستخدام الإصدار المدعوم.",
     ),
@@ -869,7 +989,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vehicleVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
       "وثائق تحقق المركبة",
     ),
-    "vehicleVerificationRejectedBanner": m13,
+    "vehicleVerificationRejectedBanner": m16,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
       "Vehicles remain under the carrier profile branch.",
     ),
@@ -891,7 +1011,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
       "تم الرفع وينتظر مراجعة الإدارة.",
     ),
-    "verificationDocumentRejectedMessage": m14,
+    "verificationDocumentRejectedMessage": m17,
     "verificationDocumentReplacedMessage": MessageLookupByLibrary.simpleMessage(
       "تم استبدال وثيقة التحقق.",
     ),
