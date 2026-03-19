@@ -53,6 +53,12 @@ Rules:
 - [x] Add baseline widget tests for localization and accessibility guidelines
 - [x] Create shared page-state widgets for loading, error, empty, retry, offline, forbidden, not-found, and verification-gate states
 - [x] Define reduced-motion policy and keyboard/focus traversal rules for forms, dialogs, sheets, and larger-device layouts
+- [ ] Add a final cross-phase UX polish pass after most operational phases are complete, covering skeleton loading, progressive loading transitions, image optimization, accessibility release checks, and localization polish
+
+Cross-phase UX note:
+
+- immediate UX/perf foundations such as debounce, stale-result protection, lazy rendering, destructive confirmations, shared recovery states, and scroll-position preservation should be applied during the feature phases they affect
+- end-of-product polish items such as skeleton loading, shimmer, broader transition refinement, media optimization, and final accessibility/localization sweeps should land in a coordinated pass after most major phases are implemented
 
 ## Phase 2 - Backend Schema And Security Foundation
 
@@ -187,29 +193,37 @@ Phase 5 notes:
 
 ### Shipment Domain
 
-- [ ] Build shipment CRUD for shipper drafts and active shipments
-- [ ] Support multiple shipment items inside one shipment
-- [ ] Enforce one shipment -> one booking rule in code and DB
-- [ ] Validate pickup window, weight, and required inputs
+- [x] Build shipment CRUD for shipper drafts and active shipments
+- [x] Support multiple shipment items inside one shipment
+- [x] Enforce one shipment -> one booking rule in code and DB
+- [x] Validate pickup window, weight, and required inputs
 
 ### Search Engine And Results
 
-- [ ] Build server-driven exact-lane search endpoint/function
-- [ ] Include recurring route expansion by date and one-off trips
-- [ ] Compute remaining capacity safely
-- [ ] Implement `Recommended` ranking logic
-- [ ] Implement same-route nearest-date fallback when same-day exact result is empty
-- [ ] Return redefine-search result when no exact route exists
-- [ ] Implement pagination/cursoring for search results and other long-running collections
-- [ ] Implement debounced/cancellable search requests and stale-result protection
+- [x] Build server-driven exact-lane search endpoint/function
+- [x] Include recurring route expansion by date and one-off trips
+- [x] Compute remaining capacity safely
+- [x] Implement `Recommended` ranking logic
+- [x] Implement same-route nearest-date fallback when same-day exact result is empty
+- [x] Return redefine-search result when no exact route exists
+- [x] Implement pagination/cursoring for search results and other long-running collections
+- [x] Implement debounced/cancellable search requests and stale-result protection
 
 ### Search UX
 
-- [ ] Build shipment search form
-- [ ] Build search results list with lazy rendering
-- [ ] Build no-result and nearest-date fallback as inline page states, not separate routes
-- [ ] Build alternative sort options: `Top Rated`, `Lowest Price`, `Nearest Departure`
-- [ ] Build filters and sort controls as sheets instead of routed microflows
+- [x] Build shipment search form
+- [x] Build search results list with lazy rendering
+- [x] Build no-result and nearest-date fallback as inline page states, not separate routes
+- [x] Build alternative sort options: `Top Rated`, `Lowest Price`, `Nearest Departure`
+- [x] Build filters and sort controls as sheets instead of routed microflows
+
+Phase 6 progress notes:
+
+- shipper shipment drafts now support direct CRUD with multiple shipment items, shared validation, and shared detail rendering over the existing draft-safe RLS model
+- shipment search is now server-driven through `search_exact_lane_capacity(...)`, using exact lane matching, recurring route expansion by requested date, one-off trip inclusion, server-side remaining-capacity checks, recommended ranking, nearest-date fallback, and redefine-search mode
+- shipper search UI now lets users search from a selected shipment draft, review exact/nearest matches inline, debounce and invalidate stale searches, switch sort/filter controls from a bottom sheet, and hand off a selected result into booking review without routed micro-success pages
+- shipment draft selection and the unique booking constraint now preserve the one-shipment -> one-booking model in both app flow and DB truth
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120000_add_shipment_domain_constraints.sql`, `supabase/migrations/20260320120100_create_exact_lane_search_rpc.sql`, and `test/shipment_search_contract_test.dart`
 
 ## Phase 7 - Booking And Pricing Flow
 

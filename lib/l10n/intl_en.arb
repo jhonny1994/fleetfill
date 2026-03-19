@@ -435,4 +435,68 @@
   ,"oneOffTripActivateConfirmationMessage": "Activate this trip for new bookings?"
   ,"oneOffTripDeactivateConfirmationMessage": "Deactivate this trip for new bookings? Existing bookings will stay unchanged."
   ,"oneOffTripDeleteConfirmationMessage": "Delete this one-off trip from FleetFill?"
+  ,"priceCurrencyLabel": "DZD"
+  ,"shipmentCreateAction": "Create shipment"
+  ,"shipmentCreateTitle": "Create shipment draft"
+  ,"shipmentEditAction": "Edit shipment"
+  ,"shipmentEditTitle": "Edit shipment draft"
+  ,"shipmentSaveAction": "Save shipment"
+  ,"shipmentSavedMessage": "Shipment draft saved."
+  ,"shipmentDeleteAction": "Delete shipment"
+  ,"shipmentDeleteConfirmationMessage": "Delete this shipment draft from FleetFill?"
+  ,"shipmentDeletedMessage": "Shipment draft removed."
+  ,"shipmentsEmptyMessage": "Create a shipment draft before searching exact capacity."
+  ,"shipmentCategoryLabel": "Category"
+  ,"shipmentDescriptionLabel": "Description"
+  ,"shipmentPickupStartLabel": "Pickup window start"
+  ,"shipmentPickupEndLabel": "Pickup window end"
+  ,"shipmentPickupWindowOrderMessage": "Pickup window end must be after pickup window start."
+  ,"shipmentItemsTitle": "Shipment items"
+  ,"shipmentItemTitle": "Item {index}"
+  ,"@shipmentItemTitle": {
+    "placeholders": {
+      "index": {}
+    }
+  }
+  ,"shipmentAddItemAction": "Add item"
+  ,"shipmentRemoveItemAction": "Remove item"
+  ,"shipmentItemLabelField": "Item label"
+  ,"shipmentItemQuantityLabel": "Quantity"
+  ,"shipmentItemWeightLabel": "Item weight (kg)"
+  ,"shipmentItemVolumeLabel": "Item volume (m3)"
+  ,"shipmentItemNotesLabel": "Item notes"
+  ,"shipmentStatusDraftLabel": "Draft"
+  ,"shipmentStatusBookedLabel": "Booked"
+  ,"shipmentStatusCancelledLabel": "Cancelled"
+  ,"searchTripsRequiresDraftMessage": "Create at least one shipment draft to search exact lane capacity."
+  ,"searchShipmentSelectorLabel": "Shipment draft"
+  ,"searchRequestedDateLabel": "Requested departure date"
+  ,"searchShipmentSummaryTitle": "Shipment summary"
+  ,"searchTripsAction": "Search exact capacity"
+  ,"searchTripsControlsAction": "Sort and filters"
+  ,"searchSortRecommendedLabel": "Recommended"
+  ,"searchSortTopRatedLabel": "Top rated"
+  ,"searchSortLowestPriceLabel": "Lowest price"
+  ,"searchSortNearestDepartureLabel": "Nearest departure"
+  ,"searchCarrierLabel": "Carrier"
+  ,"searchEstimatedPriceLabel": "Estimated total"
+  ,"searchDepartureLabel": "Departure"
+  ,"searchTripsNearestDateTitle": "Nearest exact dates found"
+  ,"searchTripsNearestDateMessage": "No same-day exact result is available. Showing nearest exact dates: {dates}"
+  ,"@searchTripsNearestDateMessage": {
+    "placeholders": {
+      "dates": {}
+    }
+  }
+  ,"searchTripsNoRouteTitle": "Redefine your search"
+  ,"searchTripsNoRouteMessage": "No exact route exists for this lane in the nearby search window."
+  ,"searchTripsFilterEmptyMessage": "No result matches the current sort and filter selection."
+  ,"searchTripsResultsTitle": "Search results ({count})"
+  ,"@searchTripsResultsTitle": {
+    "placeholders": {
+      "count": {}
+    }
+  }
+  ,"searchTripsRecurringLabel": "Recurring route"
+  ,"searchTripsOneOffLabel": "One-off trip"
 }

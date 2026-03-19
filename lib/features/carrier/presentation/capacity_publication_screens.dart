@@ -41,6 +41,7 @@ class _MyRoutesScreenState extends ConsumerState<MyRoutesScreen> {
         label: Text(s.myRoutesAddAction),
       ),
       child: ListView(
+        key: const PageStorageKey<String>('carrier-capacity-publication-list'),
         children: [
           AppSectionHeader(
             title: s.myRoutesTitle,

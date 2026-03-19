@@ -43,14 +43,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(routeId) => "Route ${routeId}";
 
-  static String m11(shipmentId) => "Shipment ${shipmentId}";
+  static String m11(dates) =>
+      "Aucun resultat exact le meme jour. Dates exactes les plus proches : ${dates}";
 
-  static String m12(bookingId) => "Tracking ${bookingId}";
+  static String m12(count) => "Resultats de recherche (${count})";
 
-  static String m13(reason) =>
+  static String m13(shipmentId) => "Shipment ${shipmentId}";
+
+  static String m14(index) => "Article ${index}";
+
+  static String m15(bookingId) => "Tracking ${bookingId}";
+
+  static String m16(reason) =>
       "La verification du vehicule demande une action : ${reason}";
 
-  static String m14(reason) => "Rejete : ${reason}";
+  static String m17(reason) => "Rejete : ${reason}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -617,6 +624,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneCompletionTitle": MessageLookupByLibrary.simpleMessage(
       "Phone completion",
     ),
+    "priceCurrencyLabel": MessageLookupByLibrary.simpleMessage("DZD"),
     "pricePerKgUnitLabel": MessageLookupByLibrary.simpleMessage("DZD/kg"),
     "profileCarrierVerificationHint": MessageLookupByLibrary.simpleMessage(
       "Renseignez d\'abord vos informations transporteur, puis deposez les documents de verification requis depuis votre profil.",
@@ -786,10 +794,65 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "sampleTotalAmount": MessageLookupByLibrary.simpleMessage("DZD 13,700"),
     "sampleTotalLabel": MessageLookupByLibrary.simpleMessage("Total"),
+    "searchCarrierLabel": MessageLookupByLibrary.simpleMessage("Transporteur"),
+    "searchDepartureLabel": MessageLookupByLibrary.simpleMessage("Depart"),
+    "searchEstimatedPriceLabel": MessageLookupByLibrary.simpleMessage(
+      "Total estime",
+    ),
+    "searchRequestedDateLabel": MessageLookupByLibrary.simpleMessage(
+      "Date de depart souhaitee",
+    ),
+    "searchShipmentSelectorLabel": MessageLookupByLibrary.simpleMessage(
+      "Brouillon d\'expedition",
+    ),
+    "searchShipmentSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Resume de l\'expedition",
+    ),
+    "searchSortLowestPriceLabel": MessageLookupByLibrary.simpleMessage(
+      "Prix le plus bas",
+    ),
+    "searchSortNearestDepartureLabel": MessageLookupByLibrary.simpleMessage(
+      "Depart le plus proche",
+    ),
+    "searchSortRecommendedLabel": MessageLookupByLibrary.simpleMessage(
+      "Recommande",
+    ),
+    "searchSortTopRatedLabel": MessageLookupByLibrary.simpleMessage(
+      "Mieux notes",
+    ),
+    "searchTripsAction": MessageLookupByLibrary.simpleMessage(
+      "Rechercher une capacite exacte",
+    ),
+    "searchTripsControlsAction": MessageLookupByLibrary.simpleMessage(
+      "Tri et filtres",
+    ),
     "searchTripsDescription": MessageLookupByLibrary.simpleMessage(
       "The search form and exact-route results stay on one page with inline states.",
     ),
+    "searchTripsFilterEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Aucun resultat ne correspond au tri et aux filtres actuels.",
+    ),
     "searchTripsNavLabel": MessageLookupByLibrary.simpleMessage("Search"),
+    "searchTripsNearestDateMessage": m11,
+    "searchTripsNearestDateTitle": MessageLookupByLibrary.simpleMessage(
+      "Dates exactes les plus proches",
+    ),
+    "searchTripsNoRouteMessage": MessageLookupByLibrary.simpleMessage(
+      "Aucune ligne exacte n\'existe pour ce couloir dans la fenetre proche.",
+    ),
+    "searchTripsNoRouteTitle": MessageLookupByLibrary.simpleMessage(
+      "Redefinissez votre recherche",
+    ),
+    "searchTripsOneOffLabel": MessageLookupByLibrary.simpleMessage(
+      "Trajet ponctuel",
+    ),
+    "searchTripsRecurringLabel": MessageLookupByLibrary.simpleMessage(
+      "Ligne recurrente",
+    ),
+    "searchTripsRequiresDraftMessage": MessageLookupByLibrary.simpleMessage(
+      "Creez au moins un brouillon d\'expedition pour rechercher une capacite exacte.",
+    ),
+    "searchTripsResultsTitle": m12,
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage("Search trips"),
     "settingsDescription": MessageLookupByLibrary.simpleMessage(
       "Gerez la langue, le theme, le support et les preferences de notification.",
@@ -804,10 +867,87 @@ class MessageLookup extends MessageLookupByLibrary {
     "sharedScaffoldPreviewTitle": MessageLookupByLibrary.simpleMessage(
       "Shared foundation preview",
     ),
+    "shipmentAddItemAction": MessageLookupByLibrary.simpleMessage(
+      "Ajouter un article",
+    ),
+    "shipmentCategoryLabel": MessageLookupByLibrary.simpleMessage("Categorie"),
+    "shipmentCreateAction": MessageLookupByLibrary.simpleMessage(
+      "Creer une expedition",
+    ),
+    "shipmentCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "Creer un brouillon d\'expedition",
+    ),
+    "shipmentDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Supprimer l\'expedition",
+    ),
+    "shipmentDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Supprimer ce brouillon d\'expedition de FleetFill ?",
+    ),
+    "shipmentDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "Brouillon d\'expedition supprime.",
+    ),
+    "shipmentDescriptionLabel": MessageLookupByLibrary.simpleMessage(
+      "Description",
+    ),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez le resume de l\'expedition, son contenu et la reservation associee.",
     ),
-    "shipmentDetailTitle": m11,
+    "shipmentDetailTitle": m13,
+    "shipmentEditAction": MessageLookupByLibrary.simpleMessage(
+      "Modifier l\'expedition",
+    ),
+    "shipmentEditTitle": MessageLookupByLibrary.simpleMessage(
+      "Modifier le brouillon d\'expedition",
+    ),
+    "shipmentItemLabelField": MessageLookupByLibrary.simpleMessage(
+      "Libelle de l\'article",
+    ),
+    "shipmentItemNotesLabel": MessageLookupByLibrary.simpleMessage(
+      "Notes de l\'article",
+    ),
+    "shipmentItemQuantityLabel": MessageLookupByLibrary.simpleMessage(
+      "Quantite",
+    ),
+    "shipmentItemTitle": m14,
+    "shipmentItemVolumeLabel": MessageLookupByLibrary.simpleMessage(
+      "Volume de l\'article (m3)",
+    ),
+    "shipmentItemWeightLabel": MessageLookupByLibrary.simpleMessage(
+      "Poids de l\'article (kg)",
+    ),
+    "shipmentItemsTitle": MessageLookupByLibrary.simpleMessage(
+      "Articles de l\'expedition",
+    ),
+    "shipmentPickupEndLabel": MessageLookupByLibrary.simpleMessage(
+      "Fin de fenetre d\'enlevement",
+    ),
+    "shipmentPickupStartLabel": MessageLookupByLibrary.simpleMessage(
+      "Debut de fenetre d\'enlevement",
+    ),
+    "shipmentPickupWindowOrderMessage": MessageLookupByLibrary.simpleMessage(
+      "La fin de fenetre doit etre posterieure au debut.",
+    ),
+    "shipmentRemoveItemAction": MessageLookupByLibrary.simpleMessage(
+      "Retirer l\'article",
+    ),
+    "shipmentSaveAction": MessageLookupByLibrary.simpleMessage(
+      "Enregistrer l\'expedition",
+    ),
+    "shipmentSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Brouillon d\'expedition enregistre.",
+    ),
+    "shipmentStatusBookedLabel": MessageLookupByLibrary.simpleMessage(
+      "Reserve",
+    ),
+    "shipmentStatusCancelledLabel": MessageLookupByLibrary.simpleMessage(
+      "Annule",
+    ),
+    "shipmentStatusDraftLabel": MessageLookupByLibrary.simpleMessage(
+      "Brouillon",
+    ),
+    "shipmentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Creez un brouillon d\'expedition avant de rechercher une capacite exacte.",
+    ),
     "shipperHomeDescription": MessageLookupByLibrary.simpleMessage(
       "Active bookings, recent notifications, quick actions, and support shortcut live here.",
     ),
@@ -839,7 +979,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
-    "trackingDetailTitle": m12,
+    "trackingDetailTitle": m15,
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
       "Mettez FleetFill a jour pour continuer avec la version prise en charge.",
     ),
@@ -907,7 +1047,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vehicleVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
       "Documents de verification du vehicule",
     ),
-    "vehicleVerificationRejectedBanner": m13,
+    "vehicleVerificationRejectedBanner": m16,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
       "Vehicles remain under the carrier profile branch.",
     ),
@@ -933,7 +1073,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
       "Telecharge et en attente d\'une revue admin.",
     ),
-    "verificationDocumentRejectedMessage": m14,
+    "verificationDocumentRejectedMessage": m17,
     "verificationDocumentReplacedMessage": MessageLookupByLibrary.simpleMessage(
       "Document de verification remplace.",
     ),
