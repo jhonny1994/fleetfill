@@ -285,15 +285,83 @@ class MessageLookup extends MessageLookupByLibrary {
     "authVerificationEmailSentMessage": MessageLookupByLibrary.simpleMessage(
       "Check your email to confirm the account before signing in.",
     ),
+    "bookingBasePriceLabel": MessageLookupByLibrary.simpleMessage("Base price"),
+    "bookingCarrierFeeLabel": MessageLookupByLibrary.simpleMessage(
+      "Carrier fee",
+    ),
+    "bookingCarrierPayoutLabel": MessageLookupByLibrary.simpleMessage(
+      "Carrier payout",
+    ),
+    "bookingConfirmAction": MessageLookupByLibrary.simpleMessage(
+      "Confirm booking",
+    ),
+    "bookingCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Booking created. Continue to payment instructions.",
+    ),
     "bookingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shared booking detail routes sit above role shells.",
     ),
     "bookingDetailTitle": m1,
+    "bookingInsuranceAction": MessageLookupByLibrary.simpleMessage(
+      "Insurance option",
+    ),
+    "bookingInsuranceDescription": MessageLookupByLibrary.simpleMessage(
+      "Insurance is optional and calculated as a percentage with a minimum fee floor.",
+    ),
+    "bookingInsuranceFeeLabel": MessageLookupByLibrary.simpleMessage(
+      "Insurance fee",
+    ),
+    "bookingInsuranceIncludedLabel": MessageLookupByLibrary.simpleMessage(
+      "Included",
+    ),
+    "bookingInsuranceLabel": MessageLookupByLibrary.simpleMessage("Insurance"),
+    "bookingInsuranceNotIncludedLabel": MessageLookupByLibrary.simpleMessage(
+      "Not included",
+    ),
+    "bookingPaymentReferenceLabel": MessageLookupByLibrary.simpleMessage(
+      "Payment reference",
+    ),
+    "bookingPlatformFeeLabel": MessageLookupByLibrary.simpleMessage(
+      "Platform fee",
+    ),
+    "bookingPricingBreakdownAction": MessageLookupByLibrary.simpleMessage(
+      "Pricing breakdown",
+    ),
     "bookingReviewDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier reputation, trip detail, and pricing review live here before payment.",
     ),
     "bookingReviewTitle": MessageLookupByLibrary.simpleMessage(
       "Booking review",
+    ),
+    "bookingStatusCancelledLabel": MessageLookupByLibrary.simpleMessage(
+      "Cancelled",
+    ),
+    "bookingStatusCompletedLabel": MessageLookupByLibrary.simpleMessage(
+      "Completed",
+    ),
+    "bookingStatusConfirmedLabel": MessageLookupByLibrary.simpleMessage(
+      "Confirmed",
+    ),
+    "bookingStatusDeliveredPendingReviewLabel":
+        MessageLookupByLibrary.simpleMessage("Delivered pending review"),
+    "bookingStatusDisputedLabel": MessageLookupByLibrary.simpleMessage(
+      "Disputed",
+    ),
+    "bookingStatusInTransitLabel": MessageLookupByLibrary.simpleMessage(
+      "In transit",
+    ),
+    "bookingStatusPaymentUnderReviewLabel":
+        MessageLookupByLibrary.simpleMessage("Payment under review"),
+    "bookingStatusPendingPaymentLabel": MessageLookupByLibrary.simpleMessage(
+      "Waiting for payment",
+    ),
+    "bookingStatusPickedUpLabel": MessageLookupByLibrary.simpleMessage(
+      "Picked up",
+    ),
+    "bookingTaxFeeLabel": MessageLookupByLibrary.simpleMessage("Tax fee"),
+    "bookingTotalLabel": MessageLookupByLibrary.simpleMessage("Final total"),
+    "bookingTrackingNumberLabel": MessageLookupByLibrary.simpleMessage(
+      "Tracking number",
     ),
     "cancelLabel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "carrierBookingsDescription": MessageLookupByLibrary.simpleMessage(
@@ -577,6 +645,28 @@ class MessageLookup extends MessageLookupByLibrary {
       "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
     ),
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment flow"),
+    "paymentInstructionsTitle": MessageLookupByLibrary.simpleMessage(
+      "Payment instructions",
+    ),
+    "paymentStatusProofSubmittedLabel": MessageLookupByLibrary.simpleMessage(
+      "Proof submitted",
+    ),
+    "paymentStatusRefundedLabel": MessageLookupByLibrary.simpleMessage(
+      "Refunded",
+    ),
+    "paymentStatusRejectedLabel": MessageLookupByLibrary.simpleMessage(
+      "Rejected",
+    ),
+    "paymentStatusReleasedToCarrierLabel": MessageLookupByLibrary.simpleMessage(
+      "Released to carrier",
+    ),
+    "paymentStatusSecuredLabel": MessageLookupByLibrary.simpleMessage(
+      "Secured",
+    ),
+    "paymentStatusUnderVerificationLabel": MessageLookupByLibrary.simpleMessage(
+      "Under verification",
+    ),
+    "paymentStatusUnpaidLabel": MessageLookupByLibrary.simpleMessage("Unpaid"),
     "payoutAccountAddAction": MessageLookupByLibrary.simpleMessage(
       "Add payout account",
     ),
@@ -807,12 +897,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "sampleTotalAmount": MessageLookupByLibrary.simpleMessage("DZD 13,700"),
     "sampleTotalLabel": MessageLookupByLibrary.simpleMessage("Total"),
     "searchCarrierLabel": MessageLookupByLibrary.simpleMessage("Carrier"),
+    "searchCarrierRatingLabel": MessageLookupByLibrary.simpleMessage(
+      "Carrier rating",
+    ),
     "searchDepartureLabel": MessageLookupByLibrary.simpleMessage("Departure"),
     "searchEstimatedPriceLabel": MessageLookupByLibrary.simpleMessage(
       "Estimated total",
     ),
     "searchRequestedDateLabel": MessageLookupByLibrary.simpleMessage(
       "Requested departure date",
+    ),
+    "searchResultTypeLabel": MessageLookupByLibrary.simpleMessage(
+      "Capacity type",
     ),
     "searchShipmentSelectorLabel": MessageLookupByLibrary.simpleMessage(
       "Shipment draft",

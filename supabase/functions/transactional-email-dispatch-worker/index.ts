@@ -4,6 +4,7 @@ import {
   dispatchEmail,
   inferDeliveryStatus,
   jsonResponse,
+  requiredEnv,
   type OutboxJob,
 } from '../_shared/email-runtime.ts'
 
@@ -15,6 +16,12 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const authorization = req.headers.get('Authorization')
+    const expectedAuthorization = `Bearer ${requiredEnv('SUPABASE_SERVICE_ROLE_KEY')}`
+    if (authorization !== expectedAuthorization) {
+      return jsonResponse({ error: 'Unauthorized' }, 401)
+    }
+
     const body = await req.json().catch(() => ({})) as { batch_size?: number }
     const serviceClient = createServiceClient()
     const workerId = `edge:${crypto.randomUUID()}`

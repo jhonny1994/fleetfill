@@ -207,7 +207,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'payment-flow',
                     name: AppRouteName.shipperPaymentFlow.name,
-                    builder: (context, state) => const PaymentFlowScreen(),
+                    builder: (context, state) => PaymentFlowScreen(
+                      bookingId: state.extra as String?,
+                    ),
                   ),
                 ],
               ),

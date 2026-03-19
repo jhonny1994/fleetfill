@@ -497,6 +497,7 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
               requestedDate: requestedDate,
               totalWeightKg: shipment.totalWeightKg,
               totalVolumeM3: shipment.totalVolumeM3,
+              sort: _sort,
               offset: reset ? 0 : (_response?.nextOffset ?? 0),
             ),
           );
@@ -526,32 +527,74 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
   }
 }
 
-class BookingReviewScreen extends ConsumerWidget {
+class BookingReviewScreen extends ConsumerStatefulWidget {
   const BookingReviewScreen({super.key, this.selection});
 
   final BookingReviewSelection? selection;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BookingReviewScreen> createState() => _BookingReviewScreenState();
+}
+
+class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
+  bool _includeInsurance = false;
+  bool _isSubmitting = false;
+
+  @override
+  Widget build(BuildContext context) {
     final s = S.of(context);
-    final bookingSelection = selection;
+    final bookingSelection = widget.selection;
+    final clientSettingsAsync = ref.watch(clientSettingsProvider);
 
     if (bookingSelection == null) {
-      return const AppPageScaffold(
-        title: 'Booking review',
-        child: AppNotFoundState(),
+      return AppPageScaffold(
+        title: s.bookingReviewTitle,
+        child: const AppNotFoundState(),
       );
     }
+
+    final quote = _quoteFromSelection(
+      bookingSelection: bookingSelection,
+      includeInsurance: _includeInsurance,
+      settings: clientSettingsAsync.asData?.value,
+    );
 
     return AppPageScaffold(
       title: s.bookingReviewTitle,
       child: ListView(
+        key: const PageStorageKey<String>('shipper-booking-review-screen'),
         children: [
           AppSectionHeader(
             title: s.bookingReviewTitle,
             subtitle: s.bookingReviewDescription,
           ),
           const SizedBox(height: AppSpacing.lg),
+          ProfileSummaryCard(
+            title: s.searchCarrierLabel,
+            rows: [
+              ProfileSummaryRow(
+                label: s.searchCarrierLabel,
+                value: bookingSelection.result.carrierName,
+              ),
+              ProfileSummaryRow(
+                label: s.searchDepartureLabel,
+                value: _formatDateTime(context, bookingSelection.result.departureAt),
+              ),
+              ProfileSummaryRow(
+                label: s.searchResultTypeLabel,
+                value: bookingSelection.result.sourceType == 'route'
+                    ? s.searchTripsRecurringLabel
+                    : s.searchTripsOneOffLabel,
+              ),
+              ProfileSummaryRow(
+                label: s.searchCarrierRatingLabel,
+                value: BidiFormatters.latinIdentifier(
+                  bookingSelection.result.ratingAverage.toStringAsFixed(1),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
           ProfileSummaryCard(
             title: s.searchShipmentSummaryTitle,
             rows: [
@@ -565,41 +608,215 @@ class BookingReviewScreen extends ConsumerWidget {
                     '${BidiFormatters.latinIdentifier(bookingSelection.shipment.totalWeightKg.toStringAsFixed(0))} kg',
               ),
               ProfileSummaryRow(
-                label: s.searchCarrierLabel,
-                value: bookingSelection.result.carrierName,
-              ),
-              ProfileSummaryRow(
                 label: s.searchEstimatedPriceLabel,
                 value:
-                    '${BidiFormatters.latinIdentifier(bookingSelection.result.estimatedTotalDzd.toStringAsFixed(0))} ${s.priceCurrencyLabel}',
+                    '${BidiFormatters.latinIdentifier(quote.shipperTotalDzd.toStringAsFixed(0))} ${s.priceCurrencyLabel}',
               ),
               ProfileSummaryRow(
-                label: s.searchDepartureLabel,
-                value: _formatDateTime(context, bookingSelection.result.departureAt),
+                label: s.bookingInsuranceLabel,
+                value: _includeInsurance
+                    ? s.bookingInsuranceIncludedLabel
+                    : s.bookingInsuranceNotIncludedLabel,
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          FilledButton(
-            onPressed: () => context.push(AppRoutePath.shipperPaymentFlow),
-            child: Text(s.paymentFlowTitle),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _openInsuranceSheet(context),
+                  child: Text(s.bookingInsuranceAction),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _openPricingBreakdown(context, quote),
+                  child: Text(s.bookingPricingBreakdownAction),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          AuthSubmitButton(
+            label: s.bookingConfirmAction,
+            isLoading: _isSubmitting,
+            onPressed: () => unawaited(_confirmBooking(context, bookingSelection, quote)),
           ),
         ],
       ),
     );
   }
+
+  void _openInsuranceSheet(BuildContext context) {
+    final s = S.of(context);
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setModalState) => SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(s.bookingInsuranceAction, style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: AppSpacing.md),
+                  SwitchListTile.adaptive(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(s.bookingInsuranceIncludedLabel),
+                    subtitle: Text(s.bookingInsuranceDescription),
+                    value: _includeInsurance,
+                    onChanged: (value) {
+                      setModalState(() => _includeInsurance = value);
+                      setState(() => _includeInsurance = value);
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  FilledButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(s.confirmLabel),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openPricingBreakdown(BuildContext context, BookingPricingQuote quote) {
+    final s = S.of(context);
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        builder: (context) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: MoneySummaryCard(
+              title: s.bookingPricingBreakdownAction,
+              lines: [
+                MoneySummaryLine(label: s.bookingBasePriceLabel, amount: _money(s, quote.basePriceDzd)),
+                MoneySummaryLine(label: s.bookingPlatformFeeLabel, amount: _money(s, quote.platformFeeDzd)),
+                MoneySummaryLine(label: s.bookingCarrierFeeLabel, amount: _money(s, quote.carrierFeeDzd)),
+                MoneySummaryLine(label: s.bookingInsuranceFeeLabel, amount: _money(s, quote.insuranceFeeDzd)),
+                MoneySummaryLine(label: s.bookingTaxFeeLabel, amount: _money(s, quote.taxFeeDzd)),
+                MoneySummaryLine(label: s.bookingCarrierPayoutLabel, amount: _money(s, quote.carrierPayoutDzd)),
+                MoneySummaryLine(label: s.bookingTotalLabel, amount: _money(s, quote.shipperTotalDzd), emphasis: true),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _confirmBooking(
+    BuildContext context,
+    BookingReviewSelection bookingSelection,
+    BookingPricingQuote quote,
+  ) async {
+    final s = S.of(context);
+    setState(() => _isSubmitting = true);
+    try {
+      final booking = await ref.read(bookingWorkflowControllerProvider).createBooking(
+            shipment: bookingSelection.shipment,
+            result: bookingSelection.result,
+            includeInsurance: _includeInsurance,
+          );
+      if (!context.mounted) return;
+      AppFeedback.showSnackBar(context, s.bookingCreatedMessage);
+      context.go(AppRoutePath.shipperPaymentFlow, extra: booking.id);
+    } on PostgrestException catch (error) {
+      if (context.mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
 }
 
-class PaymentFlowScreen extends StatelessWidget {
-  const PaymentFlowScreen({super.key});
+class PaymentFlowScreen extends ConsumerWidget {
+  const PaymentFlowScreen({super.key, this.bookingId});
+
+  final String? bookingId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final id = bookingId;
+    if (id == null) {
+      return AppPageScaffold(title: s.paymentFlowTitle, child: const AppNotFoundState());
+    }
+    final bookingAsync = ref.watch(bookingDetailProvider(id));
+    final settingsAsync = ref.watch(clientSettingsProvider);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.paymentFlowTitle,
-      description: s.paymentFlowDescription,
+      child: AppAsyncStateView<BookingRecord?>(
+        value: bookingAsync,
+        onRetry: () => ref.invalidate(bookingDetailProvider(id)),
+        data: (booking) {
+          if (booking == null) return const AppNotFoundState();
+          final paymentAccounts = _paymentAccountsFromSettings(settingsAsync.asData?.value);
+          return ListView(
+            key: const PageStorageKey<String>('shipper-payment-flow-screen'),
+            children: [
+              AppSectionHeader(
+                title: s.paymentFlowTitle,
+                subtitle: s.paymentFlowDescription,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ProfileSummaryCard(
+                title: s.bookingReviewTitle,
+                rows: [
+                  ProfileSummaryRow(label: s.bookingPaymentReferenceLabel, value: BidiFormatters.latinIdentifier(booking.paymentReference)),
+                  ProfileSummaryRow(label: s.bookingTrackingNumberLabel, value: BidiFormatters.latinIdentifier(booking.trackingNumber)),
+                  ProfileSummaryRow(label: s.bookingTotalLabel, value: _money(s, BookingPricingQuote(
+                    pricePerKgDzd: booking.pricePerKgDzd,
+                    basePriceDzd: booking.basePriceDzd,
+                    platformFeeDzd: booking.platformFeeDzd,
+                    carrierFeeDzd: booking.carrierFeeDzd,
+                    insuranceRate: booking.insuranceRate,
+                    insuranceFeeDzd: booking.insuranceFeeDzd,
+                    taxFeeDzd: booking.taxFeeDzd,
+                    shipperTotalDzd: booking.shipperTotalDzd,
+                    carrierPayoutDzd: booking.carrierPayoutDzd,
+                  ).shipperTotalDzd)),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              MoneySummaryCard(
+                title: s.bookingPricingBreakdownAction,
+                lines: [
+                  MoneySummaryLine(label: s.bookingBasePriceLabel, amount: _money(s, booking.basePriceDzd)),
+                  MoneySummaryLine(label: s.bookingPlatformFeeLabel, amount: _money(s, booking.platformFeeDzd)),
+                  MoneySummaryLine(label: s.bookingCarrierFeeLabel, amount: _money(s, booking.carrierFeeDzd)),
+                  MoneySummaryLine(label: s.bookingInsuranceFeeLabel, amount: _money(s, booking.insuranceFeeDzd)),
+                  MoneySummaryLine(label: s.bookingTaxFeeLabel, amount: _money(s, booking.taxFeeDzd)),
+                  MoneySummaryLine(label: s.bookingTotalLabel, amount: _money(s, booking.shipperTotalDzd), emphasis: true),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Text(s.paymentInstructionsTitle, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: AppSpacing.md),
+              ...paymentAccounts.map(
+                (account) => Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: AppListCard(
+                    title: account.displayName,
+                    subtitle: '${account.accountIdentifier} • ${account.accountHolderName}',
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -952,19 +1169,7 @@ class _SearchResultsSection extends StatelessWidget {
         return false;
       }
       return true;
-    }).toList(growable: false)
-      ..sort((a, b) {
-      return switch (sort) {
-        SearchSortOption.topRated => b.ratingAverage.compareTo(a.ratingAverage),
-        SearchSortOption.lowestPrice => a.estimatedTotalDzd.compareTo(b.estimatedTotalDzd),
-        SearchSortOption.nearestDeparture => a.departureAt.compareTo(b.departureAt),
-        SearchSortOption.recommended => a.dayDistance.compareTo(b.dayDistance) != 0
-            ? a.dayDistance.compareTo(b.dayDistance)
-            : b.ratingAverage.compareTo(a.ratingAverage) != 0
-                ? b.ratingAverage.compareTo(a.ratingAverage)
-                : a.estimatedTotalDzd.compareTo(b.estimatedTotalDzd),
-      };
-    });
+    }).toList(growable: false);
 
     if (results.isEmpty) {
       return AppEmptyState(
@@ -1176,6 +1381,73 @@ String _formatDateTime(BuildContext context, DateTime value) {
 
 extension<T> on Iterable<T> {
   T? get firstOrNull => isEmpty ? null : first;
+}
+
+BookingPricingQuote _quoteFromSelection({
+  required BookingReviewSelection bookingSelection,
+  required bool includeInsurance,
+  required Map<String, dynamic>? settings,
+}) {
+  final rawPricing = (settings?['booking_pricing'] as Map<String, dynamic>?) ?? const {};
+  final platformFeeRate = (rawPricing['platform_fee_rate'] as num?)?.toDouble() ?? 0.05;
+  final carrierFeeRate = (rawPricing['carrier_fee_rate'] as num?)?.toDouble() ?? 0;
+  final insuranceRate = (rawPricing['insurance_rate'] as num?)?.toDouble() ?? 0.01;
+  final insuranceMinFee = (rawPricing['insurance_min_fee_dzd'] as num?)?.toDouble() ?? 100;
+  final taxRate = (rawPricing['tax_rate'] as num?)?.toDouble() ?? 0;
+
+  final base = bookingSelection.shipment.totalWeightKg * bookingSelection.result.pricePerKgDzd;
+  final platformFee = base * platformFeeRate;
+  final carrierFee = base * carrierFeeRate;
+  final insuranceFee = includeInsurance
+      ? (base * insuranceRate) < insuranceMinFee
+          ? insuranceMinFee
+          : base * insuranceRate
+      : 0.0;
+  final taxFee = (base + platformFee + carrierFee + insuranceFee) * taxRate;
+  final total = base + platformFee + carrierFee + insuranceFee + taxFee;
+  final payout = base + carrierFee;
+
+  return BookingPricingQuote(
+    pricePerKgDzd: bookingSelection.result.pricePerKgDzd,
+    basePriceDzd: base,
+    platformFeeDzd: platformFee,
+    carrierFeeDzd: carrierFee,
+    insuranceRate: includeInsurance ? insuranceRate : null,
+    insuranceFeeDzd: insuranceFee,
+    taxFeeDzd: taxFee,
+    shipperTotalDzd: total,
+    carrierPayoutDzd: payout,
+  );
+}
+
+String _money(S s, double amount) {
+  return '${BidiFormatters.latinIdentifier(amount.toStringAsFixed(0))} ${s.priceCurrencyLabel}';
+}
+
+List<_PlatformPaymentAccountView> _paymentAccountsFromSettings(Map<String, dynamic>? settings) {
+  final raw = (settings?['platform_payment_accounts'] as List<dynamic>?) ?? const <dynamic>[];
+  return raw
+      .cast<Map<String, dynamic>>()
+      .map(
+        (item) => _PlatformPaymentAccountView(
+          displayName: (item['display_name'] as String?)?.trim() ?? '',
+          accountIdentifier: (item['account_identifier'] as String?)?.trim() ?? '',
+          accountHolderName: (item['account_holder_name'] as String?)?.trim() ?? '',
+        ),
+      )
+      .toList(growable: false);
+}
+
+class _PlatformPaymentAccountView {
+  const _PlatformPaymentAccountView({
+    required this.displayName,
+    required this.accountIdentifier,
+    required this.accountHolderName,
+  });
+
+  final String displayName;
+  final String accountIdentifier;
+  final String accountHolderName;
 }
 
 class _CommuneSelectorField extends StatelessWidget {

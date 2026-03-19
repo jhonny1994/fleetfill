@@ -2,7 +2,7 @@ import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/features/admin/admin.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
 import 'package:fleetfill/features/shipper/shipper.dart';
-import 'package:fleetfill/shared/models/algeria_location.dart';
+import 'package:fleetfill/shared/models/models.dart';
 import 'package:fleetfill/shared/providers/location_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,6 +37,18 @@ final shipmentDetailProvider =
     ) {
       return ref.read(shipmentRepositoryProvider).fetchShipmentById(shipmentId);
     });
+
+final bookingDetailProvider =
+    FutureProvider.autoDispose.family<BookingRecord?, String>((
+      ref,
+      bookingId,
+    ) {
+      return ref.read(bookingRepositoryProvider).fetchBookingById(bookingId);
+    });
+
+final clientSettingsProvider = FutureProvider<Map<String, dynamic>>((ref) {
+  return ref.read(bookingRepositoryProvider).fetchClientSettings();
+});
 
 final vehicleDetailProvider = FutureProvider.autoDispose.family<CarrierVehicle?, String>((
   ref,

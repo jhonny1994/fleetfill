@@ -229,26 +229,35 @@ Phase 6 progress notes:
 
 ### Booking Domain
 
-- [ ] Build booking creation server flow with capacity enforcement and idempotency
-- [ ] Snapshot all commercial fields onto the booking
-- [ ] Generate tracking number and payment reference
-- [ ] Enforce booking and payment status transition rules
-- [ ] Implement transactional reservation/capacity protection for per-date bookable departures
-- [ ] Ensure booking, audit, and outbox side effects commit atomically
+- [x] Build booking creation server flow with capacity enforcement and idempotency
+- [x] Snapshot all commercial fields onto the booking
+- [x] Generate tracking number and payment reference
+- [x] Enforce booking and payment status transition rules
+- [x] Implement transactional reservation/capacity protection for per-date bookable departures
+- [x] Ensure booking, audit, and outbox side effects commit atomically
 
 ### Pricing Logic
 
-- [ ] Implement price-per-kg route/trip pricing resolution
-- [ ] Implement `base_price`, `platform_fee`, `carrier_fee`, `insurance_fee`, `tax_fee`, `shipper_total`, and `carrier_payout` calculations
-- [ ] Implement optional insurance percentage with minimum fee floor
-- [ ] Build pricing breakdown presentation in shipper UI
+- [x] Implement price-per-kg route/trip pricing resolution
+- [x] Implement `base_price`, `platform_fee`, `carrier_fee`, `insurance_fee`, `tax_fee`, `shipper_total`, and `carrier_payout` calculations
+- [x] Implement optional insurance percentage with minimum fee floor
+- [x] Build pricing breakdown presentation in shipper UI
 
 ### Booking UX
 
-- [ ] Build booking confirmation screen
-- [ ] Show carrier reputation and trip details clearly before payment
-- [ ] Show total and detailed breakdown before payment proof step
-- [ ] Keep pricing breakdown and insurance choice as reusable sheets/sections inside the booking flow
+- [x] Build booking confirmation screen
+- [x] Show carrier reputation and trip details clearly before payment
+- [x] Show total and detailed breakdown before payment proof step
+- [x] Keep pricing breakdown and insurance choice as reusable sheets/sections inside the booking flow
+
+Phase 7 progress notes:
+
+- booking confirmation is now server-controlled through `create_booking_from_search_result(...)`, which resolves the selected route or one-off trip, enforces remaining capacity, snapshots commercial values, generates tracking/payment identifiers, updates route-day reservations, and writes notification/outbox/tracking side effects atomically
+- booking and payment status transitions are now guarded by DB transition helpers and a bookings trigger so later phases cannot silently jump between invalid states
+- the booking review screen now acts as the booking confirmation screen, showing carrier/trip context, insurance selection, and a reusable pricing breakdown sheet before the user continues to payment instructions
+- payment flow now shows booking summary, payment reference, total, breakdown, and platform payment account instructions instead of a placeholder screen
+- shared booking detail now resolves to a real booking summary view rather than a placeholder
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120200_create_booking_confirmation_rpc.sql`, `supabase/migrations/20260320120300_enforce_booking_status_transitions.sql`, and `test/booking_flow_contract_test.dart`
 
 ## Phase 8 - Payment Proof, Escrow, And Ledger
 

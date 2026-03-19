@@ -476,5 +476,41 @@
   "searchTripsResultsTitle": "Resultats de recherche ({count})",
   "@searchTripsResultsTitle": {"placeholders": {"count": {}}},
   "searchTripsRecurringLabel": "Ligne recurrente",
-  "searchTripsOneOffLabel": "Trajet ponctuel"
+  "searchTripsOneOffLabel": "Trajet ponctuel",
+  "bookingConfirmAction": "Confirmer la reservation",
+  "bookingCreatedMessage": "Reservation creee. Continuez vers les instructions de paiement.",
+  "bookingInsuranceAction": "Option d'assurance",
+  "bookingInsuranceLabel": "Assurance",
+  "bookingInsuranceDescription": "L'assurance est facultative et calculee en pourcentage avec un minimum.",
+  "bookingInsuranceIncludedLabel": "Incluse",
+  "bookingInsuranceNotIncludedLabel": "Non incluse",
+  "bookingPricingBreakdownAction": "Detail du prix",
+  "bookingBasePriceLabel": "Prix de base",
+  "bookingPlatformFeeLabel": "Frais plateforme",
+  "bookingCarrierFeeLabel": "Frais transporteur",
+  "bookingInsuranceFeeLabel": "Frais d'assurance",
+  "bookingTaxFeeLabel": "Taxe",
+  "bookingCarrierPayoutLabel": "Versement transporteur",
+  "bookingTotalLabel": "Total final",
+  "bookingPaymentReferenceLabel": "Reference de paiement",
+  "bookingTrackingNumberLabel": "Numero de suivi",
+  "paymentInstructionsTitle": "Instructions de paiement",
+  "searchCarrierRatingLabel": "Note du transporteur",
+  "searchResultTypeLabel": "Type de capacite"
+  ,"bookingStatusPendingPaymentLabel": "En attente de paiement"
+  ,"bookingStatusPaymentUnderReviewLabel": "Paiement en verification"
+  ,"bookingStatusConfirmedLabel": "Confirmee"
+  ,"bookingStatusPickedUpLabel": "Ramassee"
+  ,"bookingStatusInTransitLabel": "En transit"
+  ,"bookingStatusDeliveredPendingReviewLabel": "Livree en attente de revue"
+  ,"bookingStatusCompletedLabel": "Terminee"
+  ,"bookingStatusCancelledLabel": "Annulee"
+  ,"bookingStatusDisputedLabel": "Contestee"
+  ,"paymentStatusUnpaidLabel": "Non paye"
+  ,"paymentStatusProofSubmittedLabel": "Preuve soumise"
+  ,"paymentStatusUnderVerificationLabel": "En verification"
+  ,"paymentStatusSecuredLabel": "Securise"
+  ,"paymentStatusRejectedLabel": "Rejete"
+  ,"paymentStatusRefundedLabel": "Rembourse"
+  ,"paymentStatusReleasedToCarrierLabel": "Verse au transporteur"
 }

@@ -282,15 +282,81 @@ class MessageLookup extends MessageLookupByLibrary {
     "authVerificationEmailSentMessage": MessageLookupByLibrary.simpleMessage(
       "تحقق من بريدك الإلكتروني لتأكيد الحساب قبل تسجيل الدخول.",
     ),
+    "bookingBasePriceLabel": MessageLookupByLibrary.simpleMessage(
+      "السعر الأساسي",
+    ),
+    "bookingCarrierFeeLabel": MessageLookupByLibrary.simpleMessage(
+      "رسوم الناقل",
+    ),
+    "bookingCarrierPayoutLabel": MessageLookupByLibrary.simpleMessage(
+      "مستحق الناقل",
+    ),
+    "bookingConfirmAction": MessageLookupByLibrary.simpleMessage("تأكيد الحجز"),
+    "bookingCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم إنشاء الحجز. تابع إلى تعليمات الدفع.",
+    ),
     "bookingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shared booking detail routes sit above role shells.",
     ),
     "bookingDetailTitle": m1,
+    "bookingInsuranceAction": MessageLookupByLibrary.simpleMessage(
+      "خيار التأمين",
+    ),
+    "bookingInsuranceDescription": MessageLookupByLibrary.simpleMessage(
+      "التأمين اختياري ويُحسب كنسبة مئوية مع حد أدنى للرسوم.",
+    ),
+    "bookingInsuranceFeeLabel": MessageLookupByLibrary.simpleMessage(
+      "رسوم التأمين",
+    ),
+    "bookingInsuranceIncludedLabel": MessageLookupByLibrary.simpleMessage(
+      "مضاف",
+    ),
+    "bookingInsuranceLabel": MessageLookupByLibrary.simpleMessage("التأمين"),
+    "bookingInsuranceNotIncludedLabel": MessageLookupByLibrary.simpleMessage(
+      "غير مضاف",
+    ),
+    "bookingPaymentReferenceLabel": MessageLookupByLibrary.simpleMessage(
+      "مرجع الدفع",
+    ),
+    "bookingPlatformFeeLabel": MessageLookupByLibrary.simpleMessage(
+      "رسوم المنصة",
+    ),
+    "bookingPricingBreakdownAction": MessageLookupByLibrary.simpleMessage(
+      "تفصيل السعر",
+    ),
     "bookingReviewDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier reputation, trip detail, and pricing review live here before payment.",
     ),
     "bookingReviewTitle": MessageLookupByLibrary.simpleMessage(
       "Booking review",
+    ),
+    "bookingStatusCancelledLabel": MessageLookupByLibrary.simpleMessage("ملغى"),
+    "bookingStatusCompletedLabel": MessageLookupByLibrary.simpleMessage(
+      "مكتمل",
+    ),
+    "bookingStatusConfirmedLabel": MessageLookupByLibrary.simpleMessage("مؤكد"),
+    "bookingStatusDeliveredPendingReviewLabel":
+        MessageLookupByLibrary.simpleMessage("تم التسليم وبانتظار المراجعة"),
+    "bookingStatusDisputedLabel": MessageLookupByLibrary.simpleMessage(
+      "متنازع عليه",
+    ),
+    "bookingStatusInTransitLabel": MessageLookupByLibrary.simpleMessage(
+      "في الطريق",
+    ),
+    "bookingStatusPaymentUnderReviewLabel":
+        MessageLookupByLibrary.simpleMessage("الدفع قيد المراجعة"),
+    "bookingStatusPendingPaymentLabel": MessageLookupByLibrary.simpleMessage(
+      "بانتظار الدفع",
+    ),
+    "bookingStatusPickedUpLabel": MessageLookupByLibrary.simpleMessage(
+      "تم الاستلام",
+    ),
+    "bookingTaxFeeLabel": MessageLookupByLibrary.simpleMessage("الضريبة"),
+    "bookingTotalLabel": MessageLookupByLibrary.simpleMessage(
+      "الإجمالي النهائي",
+    ),
+    "bookingTrackingNumberLabel": MessageLookupByLibrary.simpleMessage(
+      "رقم التتبع",
     ),
     "cancelLabel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "carrierBookingsDescription": MessageLookupByLibrary.simpleMessage(
@@ -553,6 +619,26 @@ class MessageLookup extends MessageLookupByLibrary {
       "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
     ),
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment flow"),
+    "paymentInstructionsTitle": MessageLookupByLibrary.simpleMessage(
+      "تعليمات الدفع",
+    ),
+    "paymentStatusProofSubmittedLabel": MessageLookupByLibrary.simpleMessage(
+      "تم إرسال الإثبات",
+    ),
+    "paymentStatusRefundedLabel": MessageLookupByLibrary.simpleMessage(
+      "تم رد المبلغ",
+    ),
+    "paymentStatusRejectedLabel": MessageLookupByLibrary.simpleMessage("مرفوض"),
+    "paymentStatusReleasedToCarrierLabel": MessageLookupByLibrary.simpleMessage(
+      "تم تحويله إلى الناقل",
+    ),
+    "paymentStatusSecuredLabel": MessageLookupByLibrary.simpleMessage("مؤمّن"),
+    "paymentStatusUnderVerificationLabel": MessageLookupByLibrary.simpleMessage(
+      "قيد التحقق",
+    ),
+    "paymentStatusUnpaidLabel": MessageLookupByLibrary.simpleMessage(
+      "غير مدفوع",
+    ),
     "payoutAccountAddAction": MessageLookupByLibrary.simpleMessage(
       "إضافة حساب تحويل",
     ),
@@ -773,6 +859,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "sampleTotalAmount": MessageLookupByLibrary.simpleMessage("DZD 13,700"),
     "sampleTotalLabel": MessageLookupByLibrary.simpleMessage("الإجمالي"),
     "searchCarrierLabel": MessageLookupByLibrary.simpleMessage("الناقل"),
+    "searchCarrierRatingLabel": MessageLookupByLibrary.simpleMessage(
+      "تقييم الناقل",
+    ),
     "searchDepartureLabel": MessageLookupByLibrary.simpleMessage("الانطلاق"),
     "searchEstimatedPriceLabel": MessageLookupByLibrary.simpleMessage(
       "الإجمالي التقديري",
@@ -780,6 +869,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchRequestedDateLabel": MessageLookupByLibrary.simpleMessage(
       "تاريخ الانطلاق المطلوب",
     ),
+    "searchResultTypeLabel": MessageLookupByLibrary.simpleMessage("نوع السعة"),
     "searchShipmentSelectorLabel": MessageLookupByLibrary.simpleMessage(
       "مسودة الشحنة",
     ),

@@ -139,6 +139,7 @@ class ShipmentSearchQuery {
     required this.requestedDate,
     required this.totalWeightKg,
     required this.totalVolumeM3,
+    this.sort = SearchSortOption.recommended,
     this.offset = 0,
     this.limit = 20,
   });
@@ -149,6 +150,7 @@ class ShipmentSearchQuery {
   final DateTime requestedDate;
   final double totalWeightKg;
   final double? totalVolumeM3;
+  final SearchSortOption sort;
   final int offset;
   final int limit;
 }
