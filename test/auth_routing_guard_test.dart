@@ -141,6 +141,42 @@ void main() {
       );
     });
 
+    test('keeps non-operational profile access open without phone number', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.shipper,
+        hasCompletedOnboarding: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.shipperProfile,
+      );
+
+      expect(decision.target, AppRedirectTarget.none);
+    });
+
+    test('gates operational shipper search behind phone completion', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.shipper,
+        hasCompletedOnboarding: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.shipperSearch,
+      );
+
+      expect(decision.target, AppRedirectTarget.phoneCompletion);
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.phoneCompletion,
+      );
+    });
+
     test(
       'routes unverified carriers away from operational booking surfaces',
       () {
@@ -239,26 +275,29 @@ void main() {
       expect(decision.target, AppRedirectTarget.none);
     });
 
-    test('redirects password-recovery users to reset route from non-auth pages', () {
-      final auth = authSnapshot(
-        status: AuthStatus.authenticated,
-        role: AppUserRole.shipper,
-        hasCompletedOnboarding: true,
-        hasPhoneNumber: true,
-        isPasswordRecovery: true,
-      );
+    test(
+      'redirects password-recovery users to reset route from non-auth pages',
+      () {
+        final auth = authSnapshot(
+          status: AuthStatus.authenticated,
+          role: AppUserRole.shipper,
+          hasCompletedOnboarding: true,
+          hasPhoneNumber: true,
+          isPasswordRecovery: true,
+        );
 
-      final decision = AppRouteGuards.evaluate(
-        bootstrap: bootstrap(auth),
-        auth: auth,
-        location: AppRoutePath.shipperHome,
-      );
+        final decision = AppRouteGuards.evaluate(
+          bootstrap: bootstrap(auth),
+          auth: auth,
+          location: AppRoutePath.shipperHome,
+        );
 
-      expect(decision.target, AppRedirectTarget.resetPassword);
-      expect(
-        AppRouteGuards.redirectLocation(decision, auth: auth),
-        AppRoutePath.resetPassword,
-      );
-    });
+        expect(decision.target, AppRedirectTarget.resetPassword);
+        expect(
+          AppRouteGuards.redirectLocation(decision, auth: auth),
+          AppRoutePath.resetPassword,
+        );
+      },
+    );
   });
 }

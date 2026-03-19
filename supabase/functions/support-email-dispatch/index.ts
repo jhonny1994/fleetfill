@@ -1,18 +1,82 @@
-import { serve } from 'https://deno.land/std@0.224.0/http/server.ts'
+import {
+  buildSubjectPreview,
+  createServiceClient,
+  dispatchEmail,
+  jsonResponse,
+  type OutboxJob,
+} from '../_shared/email-runtime.ts'
 
-serve(async () => {
-  return new Response(
-    JSON.stringify({
-      function: 'support-email-dispatch',
-      responsibilities: [
-        'send support acknowledgement emails',
-        'use validated server-side template variables',
-        'keep support email logic outside the client',
-      ],
-    }),
-    {
-      headers: { 'content-type': 'application/json' },
-      status: 200,
-    },
-  )
+Deno.serve(async (req) => {
+  if (req.method !== 'POST') {
+    return jsonResponse({ error: 'Method not allowed' }, 405)
+  }
+
+  try {
+    const payload = await req.json() as {
+      recipient_email?: string
+      locale?: string
+      subject?: string
+      message?: string
+      profile_id?: string | null
+    }
+
+    if (!payload.recipient_email || !payload.subject || !payload.message) {
+      return jsonResponse({ error: 'recipient_email, subject, and message are required' }, 400)
+    }
+
+    const serviceClient = createServiceClient()
+    const profileId = payload.profile_id ?? null
+    const locale = payload.locale?.trim() || 'en'
+    const dedupeKey = `support_ack:${payload.recipient_email}:${payload.subject}`
+
+    const { data: insertedJob, error: insertError } = await serviceClient
+      .from('email_outbox_jobs')
+      .insert({
+        event_key: 'support_acknowledgement',
+        dedupe_key: dedupeKey,
+        profile_id: profileId,
+        template_key: 'support_acknowledgement',
+        locale,
+        recipient_email: payload.recipient_email.trim().toLowerCase(),
+        priority: 'high',
+        status: 'queued',
+        available_at: new Date().toISOString(),
+        payload_snapshot: {
+          subject: payload.subject.trim(),
+          message: payload.message.trim(),
+        },
+      })
+      .select()
+      .single()
+
+    if (insertError != null) {
+      console.error('support acknowledgement enqueue failed', insertError)
+      return jsonResponse({ error: 'Failed to enqueue support acknowledgement' }, 500)
+    }
+
+    const job = insertedJob as OutboxJob
+    const delivery = await dispatchEmail(job)
+    const subjectPreview = buildSubjectPreview(job.template_key, job.payload_snapshot)
+
+    const { error: completionError } = await serviceClient.rpc('complete_email_outbox_job', {
+      p_job_id: job.id,
+      p_provider: delivery.provider,
+      p_provider_message_id: delivery.providerMessageId,
+      p_subject_preview: subjectPreview,
+    })
+
+    if (completionError != null) {
+      console.error('support acknowledgement completion failed', completionError)
+      return jsonResponse({ error: 'Support acknowledgement send failed' }, 500)
+    }
+
+    return jsonResponse({
+      job_id: job.id,
+      provider_message_id: delivery.providerMessageId,
+      status: 'sent_to_provider',
+    })
+  } catch (error) {
+    console.error('support-email-dispatch failed', error)
+    return jsonResponse({ error: 'Internal server error' }, 500)
+  }
 })

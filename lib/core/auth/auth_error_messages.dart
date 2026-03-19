@@ -15,6 +15,12 @@ String mapAuthErrorMessage(S s, String rawMessage) {
   if (message.contains('user already registered')) {
     return s.authUserAlreadyRegisteredMessage;
   }
+  if (message.contains('google_auth_disabled')) {
+    return s.authGoogleUnavailableMessage;
+  }
+  if (message.contains('document_signed_url_unavailable')) {
+    return s.documentViewerUnavailableMessage;
+  }
   if (message.contains('network')) {
     return s.authNetworkErrorMessage;
   }

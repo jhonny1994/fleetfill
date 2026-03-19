@@ -131,19 +131,27 @@ Verification notes:
 
 ### Carrier Verification Domain
 
-- [ ] Implement verification document domain models and repositories
-- [ ] Build vehicle CRUD flows
-- [ ] Build document upload flow for driver identity/license and truck documents
-- [ ] Support document replacement with preserved history
-- [ ] Show verification status and rejection reasons in carrier UX
-- [ ] Implement carrier verification gates before route, booking, or payout-relevant operational actions
+- [x] Implement verification document domain models and repositories
+- [x] Build vehicle CRUD flows
+- [x] Build document upload flow for driver identity/license and truck documents
+- [x] Support document replacement with preserved history
+- [x] Show verification status and rejection reasons in carrier UX
+- [x] Implement carrier verification gates before route, booking, or payout-relevant operational actions
 
 ### Admin Verification Operations
 
-- [ ] Build grouped verification review packet for profile and vehicle
-- [ ] Build document-level review actions with reason capture
-- [ ] Build `Approve all` behavior with aggregate verification result and per-document audit entries
-- [ ] Build admin queue for pending verification packets
+- [x] Build grouped verification review packet for profile and vehicle
+- [x] Build document-level review actions with reason capture
+- [x] Build `Approve all` behavior with aggregate verification result and per-document audit entries
+- [x] Build admin queue for pending verification packets
+
+Verification notes:
+
+- carrier verification now lives under the carrier profile branch with dedicated vehicle CRUD, verification center, document upload/replace flows, and visible rejection reasons in localized copy
+- admin verification now uses privileged SQL review functions for document review and packet approval so append-only history and audit logging stay server-controlled
+- verification packet aggregation now keeps the latest document version per document type while preserving older history records in `verification_documents`
+- feature coverage was expanded in `test/verification_workflows_test.dart` for latest-document selection, carrier operational gates, and Phase 4 SQL contract safeguards
+- validation passed with `dart analyze`, `flutter test`, `supabase db lint`, and `supabase db reset --yes`
 
 ## Phase 5 - Carrier Capacity Publication
 

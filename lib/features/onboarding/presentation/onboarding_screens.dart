@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:fleetfill/core/core.dart';
+import 'package:fleetfill/features/onboarding/onboarding.dart';
+import 'package:fleetfill/features/profile/presentation/profile_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -179,53 +181,18 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
             subtitle: s.profileSetupDescription,
           ),
           const SizedBox(height: AppSpacing.lg),
-          AuthCard(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AuthTextField(
-                    controller: _nameController,
-                    label: s.profileFullNameLabel,
-                    textInputAction: role == AppUserRole.carrier
-                        ? TextInputAction.next
-                        : TextInputAction.done,
-                    validator: (value) => (value ?? '').trim().isEmpty
-                        ? s.authRequiredFieldMessage
-                        : null,
-                  ),
-                  if (role == AppUserRole.carrier) ...[
-                    const SizedBox(height: AppSpacing.md),
-                    AuthTextField(
-                      controller: _companyController,
-                      label: s.profileCompanyNameLabel,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) => (value ?? '').trim().isEmpty
-                          ? s.authRequiredFieldMessage
-                          : null,
-                    ),
-                  ],
-                  const SizedBox(height: AppSpacing.md),
-                  AuthTextField(
-                    controller: _phoneController,
-                    label: s.profilePhoneLabel,
-                    keyboardType: TextInputType.phone,
-                    textInputAction: TextInputAction.done,
-                    validator: (value) => (value ?? '').trim().isEmpty
-                        ? s.authRequiredFieldMessage
-                        : null,
-                    onFieldSubmitted: (_) => unawaited(_submit(role)),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  AuthSubmitButton(
-                    label: s.profileSetupSaveAction,
-                    isLoading: _isSubmitting,
-                    onPressed: role == null
-                        ? null
-                        : () => unawaited(_submit(role)),
-                  ),
-                ],
+          AppFocusTraversal.form(
+            child: AuthCard(
+              child: Form(
+                key: _formKey,
+                child: ProfileDetailsFormFields(
+                  role: role,
+                  nameController: _nameController,
+                  companyController: _companyController,
+                  phoneController: _phoneController,
+                  isSubmitting: _isSubmitting,
+                  onSubmit: role == null ? null : () => unawaited(_submit(role)),
+                ),
               ),
             ),
           ),
@@ -247,9 +214,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
     final s = S.of(context);
 
     try {
-      await ref
-          .read(authRepositoryProvider)
-          .upsertProfile(
+      final nextLocation = await ref
+          .read(onboardingWorkflowControllerProvider)
+          .submitProfileSetup(
             role: role,
             fullName: _nameController.text,
             companyName: role == AppUserRole.carrier
@@ -257,17 +224,11 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                 : null,
             phoneNumber: _phoneController.text,
           );
-      await ref.read(authSessionControllerProvider.notifier).refresh();
       if (!mounted) {
         return;
       }
       AppFeedback.showSnackBar(context, s.profileSetupSavedMessage);
-      final auth = ref.read(authSessionControllerProvider).asData?.value;
-      context.go(
-        auth == null
-            ? AppRoutePath.signIn
-            : AppRouteGuards.authenticatedEntryLocation(auth),
-      );
+      context.go(nextLocation);
     } on AuthException catch (error) {
       if (!mounted) {
         return;
@@ -320,29 +281,31 @@ class _PhoneCompletionScreenState extends ConsumerState<PhoneCompletionScreen> {
             subtitle: s.phoneCompletionDescription,
           ),
           const SizedBox(height: AppSpacing.lg),
-          AuthCard(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AuthTextField(
-                    controller: _phoneController,
-                    label: s.profilePhoneLabel,
-                    keyboardType: TextInputType.phone,
-                    textInputAction: TextInputAction.done,
-                    validator: (value) => (value ?? '').trim().isEmpty
-                        ? s.authRequiredFieldMessage
-                        : null,
-                    onFieldSubmitted: (_) => unawaited(_submit()),
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  AuthSubmitButton(
-                    label: s.phoneCompletionSaveAction,
-                    isLoading: _isSubmitting,
-                    onPressed: () => unawaited(_submit()),
-                  ),
-                ],
+          AppFocusTraversal.form(
+            child: AuthCard(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AuthTextField(
+                      controller: _phoneController,
+                      label: s.profilePhoneLabel,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.done,
+                      validator: (value) => (value ?? '').trim().isEmpty
+                          ? s.authRequiredFieldMessage
+                          : null,
+                      onFieldSubmitted: (_) => unawaited(_submit()),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    AuthSubmitButton(
+                      label: s.phoneCompletionSaveAction,
+                      isLoading: _isSubmitting,
+                      onPressed: () => unawaited(_submit()),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -360,20 +323,14 @@ class _PhoneCompletionScreenState extends ConsumerState<PhoneCompletionScreen> {
     final s = S.of(context);
 
     try {
-      await ref
-          .read(authRepositoryProvider)
-          .updatePhoneNumber(_phoneController.text);
-      await ref.read(authSessionControllerProvider.notifier).refresh();
+      final nextLocation = await ref
+          .read(onboardingWorkflowControllerProvider)
+          .submitPhoneCompletion(_phoneController.text);
       if (!mounted) {
         return;
       }
       AppFeedback.showSnackBar(context, s.phoneCompletionSavedMessage);
-      final auth = ref.read(authSessionControllerProvider).asData?.value;
-      context.go(
-        auth == null
-            ? AppRoutePath.signIn
-            : AppRouteGuards.authenticatedEntryLocation(auth),
-      );
+      context.go(nextLocation);
     } on AuthException catch (error) {
       if (!mounted) {
         return;

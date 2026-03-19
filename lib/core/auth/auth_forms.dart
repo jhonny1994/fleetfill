@@ -165,9 +165,10 @@ class AuthCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final animationDuration = MotionPolicy.duration(context, AppMotion.medium);
 
     return AnimatedContainer(
-      duration: AppMotion.medium,
+      duration: animationDuration,
       curve: AppMotion.emphasized,
       decoration: BoxDecoration(
         color: colorScheme.surface.withValues(alpha: 0.94),
@@ -203,6 +204,8 @@ class AuthSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final animationDuration = MotionPolicy.duration(context, AppMotion.fast);
+
     return SizedBox(
       width: double.infinity,
       child: FilledButton(
@@ -214,7 +217,7 @@ class AuthSubmitButton extends StatelessWidget {
           ),
         ),
         child: AnimatedSwitcher(
-          duration: AppMotion.fast,
+          duration: animationDuration,
           child: isLoading
               ? const SizedBox(
                   width: 20,

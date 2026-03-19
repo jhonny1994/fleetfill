@@ -294,6 +294,21 @@ set search_path = public
 as $$
 begin
   if public.is_admin() or public.is_service_role() then
+    new.email := lower(trim(new.email));
+    return new;
+  end if;
+
+  if tg_op = 'INSERT' then
+    if new.role = 'admin' then
+      raise exception 'Creating admin profiles directly is not allowed';
+    end if;
+
+    new.is_active := true;
+    new.verification_status := 'pending';
+    new.verification_rejection_reason := null;
+    new.rating_average := null;
+    new.rating_count := 0;
+    new.email := lower(trim(new.email));
     return new;
   end if;
 
@@ -318,6 +333,14 @@ set search_path = public
 as $$
 begin
   if public.is_admin() or public.is_service_role() then
+    new.plate_number := public.normalize_plate_number(new.plate_number);
+    return new;
+  end if;
+
+  if tg_op = 'INSERT' then
+    new.verification_status := 'pending';
+    new.verification_rejection_reason := null;
+    new.plate_number := public.normalize_plate_number(new.plate_number);
     return new;
   end if;
 
@@ -339,6 +362,14 @@ set search_path = public
 as $$
 begin
   if public.is_admin() or public.is_service_role() then
+    new.account_identifier := public.normalize_reference_value(new.account_identifier);
+    return new;
+  end if;
+
+  if tg_op = 'INSERT' then
+    new.is_verified := false;
+    new.verified_at := null;
+    new.account_identifier := public.normalize_reference_value(new.account_identifier);
     return new;
   end if;
 
@@ -462,7 +493,7 @@ begin
       from public.payment_proofs as pp
       join public.bookings as b on b.id = pp.booking_id
       where pp.storage_path = p_object_path
-        and (b.shipper_id = (select auth.uid()) or b.carrier_id = (select auth.uid()))
+        and b.shipper_id = (select auth.uid())
     );
   end if;
 
@@ -502,6 +533,12 @@ as $$
     where ps.is_public = true
   ),
   payment_accounts as (
+    with current_environment as (
+      select coalesce(
+        nullif(current_setting('app.settings.environment', true), ''),
+        'local'
+      )::public.platform_environment as environment
+    )
     select coalesce(
       jsonb_agg(
         jsonb_build_object(
@@ -517,7 +554,9 @@ as $$
       '[]'::jsonb
     ) as value
     from public.platform_payment_accounts as ppa
+    cross join current_environment as ce
     where ppa.is_active = true
+      and ppa.environment = ce.environment
   )
   select settings.value || jsonb_build_object('platform_payment_accounts', payment_accounts.value)
   from settings, payment_accounts;
@@ -684,6 +723,7 @@ as $$
 declare
   v_session public.upload_sessions;
   v_result public.payment_proofs;
+  v_object_exists boolean;
 begin
   select * into v_session
   from public.upload_sessions
@@ -697,6 +737,19 @@ begin
 
   if v_session.status <> 'authorized' or v_session.expires_at <= now() then
     raise exception 'Upload session is no longer valid';
+  end if;
+
+  select exists (
+    select 1
+    from storage.objects as so
+    where so.bucket_id = v_session.bucket_id
+      and so.name = v_session.object_path
+      and coalesce((so.metadata->>'size')::bigint, -1) = v_session.byte_size
+      and lower(coalesce(so.metadata->>'mimetype', '')) = lower(v_session.content_type)
+  ) into v_object_exists;
+
+  if not v_object_exists then
+    raise exception 'Uploaded proof file is missing or metadata does not match the authorized session';
   end if;
 
   insert into public.payment_proofs (
@@ -755,6 +808,7 @@ declare
   v_session public.upload_sessions;
   v_owner_profile_id uuid;
   v_result public.verification_documents;
+  v_object_exists boolean;
 begin
   select * into v_session
   from public.upload_sessions
@@ -768,6 +822,19 @@ begin
 
   if v_session.status <> 'authorized' or v_session.expires_at <= now() then
     raise exception 'Upload session is no longer valid';
+  end if;
+
+  select exists (
+    select 1
+    from storage.objects as so
+    where so.bucket_id = v_session.bucket_id
+      and so.name = v_session.object_path
+      and coalesce((so.metadata->>'size')::bigint, -1) = v_session.byte_size
+      and lower(coalesce(so.metadata->>'mimetype', '')) = lower(v_session.content_type)
+  ) into v_object_exists;
+
+  if not v_object_exists then
+    raise exception 'Uploaded verification file is missing or metadata does not match the authorized session';
   end if;
 
   if v_session.entity_type = 'profile' then
@@ -867,6 +934,232 @@ begin
   returning * into v_result;
 
   return v_result;
+end;
+$$;
+
+create or replace function public.claim_email_outbox_jobs(
+  p_worker_id text,
+  p_batch_size integer default 10
+)
+returns setof public.email_outbox_jobs
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_limit integer := greatest(1, least(coalesce(p_batch_size, 10), 50));
+begin
+  if not public.is_service_role() then
+    raise exception 'Email outbox claims require service role access';
+  end if;
+
+  return query
+  with claimed as (
+    update public.email_outbox_jobs as jobs
+    set status = 'processing',
+        locked_at = now(),
+        locked_by = p_worker_id,
+        updated_at = now()
+    where jobs.id in (
+      select candidate.id
+      from public.email_outbox_jobs as candidate
+      where candidate.status in ('queued', 'retry_scheduled')
+        and candidate.available_at <= now()
+      order by
+        case candidate.priority
+          when 'critical' then 0
+          when 'high' then 1
+          when 'normal' then 2
+          else 3
+        end,
+        candidate.available_at,
+        candidate.created_at
+      limit v_limit
+      for update skip locked
+    )
+    returning jobs.*
+  )
+  select * from claimed;
+end;
+$$;
+
+create or replace function public.release_retryable_email_job(
+  p_job_id uuid,
+  p_error_code text,
+  p_error_message text,
+  p_retry_delay_seconds integer default 300
+)
+returns public.email_outbox_jobs
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_result public.email_outbox_jobs;
+  v_delay integer := greatest(60, least(coalesce(p_retry_delay_seconds, 300), 86400));
+begin
+  if not public.is_service_role() then
+    raise exception 'Retry scheduling requires service role access';
+  end if;
+
+  update public.email_outbox_jobs
+  set status = case
+        when attempt_count + 1 >= max_attempts then 'dead_letter'::public.email_outbox_status
+        else 'retry_scheduled'::public.email_outbox_status
+      end,
+      attempt_count = attempt_count + 1,
+      available_at = case
+        when attempt_count + 1 >= max_attempts then available_at
+        else now() + make_interval(secs => v_delay)
+      end,
+      locked_at = null,
+      locked_by = null,
+      last_error_code = left(coalesce(p_error_code, 'unknown_error'), 120),
+      last_error_message = left(coalesce(p_error_message, 'Unknown email provider failure'), 500),
+      updated_at = now()
+  where id = p_job_id
+  returning * into v_result;
+
+  if not found then
+    raise exception 'Email outbox job not found';
+  end if;
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.complete_email_outbox_job(
+  p_job_id uuid,
+  p_provider text,
+  p_provider_message_id text default null,
+  p_subject_preview text default null
+)
+returns public.email_outbox_jobs
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_job public.email_outbox_jobs;
+  v_delivery public.email_delivery_logs;
+begin
+  if not public.is_service_role() then
+    raise exception 'Email outbox completion requires service role access';
+  end if;
+
+  update public.email_outbox_jobs
+  set status = 'sent_to_provider',
+      attempt_count = attempt_count + 1,
+      locked_at = null,
+      locked_by = null,
+      last_error_code = null,
+      last_error_message = null,
+      updated_at = now()
+  where id = p_job_id
+  returning * into v_job;
+
+  if not found then
+    raise exception 'Email outbox job not found';
+  end if;
+
+  insert into public.email_delivery_logs (
+    profile_id,
+    booking_id,
+    template_key,
+    locale,
+    recipient_email,
+    subject_preview,
+    provider_message_id,
+    status,
+    provider,
+    attempt_count,
+    last_attempt_at,
+    payload_snapshot
+  )
+  values (
+    v_job.profile_id,
+    v_job.booking_id,
+    v_job.template_key,
+    v_job.locale,
+    v_job.recipient_email,
+    p_subject_preview,
+    p_provider_message_id,
+    'sent',
+    left(coalesce(p_provider, 'provider'), 120),
+    v_job.attempt_count,
+    now(),
+    v_job.payload_snapshot
+  )
+  on conflict do nothing
+  returning * into v_delivery;
+
+  return v_job;
+end;
+$$;
+
+create or replace function public.record_email_provider_event(
+  p_provider_message_id text,
+  p_status public.email_delivery_status,
+  p_error_code text default null,
+  p_error_message text default null
+)
+returns public.email_delivery_logs
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_result public.email_delivery_logs;
+begin
+  if not public.is_service_role() then
+    raise exception 'Email provider events require service role access';
+  end if;
+
+  update public.email_delivery_logs
+  set status = p_status,
+      error_code = case when p_status in ('soft_failed', 'hard_failed', 'bounced', 'suppressed') then left(p_error_code, 120) else null end,
+      error_message = case when p_status in ('soft_failed', 'hard_failed', 'bounced', 'suppressed') then left(p_error_message, 500) else null end,
+      last_error_at = case when p_status in ('soft_failed', 'hard_failed', 'bounced', 'suppressed') then now() else last_error_at end,
+      updated_at = now()
+  where provider_message_id = p_provider_message_id
+  returning * into v_result;
+
+  if not found then
+    raise exception 'Email delivery log not found for provider message';
+  end if;
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.recover_stale_email_outbox_jobs(
+  p_lock_age_seconds integer default 900
+)
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_recovered_count integer := 0;
+  v_lock_age integer := greatest(60, least(coalesce(p_lock_age_seconds, 900), 86400));
+begin
+  if not public.is_service_role() then
+    raise exception 'Outbox recovery requires service role access';
+  end if;
+
+  update public.email_outbox_jobs
+  set status = 'retry_scheduled',
+      locked_at = null,
+      locked_by = null,
+      available_at = now(),
+      updated_at = now()
+  where status = 'processing'
+    and locked_at is not null
+    and locked_at < now() - make_interval(secs => v_lock_age);
+
+  get diagnostics v_recovered_count = row_count;
+  return v_recovered_count;
 end;
 $$;
 
@@ -1184,10 +1477,18 @@ using (
   or public.is_admin()
 );
 
+drop policy if exists payment_proofs_select_shipper_or_admin on public.payment_proofs;
 drop policy if exists payment_proofs_select_participant_or_admin on public.payment_proofs;
-create policy payment_proofs_select_participant_or_admin
+create policy payment_proofs_select_shipper_or_admin
 on public.payment_proofs for select to authenticated
-using (public.booking_is_visible_to_current_user(booking_id));
+using (
+  exists (
+    select 1
+    from public.bookings as b
+    where b.id = payment_proofs.booking_id
+      and (b.shipper_id = (select auth.uid()) or public.is_admin())
+  )
+);
 
 drop policy if exists tracking_events_select_participant_or_admin on public.tracking_events;
 create policy tracking_events_select_participant_or_admin
@@ -1334,15 +1635,15 @@ before insert or update on public.profiles
 for each row execute function public.normalize_profile_columns();
 
 create or replace trigger profiles_protect_sensitive_columns
-before update on public.profiles
+before insert or update on public.profiles
 for each row execute function public.protect_profile_sensitive_columns();
 
 create or replace trigger vehicles_protect_sensitive_columns
-before update on public.vehicles
+before insert or update on public.vehicles
 for each row execute function public.protect_vehicle_sensitive_columns();
 
 create or replace trigger payout_accounts_protect_sensitive_columns
-before update on public.payout_accounts
+before insert or update on public.payout_accounts
 for each row execute function public.protect_payout_account_sensitive_columns();
 
 create or replace trigger payment_proofs_append_only_guard
@@ -1370,6 +1671,21 @@ grant execute on function public.write_admin_audit_log(text, text, uuid, text, t
 
 revoke all on function public.get_client_settings() from public, anon;
 grant execute on function public.get_client_settings() to authenticated, service_role;
+
+revoke all on function public.claim_email_outbox_jobs(text, integer) from public, anon, authenticated;
+grant execute on function public.claim_email_outbox_jobs(text, integer) to service_role;
+
+revoke all on function public.release_retryable_email_job(uuid, text, text, integer) from public, anon, authenticated;
+grant execute on function public.release_retryable_email_job(uuid, text, text, integer) to service_role;
+
+revoke all on function public.complete_email_outbox_job(uuid, text, text, text) from public, anon, authenticated;
+grant execute on function public.complete_email_outbox_job(uuid, text, text, text) to service_role;
+
+revoke all on function public.record_email_provider_event(text, public.email_delivery_status, text, text) from public, anon, authenticated;
+grant execute on function public.record_email_provider_event(text, public.email_delivery_status, text, text) to service_role;
+
+revoke all on function public.recover_stale_email_outbox_jobs(integer) from public, anon, authenticated;
+grant execute on function public.recover_stale_email_outbox_jobs(integer) to service_role;
 
 revoke all on function public.create_upload_session(text, text, uuid, text, text, text, bigint, text) from public, anon;
 grant execute on function public.create_upload_session(text, text, uuid, text, text, text, bigint, text) to authenticated, service_role;
