@@ -4,6 +4,7 @@ create or replace function public.search_exact_lane_capacity(
   p_requested_date date,
   p_total_weight_kg numeric,
   p_total_volume_m3 numeric default null,
+  p_sort text default 'recommended',
   p_limit integer default 20,
   p_offset integer default 0
 )
@@ -259,9 +260,13 @@ begin
     select *
     from filtered
     order by
-      day_distance asc,
-      rating_average desc,
-      estimated_total_dzd asc,
+      case when lower(coalesce(p_sort, 'recommended')) = 'top_rated' then rating_average end desc nulls last,
+      case when lower(coalesce(p_sort, 'recommended')) = 'lowest_price' then estimated_total_dzd end asc nulls last,
+      case when lower(coalesce(p_sort, 'recommended')) = 'nearest_departure' then departure_at end asc nulls last,
+      case when lower(coalesce(p_sort, 'recommended')) = 'recommended' then day_distance end asc nulls last,
+      case when lower(coalesce(p_sort, 'recommended')) = 'recommended' then remaining_capacity_kg end desc nulls last,
+      case when lower(coalesce(p_sort, 'recommended')) in ('recommended', 'top_rated') then rating_average end desc nulls last,
+      case when lower(coalesce(p_sort, 'recommended')) in ('recommended', 'lowest_price') then estimated_total_dzd end asc nulls last,
       departure_at asc,
       source_type asc,
       source_id asc
@@ -326,5 +331,5 @@ begin
 end;
 $$;
 
-revoke all on function public.search_exact_lane_capacity(integer, integer, date, numeric, numeric, integer, integer) from public, anon;
-grant execute on function public.search_exact_lane_capacity(integer, integer, date, numeric, numeric, integer, integer) to authenticated, service_role;
+revoke all on function public.search_exact_lane_capacity(integer, integer, date, numeric, numeric, text, integer, integer) from public, anon;
+grant execute on function public.search_exact_lane_capacity(integer, integer, date, numeric, numeric, text, integer, integer) to authenticated, service_role;

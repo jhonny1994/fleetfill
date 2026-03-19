@@ -24,6 +24,10 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'subject and message are required' }, 400)
     }
 
+    if (payload.subject.trim().length > 160 || payload.message.trim().length > 4000) {
+      return jsonResponse({ error: 'support message is too large' }, 400)
+    }
+
     const authorization = req.headers.get('Authorization')
     if (!authorization) {
       return jsonResponse({ error: 'Missing authorization header' }, 401)
@@ -51,6 +55,16 @@ Deno.serve(async (req) => {
     const locale = payload.locale?.trim() || 'en'
     const recipientEmail = user.email.trim().toLowerCase()
     const dedupeKey = `support_ack:${recipientEmail}:${payload.subject.trim()}`
+
+    const { error: rateLimitError } = await serviceClient.rpc('assert_rate_limit', {
+      p_key: `support-email-dispatch:${profileId}`,
+      p_limit: 3,
+      p_window_seconds: 3600,
+    })
+
+    if (rateLimitError != null) {
+      return jsonResponse({ error: 'Support acknowledgement rate limit exceeded' }, 429)
+    }
 
     const { data: insertedJob, error: insertError } = await serviceClient
       .from('email_outbox_jobs')

@@ -1,4 +1,4 @@
-import { createServiceClient, jsonResponse } from '../_shared/email-runtime.ts'
+import { createServiceClient, jsonResponse, requiredEnv } from '../_shared/email-runtime.ts'
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
@@ -6,6 +6,12 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const authorization = req.headers.get('Authorization')
+    const expectedAuthorization = `Bearer ${requiredEnv('SUPABASE_SERVICE_ROLE_KEY')}`
+    if (authorization !== expectedAuthorization) {
+      return jsonResponse({ error: 'Unauthorized' }, 401)
+    }
+
     const serviceClient = createServiceClient()
 
     const workerResponse = await fetch(

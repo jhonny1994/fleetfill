@@ -4046,6 +4046,366 @@ class S {
       args: [],
     );
   }
+
+  /// `Confirm booking`
+  String get bookingConfirmAction {
+    return Intl.message(
+      'Confirm booking',
+      name: 'bookingConfirmAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking created. Continue to payment instructions.`
+  String get bookingCreatedMessage {
+    return Intl.message(
+      'Booking created. Continue to payment instructions.',
+      name: 'bookingCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insurance option`
+  String get bookingInsuranceAction {
+    return Intl.message(
+      'Insurance option',
+      name: 'bookingInsuranceAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insurance`
+  String get bookingInsuranceLabel {
+    return Intl.message(
+      'Insurance',
+      name: 'bookingInsuranceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insurance is optional and calculated as a percentage with a minimum fee floor.`
+  String get bookingInsuranceDescription {
+    return Intl.message(
+      'Insurance is optional and calculated as a percentage with a minimum fee floor.',
+      name: 'bookingInsuranceDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Included`
+  String get bookingInsuranceIncludedLabel {
+    return Intl.message(
+      'Included',
+      name: 'bookingInsuranceIncludedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not included`
+  String get bookingInsuranceNotIncludedLabel {
+    return Intl.message(
+      'Not included',
+      name: 'bookingInsuranceNotIncludedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pricing breakdown`
+  String get bookingPricingBreakdownAction {
+    return Intl.message(
+      'Pricing breakdown',
+      name: 'bookingPricingBreakdownAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Base price`
+  String get bookingBasePriceLabel {
+    return Intl.message(
+      'Base price',
+      name: 'bookingBasePriceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Platform fee`
+  String get bookingPlatformFeeLabel {
+    return Intl.message(
+      'Platform fee',
+      name: 'bookingPlatformFeeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carrier fee`
+  String get bookingCarrierFeeLabel {
+    return Intl.message(
+      'Carrier fee',
+      name: 'bookingCarrierFeeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insurance fee`
+  String get bookingInsuranceFeeLabel {
+    return Intl.message(
+      'Insurance fee',
+      name: 'bookingInsuranceFeeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tax fee`
+  String get bookingTaxFeeLabel {
+    return Intl.message(
+      'Tax fee',
+      name: 'bookingTaxFeeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carrier payout`
+  String get bookingCarrierPayoutLabel {
+    return Intl.message(
+      'Carrier payout',
+      name: 'bookingCarrierPayoutLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Final total`
+  String get bookingTotalLabel {
+    return Intl.message(
+      'Final total',
+      name: 'bookingTotalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment reference`
+  String get bookingPaymentReferenceLabel {
+    return Intl.message(
+      'Payment reference',
+      name: 'bookingPaymentReferenceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tracking number`
+  String get bookingTrackingNumberLabel {
+    return Intl.message(
+      'Tracking number',
+      name: 'bookingTrackingNumberLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment instructions`
+  String get paymentInstructionsTitle {
+    return Intl.message(
+      'Payment instructions',
+      name: 'paymentInstructionsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carrier rating`
+  String get searchCarrierRatingLabel {
+    return Intl.message(
+      'Carrier rating',
+      name: 'searchCarrierRatingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Capacity type`
+  String get searchResultTypeLabel {
+    return Intl.message(
+      'Capacity type',
+      name: 'searchResultTypeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Waiting for payment`
+  String get bookingStatusPendingPaymentLabel {
+    return Intl.message(
+      'Waiting for payment',
+      name: 'bookingStatusPendingPaymentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment under review`
+  String get bookingStatusPaymentUnderReviewLabel {
+    return Intl.message(
+      'Payment under review',
+      name: 'bookingStatusPaymentUnderReviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirmed`
+  String get bookingStatusConfirmedLabel {
+    return Intl.message(
+      'Confirmed',
+      name: 'bookingStatusConfirmedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Picked up`
+  String get bookingStatusPickedUpLabel {
+    return Intl.message(
+      'Picked up',
+      name: 'bookingStatusPickedUpLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In transit`
+  String get bookingStatusInTransitLabel {
+    return Intl.message(
+      'In transit',
+      name: 'bookingStatusInTransitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivered pending review`
+  String get bookingStatusDeliveredPendingReviewLabel {
+    return Intl.message(
+      'Delivered pending review',
+      name: 'bookingStatusDeliveredPendingReviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get bookingStatusCompletedLabel {
+    return Intl.message(
+      'Completed',
+      name: 'bookingStatusCompletedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancelled`
+  String get bookingStatusCancelledLabel {
+    return Intl.message(
+      'Cancelled',
+      name: 'bookingStatusCancelledLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disputed`
+  String get bookingStatusDisputedLabel {
+    return Intl.message(
+      'Disputed',
+      name: 'bookingStatusDisputedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unpaid`
+  String get paymentStatusUnpaidLabel {
+    return Intl.message(
+      'Unpaid',
+      name: 'paymentStatusUnpaidLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Proof submitted`
+  String get paymentStatusProofSubmittedLabel {
+    return Intl.message(
+      'Proof submitted',
+      name: 'paymentStatusProofSubmittedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Under verification`
+  String get paymentStatusUnderVerificationLabel {
+    return Intl.message(
+      'Under verification',
+      name: 'paymentStatusUnderVerificationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secured`
+  String get paymentStatusSecuredLabel {
+    return Intl.message(
+      'Secured',
+      name: 'paymentStatusSecuredLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rejected`
+  String get paymentStatusRejectedLabel {
+    return Intl.message(
+      'Rejected',
+      name: 'paymentStatusRejectedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refunded`
+  String get paymentStatusRefundedLabel {
+    return Intl.message(
+      'Refunded',
+      name: 'paymentStatusRefundedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Released to carrier`
+  String get paymentStatusReleasedToCarrierLabel {
+    return Intl.message(
+      'Released to carrier',
+      name: 'paymentStatusReleasedToCarrierLabel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

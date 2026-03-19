@@ -3,15 +3,17 @@ import 'dart:async';
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/core/errors/app_error.dart';
 import 'package:fleetfill/core/localization/localization.dart';
+import 'package:fleetfill/core/routing/app_routes.dart';
 import 'package:fleetfill/core/theme/design_tokens.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
 import 'package:fleetfill/features/profile/profile.dart';
 import 'package:fleetfill/features/shipper/shipper.dart';
-import 'package:fleetfill/shared/models/algeria_location.dart';
+import 'package:fleetfill/shared/models/models.dart';
 import 'package:fleetfill/shared/providers/providers.dart';
 import 'package:fleetfill/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -179,20 +181,84 @@ class ShipmentDetailScreen extends ConsumerWidget {
   }
 }
 
-class BookingDetailScreen extends StatelessWidget {
+class BookingDetailScreen extends ConsumerWidget {
   const BookingDetailScreen({required this.bookingId, super.key});
 
   final String bookingId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final formattedBookingId = BidiFormatters.trackingId(bookingId);
+    final bookingAsync = ref.watch(bookingDetailProvider(bookingId));
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.bookingDetailTitle(formattedBookingId),
-      description: s.bookingDetailDescription,
-      showSummary: false,
+      child: AppAsyncStateView<BookingRecord?>(
+        value: bookingAsync,
+        onRetry: () => ref.invalidate(bookingDetailProvider(bookingId)),
+        data: (booking) {
+          if (booking == null) {
+            return const AppNotFoundState();
+          }
+          return ListView(
+            children: [
+              AppSectionHeader(
+                title: s.bookingDetailTitle(formattedBookingId),
+                subtitle: s.bookingDetailDescription,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ProfileSummaryCard(
+                title: s.bookingReviewTitle,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.bookingTrackingNumberLabel,
+                    value: BidiFormatters.latinIdentifier(booking.trackingNumber),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.bookingPaymentReferenceLabel,
+                    value: BidiFormatters.latinIdentifier(booking.paymentReference),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routeStatusLabel,
+                    value: _bookingStatusLabel(s, booking.bookingStatus),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.paymentFlowTitle,
+                    value: _paymentStatusLabel(s, booking.paymentStatus),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.bookingTotalLabel,
+                    value: _sharedMoney(s, booking.shipperTotalDzd),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              MoneySummaryCard(
+                title: s.bookingPricingBreakdownAction,
+                lines: [
+                  MoneySummaryLine(label: s.bookingBasePriceLabel, amount: _sharedMoney(s, booking.basePriceDzd)),
+                  MoneySummaryLine(label: s.bookingPlatformFeeLabel, amount: _sharedMoney(s, booking.platformFeeDzd)),
+                  MoneySummaryLine(label: s.bookingCarrierFeeLabel, amount: _sharedMoney(s, booking.carrierFeeDzd)),
+                  MoneySummaryLine(label: s.bookingInsuranceFeeLabel, amount: _sharedMoney(s, booking.insuranceFeeDzd)),
+                  MoneySummaryLine(label: s.bookingTaxFeeLabel, amount: _sharedMoney(s, booking.taxFeeDzd)),
+                  MoneySummaryLine(label: s.bookingTotalLabel, amount: _sharedMoney(s, booking.shipperTotalDzd), emphasis: true),
+                ],
+              ),
+              if (booking.paymentStatus == PaymentStatus.unpaid) ...[
+                const SizedBox(height: AppSpacing.lg),
+                FilledButton(
+                  onPressed: () => context.push(
+                    AppRoutePath.shipperPaymentFlow,
+                    extra: booking.id,
+                  ),
+                  child: Text(s.paymentFlowTitle),
+                ),
+              ],
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -324,7 +390,6 @@ class RouteDetailScreen extends ConsumerWidget {
     final formattedRouteId = BidiFormatters.latinIdentifier(routeId);
     final routeAsync = ref.watch(carrierRouteDetailProvider(routeId));
     final communesAsync = ref.watch(communesProvider);
-    final vehiclesAsync = ref.watch(myVehiclesProvider);
 
     return AppPageScaffold(
       title: s.routeDetailTitle(formattedRouteId),
@@ -335,14 +400,11 @@ class RouteDetailScreen extends ConsumerWidget {
           if (route == null) {
             return const AppNotFoundState();
           }
-          if (communesAsync.isLoading || vehiclesAsync.isLoading) {
+          if (communesAsync.isLoading) {
             return const AppLoadingState();
           }
           final communeMap = {
             for (final commune in communesAsync.requireValue) commune.id: commune,
-          };
-          final vehicleMap = {
-            for (final vehicle in vehiclesAsync.requireValue) vehicle.id: vehicle,
           };
 
           return ListView(
@@ -360,11 +422,6 @@ class RouteDetailScreen extends ConsumerWidget {
               ProfileSummaryCard(
                 title: s.myRoutesSummaryTitle,
                 rows: [
-                  ProfileSummaryRow(
-                    label: s.routeVehicleLabel,
-                    value: vehicleMap[route.vehicleId]?.plateNumber ??
-                        BidiFormatters.latinIdentifier(route.vehicleId),
-                  ),
                   ProfileSummaryRow(
                     label: s.routeDepartureTimeLabel,
                     value: _sharedFormatSqlTime(context, route.defaultDepartureTime),
@@ -422,7 +479,6 @@ class OneOffTripDetailScreen extends ConsumerWidget {
     final formattedTripId = BidiFormatters.latinIdentifier(tripId);
     final tripAsync = ref.watch(oneOffTripDetailProvider(tripId));
     final communesAsync = ref.watch(communesProvider);
-    final vehiclesAsync = ref.watch(myVehiclesProvider);
 
     return AppPageScaffold(
       title: s.oneOffTripDetailTitle(formattedTripId),
@@ -433,14 +489,11 @@ class OneOffTripDetailScreen extends ConsumerWidget {
           if (trip == null) {
             return const AppNotFoundState();
           }
-          if (communesAsync.isLoading || vehiclesAsync.isLoading) {
+          if (communesAsync.isLoading) {
             return const AppLoadingState();
           }
           final communeMap = {
             for (final commune in communesAsync.requireValue) commune.id: commune,
-          };
-          final vehicleMap = {
-            for (final vehicle in vehiclesAsync.requireValue) vehicle.id: vehicle,
           };
 
           return ListView(
@@ -458,11 +511,6 @@ class OneOffTripDetailScreen extends ConsumerWidget {
               ProfileSummaryCard(
                 title: s.myRoutesSummaryTitle,
                 rows: [
-                  ProfileSummaryRow(
-                    label: s.routeVehicleLabel,
-                    value: vehicleMap[trip.vehicleId]?.plateNumber ??
-                        BidiFormatters.latinIdentifier(trip.vehicleId),
-                  ),
                   ProfileSummaryRow(
                     label: s.oneOffTripDepartureLabel,
                     value: '${_sharedFormatDate(trip.departureAt)} • ${TimeOfDay.fromDateTime(trip.departureAt).format(context)}',
@@ -662,4 +710,34 @@ String _sharedFormatSqlTime(BuildContext context, String value) {
 String _sharedFormatWeekdays(BuildContext context, List<int> weekdays) {
   final labels = MaterialLocalizations.of(context).narrowWeekdays;
   return weekdays.map((day) => labels[day]).join(', ');
+}
+
+String _sharedMoney(S s, double amount) {
+  return '${BidiFormatters.latinIdentifier(amount.toStringAsFixed(0))} ${s.priceCurrencyLabel}';
+}
+
+String _bookingStatusLabel(S s, BookingStatus status) {
+  return switch (status) {
+    BookingStatus.pendingPayment => s.bookingStatusPendingPaymentLabel,
+    BookingStatus.paymentUnderReview => s.bookingStatusPaymentUnderReviewLabel,
+    BookingStatus.confirmed => s.bookingStatusConfirmedLabel,
+    BookingStatus.pickedUp => s.bookingStatusPickedUpLabel,
+    BookingStatus.inTransit => s.bookingStatusInTransitLabel,
+    BookingStatus.deliveredPendingReview => s.bookingStatusDeliveredPendingReviewLabel,
+    BookingStatus.completed => s.bookingStatusCompletedLabel,
+    BookingStatus.cancelled => s.bookingStatusCancelledLabel,
+    BookingStatus.disputed => s.bookingStatusDisputedLabel,
+  };
+}
+
+String _paymentStatusLabel(S s, PaymentStatus status) {
+  return switch (status) {
+    PaymentStatus.unpaid => s.paymentStatusUnpaidLabel,
+    PaymentStatus.proofSubmitted => s.paymentStatusProofSubmittedLabel,
+    PaymentStatus.underVerification => s.paymentStatusUnderVerificationLabel,
+    PaymentStatus.secured => s.paymentStatusSecuredLabel,
+    PaymentStatus.rejected => s.paymentStatusRejectedLabel,
+    PaymentStatus.refunded => s.paymentStatusRefundedLabel,
+    PaymentStatus.releasedToCarrier => s.paymentStatusReleasedToCarrierLabel,
+  };
 }
