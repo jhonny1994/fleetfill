@@ -44,7 +44,14 @@ void main() {
       mapAuthErrorMessage(s, 'User already registered'),
       s.authUserAlreadyRegisteredMessage,
     );
-    expect(mapAuthErrorMessage(s, 'network timeout'), s.authNetworkErrorMessage);
+    expect(
+      mapAuthErrorMessage(s, 'network timeout'),
+      s.authNetworkErrorMessage,
+    );
+    expect(
+      mapAuthErrorMessage(s, 'document_signed_url_unavailable'),
+      s.documentViewerUnavailableMessage,
+    );
     expect(
       mapAuthErrorMessage(s, 'unknown failure code'),
       s.authGenericErrorMessage,

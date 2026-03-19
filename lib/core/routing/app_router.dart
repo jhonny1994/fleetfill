@@ -1,11 +1,8 @@
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/core/config/app_bootstrap.dart';
-import 'package:fleetfill/core/errors/app_error.dart';
 import 'package:fleetfill/core/localization/localization.dart';
 import 'package:fleetfill/core/permissions/permissions.dart';
-import 'package:fleetfill/core/routing/app_route_guards.dart';
-import 'package:fleetfill/core/routing/app_routes.dart';
-import 'package:fleetfill/core/routing/shared_route_screens.dart';
+import 'package:fleetfill/core/routing/routing.dart';
 import 'package:fleetfill/features/features.dart';
 import 'package:fleetfill/shared/widgets/widgets.dart';
 import 'package:flutter/widgets.dart';
@@ -102,13 +99,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return const SignInScreen();
       }
 
-      return AppErrorState(
-        error: AppError(
-          code: 'route_error',
-          message: S.of(context).routeErrorMessage,
-          technicalDetails: state.error?.toString(),
-        ),
-      );
+      return const AppNotFoundState();
     },
     routes: [
       GoRoute(
@@ -285,10 +276,36 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'vehicles',
                     builder: (context, state) => const MyVehiclesScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'new',
+                        name: AppRouteName.carrierVehicleCreate.name,
+                        builder: (context, state) =>
+                            const VehicleEditorScreen(),
+                      ),
+                      GoRoute(
+                        path: ':vehicleId',
+                        name: AppRouteName.carrierVehicleDetail.name,
+                        builder: (context, state) => VehicleDetailScreen(
+                          vehicleId: state.pathParameters['vehicleId']!,
+                        ),
+                        routes: [
+                          GoRoute(
+                            path: 'edit',
+                            name: AppRouteName.carrierVehicleEdit.name,
+                            builder: (context, state) => VehicleEditorScreen(
+                              vehicleId: state.pathParameters['vehicleId'],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   GoRoute(
-                    path: 'vehicle-detail',
-                    builder: (context, state) => const VehicleDetailScreen(),
+                    path: 'verification',
+                    name: AppRouteName.carrierVerification.name,
+                    builder: (context, state) =>
+                        const CarrierVerificationCenterScreen(),
                   ),
                   GoRoute(
                     path: 'payout-accounts',
@@ -316,6 +333,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: AppRoutePath.adminQueues,
             name: AppRouteName.adminQueues.name,
             builder: (context, state) => const AdminQueuesScreen(),
+            routes: [
+              GoRoute(
+                path: 'verification/:carrierId',
+                name: AppRouteName.adminVerificationPacket.name,
+                builder: (context, state) => AdminVerificationPacketScreen(
+                  carrierId: state.pathParameters['carrierId']!,
+                ),
+              ),
+            ],
           ),
           GoRoute(
             path: AppRoutePath.adminUsers,
@@ -451,13 +477,13 @@ List<RouteBase> _sharedRoutes(GlobalKey<NavigatorState> rootNavigatorKey) {
 }
 
 int _adminIndex(String location) {
-  if (location.startsWith('/admin/queues')) {
+  if (location.startsWith(AppRoutePath.adminQueues)) {
     return 1;
   }
-  if (location.startsWith('/admin/users')) {
+  if (location.startsWith(AppRoutePath.adminUsers)) {
     return 2;
   }
-  if (location.startsWith('/admin/settings')) {
+  if (location.startsWith(AppRoutePath.adminSettings)) {
     return 3;
   }
   return 0;

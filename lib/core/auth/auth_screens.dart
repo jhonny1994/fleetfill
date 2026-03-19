@@ -30,6 +30,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    final environment = ref.watch(appEnvironmentConfigProvider);
 
     return AuthScaffold(
       title: s.authSignInTitle,
@@ -39,76 +40,79 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         onPressed: () => context.go(AppRoutePath.signUp),
         child: Text(s.authCreateAccountCta),
       ),
-      child: AuthCard(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (auth?.isSessionExpired == true) ...[
-                AuthInfoBanner(
-                  message: s.authSessionExpiredMessage,
-                  icon: Icons.lock_clock_outlined,
-                ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              if (auth?.isSuspended == true) ...[
-                AuthInfoBanner(
-                  message: s.suspendedMessage,
-                  icon: Icons.block_rounded,
-                ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              AuthTextField(
-                controller: _emailController,
-                label: s.authEmailLabel,
-                hintText: s.authEmailHint,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                prefixIcon: Icons.mail_outline_rounded,
-                autofillHints: const [
-                  AutofillHints.username,
-                  AutofillHints.email,
-                ],
-                validator: _validateEmail,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AuthTextField(
-                controller: _passwordController,
-                label: s.authPasswordLabel,
-                hintText: s.authPasswordHint,
-                obscureText: true,
-                textInputAction: TextInputAction.done,
-                prefixIcon: Icons.key_rounded,
-                autofillHints: const [AutofillHints.password],
-                validator: _validatePassword,
-                onFieldSubmitted: (_) => unawaited(_submit()),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => context.go(AppRoutePath.forgotPassword),
-                    child: Text(s.authForgotPasswordCta),
+      child: AppFocusTraversal.form(
+        child: AuthCard(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (auth?.isSessionExpired == true) ...[
+                  AuthInfoBanner(
+                    message: s.authSessionExpiredMessage,
+                    icon: Icons.lock_clock_outlined,
                   ),
+                  const SizedBox(height: AppSpacing.md),
                 ],
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              AuthSubmitButton(
-                label: s.authSignInAction,
-                isLoading: _isSubmitting,
-                onPressed: () => unawaited(_submit()),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              OutlinedButton.icon(
-                onPressed: _isSubmitting
-                    ? null
-                    : () => unawaited(_signInWithGoogle()),
-                icon: const Icon(Icons.open_in_new_rounded),
-                label: Text(s.authGoogleAction),
-              ),
-            ],
+                if (auth?.isSuspended == true) ...[
+                  AuthInfoBanner(
+                    message: s.suspendedMessage,
+                    icon: Icons.block_rounded,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                AuthTextField(
+                  controller: _emailController,
+                  label: s.authEmailLabel,
+                  hintText: s.authEmailHint,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: Icons.mail_outline_rounded,
+                  autofillHints: const [
+                    AutofillHints.username,
+                    AutofillHints.email,
+                  ],
+                  validator: _validateEmail,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                AuthTextField(
+                  controller: _passwordController,
+                  label: s.authPasswordLabel,
+                  hintText: s.authPasswordHint,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  prefixIcon: Icons.key_rounded,
+                  autofillHints: const [AutofillHints.password],
+                  validator: _validatePassword,
+                  onFieldSubmitted: (_) => unawaited(_submit()),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => context.go(AppRoutePath.forgotPassword),
+                      child: Text(s.authForgotPasswordCta),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                AuthSubmitButton(
+                  label: s.authSignInAction,
+                  isLoading: _isSubmitting,
+                  onPressed: () => unawaited(_submit()),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                if (environment.googleAuthEnabled)
+                  OutlinedButton.icon(
+                    onPressed: _isSubmitting
+                        ? null
+                        : () => unawaited(_signInWithGoogle()),
+                    icon: const Icon(Icons.open_in_new_rounded),
+                    label: Text(s.authGoogleAction),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -201,6 +205,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final environment = ref.watch(appEnvironmentConfigProvider);
 
     return AuthScaffold(
       title: s.authSignUpTitle,
@@ -210,72 +215,76 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         onPressed: () => context.go(AppRoutePath.signIn),
         child: Text(s.authHaveAccountCta),
       ),
-      child: AuthCard(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AuthTextField(
-                controller: _emailController,
-                label: s.authEmailLabel,
-                hintText: s.authEmailHint,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                prefixIcon: Icons.mail_outline_rounded,
-                autofillHints: const [
-                  AutofillHints.newUsername,
-                  AutofillHints.email,
+      child: AppFocusTraversal.form(
+        child: AuthCard(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AuthTextField(
+                  controller: _emailController,
+                  label: s.authEmailLabel,
+                  hintText: s.authEmailHint,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: Icons.mail_outline_rounded,
+                  autofillHints: const [
+                    AutofillHints.newUsername,
+                    AutofillHints.email,
+                  ],
+                  validator: _validateEmail,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                AuthTextField(
+                  controller: _passwordController,
+                  label: s.authPasswordLabel,
+                  hintText: s.authCreatePasswordHint,
+                  obscureText: true,
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: Icons.key_rounded,
+                  autofillHints: const [AutofillHints.newPassword],
+                  validator: _validatePassword,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                AuthTextField(
+                  controller: _confirmPasswordController,
+                  label: s.authConfirmPasswordLabel,
+                  hintText: s.authConfirmPasswordHint,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  prefixIcon: Icons.key_rounded,
+                  validator: (value) {
+                    if ((value ?? '').trim().isEmpty) {
+                      return s.authRequiredFieldMessage;
+                    }
+                    if (value != _passwordController.text) {
+                      return s.authPasswordMismatchMessage;
+                    }
+                    return null;
+                  },
+                  onFieldSubmitted: (_) => unawaited(_submit()),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                AuthSubmitButton(
+                  label: s.authCreateAccountAction,
+                  isLoading: _isSubmitting,
+                  onPressed: () => unawaited(_submit()),
+                ),
+                if (environment.googleAuthEnabled) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  AuthDivider(label: s.authContinueWithLabel),
+                  const SizedBox(height: AppSpacing.lg),
+                  OutlinedButton.icon(
+                    onPressed: _isSubmitting
+                        ? null
+                        : () => unawaited(_signInWithGoogle()),
+                    icon: const Icon(Icons.open_in_new_rounded),
+                    label: Text(s.authGoogleAction),
+                  ),
                 ],
-                validator: _validateEmail,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AuthTextField(
-                controller: _passwordController,
-                label: s.authPasswordLabel,
-                hintText: s.authCreatePasswordHint,
-                obscureText: true,
-                textInputAction: TextInputAction.next,
-                prefixIcon: Icons.key_rounded,
-                autofillHints: const [AutofillHints.newPassword],
-                validator: _validatePassword,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AuthTextField(
-                controller: _confirmPasswordController,
-                label: s.authConfirmPasswordLabel,
-                hintText: s.authConfirmPasswordHint,
-                obscureText: true,
-                textInputAction: TextInputAction.done,
-                prefixIcon: Icons.key_rounded,
-                validator: (value) {
-                  if ((value ?? '').trim().isEmpty) {
-                    return s.authRequiredFieldMessage;
-                  }
-                  if (value != _passwordController.text) {
-                    return s.authPasswordMismatchMessage;
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) => unawaited(_submit()),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              AuthSubmitButton(
-                label: s.authCreateAccountAction,
-                isLoading: _isSubmitting,
-                onPressed: () => unawaited(_submit()),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              AuthDivider(label: s.authContinueWithLabel),
-              const SizedBox(height: AppSpacing.lg),
-              OutlinedButton.icon(
-                onPressed: _isSubmitting
-                    ? null
-                    : () => unawaited(_signInWithGoogle()),
-                icon: const Icon(Icons.open_in_new_rounded),
-                label: Text(s.authGoogleAction),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -369,31 +378,33 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       title: s.authForgotPasswordTitle,
       subtitle: s.authForgotPasswordDescription,
       heroIcon: Icons.mark_email_unread_rounded,
-      child: AuthCard(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AuthInfoBanner(message: s.authPasswordResetInfoMessage),
-              const SizedBox(height: AppSpacing.md),
-              AuthTextField(
-                controller: _emailController,
-                label: s.authEmailLabel,
-                hintText: s.authEmailHint,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.done,
-                prefixIcon: Icons.mail_outline_rounded,
-                validator: _validateEmail,
-                onFieldSubmitted: (_) => unawaited(_submit()),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              AuthSubmitButton(
-                label: s.authSendResetAction,
-                isLoading: _isSubmitting,
-                onPressed: () => unawaited(_submit()),
-              ),
-            ],
+      child: AppFocusTraversal.form(
+        child: AuthCard(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AuthInfoBanner(message: s.authPasswordResetInfoMessage),
+                const SizedBox(height: AppSpacing.md),
+                AuthTextField(
+                  controller: _emailController,
+                  label: s.authEmailLabel,
+                  hintText: s.authEmailHint,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
+                  prefixIcon: Icons.mail_outline_rounded,
+                  validator: _validateEmail,
+                  onFieldSubmitted: (_) => unawaited(_submit()),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                AuthSubmitButton(
+                  label: s.authSendResetAction,
+                  isLoading: _isSubmitting,
+                  onPressed: () => unawaited(_submit()),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -461,54 +472,56 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       title: s.authResetPasswordTitle,
       subtitle: s.authResetPasswordDescription,
       heroIcon: Icons.key_rounded,
-      child: AuthCard(
-        child: canReset
-            ? Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    AuthTextField(
-                      controller: _passwordController,
-                      label: s.authNewPasswordLabel,
-                      hintText: s.authCreatePasswordHint,
-                      obscureText: true,
-                      textInputAction: TextInputAction.next,
-                      prefixIcon: Icons.lock_outline_rounded,
-                      validator: _validatePassword,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    AuthTextField(
-                      controller: _confirmPasswordController,
-                      label: s.authConfirmPasswordLabel,
-                      hintText: s.authConfirmPasswordHint,
-                      obscureText: true,
-                      textInputAction: TextInputAction.done,
-                      prefixIcon: Icons.lock_outline_rounded,
-                      validator: (value) {
-                        if ((value ?? '').trim().isEmpty) {
-                          return s.authRequiredFieldMessage;
-                        }
-                        if (value != _passwordController.text) {
-                          return s.authPasswordMismatchMessage;
-                        }
-                        return null;
-                      },
-                      onFieldSubmitted: (_) => unawaited(_submit()),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    AuthSubmitButton(
-                      label: s.authUpdatePasswordAction,
-                      isLoading: _isSubmitting,
-                      onPressed: () => unawaited(_submit()),
-                    ),
-                  ],
+      child: AppFocusTraversal.form(
+        child: AuthCard(
+          child: canReset
+              ? Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      AuthTextField(
+                        controller: _passwordController,
+                        label: s.authNewPasswordLabel,
+                        hintText: s.authCreatePasswordHint,
+                        obscureText: true,
+                        textInputAction: TextInputAction.next,
+                        prefixIcon: Icons.lock_outline_rounded,
+                        validator: _validatePassword,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      AuthTextField(
+                        controller: _confirmPasswordController,
+                        label: s.authConfirmPasswordLabel,
+                        hintText: s.authConfirmPasswordHint,
+                        obscureText: true,
+                        textInputAction: TextInputAction.done,
+                        prefixIcon: Icons.lock_outline_rounded,
+                        validator: (value) {
+                          if ((value ?? '').trim().isEmpty) {
+                            return s.authRequiredFieldMessage;
+                          }
+                          if (value != _passwordController.text) {
+                            return s.authPasswordMismatchMessage;
+                          }
+                          return null;
+                        },
+                        onFieldSubmitted: (_) => unawaited(_submit()),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      AuthSubmitButton(
+                        label: s.authUpdatePasswordAction,
+                        isLoading: _isSubmitting,
+                        onPressed: () => unawaited(_submit()),
+                      ),
+                    ],
+                  ),
+                )
+              : AuthInfoBanner(
+                  message: s.authResetPasswordUnavailableMessage,
+                  icon: Icons.lock_reset_rounded,
                 ),
-              )
-            : AuthInfoBanner(
-                message: s.authResetPasswordUnavailableMessage,
-                icon: Icons.lock_reset_rounded,
-              ),
+        ),
       ),
     );
   }

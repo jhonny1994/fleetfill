@@ -59,7 +59,7 @@ class ShipperProfileScreen extends ConsumerWidget {
       title: s.shipperProfileTitle,
       actions: [
         IconButton(
-          onPressed: () => context.go('${AppRoutePath.shipperProfile}/edit'),
+          onPressed: () => context.go(AppRoutePath.shipperProfileEdit()),
           icon: const Icon(Icons.edit_outlined),
           tooltip: s.editShipperProfileTitle,
         ),
@@ -133,7 +133,7 @@ class CarrierProfileScreen extends ConsumerWidget {
       title: s.carrierProfileTitle,
       actions: [
         IconButton(
-          onPressed: () => context.go('${AppRoutePath.carrierProfile}/edit'),
+          onPressed: () => context.go(AppRoutePath.carrierProfileEdit()),
           icon: const Icon(Icons.edit_outlined),
           tooltip: s.editCarrierProfileTitle,
         ),
@@ -162,7 +162,7 @@ class CarrierProfileScreen extends ConsumerWidget {
               ),
               ProfileSummaryRow(
                 label: s.carrierProfileVerificationLabel,
-                value: _verificationLabel(s, profile?.verificationStatus),
+                value: verificationStatusLabel(s, profile?.verificationStatus),
               ),
             ],
           ),
@@ -171,17 +171,21 @@ class CarrierProfileScreen extends ConsumerWidget {
             title: s.vehiclesTitle,
             subtitle: s.vehiclesDescription,
             trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () =>
-                context.push('${AppRoutePath.carrierProfile}/vehicles'),
+            onTap: () => context.push(AppRoutePath.carrierVehicles()),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.carrierVerificationCenterTitle,
+            subtitle: s.carrierVerificationCenterDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.carrierVerification),
           ),
           const SizedBox(height: AppSpacing.sm),
           AppListCard(
             title: s.payoutAccountsTitle,
             subtitle: s.payoutAccountsDescription,
             trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.push(
-              '${AppRoutePath.carrierProfile}/payout-accounts',
-            ),
+            onTap: () => context.push(AppRoutePath.carrierPayoutAccounts()),
           ),
           const SizedBox(height: AppSpacing.sm),
           AppListCard(
@@ -197,13 +201,6 @@ class CarrierProfileScreen extends ConsumerWidget {
     );
   }
 
-  String _verificationLabel(S s, AppVerificationState? state) {
-    return switch (state) {
-      AppVerificationState.verified => s.carrierProfileVerificationVerified,
-      AppVerificationState.rejected => s.carrierProfileVerificationRejected,
-      _ => s.carrierProfileVerificationPending,
-    };
-  }
 }
 
 class EditCarrierProfileScreen extends StatelessWidget {
@@ -218,40 +215,6 @@ class EditCarrierProfileScreen extends StatelessWidget {
       title: s.editCarrierProfileTitle,
       description: s.editCarrierProfileDescription,
       successMessage: s.editCarrierProfileSavedMessage,
-    );
-  }
-}
-
-class MyVehiclesScreen extends StatelessWidget {
-  const MyVehiclesScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final s = S.of(context);
-
-    return AppPageScaffold(
-      title: s.vehiclesTitle,
-      child: AppEmptyState(
-        title: s.vehiclesTitle,
-        message: s.vehiclesDescription,
-      ),
-    );
-  }
-}
-
-class VehicleDetailScreen extends StatelessWidget {
-  const VehicleDetailScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final s = S.of(context);
-
-    return AppPageScaffold(
-      title: s.vehicleDetailTitle,
-      child: AppEmptyState(
-        title: s.vehicleDetailTitle,
-        message: s.vehicleDetailDescription,
-      ),
     );
   }
 }

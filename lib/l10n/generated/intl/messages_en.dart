@@ -20,60 +20,122 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(bookingId) => "Booking ${bookingId}";
+  static String m0(documentCount, vehicleCount) =>
+      "${documentCount} pending documents across ${vehicleCount} vehicles";
 
-  static String m1(carrierId) => "Carrier ${carrierId}";
+  static String m1(bookingId) => "Booking ${bookingId}";
 
-  static String m2(documentId) => "Document ${documentId}";
+  static String m2(carrierId) => "Carrier ${carrierId}";
 
-  static String m3(documentId) => "Generated document ${documentId}";
+  static String m3(reason) => "Verification needs attention: ${reason}";
 
-  static String m4(languageCode) => "Current language: ${languageCode}";
+  static String m4(documentId) => "Document ${documentId}";
 
-  static String m5(notificationId) => "Notification ${notificationId}";
+  static String m5(documentId) => "Generated document ${documentId}";
 
-  static String m6(tripId) => "One-off trip ${tripId}";
+  static String m6(languageCode) => "Current language: ${languageCode}";
 
-  static String m7(proofId) => "Proof ${proofId}";
+  static String m7(notificationId) => "Notification ${notificationId}";
 
-  static String m8(routeId) => "Route ${routeId}";
+  static String m8(tripId) => "One-off trip ${tripId}";
 
-  static String m9(shipmentId) => "Shipment ${shipmentId}";
+  static String m9(proofId) => "Proof ${proofId}";
 
-  static String m10(bookingId) => "Tracking ${bookingId}";
+  static String m10(routeId) => "Route ${routeId}";
+
+  static String m11(shipmentId) => "Shipment ${shipmentId}";
+
+  static String m12(bookingId) => "Tracking ${bookingId}";
+
+  static String m13(reason) =>
+      "Vehicle verification needs attention: ${reason}";
+
+  static String m14(reason) => "Rejected: ${reason}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "adminAuditLogDescription": MessageLookupByLibrary.simpleMessage(
-      "Audit visibility for sensitive operations lives here.",
+      "Review the latest sensitive admin actions and their outcomes.",
     ),
     "adminAuditLogTitle": MessageLookupByLibrary.simpleMessage(
       "Admin audit log",
     ),
     "adminDashboardDescription": MessageLookupByLibrary.simpleMessage(
-      "Operational backlog health, alerts, and quick counts live here.",
+      "Monitor queue health, alerts, and the current operational backlog.",
     ),
     "adminDashboardNavLabel": MessageLookupByLibrary.simpleMessage("Dashboard"),
     "adminDashboardTitle": MessageLookupByLibrary.simpleMessage(
       "Admin dashboard",
     ),
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
-      "Payments, verification, disputes, payouts, and email queues stay segmented inside one page.",
+      "Review payments, verification, disputes, payouts, and email work from one queue hub.",
     ),
     "adminQueuesNavLabel": MessageLookupByLibrary.simpleMessage("Queues"),
     "adminQueuesTitle": MessageLookupByLibrary.simpleMessage("Admin queues"),
     "adminSettingsDescription": MessageLookupByLibrary.simpleMessage(
-      "Platform settings, maintenance mode, version policy, and monitoring summary live here.",
+      "Manage platform settings, maintenance controls, version policy, and monitoring summaries.",
     ),
     "adminSettingsNavLabel": MessageLookupByLibrary.simpleMessage("Settings"),
     "adminSettingsTitle": MessageLookupByLibrary.simpleMessage(
       "Admin settings",
     ),
     "adminUsersDescription": MessageLookupByLibrary.simpleMessage(
-      "User search and investigation live here.",
+      "Search for users and review account details when operations need context.",
     ),
     "adminUsersNavLabel": MessageLookupByLibrary.simpleMessage("Users"),
     "adminUsersTitle": MessageLookupByLibrary.simpleMessage("Users"),
+    "adminVerificationApproveAction": MessageLookupByLibrary.simpleMessage(
+      "Approve",
+    ),
+    "adminVerificationApproveAllAction": MessageLookupByLibrary.simpleMessage(
+      "Approve all",
+    ),
+    "adminVerificationApproveAllSuccess": MessageLookupByLibrary.simpleMessage(
+      "Verification packet approved.",
+    ),
+    "adminVerificationApprovedMessage": MessageLookupByLibrary.simpleMessage(
+      "Verification document approved.",
+    ),
+    "adminVerificationAuditEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No recent verification audit items yet.",
+    ),
+    "adminVerificationAuditTitle": MessageLookupByLibrary.simpleMessage(
+      "Verification audit",
+    ),
+    "adminVerificationMissingDocumentsMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "No submitted verification documents yet.",
+        ),
+    "adminVerificationPacketDescription": MessageLookupByLibrary.simpleMessage(
+      "Review profile and vehicle documents together before approving operational access.",
+    ),
+    "adminVerificationPacketTitle": MessageLookupByLibrary.simpleMessage(
+      "Verification packet",
+    ),
+    "adminVerificationPendingDocumentsLabel":
+        MessageLookupByLibrary.simpleMessage("Pending documents"),
+    "adminVerificationQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No carrier verification packets need review right now.",
+    ),
+    "adminVerificationQueueItemSubtitle": m0,
+    "adminVerificationQueueSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Verification queue summary",
+    ),
+    "adminVerificationQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "Carrier verification queue",
+    ),
+    "adminVerificationRejectAction": MessageLookupByLibrary.simpleMessage(
+      "Reject",
+    ),
+    "adminVerificationRejectReasonHint": MessageLookupByLibrary.simpleMessage(
+      "Add the reason the carrier should see.",
+    ),
+    "adminVerificationRejectReasonTitle": MessageLookupByLibrary.simpleMessage(
+      "Rejection reason",
+    ),
+    "adminVerificationRejectedMessage": MessageLookupByLibrary.simpleMessage(
+      "Verification document rejected.",
+    ),
     "appTitle": MessageLookupByLibrary.simpleMessage("FleetFill"),
     "authAccountCreatedMessage": MessageLookupByLibrary.simpleMessage(
       "Your account was created. Continue by signing in.",
@@ -108,7 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Forgot your password?",
     ),
     "authForgotPasswordDescription": MessageLookupByLibrary.simpleMessage(
-      "Password reset request handling belongs in the auth shell.",
+      "Request a password reset link for your FleetFill account.",
     ),
     "authForgotPasswordTitle": MessageLookupByLibrary.simpleMessage(
       "Forgot password",
@@ -121,6 +183,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authGoogleStartedMessage": MessageLookupByLibrary.simpleMessage(
       "Google sign-in started. Return here after approval.",
+    ),
+    "authGoogleUnavailableMessage": MessageLookupByLibrary.simpleMessage(
+      "Google sign-in is not available in this environment.",
     ),
     "authHaveAccountCta": MessageLookupByLibrary.simpleMessage(
       "Already have an account? Sign in",
@@ -163,7 +228,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Password reset instructions were sent.",
     ),
     "authResetPasswordDescription": MessageLookupByLibrary.simpleMessage(
-      "Password reset confirmation lives here.",
+      "Set a new password after opening your secure recovery link.",
     ),
     "authResetPasswordTitle": MessageLookupByLibrary.simpleMessage(
       "Reset password",
@@ -185,14 +250,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authSignInAction": MessageLookupByLibrary.simpleMessage("Sign in"),
     "authSignInDescription": MessageLookupByLibrary.simpleMessage(
-      "Email/password and Google sign-in entry points live here.",
+      "Sign in with your email and password, or continue with Google when available.",
     ),
     "authSignInSuccess": MessageLookupByLibrary.simpleMessage(
       "Signed in successfully.",
     ),
     "authSignInTitle": MessageLookupByLibrary.simpleMessage("Sign in"),
     "authSignUpDescription": MessageLookupByLibrary.simpleMessage(
-      "Lean account creation stays inside one auth shell.",
+      "Create your FleetFill account to start shipping or publishing capacity.",
     ),
     "authSignUpTitle": MessageLookupByLibrary.simpleMessage("Create account"),
     "authUpdatePasswordAction": MessageLookupByLibrary.simpleMessage(
@@ -207,7 +272,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bookingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shared booking detail routes sit above role shells.",
     ),
-    "bookingDetailTitle": m0,
+    "bookingDetailTitle": m1,
     "bookingReviewDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier reputation, trip detail, and pricing review live here before payment.",
     ),
@@ -253,7 +318,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Recent comments",
     ),
     "carrierPublicProfileDescription": MessageLookupByLibrary.simpleMessage(
-      "Public carrier reputation and trust cues live here.",
+      "Review this carrier\'s public reputation, comments, and verification status.",
     ),
     "carrierPublicProfileNoCommentsMessage":
         MessageLookupByLibrary.simpleMessage(
@@ -267,14 +332,39 @@ class MessageLookup extends MessageLookupByLibrary {
     "carrierPublicProfileSummaryTitle": MessageLookupByLibrary.simpleMessage(
       "Carrier summary",
     ),
-    "carrierPublicProfileTitle": m1,
+    "carrierPublicProfileTitle": m2,
+    "carrierVehiclesShortcutDescription": MessageLookupByLibrary.simpleMessage(
+      "Manage trucks, upload missing documents, and resolve verification blockers.",
+    ),
+    "carrierVerificationCenterDescription": MessageLookupByLibrary.simpleMessage(
+      "Upload and replace profile or vehicle verification documents from one place.",
+    ),
+    "carrierVerificationCenterTitle": MessageLookupByLibrary.simpleMessage(
+      "Verification center",
+    ),
+    "carrierVerificationPendingBanner": MessageLookupByLibrary.simpleMessage(
+      "Your verification packet is under review. Upload any missing documents to keep approval moving.",
+    ),
+    "carrierVerificationQueueHint": MessageLookupByLibrary.simpleMessage(
+      "Verification requirements and missing documents stay grouped under your profile branch.",
+    ),
+    "carrierVerificationRejectedBanner": m3,
+    "carrierVerificationSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Verification summary",
+    ),
     "confirmLabel": MessageLookupByLibrary.simpleMessage("Confirm"),
     "documentViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "Private document viewing belongs in one secure shared route.",
+      "Open this document in your secure viewer when access is ready.",
     ),
-    "documentViewerTitle": m2,
+    "documentViewerOpenAction": MessageLookupByLibrary.simpleMessage(
+      "Open Document",
+    ),
+    "documentViewerTitle": m4,
+    "documentViewerUnavailableMessage": MessageLookupByLibrary.simpleMessage(
+      "Secure document access is temporarily unavailable.",
+    ),
     "editCarrierProfileDescription": MessageLookupByLibrary.simpleMessage(
-      "Carrier profile editing lives here.",
+      "Update your carrier contact and company details.",
     ),
     "editCarrierProfileSavedMessage": MessageLookupByLibrary.simpleMessage(
       "Carrier profile updated.",
@@ -283,7 +373,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Edit carrier profile",
     ),
     "editShipperProfileDescription": MessageLookupByLibrary.simpleMessage(
-      "Shipper profile editing lives here.",
+      "Update your shipper contact details.",
     ),
     "editShipperProfileSavedMessage": MessageLookupByLibrary.simpleMessage(
       "Shipper profile updated.",
@@ -300,15 +390,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "forbiddenTitle": MessageLookupByLibrary.simpleMessage("Access restricted"),
     "generatedDocumentViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "Generated invoice and receipt access stays deep-linkable above the shell.",
+      "Open generated invoices and receipts from a secure shared route.",
     ),
-    "generatedDocumentViewerTitle": m3,
+    "generatedDocumentViewerTitle": m5,
     "languageOptionArabic": MessageLookupByLibrary.simpleMessage("Arabic"),
     "languageOptionEnglish": MessageLookupByLibrary.simpleMessage("English"),
     "languageOptionFrench": MessageLookupByLibrary.simpleMessage("French"),
-    "languageSelectionCurrentMessage": m4,
+    "languageSelectionCurrentMessage": m6,
     "languageSelectionDescription": MessageLookupByLibrary.simpleMessage(
-      "Arabic, French, and English selection belongs here.",
+      "Choose the language you want FleetFill to use.",
     ),
     "languageSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Language selection",
@@ -318,7 +408,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "loadingTitle": MessageLookupByLibrary.simpleMessage("Loading"),
     "maintenanceDescription": MessageLookupByLibrary.simpleMessage(
-      "Global maintenance messaging lives here.",
+      "FleetFill is temporarily unavailable while maintenance is in progress.",
     ),
     "maintenanceTitle": MessageLookupByLibrary.simpleMessage(
       "Maintenance mode",
@@ -353,11 +443,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notFoundTitle": MessageLookupByLibrary.simpleMessage("Not found"),
     "notificationDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Notification details stay deep-linkable without becoming a tab.",
+      "Review the full details for this notification.",
     ),
-    "notificationDetailTitle": m5,
+    "notificationDetailTitle": m7,
     "notificationsCenterDescription": MessageLookupByLibrary.simpleMessage(
-      "Shared notification history opens above the role shells.",
+      "Review recent alerts, booking updates, and operational reminders.",
     ),
     "notificationsCenterTitle": MessageLookupByLibrary.simpleMessage(
       "Notifications",
@@ -372,9 +462,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "You are offline. Some actions are temporarily unavailable.",
     ),
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "One-off trip detail routes stay deep-linkable above the shell.",
+      "Review this one-off trip before booking or operational follow-up.",
     ),
-    "oneOffTripDetailTitle": m6,
+    "oneOffTripDetailTitle": m8,
     "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
       "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
     ),
@@ -398,7 +488,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Phone completion",
     ),
     "profileCarrierVerificationHint": MessageLookupByLibrary.simpleMessage(
-      "Carrier setup stays lean now, and verification details will continue in the next phase.",
+      "Add your carrier details now, then upload the required verification documents from your profile.",
     ),
     "profileCompanyNameLabel": MessageLookupByLibrary.simpleMessage(
       "Company name",
@@ -406,7 +496,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileFullNameLabel": MessageLookupByLibrary.simpleMessage("Full name"),
     "profilePhoneLabel": MessageLookupByLibrary.simpleMessage("Phone number"),
     "profileSetupDescription": MessageLookupByLibrary.simpleMessage(
-      "Role-aware shipper/carrier profile completion stays in one guided flow.",
+      "Complete the required profile details before using operational features.",
     ),
     "profileSetupSaveAction": MessageLookupByLibrary.simpleMessage(
       "Save profile",
@@ -415,10 +505,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Profile details saved.",
     ),
     "profileSetupTitle": MessageLookupByLibrary.simpleMessage("Profile setup"),
-    "proofViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "Private proof viewing belongs in one secure shared route.",
+    "profileVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
+      "Profile verification documents",
     ),
-    "proofViewerTitle": m7,
+    "proofViewerDescription": MessageLookupByLibrary.simpleMessage(
+      "Open this proof from a secure shared route when access is ready.",
+    ),
+    "proofViewerTitle": m9,
     "retryLabel": MessageLookupByLibrary.simpleMessage("Retry"),
     "roleSelectionCarrierDescription": MessageLookupByLibrary.simpleMessage(
       "Publish trips, manage bookings, and keep verification moving.",
@@ -441,7 +534,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shared route detail presentation sits above the role shells.",
     ),
-    "routeDetailTitle": m8,
+    "routeDetailTitle": m10,
     "routeErrorMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill could not open this route.",
     ),
@@ -468,7 +561,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "settingsSignOutAction": MessageLookupByLibrary.simpleMessage("Sign out"),
     "settingsSignedOutMessage": MessageLookupByLibrary.simpleMessage(
-      "Signed out.",
+      "You have been signed out.",
     ),
     "settingsTitle": MessageLookupByLibrary.simpleMessage("Settings"),
     "sharedScaffoldPreviewMessage": MessageLookupByLibrary.simpleMessage(
@@ -480,7 +573,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shipment summary, items, and linked booking summary live here.",
     ),
-    "shipmentDetailTitle": m9,
+    "shipmentDetailTitle": m11,
     "shipperHomeDescription": MessageLookupByLibrary.simpleMessage(
       "Active bookings, recent notifications, quick actions, and support shortcut live here.",
     ),
@@ -515,9 +608,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
-    "trackingDetailTitle": m10,
+    "trackingDetailTitle": m12,
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
-      "Minimum supported version gating lives here.",
+      "Update FleetFill to continue with the latest supported version.",
     ),
     "updateRequiredTitle": MessageLookupByLibrary.simpleMessage(
       "Update required",
@@ -526,21 +619,99 @@ class MessageLookup extends MessageLookupByLibrary {
       "Shipper and carrier specifics remain section-based inside one user detail view.",
     ),
     "userDetailTitle": MessageLookupByLibrary.simpleMessage("User detail"),
+    "vehicleCapacityVolumeLabel": MessageLookupByLibrary.simpleMessage(
+      "Capacity volume (m3)",
+    ),
+    "vehicleCapacityWeightLabel": MessageLookupByLibrary.simpleMessage(
+      "Capacity weight (kg)",
+    ),
+    "vehicleCreateAction": MessageLookupByLibrary.simpleMessage("Add vehicle"),
+    "vehicleCreateTitle": MessageLookupByLibrary.simpleMessage("Add vehicle"),
+    "vehicleCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Vehicle added.",
+    ),
+    "vehicleDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Delete vehicle",
+    ),
+    "vehicleDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "Vehicle removed.",
+    ),
     "vehicleDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Vehicle details, documents, and verification status appear here.",
     ),
     "vehicleDetailTitle": MessageLookupByLibrary.simpleMessage(
       "Vehicle detail",
     ),
+    "vehicleEditTitle": MessageLookupByLibrary.simpleMessage("Edit vehicle"),
+    "vehicleEditorDescription": MessageLookupByLibrary.simpleMessage(
+      "Keep vehicle data current so route and verification flows stay valid.",
+    ),
+    "vehiclePlateLabel": MessageLookupByLibrary.simpleMessage("Plate number"),
+    "vehiclePositiveNumberMessage": MessageLookupByLibrary.simpleMessage(
+      "Enter a number greater than zero.",
+    ),
+    "vehicleSaveAction": MessageLookupByLibrary.simpleMessage("Save vehicle"),
+    "vehicleSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Vehicle updated.",
+    ),
+    "vehicleSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Vehicle summary",
+    ),
+    "vehicleTypeLabel": MessageLookupByLibrary.simpleMessage("Vehicle type"),
+    "vehicleVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
+      "Vehicle verification documents",
+    ),
+    "vehicleVerificationRejectedBanner": m13,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
       "Vehicles remain under the carrier profile branch.",
     ),
+    "vehiclesEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Add a vehicle before you publish capacity or complete full verification.",
+    ),
     "vehiclesTitle": MessageLookupByLibrary.simpleMessage("Vehicles"),
+    "verificationDocumentDriverIdentityLabel":
+        MessageLookupByLibrary.simpleMessage("Driver identity or license"),
+    "verificationDocumentMissingMessage": MessageLookupByLibrary.simpleMessage(
+      "No file uploaded yet.",
+    ),
+    "verificationDocumentNeedsAttentionMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Review the rejection reason and upload a replacement.",
+        ),
+    "verificationDocumentOpenPreparedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Secure document access prepared.",
+        ),
+    "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
+      "Uploaded and waiting for admin review.",
+    ),
+    "verificationDocumentRejectedMessage": m14,
+    "verificationDocumentReplacedMessage": MessageLookupByLibrary.simpleMessage(
+      "Verification document replaced.",
+    ),
+    "verificationDocumentTransportLicenseLabel":
+        MessageLookupByLibrary.simpleMessage("Transport license"),
+    "verificationDocumentTruckInspectionLabel":
+        MessageLookupByLibrary.simpleMessage("Truck technical inspection"),
+    "verificationDocumentTruckInsuranceLabel":
+        MessageLookupByLibrary.simpleMessage("Truck insurance"),
+    "verificationDocumentTruckRegistrationLabel":
+        MessageLookupByLibrary.simpleMessage("Truck registration"),
+    "verificationDocumentUploadedMessage": MessageLookupByLibrary.simpleMessage(
+      "Verification document uploaded.",
+    ),
+    "verificationDocumentVerifiedMessage": MessageLookupByLibrary.simpleMessage(
+      "Verified and accepted.",
+    ),
+    "verificationReplaceAction": MessageLookupByLibrary.simpleMessage(
+      "Replace",
+    ),
     "verificationRequiredMessage": MessageLookupByLibrary.simpleMessage(
       "Complete the required verification steps before continuing.",
     ),
     "verificationRequiredTitle": MessageLookupByLibrary.simpleMessage(
       "Verification required",
     ),
+    "verificationUploadAction": MessageLookupByLibrary.simpleMessage("Upload"),
   };
 }

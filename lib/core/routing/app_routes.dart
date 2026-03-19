@@ -35,8 +35,13 @@ enum AppRouteName {
   carrierRoutes,
   carrierBookings,
   carrierProfile,
+  carrierVerification,
+  carrierVehicleCreate,
+  carrierVehicleDetail,
+  carrierVehicleEdit,
   adminDashboard,
   adminQueues,
+  adminVerificationPacket,
   adminUsers,
   adminSettings,
   adminAuditLog,
@@ -78,16 +83,28 @@ abstract final class AppRoutePath {
   static const shipperShipments = '/shipper/shipments';
   static const shipperSearch = '/shipper/search';
   static const shipperProfile = '/shipper/profile';
-  static const shipperBookingReview = '/shipper/booking-review';
-  static const shipperPaymentFlow = '/shipper/payment-flow';
+  static const shipperBookingReview = '/shipper/search/booking-review';
+  static const shipperPaymentFlow = '/shipper/search/payment-flow';
+  static String shipperProfileEdit() => '$shipperProfile/edit';
 
   static const carrierHome = '/carrier/home';
   static const carrierRoutes = '/carrier/routes';
   static const carrierBookings = '/carrier/bookings';
   static const carrierProfile = '/carrier/profile';
+  static const carrierVerification = '/carrier/profile/verification';
+  static String carrierProfileEdit() => '$carrierProfile/edit';
+  static String carrierVehicles() => '$carrierProfile/vehicles';
+  static String carrierVehicleCreate() => '${carrierVehicles()}/new';
+  static String carrierVehicleDetail(String vehicleId) =>
+      '${carrierVehicles()}/$vehicleId';
+  static String carrierVehicleEdit(String vehicleId) =>
+      '${carrierVehicleDetail(vehicleId)}/edit';
+  static String carrierPayoutAccounts() => '$carrierProfile/payout-accounts';
 
   static const adminDashboard = '/admin/dashboard';
   static const adminQueues = '/admin/queues';
+  static String adminQueuesVerification(String carrierId) =>
+      '/admin/queues/verification/$carrierId';
   static const adminUsers = '/admin/users';
   static const adminSettings = '/admin/settings';
   static const adminAuditLog = '/admin/settings/audit-log';

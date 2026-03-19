@@ -1,7 +1,7 @@
 {
   "@@locale": "ar",
   "appTitle": "FleetFill",
-  "adminAuditLogDescription": "Audit visibility for sensitive operations lives here.",
+  "adminAuditLogDescription": "راجع أحدث الإجراءات الإدارية الحساسة ونتائجها.",
   "adminAuditLogTitle": "Admin audit log",
   "adminDashboardDescription": "Operational backlog health, alerts, and quick counts live here.",
   "adminDashboardNavLabel": "Dashboard",
@@ -9,6 +9,30 @@
   "adminQueuesDescription": "Payments, verification, disputes, payouts, and email queues stay segmented inside one page.",
   "adminQueuesNavLabel": "Queues",
   "adminQueuesTitle": "Admin queues",
+  "adminVerificationApproveAction": "اعتماد",
+  "adminVerificationApproveAllAction": "اعتماد الكل",
+  "adminVerificationApproveAllSuccess": "تم اعتماد ملف التحقق.",
+  "adminVerificationApprovedMessage": "تم اعتماد وثيقة التحقق.",
+  "adminVerificationAuditEmptyMessage": "لا توجد عناصر تدقيق تحقق حديثة.",
+  "adminVerificationAuditTitle": "سجل تدقيق التحقق",
+  "adminVerificationMissingDocumentsMessage": "لم يتم إرسال أي وثائق تحقق بعد.",
+  "adminVerificationPacketDescription": "راجع وثائق الملف الشخصي والمركبة معا قبل فتح الوصول التشغيلي.",
+  "adminVerificationPacketTitle": "ملف التحقق",
+  "adminVerificationPendingDocumentsLabel": "الوثائق المعلقة",
+  "adminVerificationQueueEmptyMessage": "لا توجد ملفات تحقق للناقلين تحتاج إلى مراجعة الآن.",
+  "adminVerificationQueueSummaryTitle": "ملخص طابور التحقق",
+  "adminVerificationQueueTitle": "طابور تحقق الناقلين",
+  "adminVerificationRejectAction": "رفض",
+  "adminVerificationRejectedMessage": "تم رفض وثيقة التحقق.",
+  "adminVerificationRejectReasonHint": "أضف السبب الذي يجب أن يراه الناقل.",
+  "adminVerificationRejectReasonTitle": "سبب الرفض",
+  "adminVerificationQueueItemSubtitle": "{documentCount} وثائق معلقة عبر {vehicleCount} مركبات",
+  "@adminVerificationQueueItemSubtitle": {
+    "placeholders": {
+      "documentCount": {},
+      "vehicleCount": {}
+    }
+  },
   "adminSettingsDescription": "Platform settings, maintenance mode, version policy, and monitoring summary live here.",
   "adminSettingsNavLabel": "Settings",
   "adminSettingsTitle": "Admin settings",
@@ -28,6 +52,7 @@
   "authEmailNotConfirmedMessage": "أكد بريدك الإلكتروني قبل تسجيل الدخول.",
   "authGenericErrorMessage": "تعذر على FleetFill إكمال طلب التحقق هذا.",
   "authGoogleAction": "المتابعة عبر Google",
+  "authGoogleUnavailableMessage": "تسجيل الدخول عبر Google غير متاح في هذه البيئة.",
   "authGoogleStartedMessage": "بدأ تسجيل الدخول عبر Google. عد إلى هنا بعد الموافقة.",
   "authKeepSignedInLabel": "إبقائي مسجّل الدخول",
   "authHaveAccountCta": "لديك حساب بالفعل؟ سجّل الدخول",
@@ -44,7 +69,7 @@
   "authPasswordResetInfoMessage": "سيرسل FleetFill رابط إعادة التعيين إلى البريد الإلكتروني المسجل.",
   "authPasswordUpdatedMessage": "تم تحديث كلمة المرور.",
   "authRequiredFieldMessage": "هذا الحقل مطلوب.",
-  "authResetPasswordDescription": "Password reset confirmation lives here.",
+  "authResetPasswordDescription": "عيّن كلمة مرور جديدة بعد فتح رابط الاسترداد الآمن.",
   "authResetPasswordUnavailableMessage": "افتح هذه الشاشة من رابط استعادة كلمة المرور لتعيين كلمة مرور جديدة.",
   "authResetEmailSentMessage": "تم إرسال تعليمات إعادة تعيين كلمة المرور.",
   "authResetPasswordTitle": "Reset password",
@@ -57,7 +82,7 @@
   "authSignInAction": "تسجيل الدخول",
   "authSignInSuccess": "تم تسجيل الدخول بنجاح.",
   "authSignInTitle": "Sign in",
-  "authSignUpDescription": "Lean account creation stays inside one auth shell.",
+  "authSignUpDescription": "أنشئ حساب FleetFill للبدء في الشحن أو نشر السعة.",
   "authSignUpTitle": "Create account",
   "authUpdatePasswordAction": "تحديث كلمة المرور",
   "authUserAlreadyRegisteredMessage": "يوجد حساب بالفعل لهذا البريد الإلكتروني.",
@@ -80,7 +105,24 @@
   "carrierHomeTitle": "Carrier home",
   "carrierProfileDescription": "Carrier verification status, payout reminders, and profile tools live here.",
   "carrierProfileNavLabel": "Profile",
+  "carrierProfileSectionTitle": "Carrier details",
+  "carrierProfileVerificationLabel": "Verification",
+  "carrierProfileVerificationPending": "Pending",
+  "carrierProfileVerificationRejected": "Rejected",
+  "carrierProfileVerificationVerified": "Verified",
   "carrierProfileTitle": "Carrier profile",
+  "carrierVerificationCenterDescription": "ارفع واستبدل وثائق التحقق الخاصة بالملف الشخصي أو المركبة من مكان واحد.",
+  "carrierVerificationCenterTitle": "مركز التحقق",
+  "carrierVerificationPendingBanner": "ملف التحقق الخاص بك قيد المراجعة. ارفع أي وثائق ناقصة لتسريع الاعتماد.",
+  "carrierVerificationQueueHint": "تبقى متطلبات التحقق والوثائق الناقصة مجمعة داخل فرع الملف الشخصي.",
+  "carrierVerificationRejectedBanner": "التحقق يحتاج إلى إجراء: {reason}",
+  "@carrierVerificationRejectedBanner": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "carrierVerificationSummaryTitle": "ملخص التحقق",
+  "carrierVehiclesShortcutDescription": "أدر الشاحنات وارفع الوثائق الناقصة وعالج عوائق التحقق.",
   "carrierPublicProfileDescription": "Public carrier reputation and trust cues live here.",
   "carrierPublicProfileTitle": "Carrier {carrierId}",
   "@carrierPublicProfileTitle": {
@@ -89,19 +131,21 @@
     }
   },
   "confirmLabel": "تأكيد",
-  "documentViewerDescription": "Private document viewing belongs in one secure shared route.",
+  "documentViewerDescription": "افتح هذا المستند عبر العارض الآمن عندما يصبح الوصول جاهزا.",
+  "documentViewerOpenAction": "افتح المستند",
   "documentViewerTitle": "Document {documentId}",
+  "documentViewerUnavailableMessage": "الوصول الآمن إلى المستند غير متاح مؤقتا.",
   "@documentViewerTitle": {
     "placeholders": {
       "documentId": {}
     }
   },
-  "editCarrierProfileDescription": "Carrier profile editing lives here.",
+  "editCarrierProfileDescription": "حدّث بيانات الاتصال ومعلومات الناقل الخاصة بك.",
   "editCarrierProfileTitle": "Edit carrier profile",
-  "editShipperProfileDescription": "Shipper profile editing lives here.",
+  "editShipperProfileDescription": "حدّث بيانات الاتصال الخاصة بالمرسل.",
   "editShipperProfileTitle": "Edit shipper profile",
   "errorTitle": "حدثت مشكلة",
-  "generatedDocumentViewerDescription": "Generated invoice and receipt access stays deep-linkable above the shell.",
+  "generatedDocumentViewerDescription": "افتح الفواتير والإيصالات المولدة من مسار مشترك وآمن.",
   "generatedDocumentViewerTitle": "Generated document {documentId}",
   "@generatedDocumentViewerTitle": {
     "placeholders": {
@@ -111,7 +155,7 @@
   "forbiddenMessage": "هذا القسم غير متاح لهذا الحساب.",
   "forbiddenTitle": "الوصول مقيّد",
   "forbiddenAdminStepUpMessage": "أعد تسجيل التحقق حديثا قبل فتح هذا القسم الإداري الحساس.",
-  "languageSelectionDescription": "Arabic, French, and English selection belongs here.",
+  "languageSelectionDescription": "اختر اللغة التي تريد استخدامها داخل FleetFill.",
   "languageSelectionCurrentMessage": "اللغة الحالية: {languageCode}",
   "@languageSelectionCurrentMessage": {
     "placeholders": {
@@ -124,7 +168,7 @@
   "languageSelectionTitle": "Language selection",
   "loadingMessage": "يقوم FleetFill بتحضير مساحة العمل الخاصة بك.",
   "loadingTitle": "جار التحميل",
-  "maintenanceDescription": "Global maintenance messaging lives here.",
+  "maintenanceDescription": "خدمة FleetFill غير متاحة مؤقتا أثناء أعمال الصيانة.",
   "maintenanceTitle": "Maintenance mode",
   "mediaUploadPermissionDescription": "Guide the user back to media access when they need to upload proof or documents.",
   "mediaUploadPermissionTitle": "Media upload permission",
@@ -137,21 +181,21 @@
   "myShipmentsTitle": "My shipments",
   "noExactResultsMessage": "لا يوجد مسار مطابق تماما لهذا البحث حاليا.",
   "noExactResultsTitle": "لم يتم العثور على مسار مطابق",
-  "notificationDetailDescription": "Notification details stay deep-linkable without becoming a tab.",
+  "notificationDetailDescription": "راجع التفاصيل الكاملة لهذا الإشعار.",
   "notificationDetailTitle": "Notification {notificationId}",
   "@notificationDetailTitle": {
     "placeholders": {
       "notificationId": {}
     }
   },
-  "notificationsCenterDescription": "Shared notification history opens above the role shells.",
+  "notificationsCenterDescription": "راجع التنبيهات الأخيرة وتحديثات الحجوزات والتذكيرات المهمة.",
   "notificationsCenterTitle": "Notifications",
   "notificationsPermissionDescription": "Explain why tracking and booking updates matter before opening system settings.",
   "notificationsPermissionTitle": "Notifications permission",
   "notFoundMessage": "تعذر العثور على الصفحة أو العنصر المطلوب.",
   "notFoundTitle": "غير موجود",
   "offlineMessage": "أنت غير متصل حاليا. بعض الإجراءات غير متاحة مؤقتا.",
-  "oneOffTripDetailDescription": "One-off trip detail routes stay deep-linkable above the shell.",
+  "oneOffTripDetailDescription": "راجع تفاصيل هذه الرحلة الفردية قبل الحجز أو المتابعة التشغيلية.",
   "oneOffTripDetailTitle": "One-off trip {tripId}",
   "@oneOffTripDetailTitle": {
     "placeholders": {
@@ -166,15 +210,16 @@
   "phoneCompletionSaveAction": "حفظ رقم الهاتف",
   "phoneCompletionSavedMessage": "تم حفظ رقم الهاتف.",
   "phoneCompletionTitle": "Phone completion",
-  "profileSetupDescription": "Role-aware shipper/carrier profile completion stays in one guided flow.",
-  "profileCarrierVerificationHint": "يبقى إعداد الناقل خفيفا الآن، وستستكمل تفاصيل التحقق في المرحلة التالية.",
+  "profileVerificationDocumentsTitle": "وثائق تحقق الملف الشخصي",
+  "profileSetupDescription": "أكمل بيانات الملف المطلوبة قبل استخدام الميزات التشغيلية.",
+  "profileCarrierVerificationHint": "أكمل بيانات الناقل أولا، ثم ارفع وثائق التحقق المطلوبة من ملفك الشخصي.",
   "profileCompanyNameLabel": "اسم الشركة",
   "profileFullNameLabel": "الاسم الكامل",
   "profilePhoneLabel": "رقم الهاتف",
   "profileSetupSaveAction": "حفظ الملف الشخصي",
   "profileSetupSavedMessage": "تم حفظ بيانات الملف الشخصي.",
   "profileSetupTitle": "Profile setup",
-  "proofViewerDescription": "Private proof viewing belongs in one secure shared route.",
+  "proofViewerDescription": "افتح هذا الإثبات من خلال مسار مشترك وآمن عندما يصبح الوصول جاهزا.",
   "proofViewerTitle": "Proof {proofId}",
   "@proofViewerTitle": {
     "placeholders": {
@@ -182,34 +227,35 @@
     }
   },
   "retryLabel": "إعادة المحاولة",
-  "roleSelectionDescription": "One account selects one role before operational access begins.",
+  "roleSelectionDescription": "اختر دورا واحدا لهذا الحساب قبل بدء الاستخدام التشغيلي.",
   "roleSelectionCarrierDescription": "انشر الرحلات، وأدر الحجوزات، وتابع التحقق.",
   "roleSelectionCarrierTitle": "المتابعة كناقل",
   "roleSelectionShipperDescription": "أنشئ الشحنات، وقارن الرحلات المطابقة، وتابع التسليم.",
   "roleSelectionShipperTitle": "المتابعة كمرسل",
-  "roleSelectionTitle": "Role selection",
-  "routeDetailDescription": "Shared route detail presentation sits above the role shells.",
+  "roleSelectionTitle": "اختيار الدور",
+  "routeDetailDescription": "راجع تفاصيل هذا المسار قبل الحجز أو المتابعة.",
   "routeDetailTitle": "Route {routeId}",
   "@routeDetailTitle": {
     "placeholders": {
       "routeId": {}
     }
   },
-  "routeErrorMessage": "FleetFill could not open this route.",
+  "routeErrorMessage": "تعذر على FleetFill فتح هذه الشاشة.",
   "searchTripsDescription": "The search form and exact-route results stay on one page with inline states.",
   "searchTripsNavLabel": "Search",
   "searchTripsTitle": "Search trips",
   "sampleBasePriceLabel": "السعر الأساسي",
   "samplePlatformFeeLabel": "رسوم المنصة",
   "sampleTotalLabel": "الإجمالي",
-  "settingsDescription": "Language, theme, support, and notification preferences stay inside shared settings.",
-  "settingsTitle": "Settings",
+  "settingsDescription": "أدر اللغة والمظهر والدعم وتفضيلات الإشعارات.",
+  "settingsSignedOutMessage": "تم تسجيل خروجك.",
+  "settingsTitle": "الإعدادات",
   "sharedScaffoldPreviewMessage": "تبقى البطاقات والقوالب المشتركة متسقة عبر جميع أسطح الأدوار.",
   "sharedScaffoldPreviewTitle": "معاينة الأساس المشترك",
   "sampleBasePriceAmount": "DZD 12,500",
   "samplePlatformFeeAmount": "DZD 1,200",
   "sampleTotalAmount": "DZD 13,700",
-  "shipmentDetailDescription": "Shipment summary, items, and linked booking summary live here.",
+  "shipmentDetailDescription": "راجع ملخص الشحنة ومحتوياتها والحجز المرتبط بها.",
   "shipmentDetailTitle": "Shipment {shipmentId}",
   "@shipmentDetailTitle": {
     "placeholders": {
@@ -237,14 +283,57 @@
       "bookingId": {}
     }
   },
-  "updateRequiredDescription": "Minimum supported version gating lives here.",
+  "updateRequiredDescription": "حدّث FleetFill للمتابعة باستخدام الإصدار المدعوم.",
   "updateRequiredTitle": "Update required",
   "userDetailDescription": "Shipper and carrier specifics remain section-based inside one user detail view.",
   "userDetailTitle": "User detail",
+  "vehicleCapacityVolumeLabel": "حجم السعة (م3)",
+  "vehicleCapacityWeightLabel": "سعة الوزن (كغ)",
+  "vehicleCreateAction": "إضافة مركبة",
+  "vehicleCreateTitle": "إضافة مركبة",
+  "vehicleCreatedMessage": "تمت إضافة المركبة.",
+  "vehicleDeleteAction": "حذف المركبة",
+  "vehicleDeletedMessage": "تم حذف المركبة.",
   "vehicleDetailDescription": "Vehicle details, documents, and verification status appear here.",
   "vehicleDetailTitle": "Vehicle detail",
+  "vehicleEditTitle": "تعديل المركبة",
+  "vehicleEditorDescription": "أبق بيانات المركبة محدثة حتى تظل مسارات الطرق والتحقق صالحة.",
+  "vehiclePlateLabel": "رقم اللوحة",
+  "vehiclePositiveNumberMessage": "أدخل رقما أكبر من الصفر.",
+  "vehicleVerificationRejectedBanner": "تحقق المركبة يحتاج إلى إجراء: {reason}",
+  "@vehicleVerificationRejectedBanner": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "vehicleSaveAction": "حفظ المركبة",
+  "vehicleSavedMessage": "تم تحديث المركبة.",
+  "vehicleSummaryTitle": "ملخص المركبة",
+  "vehicleTypeLabel": "نوع المركبة",
   "vehiclesDescription": "Vehicles remain under the carrier profile branch.",
+  "vehiclesEmptyMessage": "أضف مركبة قبل نشر السعة أو إكمال التحقق الكامل.",
   "vehiclesTitle": "Vehicles",
+  "vehicleVerificationDocumentsTitle": "وثائق تحقق المركبة",
+  "verificationDocumentDriverIdentityLabel": "هوية السائق أو الرخصة",
+  "verificationDocumentMissingMessage": "لم يتم رفع أي ملف بعد.",
+  "verificationDocumentNeedsAttentionMessage": "راجع سبب الرفض ثم ارفع بديلا.",
+  "verificationDocumentOpenPreparedMessage": "تم تجهيز الوصول الآمن إلى الوثيقة.",
+  "verificationDocumentPendingMessage": "تم الرفع وينتظر مراجعة الإدارة.",
+  "verificationDocumentRejectedMessage": "مرفوض: {reason}",
+  "@verificationDocumentRejectedMessage": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "verificationDocumentReplacedMessage": "تم استبدال وثيقة التحقق.",
+  "verificationDocumentTransportLicenseLabel": "رخصة النقل",
+  "verificationDocumentTruckInspectionLabel": "الفحص التقني للشاحنة",
+  "verificationDocumentTruckInsuranceLabel": "تأمين الشاحنة",
+  "verificationDocumentTruckRegistrationLabel": "تسجيل الشاحنة",
+  "verificationDocumentUploadedMessage": "تم رفع وثيقة التحقق.",
+  "verificationDocumentVerifiedMessage": "تم التحقق منها واعتمادها.",
+  "verificationReplaceAction": "استبدال",
+  "verificationUploadAction": "رفع",
   "verificationRequiredMessage": "أكمل خطوات التحقق المطلوبة قبل المتابعة.",
   "verificationRequiredTitle": "التحقق مطلوب"
 }

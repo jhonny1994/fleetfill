@@ -210,6 +210,12 @@ Carrier public profile should show:
 
 Trust cues should matter more than decorative UI.
 
+## 9.1 Carrier Verification UX
+
+- vehicles and verification live under the carrier profile branch, not as extra carrier shell tabs
+- profile and vehicle verification documents should be managed from sections/cards with upload and replace actions instead of route-per-document flows
+- latest verification status and rejection reason must stay visible near the affected profile or vehicle record so carriers can correct issues quickly
+
 ## 10. Support UX
 
 Support entry point should be simple:

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppEnvironmentConfig {
 
- AppEnvironment get environment; String get supabaseUrl; String get supabaseAnonKey; bool get maintenanceMode; bool get forceUpdateRequired; bool get crashReportingEnabled;
+ AppEnvironment get environment; String get supabaseUrl; String get supabaseAnonKey; bool get googleAuthEnabled; bool get maintenanceMode; bool get forceUpdateRequired; bool get crashReportingEnabled;
 /// Create a copy of AppEnvironmentConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AppEnvironmentConfigCopyWith<AppEnvironmentConfig> get copyWith => _$AppEnviron
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppEnvironmentConfig&&(identical(other.environment, environment) || other.environment == environment)&&(identical(other.supabaseUrl, supabaseUrl) || other.supabaseUrl == supabaseUrl)&&(identical(other.supabaseAnonKey, supabaseAnonKey) || other.supabaseAnonKey == supabaseAnonKey)&&(identical(other.maintenanceMode, maintenanceMode) || other.maintenanceMode == maintenanceMode)&&(identical(other.forceUpdateRequired, forceUpdateRequired) || other.forceUpdateRequired == forceUpdateRequired)&&(identical(other.crashReportingEnabled, crashReportingEnabled) || other.crashReportingEnabled == crashReportingEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppEnvironmentConfig&&(identical(other.environment, environment) || other.environment == environment)&&(identical(other.supabaseUrl, supabaseUrl) || other.supabaseUrl == supabaseUrl)&&(identical(other.supabaseAnonKey, supabaseAnonKey) || other.supabaseAnonKey == supabaseAnonKey)&&(identical(other.googleAuthEnabled, googleAuthEnabled) || other.googleAuthEnabled == googleAuthEnabled)&&(identical(other.maintenanceMode, maintenanceMode) || other.maintenanceMode == maintenanceMode)&&(identical(other.forceUpdateRequired, forceUpdateRequired) || other.forceUpdateRequired == forceUpdateRequired)&&(identical(other.crashReportingEnabled, crashReportingEnabled) || other.crashReportingEnabled == crashReportingEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,environment,supabaseUrl,supabaseAnonKey,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
+int get hashCode => Object.hash(runtimeType,environment,supabaseUrl,supabaseAnonKey,googleAuthEnabled,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
 
 @override
 String toString() {
-  return 'AppEnvironmentConfig(environment: $environment, supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
+  return 'AppEnvironmentConfig(environment: $environment, supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, googleAuthEnabled: $googleAuthEnabled, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AppEnvironmentConfigCopyWith<$Res>  {
   factory $AppEnvironmentConfigCopyWith(AppEnvironmentConfig value, $Res Function(AppEnvironmentConfig) _then) = _$AppEnvironmentConfigCopyWithImpl;
 @useResult
 $Res call({
- AppEnvironment environment, String supabaseUrl, String supabaseAnonKey, bool maintenanceMode, bool forceUpdateRequired, bool crashReportingEnabled
+ AppEnvironment environment, String supabaseUrl, String supabaseAnonKey, bool googleAuthEnabled, bool maintenanceMode, bool forceUpdateRequired, bool crashReportingEnabled
 });
 
 
@@ -65,12 +65,13 @@ class _$AppEnvironmentConfigCopyWithImpl<$Res>
 
 /// Create a copy of AppEnvironmentConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? environment = null,Object? supabaseUrl = null,Object? supabaseAnonKey = null,Object? maintenanceMode = null,Object? forceUpdateRequired = null,Object? crashReportingEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? environment = null,Object? supabaseUrl = null,Object? supabaseAnonKey = null,Object? googleAuthEnabled = null,Object? maintenanceMode = null,Object? forceUpdateRequired = null,Object? crashReportingEnabled = null,}) {
   return _then(_self.copyWith(
 environment: null == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
 as AppEnvironment,supabaseUrl: null == supabaseUrl ? _self.supabaseUrl : supabaseUrl // ignore: cast_nullable_to_non_nullable
 as String,supabaseAnonKey: null == supabaseAnonKey ? _self.supabaseAnonKey : supabaseAnonKey // ignore: cast_nullable_to_non_nullable
-as String,maintenanceMode: null == maintenanceMode ? _self.maintenanceMode : maintenanceMode // ignore: cast_nullable_to_non_nullable
+as String,googleAuthEnabled: null == googleAuthEnabled ? _self.googleAuthEnabled : googleAuthEnabled // ignore: cast_nullable_to_non_nullable
+as bool,maintenanceMode: null == maintenanceMode ? _self.maintenanceMode : maintenanceMode // ignore: cast_nullable_to_non_nullable
 as bool,forceUpdateRequired: null == forceUpdateRequired ? _self.forceUpdateRequired : forceUpdateRequired // ignore: cast_nullable_to_non_nullable
 as bool,crashReportingEnabled: null == crashReportingEnabled ? _self.crashReportingEnabled : crashReportingEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AppEnvironment environment,  String supabaseUrl,  String supabaseAnonKey,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AppEnvironment environment,  String supabaseUrl,  String supabaseAnonKey,  bool googleAuthEnabled,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppEnvironmentConfig() when $default != null:
-return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
+return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.googleAuthEnabled,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AppEnvironment environment,  String supabaseUrl,  String supabaseAnonKey,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AppEnvironment environment,  String supabaseUrl,  String supabaseAnonKey,  bool googleAuthEnabled,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _AppEnvironmentConfig():
-return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
+return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.googleAuthEnabled,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AppEnvironment environment,  String supabaseUrl,  String supabaseAnonKey,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AppEnvironment environment,  String supabaseUrl,  String supabaseAnonKey,  bool googleAuthEnabled,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _AppEnvironmentConfig() when $default != null:
-return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
+return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.googleAuthEnabled,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
   return null;
 
 }
@@ -214,12 +215,13 @@ return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.
 @JsonSerializable()
 
 class _AppEnvironmentConfig extends AppEnvironmentConfig {
-  const _AppEnvironmentConfig({required this.environment, this.supabaseUrl = '', this.supabaseAnonKey = '', this.maintenanceMode = false, this.forceUpdateRequired = false, this.crashReportingEnabled = false}): super._();
+  const _AppEnvironmentConfig({required this.environment, this.supabaseUrl = '', this.supabaseAnonKey = '', this.googleAuthEnabled = false, this.maintenanceMode = false, this.forceUpdateRequired = false, this.crashReportingEnabled = false}): super._();
   factory _AppEnvironmentConfig.fromJson(Map<String, dynamic> json) => _$AppEnvironmentConfigFromJson(json);
 
 @override final  AppEnvironment environment;
 @override@JsonKey() final  String supabaseUrl;
 @override@JsonKey() final  String supabaseAnonKey;
+@override@JsonKey() final  bool googleAuthEnabled;
 @override@JsonKey() final  bool maintenanceMode;
 @override@JsonKey() final  bool forceUpdateRequired;
 @override@JsonKey() final  bool crashReportingEnabled;
@@ -237,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppEnvironmentConfig&&(identical(other.environment, environment) || other.environment == environment)&&(identical(other.supabaseUrl, supabaseUrl) || other.supabaseUrl == supabaseUrl)&&(identical(other.supabaseAnonKey, supabaseAnonKey) || other.supabaseAnonKey == supabaseAnonKey)&&(identical(other.maintenanceMode, maintenanceMode) || other.maintenanceMode == maintenanceMode)&&(identical(other.forceUpdateRequired, forceUpdateRequired) || other.forceUpdateRequired == forceUpdateRequired)&&(identical(other.crashReportingEnabled, crashReportingEnabled) || other.crashReportingEnabled == crashReportingEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppEnvironmentConfig&&(identical(other.environment, environment) || other.environment == environment)&&(identical(other.supabaseUrl, supabaseUrl) || other.supabaseUrl == supabaseUrl)&&(identical(other.supabaseAnonKey, supabaseAnonKey) || other.supabaseAnonKey == supabaseAnonKey)&&(identical(other.googleAuthEnabled, googleAuthEnabled) || other.googleAuthEnabled == googleAuthEnabled)&&(identical(other.maintenanceMode, maintenanceMode) || other.maintenanceMode == maintenanceMode)&&(identical(other.forceUpdateRequired, forceUpdateRequired) || other.forceUpdateRequired == forceUpdateRequired)&&(identical(other.crashReportingEnabled, crashReportingEnabled) || other.crashReportingEnabled == crashReportingEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,environment,supabaseUrl,supabaseAnonKey,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
+int get hashCode => Object.hash(runtimeType,environment,supabaseUrl,supabaseAnonKey,googleAuthEnabled,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
 
 @override
 String toString() {
-  return 'AppEnvironmentConfig(environment: $environment, supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
+  return 'AppEnvironmentConfig(environment: $environment, supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, googleAuthEnabled: $googleAuthEnabled, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$AppEnvironmentConfigCopyWith<$Res> implements $AppEnviron
   factory _$AppEnvironmentConfigCopyWith(_AppEnvironmentConfig value, $Res Function(_AppEnvironmentConfig) _then) = __$AppEnvironmentConfigCopyWithImpl;
 @override @useResult
 $Res call({
- AppEnvironment environment, String supabaseUrl, String supabaseAnonKey, bool maintenanceMode, bool forceUpdateRequired, bool crashReportingEnabled
+ AppEnvironment environment, String supabaseUrl, String supabaseAnonKey, bool googleAuthEnabled, bool maintenanceMode, bool forceUpdateRequired, bool crashReportingEnabled
 });
 
 
@@ -274,12 +276,13 @@ class __$AppEnvironmentConfigCopyWithImpl<$Res>
 
 /// Create a copy of AppEnvironmentConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? environment = null,Object? supabaseUrl = null,Object? supabaseAnonKey = null,Object? maintenanceMode = null,Object? forceUpdateRequired = null,Object? crashReportingEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? environment = null,Object? supabaseUrl = null,Object? supabaseAnonKey = null,Object? googleAuthEnabled = null,Object? maintenanceMode = null,Object? forceUpdateRequired = null,Object? crashReportingEnabled = null,}) {
   return _then(_AppEnvironmentConfig(
 environment: null == environment ? _self.environment : environment // ignore: cast_nullable_to_non_nullable
 as AppEnvironment,supabaseUrl: null == supabaseUrl ? _self.supabaseUrl : supabaseUrl // ignore: cast_nullable_to_non_nullable
 as String,supabaseAnonKey: null == supabaseAnonKey ? _self.supabaseAnonKey : supabaseAnonKey // ignore: cast_nullable_to_non_nullable
-as String,maintenanceMode: null == maintenanceMode ? _self.maintenanceMode : maintenanceMode // ignore: cast_nullable_to_non_nullable
+as String,googleAuthEnabled: null == googleAuthEnabled ? _self.googleAuthEnabled : googleAuthEnabled // ignore: cast_nullable_to_non_nullable
+as bool,maintenanceMode: null == maintenanceMode ? _self.maintenanceMode : maintenanceMode // ignore: cast_nullable_to_non_nullable
 as bool,forceUpdateRequired: null == forceUpdateRequired ? _self.forceUpdateRequired : forceUpdateRequired // ignore: cast_nullable_to_non_nullable
 as bool,crashReportingEnabled: null == crashReportingEnabled ? _self.crashReportingEnabled : crashReportingEnabled // ignore: cast_nullable_to_non_nullable
 as bool,

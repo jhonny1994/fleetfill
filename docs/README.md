@@ -20,6 +20,10 @@ Supporting assets:
 - `docs/wilayas-with-municipalities.json` - Algeria location seed data
 - `docs/adr/` - architecture decision records for the most irreversible decisions
 
+Working audit docs:
+
+- `docs/10-audit-phases-0-to-4.md` - remediation checklist for issues found in already-completed phases
+
 Rules for all future documentation updates:
 
 - Do not create parallel truth sources for product rules, states, pricing, or schema.

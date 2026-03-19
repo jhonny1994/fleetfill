@@ -59,10 +59,10 @@ class S {
     return Intl.message('FleetFill', name: 'appTitle', desc: '', args: []);
   }
 
-  /// `Audit visibility for sensitive operations lives here.`
+  /// `Review the latest sensitive admin actions and their outcomes.`
   String get adminAuditLogDescription {
     return Intl.message(
-      'Audit visibility for sensitive operations lives here.',
+      'Review the latest sensitive admin actions and their outcomes.',
       name: 'adminAuditLogDescription',
       desc: '',
       args: [],
@@ -79,10 +79,10 @@ class S {
     );
   }
 
-  /// `Operational backlog health, alerts, and quick counts live here.`
+  /// `Monitor queue health, alerts, and the current operational backlog.`
   String get adminDashboardDescription {
     return Intl.message(
-      'Operational backlog health, alerts, and quick counts live here.',
+      'Monitor queue health, alerts, and the current operational backlog.',
       name: 'adminDashboardDescription',
       desc: '',
       args: [],
@@ -109,10 +109,10 @@ class S {
     );
   }
 
-  /// `Payments, verification, disputes, payouts, and email queues stay segmented inside one page.`
+  /// `Review payments, verification, disputes, payouts, and email work from one queue hub.`
   String get adminQueuesDescription {
     return Intl.message(
-      'Payments, verification, disputes, payouts, and email queues stay segmented inside one page.',
+      'Review payments, verification, disputes, payouts, and email work from one queue hub.',
       name: 'adminQueuesDescription',
       desc: '',
       args: [],
@@ -139,10 +139,193 @@ class S {
     );
   }
 
-  /// `Platform settings, maintenance mode, version policy, and monitoring summary live here.`
+  /// `Approve`
+  String get adminVerificationApproveAction {
+    return Intl.message(
+      'Approve',
+      name: 'adminVerificationApproveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Approve all`
+  String get adminVerificationApproveAllAction {
+    return Intl.message(
+      'Approve all',
+      name: 'adminVerificationApproveAllAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification packet approved.`
+  String get adminVerificationApproveAllSuccess {
+    return Intl.message(
+      'Verification packet approved.',
+      name: 'adminVerificationApproveAllSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification document approved.`
+  String get adminVerificationApprovedMessage {
+    return Intl.message(
+      'Verification document approved.',
+      name: 'adminVerificationApprovedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No recent verification audit items yet.`
+  String get adminVerificationAuditEmptyMessage {
+    return Intl.message(
+      'No recent verification audit items yet.',
+      name: 'adminVerificationAuditEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification audit`
+  String get adminVerificationAuditTitle {
+    return Intl.message(
+      'Verification audit',
+      name: 'adminVerificationAuditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No submitted verification documents yet.`
+  String get adminVerificationMissingDocumentsMessage {
+    return Intl.message(
+      'No submitted verification documents yet.',
+      name: 'adminVerificationMissingDocumentsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review profile and vehicle documents together before approving operational access.`
+  String get adminVerificationPacketDescription {
+    return Intl.message(
+      'Review profile and vehicle documents together before approving operational access.',
+      name: 'adminVerificationPacketDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification packet`
+  String get adminVerificationPacketTitle {
+    return Intl.message(
+      'Verification packet',
+      name: 'adminVerificationPacketTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending documents`
+  String get adminVerificationPendingDocumentsLabel {
+    return Intl.message(
+      'Pending documents',
+      name: 'adminVerificationPendingDocumentsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No carrier verification packets need review right now.`
+  String get adminVerificationQueueEmptyMessage {
+    return Intl.message(
+      'No carrier verification packets need review right now.',
+      name: 'adminVerificationQueueEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification queue summary`
+  String get adminVerificationQueueSummaryTitle {
+    return Intl.message(
+      'Verification queue summary',
+      name: 'adminVerificationQueueSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carrier verification queue`
+  String get adminVerificationQueueTitle {
+    return Intl.message(
+      'Carrier verification queue',
+      name: 'adminVerificationQueueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reject`
+  String get adminVerificationRejectAction {
+    return Intl.message(
+      'Reject',
+      name: 'adminVerificationRejectAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification document rejected.`
+  String get adminVerificationRejectedMessage {
+    return Intl.message(
+      'Verification document rejected.',
+      name: 'adminVerificationRejectedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add the reason the carrier should see.`
+  String get adminVerificationRejectReasonHint {
+    return Intl.message(
+      'Add the reason the carrier should see.',
+      name: 'adminVerificationRejectReasonHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rejection reason`
+  String get adminVerificationRejectReasonTitle {
+    return Intl.message(
+      'Rejection reason',
+      name: 'adminVerificationRejectReasonTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{documentCount} pending documents across {vehicleCount} vehicles`
+  String adminVerificationQueueItemSubtitle(
+    Object documentCount,
+    Object vehicleCount,
+  ) {
+    return Intl.message(
+      '$documentCount pending documents across $vehicleCount vehicles',
+      name: 'adminVerificationQueueItemSubtitle',
+      desc: '',
+      args: [documentCount, vehicleCount],
+    );
+  }
+
+  /// `Manage platform settings, maintenance controls, version policy, and monitoring summaries.`
   String get adminSettingsDescription {
     return Intl.message(
-      'Platform settings, maintenance mode, version policy, and monitoring summary live here.',
+      'Manage platform settings, maintenance controls, version policy, and monitoring summaries.',
       name: 'adminSettingsDescription',
       desc: '',
       args: [],
@@ -169,10 +352,10 @@ class S {
     );
   }
 
-  /// `User search and investigation live here.`
+  /// `Search for users and review account details when operations need context.`
   String get adminUsersDescription {
     return Intl.message(
-      'User search and investigation live here.',
+      'Search for users and review account details when operations need context.',
       name: 'adminUsersDescription',
       desc: '',
       args: [],
@@ -284,10 +467,10 @@ class S {
     );
   }
 
-  /// `Password reset request handling belongs in the auth shell.`
+  /// `Request a password reset link for your FleetFill account.`
   String get authForgotPasswordDescription {
     return Intl.message(
-      'Password reset request handling belongs in the auth shell.',
+      'Request a password reset link for your FleetFill account.',
       name: 'authForgotPasswordDescription',
       desc: '',
       args: [],
@@ -319,6 +502,16 @@ class S {
     return Intl.message(
       'Continue with Google',
       name: 'authGoogleAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google sign-in is not available in this environment.`
+  String get authGoogleUnavailableMessage {
+    return Intl.message(
+      'Google sign-in is not available in this environment.',
+      name: 'authGoogleUnavailableMessage',
       desc: '',
       args: [],
     );
@@ -494,10 +687,10 @@ class S {
     );
   }
 
-  /// `Password reset confirmation lives here.`
+  /// `Set a new password after opening your secure recovery link.`
   String get authResetPasswordDescription {
     return Intl.message(
-      'Password reset confirmation lives here.',
+      'Set a new password after opening your secure recovery link.',
       name: 'authResetPasswordDescription',
       desc: '',
       args: [],
@@ -584,10 +777,10 @@ class S {
     );
   }
 
-  /// `Email/password and Google sign-in entry points live here.`
+  /// `Sign in with your email and password, or continue with Google when available.`
   String get authSignInDescription {
     return Intl.message(
-      'Email/password and Google sign-in entry points live here.',
+      'Sign in with your email and password, or continue with Google when available.',
       name: 'authSignInDescription',
       desc: '',
       args: [],
@@ -609,10 +802,10 @@ class S {
     return Intl.message('Sign in', name: 'authSignInTitle', desc: '', args: []);
   }
 
-  /// `Lean account creation stays inside one auth shell.`
+  /// `Create your FleetFill account to start shipping or publishing capacity.`
   String get authSignUpDescription {
     return Intl.message(
-      'Lean account creation stays inside one auth shell.',
+      'Create your FleetFill account to start shipping or publishing capacity.',
       name: 'authSignUpDescription',
       desc: '',
       args: [],
@@ -844,6 +1037,76 @@ class S {
     );
   }
 
+  /// `Upload and replace profile or vehicle verification documents from one place.`
+  String get carrierVerificationCenterDescription {
+    return Intl.message(
+      'Upload and replace profile or vehicle verification documents from one place.',
+      name: 'carrierVerificationCenterDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification center`
+  String get carrierVerificationCenterTitle {
+    return Intl.message(
+      'Verification center',
+      name: 'carrierVerificationCenterTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your verification packet is under review. Upload any missing documents to keep approval moving.`
+  String get carrierVerificationPendingBanner {
+    return Intl.message(
+      'Your verification packet is under review. Upload any missing documents to keep approval moving.',
+      name: 'carrierVerificationPendingBanner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification requirements and missing documents stay grouped under your profile branch.`
+  String get carrierVerificationQueueHint {
+    return Intl.message(
+      'Verification requirements and missing documents stay grouped under your profile branch.',
+      name: 'carrierVerificationQueueHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification needs attention: {reason}`
+  String carrierVerificationRejectedBanner(Object reason) {
+    return Intl.message(
+      'Verification needs attention: $reason',
+      name: 'carrierVerificationRejectedBanner',
+      desc: '',
+      args: [reason],
+    );
+  }
+
+  /// `Verification summary`
+  String get carrierVerificationSummaryTitle {
+    return Intl.message(
+      'Verification summary',
+      name: 'carrierVerificationSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage trucks, upload missing documents, and resolve verification blockers.`
+  String get carrierVehiclesShortcutDescription {
+    return Intl.message(
+      'Manage trucks, upload missing documents, and resolve verification blockers.',
+      name: 'carrierVehiclesShortcutDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Recent comments`
   String get carrierPublicProfileCommentsTitle {
     return Intl.message(
@@ -854,10 +1117,10 @@ class S {
     );
   }
 
-  /// `Public carrier reputation and trust cues live here.`
+  /// `Review this carrier's public reputation, comments, and verification status.`
   String get carrierPublicProfileDescription {
     return Intl.message(
-      'Public carrier reputation and trust cues live here.',
+      'Review this carrier\'s public reputation, comments, and verification status.',
       name: 'carrierPublicProfileDescription',
       desc: '',
       args: [],
@@ -919,11 +1182,21 @@ class S {
     return Intl.message('Confirm', name: 'confirmLabel', desc: '', args: []);
   }
 
-  /// `Private document viewing belongs in one secure shared route.`
+  /// `Open this document in your secure viewer when access is ready.`
   String get documentViewerDescription {
     return Intl.message(
-      'Private document viewing belongs in one secure shared route.',
+      'Open this document in your secure viewer when access is ready.',
       name: 'documentViewerDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open Document`
+  String get documentViewerOpenAction {
+    return Intl.message(
+      'Open Document',
+      name: 'documentViewerOpenAction',
       desc: '',
       args: [],
     );
@@ -939,10 +1212,20 @@ class S {
     );
   }
 
-  /// `Carrier profile editing lives here.`
+  /// `Secure document access is temporarily unavailable.`
+  String get documentViewerUnavailableMessage {
+    return Intl.message(
+      'Secure document access is temporarily unavailable.',
+      name: 'documentViewerUnavailableMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update your carrier contact and company details.`
   String get editCarrierProfileDescription {
     return Intl.message(
-      'Carrier profile editing lives here.',
+      'Update your carrier contact and company details.',
       name: 'editCarrierProfileDescription',
       desc: '',
       args: [],
@@ -969,10 +1252,10 @@ class S {
     );
   }
 
-  /// `Shipper profile editing lives here.`
+  /// `Update your shipper contact details.`
   String get editShipperProfileDescription {
     return Intl.message(
-      'Shipper profile editing lives here.',
+      'Update your shipper contact details.',
       name: 'editShipperProfileDescription',
       desc: '',
       args: [],
@@ -1039,10 +1322,10 @@ class S {
     );
   }
 
-  /// `Generated invoice and receipt access stays deep-linkable above the shell.`
+  /// `Open generated invoices and receipts from a secure shared route.`
   String get generatedDocumentViewerDescription {
     return Intl.message(
-      'Generated invoice and receipt access stays deep-linkable above the shell.',
+      'Open generated invoices and receipts from a secure shared route.',
       name: 'generatedDocumentViewerDescription',
       desc: '',
       args: [],
@@ -1114,10 +1397,10 @@ class S {
     return Intl.message('Loading', name: 'loadingTitle', desc: '', args: []);
   }
 
-  /// `Global maintenance messaging lives here.`
+  /// `FleetFill is temporarily unavailable while maintenance is in progress.`
   String get maintenanceDescription {
     return Intl.message(
-      'Global maintenance messaging lives here.',
+      'FleetFill is temporarily unavailable while maintenance is in progress.',
       name: 'maintenanceDescription',
       desc: '',
       args: [],
@@ -1234,10 +1517,10 @@ class S {
     );
   }
 
-  /// `Notification details stay deep-linkable without becoming a tab.`
+  /// `Review the full details for this notification.`
   String get notificationDetailDescription {
     return Intl.message(
-      'Notification details stay deep-linkable without becoming a tab.',
+      'Review the full details for this notification.',
       name: 'notificationDetailDescription',
       desc: '',
       args: [],
@@ -1254,10 +1537,10 @@ class S {
     );
   }
 
-  /// `Shared notification history opens above the role shells.`
+  /// `Review recent alerts, booking updates, and operational reminders.`
   String get notificationsCenterDescription {
     return Intl.message(
-      'Shared notification history opens above the role shells.',
+      'Review recent alerts, booking updates, and operational reminders.',
       name: 'notificationsCenterDescription',
       desc: '',
       args: [],
@@ -1319,10 +1602,10 @@ class S {
     );
   }
 
-  /// `One-off trip detail routes stay deep-linkable above the shell.`
+  /// `Review this one-off trip before booking or operational follow-up.`
   String get oneOffTripDetailDescription {
     return Intl.message(
-      'One-off trip detail routes stay deep-linkable above the shell.',
+      'Review this one-off trip before booking or operational follow-up.',
       name: 'oneOffTripDetailDescription',
       desc: '',
       args: [],
@@ -1419,11 +1702,21 @@ class S {
     );
   }
 
-  /// `Carrier setup stays lean now, and verification details will continue in the next phase.`
+  /// `Add your carrier details now, then upload the required verification documents from your profile.`
   String get profileCarrierVerificationHint {
     return Intl.message(
-      'Carrier setup stays lean now, and verification details will continue in the next phase.',
+      'Add your carrier details now, then upload the required verification documents from your profile.',
       name: 'profileCarrierVerificationHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile verification documents`
+  String get profileVerificationDocumentsTitle {
+    return Intl.message(
+      'Profile verification documents',
+      name: 'profileVerificationDocumentsTitle',
       desc: '',
       args: [],
     );
@@ -1459,10 +1752,10 @@ class S {
     );
   }
 
-  /// `Role-aware shipper/carrier profile completion stays in one guided flow.`
+  /// `Complete the required profile details before using operational features.`
   String get profileSetupDescription {
     return Intl.message(
-      'Role-aware shipper/carrier profile completion stays in one guided flow.',
+      'Complete the required profile details before using operational features.',
       name: 'profileSetupDescription',
       desc: '',
       args: [],
@@ -1499,10 +1792,10 @@ class S {
     );
   }
 
-  /// `Private proof viewing belongs in one secure shared route.`
+  /// `Open this proof from a secure shared route when access is ready.`
   String get proofViewerDescription {
     return Intl.message(
-      'Private proof viewing belongs in one secure shared route.',
+      'Open this proof from a secure shared route when access is ready.',
       name: 'proofViewerDescription',
       desc: '',
       args: [],
@@ -1689,10 +1982,10 @@ class S {
     );
   }
 
-  /// `Signed out.`
+  /// `You have been signed out.`
   String get settingsSignedOutMessage {
     return Intl.message(
-      'Signed out.',
+      'You have been signed out.',
       name: 'settingsSignedOutMessage',
       desc: '',
       args: [],
@@ -1939,10 +2232,10 @@ class S {
     );
   }
 
-  /// `Minimum supported version gating lives here.`
+  /// `Update FleetFill to continue with the latest supported version.`
   String get updateRequiredDescription {
     return Intl.message(
-      'Minimum supported version gating lives here.',
+      'Update FleetFill to continue with the latest supported version.',
       name: 'updateRequiredDescription',
       desc: '',
       args: [],
@@ -1979,6 +2272,76 @@ class S {
     );
   }
 
+  /// `Capacity volume (m3)`
+  String get vehicleCapacityVolumeLabel {
+    return Intl.message(
+      'Capacity volume (m3)',
+      name: 'vehicleCapacityVolumeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Capacity weight (kg)`
+  String get vehicleCapacityWeightLabel {
+    return Intl.message(
+      'Capacity weight (kg)',
+      name: 'vehicleCapacityWeightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add vehicle`
+  String get vehicleCreateAction {
+    return Intl.message(
+      'Add vehicle',
+      name: 'vehicleCreateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add vehicle`
+  String get vehicleCreateTitle {
+    return Intl.message(
+      'Add vehicle',
+      name: 'vehicleCreateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle added.`
+  String get vehicleCreatedMessage {
+    return Intl.message(
+      'Vehicle added.',
+      name: 'vehicleCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete vehicle`
+  String get vehicleDeleteAction {
+    return Intl.message(
+      'Delete vehicle',
+      name: 'vehicleDeleteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle removed.`
+  String get vehicleDeletedMessage {
+    return Intl.message(
+      'Vehicle removed.',
+      name: 'vehicleDeletedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vehicle details, documents, and verification status appear here.`
   String get vehicleDetailDescription {
     return Intl.message(
@@ -1999,6 +2362,96 @@ class S {
     );
   }
 
+  /// `Edit vehicle`
+  String get vehicleEditTitle {
+    return Intl.message(
+      'Edit vehicle',
+      name: 'vehicleEditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep vehicle data current so route and verification flows stay valid.`
+  String get vehicleEditorDescription {
+    return Intl.message(
+      'Keep vehicle data current so route and verification flows stay valid.',
+      name: 'vehicleEditorDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Plate number`
+  String get vehiclePlateLabel {
+    return Intl.message(
+      'Plate number',
+      name: 'vehiclePlateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a number greater than zero.`
+  String get vehiclePositiveNumberMessage {
+    return Intl.message(
+      'Enter a number greater than zero.',
+      name: 'vehiclePositiveNumberMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle verification needs attention: {reason}`
+  String vehicleVerificationRejectedBanner(Object reason) {
+    return Intl.message(
+      'Vehicle verification needs attention: $reason',
+      name: 'vehicleVerificationRejectedBanner',
+      desc: '',
+      args: [reason],
+    );
+  }
+
+  /// `Save vehicle`
+  String get vehicleSaveAction {
+    return Intl.message(
+      'Save vehicle',
+      name: 'vehicleSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle updated.`
+  String get vehicleSavedMessage {
+    return Intl.message(
+      'Vehicle updated.',
+      name: 'vehicleSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle summary`
+  String get vehicleSummaryTitle {
+    return Intl.message(
+      'Vehicle summary',
+      name: 'vehicleSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle type`
+  String get vehicleTypeLabel {
+    return Intl.message(
+      'Vehicle type',
+      name: 'vehicleTypeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vehicles remain under the carrier profile branch.`
   String get vehiclesDescription {
     return Intl.message(
@@ -2009,9 +2462,179 @@ class S {
     );
   }
 
+  /// `Add a vehicle before you publish capacity or complete full verification.`
+  String get vehiclesEmptyMessage {
+    return Intl.message(
+      'Add a vehicle before you publish capacity or complete full verification.',
+      name: 'vehiclesEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vehicles`
   String get vehiclesTitle {
     return Intl.message('Vehicles', name: 'vehiclesTitle', desc: '', args: []);
+  }
+
+  /// `Vehicle verification documents`
+  String get vehicleVerificationDocumentsTitle {
+    return Intl.message(
+      'Vehicle verification documents',
+      name: 'vehicleVerificationDocumentsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Driver identity or license`
+  String get verificationDocumentDriverIdentityLabel {
+    return Intl.message(
+      'Driver identity or license',
+      name: 'verificationDocumentDriverIdentityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No file uploaded yet.`
+  String get verificationDocumentMissingMessage {
+    return Intl.message(
+      'No file uploaded yet.',
+      name: 'verificationDocumentMissingMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review the rejection reason and upload a replacement.`
+  String get verificationDocumentNeedsAttentionMessage {
+    return Intl.message(
+      'Review the rejection reason and upload a replacement.',
+      name: 'verificationDocumentNeedsAttentionMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secure document access prepared.`
+  String get verificationDocumentOpenPreparedMessage {
+    return Intl.message(
+      'Secure document access prepared.',
+      name: 'verificationDocumentOpenPreparedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uploaded and waiting for admin review.`
+  String get verificationDocumentPendingMessage {
+    return Intl.message(
+      'Uploaded and waiting for admin review.',
+      name: 'verificationDocumentPendingMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rejected: {reason}`
+  String verificationDocumentRejectedMessage(Object reason) {
+    return Intl.message(
+      'Rejected: $reason',
+      name: 'verificationDocumentRejectedMessage',
+      desc: '',
+      args: [reason],
+    );
+  }
+
+  /// `Verification document replaced.`
+  String get verificationDocumentReplacedMessage {
+    return Intl.message(
+      'Verification document replaced.',
+      name: 'verificationDocumentReplacedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transport license`
+  String get verificationDocumentTransportLicenseLabel {
+    return Intl.message(
+      'Transport license',
+      name: 'verificationDocumentTransportLicenseLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Truck technical inspection`
+  String get verificationDocumentTruckInspectionLabel {
+    return Intl.message(
+      'Truck technical inspection',
+      name: 'verificationDocumentTruckInspectionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Truck insurance`
+  String get verificationDocumentTruckInsuranceLabel {
+    return Intl.message(
+      'Truck insurance',
+      name: 'verificationDocumentTruckInsuranceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Truck registration`
+  String get verificationDocumentTruckRegistrationLabel {
+    return Intl.message(
+      'Truck registration',
+      name: 'verificationDocumentTruckRegistrationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification document uploaded.`
+  String get verificationDocumentUploadedMessage {
+    return Intl.message(
+      'Verification document uploaded.',
+      name: 'verificationDocumentUploadedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verified and accepted.`
+  String get verificationDocumentVerifiedMessage {
+    return Intl.message(
+      'Verified and accepted.',
+      name: 'verificationDocumentVerifiedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Replace`
+  String get verificationReplaceAction {
+    return Intl.message(
+      'Replace',
+      name: 'verificationReplaceAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload`
+  String get verificationUploadAction {
+    return Intl.message(
+      'Upload',
+      name: 'verificationUploadAction',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Complete the required verification steps before continuing.`
@@ -2034,10 +2657,10 @@ class S {
     );
   }
 
-  /// `Arabic, French, and English selection belongs here.`
+  /// `Choose the language you want FleetFill to use.`
   String get languageSelectionDescription {
     return Intl.message(
-      'Arabic, French, and English selection belongs here.',
+      'Choose the language you want FleetFill to use.',
       name: 'languageSelectionDescription',
       desc: '',
       args: [],

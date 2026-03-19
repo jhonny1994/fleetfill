@@ -1,7 +1,7 @@
 {
   "@@locale": "fr",
   "appTitle": "FleetFill",
-  "adminAuditLogDescription": "Audit visibility for sensitive operations lives here.",
+  "adminAuditLogDescription": "Consultez les dernieres actions admin sensibles et leur resultat.",
   "adminAuditLogTitle": "Admin audit log",
   "adminDashboardDescription": "Operational backlog health, alerts, and quick counts live here.",
   "adminDashboardNavLabel": "Dashboard",
@@ -9,6 +9,30 @@
   "adminQueuesDescription": "Payments, verification, disputes, payouts, and email queues stay segmented inside one page.",
   "adminQueuesNavLabel": "Queues",
   "adminQueuesTitle": "Admin queues",
+  "adminVerificationApproveAction": "Approuver",
+  "adminVerificationApproveAllAction": "Tout approuver",
+  "adminVerificationApproveAllSuccess": "Le dossier de verification a ete approuve.",
+  "adminVerificationApprovedMessage": "Le document de verification a ete approuve.",
+  "adminVerificationAuditEmptyMessage": "Aucun element d'audit de verification recent.",
+  "adminVerificationAuditTitle": "Audit de verification",
+  "adminVerificationMissingDocumentsMessage": "Aucun document de verification n'a encore ete soumis.",
+  "adminVerificationPacketDescription": "Revisez ensemble les documents de profil et de vehicule avant d'ouvrir l'acces operationnel.",
+  "adminVerificationPacketTitle": "Dossier de verification",
+  "adminVerificationPendingDocumentsLabel": "Documents en attente",
+  "adminVerificationQueueEmptyMessage": "Aucun dossier de verification transporteur n'attend une revue.",
+  "adminVerificationQueueSummaryTitle": "Resume de la file de verification",
+  "adminVerificationQueueTitle": "File de verification transporteur",
+  "adminVerificationRejectAction": "Rejeter",
+  "adminVerificationRejectedMessage": "Le document de verification a ete rejete.",
+  "adminVerificationRejectReasonHint": "Ajoutez la raison que le transporteur doit voir.",
+  "adminVerificationRejectReasonTitle": "Motif du rejet",
+  "adminVerificationQueueItemSubtitle": "{documentCount} documents en attente sur {vehicleCount} vehicules",
+  "@adminVerificationQueueItemSubtitle": {
+    "placeholders": {
+      "documentCount": {},
+      "vehicleCount": {}
+    }
+  },
   "adminSettingsDescription": "Platform settings, maintenance mode, version policy, and monitoring summary live here.",
   "adminSettingsNavLabel": "Settings",
   "adminSettingsTitle": "Admin settings",
@@ -28,6 +52,7 @@
   "authEmailNotConfirmedMessage": "Confirmez votre e-mail avant de vous connecter.",
   "authGenericErrorMessage": "FleetFill n'a pas pu terminer cette action d'authentification.",
   "authGoogleAction": "Continuer avec Google",
+  "authGoogleUnavailableMessage": "La connexion Google n'est pas disponible dans cet environnement.",
   "authGoogleStartedMessage": "La connexion Google a commence. Revenez ici apres validation.",
   "authKeepSignedInLabel": "Rester connecte",
   "authHaveAccountCta": "Vous avez deja un compte ? Connectez-vous",
@@ -44,7 +69,7 @@
   "authPasswordResetInfoMessage": "FleetFill enverra un lien de reinitialisation a l'adresse e-mail du compte.",
   "authPasswordUpdatedMessage": "Votre mot de passe a ete mis a jour.",
   "authRequiredFieldMessage": "Ce champ est obligatoire.",
-  "authResetPasswordDescription": "Password reset confirmation lives here.",
+  "authResetPasswordDescription": "Definissez un nouveau mot de passe apres ouverture du lien de recuperation securise.",
   "authResetPasswordUnavailableMessage": "Ouvrez cet ecran depuis le lien de recuperation pour definir un nouveau mot de passe.",
   "authResetEmailSentMessage": "Les instructions de reinitialisation ont ete envoyees.",
   "authResetPasswordTitle": "Reset password",
@@ -57,7 +82,7 @@
   "authSignInAction": "Se connecter",
   "authSignInSuccess": "Connexion reussie.",
   "authSignInTitle": "Sign in",
-  "authSignUpDescription": "Lean account creation stays inside one auth shell.",
+  "authSignUpDescription": "Creez votre compte FleetFill pour expedier ou publier de la capacite.",
   "authSignUpTitle": "Create account",
   "authUpdatePasswordAction": "Mettre a jour le mot de passe",
   "authUserAlreadyRegisteredMessage": "Un compte existe deja pour cet e-mail.",
@@ -80,7 +105,24 @@
   "carrierHomeTitle": "Carrier home",
   "carrierProfileDescription": "Carrier verification status, payout reminders, and profile tools live here.",
   "carrierProfileNavLabel": "Profile",
+  "carrierProfileSectionTitle": "Carrier details",
+  "carrierProfileVerificationLabel": "Verification",
+  "carrierProfileVerificationPending": "Pending",
+  "carrierProfileVerificationRejected": "Rejected",
+  "carrierProfileVerificationVerified": "Verified",
   "carrierProfileTitle": "Carrier profile",
+  "carrierVerificationCenterDescription": "Telechargez et remplacez les documents de verification du profil ou du vehicule depuis un seul endroit.",
+  "carrierVerificationCenterTitle": "Centre de verification",
+  "carrierVerificationPendingBanner": "Votre dossier de verification est en cours de revue. Telechargez les documents manquants pour accelerer l'approbation.",
+  "carrierVerificationQueueHint": "Les exigences de verification et les documents manquants restent regroupes dans votre branche profil.",
+  "carrierVerificationRejectedBanner": "La verification demande une action : {reason}",
+  "@carrierVerificationRejectedBanner": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "carrierVerificationSummaryTitle": "Resume de verification",
+  "carrierVehiclesShortcutDescription": "Gerez les camions, telechargez les documents manquants et resolvez les blocages de verification.",
   "carrierPublicProfileDescription": "Public carrier reputation and trust cues live here.",
   "carrierPublicProfileTitle": "Carrier {carrierId}",
   "@carrierPublicProfileTitle": {
@@ -89,19 +131,21 @@
     }
   },
   "confirmLabel": "Confirmer",
-  "documentViewerDescription": "Private document viewing belongs in one secure shared route.",
+  "documentViewerDescription": "Ouvrez ce document dans un visualiseur securise lorsque l'acces est pret.",
+  "documentViewerOpenAction": "Ouvrir le document",
   "documentViewerTitle": "Document {documentId}",
+  "documentViewerUnavailableMessage": "L'acces securise au document est temporairement indisponible.",
   "@documentViewerTitle": {
     "placeholders": {
       "documentId": {}
     }
   },
-  "editCarrierProfileDescription": "Carrier profile editing lives here.",
+  "editCarrierProfileDescription": "Mettez a jour vos coordonnees et informations transporteur.",
   "editCarrierProfileTitle": "Edit carrier profile",
-  "editShipperProfileDescription": "Shipper profile editing lives here.",
+  "editShipperProfileDescription": "Mettez a jour vos coordonnees expediteur.",
   "editShipperProfileTitle": "Edit shipper profile",
   "errorTitle": "Un probleme est survenu",
-  "generatedDocumentViewerDescription": "Generated invoice and receipt access stays deep-linkable above the shell.",
+  "generatedDocumentViewerDescription": "Ouvrez les factures et recus generes depuis une route partagee securisee.",
   "generatedDocumentViewerTitle": "Generated document {documentId}",
   "@generatedDocumentViewerTitle": {
     "placeholders": {
@@ -111,7 +155,7 @@
   "forbiddenMessage": "This area is not available for your account.",
   "forbiddenTitle": "Access restricted",
   "forbiddenAdminStepUpMessage": "Re-authenticate recently before opening this sensitive admin surface.",
-  "languageSelectionDescription": "Arabic, French, and English selection belongs here.",
+  "languageSelectionDescription": "Choisissez la langue a utiliser dans FleetFill.",
   "languageSelectionCurrentMessage": "Langue actuelle : {languageCode}",
   "@languageSelectionCurrentMessage": {
     "placeholders": {
@@ -122,9 +166,9 @@
   "languageOptionEnglish": "Anglais",
   "languageOptionFrench": "Francais",
   "languageSelectionTitle": "Language selection",
-  "loadingMessage": "FleetFill is preparing your workspace.",
-  "loadingTitle": "Loading",
-  "maintenanceDescription": "Global maintenance messaging lives here.",
+  "loadingMessage": "FleetFill prepare votre espace de travail.",
+  "loadingTitle": "Chargement",
+  "maintenanceDescription": "FleetFill est temporairement indisponible pendant la maintenance.",
   "maintenanceTitle": "Maintenance mode",
   "mediaUploadPermissionDescription": "Guide the user back to media access when they need to upload proof or documents.",
   "mediaUploadPermissionTitle": "Media upload permission",
@@ -137,21 +181,21 @@
   "myShipmentsTitle": "My shipments",
   "noExactResultsMessage": "No exact route is available for this search yet.",
   "noExactResultsTitle": "No exact route found",
-  "notificationDetailDescription": "Notification details stay deep-linkable without becoming a tab.",
+  "notificationDetailDescription": "Consultez le detail complet de cette notification.",
   "notificationDetailTitle": "Notification {notificationId}",
   "@notificationDetailTitle": {
     "placeholders": {
       "notificationId": {}
     }
   },
-  "notificationsCenterDescription": "Shared notification history opens above the role shells.",
+  "notificationsCenterDescription": "Consultez les alertes recentes, les mises a jour de reservation et les rappels utiles.",
   "notificationsCenterTitle": "Notifications",
   "notificationsPermissionDescription": "Explain why tracking and booking updates matter before opening system settings.",
   "notificationsPermissionTitle": "Notifications permission",
   "notFoundMessage": "The requested page or entity could not be found.",
   "notFoundTitle": "Not found",
   "offlineMessage": "You are offline. Some actions are temporarily unavailable.",
-  "oneOffTripDetailDescription": "One-off trip detail routes stay deep-linkable above the shell.",
+  "oneOffTripDetailDescription": "Consultez ce trajet ponctuel avant reservation ou suivi operationnel.",
   "oneOffTripDetailTitle": "One-off trip {tripId}",
   "@oneOffTripDetailTitle": {
     "placeholders": {
@@ -166,15 +210,16 @@
   "phoneCompletionSaveAction": "Enregistrer le numero",
   "phoneCompletionSavedMessage": "Numero de telephone enregistre.",
   "phoneCompletionTitle": "Phone completion",
-  "profileSetupDescription": "Role-aware shipper/carrier profile completion stays in one guided flow.",
-  "profileCarrierVerificationHint": "La configuration transporteur reste legere pour l'instant. Les details de verification arrivent a la phase suivante.",
+  "profileVerificationDocumentsTitle": "Documents de verification du profil",
+  "profileSetupDescription": "Completez les informations requises du profil avant d'utiliser les fonctions operationnelles.",
+  "profileCarrierVerificationHint": "Renseignez d'abord vos informations transporteur, puis deposez les documents de verification requis depuis votre profil.",
   "profileCompanyNameLabel": "Nom de l'entreprise",
   "profileFullNameLabel": "Nom complet",
   "profilePhoneLabel": "Numero de telephone",
   "profileSetupSaveAction": "Enregistrer le profil",
   "profileSetupSavedMessage": "Les informations du profil ont ete enregistrees.",
   "profileSetupTitle": "Profile setup",
-  "proofViewerDescription": "Private proof viewing belongs in one secure shared route.",
+  "proofViewerDescription": "Ouvrez cette preuve depuis une route partagee securisee lorsque l'acces est pret.",
   "proofViewerTitle": "Proof {proofId}",
   "@proofViewerTitle": {
     "placeholders": {
@@ -182,34 +227,35 @@
     }
   },
   "retryLabel": "Retry",
-  "roleSelectionDescription": "One account selects one role before operational access begins.",
+  "roleSelectionDescription": "Choisissez un seul role pour ce compte avant de commencer les operations.",
   "roleSelectionCarrierDescription": "Publiez des trajets, gerez les reservations et suivez la verification.",
   "roleSelectionCarrierTitle": "Continuer comme transporteur",
   "roleSelectionShipperDescription": "Creez des expeditions, comparez les trajets exacts et suivez la livraison.",
   "roleSelectionShipperTitle": "Continuer comme expediteur",
-  "roleSelectionTitle": "Role selection",
-  "routeDetailDescription": "Shared route detail presentation sits above the role shells.",
+  "roleSelectionTitle": "Choix du role",
+  "routeDetailDescription": "Consultez les details de cette ligne avant reservation ou suivi.",
   "routeDetailTitle": "Route {routeId}",
   "@routeDetailTitle": {
     "placeholders": {
       "routeId": {}
     }
   },
-  "routeErrorMessage": "FleetFill could not open this route.",
+  "routeErrorMessage": "FleetFill n'a pas pu ouvrir cet ecran.",
   "searchTripsDescription": "The search form and exact-route results stay on one page with inline states.",
   "searchTripsNavLabel": "Search",
   "searchTripsTitle": "Search trips",
   "sampleBasePriceLabel": "Base price",
   "samplePlatformFeeLabel": "Platform fee",
   "sampleTotalLabel": "Total",
-  "settingsDescription": "Language, theme, support, and notification preferences stay inside shared settings.",
-  "settingsTitle": "Settings",
+  "settingsDescription": "Gerez la langue, le theme, le support et les preferences de notification.",
+  "settingsSignedOutMessage": "Votre session a ete fermee.",
+  "settingsTitle": "Parametres",
   "sharedScaffoldPreviewMessage": "Shared cards and shells stay consistent across role surfaces.",
   "sharedScaffoldPreviewTitle": "Shared foundation preview",
   "sampleBasePriceAmount": "DZD 12,500",
   "samplePlatformFeeAmount": "DZD 1,200",
   "sampleTotalAmount": "DZD 13,700",
-  "shipmentDetailDescription": "Shipment summary, items, and linked booking summary live here.",
+  "shipmentDetailDescription": "Consultez le resume de l'expedition, son contenu et la reservation associee.",
   "shipmentDetailTitle": "Shipment {shipmentId}",
   "@shipmentDetailTitle": {
     "placeholders": {
@@ -237,14 +283,57 @@
       "bookingId": {}
     }
   },
-  "updateRequiredDescription": "Minimum supported version gating lives here.",
+  "updateRequiredDescription": "Mettez FleetFill a jour pour continuer avec la version prise en charge.",
   "updateRequiredTitle": "Update required",
   "userDetailDescription": "Shipper and carrier specifics remain section-based inside one user detail view.",
   "userDetailTitle": "User detail",
+  "vehicleCapacityVolumeLabel": "Volume de capacite (m3)",
+  "vehicleCapacityWeightLabel": "Capacite de poids (kg)",
+  "vehicleCreateAction": "Ajouter un vehicule",
+  "vehicleCreateTitle": "Ajouter un vehicule",
+  "vehicleCreatedMessage": "Vehicule ajoute.",
+  "vehicleDeleteAction": "Supprimer le vehicule",
+  "vehicleDeletedMessage": "Vehicule supprime.",
   "vehicleDetailDescription": "Vehicle details, documents, and verification status appear here.",
   "vehicleDetailTitle": "Vehicle detail",
+  "vehicleEditTitle": "Modifier le vehicule",
+  "vehicleEditorDescription": "Gardez les donnees du vehicule a jour pour conserver des flux de route et de verification valides.",
+  "vehiclePlateLabel": "Numero d'immatriculation",
+  "vehiclePositiveNumberMessage": "Entrez un nombre superieur a zero.",
+  "vehicleVerificationRejectedBanner": "La verification du vehicule demande une action : {reason}",
+  "@vehicleVerificationRejectedBanner": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "vehicleSaveAction": "Enregistrer le vehicule",
+  "vehicleSavedMessage": "Vehicule mis a jour.",
+  "vehicleSummaryTitle": "Resume du vehicule",
+  "vehicleTypeLabel": "Type de vehicule",
   "vehiclesDescription": "Vehicles remain under the carrier profile branch.",
+  "vehiclesEmptyMessage": "Ajoutez un vehicule avant de publier de la capacite ou de terminer la verification complete.",
   "vehiclesTitle": "Vehicles",
+  "vehicleVerificationDocumentsTitle": "Documents de verification du vehicule",
+  "verificationDocumentDriverIdentityLabel": "Identite ou permis du conducteur",
+  "verificationDocumentMissingMessage": "Aucun fichier telecharge pour le moment.",
+  "verificationDocumentNeedsAttentionMessage": "Consultez le motif du rejet puis telechargez un remplacement.",
+  "verificationDocumentOpenPreparedMessage": "L'acces securise au document est pret.",
+  "verificationDocumentPendingMessage": "Telecharge et en attente d'une revue admin.",
+  "verificationDocumentRejectedMessage": "Rejete : {reason}",
+  "@verificationDocumentRejectedMessage": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "verificationDocumentReplacedMessage": "Document de verification remplace.",
+  "verificationDocumentTransportLicenseLabel": "Licence de transport",
+  "verificationDocumentTruckInspectionLabel": "Controle technique du camion",
+  "verificationDocumentTruckInsuranceLabel": "Assurance du camion",
+  "verificationDocumentTruckRegistrationLabel": "Carte grise du camion",
+  "verificationDocumentUploadedMessage": "Document de verification telecharge.",
+  "verificationDocumentVerifiedMessage": "Verifie et accepte.",
+  "verificationReplaceAction": "Remplacer",
+  "verificationUploadAction": "Telecharger",
   "verificationRequiredMessage": "Complete the required verification steps before continuing.",
   "verificationRequiredTitle": "Verification required"
 }
