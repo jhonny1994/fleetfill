@@ -271,6 +271,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final s = S.of(context);
 
     return TextFormField(
       controller: widget.controller,
@@ -294,6 +295,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
         suffixIcon: widget.obscureText
             ? IconButton(
                 onPressed: () => setState(() => _obscureText = !_obscureText),
+                tooltip: _obscureText
+                    ? s.authShowPasswordAction
+                    : s.authHidePasswordAction,
                 icon: Icon(
                   _obscureText
                       ? Icons.visibility_off_outlined

@@ -6,6 +6,7 @@ import 'package:fleetfill/core/localization/localization.dart';
 import 'package:fleetfill/core/theme/design_tokens.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
 import 'package:fleetfill/features/profile/profile.dart';
+import 'package:fleetfill/shared/models/algeria_location.dart';
 import 'package:fleetfill/shared/providers/providers.dart';
 import 'package:fleetfill/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -231,38 +232,190 @@ class CarrierPublicProfileScreen extends ConsumerWidget {
   }
 }
 
-class RouteDetailScreen extends StatelessWidget {
+class RouteDetailScreen extends ConsumerWidget {
   const RouteDetailScreen({required this.routeId, super.key});
 
   final String routeId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final formattedRouteId = BidiFormatters.latinIdentifier(routeId);
+    final routeAsync = ref.watch(carrierRouteDetailProvider(routeId));
+    final communesAsync = ref.watch(communesProvider);
+    final vehiclesAsync = ref.watch(myVehiclesProvider);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.routeDetailTitle(formattedRouteId),
-      description: s.routeDetailDescription,
-      showSummary: false,
+      child: AppAsyncStateView<CarrierRoute?>(
+        value: routeAsync,
+        onRetry: () => ref.invalidate(carrierRouteDetailProvider(routeId)),
+        data: (route) {
+          if (route == null) {
+            return const AppNotFoundState();
+          }
+          if (communesAsync.isLoading || vehiclesAsync.isLoading) {
+            return const AppLoadingState();
+          }
+          final communeMap = {
+            for (final commune in communesAsync.requireValue) commune.id: commune,
+          };
+          final vehicleMap = {
+            for (final vehicle in vehiclesAsync.requireValue) vehicle.id: vehicle,
+          };
+
+          return ListView(
+            children: [
+              AppSectionHeader(
+                title: _sharedLaneLabel(
+                  context,
+                  communeMap,
+                  route.originCommuneId,
+                  route.destinationCommuneId,
+                ),
+                subtitle: s.routeDetailDescription,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ProfileSummaryCard(
+                title: s.myRoutesSummaryTitle,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.routeVehicleLabel,
+                    value: vehicleMap[route.vehicleId]?.plateNumber ??
+                        BidiFormatters.latinIdentifier(route.vehicleId),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routeDepartureTimeLabel,
+                    value: _sharedFormatSqlTime(context, route.defaultDepartureTime),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routeRecurringDaysLabel,
+                    value: _sharedFormatWeekdays(context, route.recurringDaysOfWeek),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routeEffectiveFromLabel,
+                    value: _sharedFormatDate(route.effectiveFrom),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routePricePerKgLabel,
+                    value:
+                        '${BidiFormatters.latinIdentifier(route.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.vehicleCapacityWeightLabel,
+                    value:
+                        '${BidiFormatters.latinIdentifier(route.totalCapacityKg.toStringAsFixed(0))} kg',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.vehicleCapacityVolumeLabel,
+                    value: route.totalCapacityVolumeM3 == null
+                        ? '-'
+                        : BidiFormatters.latinIdentifier(
+                            route.totalCapacityVolumeM3!.toStringAsFixed(1),
+                          ),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routeStatusLabel,
+                    value: route.isActive
+                        ? s.publicationActiveLabel
+                        : s.publicationInactiveLabel,
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
 
-class OneOffTripDetailScreen extends StatelessWidget {
+class OneOffTripDetailScreen extends ConsumerWidget {
   const OneOffTripDetailScreen({required this.tripId, super.key});
 
   final String tripId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final formattedTripId = BidiFormatters.latinIdentifier(tripId);
+    final tripAsync = ref.watch(oneOffTripDetailProvider(tripId));
+    final communesAsync = ref.watch(communesProvider);
+    final vehiclesAsync = ref.watch(myVehiclesProvider);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.oneOffTripDetailTitle(formattedTripId),
-      description: s.oneOffTripDetailDescription,
-      showSummary: false,
+      child: AppAsyncStateView<CarrierOneOffTrip?>(
+        value: tripAsync,
+        onRetry: () => ref.invalidate(oneOffTripDetailProvider(tripId)),
+        data: (trip) {
+          if (trip == null) {
+            return const AppNotFoundState();
+          }
+          if (communesAsync.isLoading || vehiclesAsync.isLoading) {
+            return const AppLoadingState();
+          }
+          final communeMap = {
+            for (final commune in communesAsync.requireValue) commune.id: commune,
+          };
+          final vehicleMap = {
+            for (final vehicle in vehiclesAsync.requireValue) vehicle.id: vehicle,
+          };
+
+          return ListView(
+            children: [
+              AppSectionHeader(
+                title: _sharedLaneLabel(
+                  context,
+                  communeMap,
+                  trip.originCommuneId,
+                  trip.destinationCommuneId,
+                ),
+                subtitle: s.oneOffTripDetailDescription,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ProfileSummaryCard(
+                title: s.myRoutesSummaryTitle,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.routeVehicleLabel,
+                    value: vehicleMap[trip.vehicleId]?.plateNumber ??
+                        BidiFormatters.latinIdentifier(trip.vehicleId),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.oneOffTripDepartureLabel,
+                    value: '${_sharedFormatDate(trip.departureAt)} • ${TimeOfDay.fromDateTime(trip.departureAt).format(context)}',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routePricePerKgLabel,
+                    value:
+                        '${BidiFormatters.latinIdentifier(trip.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.vehicleCapacityWeightLabel,
+                    value:
+                        '${BidiFormatters.latinIdentifier(trip.totalCapacityKg.toStringAsFixed(0))} kg',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.vehicleCapacityVolumeLabel,
+                    value: trip.totalCapacityVolumeM3 == null
+                        ? '-'
+                        : BidiFormatters.latinIdentifier(
+                            trip.totalCapacityVolumeM3!.toStringAsFixed(1),
+                          ),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routeStatusLabel,
+                    value: trip.isActive
+                        ? s.publicationActiveLabel
+                        : s.publicationInactiveLabel,
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -381,4 +534,38 @@ class GeneratedDocumentViewerScreen extends StatelessWidget {
       showSummary: false,
     );
   }
+}
+
+String _sharedLaneLabel(
+  BuildContext context,
+  Map<int, AlgeriaCommune> communeMap,
+  int originId,
+  int destinationId,
+) {
+  final locale = Localizations.localeOf(context);
+  final origin = communeMap[originId]?.displayName(locale) ??
+      BidiFormatters.latinIdentifier(originId.toString());
+  final destination = communeMap[destinationId]?.displayName(locale) ??
+      BidiFormatters.latinIdentifier(destinationId.toString());
+  return '$origin -> $destination';
+}
+
+String _sharedFormatDate(DateTime value) {
+  return BidiFormatters.latinIdentifier(
+    '${value.year}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}',
+  );
+}
+
+String _sharedFormatSqlTime(BuildContext context, String value) {
+  final parts = value.split(':');
+  final time = TimeOfDay(
+    hour: int.tryParse(parts.isEmpty ? '' : parts[0]) ?? 0,
+    minute: int.tryParse(parts.length > 1 ? parts[1] : '') ?? 0,
+  );
+  return time.format(context);
+}
+
+String _sharedFormatWeekdays(BuildContext context, List<int> weekdays) {
+  final labels = MaterialLocalizations.of(context).narrowWeekdays;
+  return weekdays.map((day) => labels[day]).join(', ');
 }

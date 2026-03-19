@@ -22,7 +22,11 @@ class AppAsyncStateView<T> extends StatelessWidget {
       data: data,
       loading: () => loading ?? const AppLoadingState(),
       error: (error, stackTrace) => AppErrorState(
-        error: AppError(code: 'async_error', message: error.toString()),
+        error: AppError(
+          code: 'async_error',
+          message: mapAppErrorMessage(S.of(context), error),
+          technicalDetails: stackTrace.toString(),
+        ),
         onRetry: onRetry,
       ),
     );

@@ -1,3 +1,4 @@
+export { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
 
 export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue }

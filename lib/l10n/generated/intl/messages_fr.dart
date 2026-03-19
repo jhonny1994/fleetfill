@@ -136,6 +136,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminVerificationRejectedMessage": MessageLookupByLibrary.simpleMessage(
       "Le document de verification a ete rejete.",
     ),
+    "appGenericErrorMessage": MessageLookupByLibrary.simpleMessage(
+      "FleetFill n\'a pas pu terminer cette action pour le moment.",
+    ),
     "appTitle": MessageLookupByLibrary.simpleMessage("FleetFill"),
     "authAccountCreatedMessage": MessageLookupByLibrary.simpleMessage(
       "Votre compte a ete cree. Continuez en vous connectant.",
@@ -189,6 +192,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authHaveAccountCta": MessageLookupByLibrary.simpleMessage(
       "Vous avez deja un compte ? Connectez-vous",
+    ),
+    "authHidePasswordAction": MessageLookupByLibrary.simpleMessage(
+      "Masquer le mot de passe",
     ),
     "authInvalidCredentialsMessage": MessageLookupByLibrary.simpleMessage(
       "Verifiez votre e-mail et votre mot de passe, puis reessayez.",
@@ -247,6 +253,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authSessionExpiredTitle": MessageLookupByLibrary.simpleMessage(
       "Session expiree",
+    ),
+    "authShowPasswordAction": MessageLookupByLibrary.simpleMessage(
+      "Afficher le mot de passe",
     ),
     "authSignInAction": MessageLookupByLibrary.simpleMessage("Se connecter"),
     "authSignInDescription": MessageLookupByLibrary.simpleMessage(
@@ -384,6 +393,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Language selection",
     ),
+    "loadMoreLabel": MessageLookupByLibrary.simpleMessage("Charger plus"),
     "loadingMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill prepare votre espace de travail.",
     ),
@@ -403,11 +413,56 @@ class MessageLookup extends MessageLookupByLibrary {
     "moneySummaryTitle": MessageLookupByLibrary.simpleMessage(
       "Pricing summary",
     ),
+    "myRoutesActiveRoutesLabel": MessageLookupByLibrary.simpleMessage(
+      "Lignes recurrentes actives",
+    ),
+    "myRoutesActiveTripsLabel": MessageLookupByLibrary.simpleMessage(
+      "Trajets ponctuels actifs",
+    ),
+    "myRoutesAddAction": MessageLookupByLibrary.simpleMessage(
+      "Ajouter de la capacite",
+    ),
+    "myRoutesCreateRouteAction": MessageLookupByLibrary.simpleMessage(
+      "Ajouter une ligne recurrente",
+    ),
+    "myRoutesCreateTripAction": MessageLookupByLibrary.simpleMessage(
+      "Ajouter un trajet ponctuel",
+    ),
     "myRoutesDescription": MessageLookupByLibrary.simpleMessage(
       "Recurring routes and one-off trips stay grouped in one branch.",
     ),
+    "myRoutesEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Publiez une ligne recurrente ou un trajet ponctuel pour proposer de la capacite.",
+    ),
     "myRoutesNavLabel": MessageLookupByLibrary.simpleMessage("Routes"),
+    "myRoutesOneOffTab": MessageLookupByLibrary.simpleMessage(
+      "Trajets ponctuels",
+    ),
+    "myRoutesPublishedCapacityLabel": MessageLookupByLibrary.simpleMessage(
+      "Capacite publiee",
+    ),
+    "myRoutesRecurringTab": MessageLookupByLibrary.simpleMessage(
+      "Lignes recurrentes",
+    ),
+    "myRoutesReservedCapacityLabel": MessageLookupByLibrary.simpleMessage(
+      "Capacite reservee",
+    ),
+    "myRoutesRouteListTitle": MessageLookupByLibrary.simpleMessage(
+      "Lignes recurrentes",
+    ),
+    "myRoutesSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Resume de publication",
+    ),
     "myRoutesTitle": MessageLookupByLibrary.simpleMessage("My routes"),
+    "myRoutesTripListTitle": MessageLookupByLibrary.simpleMessage(
+      "Trajets ponctuels",
+    ),
+    "myRoutesUpcomingDeparturesLabel": MessageLookupByLibrary.simpleMessage(
+      "Departs a venir",
+    ),
+    "myRoutesUtilizationLabel": MessageLookupByLibrary.simpleMessage(
+      "Utilisation",
+    ),
     "myShipmentsDescription": MessageLookupByLibrary.simpleMessage(
       "Active, history, and draft shipment states stay inside this branch.",
     ),
@@ -442,14 +497,108 @@ class MessageLookup extends MessageLookupByLibrary {
     "offlineMessage": MessageLookupByLibrary.simpleMessage(
       "You are offline. Some actions are temporarily unavailable.",
     ),
+    "oneOffTripActivateAction": MessageLookupByLibrary.simpleMessage(
+      "Activer le trajet",
+    ),
+    "oneOffTripActivateConfirmationMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Activer ce trajet pour de nouvelles reservations ?",
+        ),
+    "oneOffTripActivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Trajet ponctuel active.",
+    ),
+    "oneOffTripCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "Ajouter un trajet ponctuel",
+    ),
+    "oneOffTripCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Trajet ponctuel ajoute.",
+    ),
+    "oneOffTripDeactivateAction": MessageLookupByLibrary.simpleMessage(
+      "Desactiver le trajet",
+    ),
+    "oneOffTripDeactivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Desactiver ce trajet pour de nouvelles reservations ? Les reservations existantes restent inchangees.",
+    ),
+    "oneOffTripDeactivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Trajet ponctuel desactive.",
+    ),
+    "oneOffTripDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Supprimer le trajet",
+    ),
+    "oneOffTripDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "Ce trajet ne peut pas etre supprime car il a deja des reservations.",
+    ),
+    "oneOffTripDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Supprimer ce trajet ponctuel de FleetFill ?",
+    ),
+    "oneOffTripDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "Trajet ponctuel supprime.",
+    ),
+    "oneOffTripDepartureLabel": MessageLookupByLibrary.simpleMessage("Depart"),
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez ce trajet ponctuel avant reservation ou suivi operationnel.",
     ),
     "oneOffTripDetailTitle": m8,
+    "oneOffTripEditTitle": MessageLookupByLibrary.simpleMessage(
+      "Modifier le trajet ponctuel",
+    ),
+    "oneOffTripEditorDescription": MessageLookupByLibrary.simpleMessage(
+      "Publiez un trajet date avec vehicule, ligne, depart et capacite.",
+    ),
+    "oneOffTripSaveAction": MessageLookupByLibrary.simpleMessage(
+      "Enregistrer le trajet",
+    ),
+    "oneOffTripSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Trajet ponctuel mis a jour.",
+    ),
     "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
       "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
     ),
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment flow"),
+    "payoutAccountAddAction": MessageLookupByLibrary.simpleMessage(
+      "Ajouter un compte de versement",
+    ),
+    "payoutAccountDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Supprimer le compte",
+    ),
+    "payoutAccountDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "Ce compte ne peut pas etre supprime pour le moment.",
+    ),
+    "payoutAccountDeleteConfirmationMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Supprimer ce compte de versement de FleetFill ?",
+        ),
+    "payoutAccountDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "Compte de versement supprime.",
+    ),
+    "payoutAccountEditAction": MessageLookupByLibrary.simpleMessage(
+      "Modifier le compte",
+    ),
+    "payoutAccountHolderLabel": MessageLookupByLibrary.simpleMessage(
+      "Nom du titulaire",
+    ),
+    "payoutAccountIdentifierLabel": MessageLookupByLibrary.simpleMessage(
+      "Numero ou identifiant du compte",
+    ),
+    "payoutAccountInstitutionLabel": MessageLookupByLibrary.simpleMessage(
+      "Banque ou nom CCP",
+    ),
+    "payoutAccountSaveAction": MessageLookupByLibrary.simpleMessage(
+      "Enregistrer le compte",
+    ),
+    "payoutAccountSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Compte de versement enregistre.",
+    ),
+    "payoutAccountTypeBankLabel": MessageLookupByLibrary.simpleMessage(
+      "Virement bancaire",
+    ),
+    "payoutAccountTypeCcpLabel": MessageLookupByLibrary.simpleMessage("CCP"),
+    "payoutAccountTypeDahabiaLabel": MessageLookupByLibrary.simpleMessage(
+      "Dahabia",
+    ),
+    "payoutAccountTypeLabel": MessageLookupByLibrary.simpleMessage(
+      "Rail de versement",
+    ),
     "payoutAccountsDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier payout accounts stay grouped under the profile branch.",
     ),
@@ -468,6 +617,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneCompletionTitle": MessageLookupByLibrary.simpleMessage(
       "Phone completion",
     ),
+    "pricePerKgUnitLabel": MessageLookupByLibrary.simpleMessage("DZD/kg"),
     "profileCarrierVerificationHint": MessageLookupByLibrary.simpleMessage(
       "Renseignez d\'abord vos informations transporteur, puis deposez les documents de verification requis depuis votre profil.",
     ),
@@ -495,6 +645,41 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ouvrez cette preuve depuis une route partagee securisee lorsque l\'acces est pret.",
     ),
     "proofViewerTitle": m9,
+    "publicationActiveLabel": MessageLookupByLibrary.simpleMessage("Actif"),
+    "publicationEffectiveDateFutureMessage": MessageLookupByLibrary.simpleMessage(
+      "Choisissez une date et une heure d\'effet egales ou posterieures a maintenant.",
+    ),
+    "publicationInactiveLabel": MessageLookupByLibrary.simpleMessage("Inactif"),
+    "publicationNoRevisionsMessage": MessageLookupByLibrary.simpleMessage(
+      "Aucune revision de ligne n\'est encore enregistree.",
+    ),
+    "publicationRevisionHistoryTitle": MessageLookupByLibrary.simpleMessage(
+      "Historique des revisions",
+    ),
+    "publicationSameLaneErrorMessage": MessageLookupByLibrary.simpleMessage(
+      "L\'origine et la destination doivent etre differentes.",
+    ),
+    "publicationSearchCommunesHint": MessageLookupByLibrary.simpleMessage(
+      "Rechercher une commune",
+    ),
+    "publicationSelectValueAction": MessageLookupByLibrary.simpleMessage(
+      "Selectionner",
+    ),
+    "publicationVehicleUnavailableMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Choisissez un de vos vehicules disponibles pour cette publication.",
+        ),
+    "publicationVerifiedCarrierRequiredMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Terminez la verification transporteur avant de publier de la capacite.",
+        ),
+    "publicationVerifiedVehicleRequiredMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Choisissez un vehicule verifie avant de publier de la capacite.",
+        ),
+    "publicationWeekdaysRequiredMessage": MessageLookupByLibrary.simpleMessage(
+      "Selectionnez au moins un jour de depart.",
+    ),
     "retryLabel": MessageLookupByLibrary.simpleMessage("Retry"),
     "roleSelectionCarrierDescription": MessageLookupByLibrary.simpleMessage(
       "Publiez des trajets, gerez les reservations et suivez la verification.",
@@ -512,12 +697,84 @@ class MessageLookup extends MessageLookupByLibrary {
       "Continuer comme expediteur",
     ),
     "roleSelectionTitle": MessageLookupByLibrary.simpleMessage("Choix du role"),
+    "routeActivateAction": MessageLookupByLibrary.simpleMessage(
+      "Activer la ligne",
+    ),
+    "routeActivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Activer cette ligne pour de nouvelles reservations ?",
+    ),
+    "routeActivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Ligne activee.",
+    ),
+    "routeCreateTitle": MessageLookupByLibrary.simpleMessage(
+      "Ajouter une ligne recurrente",
+    ),
+    "routeCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Ligne recurrente ajoutee.",
+    ),
+    "routeDeactivateAction": MessageLookupByLibrary.simpleMessage(
+      "Desactiver la ligne",
+    ),
+    "routeDeactivateConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Desactiver cette ligne pour de nouvelles reservations ? Les reservations existantes restent inchangées.",
+    ),
+    "routeDeactivatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Ligne desactivee.",
+    ),
+    "routeDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Supprimer la ligne",
+    ),
+    "routeDeleteBlockedMessage": MessageLookupByLibrary.simpleMessage(
+      "Cette ligne ne peut pas etre supprimee car elle a deja des reservations.",
+    ),
+    "routeDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Supprimer cette ligne recurrente de FleetFill ?",
+    ),
+    "routeDeletedMessage": MessageLookupByLibrary.simpleMessage(
+      "Ligne recurrente supprimee.",
+    ),
+    "routeDepartureTimeLabel": MessageLookupByLibrary.simpleMessage(
+      "Heure de depart par defaut",
+    ),
+    "routeDestinationLabel": MessageLookupByLibrary.simpleMessage(
+      "Commune de destination",
+    ),
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez les details de cette ligne avant reservation ou suivi.",
     ),
     "routeDetailTitle": m10,
+    "routeEditTitle": MessageLookupByLibrary.simpleMessage(
+      "Modifier la ligne recurrente",
+    ),
+    "routeEditorDescription": MessageLookupByLibrary.simpleMessage(
+      "Publiez une ligne recurrente avec vehicule, horaire et capacite.",
+    ),
+    "routeEffectiveFromLabel": MessageLookupByLibrary.simpleMessage(
+      "Effective a partir du",
+    ),
     "routeErrorMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill n\'a pas pu ouvrir cet ecran.",
+    ),
+    "routeOriginLabel": MessageLookupByLibrary.simpleMessage(
+      "Commune d\'origine",
+    ),
+    "routePricePerKgLabel": MessageLookupByLibrary.simpleMessage(
+      "Prix par kg (DZD)",
+    ),
+    "routeRecurringDaysLabel": MessageLookupByLibrary.simpleMessage(
+      "Jours recurrents",
+    ),
+    "routeSaveAction": MessageLookupByLibrary.simpleMessage(
+      "Enregistrer la ligne",
+    ),
+    "routeSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Ligne recurrente mise a jour.",
+    ),
+    "routeStatusLabel": MessageLookupByLibrary.simpleMessage(
+      "Statut de publication",
+    ),
+    "routeVehicleLabel": MessageLookupByLibrary.simpleMessage(
+      "Vehicule assigne",
     ),
     "sampleBasePriceAmount": MessageLookupByLibrary.simpleMessage("DZD 12,500"),
     "sampleBasePriceLabel": MessageLookupByLibrary.simpleMessage("Base price"),
@@ -611,6 +868,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "vehicleDeleteAction": MessageLookupByLibrary.simpleMessage(
       "Supprimer le vehicule",
     ),
+    "vehicleDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
+      "Supprimer ce vehicule de FleetFill ?",
+    ),
     "vehicleDeletedMessage": MessageLookupByLibrary.simpleMessage(
       "Vehicule supprime.",
     ),
@@ -695,10 +955,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Remplacer",
     ),
     "verificationRequiredMessage": MessageLookupByLibrary.simpleMessage(
-      "Complete the required verification steps before continuing.",
+      "Terminez les etapes de verification requises avant de continuer.",
     ),
     "verificationRequiredTitle": MessageLookupByLibrary.simpleMessage(
-      "Verification required",
+      "Verification requise",
     ),
     "verificationUploadAction": MessageLookupByLibrary.simpleMessage(
       "Telecharger",
