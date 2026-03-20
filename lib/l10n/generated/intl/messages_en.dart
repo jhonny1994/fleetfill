@@ -74,11 +74,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminDashboardTitle": MessageLookupByLibrary.simpleMessage(
       "Admin dashboard",
     ),
+    "adminDisputesQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No disputes are waiting for review right now.",
+    ),
+    "adminDisputesQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "Dispute queue",
+    ),
     "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No payment proofs need review right now.",
     ),
     "adminPaymentProofQueueTitle": MessageLookupByLibrary.simpleMessage(
       "Payment proof review",
+    ),
+    "adminPayoutQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No payouts have been released yet.",
+    ),
+    "adminPayoutQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "Payout queue",
     ),
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
       "Review payments, verification, disputes, payouts, and email work from one queue hub.",

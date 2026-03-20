@@ -335,6 +335,13 @@ class BookingTrackingScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
+              if (canShipperConfirm && booking.bookingStatus == BookingStatus.deliveredPendingReview) ...[
+                OutlinedButton(
+                  onPressed: () => unawaited(_openDispute(context, ref, booking)),
+                  child: Text(s.bookingStatusDisputedLabel),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
               Text(
                 s.trackingTimelineTitle,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -443,6 +450,67 @@ class BookingTrackingScreen extends ConsumerWidget {
       AppFeedback.showSnackBar(context, s.deliveryConfirmedMessage);
     } on PostgrestException catch (error) {
       if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    }
+  }
+
+  Future<void> _openDispute(
+    BuildContext context,
+    WidgetRef ref,
+    BookingRecord booking,
+  ) async {
+    final s = S.of(context);
+    final reasonController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          left: AppSpacing.md,
+          right: AppSpacing.md,
+          top: AppSpacing.md,
+          bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(s.bookingStatusDisputedLabel, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.md),
+            AuthTextField(controller: reasonController, label: s.paymentProofRejectionReasonLabel),
+            const SizedBox(height: AppSpacing.md),
+            AuthTextField(controller: descriptionController, label: s.shipmentDescriptionLabel),
+            const SizedBox(height: AppSpacing.md),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(s.confirmLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (confirmed != true) {
+      reasonController.dispose();
+      descriptionController.dispose();
+      return;
+    }
+    try {
+      await ref.read(disputeRepositoryProvider).createDispute(
+            bookingId: booking.id,
+            reason: reasonController.text,
+            description: descriptionController.text,
+          );
+      ref
+        ..invalidate(bookingDetailProvider(booking.id))
+        ..invalidate(trackingEventsProvider(booking.id))
+        ..invalidate(openDisputesProvider);
+      if (!context.mounted) return;
+      AppFeedback.showSnackBar(context, s.bookingStatusDisputedLabel);
+    } on PostgrestException catch (error) {
+      if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    } finally {
+      reasonController.dispose();
+      descriptionController.dispose();
     }
   }
 }
