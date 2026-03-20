@@ -124,6 +124,8 @@ class AdminQueuesScreen extends ConsumerWidget {
     final packetsAsync = ref.watch(pendingVerificationPacketsProvider);
     final auditAsync = ref.watch(verificationAuditProvider);
     final paymentProofsAsync = ref.watch(pendingPaymentProofsProvider);
+    final disputesAsync = ref.watch(openDisputesProvider);
+    final payoutsAsync = ref.watch(payoutsProvider);
 
     return AppPageScaffold(
       title: s.adminQueuesTitle,
@@ -240,6 +242,90 @@ class AdminQueuesScreen extends ConsumerWidget {
                 technicalDetails: stackTrace.toString(),
               ),
               onRetry: () => ref.invalidate(pendingPaymentProofsProvider),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          Text(
+            s.adminDisputesQueueTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          disputesAsync.when(
+            data: (items) {
+              if (items.isEmpty) {
+                return AppEmptyState(
+                  title: s.adminDisputesQueueTitle,
+                  message: s.adminDisputesQueueEmptyMessage,
+                );
+              }
+              return Column(
+                children: items
+                    .map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: AppListCard(
+                          title: item.reason,
+                          subtitle: item.description ?? item.bookingId,
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: () => unawaited(
+                            showModalBottomSheet<void>(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => _DisputeResolutionSheet(item: item),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(growable: false),
+              );
+            },
+            loading: () => const AppLoadingState(),
+            error: (error, stackTrace) => AppErrorState(
+              error: AppError(
+                code: 'dispute_queue_failed',
+                message: mapAppErrorMessage(s, error),
+                technicalDetails: stackTrace.toString(),
+              ),
+              onRetry: () => ref.invalidate(openDisputesProvider),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          Text(
+            s.adminPayoutQueueTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          payoutsAsync.when(
+            data: (items) {
+              if (items.isEmpty) {
+                return AppEmptyState(
+                  title: s.adminPayoutQueueTitle,
+                  message: s.adminPayoutQueueEmptyMessage,
+                );
+              }
+              return Column(
+                children: items
+                    .map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: AppListCard(
+                          title: item.bookingId,
+                          subtitle: '${BidiFormatters.latinIdentifier(item.amountDzd.toStringAsFixed(0))} • ${item.status}',
+                        ),
+                      ),
+                    )
+                    .toList(growable: false),
+              );
+            },
+            loading: () => const AppLoadingState(),
+            error: (error, stackTrace) => AppErrorState(
+              error: AppError(
+                code: 'payout_queue_failed',
+                message: mapAppErrorMessage(s, error),
+                technicalDetails: stackTrace.toString(),
+              ),
+              onRetry: () => ref.invalidate(payoutsProvider),
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
@@ -796,6 +882,129 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
           );
       if (!mounted) return;
       AppFeedback.showSnackBar(context, s.paymentProofRejectedMessage);
+      Navigator.of(context).pop();
+    } on PostgrestException catch (error) {
+      if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+}
+
+class _DisputeResolutionSheet extends ConsumerStatefulWidget {
+  const _DisputeResolutionSheet({required this.item});
+
+  final DisputeRecord item;
+
+  @override
+  ConsumerState<_DisputeResolutionSheet> createState() => _DisputeResolutionSheetState();
+}
+
+class _DisputeResolutionSheetState extends ConsumerState<_DisputeResolutionSheet> {
+  final TextEditingController _refundAmountController = TextEditingController();
+  final TextEditingController _refundReasonController = TextEditingController();
+  final TextEditingController _externalReferenceController = TextEditingController();
+  final TextEditingController _resolutionNoteController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _refundAmountController.dispose();
+    _refundReasonController.dispose();
+    _externalReferenceController.dispose();
+    _resolutionNoteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    return Padding(
+      padding: EdgeInsets.only(
+        left: AppSpacing.md,
+        right: AppSpacing.md,
+        top: AppSpacing.md,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Text(s.adminDisputesQueueTitle, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.md),
+          ProfileSummaryCard(
+            title: widget.item.reason,
+            rows: [
+              ProfileSummaryRow(label: s.shipmentDescriptionLabel, value: widget.item.description ?? '-'),
+              ProfileSummaryRow(label: s.routeStatusLabel, value: widget.item.status),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(controller: _resolutionNoteController, label: s.paymentProofDecisionNoteLabel),
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(controller: _refundAmountController, label: s.paymentProofAmountLabel, keyboardType: const TextInputType.numberWithOptions(decimal: true)),
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(controller: _refundReasonController, label: s.paymentProofRejectionReasonLabel),
+          const SizedBox(height: AppSpacing.md),
+          AuthTextField(controller: _externalReferenceController, label: s.paymentProofVerifiedReferenceLabel),
+          const SizedBox(height: AppSpacing.lg),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _isSubmitting ? null : () => unawaited(_resolveComplete()),
+                  child: Text(s.bookingStatusCompletedLabel),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: FilledButton(
+                  onPressed: _isSubmitting ? null : () => unawaited(_resolveRefund()),
+                  child: Text(s.paymentStatusRefundedLabel),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _resolveComplete() async {
+    final s = S.of(context);
+    setState(() => _isSubmitting = true);
+    try {
+      await ref.read(adminDisputePayoutWorkflowControllerProvider).resolveDisputeComplete(
+            disputeId: widget.item.id,
+            resolutionNote: _resolutionNoteController.text,
+          );
+      if (!mounted) return;
+      AppFeedback.showSnackBar(context, s.bookingStatusCompletedLabel);
+      Navigator.of(context).pop();
+    } on PostgrestException catch (error) {
+      if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  Future<void> _resolveRefund() async {
+    final s = S.of(context);
+    final amount = double.tryParse(_refundAmountController.text.trim());
+    if (amount == null || amount <= 0 || _refundReasonController.text.trim().isEmpty) {
+      AppFeedback.showSnackBar(context, s.authRequiredFieldMessage);
+      return;
+    }
+    setState(() => _isSubmitting = true);
+    try {
+      await ref.read(adminDisputePayoutWorkflowControllerProvider).resolveDisputeRefund(
+            disputeId: widget.item.id,
+            refundAmountDzd: amount,
+            refundReason: _refundReasonController.text,
+            externalReference: _externalReferenceController.text,
+            resolutionNote: _resolutionNoteController.text,
+          );
+      if (!mounted) return;
+      AppFeedback.showSnackBar(context, s.paymentStatusRefundedLabel);
       Navigator.of(context).pop();
     } on PostgrestException catch (error) {
       if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));

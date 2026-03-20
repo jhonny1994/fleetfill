@@ -534,6 +534,12 @@
   "trackingEventCompletedLabel": "Terminee",
   "trackingEventCancelledLabel": "Annulee",
   "trackingEventDisputedLabel": "Contestee",
+  "adminPaymentProofQueueTitle": "Revue des preuves de paiement",
+  "adminPaymentProofQueueEmptyMessage": "Aucune preuve de paiement a revoir pour le moment.",
+  "adminDisputesQueueTitle": "File des litiges",
+  "adminDisputesQueueEmptyMessage": "Aucun litige n'attend de revue pour le moment.",
+  "adminPayoutQueueTitle": "File des versements",
+  "adminPayoutQueueEmptyMessage": "Aucun versement n'a encore ete libere.",
   "searchCarrierRatingLabel": "Note du transporteur",
   "searchResultTypeLabel": "Type de capacite"
   ,"bookingStatusPendingPaymentLabel": "En attente de paiement"

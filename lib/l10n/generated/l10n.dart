@@ -4617,6 +4617,46 @@ class S {
     );
   }
 
+  /// `Dispute queue`
+  String get adminDisputesQueueTitle {
+    return Intl.message(
+      'Dispute queue',
+      name: 'adminDisputesQueueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No disputes are waiting for review right now.`
+  String get adminDisputesQueueEmptyMessage {
+    return Intl.message(
+      'No disputes are waiting for review right now.',
+      name: 'adminDisputesQueueEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payout queue`
+  String get adminPayoutQueueTitle {
+    return Intl.message(
+      'Payout queue',
+      name: 'adminPayoutQueueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No payouts have been released yet.`
+  String get adminPayoutQueueEmptyMessage {
+    return Intl.message(
+      'No payouts have been released yet.',
+      name: 'adminPayoutQueueEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Carrier rating`
   String get searchCarrierRatingLabel {
     return Intl.message(

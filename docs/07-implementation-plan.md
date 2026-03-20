@@ -331,23 +331,32 @@ Phase 9 progress notes:
 
 ### Disputes
 
-- [ ] Build dispute creation flow from `delivered_pending_review`
+- [x] Build dispute creation flow from `delivered_pending_review`
 - [ ] Support evidence/notes attachment if included in scope
-- [ ] Build admin dispute review screen with booking, proof, tracking, and ledger context
-- [ ] Support dispute outcomes: complete, cancel, refund
-- [ ] Record all dispute outcomes in audit log and ledger where relevant
-- [ ] Build first-class dispute records with lifecycle, reason, notes, and resolution metadata
+- [x] Build admin dispute review screen with booking, proof, tracking, and ledger context
+- [x] Support dispute outcomes: complete, cancel, refund
+- [x] Record all dispute outcomes in audit log and ledger where relevant
+- [x] Build first-class dispute records with lifecycle, reason, notes, and resolution metadata
 
 ### Payouts
 
-- [ ] Build payout account CRUD for carriers
-- [ ] Validate only one active payout account is operationally used at a time
-- [ ] Build payout eligibility checks
-- [ ] Build payout release flow for admin/ops
-- [ ] Update `payment_status` to `released_to_carrier` when payout is completed
-- [ ] Generate payout receipt or payout statement document when applicable
-- [ ] Build first-class payout records with account snapshot, external reference, failure handling, and retry-safe operations
-- [ ] Build first-class refund records with external reference and processing lifecycle
+- [x] Build payout account CRUD for carriers
+- [x] Validate only one active payout account is operationally used at a time
+- [x] Build payout eligibility checks
+- [x] Build payout release flow for admin/ops
+- [x] Update `payment_status` to `released_to_carrier` when payout is completed
+- [x] Generate payout receipt or payout statement document when applicable
+- [x] Build first-class payout records with account snapshot, external reference, failure handling, and retry-safe operations
+- [x] Build first-class refund records with external reference and processing lifecycle
+
+Phase 10 progress notes:
+
+- shippers can now open disputes only from `delivered_pending_review`, which moves the booking into `disputed` and appends a user-visible tracking event
+- admins now have dispute-resolution paths for complete and refund outcomes, with booking state, ledger, and tracking updates handled on the server
+- refunds and payouts now use first-class records instead of relying on booking/payment status alone
+- payout release now snapshots the chosen payout account, blocks on open disputes, writes payout ledger entries, and generates a payout receipt record
+- the schema now enforces a single active payout account per carrier through a partial unique index
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql` and `test/dispute_payout_flow_contract_test.dart`
 
 ## Phase 11 - Ratings, Notifications, And Support
 

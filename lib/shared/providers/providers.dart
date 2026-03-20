@@ -58,6 +58,14 @@ final carrierBookingsProvider = FutureProvider<List<BookingRecord>>((ref) {
   return ref.read(bookingRepositoryProvider).fetchCarrierBookings();
 });
 
+final openDisputesProvider = FutureProvider<List<DisputeRecord>>((ref) {
+  return ref.read(disputeRepositoryProvider).fetchOpenDisputes();
+});
+
+final payoutsProvider = FutureProvider<List<PayoutRecord>>((ref) {
+  return ref.read(disputeRepositoryProvider).fetchPayouts();
+});
+
 final paymentProofsForBookingProvider =
     FutureProvider.autoDispose.family<List<PaymentProofRecord>, String>((
       ref,
