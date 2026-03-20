@@ -7,7 +7,8 @@ enum BookingStatus {
   deliveredPendingReview,
   completed,
   cancelled,
-  disputed;
+  disputed
+  ;
 
   static BookingStatus fromDatabase(Object? value) {
     return switch (value) {
@@ -31,7 +32,8 @@ enum PaymentStatus {
   secured,
   rejected,
   refunded,
-  releasedToCarrier;
+  releasedToCarrier
+  ;
 
   static PaymentStatus fromDatabase(Object? value) {
     return switch (value) {
@@ -42,6 +44,21 @@ enum PaymentStatus {
       'refunded' => PaymentStatus.refunded,
       'released_to_carrier' => PaymentStatus.releasedToCarrier,
       _ => PaymentStatus.unpaid,
+    };
+  }
+}
+
+enum GeneratedDocumentStatus {
+  pending,
+  ready,
+  failed
+  ;
+
+  static GeneratedDocumentStatus fromDatabase(Object? value) {
+    return switch (value) {
+      'ready' => GeneratedDocumentStatus.ready,
+      'failed' => GeneratedDocumentStatus.failed,
+      _ => GeneratedDocumentStatus.pending,
     };
   }
 }
@@ -222,6 +239,11 @@ class GeneratedDocumentRecord {
     required this.storagePath,
     required this.version,
     required this.generatedBy,
+    required this.status,
+    required this.contentType,
+    required this.byteSize,
+    required this.availableAt,
+    required this.failureReason,
     required this.createdAt,
   });
 
@@ -233,6 +255,11 @@ class GeneratedDocumentRecord {
       storagePath: (json['storage_path'] as String?)?.trim() ?? '',
       version: (json['version'] as num?)?.toInt() ?? 1,
       generatedBy: json['generated_by'] as String?,
+      status: GeneratedDocumentStatus.fromDatabase(json['status']),
+      contentType: (json['content_type'] as String?)?.trim(),
+      byteSize: (json['byte_size'] as num?)?.toInt(),
+      availableAt: DateTime.tryParse(json['available_at'] as String? ?? ''),
+      failureReason: (json['failure_reason'] as String?)?.trim(),
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
     );
   }
@@ -243,7 +270,18 @@ class GeneratedDocumentRecord {
   final String storagePath;
   final int version;
   final String? generatedBy;
+  final GeneratedDocumentStatus status;
+  final String? contentType;
+  final int? byteSize;
+  final DateTime? availableAt;
+  final String? failureReason;
   final DateTime? createdAt;
+
+  bool get isReady => status == GeneratedDocumentStatus.ready;
+
+  bool get isPending => status == GeneratedDocumentStatus.pending;
+
+  bool get isFailed => status == GeneratedDocumentStatus.failed;
 }
 
 class TrackingEventRecord {

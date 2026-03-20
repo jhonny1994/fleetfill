@@ -53,6 +53,14 @@ void main() {
       s.documentViewerUnavailableMessage,
     );
     expect(
+      mapAuthErrorMessage(s, 'generated_document_not_ready'),
+      s.generatedDocumentPendingMessage,
+    );
+    expect(
+      mapAuthErrorMessage(s, 'generated_document_failed'),
+      s.generatedDocumentFailedMessage,
+    );
+    expect(
       mapAuthErrorMessage(s, 'unknown failure code'),
       s.authGenericErrorMessage,
     );

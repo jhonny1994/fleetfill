@@ -1,7 +1,9 @@
 export { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
 
-export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue }
+export type JsonValue = string | number | boolean | null | JsonValue[] | {
+  [key: string]: JsonValue
+}
 
 export type OutboxJob = {
   id: string
@@ -76,7 +78,10 @@ export function inferDeliveryStatus(errorCode: string | null) {
   return 'soft_failed'
 }
 
-export function buildSubjectPreview(templateKey: string, payload: Record<string, JsonValue> | null) {
+export function buildSubjectPreview(
+  templateKey: string,
+  payload: Record<string, JsonValue> | null,
+) {
   const bookingReference = typeof payload?.booking_reference === 'string'
     ? payload.booking_reference
     : null
@@ -88,11 +93,21 @@ export function buildSubjectPreview(templateKey: string, payload: Record<string,
     case 'support_request_forwarded':
       return supportSubject == null ? 'Support request' : `Support request - ${supportSubject}`
     case 'booking_confirmed':
-      return bookingReference == null ? 'Booking confirmed' : `Booking confirmed - ${bookingReference}`
+      return bookingReference == null
+        ? 'Booking confirmed'
+        : `Booking confirmed - ${bookingReference}`
     case 'payment_proof_received':
-      return bookingReference == null ? 'Payment proof received' : `Payment proof received - ${bookingReference}`
+      return bookingReference == null
+        ? 'Payment proof received'
+        : `Payment proof received - ${bookingReference}`
     case 'payment_rejected':
-      return bookingReference == null ? 'Payment rejected' : `Payment rejected - ${bookingReference}`
+      return bookingReference == null
+        ? 'Payment rejected'
+        : `Payment rejected - ${bookingReference}`
+    case 'generated_document_available':
+      return bookingReference == null
+        ? 'Generated document available'
+        : `Generated document available - ${bookingReference}`
     default:
       return templateKey.replaceAll('_', ' ')
   }
@@ -106,7 +121,8 @@ export function computeRetryDelaySeconds(attemptCount: number) {
 export async function dispatchEmail(job: OutboxJob) {
   const provider = requiredEnv('TRANSACTIONAL_EMAIL_PROVIDER')
   const sender = requiredEnv('TRANSACTIONAL_EMAIL_FROM_EMAIL')
-  const senderName = Deno.env.get('TRANSACTIONAL_EMAIL_FROM_NAME')?.trim() || 'FleetFill'
+  const senderName = Deno.env.get('TRANSACTIONAL_EMAIL_FROM_NAME')?.trim() ||
+    'FleetFill'
 
   const shouldMockSend = isTruthyEnv('TRANSACTIONAL_EMAIL_MOCK_MODE')
   const payload = job.payload_snapshot ?? {}
@@ -121,26 +137,29 @@ export async function dispatchEmail(job: OutboxJob) {
   }
 
   const apiKey = requiredEnv('TRANSACTIONAL_EMAIL_PROVIDER_API_KEY')
-  const response = await fetch(requiredEnv('TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT'), {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      provider,
-      from: {
-        email: sender,
-        name: senderName,
+  const response = await fetch(
+    requiredEnv('TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT'),
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'content-type': 'application/json',
       },
-      to: [job.recipient_email],
-      template_key: job.template_key,
-      locale: normalizeSupportedLocale(job.locale),
-      subject_preview: subjectPreview,
-      payload,
-      dedupe_key: job.dedupe_key,
-    }),
-  })
+      body: JSON.stringify({
+        provider,
+        from: {
+          email: sender,
+          name: senderName,
+        },
+        to: [job.recipient_email],
+        template_key: job.template_key,
+        locale: normalizeSupportedLocale(job.locale),
+        subject_preview: subjectPreview,
+        payload,
+        dedupe_key: job.dedupe_key,
+      }),
+    },
+  )
 
   const responseText = await response.text()
   let responseBody: Record<string, JsonValue> = {}
