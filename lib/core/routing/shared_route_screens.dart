@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -113,13 +114,17 @@ class ShipmentDetailScreen extends ConsumerWidget {
             return AppErrorState(
               error: AppError(
                 code: 'shipment_detail_communes_failed',
-                message: mapAppErrorMessage(s, communesAsync.error ?? Exception('unknown')),
+                message: mapAppErrorMessage(
+                  s,
+                  communesAsync.error ?? Exception('unknown'),
+                ),
               ),
               onRetry: () => ref.invalidate(communesProvider),
             );
           }
           final communeMap = {
-            for (final commune in communesAsync.requireValue) commune.id: commune,
+            for (final commune in communesAsync.requireValue)
+              commune.id: commune,
           };
           return ListView(
             children: [
@@ -160,7 +165,8 @@ class ShipmentDetailScreen extends ConsumerWidget {
                     label: s.routeStatusLabel,
                     value: switch (shipment.status) {
                       ShipmentStatus.booked => s.shipmentStatusBookedLabel,
-                      ShipmentStatus.cancelled => s.shipmentStatusCancelledLabel,
+                      ShipmentStatus.cancelled =>
+                        s.shipmentStatusCancelledLabel,
                       ShipmentStatus.draft => s.shipmentStatusDraftLabel,
                     },
                   ),
@@ -224,11 +230,15 @@ class BookingDetailScreen extends ConsumerWidget {
                 rows: [
                   ProfileSummaryRow(
                     label: s.bookingTrackingNumberLabel,
-                    value: BidiFormatters.latinIdentifier(booking.trackingNumber),
+                    value: BidiFormatters.latinIdentifier(
+                      booking.trackingNumber,
+                    ),
                   ),
                   ProfileSummaryRow(
                     label: s.bookingPaymentReferenceLabel,
-                    value: BidiFormatters.latinIdentifier(booking.paymentReference),
+                    value: BidiFormatters.latinIdentifier(
+                      booking.paymentReference,
+                    ),
                   ),
                   ProfileSummaryRow(
                     label: s.routeStatusLabel,
@@ -248,12 +258,31 @@ class BookingDetailScreen extends ConsumerWidget {
               MoneySummaryCard(
                 title: s.bookingPricingBreakdownAction,
                 lines: [
-                  MoneySummaryLine(label: s.bookingBasePriceLabel, amount: _sharedMoney(s, booking.basePriceDzd)),
-                  MoneySummaryLine(label: s.bookingPlatformFeeLabel, amount: _sharedMoney(s, booking.platformFeeDzd)),
-                  MoneySummaryLine(label: s.bookingCarrierFeeLabel, amount: _sharedMoney(s, booking.carrierFeeDzd)),
-                  MoneySummaryLine(label: s.bookingInsuranceFeeLabel, amount: _sharedMoney(s, booking.insuranceFeeDzd)),
-                  MoneySummaryLine(label: s.bookingTaxFeeLabel, amount: _sharedMoney(s, booking.taxFeeDzd)),
-                  MoneySummaryLine(label: s.bookingTotalLabel, amount: _sharedMoney(s, booking.shipperTotalDzd), emphasis: true),
+                  MoneySummaryLine(
+                    label: s.bookingBasePriceLabel,
+                    amount: _sharedMoney(s, booking.basePriceDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingPlatformFeeLabel,
+                    amount: _sharedMoney(s, booking.platformFeeDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingCarrierFeeLabel,
+                    amount: _sharedMoney(s, booking.carrierFeeDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingInsuranceFeeLabel,
+                    amount: _sharedMoney(s, booking.insuranceFeeDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingTaxFeeLabel,
+                    amount: _sharedMoney(s, booking.taxFeeDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingTotalLabel,
+                    amount: _sharedMoney(s, booking.shipperTotalDzd),
+                    emphasis: true,
+                  ),
                 ],
               ),
               if (booking.paymentStatus == PaymentStatus.unpaid) ...[
@@ -296,8 +325,12 @@ class BookingTrackingScreen extends ConsumerWidget {
           if (booking == null) {
             return const AppNotFoundState();
           }
-          final canCarrierAdvance = auth?.role == AppUserRole.carrier && auth?.userId == booking.carrierId;
-          final canShipperConfirm = auth?.role == AppUserRole.shipper && auth?.userId == booking.shipperId;
+          final canCarrierAdvance =
+              auth?.role == AppUserRole.carrier &&
+              auth?.userId == booking.carrierId;
+          final canShipperConfirm =
+              auth?.role == AppUserRole.shipper &&
+              auth?.userId == booking.shipperId;
 
           return ListView(
             key: const PageStorageKey<String>('booking-tracking-screen'),
@@ -310,50 +343,83 @@ class BookingTrackingScreen extends ConsumerWidget {
               ProfileSummaryCard(
                 title: s.bookingReviewTitle,
                 rows: [
-                  ProfileSummaryRow(label: s.bookingTrackingNumberLabel, value: BidiFormatters.latinIdentifier(booking.trackingNumber)),
-                  ProfileSummaryRow(label: s.routeStatusLabel, value: _bookingStatusLabel(s, booking.bookingStatus)),
-                  ProfileSummaryRow(label: s.paymentFlowTitle, value: _paymentStatusLabel(s, booking.paymentStatus)),
+                  ProfileSummaryRow(
+                    label: s.bookingTrackingNumberLabel,
+                    value: BidiFormatters.latinIdentifier(
+                      booking.trackingNumber,
+                    ),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.routeStatusLabel,
+                    value: _bookingStatusLabel(s, booking.bookingStatus),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.paymentFlowTitle,
+                    value: _paymentStatusLabel(s, booking.paymentStatus),
+                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
-              if (canCarrierAdvance && booking.bookingStatus == BookingStatus.confirmed) ...[
+              if (canCarrierAdvance &&
+                  booking.bookingStatus == BookingStatus.confirmed) ...[
                 OutlinedButton(
-                  onPressed: () => unawaited(_recordMilestone(context, ref, booking, 'picked_up')),
+                  onPressed: () => unawaited(
+                    _recordMilestone(context, ref, booking, 'picked_up'),
+                  ),
                   child: Text(s.bookingStatusPickedUpLabel),
                 ),
                 const SizedBox(height: AppSpacing.sm),
               ],
-              if (canCarrierAdvance && booking.bookingStatus == BookingStatus.pickedUp) ...[
+              if (canCarrierAdvance &&
+                  booking.bookingStatus == BookingStatus.pickedUp) ...[
                 OutlinedButton(
-                  onPressed: () => unawaited(_recordMilestone(context, ref, booking, 'in_transit')),
+                  onPressed: () => unawaited(
+                    _recordMilestone(context, ref, booking, 'in_transit'),
+                  ),
                   child: Text(s.bookingStatusInTransitLabel),
                 ),
                 const SizedBox(height: AppSpacing.sm),
               ],
-              if (canCarrierAdvance && booking.bookingStatus == BookingStatus.inTransit) ...[
+              if (canCarrierAdvance &&
+                  booking.bookingStatus == BookingStatus.inTransit) ...[
                 OutlinedButton(
-                  onPressed: () => unawaited(_recordMilestone(context, ref, booking, 'delivered_pending_review')),
+                  onPressed: () => unawaited(
+                    _recordMilestone(
+                      context,
+                      ref,
+                      booking,
+                      'delivered_pending_review',
+                    ),
+                  ),
                   child: Text(s.bookingStatusDeliveredPendingReviewLabel),
                 ),
                 const SizedBox(height: AppSpacing.sm),
               ],
-              if (canShipperConfirm && booking.bookingStatus == BookingStatus.deliveredPendingReview) ...[
+              if (canShipperConfirm &&
+                  booking.bookingStatus ==
+                      BookingStatus.deliveredPendingReview) ...[
                 FilledButton(
-                  onPressed: () => unawaited(_confirmDelivery(context, ref, booking)),
+                  onPressed: () =>
+                      unawaited(_confirmDelivery(context, ref, booking)),
                   child: Text(s.deliveryConfirmAction),
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
-              if (canShipperConfirm && booking.bookingStatus == BookingStatus.deliveredPendingReview) ...[
+              if (canShipperConfirm &&
+                  booking.bookingStatus ==
+                      BookingStatus.deliveredPendingReview) ...[
                 OutlinedButton(
-                  onPressed: () => unawaited(_openDispute(context, ref, booking)),
+                  onPressed: () =>
+                      unawaited(_openDispute(context, ref, booking)),
                   child: Text(s.bookingStatusDisputedLabel),
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
-              if (canShipperConfirm && booking.bookingStatus == BookingStatus.completed) ...[
+              if (canShipperConfirm &&
+                  booking.bookingStatus == BookingStatus.completed) ...[
                 OutlinedButton(
-                  onPressed: () => unawaited(_openReview(context, ref, booking)),
+                  onPressed: () =>
+                      unawaited(_openReview(context, ref, booking)),
                   child: Text(s.ratingSubmitAction),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -373,10 +439,16 @@ class BookingTrackingScreen extends ConsumerWidget {
                         children: events
                             .map(
                               (event) => Padding(
-                                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.sm,
+                                ),
                                 child: AppListCard(
-                                  title: _trackingEventLabel(s, event.eventType),
-                                  subtitle: event.note == null || event.note!.isEmpty
+                                  title: _trackingEventLabel(
+                                    s,
+                                    event.eventType,
+                                  ),
+                                  subtitle:
+                                      event.note == null || event.note!.isEmpty
                                       ? _sharedFormatDate(event.recordedAt)
                                       : '${_sharedFormatDate(event.recordedAt)} • ${event.note}',
                                 ),
@@ -386,8 +458,12 @@ class BookingTrackingScreen extends ConsumerWidget {
                       ),
                 loading: () => const AppLoadingState(),
                 error: (error, stackTrace) => AppErrorState(
-                  error: AppError(code: 'tracking_events_failed', message: mapAppErrorMessage(s, error)),
-                  onRetry: () => ref.invalidate(trackingEventsProvider(bookingId)),
+                  error: AppError(
+                    code: 'tracking_events_failed',
+                    message: mapAppErrorMessage(s, error),
+                  ),
+                  onRetry: () =>
+                      ref.invalidate(trackingEventsProvider(bookingId)),
                 ),
               ),
             ],
@@ -419,9 +495,15 @@ class BookingTrackingScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(_trackingEventLabel(s, milestone), style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              _trackingEventLabel(s, milestone),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: AppSpacing.md),
-            AuthTextField(controller: noteController, label: s.adminVerificationRejectReasonHint),
+            AuthTextField(
+              controller: noteController,
+              label: s.adminVerificationRejectReasonHint,
+            ),
             const SizedBox(height: AppSpacing.md),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
@@ -437,7 +519,9 @@ class BookingTrackingScreen extends ConsumerWidget {
     }
 
     try {
-      await ref.read(bookingWorkflowControllerProvider).carrierRecordMilestone(
+      await ref
+          .read(bookingWorkflowControllerProvider)
+          .carrierRecordMilestone(
             bookingId: booking.id,
             milestone: milestone,
             note: noteController.text,
@@ -445,7 +529,9 @@ class BookingTrackingScreen extends ConsumerWidget {
       if (!context.mounted) return;
       AppFeedback.showSnackBar(context, s.carrierMilestoneUpdatedMessage);
     } on PostgrestException catch (error) {
-      if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      if (context.mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
     } finally {
       noteController.dispose();
     }
@@ -458,14 +544,18 @@ class BookingTrackingScreen extends ConsumerWidget {
   ) async {
     final s = S.of(context);
     try {
-      await ref.read(bookingWorkflowControllerProvider).shipperConfirmDelivery(
+      await ref
+          .read(bookingWorkflowControllerProvider)
+          .shipperConfirmDelivery(
             bookingId: booking.id,
             shipmentId: booking.shipmentId,
           );
       if (!context.mounted) return;
       AppFeedback.showSnackBar(context, s.deliveryConfirmedMessage);
     } on PostgrestException catch (error) {
-      if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      if (context.mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
     }
   }
 
@@ -491,11 +581,20 @@ class BookingTrackingScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(s.bookingStatusDisputedLabel, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              s.bookingStatusDisputedLabel,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: AppSpacing.md),
-            AuthTextField(controller: reasonController, label: s.paymentProofRejectionReasonLabel),
+            AuthTextField(
+              controller: reasonController,
+              label: s.paymentProofRejectionReasonLabel,
+            ),
             const SizedBox(height: AppSpacing.md),
-            AuthTextField(controller: descriptionController, label: s.shipmentDescriptionLabel),
+            AuthTextField(
+              controller: descriptionController,
+              label: s.shipmentDescriptionLabel,
+            ),
             const SizedBox(height: AppSpacing.md),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
@@ -511,7 +610,9 @@ class BookingTrackingScreen extends ConsumerWidget {
       return;
     }
     try {
-      await ref.read(disputeRepositoryProvider).createDispute(
+      await ref
+          .read(disputeRepositoryProvider)
+          .createDispute(
             bookingId: booking.id,
             reason: reasonController.text,
             description: descriptionController.text,
@@ -523,7 +624,9 @@ class BookingTrackingScreen extends ConsumerWidget {
       if (!context.mounted) return;
       AppFeedback.showSnackBar(context, s.bookingStatusDisputedLabel);
     } on PostgrestException catch (error) {
-      if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      if (context.mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
     } finally {
       reasonController.dispose();
       descriptionController.dispose();
@@ -553,19 +656,30 @@ class BookingTrackingScreen extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(s.ratingSubmitAction, style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                s.ratingSubmitAction,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<int>(
                 initialValue: score,
                 items: List.generate(5, (index) => index + 1)
-                    .map((value) => DropdownMenuItem(value: value, child: Text('$value/5')))
+                    .map(
+                      (value) => DropdownMenuItem(
+                        value: value,
+                        child: Text('$value/5'),
+                      ),
+                    )
                     .toList(growable: false),
                 onChanged: (value) {
                   if (value != null) setModalState(() => score = value);
                 },
               ),
               const SizedBox(height: AppSpacing.md),
-              AuthTextField(controller: commentController, label: s.ratingCommentLabel),
+              AuthTextField(
+                controller: commentController,
+                label: s.ratingCommentLabel,
+              ),
               const SizedBox(height: AppSpacing.md),
               FilledButton(
                 onPressed: () => Navigator.of(context).pop(true),
@@ -581,7 +695,9 @@ class BookingTrackingScreen extends ConsumerWidget {
       return;
     }
     try {
-      await ref.read(bookingWorkflowControllerProvider).submitCarrierReview(
+      await ref
+          .read(bookingWorkflowControllerProvider)
+          .submitCarrierReview(
             bookingId: booking.id,
             score: score,
             comment: commentController.text,
@@ -589,7 +705,9 @@ class BookingTrackingScreen extends ConsumerWidget {
       if (!context.mounted) return;
       AppFeedback.showSnackBar(context, s.ratingSubmittedMessage);
     } on PostgrestException catch (error) {
-      if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      if (context.mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
     } finally {
       commentController.dispose();
     }
@@ -722,13 +840,17 @@ class RouteDetailScreen extends ConsumerWidget {
             return AppErrorState(
               error: AppError(
                 code: 'route_detail_communes_failed',
-                message: mapAppErrorMessage(s, communesAsync.error ?? Exception('unknown')),
+                message: mapAppErrorMessage(
+                  s,
+                  communesAsync.error ?? Exception('unknown'),
+                ),
               ),
               onRetry: () => ref.invalidate(communesProvider),
             );
           }
           final communeMap = {
-            for (final commune in communesAsync.requireValue) commune.id: commune,
+            for (final commune in communesAsync.requireValue)
+              commune.id: commune,
           };
 
           return ListView(
@@ -748,11 +870,17 @@ class RouteDetailScreen extends ConsumerWidget {
                 rows: [
                   ProfileSummaryRow(
                     label: s.routeDepartureTimeLabel,
-                    value: _sharedFormatSqlTime(context, route.defaultDepartureTime),
+                    value: _sharedFormatSqlTime(
+                      context,
+                      route.defaultDepartureTime,
+                    ),
                   ),
                   ProfileSummaryRow(
                     label: s.routeRecurringDaysLabel,
-                    value: _sharedFormatWeekdays(context, route.recurringDaysOfWeek),
+                    value: _sharedFormatWeekdays(
+                      context,
+                      route.recurringDaysOfWeek,
+                    ),
                   ),
                   ProfileSummaryRow(
                     label: s.routeEffectiveFromLabel,
@@ -820,13 +948,17 @@ class OneOffTripDetailScreen extends ConsumerWidget {
             return AppErrorState(
               error: AppError(
                 code: 'oneoff_trip_detail_communes_failed',
-                message: mapAppErrorMessage(s, communesAsync.error ?? Exception('unknown')),
+                message: mapAppErrorMessage(
+                  s,
+                  communesAsync.error ?? Exception('unknown'),
+                ),
               ),
               onRetry: () => ref.invalidate(communesProvider),
             );
           }
           final communeMap = {
-            for (final commune in communesAsync.requireValue) commune.id: commune,
+            for (final commune in communesAsync.requireValue)
+              commune.id: commune,
           };
 
           return ListView(
@@ -846,7 +978,8 @@ class OneOffTripDetailScreen extends ConsumerWidget {
                 rows: [
                   ProfileSummaryRow(
                     label: s.oneOffTripDepartureLabel,
-                    value: '${_sharedFormatDate(trip.departureAt)} • ${TimeOfDay.fromDateTime(trip.departureAt).format(context)}',
+                    value:
+                        '${_sharedFormatDate(trip.departureAt)} • ${TimeOfDay.fromDateTime(trip.departureAt).format(context)}',
                   ),
                   ProfileSummaryRow(
                     label: s.routePricePerKgLabel,
@@ -903,7 +1036,9 @@ class ProofViewerScreen extends ConsumerWidget {
             return const AppNotFoundState();
           }
           return FutureBuilder<String>(
-            future: ref.read(paymentProofRepositoryProvider).createSignedPaymentProofUrl(proof),
+            future: ref
+                .read(paymentProofRepositoryProvider)
+                .createSignedPaymentProofUrl(proof),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const AppLoadingState();
@@ -912,10 +1047,14 @@ class ProofViewerScreen extends ConsumerWidget {
                 return AppErrorState(
                   error: AppError(
                     code: 'payment_proof_signed_url_failed',
-                    message: mapAppErrorMessage(s, snapshot.error ?? Exception('unknown')),
+                    message: mapAppErrorMessage(
+                      s,
+                      snapshot.error ?? Exception('unknown'),
+                    ),
                     technicalDetails: snapshot.error?.toString(),
                   ),
-                  onRetry: () => ref.invalidate(paymentProofDetailProvider(proofId)),
+                  onRetry: () =>
+                      ref.invalidate(paymentProofDetailProvider(proofId)),
                 );
               }
               return AppStateMessage(
@@ -1032,16 +1171,40 @@ class GeneratedDocumentViewerScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final formattedDocumentId = BidiFormatters.latinIdentifier(documentId);
-    final documentAsync = ref.watch(generatedDocumentDetailProvider(documentId));
+    final documentAsync = ref.watch(
+      generatedDocumentDetailProvider(documentId),
+    );
 
     return AppPageScaffold(
       title: s.generatedDocumentViewerTitle(formattedDocumentId),
       child: AppAsyncStateView<GeneratedDocumentRecord?>(
         value: documentAsync,
-        onRetry: () => ref.invalidate(generatedDocumentDetailProvider(documentId)),
+        onRetry: () =>
+            ref.invalidate(generatedDocumentDetailProvider(documentId)),
         data: (document) {
           if (document == null) {
             return const AppNotFoundState();
+          }
+
+          if (document.isPending) {
+            return AppStateMessage(
+              icon: Icons.hourglass_top_rounded,
+              title: s.generatedDocumentViewerTitle(formattedDocumentId),
+              message: s.generatedDocumentPendingMessage,
+            );
+          }
+
+          if (document.isFailed) {
+            final trimmedFailureReason = document.failureReason?.trim();
+            return AppStateMessage(
+              icon: Icons.error_outline_rounded,
+              title: s.generatedDocumentViewerTitle(formattedDocumentId),
+              message:
+                  trimmedFailureReason != null &&
+                      trimmedFailureReason.isNotEmpty
+                  ? '${s.generatedDocumentFailedMessage}\n\n${s.generatedDocumentFailureReasonLabel}: $trimmedFailureReason'
+                  : s.generatedDocumentFailedMessage,
+            );
           }
 
           return FutureBuilder<String>(
@@ -1057,32 +1220,87 @@ class GeneratedDocumentViewerScreen extends ConsumerWidget {
                 return AppErrorState(
                   error: AppError(
                     code: 'generated_document_signed_url_failed',
-                    message: mapAuthErrorMessage(
+                    message: mapAppErrorMessage(
                       s,
-                      snapshot.error?.toString() ?? 'document_signed_url_unavailable',
+                      snapshot.error ??
+                          Exception('document_signed_url_unavailable'),
                     ),
                     technicalDetails: snapshot.error?.toString(),
                   ),
-                  onRetry: () => ref.invalidate(generatedDocumentDetailProvider(documentId)),
+                  onRetry: () => ref.invalidate(
+                    generatedDocumentDetailProvider(documentId),
+                  ),
                 );
               }
 
-              return AppStateMessage(
-                icon: Icons.description_outlined,
-                title: s.generatedDocumentViewerTitle(formattedDocumentId),
-                message: s.verificationDocumentOpenPreparedMessage,
-                action: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FilledButton.icon(
-                      onPressed: () => unawaited(_openExternal(snapshot.data!)),
-                      icon: const Icon(Icons.open_in_new_rounded),
-                      label: Text(s.documentViewerOpenAction),
+              final signedUrl = snapshot.data!;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Wrap(
+                        runSpacing: AppSpacing.sm,
+                        spacing: AppSpacing.sm,
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 280,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  _generatedDocumentTypeLabel(
+                                    s,
+                                    document.documentType,
+                                  ),
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: AppSpacing.xs),
+                                if (document.availableAt != null)
+                                  Text(
+                                    '${s.generatedDocumentAvailableAtLabel}: ${_sharedFormatDate(document.availableAt!)}',
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Wrap(
+                            spacing: AppSpacing.sm,
+                            runSpacing: AppSpacing.sm,
+                            children: [
+                              FilledButton.icon(
+                                onPressed: () =>
+                                    unawaited(_openExternal(signedUrl)),
+                                icon: const Icon(Icons.download_rounded),
+                                label: Text(s.generatedDocumentDownloadAction),
+                              ),
+                              OutlinedButton.icon(
+                                onPressed: () =>
+                                    unawaited(_openExternal(signedUrl)),
+                                icon: const Icon(Icons.open_in_new_rounded),
+                                label: Text(
+                                  s.generatedDocumentOpenInBrowserAction,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: AppSpacing.sm),
-                    SelectionArea(child: Text(snapshot.data!)),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Expanded(
+                    child: Card(
+                      clipBehavior: Clip.antiAlias,
+                      child: SfPdfViewer.network(signedUrl),
+                    ),
+                  ),
+                ],
               );
             },
           );
@@ -1099,9 +1317,11 @@ String _sharedLaneLabel(
   int destinationId,
 ) {
   final locale = Localizations.localeOf(context);
-  final origin = communeMap[originId]?.displayName(locale) ??
+  final origin =
+      communeMap[originId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(originId.toString());
-  final destination = communeMap[destinationId]?.displayName(locale) ??
+  final destination =
+      communeMap[destinationId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(destinationId.toString());
   return '$origin -> $destination';
 }
@@ -1155,7 +1375,8 @@ String _bookingStatusLabel(S s, BookingStatus status) {
     BookingStatus.confirmed => s.bookingStatusConfirmedLabel,
     BookingStatus.pickedUp => s.bookingStatusPickedUpLabel,
     BookingStatus.inTransit => s.bookingStatusInTransitLabel,
-    BookingStatus.deliveredPendingReview => s.bookingStatusDeliveredPendingReviewLabel,
+    BookingStatus.deliveredPendingReview =>
+      s.bookingStatusDeliveredPendingReviewLabel,
     BookingStatus.completed => s.bookingStatusCompletedLabel,
     BookingStatus.cancelled => s.bookingStatusCancelledLabel,
     BookingStatus.disputed => s.bookingStatusDisputedLabel,
@@ -1171,6 +1392,15 @@ String _paymentStatusLabel(S s, PaymentStatus status) {
     PaymentStatus.rejected => s.paymentStatusRejectedLabel,
     PaymentStatus.refunded => s.paymentStatusRefundedLabel,
     PaymentStatus.releasedToCarrier => s.paymentStatusReleasedToCarrierLabel,
+  };
+}
+
+String _generatedDocumentTypeLabel(S s, String? documentType) {
+  return switch (documentType) {
+    'booking_invoice' => s.generatedDocumentTypeBookingInvoice,
+    'payment_receipt' => s.generatedDocumentTypePaymentReceipt,
+    'payout_receipt' => s.generatedDocumentTypePayoutReceipt,
+    _ => s.generatedDocumentsTitle,
   };
 }
 

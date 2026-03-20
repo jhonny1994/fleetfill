@@ -21,6 +21,12 @@ String mapAuthErrorMessage(S s, String rawMessage) {
   if (message.contains('document_signed_url_unavailable')) {
     return s.documentViewerUnavailableMessage;
   }
+  if (message.contains('generated_document_not_ready')) {
+    return s.generatedDocumentPendingMessage;
+  }
+  if (message.contains('generated_document_failed')) {
+    return s.generatedDocumentFailedMessage;
+  }
   if (message.contains('network')) {
     return s.authNetworkErrorMessage;
   }

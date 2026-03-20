@@ -29,12 +29,18 @@ class ShipperShellScreen extends StatelessWidget {
       ),
       body: navigationShell,
       destinations: [
-        AppShellDestination(icon: Icons.home_outlined, label: s.shipperHomeNavLabel),
+        AppShellDestination(
+          icon: Icons.home_outlined,
+          label: s.shipperHomeNavLabel,
+        ),
         AppShellDestination(
           icon: Icons.inventory_2_outlined,
           label: s.myShipmentsNavLabel,
         ),
-        AppShellDestination(icon: Icons.search_rounded, label: s.searchTripsNavLabel),
+        AppShellDestination(
+          icon: Icons.search_rounded,
+          label: s.searchTripsNavLabel,
+        ),
         AppShellDestination(
           icon: Icons.person_outline_rounded,
           label: s.shipperProfileNavLabel,
@@ -53,9 +59,11 @@ class ShipperHomeScreen extends ConsumerWidget {
     final shipmentsAsync = ref.watch(myShipperShipmentsProvider);
     final bookingsAsync = ref.watch(myShipperBookingsProvider);
     final notificationsAsync = ref.watch(myNotificationsProvider);
-    final activeBookings = bookingsAsync.asData?.value
+    final activeBookings =
+        bookingsAsync.asData?.value
             .where(
-              (booking) => booking.bookingStatus != BookingStatus.completed &&
+              (booking) =>
+                  booking.bookingStatus != BookingStatus.completed &&
                   booking.bookingStatus != BookingStatus.cancelled,
             )
             .length ??
@@ -77,7 +85,9 @@ class ShipperHomeScreen extends ConsumerWidget {
             rows: [
               ProfileSummaryRow(
                 label: s.shipperHomeActiveBookingsLabel,
-                value: BidiFormatters.latinIdentifier(activeBookings.toString()),
+                value: BidiFormatters.latinIdentifier(
+                  activeBookings.toString(),
+                ),
               ),
               ProfileSummaryRow(
                 label: s.myShipmentsTitle,
@@ -88,7 +98,11 @@ class ShipperHomeScreen extends ConsumerWidget {
               ProfileSummaryRow(
                 label: s.shipperHomeUnreadNotificationsLabel,
                 value: BidiFormatters.latinIdentifier(
-                  (notificationsAsync.asData?.value.where((n) => !n.isRead).length ?? 0).toString(),
+                  (notificationsAsync.asData?.value
+                              .where((n) => !n.isRead)
+                              .length ??
+                          0)
+                      .toString(),
                 ),
               ),
             ],
@@ -111,7 +125,10 @@ class ShipperHomeScreen extends ConsumerWidget {
               subtitle: _notificationPreviewBody(context, latestNotification),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => context.push(
-                AppRoutePath.sharedNotificationDetail.replaceFirst(':id', latestNotification.id),
+                AppRoutePath.sharedNotificationDetail.replaceFirst(
+                  ':id',
+                  latestNotification.id,
+                ),
               ),
             ),
           const SizedBox(height: AppSpacing.md),
@@ -183,13 +200,17 @@ class MyShipmentsScreen extends ConsumerWidget {
             return AppErrorState(
               error: AppError(
                 code: 'shipment_communes_load_failed',
-                message: mapAppErrorMessage(s, communesAsync.error ?? Exception('unknown')),
+                message: mapAppErrorMessage(
+                  s,
+                  communesAsync.error ?? Exception('unknown'),
+                ),
               ),
               onRetry: () => ref.invalidate(communesProvider),
             );
           }
           final communeMap = {
-            for (final commune in communesAsync.requireValue) commune.id: commune,
+            for (final commune in communesAsync.requireValue)
+              commune.id: commune,
           };
 
           return ListView.separated(
@@ -206,8 +227,8 @@ class MyShipmentsScreen extends ConsumerWidget {
                   tone: shipment.status == ShipmentStatus.draft
                       ? AppStatusTone.info
                       : shipment.status == ShipmentStatus.booked
-                          ? AppStatusTone.success
-                          : AppStatusTone.warning,
+                      ? AppStatusTone.success
+                      : AppStatusTone.warning,
                 ),
                 trailing: IconButton(
                   onPressed: shipment.status == ShipmentStatus.draft
@@ -217,7 +238,10 @@ class MyShipmentsScreen extends ConsumerWidget {
                   tooltip: s.shipmentEditAction,
                 ),
                 onTap: () => context.push(
-                  AppRoutePath.sharedShipmentDetail.replaceFirst(':id', shipment.id),
+                  AppRoutePath.sharedShipmentDetail.replaceFirst(
+                    ':id',
+                    shipment.id,
+                  ),
                 ),
               );
             },
@@ -227,7 +251,10 @@ class MyShipmentsScreen extends ConsumerWidget {
     );
   }
 
-  void _openShipmentEditor(BuildContext context, {ShipmentDraftRecord? shipment}) {
+  void _openShipmentEditor(
+    BuildContext context, {
+    ShipmentDraftRecord? shipment,
+  }) {
     unawaited(
       showModalBottomSheet<void>(
         context: context,
@@ -308,12 +335,16 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                   children: [
                     DropdownButtonFormField<String>(
                       initialValue: _selectedShipmentId,
-                      decoration: InputDecoration(labelText: s.searchShipmentSelectorLabel),
+                      decoration: InputDecoration(
+                        labelText: s.searchShipmentSelectorLabel,
+                      ),
                       items: draftShipments
                           .map(
                             (shipment) => DropdownMenuItem(
                               value: shipment.id,
-                              child: Text(_shipmentCompactLabel(context, shipment)),
+                              child: Text(
+                                _shipmentCompactLabel(context, shipment),
+                              ),
                             ),
                           )
                           .toList(growable: false),
@@ -339,7 +370,9 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                     const SizedBox(height: AppSpacing.md),
                     _DateButtonField(
                       label: s.searchRequestedDateLabel,
-                      value: _requestedDate == null ? null : _formatDate(_requestedDate!),
+                      value: _requestedDate == null
+                          ? null
+                          : _formatDate(_requestedDate!),
                       onPressed: () => unawaited(_pickRequestedDate(context)),
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -372,7 +405,8 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                           value: selectedShipment.totalVolumeM3 == null
                               ? '-'
                               : BidiFormatters.latinIdentifier(
-                                  selectedShipment.totalVolumeM3!.toStringAsFixed(1),
+                                  selectedShipment.totalVolumeM3!
+                                      .toStringAsFixed(1),
                                 ),
                         ),
                         ProfileSummaryRow(
@@ -385,7 +419,8 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                     AuthSubmitButton(
                       label: s.searchTripsAction,
                       isLoading: _isSearching,
-                      onPressed: () => _scheduleSearch(selectedShipment, reset: true),
+                      onPressed: () =>
+                          _scheduleSearch(selectedShipment, reset: true),
                     ),
                   ],
                 ),
@@ -396,7 +431,8 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: () => unawaited(_openSearchControlsSheet(context)),
+                        onPressed: () =>
+                            unawaited(_openSearchControlsSheet(context)),
                         icon: const Icon(Icons.tune_rounded),
                         label: Text(s.searchTripsControlsAction),
                       ),
@@ -433,7 +469,11 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
     if (selected == null || !mounted) {
       return;
     }
-    final shipment = ref.read(myShipperShipmentsProvider).asData?.value.firstWhere(
+    final shipment = ref
+        .read(myShipperShipmentsProvider)
+        .asData
+        ?.value
+        .firstWhere(
           (item) => item.id == _selectedShipmentId,
           orElse: () => ShipmentDraftRecord(
             id: '',
@@ -466,100 +506,103 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
   }
 
   Future<void> _openSearchControlsSheet(BuildContext context) async {
-    final result = await showModalBottomSheet<(
-      SearchSortOption,
-      bool,
-      bool,
-    )>(
-      context: context,
-      builder: (context) {
-        var selectedSort = _sort;
-        var includeRecurring = _includeRecurring;
-        var includeOneOff = _includeOneOff;
-        final s = S.of(context);
-        return StatefulBuilder(
-          builder: (context, setModalState) => SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    s.searchTripsControlsAction,
-                    style: Theme.of(context).textTheme.titleMedium,
+    final result =
+        await showModalBottomSheet<
+          (
+            SearchSortOption,
+            bool,
+            bool,
+          )
+        >(
+          context: context,
+          builder: (context) {
+            var selectedSort = _sort;
+            var includeRecurring = _includeRecurring;
+            var includeOneOff = _includeOneOff;
+            final s = S.of(context);
+            return StatefulBuilder(
+              builder: (context, setModalState) => SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        s.searchTripsControlsAction,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      RadioGroup<SearchSortOption>(
+                        groupValue: selectedSort,
+                        onChanged: (value) {
+                          if (value != null) {
+                            setModalState(() => selectedSort = value);
+                          }
+                        },
+                        child: Column(
+                          children: SearchSortOption.values
+                              .map(
+                                (option) => RadioListTile<SearchSortOption>(
+                                  value: option,
+                                  dense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text(
+                                    switch (option) {
+                                      SearchSortOption.recommended =>
+                                        s.searchSortRecommendedLabel,
+                                      SearchSortOption.topRated =>
+                                        s.searchSortTopRatedLabel,
+                                      SearchSortOption.lowestPrice =>
+                                        s.searchSortLowestPriceLabel,
+                                      SearchSortOption.nearestDeparture =>
+                                        s.searchSortNearestDepartureLabel,
+                                    },
+                                  ),
+                                ),
+                              )
+                              .toList(growable: false),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      CheckboxListTile(
+                        value: includeRecurring,
+                        onChanged: (value) {
+                          final nextValue = value ?? true;
+                          if (!nextValue && !includeOneOff) {
+                            return;
+                          }
+                          setModalState(() => includeRecurring = nextValue);
+                        },
+                        title: Text(s.searchTripsRecurringLabel),
+                      ),
+                      CheckboxListTile(
+                        value: includeOneOff,
+                        onChanged: (value) {
+                          final nextValue = value ?? true;
+                          if (!nextValue && !includeRecurring) {
+                            return;
+                          }
+                          setModalState(() => includeOneOff = nextValue);
+                        },
+                        title: Text(s.searchTripsOneOffLabel),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      FilledButton(
+                        onPressed: () => Navigator.of(context).pop((
+                          selectedSort,
+                          includeRecurring,
+                          includeOneOff,
+                        )),
+                        child: Text(s.confirmLabel),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  RadioGroup<SearchSortOption>(
-                    groupValue: selectedSort,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setModalState(() => selectedSort = value);
-                      }
-                    },
-                    child: Column(
-                      children: SearchSortOption.values
-                          .map(
-                            (option) => RadioListTile<SearchSortOption>(
-                              value: option,
-                              dense: true,
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(
-                                switch (option) {
-                                  SearchSortOption.recommended =>
-                                    s.searchSortRecommendedLabel,
-                                  SearchSortOption.topRated =>
-                                    s.searchSortTopRatedLabel,
-                                  SearchSortOption.lowestPrice =>
-                                    s.searchSortLowestPriceLabel,
-                                  SearchSortOption.nearestDeparture =>
-                                    s.searchSortNearestDepartureLabel,
-                                },
-                              ),
-                            ),
-                          )
-                          .toList(growable: false),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  CheckboxListTile(
-                    value: includeRecurring,
-                    onChanged: (value) {
-                      final nextValue = value ?? true;
-                      if (!nextValue && !includeOneOff) {
-                        return;
-                      }
-                      setModalState(() => includeRecurring = nextValue);
-                    },
-                    title: Text(s.searchTripsRecurringLabel),
-                  ),
-                  CheckboxListTile(
-                    value: includeOneOff,
-                    onChanged: (value) {
-                      final nextValue = value ?? true;
-                      if (!nextValue && !includeRecurring) {
-                        return;
-                      }
-                      setModalState(() => includeOneOff = nextValue);
-                    },
-                    title: Text(s.searchTripsOneOffLabel),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  FilledButton(
-                    onPressed: () => Navigator.of(context).pop((
-                      selectedSort,
-                      includeRecurring,
-                      includeOneOff,
-                    )),
-                    child: Text(s.confirmLabel),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
-      },
-    );
     if (result == null || !mounted) {
       return;
     }
@@ -581,7 +624,9 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
     final token = ++_searchToken;
     setState(() => _isSearching = true);
     try {
-      final response = await ref.read(shipmentRepositoryProvider).searchExactLaneCapacity(
+      final response = await ref
+          .read(shipmentRepositoryProvider)
+          .searchExactLaneCapacity(
             ShipmentSearchQuery(
               shipmentId: shipment.id,
               originCommuneId: shipment.originCommuneId,
@@ -609,7 +654,10 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
       });
     } on PostgrestException catch (error) {
       if (mounted) {
-        AppFeedback.showSnackBar(context, mapAppErrorMessage(S.of(context), error));
+        AppFeedback.showSnackBar(
+          context,
+          mapAppErrorMessage(S.of(context), error),
+        );
       }
     } finally {
       if (mounted && token == _searchToken) {
@@ -625,7 +673,8 @@ class BookingReviewScreen extends ConsumerStatefulWidget {
   final BookingReviewSelection? selection;
 
   @override
-  ConsumerState<BookingReviewScreen> createState() => _BookingReviewScreenState();
+  ConsumerState<BookingReviewScreen> createState() =>
+      _BookingReviewScreenState();
 }
 
 class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
@@ -670,7 +719,10 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
               ),
               ProfileSummaryRow(
                 label: s.searchDepartureLabel,
-                value: _formatDateTime(context, bookingSelection.result.departureAt),
+                value: _formatDateTime(
+                  context,
+                  bookingSelection.result.departureAt,
+                ),
               ),
               ProfileSummaryRow(
                 label: s.searchResultTypeLabel,
@@ -734,7 +786,8 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
           AuthSubmitButton(
             label: s.bookingConfirmAction,
             isLoading: _isSubmitting,
-            onPressed: () => unawaited(_confirmBooking(context, bookingSelection, quote)),
+            onPressed: () =>
+                unawaited(_confirmBooking(context, bookingSelection, quote)),
           ),
         ],
       ),
@@ -754,7 +807,10 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(s.bookingInsuranceAction, style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    s.bookingInsuranceAction,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   SwitchListTile.adaptive(
                     contentPadding: EdgeInsets.zero,
@@ -791,13 +847,35 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
             child: MoneySummaryCard(
               title: s.bookingPricingBreakdownAction,
               lines: [
-                MoneySummaryLine(label: s.bookingBasePriceLabel, amount: _money(s, quote.basePriceDzd)),
-                MoneySummaryLine(label: s.bookingPlatformFeeLabel, amount: _money(s, quote.platformFeeDzd)),
-                MoneySummaryLine(label: s.bookingCarrierFeeLabel, amount: _money(s, quote.carrierFeeDzd)),
-                MoneySummaryLine(label: s.bookingInsuranceFeeLabel, amount: _money(s, quote.insuranceFeeDzd)),
-                MoneySummaryLine(label: s.bookingTaxFeeLabel, amount: _money(s, quote.taxFeeDzd)),
-                MoneySummaryLine(label: s.bookingCarrierPayoutLabel, amount: _money(s, quote.carrierPayoutDzd)),
-                MoneySummaryLine(label: s.bookingTotalLabel, amount: _money(s, quote.shipperTotalDzd), emphasis: true),
+                MoneySummaryLine(
+                  label: s.bookingBasePriceLabel,
+                  amount: _money(s, quote.basePriceDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingPlatformFeeLabel,
+                  amount: _money(s, quote.platformFeeDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingCarrierFeeLabel,
+                  amount: _money(s, quote.carrierFeeDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingInsuranceFeeLabel,
+                  amount: _money(s, quote.insuranceFeeDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingTaxFeeLabel,
+                  amount: _money(s, quote.taxFeeDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingCarrierPayoutLabel,
+                  amount: _money(s, quote.carrierPayoutDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingTotalLabel,
+                  amount: _money(s, quote.shipperTotalDzd),
+                  emphasis: true,
+                ),
               ],
             ),
           ),
@@ -814,7 +892,9 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
     final s = S.of(context);
     setState(() => _isSubmitting = true);
     try {
-      final booking = await ref.read(bookingWorkflowControllerProvider).createBooking(
+      final booking = await ref
+          .read(bookingWorkflowControllerProvider)
+          .createBooking(
             shipment: bookingSelection.shipment,
             result: bookingSelection.result,
             includeInsurance: _includeInsurance,
@@ -849,7 +929,10 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
     final s = S.of(context);
     final id = widget.bookingId;
     if (id == null) {
-      return AppPageScaffold(title: s.paymentFlowTitle, child: const AppNotFoundState());
+      return AppPageScaffold(
+        title: s.paymentFlowTitle,
+        child: const AppNotFoundState(),
+      );
     }
     final bookingAsync = ref.watch(bookingDetailProvider(id));
     final settingsAsync = ref.watch(clientSettingsProvider);
@@ -863,7 +946,9 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
         onRetry: () => ref.invalidate(bookingDetailProvider(id)),
         data: (booking) {
           if (booking == null) return const AppNotFoundState();
-          final paymentAccounts = _paymentAccountsFromSettings(settingsAsync.asData?.value);
+          final paymentAccounts = _paymentAccountsFromSettings(
+            settingsAsync.asData?.value,
+          );
           final latestProof = proofsAsync.asData?.value.firstOrNull;
           return ListView(
             key: const PageStorageKey<String>('shipper-payment-flow-screen'),
@@ -876,35 +961,73 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
               ProfileSummaryCard(
                 title: s.bookingReviewTitle,
                 rows: [
-                  ProfileSummaryRow(label: s.bookingPaymentReferenceLabel, value: BidiFormatters.latinIdentifier(booking.paymentReference)),
-                  ProfileSummaryRow(label: s.bookingTrackingNumberLabel, value: BidiFormatters.latinIdentifier(booking.trackingNumber)),
-                  ProfileSummaryRow(label: s.bookingTotalLabel, value: _money(s, BookingPricingQuote(
-                    pricePerKgDzd: booking.pricePerKgDzd,
-                    basePriceDzd: booking.basePriceDzd,
-                    platformFeeDzd: booking.platformFeeDzd,
-                    carrierFeeDzd: booking.carrierFeeDzd,
-                    insuranceRate: booking.insuranceRate,
-                    insuranceFeeDzd: booking.insuranceFeeDzd,
-                    taxFeeDzd: booking.taxFeeDzd,
-                    shipperTotalDzd: booking.shipperTotalDzd,
-                    carrierPayoutDzd: booking.carrierPayoutDzd,
-                  ).shipperTotalDzd)),
+                  ProfileSummaryRow(
+                    label: s.bookingPaymentReferenceLabel,
+                    value: BidiFormatters.latinIdentifier(
+                      booking.paymentReference,
+                    ),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.bookingTrackingNumberLabel,
+                    value: BidiFormatters.latinIdentifier(
+                      booking.trackingNumber,
+                    ),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.bookingTotalLabel,
+                    value: _money(
+                      s,
+                      BookingPricingQuote(
+                        pricePerKgDzd: booking.pricePerKgDzd,
+                        basePriceDzd: booking.basePriceDzd,
+                        platformFeeDzd: booking.platformFeeDzd,
+                        carrierFeeDzd: booking.carrierFeeDzd,
+                        insuranceRate: booking.insuranceRate,
+                        insuranceFeeDzd: booking.insuranceFeeDzd,
+                        taxFeeDzd: booking.taxFeeDzd,
+                        shipperTotalDzd: booking.shipperTotalDzd,
+                        carrierPayoutDzd: booking.carrierPayoutDzd,
+                      ).shipperTotalDzd,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
               MoneySummaryCard(
                 title: s.bookingPricingBreakdownAction,
                 lines: [
-                  MoneySummaryLine(label: s.bookingBasePriceLabel, amount: _money(s, booking.basePriceDzd)),
-                  MoneySummaryLine(label: s.bookingPlatformFeeLabel, amount: _money(s, booking.platformFeeDzd)),
-                  MoneySummaryLine(label: s.bookingCarrierFeeLabel, amount: _money(s, booking.carrierFeeDzd)),
-                  MoneySummaryLine(label: s.bookingInsuranceFeeLabel, amount: _money(s, booking.insuranceFeeDzd)),
-                  MoneySummaryLine(label: s.bookingTaxFeeLabel, amount: _money(s, booking.taxFeeDzd)),
-                  MoneySummaryLine(label: s.bookingTotalLabel, amount: _money(s, booking.shipperTotalDzd), emphasis: true),
+                  MoneySummaryLine(
+                    label: s.bookingBasePriceLabel,
+                    amount: _money(s, booking.basePriceDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingPlatformFeeLabel,
+                    amount: _money(s, booking.platformFeeDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingCarrierFeeLabel,
+                    amount: _money(s, booking.carrierFeeDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingInsuranceFeeLabel,
+                    amount: _money(s, booking.insuranceFeeDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingTaxFeeLabel,
+                    amount: _money(s, booking.taxFeeDzd),
+                  ),
+                  MoneySummaryLine(
+                    label: s.bookingTotalLabel,
+                    amount: _money(s, booking.shipperTotalDzd),
+                    emphasis: true,
+                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(s.paymentProofSectionTitle, style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                s.paymentProofSectionTitle,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: AppSpacing.md),
               if (latestProof != null)
                 ProfileSummaryCard(
@@ -940,7 +1063,9 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: _isUploading ? null : () => unawaited(_uploadProof(context, booking)),
+                      onPressed: _isUploading
+                          ? null
+                          : () => unawaited(_uploadProof(context, booking)),
                       child: Text(
                         latestProof == null || latestProof.status != 'rejected'
                             ? s.paymentProofUploadAction
@@ -952,9 +1077,12 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: OutlinedButton(
-                          onPressed: () => context.push(
-                            AppRoutePath.sharedProofViewer.replaceFirst(':id', latestProof.id),
+                        onPressed: () => context.push(
+                          AppRoutePath.sharedProofViewer.replaceFirst(
+                            ':id',
+                            latestProof.id,
                           ),
+                        ),
                         child: Text(s.documentViewerOpenAction),
                       ),
                     ),
@@ -969,12 +1097,21 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                         children: proofs
                             .map(
                               (proof) => Padding(
-                                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.sm,
+                                ),
                                 child: AppListCard(
-                                  title: '${_paymentProofStatusLabel(s, proof.status)} • ${_money(s, proof.submittedAmountDzd)}',
-                                  subtitle: _formatDateTime(context, proof.submittedAt),
+                                  title:
+                                      '${_paymentProofStatusLabel(s, proof.status)} • ${_money(s, proof.submittedAmountDzd)}',
+                                  subtitle: _formatDateTime(
+                                    context,
+                                    proof.submittedAt,
+                                  ),
                                   onTap: () => context.push(
-                                    AppRoutePath.sharedProofViewer.replaceFirst(':id', proof.id),
+                                    AppRoutePath.sharedProofViewer.replaceFirst(
+                                      ':id',
+                                      proof.id,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -983,24 +1120,36 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                       ),
                 loading: () => const AppLoadingState(),
                 error: (error, stackTrace) => AppErrorState(
-                  error: AppError(code: 'payment_proofs_load_failed', message: mapAppErrorMessage(s, error)),
+                  error: AppError(
+                    code: 'payment_proofs_load_failed',
+                    message: mapAppErrorMessage(s, error),
+                  ),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(s.paymentInstructionsTitle, style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                s.paymentInstructionsTitle,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: AppSpacing.md),
               ...paymentAccounts.map(
                 (account) => Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: AppListCard(
                     title: account.displayName,
-                    subtitle: '${account.accountIdentifier} • ${account.accountHolderName}',
+                    subtitle:
+                        '${account.accountIdentifier} • ${account.accountHolderName}',
                   ),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(s.generatedDocumentsTitle, style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                s.generatedDocumentsTitle,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: AppSpacing.md),
+              Text(s.generatedDocumentsTapReadyHint),
+              const SizedBox(height: AppSpacing.sm),
               documentsAsync.when(
                 data: (documents) => documents.isEmpty
                     ? AppStateMessage(
@@ -1012,13 +1161,46 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                         children: documents
                             .map(
                               (document) => Padding(
-                                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.sm,
+                                ),
                                 child: AppListCard(
-                                  title: document.documentType,
-                                  subtitle: document.storagePath,
-                                  onTap: () => context.push(
-                                    AppRoutePath.sharedGeneratedDocumentViewer.replaceFirst(':id', document.id),
+                                  title: _generatedDocumentTypeLabel(
+                                    s,
+                                    document.documentType,
                                   ),
+                                  subtitle: _generatedDocumentSubtitle(
+                                    context,
+                                    s,
+                                    document,
+                                  ),
+                                  leading: AppStatusChip(
+                                    label: _generatedDocumentStatusLabel(
+                                      s,
+                                      document,
+                                    ),
+                                    tone: _generatedDocumentStatusTone(
+                                      document,
+                                    ),
+                                  ),
+                                  trailing: document.isReady
+                                      ? const Icon(Icons.chevron_right_rounded)
+                                      : document.isPending
+                                      ? const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Icon(Icons.error_outline_rounded),
+                                  onTap: document.isReady
+                                      ? () => context.push(
+                                          AppRoutePath
+                                              .sharedGeneratedDocumentViewer
+                                              .replaceFirst(':id', document.id),
+                                        )
+                                      : null,
                                 ),
                               ),
                             )
@@ -1026,7 +1208,10 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                       ),
                 loading: () => const AppLoadingState(),
                 error: (error, stackTrace) => AppErrorState(
-                  error: AppError(code: 'generated_documents_load_failed', message: mapAppErrorMessage(s, error)),
+                  error: AppError(
+                    code: 'generated_documents_load_failed',
+                    message: mapAppErrorMessage(s, error),
+                  ),
                 ),
               ),
             ],
@@ -1040,13 +1225,24 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
     final s = S.of(context);
     final settings = ref.read(clientSettingsProvider).asData?.value;
     final paymentAccounts = _paymentAccountsFromSettings(settings);
-    var paymentRail = paymentAccounts.firstOrNull?.displayName.toLowerCase().contains('dahab') == true
+    var paymentRail =
+        paymentAccounts.firstOrNull?.displayName.toLowerCase().contains(
+              'dahab',
+            ) ==
+            true
         ? 'dahabia'
-        : paymentAccounts.firstOrNull?.displayName.toLowerCase().contains('bank') == true
-            ? 'bank'
-            : 'ccp';
-    final amountController = TextEditingController(text: booking.shipperTotalDzd.toStringAsFixed(0));
-    final referenceController = TextEditingController(text: booking.paymentReference);
+        : paymentAccounts.firstOrNull?.displayName.toLowerCase().contains(
+                'bank',
+              ) ==
+              true
+        ? 'bank'
+        : 'ccp';
+    final amountController = TextEditingController(
+      text: booking.shipperTotalDzd.toStringAsFixed(0),
+    );
+    final referenceController = TextEditingController(
+      text: booking.paymentReference,
+    );
 
     final confirmed = await showModalBottomSheet<bool>(
       context: context,
@@ -1063,7 +1259,10 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(s.paymentProofUploadAction, style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                s.paymentProofUploadAction,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<String>(
                 initialValue: paymentRail,
@@ -1077,9 +1276,18 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                 },
               ),
               const SizedBox(height: AppSpacing.md),
-              AuthTextField(controller: amountController, label: s.paymentProofAmountLabel, keyboardType: const TextInputType.numberWithOptions(decimal: true)),
+              AuthTextField(
+                controller: amountController,
+                label: s.paymentProofAmountLabel,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+              ),
               const SizedBox(height: AppSpacing.md),
-              AuthTextField(controller: referenceController, label: s.paymentProofReferenceLabel),
+              AuthTextField(
+                controller: referenceController,
+                label: s.paymentProofReferenceLabel,
+              ),
               const SizedBox(height: AppSpacing.md),
               FilledButton(
                 onPressed: () => Navigator.of(context).pop(true),
@@ -1129,7 +1337,9 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
         byteSize: file.size,
         bytes: file.bytes,
       );
-      await ref.read(paymentProofRepositoryProvider).uploadPaymentProof(
+      await ref
+          .read(paymentProofRepositoryProvider)
+          .uploadPaymentProof(
             bookingId: booking.id,
             paymentRail: paymentRail,
             draft: draft,
@@ -1167,7 +1377,8 @@ class _ShipmentEditorSheet extends ConsumerStatefulWidget {
   final ShipmentDraftRecord? shipment;
 
   @override
-  ConsumerState<_ShipmentEditorSheet> createState() => _ShipmentEditorSheetState();
+  ConsumerState<_ShipmentEditorSheet> createState() =>
+      _ShipmentEditorSheetState();
 }
 
 class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
@@ -1237,7 +1448,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                 shrinkWrap: true,
                 children: [
                   Text(
-                    widget.shipment == null ? s.shipmentCreateTitle : s.shipmentEditTitle,
+                    widget.shipment == null
+                        ? s.shipmentCreateTitle
+                        : s.shipmentEditTitle,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -1245,39 +1458,49 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                     label: s.routeOriginLabel,
                     communeId: _originCommuneId,
                     communes: communes,
-                    onSelect: (value) => setState(() => _originCommuneId = value),
+                    onSelect: (value) =>
+                        setState(() => _originCommuneId = value),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   _CommuneSelectorField(
                     label: s.routeDestinationLabel,
                     communeId: _destinationCommuneId,
                     communes: communes,
-                    onSelect: (value) => setState(() => _destinationCommuneId = value),
+                    onSelect: (value) =>
+                        setState(() => _destinationCommuneId = value),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   _DateButtonField(
                     label: s.shipmentPickupStartLabel,
-                    value: _pickupStart == null ? null : _formatDateTime(context, _pickupStart!),
+                    value: _pickupStart == null
+                        ? null
+                        : _formatDateTime(context, _pickupStart!),
                     onPressed: () => unawaited(_pickDateTime(context, true)),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   _DateButtonField(
                     label: s.shipmentPickupEndLabel,
-                    value: _pickupEnd == null ? null : _formatDateTime(context, _pickupEnd!),
+                    value: _pickupEnd == null
+                        ? null
+                        : _formatDateTime(context, _pickupEnd!),
                     onPressed: () => unawaited(_pickDateTime(context, false)),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AuthTextField(
                     controller: _weightController,
                     label: s.vehicleCapacityWeightLabel,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     validator: _positiveValidator,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AuthTextField(
                     controller: _volumeController,
                     label: s.vehicleCapacityVolumeLabel,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     validator: _optionalPositiveValidator,
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -1298,20 +1521,22 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   ..._items.asMap().entries.map(
-                        (entry) => Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                          child: _ShipmentItemEditor(
-                            controller: entry.value,
-                            title: s.shipmentItemTitle(BidiFormatters.latinIdentifier('${entry.key + 1}')),
-                            onRemove: _items.length == 1
-                                ? null
-                                : () => setState(() {
-                                      entry.value.dispose();
-                                      _items.removeAt(entry.key);
-                                    }),
-                          ),
+                    (entry) => Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      child: _ShipmentItemEditor(
+                        controller: entry.value,
+                        title: s.shipmentItemTitle(
+                          BidiFormatters.latinIdentifier('${entry.key + 1}'),
                         ),
+                        onRemove: _items.length == 1
+                            ? null
+                            : () => setState(() {
+                                entry.value.dispose();
+                                _items.removeAt(entry.key);
+                              }),
                       ),
+                    ),
+                  ),
                   TextButton.icon(
                     onPressed: () => setState(() {
                       _items.add(_ShipmentItemController.empty());
@@ -1321,7 +1546,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   AuthSubmitButton(
-                    label: widget.shipment == null ? s.shipmentCreateAction : s.shipmentSaveAction,
+                    label: widget.shipment == null
+                        ? s.shipmentCreateAction
+                        : s.shipmentSaveAction,
                     isLoading: _isSaving,
                     onPressed: () => unawaited(_save()),
                   ),
@@ -1342,7 +1569,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   }
 
   Future<void> _pickDateTime(BuildContext context, bool start) async {
-    final initial = start ? (_pickupStart ?? DateTime.now()) : (_pickupEnd ?? DateTime.now().add(const Duration(hours: 2)));
+    final initial = start
+        ? (_pickupStart ?? DateTime.now())
+        : (_pickupEnd ?? DateTime.now().add(const Duration(hours: 2)));
     final date = await showDatePicker(
       context: context,
       firstDate: DateTime.now(),
@@ -1356,7 +1585,13 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
       initialTime: TimeOfDay.fromDateTime(initial),
     );
     if (time == null || !mounted) return;
-    final picked = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    final picked = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
     setState(() {
       if (start) {
         _pickupStart = picked;
@@ -1369,7 +1604,10 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   Future<void> _save() async {
     final s = S.of(context);
     if (!_formKey.currentState!.validate()) return;
-    if (_originCommuneId == null || _destinationCommuneId == null || _pickupStart == null || _pickupEnd == null) {
+    if (_originCommuneId == null ||
+        _destinationCommuneId == null ||
+        _pickupStart == null ||
+        _pickupEnd == null) {
       AppFeedback.showSnackBar(context, s.authRequiredFieldMessage);
       return;
     }
@@ -1398,7 +1636,10 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
       if (widget.shipment == null) {
         await workflow.createShipmentDraft(input);
       } else {
-        await workflow.updateShipmentDraft(shipmentId: widget.shipment!.id, input: input);
+        await workflow.updateShipmentDraft(
+          shipmentId: widget.shipment!.id,
+          input: input,
+        );
       }
       if (!mounted) return;
       AppFeedback.showSnackBar(context, s.shipmentSavedMessage);
@@ -1423,8 +1664,14 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
           title: Text(s.shipmentDeleteAction),
           content: Text(s.shipmentDeleteConfirmationMessage),
           actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(s.cancelLabel)),
-            FilledButton(onPressed: () => Navigator.of(context).pop(true), child: Text(s.confirmLabel)),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(s.cancelLabel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(s.confirmLabel),
+            ),
           ],
         ),
       ),
@@ -1432,7 +1679,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
     if (confirmed != true) return;
     setState(() => _isSaving = true);
     try {
-      await ref.read(shipmentWorkflowControllerProvider).deleteShipmentDraft(shipment.id);
+      await ref
+          .read(shipmentWorkflowControllerProvider)
+          .deleteShipmentDraft(shipment.id);
       if (!mounted) return;
       AppFeedback.showSnackBar(context, s.shipmentDeletedMessage);
       Navigator.of(context).pop();
@@ -1446,14 +1695,18 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   }
 
   String? _requiredValidator(String? value) {
-    return (value ?? '').trim().isEmpty ? S.of(context).authRequiredFieldMessage : null;
+    return (value ?? '').trim().isEmpty
+        ? S.of(context).authRequiredFieldMessage
+        : null;
   }
 
   String? _positiveValidator(String? value) {
     final trimmed = (value ?? '').trim();
     if (trimmed.isEmpty) return S.of(context).authRequiredFieldMessage;
     final parsed = double.tryParse(trimmed);
-    if (parsed == null || parsed <= 0) return S.of(context).vehiclePositiveNumberMessage;
+    if (parsed == null || parsed <= 0) {
+      return S.of(context).vehiclePositiveNumberMessage;
+    }
     return null;
   }
 
@@ -1461,7 +1714,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
     final trimmed = (value ?? '').trim();
     if (trimmed.isEmpty) return null;
     final parsed = double.tryParse(trimmed);
-    if (parsed == null || parsed <= 0) return S.of(context).vehiclePositiveNumberMessage;
+    if (parsed == null || parsed <= 0) {
+      return S.of(context).vehiclePositiveNumberMessage;
+    }
     return null;
   }
 
@@ -1501,15 +1756,17 @@ class _SearchResultsSection extends StatelessWidget {
           : const AppNoExactResultsState();
     }
 
-    final results = response.results.where((result) {
-      if (result.sourceType == 'route' && !includeRecurring) {
-        return false;
-      }
-      if (result.sourceType == 'oneoff_trip' && !includeOneOff) {
-        return false;
-      }
-      return true;
-    }).toList(growable: false);
+    final results = response.results
+        .where((result) {
+          if (result.sourceType == 'route' && !includeRecurring) {
+            return false;
+          }
+          if (result.sourceType == 'oneoff_trip' && !includeOneOff) {
+            return false;
+          }
+          return true;
+        })
+        .toList(growable: false);
 
     if (results.isEmpty) {
       return AppEmptyState(
@@ -1534,7 +1791,9 @@ class _SearchResultsSection extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
         ],
         Text(
-          s.searchTripsResultsTitle(BidiFormatters.latinIdentifier('${response.totalCount}')),
+          s.searchTripsResultsTitle(
+            BidiFormatters.latinIdentifier('${response.totalCount}'),
+          ),
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: AppSpacing.md),
@@ -1558,7 +1817,10 @@ class _SearchResultsSection extends StatelessWidget {
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => context.push(
                 AppRoutePath.shipperBookingReview,
-                extra: BookingReviewSelection(shipment: shipment, result: result),
+                extra: BookingReviewSelection(
+                  shipment: shipment,
+                  result: result,
+                ),
               ),
             );
           },
@@ -1593,7 +1855,12 @@ class _ShipmentItemEditor extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(title, style: Theme.of(context).textTheme.titleSmall)),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
                 if (onRemove != null)
                   IconButton(
                     onPressed: onRemove,
@@ -1602,7 +1869,10 @@ class _ShipmentItemEditor extends StatelessWidget {
                   ),
               ],
             ),
-            AuthTextField(controller: controller.label, label: s.shipmentItemLabelField),
+            AuthTextField(
+              controller: controller.label,
+              label: s.shipmentItemLabelField,
+            ),
             const SizedBox(height: AppSpacing.md),
             AuthTextField(
               controller: controller.quantity,
@@ -1613,16 +1883,23 @@ class _ShipmentItemEditor extends StatelessWidget {
             AuthTextField(
               controller: controller.weight,
               label: s.shipmentItemWeightLabel,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
             AuthTextField(
               controller: controller.volume,
               label: s.shipmentItemVolumeLabel,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
-            AuthTextField(controller: controller.notes, label: s.shipmentItemNotesLabel),
+            AuthTextField(
+              controller: controller.notes,
+              label: s.shipmentItemNotesLabel,
+            ),
           ],
         ),
       ),
@@ -1632,14 +1909,15 @@ class _ShipmentItemEditor extends StatelessWidget {
 
 class _ShipmentItemController {
   _ShipmentItemController({required ShipmentItemDraft draft})
-      : label = TextEditingController(text: draft.label),
-        quantity = TextEditingController(text: draft.quantity.toString()),
-        weight = TextEditingController(text: draft.weightKg?.toString() ?? ''),
-        volume = TextEditingController(text: draft.volumeM3?.toString() ?? ''),
-        notes = TextEditingController(text: draft.notes ?? '');
+    : label = TextEditingController(text: draft.label),
+      quantity = TextEditingController(text: draft.quantity.toString()),
+      weight = TextEditingController(text: draft.weightKg?.toString() ?? ''),
+      volume = TextEditingController(text: draft.volumeM3?.toString() ?? ''),
+      notes = TextEditingController(text: draft.notes ?? '');
 
-  factory _ShipmentItemController.empty() =>
-      _ShipmentItemController(draft: const ShipmentItemDraft(label: '', quantity: 1));
+  factory _ShipmentItemController.empty() => _ShipmentItemController(
+    draft: const ShipmentItemDraft(label: '', quantity: 1),
+  );
 
   factory _ShipmentItemController.fromDraft(ShipmentItemDraft draft) =>
       _ShipmentItemController(draft: draft);
@@ -1675,9 +1953,11 @@ String _shipmentLaneLabel(
   Map<int, AlgeriaCommune> communeMap,
 ) {
   final locale = Localizations.localeOf(context);
-  final origin = communeMap[shipment.originCommuneId]?.displayName(locale) ??
+  final origin =
+      communeMap[shipment.originCommuneId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(shipment.originCommuneId.toString());
-  final destination = communeMap[shipment.destinationCommuneId]?.displayName(locale) ??
+  final destination =
+      communeMap[shipment.destinationCommuneId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(shipment.destinationCommuneId.toString());
   return '$origin -> $destination';
 }
@@ -1694,6 +1974,7 @@ String _notificationPreviewTitle(
     'payment_rejected' => s.notificationPaymentRejectedTitle,
     'booking_milestone_updated' => s.notificationBookingMilestoneUpdatedTitle,
     'carrier_review_submitted' => s.notificationCarrierReviewSubmittedTitle,
+    'generated_document_ready' => s.notificationGeneratedDocumentReadyTitle,
     _ => notification.title,
   };
 }
@@ -1709,24 +1990,34 @@ String _notificationPreviewBody(
     'payment_secured' => s.notificationPaymentSecuredBody,
     'payment_rejected' => s.notificationPaymentRejectedBody,
     'booking_milestone_updated' => s.notificationBookingMilestoneUpdatedBody(
-        switch (notification.data['milestone'] as String?) {
-          'payment_under_review' => s.trackingEventPaymentUnderReviewLabel,
-          'confirmed' => s.trackingEventConfirmedLabel,
-          'picked_up' => s.trackingEventPickedUpLabel,
-          'in_transit' => s.trackingEventInTransitLabel,
-          'delivered_pending_review' => s.trackingEventDeliveredPendingReviewLabel,
-          'completed' => s.trackingEventCompletedLabel,
-          'cancelled' => s.trackingEventCancelledLabel,
-          'disputed' => s.trackingEventDisputedLabel,
-          _ => notification.data['milestone'] as String? ?? '',
-        },
-      ),
+      switch (notification.data['milestone'] as String?) {
+        'payment_under_review' => s.trackingEventPaymentUnderReviewLabel,
+        'confirmed' => s.trackingEventConfirmedLabel,
+        'picked_up' => s.trackingEventPickedUpLabel,
+        'in_transit' => s.trackingEventInTransitLabel,
+        'delivered_pending_review' =>
+          s.trackingEventDeliveredPendingReviewLabel,
+        'completed' => s.trackingEventCompletedLabel,
+        'cancelled' => s.trackingEventCancelledLabel,
+        'disputed' => s.trackingEventDisputedLabel,
+        _ => notification.data['milestone'] as String? ?? '',
+      },
+    ),
     'carrier_review_submitted' => s.notificationCarrierReviewSubmittedBody,
+    'generated_document_ready' => s.notificationGeneratedDocumentReadyBody(
+      _generatedDocumentTypeLabel(
+        s,
+        notification.data['document_type'] as String?,
+      ),
+    ),
     _ => notification.body,
   };
 }
 
-String _shipmentCompactLabel(BuildContext context, ShipmentDraftRecord shipment) {
+String _shipmentCompactLabel(
+  BuildContext context,
+  ShipmentDraftRecord shipment,
+) {
   return '${shipment.category} • ${_formatDate(shipment.pickupWindowStart)}';
 }
 
@@ -1750,7 +2041,8 @@ String _communeName(
 ) {
   final locale = Localizations.localeOf(context);
   final commune = communes?.where((item) => item.id == communeId).firstOrNull;
-  return commune?.displayName(locale) ?? BidiFormatters.latinIdentifier('$communeId');
+  return commune?.displayName(locale) ??
+      BidiFormatters.latinIdentifier('$communeId');
 }
 
 String _formatDate(DateTime value) {
@@ -1779,13 +2071,15 @@ BookingPricingQuote _quoteFromSelection({
   final insuranceMinFee = pricing?.insuranceMinFeeDzd ?? 100;
   final taxRate = pricing?.taxRate ?? 0;
 
-  final base = bookingSelection.shipment.totalWeightKg * bookingSelection.result.pricePerKgDzd;
+  final base =
+      bookingSelection.shipment.totalWeightKg *
+      bookingSelection.result.pricePerKgDzd;
   final platformFee = base * platformFeeRate;
   final carrierFee = base * carrierFeeRate;
   final insuranceFee = includeInsurance
       ? (base * insuranceRate) < insuranceMinFee
-          ? insuranceMinFee
-          : base * insuranceRate
+            ? insuranceMinFee
+            : base * insuranceRate
       : 0.0;
   final taxFee = (base + platformFee + carrierFee + insuranceFee) * taxRate;
   final total = base + platformFee + carrierFee + insuranceFee + taxFee;
@@ -1808,8 +2102,11 @@ String _money(S s, double amount) {
   return '${BidiFormatters.latinIdentifier(amount.toStringAsFixed(0))} ${s.priceCurrencyLabel}';
 }
 
-List<_PlatformPaymentAccountView> _paymentAccountsFromSettings(ClientSettings? settings) {
-  final raw = settings?.paymentAccounts ?? const <PlatformPaymentAccountSettings>[];
+List<_PlatformPaymentAccountView> _paymentAccountsFromSettings(
+  ClientSettings? settings,
+) {
+  final raw =
+      settings?.paymentAccounts ?? const <PlatformPaymentAccountSettings>[];
   return raw
       .map(
         (item) => _PlatformPaymentAccountView(
@@ -1826,6 +2123,48 @@ String _paymentProofStatusLabel(S s, String status) {
     'verified' => s.paymentProofStatusVerifiedLabel,
     'rejected' => s.paymentProofStatusRejectedLabel,
     _ => s.paymentProofStatusPendingLabel,
+  };
+}
+
+String _generatedDocumentTypeLabel(S s, String? documentType) {
+  return switch (documentType) {
+    'booking_invoice' => s.generatedDocumentTypeBookingInvoice,
+    'payment_receipt' => s.generatedDocumentTypePaymentReceipt,
+    'payout_receipt' => s.generatedDocumentTypePayoutReceipt,
+    _ => s.generatedDocumentsTitle,
+  };
+}
+
+String _generatedDocumentSubtitle(
+  BuildContext context,
+  S s,
+  GeneratedDocumentRecord document,
+) {
+  final detail = switch (document.status) {
+    GeneratedDocumentStatus.pending => s.generatedDocumentPendingMessage,
+    GeneratedDocumentStatus.failed => s.generatedDocumentFailedMessage,
+    GeneratedDocumentStatus.ready =>
+      document.availableAt == null
+          ? s.verificationDocumentOpenPreparedMessage
+          : '${s.generatedDocumentAvailableAtLabel}: ${_formatDateTime(context, document.availableAt!)}',
+  };
+
+  return '${_generatedDocumentStatusLabel(s, document)} • $detail';
+}
+
+String _generatedDocumentStatusLabel(S s, GeneratedDocumentRecord document) {
+  return switch (document.status) {
+    GeneratedDocumentStatus.ready => s.statusReadyLabel,
+    GeneratedDocumentStatus.failed => s.generatedDocumentStatusFailedLabel,
+    GeneratedDocumentStatus.pending => s.generatedDocumentStatusPendingLabel,
+  };
+}
+
+AppStatusTone _generatedDocumentStatusTone(GeneratedDocumentRecord document) {
+  return switch (document.status) {
+    GeneratedDocumentStatus.ready => AppStatusTone.success,
+    GeneratedDocumentStatus.failed => AppStatusTone.danger,
+    GeneratedDocumentStatus.pending => AppStatusTone.warning,
   };
 }
 
@@ -1901,7 +2240,9 @@ class _CommuneSelectorField extends StatelessWidget {
                           final commune = filtered[index];
                           return AppListCard(
                             title: commune.displayName(locale),
-                            subtitle: BidiFormatters.latinIdentifier(commune.id.toString()),
+                            subtitle: BidiFormatters.latinIdentifier(
+                              commune.id.toString(),
+                            ),
                             onTap: () => Navigator.of(context).pop(commune),
                           );
                         },
@@ -1938,7 +2279,9 @@ class _DateButtonField extends StatelessWidget {
       onPressed: onPressed,
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Text('$label: ${value ?? S.of(context).publicationSelectValueAction}'),
+        child: Text(
+          '$label: ${value ?? S.of(context).publicationSelectValueAction}',
+        ),
       ),
     );
   }

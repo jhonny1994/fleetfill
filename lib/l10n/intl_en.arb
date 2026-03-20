@@ -165,6 +165,24 @@
       "documentId": {}
     }
   },
+  "generatedDocumentTypeBookingInvoice": "Booking invoice",
+  "generatedDocumentTypePaymentReceipt": "Payment receipt",
+  "generatedDocumentTypePayoutReceipt": "Payout receipt",
+  "generatedDocumentStatusPendingLabel": "Generating",
+  "generatedDocumentStatusFailedLabel": "Needs regeneration",
+  "generatedDocumentPendingMessage": "This document is still being generated. Check back in a moment.",
+  "generatedDocumentFailedMessage": "This document could not be generated yet. Try again later or contact support if the issue persists.",
+  "generatedDocumentAvailableAtLabel": "Available at",
+  "generatedDocumentFailureReasonLabel": "Issue",
+  "generatedDocumentOpenInBrowserAction": "Open in browser",
+  "generatedDocumentDownloadAction": "Download PDF",
+  "notificationGeneratedDocumentReadyTitle": "Document ready",
+  "notificationGeneratedDocumentReadyBody": "Your {documentType} is ready to view securely.",
+  "@notificationGeneratedDocumentReadyBody": {
+    "placeholders": {
+      "documentType": {}
+    }
+  },
   "languageOptionArabic": "Arabic",
   "languageOptionEnglish": "English",
   "languageOptionFrench": "French",
@@ -562,6 +580,7 @@
   ,"paymentProofRejectedMessage": "Payment proof rejected."
   ,"generatedDocumentsTitle": "Generated documents"
   ,"generatedDocumentsEmptyMessage": "Generated invoice and receipt documents will appear here when available."
+  ,"generatedDocumentsTapReadyHint": "Tap any ready document to open it securely."
   ,"paymentProofPendingWindowMessage": "Payment proof can only be submitted while payment is still pending."
   ,"paymentProofExactAmountRequiredMessage": "The verified payment amount must match the booking total exactly."
   ,"paymentProofAlreadyReviewedMessage": "This payment proof has already been reviewed."
