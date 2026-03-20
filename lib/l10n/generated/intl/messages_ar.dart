@@ -67,13 +67,35 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminAuditLogDescription": MessageLookupByLibrary.simpleMessage(
       "راجع أحدث الإجراءات الإدارية الحساسة ونتائجها.",
     ),
+    "adminAuditLogEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لم يتم تسجيل أي أحداث تدقيق إدارية بعد.",
+    ),
     "adminAuditLogTitle": MessageLookupByLibrary.simpleMessage(
       "Admin audit log",
+    ),
+    "adminDashboardAutomationTitle": MessageLookupByLibrary.simpleMessage(
+      "صحة الأتمتة",
+    ),
+    "adminDashboardBacklogHealthTitle": MessageLookupByLibrary.simpleMessage(
+      "صحة قوائم الانتظار",
+    ),
+    "adminDashboardDeadLetterLabel": MessageLookupByLibrary.simpleMessage(
+      "رسائل dead-letter",
     ),
     "adminDashboardDescription": MessageLookupByLibrary.simpleMessage(
       "Operational backlog health, alerts, and quick counts live here.",
     ),
+    "adminDashboardEmailBacklogLabel": MessageLookupByLibrary.simpleMessage(
+      "تراكم البريد الإلكتروني",
+    ),
+    "adminDashboardEmailHealthTitle": MessageLookupByLibrary.simpleMessage(
+      "صحة البريد الإلكتروني",
+    ),
     "adminDashboardNavLabel": MessageLookupByLibrary.simpleMessage("Dashboard"),
+    "adminDashboardOverdueDeliveryReviewsLabel":
+        MessageLookupByLibrary.simpleMessage("مراجعات التسليم المتأخرة"),
+    "adminDashboardOverduePaymentResubmissionsLabel":
+        MessageLookupByLibrary.simpleMessage("إعادات إرسال الدفع المتأخرة"),
     "adminDashboardTitle": MessageLookupByLibrary.simpleMessage(
       "Admin dashboard",
     ),
@@ -83,11 +105,68 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminDisputesQueueTitle": MessageLookupByLibrary.simpleMessage(
       "طابور النزاعات",
     ),
+    "adminEligiblePayoutsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد دفعات مؤهلة للإطلاق حاليا.",
+    ),
+    "adminEmailDeadLetterEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد مهام بريد إلكتروني dead-letter تحتاج إلى متابعة الآن.",
+    ),
+    "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
+      "طابور dead-letter",
+    ),
+    "adminEmailQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد سجلات بريد إلكتروني تطابق عوامل التصفية الحالية.",
+    ),
+    "adminEmailQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "مراقبة تسليم البريد الإلكتروني",
+    ),
+    "adminEmailResendAction": MessageLookupByLibrary.simpleMessage(
+      "إعادة الإرسال",
+    ),
+    "adminEmailResendSuccess": MessageLookupByLibrary.simpleMessage(
+      "تمت جدولة إعادة إرسال البريد الإلكتروني.",
+    ),
+    "adminEmailSearchLabel": MessageLookupByLibrary.simpleMessage(
+      "ابحث في سجلات البريد الإلكتروني",
+    ),
+    "adminEmailStatusAllLabel": MessageLookupByLibrary.simpleMessage(
+      "كل الحالات",
+    ),
+    "adminEmailStatusBouncedLabel": MessageLookupByLibrary.simpleMessage(
+      "مرتد",
+    ),
+    "adminEmailStatusDeadLetterLabel": MessageLookupByLibrary.simpleMessage(
+      "Dead letter",
+    ),
+    "adminEmailStatusDeliveredLabel": MessageLookupByLibrary.simpleMessage(
+      "تم التسليم",
+    ),
+    "adminEmailStatusFilterLabel": MessageLookupByLibrary.simpleMessage(
+      "حالة البريد الإلكتروني",
+    ),
+    "adminEmailStatusHardFailedLabel": MessageLookupByLibrary.simpleMessage(
+      "فشل نهائي",
+    ),
+    "adminEmailStatusQueuedLabel": MessageLookupByLibrary.simpleMessage(
+      "في الانتظار",
+    ),
+    "adminEmailStatusSentLabel": MessageLookupByLibrary.simpleMessage(
+      "تم الإرسال",
+    ),
+    "adminEmailStatusSoftFailedLabel": MessageLookupByLibrary.simpleMessage(
+      "فشل مؤقت",
+    ),
+    "adminEmailStatusSuppressedLabel": MessageLookupByLibrary.simpleMessage(
+      "مقيد",
+    ),
     "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لا توجد إثباتات دفع تحتاج إلى مراجعة الآن.",
     ),
     "adminPaymentProofQueueTitle": MessageLookupByLibrary.simpleMessage(
       "مراجعة إثباتات الدفع",
+    ),
+    "adminPayoutEligibleTitle": MessageLookupByLibrary.simpleMessage(
+      "الدفعات المؤهلة",
     ),
     "adminPayoutQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لم يتم تحرير أي تحويلات بعد.",
@@ -95,22 +174,147 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminPayoutQueueTitle": MessageLookupByLibrary.simpleMessage(
       "طابور التحويلات",
     ),
+    "adminPayoutReleaseAction": MessageLookupByLibrary.simpleMessage(
+      "إطلاق الدفعة",
+    ),
+    "adminQueueDisputesTabLabel": MessageLookupByLibrary.simpleMessage(
+      "النزاعات",
+    ),
+    "adminQueueEmailTabLabel": MessageLookupByLibrary.simpleMessage(
+      "البريد الإلكتروني",
+    ),
+    "adminQueuePaymentsTabLabel": MessageLookupByLibrary.simpleMessage(
+      "المدفوعات",
+    ),
+    "adminQueuePayoutsTabLabel": MessageLookupByLibrary.simpleMessage(
+      "الدفعات",
+    ),
+    "adminQueueVerificationTabLabel": MessageLookupByLibrary.simpleMessage(
+      "التحقق",
+    ),
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
       "Payments, verification, disputes, payouts, and email queues stay segmented inside one page.",
     ),
     "adminQueuesNavLabel": MessageLookupByLibrary.simpleMessage("Queues"),
     "adminQueuesTitle": MessageLookupByLibrary.simpleMessage("Admin queues"),
+    "adminSettingsDeliveryGraceLabel": MessageLookupByLibrary.simpleMessage(
+      "نافذة السماح للتسليم (بالساعات)",
+    ),
+    "adminSettingsDeliverySectionTitle": MessageLookupByLibrary.simpleMessage(
+      "سياسة مراجعة التسليم",
+    ),
     "adminSettingsDescription": MessageLookupByLibrary.simpleMessage(
       "Platform settings, maintenance mode, version policy, and monitoring summary live here.",
     ),
+    "adminSettingsEmailResendEnabledLabel":
+        MessageLookupByLibrary.simpleMessage(
+          "تفعيل إعادة إرسال البريد الإلكتروني من الإدارة",
+        ),
+    "adminSettingsFeatureFlagsSectionTitle":
+        MessageLookupByLibrary.simpleMessage("إشارات الميزات"),
+    "adminSettingsForceUpdateLabel": MessageLookupByLibrary.simpleMessage(
+      "فرض التحديث",
+    ),
+    "adminSettingsInsuranceMinimumLabel": MessageLookupByLibrary.simpleMessage(
+      "الحد الأدنى لرسوم التأمين",
+    ),
+    "adminSettingsInsuranceRateLabel": MessageLookupByLibrary.simpleMessage(
+      "نسبة التأمين",
+    ),
+    "adminSettingsMaintenanceModeLabel": MessageLookupByLibrary.simpleMessage(
+      "وضع الصيانة",
+    ),
+    "adminSettingsMinimumAndroidVersionLabel":
+        MessageLookupByLibrary.simpleMessage("الحد الأدنى لإصدار Android"),
+    "adminSettingsMinimumIosVersionLabel": MessageLookupByLibrary.simpleMessage(
+      "الحد الأدنى لإصدار iOS",
+    ),
+    "adminSettingsMonitoringSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "ملخص المراقبة",
+    ),
     "adminSettingsNavLabel": MessageLookupByLibrary.simpleMessage("Settings"),
+    "adminSettingsPaymentDeadlineLabel": MessageLookupByLibrary.simpleMessage(
+      "مهلة إعادة إرسال الدفع (بالساعات)",
+    ),
+    "adminSettingsPlatformFeeRateLabel": MessageLookupByLibrary.simpleMessage(
+      "نسبة رسوم المنصة",
+    ),
+    "adminSettingsPricingSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "سياسة التسعير",
+    ),
+    "adminSettingsRuntimeSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "سياسة التشغيل",
+    ),
+    "adminSettingsSaveAction": MessageLookupByLibrary.simpleMessage(
+      "حفظ الإعدادات",
+    ),
+    "adminSettingsSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تحديث إعدادات الإدارة.",
+    ),
     "adminSettingsTitle": MessageLookupByLibrary.simpleMessage(
       "Admin settings",
+    ),
+    "adminUserAccountSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "ملخص الحساب",
+    ),
+    "adminUserBookingsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد حجوزات مرتبطة بهذا المستخدم بعد.",
+    ),
+    "adminUserBookingsSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "الحجوزات المرتبطة",
+    ),
+    "adminUserDocumentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد وثائق تحقق متاحة لهذا المستخدم.",
+    ),
+    "adminUserDocumentsSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "وثائق التحقق",
+    ),
+    "adminUserEmailEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد سجلات بريد إلكتروني حديثة لهذا المستخدم.",
+    ),
+    "adminUserEmailSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "الرسائل الأخيرة",
+    ),
+    "adminUserReactivateAction": MessageLookupByLibrary.simpleMessage(
+      "إعادة تفعيل المستخدم",
+    ),
+    "adminUserReactivateSuccess": MessageLookupByLibrary.simpleMessage(
+      "تمت إعادة تفعيل المستخدم.",
+    ),
+    "adminUserReasonHint": MessageLookupByLibrary.simpleMessage(
+      "أضف سببا تشغيليا لهذا التغيير.",
+    ),
+    "adminUserRoleAdminLabel": MessageLookupByLibrary.simpleMessage("الإدارة"),
+    "adminUserRoleCarrierLabel": MessageLookupByLibrary.simpleMessage("الناقل"),
+    "adminUserRoleLabel": MessageLookupByLibrary.simpleMessage("الدور"),
+    "adminUserRoleShipperLabel": MessageLookupByLibrary.simpleMessage("الشاحن"),
+    "adminUserStatusActiveLabel": MessageLookupByLibrary.simpleMessage("نشط"),
+    "adminUserStatusLabel": MessageLookupByLibrary.simpleMessage("حالة الحساب"),
+    "adminUserStatusSuspendedLabel": MessageLookupByLibrary.simpleMessage(
+      "معلّق",
+    ),
+    "adminUserSuspendAction": MessageLookupByLibrary.simpleMessage(
+      "تعليق المستخدم",
+    ),
+    "adminUserSuspendSuccess": MessageLookupByLibrary.simpleMessage(
+      "تم تعليق المستخدم.",
+    ),
+    "adminUserVehiclesEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد مركبات مرتبطة بهذا المستخدم.",
+    ),
+    "adminUserVehiclesSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "المركبات",
     ),
     "adminUsersDescription": MessageLookupByLibrary.simpleMessage(
       "User search and investigation live here.",
     ),
+    "adminUsersEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد مستخدمون يطابقون هذا البحث.",
+    ),
     "adminUsersNavLabel": MessageLookupByLibrary.simpleMessage("Users"),
+    "adminUsersSearchLabel": MessageLookupByLibrary.simpleMessage(
+      "ابحث عن المستخدمين",
+    ),
     "adminUsersTitle": MessageLookupByLibrary.simpleMessage("Users"),
     "adminVerificationApproveAction": MessageLookupByLibrary.simpleMessage(
       "اعتماد",

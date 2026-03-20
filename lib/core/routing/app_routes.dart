@@ -49,6 +49,7 @@ enum AppRouteName {
   adminQueues,
   adminVerificationPacket,
   adminUsers,
+  adminUserDetail,
   adminSettings,
   adminAuditLog,
 }
@@ -121,6 +122,7 @@ abstract final class AppRoutePath {
   static String adminQueuesVerification(String carrierId) =>
       '/admin/queues/verification/$carrierId';
   static const adminUsers = '/admin/users';
+  static String adminUserDetail(String userId) => '/admin/users/$userId';
   static const adminSettings = '/admin/settings';
   static const adminAuditLog = '/admin/settings/audit-log';
 }

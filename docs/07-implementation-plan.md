@@ -401,19 +401,27 @@ Phase 11 progress notes:
 
 ### Admin Core
 
-- [ ] Build secure admin shell and route guards
-- [ ] Build dashboards/queues for payment proofs, verification packets, disputes, payouts, email failures, and audit events
-- [ ] Build platform settings editor or controlled operational surface
-- [ ] Build search/filter tools for bookings, users, proofs, documents, and email logs
-- [ ] Keep mobile admin lean: use one queues page with segmented sections instead of many top-level admin tabs
-- [ ] Build typed client-settings response/API from `platform_settings` rather than raw client table reads
+- [x] Build secure admin shell and route guards
+- [x] Build dashboards/queues for payment proofs, verification packets, disputes, payouts, email failures, and audit events
+- [x] Build platform settings editor or controlled operational surface
+- [x] Build search/filter tools for bookings, users, proofs, documents, and email logs
+- [x] Keep mobile admin lean: use one queues page with segmented sections instead of many top-level admin tabs
+- [x] Build typed client-settings response/API from `platform_settings` rather than raw client table reads
 
 ### Admin Audit And Monitoring
 
-- [ ] Build admin audit log viewer
-- [ ] Build dead-letter email queue viewer and safe resend controls
-- [ ] Build monitoring views for payment review backlog, dispute backlog, payout backlog, and email backlog
-- [ ] Build monitoring for timed automations such as payment-resubmission expiry and delivery grace-window expiry
+- [x] Build admin audit log viewer
+- [x] Build dead-letter email queue viewer and safe resend controls
+- [x] Build monitoring views for payment review backlog, dispute backlog, payout backlog, and email backlog
+- [x] Build monitoring for timed automations such as payment-resubmission expiry and delivery grace-window expiry
+
+Phase 12 progress notes:
+
+- admin now has a real shell with dashboard, segmented queues, users, settings, and audit log surfaces instead of placeholders, while keeping the mobile information architecture lean and operational
+- admin queue coverage now includes searchable payment proof, verification, dispute, payout, booking, and email operations with dead-letter review, safe resend controls, and overdue automation fallback visibility
+- sensitive admin mutations now run through privileged RPC with typed client settings, constrained setting keys, recent step-up checks, resend feature-flag enforcement, and audit-log invalidation across related workflows
+- shipper/bootstrap settings consumption now uses the typed `get_client_settings()` contract instead of raw internal setting reads, keeping client runtime behavior aligned with the controlled platform settings model
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120900_seed_runtime_and_feature_flag_settings.sql`, `supabase/migrations/20260320121000_create_typed_client_settings_rpc.sql`, `supabase/migrations/20260320121100_create_admin_operations_rpc.sql`, and `test/admin_operations_contract_test.dart`
 
 ## Phase 13 - Generated Documents
 

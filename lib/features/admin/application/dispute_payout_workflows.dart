@@ -22,6 +22,10 @@ class AdminDisputePayoutWorkflowController {
         );
     ref
       ..invalidate(openDisputesProvider)
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminAutomationAlertsProvider)
+      ..invalidate(adminEligiblePayoutsProvider)
+      ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }
 
@@ -41,6 +45,10 @@ class AdminDisputePayoutWorkflowController {
         );
     ref
       ..invalidate(openDisputesProvider)
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminAutomationAlertsProvider)
+      ..invalidate(adminEligiblePayoutsProvider)
+      ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }
 
@@ -56,6 +64,10 @@ class AdminDisputePayoutWorkflowController {
         );
     ref
       ..invalidate(payoutsProvider)
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminAutomationAlertsProvider)
+      ..invalidate(adminEligiblePayoutsProvider)
+      ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }
 }

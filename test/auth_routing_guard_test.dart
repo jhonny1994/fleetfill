@@ -20,6 +20,7 @@ void main() {
     bool isSuspended = false,
     bool isCarrierVerified = false,
     bool hasPayoutAccount = false,
+    bool hasRecentAdminStepUp = false,
     bool isPasswordRecovery = false,
     bool isSessionExpired = false,
   }) {
@@ -33,6 +34,7 @@ void main() {
       hasPhoneNumber: hasPhoneNumber,
       isCarrierVerified: isCarrierVerified,
       hasPayoutAccount: hasPayoutAccount,
+      hasRecentAdminStepUp: hasRecentAdminStepUp,
       isPasswordRecovery: isPasswordRecovery,
       isSessionExpired: isSessionExpired,
     );
