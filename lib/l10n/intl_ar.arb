@@ -540,6 +540,10 @@
   "adminDisputesQueueEmptyMessage": "لا توجد نزاعات بانتظار المراجعة الآن.",
   "adminPayoutQueueTitle": "طابور التحويلات",
   "adminPayoutQueueEmptyMessage": "لم يتم تحرير أي تحويلات بعد.",
+  "supportSubjectLabel": "موضوع الدعم",
+  "supportMessageLabel": "رسالة الدعم",
+  "supportSendAction": "إرسال بريد الدعم",
+  "supportMessageSentMessage": "تم إرسال رسالة الدعم.",
   "searchCarrierRatingLabel": "تقييم الناقل",
   "searchResultTypeLabel": "نوع السعة"
   ,"bookingStatusPendingPaymentLabel": "بانتظار الدفع"

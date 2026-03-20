@@ -540,6 +540,10 @@
   "adminDisputesQueueEmptyMessage": "Aucun litige n'attend de revue pour le moment.",
   "adminPayoutQueueTitle": "File des versements",
   "adminPayoutQueueEmptyMessage": "Aucun versement n'a encore ete libere.",
+  "supportSubjectLabel": "Sujet du support",
+  "supportMessageLabel": "Message au support",
+  "supportSendAction": "Envoyer l'email au support",
+  "supportMessageSentMessage": "Message de support envoye.",
   "searchCarrierRatingLabel": "Note du transporteur",
   "searchResultTypeLabel": "Type de capacite"
   ,"bookingStatusPendingPaymentLabel": "En attente de paiement"
