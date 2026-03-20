@@ -395,7 +395,7 @@ Phase 11 progress notes:
 - support dispatch now normalizes locale inputs and queues both acknowledgement and support-forward emails through the outbox path instead of sending inline in the user request
 - generated document shared routes now resolve to secure signed-URL viewers instead of placeholders
 - user-device registration and notification marking are now server-controlled RPCs, with additional Phase 11 hardening for locale normalization, token validation, webhook event ordering, and notification write integrity before push rollout
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120700_create_reviews_notifications_and_support_rpc.sql` and `test/engagement_support_contract_test.dart`
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120700_create_carrier_review_and_notification_rpc.sql`, `supabase/migrations/20260320120800_harden_notification_and_email_delivery_rules.sql`, and `test/engagement_support_contract_test.dart`
 
 ## Phase 12 - Admin Surface And Operations
 
