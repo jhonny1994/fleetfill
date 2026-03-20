@@ -25,7 +25,9 @@ class PaymentProofRepository {
 
   SupabaseClient get _client => Supabase.instance.client;
 
-  Future<List<PaymentProofRecord>> fetchPaymentProofsForBooking(String bookingId) async {
+  Future<List<PaymentProofRecord>> fetchPaymentProofsForBooking(
+    String bookingId,
+  ) async {
     final response = await _client
         .from('payment_proofs')
         .select()
@@ -72,7 +74,9 @@ class PaymentProofRepository {
       },
     );
 
-    final uploadSession = uploadSessionResponse.cast<Map<String, dynamic>>().single;
+    final uploadSession = uploadSessionResponse
+        .cast<Map<String, dynamic>>()
+        .single;
     final bucketId = uploadSession['bucket_id'] as String;
     final objectPath = uploadSession['object_path'] as String;
     final sessionId = uploadSession['upload_session_id'] as String;
@@ -115,12 +119,16 @@ class PaymentProofRepository {
     );
     final data = response.data as Map<String, dynamic>?;
     if (data == null || data['signed_url'] == null) {
-      throw const PostgrestException(message: 'document_signed_url_unavailable');
+      throw const PostgrestException(
+        message: 'document_signed_url_unavailable',
+      );
     }
     return data['signed_url'] as String;
   }
 
-  Future<List<GeneratedDocumentRecord>> fetchGeneratedDocumentsForBooking(String bookingId) async {
+  Future<List<GeneratedDocumentRecord>> fetchGeneratedDocumentsForBooking(
+    String bookingId,
+  ) async {
     final response = await _client
         .from('generated_documents')
         .select()
@@ -132,7 +140,9 @@ class PaymentProofRepository {
         .toList(growable: false);
   }
 
-  Future<GeneratedDocumentRecord?> fetchGeneratedDocumentById(String documentId) async {
+  Future<GeneratedDocumentRecord?> fetchGeneratedDocumentById(
+    String documentId,
+  ) async {
     final response = await _client
         .from('generated_documents')
         .select()
@@ -144,7 +154,17 @@ class PaymentProofRepository {
     return GeneratedDocumentRecord.fromJson(response);
   }
 
-  Future<String> createSignedGeneratedDocumentUrl(GeneratedDocumentRecord document) async {
+  Future<String> createSignedGeneratedDocumentUrl(
+    GeneratedDocumentRecord document,
+  ) async {
+    if (!document.isReady) {
+      throw PostgrestException(
+        message: document.isFailed
+            ? 'generated_document_failed'
+            : 'generated_document_not_ready',
+      );
+    }
+
     final response = await _client.functions.invoke(
       'signed-file-url',
       body: {
@@ -154,7 +174,9 @@ class PaymentProofRepository {
     );
     final data = response.data as Map<String, dynamic>?;
     if (data == null || data['signed_url'] == null) {
-      throw const PostgrestException(message: 'document_signed_url_unavailable');
+      throw const PostgrestException(
+        message: 'document_signed_url_unavailable',
+      );
     }
     return data['signed_url'] as String;
   }

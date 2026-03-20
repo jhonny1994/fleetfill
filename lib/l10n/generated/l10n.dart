@@ -1372,6 +1372,136 @@ class S {
     );
   }
 
+  /// `Booking invoice`
+  String get generatedDocumentTypeBookingInvoice {
+    return Intl.message(
+      'Booking invoice',
+      name: 'generatedDocumentTypeBookingInvoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment receipt`
+  String get generatedDocumentTypePaymentReceipt {
+    return Intl.message(
+      'Payment receipt',
+      name: 'generatedDocumentTypePaymentReceipt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payout receipt`
+  String get generatedDocumentTypePayoutReceipt {
+    return Intl.message(
+      'Payout receipt',
+      name: 'generatedDocumentTypePayoutReceipt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generating`
+  String get generatedDocumentStatusPendingLabel {
+    return Intl.message(
+      'Generating',
+      name: 'generatedDocumentStatusPendingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Needs regeneration`
+  String get generatedDocumentStatusFailedLabel {
+    return Intl.message(
+      'Needs regeneration',
+      name: 'generatedDocumentStatusFailedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This document is still being generated. Check back in a moment.`
+  String get generatedDocumentPendingMessage {
+    return Intl.message(
+      'This document is still being generated. Check back in a moment.',
+      name: 'generatedDocumentPendingMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This document could not be generated yet. Try again later or contact support if the issue persists.`
+  String get generatedDocumentFailedMessage {
+    return Intl.message(
+      'This document could not be generated yet. Try again later or contact support if the issue persists.',
+      name: 'generatedDocumentFailedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available at`
+  String get generatedDocumentAvailableAtLabel {
+    return Intl.message(
+      'Available at',
+      name: 'generatedDocumentAvailableAtLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Issue`
+  String get generatedDocumentFailureReasonLabel {
+    return Intl.message(
+      'Issue',
+      name: 'generatedDocumentFailureReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open in browser`
+  String get generatedDocumentOpenInBrowserAction {
+    return Intl.message(
+      'Open in browser',
+      name: 'generatedDocumentOpenInBrowserAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download PDF`
+  String get generatedDocumentDownloadAction {
+    return Intl.message(
+      'Download PDF',
+      name: 'generatedDocumentDownloadAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Document ready`
+  String get notificationGeneratedDocumentReadyTitle {
+    return Intl.message(
+      'Document ready',
+      name: 'notificationGeneratedDocumentReadyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your {documentType} is ready to view securely.`
+  String notificationGeneratedDocumentReadyBody(Object documentType) {
+    return Intl.message(
+      'Your $documentType is ready to view securely.',
+      name: 'notificationGeneratedDocumentReadyBody',
+      desc: '',
+      args: [documentType],
+    );
+  }
+
   /// `Arabic`
   String get languageOptionArabic {
     return Intl.message(
@@ -4622,6 +4752,16 @@ class S {
     return Intl.message(
       'Generated invoice and receipt documents will appear here when available.',
       name: 'generatedDocumentsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap any ready document to open it securely.`
+  String get generatedDocumentsTapReadyHint {
+    return Intl.message(
+      'Tap any ready document to open it securely.',
+      name: 'generatedDocumentsTapReadyHint',
       desc: '',
       args: [],
     );

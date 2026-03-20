@@ -225,6 +225,24 @@
       "documentId": {}
     }
   },
+  "generatedDocumentTypeBookingInvoice": "فاتورة الحجز",
+  "generatedDocumentTypePaymentReceipt": "إيصال الدفع",
+  "generatedDocumentTypePayoutReceipt": "إيصال التحويل",
+  "generatedDocumentStatusPendingLabel": "قيد الإنشاء",
+  "generatedDocumentStatusFailedLabel": "يحتاج إلى إعادة إنشاء",
+  "generatedDocumentPendingMessage": "لا يزال هذا المستند قيد الإنشاء. عد بعد قليل.",
+  "generatedDocumentFailedMessage": "تعذر إنشاء هذا المستند حتى الآن. حاول لاحقا أو تواصل مع الدعم إذا استمرت المشكلة.",
+  "generatedDocumentAvailableAtLabel": "متاح في",
+  "generatedDocumentFailureReasonLabel": "المشكلة",
+  "generatedDocumentOpenInBrowserAction": "فتح في المتصفح",
+  "generatedDocumentDownloadAction": "تنزيل PDF",
+  "notificationGeneratedDocumentReadyTitle": "المستند جاهز",
+  "notificationGeneratedDocumentReadyBody": "أصبح {documentType} جاهزا للعرض الآمن.",
+  "@notificationGeneratedDocumentReadyBody": {
+    "placeholders": {
+      "documentType": {}
+    }
+  },
   "forbiddenMessage": "هذا القسم غير متاح لهذا الحساب.",
   "forbiddenTitle": "الوصول مقيّد",
   "forbiddenAdminStepUpMessage": "أعد تسجيل التحقق حديثا قبل فتح هذا القسم الإداري الحساس.",
@@ -613,6 +631,7 @@
   "paymentProofRejectedMessage": "تم رفض إثبات الدفع.",
   "generatedDocumentsTitle": "المستندات المولدة",
   "generatedDocumentsEmptyMessage": "ستظهر الفاتورة والإيصال المولدان هنا عند توفرهما.",
+  "generatedDocumentsTapReadyHint": "اضغط على أي مستند جاهز لفتحه بشكل آمن.",
   "paymentProofPendingWindowMessage": "لا يمكن إرسال إثبات الدفع إلا ما دام الدفع ما يزال معلقا.",
   "paymentProofExactAmountRequiredMessage": "يجب أن يطابق المبلغ المتحقق منه إجمالي الحجز تماما.",
   "paymentProofAlreadyReviewedMessage": "تمت مراجعة إثبات الدفع هذا بالفعل.",

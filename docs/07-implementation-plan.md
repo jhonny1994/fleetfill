@@ -425,12 +425,21 @@ Phase 12 progress notes:
 
 ## Phase 13 - Generated Documents
 
-- [ ] Build server-side PDF generation pipeline for booking invoices
-- [ ] Build payment receipt generation where applicable
-- [ ] Build payout receipt/statement generation where applicable
-- [ ] Store generated documents in private storage
-- [ ] Build secure in-app document viewing/downloading flow
-- [ ] Ensure email references to documents do not expose insecure public links
+ - [x] Build server-side PDF generation pipeline for booking invoices
+ - [x] Build payment receipt generation where applicable
+ - [x] Build payout receipt/statement generation where applicable
+ - [x] Store generated documents in private storage
+ - [x] Build secure in-app document viewing/downloading flow
+ - [x] Ensure email references to documents do not expose insecure public links
+
+Phase 13 progress notes:
+
+- generated document records now carry processing state, availability metadata, and failure reasons through `supabase/migrations/20260320121200_track_generated_document_processing.sql`
+- scheduled automation now invokes a service-role generated document worker that renders invoice and receipt PDFs from canonical booking and payout data, uploads them to the private `generated-documents` bucket, and marks records ready or failed
+- generated document completion now emits in-app notifications and queues transactional email using secure app routes instead of exposing file URLs
+- shipper payment flows now show generated document readiness clearly, block pending and failed documents from opening, and keep secure access inside the product flow
+- shared generated document routes now render ready PDFs in-app with secure signed URLs while still offering explicit browser and download actions when needed
+- localization, auth error mapping, and contract coverage were extended for generated document readiness states and notifications
 
 ## Phase 14 - Hardening, Testing, And Release Readiness
 

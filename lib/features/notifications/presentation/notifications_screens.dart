@@ -37,12 +37,21 @@ class NotificationsCenterScreen extends ConsumerWidget {
                 title: content.title,
                 subtitle: content.body,
                 leading: AppStatusChip(
-                  label: item.isRead ? s.statusReadyLabel : s.statusNeedsReviewLabel,
-                  tone: item.isRead ? AppStatusTone.success : AppStatusTone.warning,
+                  label: item.isRead
+                      ? s.statusReadyLabel
+                      : s.statusNeedsReviewLabel,
+                  tone: item.isRead
+                      ? AppStatusTone.success
+                      : AppStatusTone.warning,
                 ),
-                trailing: Text(_formatNotificationDate(context, item.createdAt)),
+                trailing: Text(
+                  _formatNotificationDate(context, item.createdAt),
+                ),
                 onTap: () => context.push(
-                  AppRoutePath.sharedNotificationDetail.replaceFirst(':id', item.id),
+                  AppRoutePath.sharedNotificationDetail.replaceFirst(
+                    ':id',
+                    item.id,
+                  ),
                 ),
               );
             },
@@ -63,13 +72,16 @@ class NotificationDetailScreen extends ConsumerStatefulWidget {
       _NotificationDetailScreenState();
 }
 
-class _NotificationDetailScreenState extends ConsumerState<NotificationDetailScreen> {
+class _NotificationDetailScreenState
+    extends ConsumerState<NotificationDetailScreen> {
   bool _markRequested = false;
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final detailAsync = ref.watch(notificationDetailProvider(widget.notificationId));
+    final detailAsync = ref.watch(
+      notificationDetailProvider(widget.notificationId),
+    );
 
     ref.listen<AsyncValue<AppNotificationRecord?>>(
       notificationDetailProvider(widget.notificationId),
@@ -87,7 +99,8 @@ class _NotificationDetailScreenState extends ConsumerState<NotificationDetailScr
       title: s.notificationDetailTitle(widget.notificationId),
       child: AppAsyncStateView<AppNotificationRecord?>(
         value: detailAsync,
-        onRetry: () => ref.invalidate(notificationDetailProvider(widget.notificationId)),
+        onRetry: () =>
+            ref.invalidate(notificationDetailProvider(widget.notificationId)),
         data: (notification) {
           if (notification == null) {
             return const AppNotFoundState();
@@ -106,6 +119,20 @@ class _NotificationDetailScreenState extends ConsumerState<NotificationDetailScr
                   child: Text(content.body),
                 ),
               ),
+              if (notification.type == 'generated_document_ready' &&
+                  notification.data['document_id'] is String) ...[
+                const SizedBox(height: AppSpacing.md),
+                FilledButton.icon(
+                  onPressed: () => context.push(
+                    AppRoutePath.sharedGeneratedDocumentViewer.replaceFirst(
+                      ':id',
+                      notification.data['document_id'] as String,
+                    ),
+                  ),
+                  icon: const Icon(Icons.description_outlined),
+                  label: Text(s.documentViewerOpenAction),
+                ),
+              ],
             ],
           );
         },
@@ -115,7 +142,9 @@ class _NotificationDetailScreenState extends ConsumerState<NotificationDetailScr
 
   Future<void> _markRead(String notificationId) async {
     try {
-      await ref.read(notificationRepositoryProvider).markNotificationRead(notificationId);
+      await ref
+          .read(notificationRepositoryProvider)
+          .markNotificationRead(notificationId);
       ref
         ..invalidate(myNotificationsProvider)
         ..invalidate(notificationDetailProvider(widget.notificationId));
@@ -139,35 +168,53 @@ _NotificationContent _notificationContent(
   final s = S.of(context);
   return switch (notification.type) {
     'booking_created' => _NotificationContent(
-        title: s.notificationBookingCreatedTitle,
-        body: s.notificationBookingCreatedBody,
-      ),
+      title: s.notificationBookingCreatedTitle,
+      body: s.notificationBookingCreatedBody,
+    ),
     'payment_proof_submitted' => _NotificationContent(
-        title: s.notificationPaymentProofSubmittedTitle,
-        body: s.notificationPaymentProofSubmittedBody,
-      ),
+      title: s.notificationPaymentProofSubmittedTitle,
+      body: s.notificationPaymentProofSubmittedBody,
+    ),
     'payment_secured' => _NotificationContent(
-        title: s.notificationPaymentSecuredTitle,
-        body: s.notificationPaymentSecuredBody,
-      ),
+      title: s.notificationPaymentSecuredTitle,
+      body: s.notificationPaymentSecuredBody,
+    ),
     'payment_rejected' => _NotificationContent(
-        title: s.notificationPaymentRejectedTitle,
-        body: s.notificationPaymentRejectedBody,
-      ),
+      title: s.notificationPaymentRejectedTitle,
+      body: s.notificationPaymentRejectedBody,
+    ),
     'booking_milestone_updated' => _NotificationContent(
-        title: s.notificationBookingMilestoneUpdatedTitle,
-        body: s.notificationBookingMilestoneUpdatedBody(
-          _milestoneLabel(s, notification.data['milestone'] as String?),
+      title: s.notificationBookingMilestoneUpdatedTitle,
+      body: s.notificationBookingMilestoneUpdatedBody(
+        _milestoneLabel(s, notification.data['milestone'] as String?),
+      ),
+    ),
+    'carrier_review_submitted' => _NotificationContent(
+      title: s.notificationCarrierReviewSubmittedTitle,
+      body: s.notificationCarrierReviewSubmittedBody,
+    ),
+    'generated_document_ready' => _NotificationContent(
+      title: s.notificationGeneratedDocumentReadyTitle,
+      body: s.notificationGeneratedDocumentReadyBody(
+        _generatedDocumentTypeLabel(
+          s,
+          notification.data['document_type'] as String?,
         ),
       ),
-    'carrier_review_submitted' => _NotificationContent(
-        title: s.notificationCarrierReviewSubmittedTitle,
-        body: s.notificationCarrierReviewSubmittedBody,
-      ),
+    ),
     _ => _NotificationContent(
-        title: notification.title,
-        body: notification.body,
-      ),
+      title: notification.title,
+      body: notification.body,
+    ),
+  };
+}
+
+String _generatedDocumentTypeLabel(S s, String? documentType) {
+  return switch (documentType) {
+    'booking_invoice' => s.generatedDocumentTypeBookingInvoice,
+    'payment_receipt' => s.generatedDocumentTypePaymentReceipt,
+    'payout_receipt' => s.generatedDocumentTypePayoutReceipt,
+    _ => s.generatedDocumentsTitle,
   };
 }
 

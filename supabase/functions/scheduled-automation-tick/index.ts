@@ -1,6 +1,6 @@
 import { createServiceClient, jsonResponse, requiredEnv } from '../_shared/email-runtime.ts'
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405)
   }
@@ -26,6 +26,18 @@ Deno.serve(async (req) => {
       },
     )
 
+    const documentWorkerResponse = await fetch(
+      `${Deno.env.get('SUPABASE_URL')}/functions/v1/generated-document-worker`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ batch_size: 5 }),
+      },
+    )
+
     let workerPayload: Record<string, unknown> = {}
     try {
       workerPayload = await workerResponse.json() as Record<string, unknown>
@@ -33,10 +45,21 @@ Deno.serve(async (req) => {
       workerPayload = {}
     }
 
-    const { data: recoveredJobs, error: recoveryError } = await serviceClient.rpc(
-      'recover_stale_email_outbox_jobs',
-      { p_lock_age_seconds: 900 },
-    )
+    let documentWorkerPayload: Record<string, unknown> = {}
+    try {
+      documentWorkerPayload = await documentWorkerResponse.json() as Record<
+        string,
+        unknown
+      >
+    } catch (_) {
+      documentWorkerPayload = {}
+    }
+
+    const { data: recoveredJobs, error: recoveryError } = await serviceClient
+      .rpc(
+        'recover_stale_email_outbox_jobs',
+        { p_lock_age_seconds: 900 },
+      )
 
     const { data: expiredRejectedBookings, error: paymentExpiryError } = await serviceClient.rpc(
       'expire_payment_resubmission_deadlines',
@@ -45,15 +68,28 @@ Deno.serve(async (req) => {
       'auto_complete_delivered_bookings',
     )
 
-    if (recoveryError != null || paymentExpiryError != null || deliveryExpiryError != null) {
+    if (
+      recoveryError != null || paymentExpiryError != null ||
+      deliveryExpiryError != null
+    ) {
       console.error('recover_stale_email_outbox_jobs failed', recoveryError)
-      console.error('expire_payment_resubmission_deadlines failed', paymentExpiryError)
-      console.error('auto_complete_delivered_bookings failed', deliveryExpiryError)
-      return jsonResponse({ error: 'Failed to run scheduled maintenance' }, 500)
+      console.error(
+        'expire_payment_resubmission_deadlines failed',
+        paymentExpiryError,
+      )
+      console.error(
+        'auto_complete_delivered_bookings failed',
+        deliveryExpiryError,
+      )
+      return jsonResponse(
+        { error: 'Failed to run scheduled maintenance' },
+        500,
+      )
     }
 
     return jsonResponse({
       email_dispatch: workerPayload,
+      generated_documents: documentWorkerPayload,
       recovered_stale_jobs: recoveredJobs ?? 0,
       delivery_grace_window_expiry: autoCompletedDeliveries ?? 0,
       payment_resubmission_expiry: expiredRejectedBookings ?? 0,

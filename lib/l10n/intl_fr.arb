@@ -225,6 +225,24 @@
       "documentId": {}
     }
   },
+  "generatedDocumentTypeBookingInvoice": "Facture de reservation",
+  "generatedDocumentTypePaymentReceipt": "Recu de paiement",
+  "generatedDocumentTypePayoutReceipt": "Recu de versement",
+  "generatedDocumentStatusPendingLabel": "En generation",
+  "generatedDocumentStatusFailedLabel": "Regeneration requise",
+  "generatedDocumentPendingMessage": "Ce document est encore en cours de generation. Revenez dans un instant.",
+  "generatedDocumentFailedMessage": "Ce document n'a pas encore pu etre genere. Reessayez plus tard ou contactez le support si le probleme persiste.",
+  "generatedDocumentAvailableAtLabel": "Disponible le",
+  "generatedDocumentFailureReasonLabel": "Probleme",
+  "generatedDocumentOpenInBrowserAction": "Ouvrir dans le navigateur",
+  "generatedDocumentDownloadAction": "Telecharger le PDF",
+  "notificationGeneratedDocumentReadyTitle": "Document pret",
+  "notificationGeneratedDocumentReadyBody": "Votre {documentType} est pret a etre consulte en toute securite.",
+  "@notificationGeneratedDocumentReadyBody": {
+    "placeholders": {
+      "documentType": {}
+    }
+  },
   "forbiddenMessage": "This area is not available for your account.",
   "forbiddenTitle": "Access restricted",
   "forbiddenAdminStepUpMessage": "Re-authenticate recently before opening this sensitive admin surface.",
@@ -613,6 +631,7 @@
   "paymentProofRejectedMessage": "Preuve de paiement rejetee.",
   "generatedDocumentsTitle": "Documents generes",
   "generatedDocumentsEmptyMessage": "Les factures et recus generes apparaitront ici lorsqu'ils seront disponibles.",
+  "generatedDocumentsTapReadyHint": "Touchez un document pret pour l'ouvrir de maniere securisee.",
   "paymentProofPendingWindowMessage": "La preuve de paiement ne peut etre soumise que tant que le paiement est en attente.",
   "paymentProofExactAmountRequiredMessage": "Le montant verifie doit correspondre exactement au total de la reservation.",
   "paymentProofAlreadyReviewedMessage": "Cette preuve de paiement a deja ete revue.",
