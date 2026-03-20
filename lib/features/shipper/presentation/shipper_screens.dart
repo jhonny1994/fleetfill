@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:file_picker/file_picker.dart';
 import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
+import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:fleetfill/features/profile/presentation/profile_components.dart';
 import 'package:fleetfill/features/shipper/shipper.dart';
 import 'package:flutter/foundation.dart';
@@ -43,16 +44,104 @@ class ShipperShellScreen extends StatelessWidget {
   }
 }
 
-class ShipperHomeScreen extends StatelessWidget {
+class ShipperHomeScreen extends ConsumerWidget {
   const ShipperHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final shipmentsAsync = ref.watch(myShipperShipmentsProvider);
+    final bookingsAsync = ref.watch(myShipperBookingsProvider);
+    final notificationsAsync = ref.watch(myNotificationsProvider);
+    final activeBookings = bookingsAsync.asData?.value
+            .where(
+              (booking) => booking.bookingStatus != BookingStatus.completed &&
+                  booking.bookingStatus != BookingStatus.cancelled,
+            )
+            .length ??
+        0;
+    final latestNotification = notificationsAsync.asData?.value.firstOrNull;
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.shipperHomeTitle,
-      description: s.shipperHomeDescription,
+      child: ListView(
+        key: const PageStorageKey<String>('shipper-home-screen'),
+        children: [
+          AppSectionHeader(
+            title: s.shipperHomeTitle,
+            subtitle: s.shipperHomeDescription,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          ProfileSummaryCard(
+            title: s.shipperHomeTitle,
+            rows: [
+              ProfileSummaryRow(
+                label: s.shipperHomeActiveBookingsLabel,
+                value: BidiFormatters.latinIdentifier(activeBookings.toString()),
+              ),
+              ProfileSummaryRow(
+                label: s.myShipmentsTitle,
+                value: BidiFormatters.latinIdentifier(
+                  (shipmentsAsync.asData?.value.length ?? 0).toString(),
+                ),
+              ),
+              ProfileSummaryRow(
+                label: s.shipperHomeUnreadNotificationsLabel,
+                value: BidiFormatters.latinIdentifier(
+                  (notificationsAsync.asData?.value.where((n) => !n.isRead).length ?? 0).toString(),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            s.shipperHomeRecentNotificationTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          if (latestNotification == null)
+            AppStateMessage(
+              icon: Icons.notifications_none_rounded,
+              title: s.notificationsCenterTitle,
+              message: s.shipperHomeNoRecentNotificationMessage,
+            )
+          else
+            AppListCard(
+              title: _notificationPreviewTitle(context, latestNotification),
+              subtitle: _notificationPreviewBody(context, latestNotification),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.push(
+                AppRoutePath.sharedNotificationDetail.replaceFirst(':id', latestNotification.id),
+              ),
+            ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            s.shipperHomeQuickActionsTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.searchTripsTitle,
+            subtitle: s.searchTripsDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.go(AppRoutePath.shipperSearch),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.notificationsCenterTitle,
+            subtitle: s.notificationsCenterDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.sharedNotifications),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.supportTitle,
+            subtitle: s.supportDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.sharedSupport),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1007,6 +1096,16 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
       return;
     }
 
+    final submittedAmount = _tryParseMoneyAmount(amountController.text);
+    if (submittedAmount == null || submittedAmount <= 0) {
+      amountController.dispose();
+      referenceController.dispose();
+      if (mounted) {
+        AppFeedback.showSnackBar(this.context, s.vehiclePositiveNumberMessage);
+      }
+      return;
+    }
+
     setState(() => _isUploading = true);
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -1034,7 +1133,7 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
             bookingId: booking.id,
             paymentRail: paymentRail,
             draft: draft,
-            submittedAmountDzd: double.parse(amountController.text.trim()),
+            submittedAmountDzd: submittedAmount,
             submittedReference: referenceController.text,
           );
       ref
@@ -1052,6 +1151,14 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
       if (mounted) setState(() => _isUploading = false);
     }
   }
+}
+
+double? _tryParseMoneyAmount(String value) {
+  final normalized = value.trim().replaceAll(',', '.');
+  if (normalized.isEmpty) {
+    return null;
+  }
+  return double.tryParse(normalized);
 }
 
 class _ShipmentEditorSheet extends ConsumerStatefulWidget {
@@ -1573,6 +1680,50 @@ String _shipmentLaneLabel(
   final destination = communeMap[shipment.destinationCommuneId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(shipment.destinationCommuneId.toString());
   return '$origin -> $destination';
+}
+
+String _notificationPreviewTitle(
+  BuildContext context,
+  AppNotificationRecord notification,
+) {
+  final s = S.of(context);
+  return switch (notification.type) {
+    'booking_created' => s.notificationBookingCreatedTitle,
+    'payment_proof_submitted' => s.notificationPaymentProofSubmittedTitle,
+    'payment_secured' => s.notificationPaymentSecuredTitle,
+    'payment_rejected' => s.notificationPaymentRejectedTitle,
+    'booking_milestone_updated' => s.notificationBookingMilestoneUpdatedTitle,
+    'carrier_review_submitted' => s.notificationCarrierReviewSubmittedTitle,
+    _ => notification.title,
+  };
+}
+
+String _notificationPreviewBody(
+  BuildContext context,
+  AppNotificationRecord notification,
+) {
+  final s = S.of(context);
+  return switch (notification.type) {
+    'booking_created' => s.notificationBookingCreatedBody,
+    'payment_proof_submitted' => s.notificationPaymentProofSubmittedBody,
+    'payment_secured' => s.notificationPaymentSecuredBody,
+    'payment_rejected' => s.notificationPaymentRejectedBody,
+    'booking_milestone_updated' => s.notificationBookingMilestoneUpdatedBody(
+        switch (notification.data['milestone'] as String?) {
+          'payment_under_review' => s.trackingEventPaymentUnderReviewLabel,
+          'confirmed' => s.trackingEventConfirmedLabel,
+          'picked_up' => s.trackingEventPickedUpLabel,
+          'in_transit' => s.trackingEventInTransitLabel,
+          'delivered_pending_review' => s.trackingEventDeliveredPendingReviewLabel,
+          'completed' => s.trackingEventCompletedLabel,
+          'cancelled' => s.trackingEventCancelledLabel,
+          'disputed' => s.trackingEventDisputedLabel,
+          _ => notification.data['milestone'] as String? ?? '',
+        },
+      ),
+    'carrier_review_submitted' => s.notificationCarrierReviewSubmittedBody,
+    _ => notification.body,
+  };
 }
 
 String _shipmentCompactLabel(BuildContext context, ShipmentDraftRecord shipment) {

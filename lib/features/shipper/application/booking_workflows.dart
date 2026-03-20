@@ -61,6 +61,22 @@ class BookingWorkflowController {
     return booking;
   }
 
+  Future<void> submitCarrierReview({
+    required String bookingId,
+    required int score,
+    String? comment,
+  }) async {
+    await ref.read(bookingRepositoryProvider).submitCarrierReview(
+          bookingId: bookingId,
+          score: score,
+          comment: comment,
+        );
+    ref
+      ..invalidate(bookingDetailProvider(bookingId))
+      ..invalidate(trackingEventsProvider(bookingId))
+      ..invalidate(myNotificationsProvider);
+  }
+
   void _invalidateBooking(String bookingId, String shipmentId) {
     ref
       ..invalidate(bookingDetailProvider(bookingId))

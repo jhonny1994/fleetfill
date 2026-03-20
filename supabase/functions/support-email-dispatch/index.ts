@@ -1,11 +1,9 @@
 import {
-  buildSubjectPreview,
   createClient,
   createServiceClient,
-  dispatchEmail,
   jsonResponse,
+  normalizeSupportedLocale,
   requiredEnv,
-  type OutboxJob,
 } from '../_shared/email-runtime.ts'
 
 Deno.serve(async (req) => {
@@ -52,9 +50,11 @@ Deno.serve(async (req) => {
 
     const serviceClient = createServiceClient()
     const profileId = user.id
-    const locale = payload.locale?.trim() || 'en'
+    const locale = normalizeSupportedLocale(payload.locale)
     const recipientEmail = user.email.trim().toLowerCase()
-    const dedupeKey = `support_ack:${recipientEmail}:${payload.subject.trim()}`
+    const supportInbox = requiredEnv('SUPPORT_EMAIL_TO').trim().toLowerCase()
+    const ackDedupeKey = `support_ack:${profileId}:${crypto.randomUUID()}`
+    const forwardDedupeKey = `support_forward:${profileId}:${crypto.randomUUID()}`
 
     const { error: rateLimitError } = await serviceClient.rpc('assert_rate_limit', {
       p_key: `support-email-dispatch:${profileId}`,
@@ -66,51 +66,57 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'Support acknowledgement rate limit exceeded' }, 429)
     }
 
-    const { data: insertedJob, error: insertError } = await serviceClient
+    const { data: insertedJobs, error: insertJobsError } = await serviceClient
       .from('email_outbox_jobs')
-      .insert({
-        event_key: 'support_acknowledgement',
-        dedupe_key: dedupeKey,
-        profile_id: profileId,
-        template_key: 'support_acknowledgement',
-        locale,
-        recipient_email: recipientEmail,
-        priority: 'high',
-        status: 'queued',
-        available_at: new Date().toISOString(),
-        payload_snapshot: {
-          subject: payload.subject.trim(),
-          message: payload.message.trim(),
+      .insert([
+        {
+          event_key: 'support_acknowledgement',
+          dedupe_key: ackDedupeKey,
+          profile_id: profileId,
+          template_key: 'support_acknowledgement',
+          locale,
+          recipient_email: recipientEmail,
+          priority: 'high',
+          status: 'queued',
+          available_at: new Date().toISOString(),
+          payload_snapshot: {
+            subject: payload.subject.trim(),
+            message: payload.message.trim(),
+          },
         },
-      })
+        {
+          event_key: 'support_request_forwarded',
+          dedupe_key: forwardDedupeKey,
+          profile_id: profileId,
+          template_key: 'support_request_forwarded',
+          locale,
+          recipient_email: supportInbox,
+          priority: 'high',
+          status: 'queued',
+          available_at: new Date().toISOString(),
+          payload_snapshot: {
+            subject: payload.subject.trim(),
+            message: payload.message.trim(),
+            sender_email: recipientEmail,
+            profile_id: profileId,
+          },
+        },
+      ])
       .select()
-      .single()
 
-    if (insertError != null) {
-      console.error('support acknowledgement enqueue failed', insertError)
-      return jsonResponse({ error: 'Failed to enqueue support acknowledgement' }, 500)
+    if (insertJobsError != null) {
+      console.error('support email enqueue failed', insertJobsError)
+      return jsonResponse({ error: 'Failed to enqueue support request' }, 500)
     }
 
-    const job = insertedJob as OutboxJob
-    const delivery = await dispatchEmail(job)
-    const subjectPreview = buildSubjectPreview(job.template_key, job.payload_snapshot)
-
-    const { error: completionError } = await serviceClient.rpc('complete_email_outbox_job', {
-      p_job_id: job.id,
-      p_provider: delivery.provider,
-      p_provider_message_id: delivery.providerMessageId,
-      p_subject_preview: subjectPreview,
-    })
-
-    if (completionError != null) {
-      console.error('support acknowledgement completion failed', completionError)
-      return jsonResponse({ error: 'Support acknowledgement send failed' }, 500)
-    }
+    const jobs = (insertedJobs ?? []) as Array<{ id: string; event_key: string }>
+    const acknowledgementJob = jobs.find((job) => job.event_key === 'support_acknowledgement')
+    const forwardJob = jobs.find((job) => job.event_key === 'support_request_forwarded')
 
     return jsonResponse({
-      job_id: job.id,
-      provider_message_id: delivery.providerMessageId,
-      status: 'sent_to_provider',
+      acknowledgement_job_id: acknowledgementJob?.id,
+      forward_job_id: forwardJob?.id,
+      status: 'queued',
     })
   } catch (error) {
     console.error('support-email-dispatch failed', error)

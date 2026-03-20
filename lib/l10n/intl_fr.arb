@@ -190,6 +190,23 @@
   },
   "notificationsCenterDescription": "Consultez les alertes recentes, les mises a jour de reservation et les rappels utiles.",
   "notificationsCenterTitle": "Notifications",
+  "notificationBookingCreatedTitle": "Reservation creee",
+  "notificationBookingCreatedBody": "Votre reservation est prete. Continuez vers les instructions de paiement pour la faire avancer.",
+  "notificationPaymentProofSubmittedTitle": "Preuve de paiement envoyee",
+  "notificationPaymentProofSubmittedBody": "Votre preuve de paiement attend une revue.",
+  "notificationPaymentSecuredTitle": "Paiement securise",
+  "notificationPaymentSecuredBody": "Votre paiement est securise et la reservation est confirmee.",
+  "notificationPaymentRejectedTitle": "Preuve de paiement rejetee",
+  "notificationPaymentRejectedBody": "Votre preuve de paiement a ete rejetee. Revisez le motif et renvoyez-la avant l'echeance.",
+  "notificationBookingMilestoneUpdatedTitle": "Etape de reservation mise a jour",
+  "notificationBookingMilestoneUpdatedBody": "Derniere etape : {milestoneLabel}",
+  "@notificationBookingMilestoneUpdatedBody": {
+    "placeholders": {
+      "milestoneLabel": {}
+    }
+  },
+  "notificationCarrierReviewSubmittedTitle": "Avis transporteur recu",
+  "notificationCarrierReviewSubmittedBody": "Un nouvel avis expediteur a ete ajoute a votre profil.",
   "notificationsPermissionDescription": "Explain why tracking and booking updates matter before opening system settings.",
   "notificationsPermissionTitle": "Notifications permission",
   "notFoundMessage": "The requested page or entity could not be found.",
@@ -263,6 +280,11 @@
     }
   },
   "shipperHomeDescription": "Active bookings, recent notifications, quick actions, and support shortcut live here.",
+  "shipperHomeActiveBookingsLabel": "Reservations actives",
+  "shipperHomeUnreadNotificationsLabel": "Notifications non lues",
+  "shipperHomeRecentNotificationTitle": "Notification recente",
+  "shipperHomeNoRecentNotificationMessage": "Vos dernieres mises a jour operationnelles apparaitront ici.",
+  "shipperHomeQuickActionsTitle": "Actions rapides",
   "shipperHomeNavLabel": "Home",
   "shipperHomeTitle": "Shipper home",
   "shipperProfileDescription": "Profile, phone, preferences, and support shortcuts stay in one branch.",
@@ -542,10 +564,20 @@
   "adminPayoutQueueEmptyMessage": "Aucun versement n'a encore ete libere.",
   "supportSubjectLabel": "Sujet du support",
   "supportMessageLabel": "Message au support",
+  "supportConfiguredEmailMessage": "E-mail du support : {supportEmail}",
+  "@supportConfiguredEmailMessage": {
+    "placeholders": {
+      "supportEmail": {}
+    }
+  },
+  "supportReferenceHintMessage": "Ajoutez tout identifiant de reservation, numero de suivi ou reference de paiement qui aidera le support a enqueter plus vite.",
   "supportSendAction": "Envoyer l'email au support",
   "supportMessageSentMessage": "Message de support envoye.",
   "searchCarrierRatingLabel": "Note du transporteur",
-  "searchResultTypeLabel": "Type de capacite"
+  "searchResultTypeLabel": "Type de capacite",
+  "ratingSubmitAction": "Envoyer un avis",
+  "ratingCommentLabel": "Commentaire",
+  "ratingSubmittedMessage": "Avis transporteur envoye."
   ,"bookingStatusPendingPaymentLabel": "En attente de paiement"
   ,"bookingStatusPaymentUnderReviewLabel": "Paiement en verification"
   ,"bookingStatusConfirmedLabel": "Confirmee"

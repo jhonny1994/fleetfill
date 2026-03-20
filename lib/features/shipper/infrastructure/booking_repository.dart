@@ -36,6 +36,21 @@ class BookingRepository {
         .toList(growable: false);
   }
 
+  Future<List<BookingRecord>> fetchMyShipperBookings({
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final response = await _client
+        .from('bookings')
+        .select()
+        .range(offset, offset + limit - 1)
+        .order('updated_at', ascending: false);
+    return (response as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(BookingRecord.fromJson)
+        .toList(growable: false);
+  }
+
   Future<List<TrackingEventRecord>> fetchTrackingEvents(String bookingId) async {
     final response = await _client
         .from('tracking_events')
@@ -121,5 +136,20 @@ class BookingRepository {
       },
     );
     return BookingRecord.fromJson(response);
+  }
+
+  Future<void> submitCarrierReview({
+    required String bookingId,
+    required int score,
+    String? comment,
+  }) async {
+    await _client.rpc<Map<String, dynamic>>(
+      'submit_carrier_review',
+      params: {
+        'p_booking_id': bookingId,
+        'p_score': score,
+        'p_comment': comment,
+      },
+    );
   }
 }

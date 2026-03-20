@@ -190,6 +190,23 @@
   },
   "notificationsCenterDescription": "راجع التنبيهات الأخيرة وتحديثات الحجوزات والتذكيرات المهمة.",
   "notificationsCenterTitle": "Notifications",
+  "notificationBookingCreatedTitle": "تم إنشاء الحجز",
+  "notificationBookingCreatedBody": "أصبح الحجز جاهزا. تابع إلى تعليمات الدفع لمواصلة الإجراء.",
+  "notificationPaymentProofSubmittedTitle": "تم إرسال إثبات الدفع",
+  "notificationPaymentProofSubmittedBody": "إثبات الدفع بانتظار المراجعة.",
+  "notificationPaymentSecuredTitle": "تم تأمين الدفع",
+  "notificationPaymentSecuredBody": "تم تأمين الدفع وأصبح الحجز مؤكدا.",
+  "notificationPaymentRejectedTitle": "تم رفض إثبات الدفع",
+  "notificationPaymentRejectedBody": "تم رفض إثبات الدفع. راجع السبب وأعد الإرسال قبل انتهاء المهلة.",
+  "notificationBookingMilestoneUpdatedTitle": "تم تحديث مرحلة الحجز",
+  "notificationBookingMilestoneUpdatedBody": "آخر مرحلة: {milestoneLabel}",
+  "@notificationBookingMilestoneUpdatedBody": {
+    "placeholders": {
+      "milestoneLabel": {}
+    }
+  },
+  "notificationCarrierReviewSubmittedTitle": "تم استلام تقييم الناقل",
+  "notificationCarrierReviewSubmittedBody": "تمت إضافة تقييم جديد من مرسل إلى ملفك الشخصي.",
   "notificationsPermissionDescription": "Explain why tracking and booking updates matter before opening system settings.",
   "notificationsPermissionTitle": "Notifications permission",
   "notFoundMessage": "تعذر العثور على الصفحة أو العنصر المطلوب.",
@@ -263,6 +280,11 @@
     }
   },
   "shipperHomeDescription": "Active bookings, recent notifications, quick actions, and support shortcut live here.",
+  "shipperHomeActiveBookingsLabel": "الحجوزات النشطة",
+  "shipperHomeUnreadNotificationsLabel": "الإشعارات غير المقروءة",
+  "shipperHomeRecentNotificationTitle": "أحدث إشعار",
+  "shipperHomeNoRecentNotificationMessage": "ستظهر آخر التحديثات التشغيلية هنا.",
+  "shipperHomeQuickActionsTitle": "إجراءات سريعة",
   "shipperHomeNavLabel": "Home",
   "shipperHomeTitle": "Shipper home",
   "shipperProfileDescription": "Profile, phone, preferences, and support shortcuts stay in one branch.",
@@ -542,10 +564,20 @@
   "adminPayoutQueueEmptyMessage": "لم يتم تحرير أي تحويلات بعد.",
   "supportSubjectLabel": "موضوع الدعم",
   "supportMessageLabel": "رسالة الدعم",
+  "supportConfiguredEmailMessage": "بريد الدعم: {supportEmail}",
+  "@supportConfiguredEmailMessage": {
+    "placeholders": {
+      "supportEmail": {}
+    }
+  },
+  "supportReferenceHintMessage": "أضف أي معرّف حجز أو رقم تتبع أو مرجع دفع يساعد فريق الدعم على التحقيق بسرعة أكبر.",
   "supportSendAction": "إرسال بريد الدعم",
   "supportMessageSentMessage": "تم إرسال رسالة الدعم.",
   "searchCarrierRatingLabel": "تقييم الناقل",
-  "searchResultTypeLabel": "نوع السعة"
+  "searchResultTypeLabel": "نوع السعة",
+  "ratingSubmitAction": "إرسال التقييم",
+  "ratingCommentLabel": "تعليق التقييم",
+  "ratingSubmittedMessage": "تم إرسال تقييم الناقل."
   ,"bookingStatusPendingPaymentLabel": "بانتظار الدفع"
   ,"bookingStatusPaymentUnderReviewLabel": "الدفع قيد المراجعة"
   ,"bookingStatusConfirmedLabel": "مؤكد"

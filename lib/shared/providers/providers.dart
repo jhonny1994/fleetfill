@@ -59,6 +59,10 @@ final carrierBookingsProvider = FutureProvider<List<BookingRecord>>((ref) {
   return ref.read(bookingRepositoryProvider).fetchCarrierBookings();
 });
 
+final myShipperBookingsProvider = FutureProvider<List<BookingRecord>>((ref) {
+  return ref.read(bookingRepositoryProvider).fetchMyShipperBookings();
+});
+
 final openDisputesProvider = FutureProvider<List<DisputeRecord>>((ref) {
   return ref.read(disputeRepositoryProvider).fetchOpenDisputes();
 });
@@ -93,6 +97,16 @@ final generatedDocumentsForBookingProvider =
       return ref
           .read(paymentProofRepositoryProvider)
           .fetchGeneratedDocumentsForBooking(bookingId);
+    });
+
+final generatedDocumentDetailProvider =
+    FutureProvider.autoDispose.family<GeneratedDocumentRecord?, String>((
+      ref,
+      documentId,
+    ) {
+      return ref
+          .read(paymentProofRepositoryProvider)
+          .fetchGeneratedDocumentById(documentId);
     });
 
 final pendingPaymentProofsProvider =

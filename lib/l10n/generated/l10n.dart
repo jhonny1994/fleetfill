@@ -1587,6 +1587,126 @@ class S {
     );
   }
 
+  /// `Booking created`
+  String get notificationBookingCreatedTitle {
+    return Intl.message(
+      'Booking created',
+      name: 'notificationBookingCreatedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your booking is ready. Continue to payment instructions to keep it moving.`
+  String get notificationBookingCreatedBody {
+    return Intl.message(
+      'Your booking is ready. Continue to payment instructions to keep it moving.',
+      name: 'notificationBookingCreatedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment proof submitted`
+  String get notificationPaymentProofSubmittedTitle {
+    return Intl.message(
+      'Payment proof submitted',
+      name: 'notificationPaymentProofSubmittedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your payment proof is waiting for review.`
+  String get notificationPaymentProofSubmittedBody {
+    return Intl.message(
+      'Your payment proof is waiting for review.',
+      name: 'notificationPaymentProofSubmittedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment secured`
+  String get notificationPaymentSecuredTitle {
+    return Intl.message(
+      'Payment secured',
+      name: 'notificationPaymentSecuredTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your payment has been secured and the booking is confirmed.`
+  String get notificationPaymentSecuredBody {
+    return Intl.message(
+      'Your payment has been secured and the booking is confirmed.',
+      name: 'notificationPaymentSecuredBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment proof rejected`
+  String get notificationPaymentRejectedTitle {
+    return Intl.message(
+      'Payment proof rejected',
+      name: 'notificationPaymentRejectedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your payment proof was rejected. Review the reason and resubmit before the deadline.`
+  String get notificationPaymentRejectedBody {
+    return Intl.message(
+      'Your payment proof was rejected. Review the reason and resubmit before the deadline.',
+      name: 'notificationPaymentRejectedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking milestone updated`
+  String get notificationBookingMilestoneUpdatedTitle {
+    return Intl.message(
+      'Booking milestone updated',
+      name: 'notificationBookingMilestoneUpdatedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Latest milestone: {milestoneLabel}`
+  String notificationBookingMilestoneUpdatedBody(Object milestoneLabel) {
+    return Intl.message(
+      'Latest milestone: $milestoneLabel',
+      name: 'notificationBookingMilestoneUpdatedBody',
+      desc: '',
+      args: [milestoneLabel],
+    );
+  }
+
+  /// `Carrier review received`
+  String get notificationCarrierReviewSubmittedTitle {
+    return Intl.message(
+      'Carrier review received',
+      name: 'notificationCarrierReviewSubmittedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new shipper review has been added to your profile.`
+  String get notificationCarrierReviewSubmittedBody {
+    return Intl.message(
+      'A new shipper review has been added to your profile.',
+      name: 'notificationCarrierReviewSubmittedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Explain why tracking and booking updates matter before opening system settings.`
   String get notificationsPermissionDescription {
     return Intl.message(
@@ -2262,6 +2382,56 @@ class S {
     return Intl.message(
       'Active bookings, recent notifications, quick actions, and support shortcut live here.',
       name: 'shipperHomeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active bookings`
+  String get shipperHomeActiveBookingsLabel {
+    return Intl.message(
+      'Active bookings',
+      name: 'shipperHomeActiveBookingsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unread notifications`
+  String get shipperHomeUnreadNotificationsLabel {
+    return Intl.message(
+      'Unread notifications',
+      name: 'shipperHomeUnreadNotificationsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent notification`
+  String get shipperHomeRecentNotificationTitle {
+    return Intl.message(
+      'Recent notification',
+      name: 'shipperHomeRecentNotificationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your latest operational updates will appear here.`
+  String get shipperHomeNoRecentNotificationMessage {
+    return Intl.message(
+      'Your latest operational updates will appear here.',
+      name: 'shipperHomeNoRecentNotificationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick actions`
+  String get shipperHomeQuickActionsTitle {
+    return Intl.message(
+      'Quick actions',
+      name: 'shipperHomeQuickActionsTitle',
       desc: '',
       args: [],
     );
@@ -4677,6 +4847,26 @@ class S {
     );
   }
 
+  /// `Support email: {supportEmail}`
+  String supportConfiguredEmailMessage(Object supportEmail) {
+    return Intl.message(
+      'Support email: $supportEmail',
+      name: 'supportConfiguredEmailMessage',
+      desc: '',
+      args: [supportEmail],
+    );
+  }
+
+  /// `Include any booking ID, tracking number, or payment reference that can help support investigate faster.`
+  String get supportReferenceHintMessage {
+    return Intl.message(
+      'Include any booking ID, tracking number, or payment reference that can help support investigate faster.',
+      name: 'supportReferenceHintMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send support email`
   String get supportSendAction {
     return Intl.message(
@@ -4712,6 +4902,36 @@ class S {
     return Intl.message(
       'Capacity type',
       name: 'searchResultTypeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submit review`
+  String get ratingSubmitAction {
+    return Intl.message(
+      'Submit review',
+      name: 'ratingSubmitAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review comment`
+  String get ratingCommentLabel {
+    return Intl.message(
+      'Review comment',
+      name: 'ratingCommentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carrier review submitted.`
+  String get ratingSubmittedMessage {
+    return Intl.message(
+      'Carrier review submitted.',
+      name: 'ratingSubmittedMessage',
       desc: '',
       args: [],
     );

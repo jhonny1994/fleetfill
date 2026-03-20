@@ -109,6 +109,15 @@ class ShipmentDetailScreen extends ConsumerWidget {
           if (communesAsync.isLoading) {
             return const AppLoadingState();
           }
+          if (communesAsync.hasError) {
+            return AppErrorState(
+              error: AppError(
+                code: 'shipment_detail_communes_failed',
+                message: mapAppErrorMessage(s, communesAsync.error ?? Exception('unknown')),
+              ),
+              onRetry: () => ref.invalidate(communesProvider),
+            );
+          }
           final communeMap = {
             for (final commune in communesAsync.requireValue) commune.id: commune,
           };
@@ -342,6 +351,13 @@ class BookingTrackingScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
+              if (canShipperConfirm && booking.bookingStatus == BookingStatus.completed) ...[
+                OutlinedButton(
+                  onPressed: () => unawaited(_openReview(context, ref, booking)),
+                  child: Text(s.ratingSubmitAction),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
               Text(
                 s.trackingTimelineTitle,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -513,6 +529,71 @@ class BookingTrackingScreen extends ConsumerWidget {
       descriptionController.dispose();
     }
   }
+
+  Future<void> _openReview(
+    BuildContext context,
+    WidgetRef ref,
+    BookingRecord booking,
+  ) async {
+    final s = S.of(context);
+    var score = 5;
+    final commentController = TextEditingController();
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Padding(
+          padding: EdgeInsets.only(
+            left: AppSpacing.md,
+            right: AppSpacing.md,
+            top: AppSpacing.md,
+            bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(s.ratingSubmitAction, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: AppSpacing.md),
+              DropdownButtonFormField<int>(
+                initialValue: score,
+                items: List.generate(5, (index) => index + 1)
+                    .map((value) => DropdownMenuItem(value: value, child: Text('$value/5')))
+                    .toList(growable: false),
+                onChanged: (value) {
+                  if (value != null) setModalState(() => score = value);
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AuthTextField(controller: commentController, label: s.ratingCommentLabel),
+              const SizedBox(height: AppSpacing.md),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(s.confirmLabel),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (confirmed != true) {
+      commentController.dispose();
+      return;
+    }
+    try {
+      await ref.read(bookingWorkflowControllerProvider).submitCarrierReview(
+            bookingId: booking.id,
+            score: score,
+            comment: commentController.text,
+          );
+      if (!context.mounted) return;
+      AppFeedback.showSnackBar(context, s.ratingSubmittedMessage);
+    } on PostgrestException catch (error) {
+      if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    } finally {
+      commentController.dispose();
+    }
+  }
 }
 
 class CarrierPublicProfileScreen extends ConsumerWidget {
@@ -637,6 +718,15 @@ class RouteDetailScreen extends ConsumerWidget {
           if (communesAsync.isLoading) {
             return const AppLoadingState();
           }
+          if (communesAsync.hasError) {
+            return AppErrorState(
+              error: AppError(
+                code: 'route_detail_communes_failed',
+                message: mapAppErrorMessage(s, communesAsync.error ?? Exception('unknown')),
+              ),
+              onRetry: () => ref.invalidate(communesProvider),
+            );
+          }
           final communeMap = {
             for (final commune in communesAsync.requireValue) commune.id: commune,
           };
@@ -725,6 +815,15 @@ class OneOffTripDetailScreen extends ConsumerWidget {
           }
           if (communesAsync.isLoading) {
             return const AppLoadingState();
+          }
+          if (communesAsync.hasError) {
+            return AppErrorState(
+              error: AppError(
+                code: 'oneoff_trip_detail_communes_failed',
+                message: mapAppErrorMessage(s, communesAsync.error ?? Exception('unknown')),
+              ),
+              onRetry: () => ref.invalidate(communesProvider),
+            );
           }
           final communeMap = {
             for (final commune in communesAsync.requireValue) commune.id: commune,
@@ -924,20 +1023,71 @@ class DocumentViewerScreen extends ConsumerWidget {
   }
 }
 
-class GeneratedDocumentViewerScreen extends StatelessWidget {
+class GeneratedDocumentViewerScreen extends ConsumerWidget {
   const GeneratedDocumentViewerScreen({required this.documentId, super.key});
 
   final String documentId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final formattedDocumentId = BidiFormatters.latinIdentifier(documentId);
+    final documentAsync = ref.watch(generatedDocumentDetailProvider(documentId));
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.generatedDocumentViewerTitle(formattedDocumentId),
-      description: s.generatedDocumentViewerDescription,
-      showSummary: false,
+      child: AppAsyncStateView<GeneratedDocumentRecord?>(
+        value: documentAsync,
+        onRetry: () => ref.invalidate(generatedDocumentDetailProvider(documentId)),
+        data: (document) {
+          if (document == null) {
+            return const AppNotFoundState();
+          }
+
+          return FutureBuilder<String>(
+            future: ref
+                .read(paymentProofRepositoryProvider)
+                .createSignedGeneratedDocumentUrl(document),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const AppLoadingState();
+              }
+
+              if (snapshot.hasError || !snapshot.hasData) {
+                return AppErrorState(
+                  error: AppError(
+                    code: 'generated_document_signed_url_failed',
+                    message: mapAuthErrorMessage(
+                      s,
+                      snapshot.error?.toString() ?? 'document_signed_url_unavailable',
+                    ),
+                    technicalDetails: snapshot.error?.toString(),
+                  ),
+                  onRetry: () => ref.invalidate(generatedDocumentDetailProvider(documentId)),
+                );
+              }
+
+              return AppStateMessage(
+                icon: Icons.description_outlined,
+                title: s.generatedDocumentViewerTitle(formattedDocumentId),
+                message: s.verificationDocumentOpenPreparedMessage,
+                action: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: () => unawaited(_openExternal(snapshot.data!)),
+                      icon: const Icon(Icons.open_in_new_rounded),
+                      label: Text(s.documentViewerOpenAction),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    SelectionArea(child: Text(snapshot.data!)),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

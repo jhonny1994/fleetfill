@@ -13,6 +13,7 @@ class SupportHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _SupportHomeScreenState extends ConsumerState<SupportHomeScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _subjectController = TextEditingController();
   final _messageController = TextEditingController();
   bool _isSubmitting = false;
@@ -27,6 +28,7 @@ class _SupportHomeScreenState extends ConsumerState<SupportHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final supportEmail = _configuredSupportEmail();
 
     return AppPageScaffold(
       title: s.supportTitle,
@@ -37,28 +39,39 @@ class _SupportHomeScreenState extends ConsumerState<SupportHomeScreen> {
             subtitle: s.supportDescription,
           ),
           const SizedBox(height: AppSpacing.lg),
+          if (supportEmail != null) ...[
+            AuthInfoBanner(message: s.supportConfiguredEmailMessage(supportEmail)),
+            const SizedBox(height: AppSpacing.md),
+          ],
+          AuthInfoBanner(message: s.supportReferenceHintMessage),
+          const SizedBox(height: AppSpacing.md),
           AuthCard(
-            child: AppFocusTraversal.form(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AuthTextField(
-                    controller: _subjectController,
-                    label: s.supportSubjectLabel,
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  AuthTextField(
-                    controller: _messageController,
-                    label: s.supportMessageLabel,
-                    maxLines: 6,
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  AuthSubmitButton(
-                    label: s.supportSendAction,
-                    isLoading: _isSubmitting,
-                    onPressed: () => unawaited(_send(context)),
-                  ),
-                ],
+            child: Form(
+              key: _formKey,
+              child: AppFocusTraversal.form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AuthTextField(
+                      controller: _subjectController,
+                      label: s.supportSubjectLabel,
+                      validator: _requiredValidator,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    AuthTextField(
+                      controller: _messageController,
+                      label: s.supportMessageLabel,
+                      maxLines: 6,
+                      validator: _requiredValidator,
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    AuthSubmitButton(
+                      label: s.supportSendAction,
+                      isLoading: _isSubmitting,
+                      onPressed: () => unawaited(_send(context)),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -69,8 +82,8 @@ class _SupportHomeScreenState extends ConsumerState<SupportHomeScreen> {
 
   Future<void> _send(BuildContext context) async {
     final s = S.of(context);
-    if (_subjectController.text.trim().isEmpty || _messageController.text.trim().isEmpty) {
-      AppFeedback.showSnackBar(context, s.authRequiredFieldMessage);
+    final formState = _formKey.currentState;
+    if (formState == null || !formState.validate()) {
       return;
     }
     setState(() => _isSubmitting = true);
@@ -89,5 +102,19 @@ class _SupportHomeScreenState extends ConsumerState<SupportHomeScreen> {
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
+  }
+
+  String? _requiredValidator(String? value) {
+    if ((value ?? '').trim().isEmpty) {
+      return S.of(context).authRequiredFieldMessage;
+    }
+    return null;
+  }
+
+  String? _configuredSupportEmail() {
+    const direct = String.fromEnvironment('SUPPORT_EMAIL');
+    const fallback = String.fromEnvironment('APP_SUPPORT_EMAIL');
+    final value = direct.trim().isNotEmpty ? direct.trim() : fallback.trim();
+    return value.isEmpty ? null : value;
   }
 }
