@@ -10,10 +10,10 @@ void main() {
 
     setUpAll(() {
       engagementMigration = File(
-        'supabase/migrations/20260320120700_create_reviews_notifications_and_support_rpc.sql',
+        'supabase/migrations/20260320120700_create_carrier_review_and_notification_rpc.sql',
       ).readAsStringSync();
       hardeningMigration = File(
-        'supabase/migrations/20260320120800_harden_phase11_notifications_and_email.sql',
+        'supabase/migrations/20260320120800_harden_notification_and_email_delivery_rules.sql',
       ).readAsStringSync();
     });
 
