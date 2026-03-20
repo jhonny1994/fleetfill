@@ -1,6 +1,7 @@
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/features/admin/admin.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
+import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:fleetfill/features/shipper/shipper.dart';
 import 'package:fleetfill/shared/models/models.dart';
 import 'package:fleetfill/shared/providers/location_repository.dart';
@@ -102,6 +103,18 @@ final pendingPaymentProofsProvider =
 final clientSettingsProvider = FutureProvider<Map<String, dynamic>>((ref) {
   return ref.read(bookingRepositoryProvider).fetchClientSettings();
 });
+
+final myNotificationsProvider = FutureProvider<List<AppNotificationRecord>>((ref) {
+  return ref.read(notificationRepositoryProvider).fetchMyNotifications();
+});
+
+final notificationDetailProvider =
+    FutureProvider.autoDispose.family<AppNotificationRecord?, String>((
+      ref,
+      notificationId,
+    ) {
+      return ref.read(notificationRepositoryProvider).fetchNotificationById(notificationId);
+    });
 
 final vehicleDetailProvider = FutureProvider.autoDispose.family<CarrierVehicle?, String>((
   ref,

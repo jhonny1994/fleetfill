@@ -1175,6 +1175,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "supportDescription": MessageLookupByLibrary.simpleMessage(
       "Support starts with clear email guidance and structured issue details.",
     ),
+    "supportMessageLabel": MessageLookupByLibrary.simpleMessage(
+      "Support message",
+    ),
+    "supportMessageSentMessage": MessageLookupByLibrary.simpleMessage(
+      "Support message sent.",
+    ),
+    "supportSendAction": MessageLookupByLibrary.simpleMessage(
+      "Send support email",
+    ),
+    "supportSubjectLabel": MessageLookupByLibrary.simpleMessage(
+      "Support subject",
+    ),
     "supportTitle": MessageLookupByLibrary.simpleMessage("Support"),
     "suspendedMessage": MessageLookupByLibrary.simpleMessage(
       "Your account is currently suspended. Contact FleetFill support by email.",
