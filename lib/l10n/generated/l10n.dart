@@ -4657,6 +4657,46 @@ class S {
     );
   }
 
+  /// `Support subject`
+  String get supportSubjectLabel {
+    return Intl.message(
+      'Support subject',
+      name: 'supportSubjectLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Support message`
+  String get supportMessageLabel {
+    return Intl.message(
+      'Support message',
+      name: 'supportMessageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send support email`
+  String get supportSendAction {
+    return Intl.message(
+      'Send support email',
+      name: 'supportSendAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Support message sent.`
+  String get supportMessageSentMessage {
+    return Intl.message(
+      'Support message sent.',
+      name: 'supportMessageSentMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Carrier rating`
   String get searchCarrierRatingLabel {
     return Intl.message(
