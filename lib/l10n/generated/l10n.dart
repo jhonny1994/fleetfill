@@ -4487,6 +4487,136 @@ class S {
     );
   }
 
+  /// `Tracking timeline`
+  String get trackingTimelineTitle {
+    return Intl.message(
+      'Tracking timeline',
+      name: 'trackingTimelineTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No tracking events are available yet.`
+  String get trackingTimelineEmptyMessage {
+    return Intl.message(
+      'No tracking events are available yet.',
+      name: 'trackingTimelineEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm delivery`
+  String get deliveryConfirmAction {
+    return Intl.message(
+      'Confirm delivery',
+      name: 'deliveryConfirmAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivery confirmed.`
+  String get deliveryConfirmedMessage {
+    return Intl.message(
+      'Delivery confirmed.',
+      name: 'deliveryConfirmedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking milestone updated.`
+  String get carrierMilestoneUpdatedMessage {
+    return Intl.message(
+      'Booking milestone updated.',
+      name: 'carrierMilestoneUpdatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment under review`
+  String get trackingEventPaymentUnderReviewLabel {
+    return Intl.message(
+      'Payment under review',
+      name: 'trackingEventPaymentUnderReviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirmed`
+  String get trackingEventConfirmedLabel {
+    return Intl.message(
+      'Confirmed',
+      name: 'trackingEventConfirmedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Picked up`
+  String get trackingEventPickedUpLabel {
+    return Intl.message(
+      'Picked up',
+      name: 'trackingEventPickedUpLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In transit`
+  String get trackingEventInTransitLabel {
+    return Intl.message(
+      'In transit',
+      name: 'trackingEventInTransitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivered pending review`
+  String get trackingEventDeliveredPendingReviewLabel {
+    return Intl.message(
+      'Delivered pending review',
+      name: 'trackingEventDeliveredPendingReviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get trackingEventCompletedLabel {
+    return Intl.message(
+      'Completed',
+      name: 'trackingEventCompletedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancelled`
+  String get trackingEventCancelledLabel {
+    return Intl.message(
+      'Cancelled',
+      name: 'trackingEventCancelledLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disputed`
+  String get trackingEventDisputedLabel {
+    return Intl.message(
+      'Disputed',
+      name: 'trackingEventDisputedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Carrier rating`
   String get searchCarrierRatingLabel {
     return Intl.message(

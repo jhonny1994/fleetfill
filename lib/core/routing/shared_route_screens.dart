@@ -15,6 +15,7 @@ import 'package:fleetfill/shared/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -264,21 +265,185 @@ class BookingDetailScreen extends ConsumerWidget {
   }
 }
 
-class BookingTrackingScreen extends StatelessWidget {
+class BookingTrackingScreen extends ConsumerWidget {
   const BookingTrackingScreen({required this.bookingId, super.key});
 
   final String bookingId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final formattedBookingId = BidiFormatters.trackingId(bookingId);
+    final bookingAsync = ref.watch(bookingDetailProvider(bookingId));
+    final eventsAsync = ref.watch(trackingEventsProvider(bookingId));
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.trackingDetailTitle(formattedBookingId),
-      description: s.trackingDetailDescription,
-      showSummary: false,
+      child: AppAsyncStateView<BookingRecord?>(
+        value: bookingAsync,
+        onRetry: () => ref.invalidate(bookingDetailProvider(bookingId)),
+        data: (booking) {
+          if (booking == null) {
+            return const AppNotFoundState();
+          }
+          final canCarrierAdvance = auth?.role == AppUserRole.carrier && auth?.userId == booking.carrierId;
+          final canShipperConfirm = auth?.role == AppUserRole.shipper && auth?.userId == booking.shipperId;
+
+          return ListView(
+            key: const PageStorageKey<String>('booking-tracking-screen'),
+            children: [
+              AppSectionHeader(
+                title: s.trackingDetailTitle(formattedBookingId),
+                subtitle: s.trackingDetailDescription,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ProfileSummaryCard(
+                title: s.bookingReviewTitle,
+                rows: [
+                  ProfileSummaryRow(label: s.bookingTrackingNumberLabel, value: BidiFormatters.latinIdentifier(booking.trackingNumber)),
+                  ProfileSummaryRow(label: s.routeStatusLabel, value: _bookingStatusLabel(s, booking.bookingStatus)),
+                  ProfileSummaryRow(label: s.paymentFlowTitle, value: _paymentStatusLabel(s, booking.paymentStatus)),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              if (canCarrierAdvance && booking.bookingStatus == BookingStatus.confirmed) ...[
+                OutlinedButton(
+                  onPressed: () => unawaited(_recordMilestone(context, ref, booking, 'picked_up')),
+                  child: Text(s.bookingStatusPickedUpLabel),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              if (canCarrierAdvance && booking.bookingStatus == BookingStatus.pickedUp) ...[
+                OutlinedButton(
+                  onPressed: () => unawaited(_recordMilestone(context, ref, booking, 'in_transit')),
+                  child: Text(s.bookingStatusInTransitLabel),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              if (canCarrierAdvance && booking.bookingStatus == BookingStatus.inTransit) ...[
+                OutlinedButton(
+                  onPressed: () => unawaited(_recordMilestone(context, ref, booking, 'delivered_pending_review')),
+                  child: Text(s.bookingStatusDeliveredPendingReviewLabel),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              if (canShipperConfirm && booking.bookingStatus == BookingStatus.deliveredPendingReview) ...[
+                FilledButton(
+                  onPressed: () => unawaited(_confirmDelivery(context, ref, booking)),
+                  child: Text(s.deliveryConfirmAction),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              Text(
+                s.trackingTimelineTitle,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              eventsAsync.when(
+                data: (events) => events.isEmpty
+                    ? AppEmptyState(
+                        title: s.trackingTimelineTitle,
+                        message: s.trackingTimelineEmptyMessage,
+                      )
+                    : Column(
+                        children: events
+                            .map(
+                              (event) => Padding(
+                                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                                child: AppListCard(
+                                  title: _trackingEventLabel(s, event.eventType),
+                                  subtitle: event.note == null || event.note!.isEmpty
+                                      ? _sharedFormatDate(event.recordedAt)
+                                      : '${_sharedFormatDate(event.recordedAt)} • ${event.note}',
+                                ),
+                              ),
+                            )
+                            .toList(growable: false),
+                      ),
+                loading: () => const AppLoadingState(),
+                error: (error, stackTrace) => AppErrorState(
+                  error: AppError(code: 'tracking_events_failed', message: mapAppErrorMessage(s, error)),
+                  onRetry: () => ref.invalidate(trackingEventsProvider(bookingId)),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
+  }
+
+  Future<void> _recordMilestone(
+    BuildContext context,
+    WidgetRef ref,
+    BookingRecord booking,
+    String milestone,
+  ) async {
+    final s = S.of(context);
+    final noteController = TextEditingController();
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          left: AppSpacing.md,
+          right: AppSpacing.md,
+          top: AppSpacing.md,
+          bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(_trackingEventLabel(s, milestone), style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.md),
+            AuthTextField(controller: noteController, label: s.adminVerificationRejectReasonHint),
+            const SizedBox(height: AppSpacing.md),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(s.confirmLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (confirmed != true) {
+      noteController.dispose();
+      return;
+    }
+
+    try {
+      await ref.read(bookingWorkflowControllerProvider).carrierRecordMilestone(
+            bookingId: booking.id,
+            milestone: milestone,
+            note: noteController.text,
+          );
+      if (!context.mounted) return;
+      AppFeedback.showSnackBar(context, s.carrierMilestoneUpdatedMessage);
+    } on PostgrestException catch (error) {
+      if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    } finally {
+      noteController.dispose();
+    }
+  }
+
+  Future<void> _confirmDelivery(
+    BuildContext context,
+    WidgetRef ref,
+    BookingRecord booking,
+  ) async {
+    final s = S.of(context);
+    try {
+      await ref.read(bookingWorkflowControllerProvider).shipperConfirmDelivery(
+            bookingId: booking.id,
+            shipmentId: booking.shipmentId,
+          );
+      if (!context.mounted) return;
+      AppFeedback.showSnackBar(context, s.deliveryConfirmedMessage);
+    } on PostgrestException catch (error) {
+      if (context.mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    }
   }
 }
 
@@ -788,5 +953,19 @@ String _paymentStatusLabel(S s, PaymentStatus status) {
     PaymentStatus.rejected => s.paymentStatusRejectedLabel,
     PaymentStatus.refunded => s.paymentStatusRefundedLabel,
     PaymentStatus.releasedToCarrier => s.paymentStatusReleasedToCarrierLabel,
+  };
+}
+
+String _trackingEventLabel(S s, String eventType) {
+  return switch (eventType) {
+    'payment_under_review' => s.trackingEventPaymentUnderReviewLabel,
+    'confirmed' => s.trackingEventConfirmedLabel,
+    'picked_up' => s.trackingEventPickedUpLabel,
+    'in_transit' => s.trackingEventInTransitLabel,
+    'delivered_pending_review' => s.trackingEventDeliveredPendingReviewLabel,
+    'completed' => s.trackingEventCompletedLabel,
+    'cancelled' => s.trackingEventCancelledLabel,
+    'disputed' => s.trackingEventDisputedLabel,
+    _ => eventType,
   };
 }

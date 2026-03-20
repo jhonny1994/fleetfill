@@ -46,6 +46,18 @@ final bookingDetailProvider =
       return ref.read(bookingRepositoryProvider).fetchBookingById(bookingId);
     });
 
+final trackingEventsProvider =
+    FutureProvider.autoDispose.family<List<TrackingEventRecord>, String>((
+      ref,
+      bookingId,
+    ) {
+      return ref.read(bookingRepositoryProvider).fetchTrackingEvents(bookingId);
+    });
+
+final carrierBookingsProvider = FutureProvider<List<BookingRecord>>((ref) {
+  return ref.read(bookingRepositoryProvider).fetchCarrierBookings();
+});
+
 final paymentProofsForBookingProvider =
     FutureProvider.autoDispose.family<List<PaymentProofRecord>, String>((
       ref,
