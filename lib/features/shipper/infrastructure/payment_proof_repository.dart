@@ -131,4 +131,31 @@ class PaymentProofRepository {
         .map(GeneratedDocumentRecord.fromJson)
         .toList(growable: false);
   }
+
+  Future<GeneratedDocumentRecord?> fetchGeneratedDocumentById(String documentId) async {
+    final response = await _client
+        .from('generated_documents')
+        .select()
+        .eq('id', documentId)
+        .maybeSingle();
+    if (response == null) {
+      return null;
+    }
+    return GeneratedDocumentRecord.fromJson(response);
+  }
+
+  Future<String> createSignedGeneratedDocumentUrl(GeneratedDocumentRecord document) async {
+    final response = await _client.functions.invoke(
+      'signed-file-url',
+      body: {
+        'bucket_id': 'generated-documents',
+        'object_path': document.storagePath,
+      },
+    );
+    final data = response.data as Map<String, dynamic>?;
+    if (data == null || data['signed_url'] == null) {
+      throw const PostgrestException(message: 'document_signed_url_unavailable');
+    }
+    return data['signed_url'] as String;
+  }
 }

@@ -362,30 +362,40 @@ Phase 10 progress notes:
 
 ### Ratings
 
-- [ ] Allow one carrier review per completed booking
-- [ ] Build rating and comment submission flow
-- [ ] Recompute carrier rating aggregates safely
-- [ ] Surface public comments on carrier profile
+- [x] Allow one carrier review per completed booking
+- [x] Build rating and comment submission flow
+- [x] Recompute carrier rating aggregates safely
+- [x] Surface public comments on carrier profile
 
 ### Notifications
 
-- [ ] Build in-app notifications table consumption
+- [x] Build in-app notifications table consumption
 - [ ] Register and manage push device tokens
-- [ ] Trigger in-app and push notifications for critical lifecycle events
-- [ ] Build notifications center UI
-- [ ] Open notifications from shared routes or home/profile entry points rather than dedicated shipper/carrier bottom tabs
+- [x] Trigger in-app and push notifications for critical lifecycle events
+- [x] Build notifications center UI
+- [x] Open notifications from shared routes or home/profile entry points rather than dedicated shipper/carrier bottom tabs
 
 ### Email And Support
 
-- [ ] Integrate transactional email sending from secure server code with a provider-agnostic boundary
-- [ ] Build `email_outbox_jobs` processing worker
-- [ ] Build `email_delivery_logs` recording and update flow
-- [ ] Implement locale-aware template selection with English fallback
-- [ ] Build provider webhook/status handling for delivered, bounced, suppressed, and failed states where supported
-- [ ] Build support acknowledgement email flow
-- [ ] Expose support email entry points in app
-- [ ] Implement webhook authenticity verification, idempotency, and out-of-order event handling
+- [x] Integrate transactional email sending from secure server code with a provider-agnostic boundary
+- [x] Build `email_outbox_jobs` processing worker
+- [x] Build `email_delivery_logs` recording and update flow
+- [x] Implement locale-aware template selection with English fallback
+- [x] Build provider webhook/status handling for delivered, bounced, suppressed, and failed states where supported
+- [x] Build support acknowledgement email flow
+- [x] Expose support email entry points in app
+- [x] Implement webhook authenticity verification, idempotency, and out-of-order event handling
 - [ ] Define and implement the full transactional email event set from the canonical docs, not support acknowledgement only
+
+Phase 11 progress notes:
+
+- shippers can now submit one carrier review per completed booking from shared tracking detail, and carrier rating aggregates are recomputed through a dedicated server function
+- notifications now have real in-app table consumption, a notifications center, notification detail screens, and localized read-state updates instead of placeholders or raw notification keys
+- support now has a real in-app email entry surface backed by the provider-agnostic support dispatch function, with visible support email guidance and structured issue-entry hints
+- support dispatch now normalizes locale inputs and queues both acknowledgement and support-forward emails through the outbox path instead of sending inline in the user request
+- generated document shared routes now resolve to secure signed-URL viewers instead of placeholders
+- user-device registration and notification marking are now server-controlled RPCs, with additional Phase 11 hardening for locale normalization, token validation, webhook event ordering, and notification write integrity before push rollout
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120700_create_reviews_notifications_and_support_rpc.sql` and `test/engagement_support_contract_test.dart`
 
 ## Phase 12 - Admin Surface And Operations
 
