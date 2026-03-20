@@ -114,7 +114,107 @@ final pendingPaymentProofsProvider =
       return ref.read(paymentAdminRepositoryProvider).fetchPendingPaymentProofs();
     });
 
-final clientSettingsProvider = FutureProvider<Map<String, dynamic>>((ref) {
+final adminPaymentProofSearchResultsProvider = FutureProvider.autoDispose
+    .family<List<AdminPaymentProofQueueItem>, String>((ref, query) {
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchPaymentProofQueue(query: query);
+    });
+
+final adminOperationalSummaryProvider = FutureProvider<AdminOperationalSummary>((
+  ref,
+) {
+  return ref.read(adminOperationsRepositoryProvider).fetchOperationalSummary();
+});
+
+final adminUsersProvider = FutureProvider<List<AdminUserListItem>>((ref) {
+  return ref.read(adminOperationsRepositoryProvider).fetchUsers();
+});
+
+final adminUserSearchResultsProvider =
+    FutureProvider.autoDispose.family<List<AdminUserListItem>, String>((
+      ref,
+      query,
+    ) {
+      return ref.read(adminOperationsRepositoryProvider).fetchUsers(query: query);
+    });
+
+final adminUserDetailProvider =
+    FutureProvider.autoDispose.family<AdminUserDetail?, String>((
+      ref,
+      profileId,
+    ) {
+      return ref.read(adminOperationsRepositoryProvider).fetchUserDetail(profileId);
+    });
+
+final adminBookingSearchResultsProvider =
+    FutureProvider.autoDispose.family<List<BookingRecord>, String>((ref, query) {
+      return ref.read(adminOperationsRepositoryProvider).fetchBookings(query: query);
+    });
+ 
+final adminPlatformSettingsProvider =
+    FutureProvider<List<PlatformSettingRecord>>((ref) {
+      return ref.read(adminOperationsRepositoryProvider).fetchPlatformSettings();
+    });
+
+final adminAuditLogsProvider = FutureProvider<List<AdminAuditLogRecord>>((ref) {
+  return ref.read(adminOperationsRepositoryProvider).fetchAuditLogs();
+});
+
+final adminEmailLogsProvider = FutureProvider<List<EmailDeliveryLogRecord>>((ref) {
+  return ref.read(adminOperationsRepositoryProvider).fetchEmailLogs();
+});
+
+final adminFilteredEmailLogsProvider = FutureProvider.autoDispose
+    .family<List<EmailDeliveryLogRecord>, ({String? status, String? query})>((
+      ref,
+      filter,
+    ) {
+      return ref.read(adminOperationsRepositoryProvider).fetchEmailLogs(
+            status: filter.status,
+            query: filter.query,
+          );
+    });
+
+final adminDeadLetterEmailJobsProvider =
+    FutureProvider<List<EmailOutboxJobRecord>>((ref) {
+      return ref.read(adminOperationsRepositoryProvider).fetchDeadLetterEmailJobs();
+    });
+
+final adminEligiblePayoutsProvider =
+    FutureProvider<List<EligiblePayoutQueueItem>>((ref) {
+      return ref.read(adminOperationsRepositoryProvider).fetchEligiblePayouts();
+    });
+
+final adminEligiblePayoutSearchResultsProvider = FutureProvider.autoDispose
+    .family<List<EligiblePayoutQueueItem>, String>((ref, query) {
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchEligiblePayoutQueue(query: query);
+    });
+
+final adminVerificationQueueSearchResultsProvider = FutureProvider.autoDispose
+    .family<List<VerificationReviewPacket>, String>((ref, query) {
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchVerificationQueue(query: query);
+    });
+
+final adminDisputeQueueSearchResultsProvider = FutureProvider.autoDispose
+    .family<List<DisputeRecord>, String>((ref, query) {
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchDisputeQueue(query: query);
+    });
+
+final adminAutomationAlertsProvider =
+    FutureProvider<List<AdminAutomationAlertItem>>((ref) {
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchOverdueAutomationAlerts();
+    });
+ 
+final clientSettingsProvider = FutureProvider<ClientSettings>((ref) {
   return ref.read(bookingRepositoryProvider).fetchClientSettings();
 });
 

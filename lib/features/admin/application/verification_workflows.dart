@@ -20,6 +20,8 @@ class AdminVerificationWorkflowController {
     ref
       ..invalidate(pendingVerificationPacketsProvider)
       ..invalidate(pendingVerificationPacketProvider(packet.carrierId))
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }
 
@@ -38,6 +40,8 @@ class AdminVerificationWorkflowController {
     ref
       ..invalidate(pendingVerificationPacketsProvider)
       ..invalidate(pendingVerificationPacketProvider(document.ownerProfileId))
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }
 }

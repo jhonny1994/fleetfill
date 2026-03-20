@@ -92,6 +92,31 @@ Future<bool> _initializeSupabase(AppEnvironmentConfig environment) async {
   return true;
 }
 
+Future<AppEnvironmentConfig> _resolveRuntimeEnvironment(
+  AppEnvironmentConfig environment,
+) async {
+  if (!environment.hasSupabaseConfig || !AppBootstrapController.supabaseInitialized) {
+    return environment;
+  }
+
+  try {
+    final response = await Supabase.instance.client.rpc<Map<String, dynamic>>(
+      'get_client_settings',
+    );
+    final appRuntime = Map<String, dynamic>.from(
+      (response['app_runtime'] as Map?) ?? const <String, dynamic>{},
+    );
+
+    return environment.copyWith(
+      maintenanceMode: appRuntime['maintenance_mode'] as bool? ?? environment.maintenanceMode,
+      forceUpdateRequired:
+          appRuntime['force_update_required'] as bool? ?? environment.forceUpdateRequired,
+    );
+  } on Object {
+    return environment;
+  }
+}
+
 enum BootstrapStateStatus {
   ready,
   failed,
@@ -119,10 +144,11 @@ class AppBootstrapController extends _$AppBootstrapController {
 
   @override
   Future<AppBootstrapState> build() async {
-    final environment = ref.watch(appEnvironmentConfigProvider);
+    final configuredEnvironment = ref.watch(appEnvironmentConfigProvider);
     final logger = ref.watch(appLoggerProvider);
 
     try {
+      final environment = await _resolveRuntimeEnvironment(configuredEnvironment);
       final auth = await ref
           .read(authRepositoryProvider)
           .buildSnapshot(
@@ -134,9 +160,9 @@ class AppBootstrapController extends _$AppBootstrapController {
         logger.info('Supabase initialized for ${environment.environment.name}');
       }
 
-      return AppBootstrapState(
-        status: BootstrapStateStatus.ready,
-        environment: environment,
+        return AppBootstrapState(
+          status: BootstrapStateStatus.ready,
+          environment: environment,
         auth: auth,
       );
     } on Object catch (error, stackTrace) {
@@ -146,11 +172,11 @@ class AppBootstrapController extends _$AppBootstrapController {
         stackTrace: stackTrace,
       );
 
-      return AppBootstrapState(
-        status: BootstrapStateStatus.failed,
-        environment: environment,
-        auth: const AuthSnapshot(status: AuthStatus.unauthenticated),
-        error: error,
+        return AppBootstrapState(
+          status: BootstrapStateStatus.failed,
+          environment: configuredEnvironment,
+          auth: const AuthSnapshot(status: AuthStatus.unauthenticated),
+          error: error,
         stackTrace: stackTrace,
       );
     }

@@ -5096,6 +5096,731 @@ class S {
       args: [],
     );
   }
+
+  /// `Backlog health`
+  String get adminDashboardBacklogHealthTitle {
+    return Intl.message(
+      'Backlog health',
+      name: 'adminDashboardBacklogHealthTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Automation health`
+  String get adminDashboardAutomationTitle {
+    return Intl.message(
+      'Automation health',
+      name: 'adminDashboardAutomationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Overdue delivery reviews`
+  String get adminDashboardOverdueDeliveryReviewsLabel {
+    return Intl.message(
+      'Overdue delivery reviews',
+      name: 'adminDashboardOverdueDeliveryReviewsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Overdue payment resubmissions`
+  String get adminDashboardOverduePaymentResubmissionsLabel {
+    return Intl.message(
+      'Overdue payment resubmissions',
+      name: 'adminDashboardOverduePaymentResubmissionsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email health`
+  String get adminDashboardEmailHealthTitle {
+    return Intl.message(
+      'Email health',
+      name: 'adminDashboardEmailHealthTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email backlog`
+  String get adminDashboardEmailBacklogLabel {
+    return Intl.message(
+      'Email backlog',
+      name: 'adminDashboardEmailBacklogLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dead-letter emails`
+  String get adminDashboardDeadLetterLabel {
+    return Intl.message(
+      'Dead-letter emails',
+      name: 'adminDashboardDeadLetterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payments`
+  String get adminQueuePaymentsTabLabel {
+    return Intl.message(
+      'Payments',
+      name: 'adminQueuePaymentsTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification`
+  String get adminQueueVerificationTabLabel {
+    return Intl.message(
+      'Verification',
+      name: 'adminQueueVerificationTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disputes`
+  String get adminQueueDisputesTabLabel {
+    return Intl.message(
+      'Disputes',
+      name: 'adminQueueDisputesTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payouts`
+  String get adminQueuePayoutsTabLabel {
+    return Intl.message(
+      'Payouts',
+      name: 'adminQueuePayoutsTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get adminQueueEmailTabLabel {
+    return Intl.message(
+      'Email',
+      name: 'adminQueueEmailTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No carrier payouts are eligible for release right now.`
+  String get adminEligiblePayoutsEmptyMessage {
+    return Intl.message(
+      'No carrier payouts are eligible for release right now.',
+      name: 'adminEligiblePayoutsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Eligible payouts`
+  String get adminPayoutEligibleTitle {
+    return Intl.message(
+      'Eligible payouts',
+      name: 'adminPayoutEligibleTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Release payout`
+  String get adminPayoutReleaseAction {
+    return Intl.message(
+      'Release payout',
+      name: 'adminPayoutReleaseAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email delivery monitoring`
+  String get adminEmailQueueTitle {
+    return Intl.message(
+      'Email delivery monitoring',
+      name: 'adminEmailQueueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search email logs`
+  String get adminEmailSearchLabel {
+    return Intl.message(
+      'Search email logs',
+      name: 'adminEmailSearchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email status`
+  String get adminEmailStatusFilterLabel {
+    return Intl.message(
+      'Email status',
+      name: 'adminEmailStatusFilterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All statuses`
+  String get adminEmailStatusAllLabel {
+    return Intl.message(
+      'All statuses',
+      name: 'adminEmailStatusAllLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Queued`
+  String get adminEmailStatusQueuedLabel {
+    return Intl.message(
+      'Queued',
+      name: 'adminEmailStatusQueuedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sent`
+  String get adminEmailStatusSentLabel {
+    return Intl.message(
+      'Sent',
+      name: 'adminEmailStatusSentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivered`
+  String get adminEmailStatusDeliveredLabel {
+    return Intl.message(
+      'Delivered',
+      name: 'adminEmailStatusDeliveredLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Soft failed`
+  String get adminEmailStatusSoftFailedLabel {
+    return Intl.message(
+      'Soft failed',
+      name: 'adminEmailStatusSoftFailedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hard failed`
+  String get adminEmailStatusHardFailedLabel {
+    return Intl.message(
+      'Hard failed',
+      name: 'adminEmailStatusHardFailedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bounced`
+  String get adminEmailStatusBouncedLabel {
+    return Intl.message(
+      'Bounced',
+      name: 'adminEmailStatusBouncedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Suppressed`
+  String get adminEmailStatusSuppressedLabel {
+    return Intl.message(
+      'Suppressed',
+      name: 'adminEmailStatusSuppressedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dead letter`
+  String get adminEmailStatusDeadLetterLabel {
+    return Intl.message(
+      'Dead letter',
+      name: 'adminEmailStatusDeadLetterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend`
+  String get adminEmailResendAction {
+    return Intl.message(
+      'Resend',
+      name: 'adminEmailResendAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email resend queued.`
+  String get adminEmailResendSuccess {
+    return Intl.message(
+      'Email resend queued.',
+      name: 'adminEmailResendSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dead-letter queue`
+  String get adminEmailDeadLetterTitle {
+    return Intl.message(
+      'Dead-letter queue',
+      name: 'adminEmailDeadLetterTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No dead-letter email jobs need attention right now.`
+  String get adminEmailDeadLetterEmptyMessage {
+    return Intl.message(
+      'No dead-letter email jobs need attention right now.',
+      name: 'adminEmailDeadLetterEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No email delivery logs match the current filters.`
+  String get adminEmailQueueEmptyMessage {
+    return Intl.message(
+      'No email delivery logs match the current filters.',
+      name: 'adminEmailQueueEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search users`
+  String get adminUsersSearchLabel {
+    return Intl.message(
+      'Search users',
+      name: 'adminUsersSearchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No users match the current search.`
+  String get adminUsersEmptyMessage {
+    return Intl.message(
+      'No users match the current search.',
+      name: 'adminUsersEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account overview`
+  String get adminUserAccountSectionTitle {
+    return Intl.message(
+      'Account overview',
+      name: 'adminUserAccountSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Role`
+  String get adminUserRoleLabel {
+    return Intl.message('Role', name: 'adminUserRoleLabel', desc: '', args: []);
+  }
+
+  /// `Account status`
+  String get adminUserStatusLabel {
+    return Intl.message(
+      'Account status',
+      name: 'adminUserStatusLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active`
+  String get adminUserStatusActiveLabel {
+    return Intl.message(
+      'Active',
+      name: 'adminUserStatusActiveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Suspended`
+  String get adminUserStatusSuspendedLabel {
+    return Intl.message(
+      'Suspended',
+      name: 'adminUserStatusSuspendedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Suspend user`
+  String get adminUserSuspendAction {
+    return Intl.message(
+      'Suspend user',
+      name: 'adminUserSuspendAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reactivate user`
+  String get adminUserReactivateAction {
+    return Intl.message(
+      'Reactivate user',
+      name: 'adminUserReactivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add an operational reason for this change.`
+  String get adminUserReasonHint {
+    return Intl.message(
+      'Add an operational reason for this change.',
+      name: 'adminUserReasonHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User reactivated.`
+  String get adminUserReactivateSuccess {
+    return Intl.message(
+      'User reactivated.',
+      name: 'adminUserReactivateSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User suspended.`
+  String get adminUserSuspendSuccess {
+    return Intl.message(
+      'User suspended.',
+      name: 'adminUserSuspendSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Related bookings`
+  String get adminUserBookingsSectionTitle {
+    return Intl.message(
+      'Related bookings',
+      name: 'adminUserBookingsSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No bookings are linked to this user yet.`
+  String get adminUserBookingsEmptyMessage {
+    return Intl.message(
+      'No bookings are linked to this user yet.',
+      name: 'adminUserBookingsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicles`
+  String get adminUserVehiclesSectionTitle {
+    return Intl.message(
+      'Vehicles',
+      name: 'adminUserVehiclesSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No vehicles are linked to this user.`
+  String get adminUserVehiclesEmptyMessage {
+    return Intl.message(
+      'No vehicles are linked to this user.',
+      name: 'adminUserVehiclesEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification documents`
+  String get adminUserDocumentsSectionTitle {
+    return Intl.message(
+      'Verification documents',
+      name: 'adminUserDocumentsSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No verification documents are available for this user.`
+  String get adminUserDocumentsEmptyMessage {
+    return Intl.message(
+      'No verification documents are available for this user.',
+      name: 'adminUserDocumentsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent emails`
+  String get adminUserEmailSectionTitle {
+    return Intl.message(
+      'Recent emails',
+      name: 'adminUserEmailSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No recent email logs are available for this user.`
+  String get adminUserEmailEmptyMessage {
+    return Intl.message(
+      'No recent email logs are available for this user.',
+      name: 'adminUserEmailEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Shipper`
+  String get adminUserRoleShipperLabel {
+    return Intl.message(
+      'Shipper',
+      name: 'adminUserRoleShipperLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carrier`
+  String get adminUserRoleCarrierLabel {
+    return Intl.message(
+      'Carrier',
+      name: 'adminUserRoleCarrierLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Admin`
+  String get adminUserRoleAdminLabel {
+    return Intl.message(
+      'Admin',
+      name: 'adminUserRoleAdminLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monitoring summary`
+  String get adminSettingsMonitoringSummaryTitle {
+    return Intl.message(
+      'Monitoring summary',
+      name: 'adminSettingsMonitoringSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Runtime policy`
+  String get adminSettingsRuntimeSectionTitle {
+    return Intl.message(
+      'Runtime policy',
+      name: 'adminSettingsRuntimeSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maintenance mode`
+  String get adminSettingsMaintenanceModeLabel {
+    return Intl.message(
+      'Maintenance mode',
+      name: 'adminSettingsMaintenanceModeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Force update required`
+  String get adminSettingsForceUpdateLabel {
+    return Intl.message(
+      'Force update required',
+      name: 'adminSettingsForceUpdateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minimum Android version`
+  String get adminSettingsMinimumAndroidVersionLabel {
+    return Intl.message(
+      'Minimum Android version',
+      name: 'adminSettingsMinimumAndroidVersionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minimum iOS version`
+  String get adminSettingsMinimumIosVersionLabel {
+    return Intl.message(
+      'Minimum iOS version',
+      name: 'adminSettingsMinimumIosVersionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save settings`
+  String get adminSettingsSaveAction {
+    return Intl.message(
+      'Save settings',
+      name: 'adminSettingsSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Admin settings updated.`
+  String get adminSettingsSavedMessage {
+    return Intl.message(
+      'Admin settings updated.',
+      name: 'adminSettingsSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking pricing policy`
+  String get adminSettingsPricingSectionTitle {
+    return Intl.message(
+      'Booking pricing policy',
+      name: 'adminSettingsPricingSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Platform fee rate`
+  String get adminSettingsPlatformFeeRateLabel {
+    return Intl.message(
+      'Platform fee rate',
+      name: 'adminSettingsPlatformFeeRateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insurance rate`
+  String get adminSettingsInsuranceRateLabel {
+    return Intl.message(
+      'Insurance rate',
+      name: 'adminSettingsInsuranceRateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insurance minimum fee`
+  String get adminSettingsInsuranceMinimumLabel {
+    return Intl.message(
+      'Insurance minimum fee',
+      name: 'adminSettingsInsuranceMinimumLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment resubmission deadline (hours)`
+  String get adminSettingsPaymentDeadlineLabel {
+    return Intl.message(
+      'Payment resubmission deadline (hours)',
+      name: 'adminSettingsPaymentDeadlineLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivery review policy`
+  String get adminSettingsDeliverySectionTitle {
+    return Intl.message(
+      'Delivery review policy',
+      name: 'adminSettingsDeliverySectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivery grace window (hours)`
+  String get adminSettingsDeliveryGraceLabel {
+    return Intl.message(
+      'Delivery grace window (hours)',
+      name: 'adminSettingsDeliveryGraceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Feature flags`
+  String get adminSettingsFeatureFlagsSectionTitle {
+    return Intl.message(
+      'Feature flags',
+      name: 'adminSettingsFeatureFlagsSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable admin email resend`
+  String get adminSettingsEmailResendEnabledLabel {
+    return Intl.message(
+      'Enable admin email resend',
+      name: 'adminSettingsEmailResendEnabledLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No admin audit events have been recorded yet.`
+  String get adminAuditLogEmptyMessage {
+    return Intl.message(
+      'No admin audit events have been recorded yet.',
+      name: 'adminAuditLogEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
