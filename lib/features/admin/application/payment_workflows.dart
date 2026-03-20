@@ -24,6 +24,9 @@ class AdminPaymentWorkflowController {
         );
     ref
       ..invalidate(pendingPaymentProofsProvider)
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminAutomationAlertsProvider)
+      ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }
 
@@ -39,6 +42,9 @@ class AdminPaymentWorkflowController {
         );
     ref
       ..invalidate(pendingPaymentProofsProvider)
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminAutomationAlertsProvider)
+      ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }
 }

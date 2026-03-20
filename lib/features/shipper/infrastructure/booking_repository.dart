@@ -76,9 +76,9 @@ class BookingRepository {
     return BookingRecord.fromJson(response);
   }
 
-  Future<Map<String, dynamic>> fetchClientSettings() async {
+  Future<ClientSettings> fetchClientSettings() async {
     final response = await _client.rpc<Map<String, dynamic>>('get_client_settings');
-    return response;
+    return ClientSettings.fromJson(response);
   }
 
   Future<BookingRecord> createBooking({

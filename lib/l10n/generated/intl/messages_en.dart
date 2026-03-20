@@ -68,13 +68,35 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminAuditLogDescription": MessageLookupByLibrary.simpleMessage(
       "Review the latest sensitive admin actions and their outcomes.",
     ),
+    "adminAuditLogEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No admin audit events have been recorded yet.",
+    ),
     "adminAuditLogTitle": MessageLookupByLibrary.simpleMessage(
       "Admin audit log",
+    ),
+    "adminDashboardAutomationTitle": MessageLookupByLibrary.simpleMessage(
+      "Automation health",
+    ),
+    "adminDashboardBacklogHealthTitle": MessageLookupByLibrary.simpleMessage(
+      "Backlog health",
+    ),
+    "adminDashboardDeadLetterLabel": MessageLookupByLibrary.simpleMessage(
+      "Dead-letter emails",
     ),
     "adminDashboardDescription": MessageLookupByLibrary.simpleMessage(
       "Monitor queue health, alerts, and the current operational backlog.",
     ),
+    "adminDashboardEmailBacklogLabel": MessageLookupByLibrary.simpleMessage(
+      "Email backlog",
+    ),
+    "adminDashboardEmailHealthTitle": MessageLookupByLibrary.simpleMessage(
+      "Email health",
+    ),
     "adminDashboardNavLabel": MessageLookupByLibrary.simpleMessage("Dashboard"),
+    "adminDashboardOverdueDeliveryReviewsLabel":
+        MessageLookupByLibrary.simpleMessage("Overdue delivery reviews"),
+    "adminDashboardOverduePaymentResubmissionsLabel":
+        MessageLookupByLibrary.simpleMessage("Overdue payment resubmissions"),
     "adminDashboardTitle": MessageLookupByLibrary.simpleMessage(
       "Admin dashboard",
     ),
@@ -84,11 +106,64 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminDisputesQueueTitle": MessageLookupByLibrary.simpleMessage(
       "Dispute queue",
     ),
+    "adminEligiblePayoutsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No carrier payouts are eligible for release right now.",
+    ),
+    "adminEmailDeadLetterEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No dead-letter email jobs need attention right now.",
+    ),
+    "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
+      "Dead-letter queue",
+    ),
+    "adminEmailQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No email delivery logs match the current filters.",
+    ),
+    "adminEmailQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "Email delivery monitoring",
+    ),
+    "adminEmailResendAction": MessageLookupByLibrary.simpleMessage("Resend"),
+    "adminEmailResendSuccess": MessageLookupByLibrary.simpleMessage(
+      "Email resend queued.",
+    ),
+    "adminEmailSearchLabel": MessageLookupByLibrary.simpleMessage(
+      "Search email logs",
+    ),
+    "adminEmailStatusAllLabel": MessageLookupByLibrary.simpleMessage(
+      "All statuses",
+    ),
+    "adminEmailStatusBouncedLabel": MessageLookupByLibrary.simpleMessage(
+      "Bounced",
+    ),
+    "adminEmailStatusDeadLetterLabel": MessageLookupByLibrary.simpleMessage(
+      "Dead letter",
+    ),
+    "adminEmailStatusDeliveredLabel": MessageLookupByLibrary.simpleMessage(
+      "Delivered",
+    ),
+    "adminEmailStatusFilterLabel": MessageLookupByLibrary.simpleMessage(
+      "Email status",
+    ),
+    "adminEmailStatusHardFailedLabel": MessageLookupByLibrary.simpleMessage(
+      "Hard failed",
+    ),
+    "adminEmailStatusQueuedLabel": MessageLookupByLibrary.simpleMessage(
+      "Queued",
+    ),
+    "adminEmailStatusSentLabel": MessageLookupByLibrary.simpleMessage("Sent"),
+    "adminEmailStatusSoftFailedLabel": MessageLookupByLibrary.simpleMessage(
+      "Soft failed",
+    ),
+    "adminEmailStatusSuppressedLabel": MessageLookupByLibrary.simpleMessage(
+      "Suppressed",
+    ),
     "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No payment proofs need review right now.",
     ),
     "adminPaymentProofQueueTitle": MessageLookupByLibrary.simpleMessage(
       "Payment proof review",
+    ),
+    "adminPayoutEligibleTitle": MessageLookupByLibrary.simpleMessage(
+      "Eligible payouts",
     ),
     "adminPayoutQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No payouts have been released yet.",
@@ -96,22 +171,151 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminPayoutQueueTitle": MessageLookupByLibrary.simpleMessage(
       "Payout queue",
     ),
+    "adminPayoutReleaseAction": MessageLookupByLibrary.simpleMessage(
+      "Release payout",
+    ),
+    "adminQueueDisputesTabLabel": MessageLookupByLibrary.simpleMessage(
+      "Disputes",
+    ),
+    "adminQueueEmailTabLabel": MessageLookupByLibrary.simpleMessage("Email"),
+    "adminQueuePaymentsTabLabel": MessageLookupByLibrary.simpleMessage(
+      "Payments",
+    ),
+    "adminQueuePayoutsTabLabel": MessageLookupByLibrary.simpleMessage(
+      "Payouts",
+    ),
+    "adminQueueVerificationTabLabel": MessageLookupByLibrary.simpleMessage(
+      "Verification",
+    ),
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
       "Review payments, verification, disputes, payouts, and email work from one queue hub.",
     ),
     "adminQueuesNavLabel": MessageLookupByLibrary.simpleMessage("Queues"),
     "adminQueuesTitle": MessageLookupByLibrary.simpleMessage("Admin queues"),
+    "adminSettingsDeliveryGraceLabel": MessageLookupByLibrary.simpleMessage(
+      "Delivery grace window (hours)",
+    ),
+    "adminSettingsDeliverySectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Delivery review policy",
+    ),
     "adminSettingsDescription": MessageLookupByLibrary.simpleMessage(
       "Manage platform settings, maintenance controls, version policy, and monitoring summaries.",
     ),
+    "adminSettingsEmailResendEnabledLabel":
+        MessageLookupByLibrary.simpleMessage("Enable admin email resend"),
+    "adminSettingsFeatureFlagsSectionTitle":
+        MessageLookupByLibrary.simpleMessage("Feature flags"),
+    "adminSettingsForceUpdateLabel": MessageLookupByLibrary.simpleMessage(
+      "Force update required",
+    ),
+    "adminSettingsInsuranceMinimumLabel": MessageLookupByLibrary.simpleMessage(
+      "Insurance minimum fee",
+    ),
+    "adminSettingsInsuranceRateLabel": MessageLookupByLibrary.simpleMessage(
+      "Insurance rate",
+    ),
+    "adminSettingsMaintenanceModeLabel": MessageLookupByLibrary.simpleMessage(
+      "Maintenance mode",
+    ),
+    "adminSettingsMinimumAndroidVersionLabel":
+        MessageLookupByLibrary.simpleMessage("Minimum Android version"),
+    "adminSettingsMinimumIosVersionLabel": MessageLookupByLibrary.simpleMessage(
+      "Minimum iOS version",
+    ),
+    "adminSettingsMonitoringSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Monitoring summary",
+    ),
     "adminSettingsNavLabel": MessageLookupByLibrary.simpleMessage("Settings"),
+    "adminSettingsPaymentDeadlineLabel": MessageLookupByLibrary.simpleMessage(
+      "Payment resubmission deadline (hours)",
+    ),
+    "adminSettingsPlatformFeeRateLabel": MessageLookupByLibrary.simpleMessage(
+      "Platform fee rate",
+    ),
+    "adminSettingsPricingSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Booking pricing policy",
+    ),
+    "adminSettingsRuntimeSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Runtime policy",
+    ),
+    "adminSettingsSaveAction": MessageLookupByLibrary.simpleMessage(
+      "Save settings",
+    ),
+    "adminSettingsSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Admin settings updated.",
+    ),
     "adminSettingsTitle": MessageLookupByLibrary.simpleMessage(
       "Admin settings",
+    ),
+    "adminUserAccountSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Account overview",
+    ),
+    "adminUserBookingsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No bookings are linked to this user yet.",
+    ),
+    "adminUserBookingsSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Related bookings",
+    ),
+    "adminUserDocumentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No verification documents are available for this user.",
+    ),
+    "adminUserDocumentsSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Verification documents",
+    ),
+    "adminUserEmailEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No recent email logs are available for this user.",
+    ),
+    "adminUserEmailSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Recent emails",
+    ),
+    "adminUserReactivateAction": MessageLookupByLibrary.simpleMessage(
+      "Reactivate user",
+    ),
+    "adminUserReactivateSuccess": MessageLookupByLibrary.simpleMessage(
+      "User reactivated.",
+    ),
+    "adminUserReasonHint": MessageLookupByLibrary.simpleMessage(
+      "Add an operational reason for this change.",
+    ),
+    "adminUserRoleAdminLabel": MessageLookupByLibrary.simpleMessage("Admin"),
+    "adminUserRoleCarrierLabel": MessageLookupByLibrary.simpleMessage(
+      "Carrier",
+    ),
+    "adminUserRoleLabel": MessageLookupByLibrary.simpleMessage("Role"),
+    "adminUserRoleShipperLabel": MessageLookupByLibrary.simpleMessage(
+      "Shipper",
+    ),
+    "adminUserStatusActiveLabel": MessageLookupByLibrary.simpleMessage(
+      "Active",
+    ),
+    "adminUserStatusLabel": MessageLookupByLibrary.simpleMessage(
+      "Account status",
+    ),
+    "adminUserStatusSuspendedLabel": MessageLookupByLibrary.simpleMessage(
+      "Suspended",
+    ),
+    "adminUserSuspendAction": MessageLookupByLibrary.simpleMessage(
+      "Suspend user",
+    ),
+    "adminUserSuspendSuccess": MessageLookupByLibrary.simpleMessage(
+      "User suspended.",
+    ),
+    "adminUserVehiclesEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No vehicles are linked to this user.",
+    ),
+    "adminUserVehiclesSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Vehicles",
     ),
     "adminUsersDescription": MessageLookupByLibrary.simpleMessage(
       "Search for users and review account details when operations need context.",
     ),
+    "adminUsersEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No users match the current search.",
+    ),
     "adminUsersNavLabel": MessageLookupByLibrary.simpleMessage("Users"),
+    "adminUsersSearchLabel": MessageLookupByLibrary.simpleMessage(
+      "Search users",
+    ),
     "adminUsersTitle": MessageLookupByLibrary.simpleMessage("Users"),
     "adminVerificationApproveAction": MessageLookupByLibrary.simpleMessage(
       "Approve",

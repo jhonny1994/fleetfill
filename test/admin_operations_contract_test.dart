@@ -33,6 +33,8 @@ void main() {
       expect(adminMigration.contains('admin_upsert_platform_setting'), isTrue);
       expect(adminMigration.contains('admin_set_profile_active'), isTrue);
       expect(adminMigration.contains('admin_retry_email_delivery'), isTrue);
+      expect(adminMigration.contains('admin_retry_dead_letter_email_job'), isTrue);
+      expect(adminMigration.contains('current_admin_email_resend_enabled'), isTrue);
     });
   });
 

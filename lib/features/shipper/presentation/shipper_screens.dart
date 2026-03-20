@@ -1770,14 +1770,14 @@ extension<T> on Iterable<T> {
 BookingPricingQuote _quoteFromSelection({
   required BookingReviewSelection bookingSelection,
   required bool includeInsurance,
-  required Map<String, dynamic>? settings,
+  required ClientSettings? settings,
 }) {
-  final rawPricing = (settings?['booking_pricing'] as Map<String, dynamic>?) ?? const {};
-  final platformFeeRate = (rawPricing['platform_fee_rate'] as num?)?.toDouble() ?? 0.05;
-  final carrierFeeRate = (rawPricing['carrier_fee_rate'] as num?)?.toDouble() ?? 0;
-  final insuranceRate = (rawPricing['insurance_rate'] as num?)?.toDouble() ?? 0.01;
-  final insuranceMinFee = (rawPricing['insurance_min_fee_dzd'] as num?)?.toDouble() ?? 100;
-  final taxRate = (rawPricing['tax_rate'] as num?)?.toDouble() ?? 0;
+  final pricing = settings?.bookingPricing;
+  final platformFeeRate = pricing?.platformFeeRate ?? 0.05;
+  final carrierFeeRate = pricing?.carrierFeeRate ?? 0;
+  final insuranceRate = pricing?.insuranceRate ?? 0.01;
+  final insuranceMinFee = pricing?.insuranceMinFeeDzd ?? 100;
+  final taxRate = pricing?.taxRate ?? 0;
 
   final base = bookingSelection.shipment.totalWeightKg * bookingSelection.result.pricePerKgDzd;
   final platformFee = base * platformFeeRate;
@@ -1808,15 +1808,14 @@ String _money(S s, double amount) {
   return '${BidiFormatters.latinIdentifier(amount.toStringAsFixed(0))} ${s.priceCurrencyLabel}';
 }
 
-List<_PlatformPaymentAccountView> _paymentAccountsFromSettings(Map<String, dynamic>? settings) {
-  final raw = (settings?['platform_payment_accounts'] as List<dynamic>?) ?? const <dynamic>[];
+List<_PlatformPaymentAccountView> _paymentAccountsFromSettings(ClientSettings? settings) {
+  final raw = settings?.paymentAccounts ?? const <PlatformPaymentAccountSettings>[];
   return raw
-      .cast<Map<String, dynamic>>()
       .map(
         (item) => _PlatformPaymentAccountView(
-          displayName: (item['display_name'] as String?)?.trim() ?? '',
-          accountIdentifier: (item['account_identifier'] as String?)?.trim() ?? '',
-          accountHolderName: (item['account_holder_name'] as String?)?.trim() ?? '',
+          displayName: item.displayName,
+          accountIdentifier: item.accountIdentifier,
+          accountHolderName: item.accountHolderName,
         ),
       )
       .toList(growable: false);

@@ -397,8 +397,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const UsersScreen(),
             routes: [
               GoRoute(
-                path: 'detail',
-                builder: (context, state) => const UserDetailScreen(),
+                path: ':userId',
+                name: AppRouteName.adminUserDetail.name,
+                builder: (context, state) => UserDetailScreen(
+                  userId: state.pathParameters['userId']!,
+                ),
               ),
             ],
           ),
