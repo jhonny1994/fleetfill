@@ -198,6 +198,23 @@
   },
   "notificationsCenterDescription": "Review recent alerts, booking updates, and operational reminders.",
   "notificationsCenterTitle": "Notifications",
+  "notificationBookingCreatedTitle": "Booking created",
+  "notificationBookingCreatedBody": "Your booking is ready. Continue to payment instructions to keep it moving.",
+  "notificationPaymentProofSubmittedTitle": "Payment proof submitted",
+  "notificationPaymentProofSubmittedBody": "Your payment proof is waiting for review.",
+  "notificationPaymentSecuredTitle": "Payment secured",
+  "notificationPaymentSecuredBody": "Your payment has been secured and the booking is confirmed.",
+  "notificationPaymentRejectedTitle": "Payment proof rejected",
+  "notificationPaymentRejectedBody": "Your payment proof was rejected. Review the reason and resubmit before the deadline.",
+  "notificationBookingMilestoneUpdatedTitle": "Booking milestone updated",
+  "notificationBookingMilestoneUpdatedBody": "Latest milestone: {milestoneLabel}",
+  "@notificationBookingMilestoneUpdatedBody": {
+    "placeholders": {
+      "milestoneLabel": {}
+    }
+  },
+  "notificationCarrierReviewSubmittedTitle": "Carrier review received",
+  "notificationCarrierReviewSubmittedBody": "A new shipper review has been added to your profile.",
   "notificationsPermissionDescription": "Explain why tracking and booking updates matter before opening system settings.",
   "notificationsPermissionTitle": "Notifications permission",
   "notFoundMessage": "The requested page or entity could not be found.",
@@ -288,6 +305,11 @@
     }
   },
   "shipperHomeDescription": "Active bookings, recent notifications, quick actions, and support shortcut live here.",
+  "shipperHomeActiveBookingsLabel": "Active bookings",
+  "shipperHomeUnreadNotificationsLabel": "Unread notifications",
+  "shipperHomeRecentNotificationTitle": "Recent notification",
+  "shipperHomeNoRecentNotificationMessage": "Your latest operational updates will appear here.",
+  "shipperHomeQuickActionsTitle": "Quick actions",
   "shipperHomeNavLabel": "Home",
   "shipperHomeTitle": "Shipper home",
   "shipperProfileDescription": "Profile, phone, preferences, and support shortcuts stay in one branch.",
@@ -564,10 +586,20 @@
   ,"adminPayoutQueueEmptyMessage": "No payouts have been released yet."
   ,"supportSubjectLabel": "Support subject"
   ,"supportMessageLabel": "Support message"
+  ,"supportConfiguredEmailMessage": "Support email: {supportEmail}"
+  ,"@supportConfiguredEmailMessage": {
+    "placeholders": {
+      "supportEmail": {}
+    }
+  }
+  ,"supportReferenceHintMessage": "Include any booking ID, tracking number, or payment reference that can help support investigate faster."
   ,"supportSendAction": "Send support email"
   ,"supportMessageSentMessage": "Support message sent."
   ,"searchCarrierRatingLabel": "Carrier rating"
   ,"searchResultTypeLabel": "Capacity type"
+  ,"ratingSubmitAction": "Submit review"
+  ,"ratingCommentLabel": "Review comment"
+  ,"ratingSubmittedMessage": "Carrier review submitted."
   ,"bookingStatusPendingPaymentLabel": "Waiting for payment"
   ,"bookingStatusPaymentUnderReviewLabel": "Payment under review"
   ,"bookingStatusConfirmedLabel": "Confirmed"

@@ -37,6 +37,14 @@ export function requiredEnv(name: string) {
   return value
 }
 
+export function normalizeSupportedLocale(locale: string | null | undefined) {
+  const normalized = locale?.trim().toLowerCase()
+  if (normalized === 'ar' || normalized === 'fr' || normalized === 'en') {
+    return normalized
+  }
+  return 'en'
+}
+
 export function createServiceClient() {
   return createClient(
     requiredEnv('SUPABASE_URL'),
@@ -77,6 +85,8 @@ export function buildSubjectPreview(templateKey: string, payload: Record<string,
   switch (templateKey) {
     case 'support_acknowledgement':
       return supportSubject ?? 'Support acknowledgement'
+    case 'support_request_forwarded':
+      return supportSubject == null ? 'Support request' : `Support request - ${supportSubject}`
     case 'booking_confirmed':
       return bookingReference == null ? 'Booking confirmed' : `Booking confirmed - ${bookingReference}`
     case 'payment_proof_received':
@@ -125,7 +135,7 @@ export async function dispatchEmail(job: OutboxJob) {
       },
       to: [job.recipient_email],
       template_key: job.template_key,
-      locale: job.locale,
+      locale: normalizeSupportedLocale(job.locale),
       subject_preview: subjectPreview,
       payload,
       dedupe_key: job.dedupe_key,
