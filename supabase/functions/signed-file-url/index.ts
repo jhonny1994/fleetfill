@@ -18,7 +18,7 @@ function requireEnv(name: string) {
   return value
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method != 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405)
   }
@@ -39,7 +39,10 @@ Deno.serve(async (req) => {
   const objectPath = payload.object_path?.trim()
 
   if (!bucketId || !objectPath) {
-    return jsonResponse({ error: 'bucket_id and object_path are required' }, 400)
+    return jsonResponse(
+      { error: 'bucket_id and object_path are required' },
+      400,
+    )
   }
 
   try {
@@ -74,14 +77,18 @@ Deno.serve(async (req) => {
 
     if (authorizationError != null) {
       console.error('signed-file-url authorization error', authorizationError)
-      return jsonResponse({ error: 'Failed to authorize document access' }, 400)
+      return jsonResponse(
+        { error: 'Failed to authorize document access' },
+        400,
+      )
     }
 
     if (authorizationResult != true) {
       return jsonResponse({ error: 'Forbidden' }, 403)
     }
 
-    const { data: signedUrlData, error: signedUrlError } = await serviceClient.storage
+    const { data: signedUrlData, error: signedUrlError } = await serviceClient
+      .storage
       .from(bucketId)
       .createSignedUrl(objectPath, signedUrlExpirySeconds)
 

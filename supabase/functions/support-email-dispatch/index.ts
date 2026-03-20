@@ -6,7 +6,7 @@ import {
   requiredEnv,
 } from '../_shared/email-runtime.ts'
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405)
   }
@@ -22,7 +22,10 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'subject and message are required' }, 400)
     }
 
-    if (payload.subject.trim().length > 160 || payload.message.trim().length > 4000) {
+    if (
+      payload.subject.trim().length > 160 ||
+      payload.message.trim().length > 4000
+    ) {
       return jsonResponse({ error: 'support message is too large' }, 400)
     }
 
@@ -56,14 +59,19 @@ Deno.serve(async (req) => {
     const ackDedupeKey = `support_ack:${profileId}:${crypto.randomUUID()}`
     const forwardDedupeKey = `support_forward:${profileId}:${crypto.randomUUID()}`
 
-    const { error: rateLimitError } = await serviceClient.rpc('assert_rate_limit', {
-      p_key: `support-email-dispatch:${profileId}`,
-      p_limit: 3,
-      p_window_seconds: 3600,
-    })
+    const { error: rateLimitError } = await serviceClient.rpc(
+      'assert_rate_limit',
+      {
+        p_key: `support-email-dispatch:${profileId}`,
+        p_limit: 3,
+        p_window_seconds: 3600,
+      },
+    )
 
     if (rateLimitError != null) {
-      return jsonResponse({ error: 'Support acknowledgement rate limit exceeded' }, 429)
+      return jsonResponse({
+        error: 'Support acknowledgement rate limit exceeded',
+      }, 429)
     }
 
     const { data: insertedJobs, error: insertJobsError } = await serviceClient
@@ -109,7 +117,9 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'Failed to enqueue support request' }, 500)
     }
 
-    const jobs = (insertedJobs ?? []) as Array<{ id: string; event_key: string }>
+    const jobs = (insertedJobs ?? []) as Array<
+      { id: string; event_key: string }
+    >
     const acknowledgementJob = jobs.find((job) => job.event_key === 'support_acknowledgement')
     const forwardJob = jobs.find((job) => job.event_key === 'support_request_forwarded')
 

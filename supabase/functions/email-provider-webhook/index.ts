@@ -16,14 +16,16 @@ function timingSafeEqual(left: string, right: string) {
   return mismatch === 0
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405)
   }
 
   try {
     const signature = req.headers.get('x-transactional-email-signature')
-    const expectedSignature = requiredEnv('TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET')
+    const expectedSignature = requiredEnv(
+      'TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET',
+    )
     if (signature == null || !timingSafeEqual(signature, expectedSignature)) {
       return jsonResponse({ error: 'Invalid webhook signature' }, 401)
     }
@@ -36,7 +38,9 @@ Deno.serve(async (req) => {
     }
 
     if (!payload.provider_message_id || !payload.status) {
-      return jsonResponse({ error: 'provider_message_id and status are required' }, 400)
+      return jsonResponse({
+        error: 'provider_message_id and status are required',
+      }, 400)
     }
 
     const allowedStatuses = new Set([
@@ -55,12 +59,15 @@ Deno.serve(async (req) => {
     }
 
     const serviceClient = createServiceClient()
-    const { data, error } = await serviceClient.rpc('record_email_provider_event', {
-      p_provider_message_id: payload.provider_message_id,
-      p_status: payload.status,
-      p_error_code: payload.error_code ?? null,
-      p_error_message: payload.error_message ?? null,
-    })
+    const { data, error } = await serviceClient.rpc(
+      'record_email_provider_event',
+      {
+        p_provider_message_id: payload.provider_message_id,
+        p_status: payload.status,
+        p_error_code: payload.error_code ?? null,
+        p_error_message: payload.error_message ?? null,
+      },
+    )
 
     if (error != null) {
       console.error('record_email_provider_event failed', error)
