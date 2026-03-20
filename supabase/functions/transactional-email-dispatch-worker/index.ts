@@ -4,13 +4,13 @@ import {
   dispatchEmail,
   inferDeliveryStatus,
   jsonResponse,
-  requiredEnv,
   type OutboxJob,
+  requiredEnv,
 } from '../_shared/email-runtime.ts'
 
 const defaultBatchSize = 10
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405)
   }
@@ -25,12 +25,18 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({})) as { batch_size?: number }
     const serviceClient = createServiceClient()
     const workerId = `edge:${crypto.randomUUID()}`
-    const batchSize = Math.max(1, Math.min(body.batch_size ?? defaultBatchSize, 25))
+    const batchSize = Math.max(
+      1,
+      Math.min(body.batch_size ?? defaultBatchSize, 25),
+    )
 
-    const { data: jobs, error: claimError } = await serviceClient.rpc('claim_email_outbox_jobs', {
-      p_worker_id: workerId,
-      p_batch_size: batchSize,
-    })
+    const { data: jobs, error: claimError } = await serviceClient.rpc(
+      'claim_email_outbox_jobs',
+      {
+        p_worker_id: workerId,
+        p_batch_size: batchSize,
+      },
+    )
 
     if (claimError != null) {
       console.error('claim_email_outbox_jobs failed', claimError)
@@ -43,12 +49,15 @@ Deno.serve(async (req) => {
     for (const job of claimedJobs) {
       try {
         const delivery = await dispatchEmail(job)
-        const { error: completionError } = await serviceClient.rpc('complete_email_outbox_job', {
-          p_job_id: job.id,
-          p_provider: delivery.provider,
-          p_provider_message_id: delivery.providerMessageId,
-          p_subject_preview: delivery.subjectPreview,
-        })
+        const { error: completionError } = await serviceClient.rpc(
+          'complete_email_outbox_job',
+          {
+            p_job_id: job.id,
+            p_provider: delivery.provider,
+            p_provider_message_id: delivery.providerMessageId,
+            p_subject_preview: delivery.subjectPreview,
+          },
+        )
 
         if (completionError != null) {
           throw completionError
@@ -60,18 +69,27 @@ Deno.serve(async (req) => {
           provider_message_id: delivery.providerMessageId,
         })
       } catch (error) {
-        const rawMessage = error instanceof Error ? error.message : 'unknown_error:Unknown email dispatch failure'
+        const rawMessage = error instanceof Error
+          ? error.message
+          : 'unknown_error:Unknown email dispatch failure'
         const separatorIndex = rawMessage.indexOf(':')
-        const errorCode = separatorIndex >= 0 ? rawMessage.slice(0, separatorIndex) : 'unknown_error'
+        const errorCode = separatorIndex >= 0
+          ? rawMessage.slice(0, separatorIndex)
+          : 'unknown_error'
         const errorMessage = separatorIndex >= 0 ? rawMessage.slice(separatorIndex + 1) : rawMessage
-        const retryDelaySeconds = computeRetryDelaySeconds(job.attempt_count + 1)
+        const retryDelaySeconds = computeRetryDelaySeconds(
+          job.attempt_count + 1,
+        )
 
-        const { error: retryError } = await serviceClient.rpc('release_retryable_email_job', {
-          p_job_id: job.id,
-          p_error_code: errorCode,
-          p_error_message: errorMessage,
-          p_retry_delay_seconds: retryDelaySeconds,
-        })
+        const { error: retryError } = await serviceClient.rpc(
+          'release_retryable_email_job',
+          {
+            p_job_id: job.id,
+            p_error_code: errorCode,
+            p_error_message: errorMessage,
+            p_retry_delay_seconds: retryDelaySeconds,
+          },
+        )
 
         if (retryError != null) {
           console.error('release_retryable_email_job failed', retryError)
