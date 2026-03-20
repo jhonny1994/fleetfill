@@ -382,6 +382,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "carrierHomeNavLabel": MessageLookupByLibrary.simpleMessage("Home"),
     "carrierHomeTitle": MessageLookupByLibrary.simpleMessage("Carrier home"),
+    "carrierMilestoneUpdatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Booking milestone updated.",
+    ),
     "carrierProfileDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier verification status, payout reminders, and profile tools live here.",
     ),
@@ -443,6 +446,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Verification summary",
     ),
     "confirmLabel": MessageLookupByLibrary.simpleMessage("Confirm"),
+    "deliveryConfirmAction": MessageLookupByLibrary.simpleMessage(
+      "Confirm delivery",
+    ),
+    "deliveryConfirmedMessage": MessageLookupByLibrary.simpleMessage(
+      "Delivery confirmed.",
+    ),
     "documentViewerDescription": MessageLookupByLibrary.simpleMessage(
       "Open this document in your secure viewer when access is ready.",
     ),
@@ -1163,6 +1172,34 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
     "trackingDetailTitle": m15,
+    "trackingEventCancelledLabel": MessageLookupByLibrary.simpleMessage(
+      "Cancelled",
+    ),
+    "trackingEventCompletedLabel": MessageLookupByLibrary.simpleMessage(
+      "Completed",
+    ),
+    "trackingEventConfirmedLabel": MessageLookupByLibrary.simpleMessage(
+      "Confirmed",
+    ),
+    "trackingEventDeliveredPendingReviewLabel":
+        MessageLookupByLibrary.simpleMessage("Delivered pending review"),
+    "trackingEventDisputedLabel": MessageLookupByLibrary.simpleMessage(
+      "Disputed",
+    ),
+    "trackingEventInTransitLabel": MessageLookupByLibrary.simpleMessage(
+      "In transit",
+    ),
+    "trackingEventPaymentUnderReviewLabel":
+        MessageLookupByLibrary.simpleMessage("Payment under review"),
+    "trackingEventPickedUpLabel": MessageLookupByLibrary.simpleMessage(
+      "Picked up",
+    ),
+    "trackingTimelineEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No tracking events are available yet.",
+    ),
+    "trackingTimelineTitle": MessageLookupByLibrary.simpleMessage(
+      "Tracking timeline",
+    ),
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
       "Update FleetFill to continue with the latest supported version.",
     ),

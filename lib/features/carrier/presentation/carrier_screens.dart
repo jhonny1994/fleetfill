@@ -116,16 +116,46 @@ class CarrierHomeScreen extends ConsumerWidget {
   }
 }
 
-class CarrierBookingsScreen extends StatelessWidget {
+class CarrierBookingsScreen extends ConsumerWidget {
   const CarrierBookingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final bookingsAsync = ref.watch(carrierBookingsProvider);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.carrierBookingsTitle,
-      description: s.carrierBookingsDescription,
+      child: AppAsyncStateView<List<BookingRecord>>(
+        value: bookingsAsync,
+        onRetry: () => ref.invalidate(carrierBookingsProvider),
+        data: (bookings) {
+          if (bookings.isEmpty) {
+            return AppEmptyState(
+              title: s.carrierBookingsTitle,
+              message: s.carrierBookingsDescription,
+            );
+          }
+
+          return ListView.separated(
+            key: const PageStorageKey<String>('carrier-bookings-list'),
+            itemCount: bookings.length,
+            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
+            itemBuilder: (context, index) {
+              final booking = bookings[index];
+              return AppListCard(
+                title: booking.trackingNumber,
+                subtitle:
+                    '${_carrierBookingStatusLabel(s, booking.bookingStatus)} • ${BidiFormatters.latinIdentifier(booking.weightKg.toStringAsFixed(0))} kg',
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => context.push(
+                  AppRoutePath.sharedTrackingDetail.replaceFirst(':id', booking.id),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -864,4 +894,18 @@ Widget _verificationChip(
       : verificationStatusLabel(s, state);
 
   return AppStatusChip(label: label, tone: tone);
+}
+
+String _carrierBookingStatusLabel(S s, BookingStatus status) {
+  return switch (status) {
+    BookingStatus.pendingPayment => s.bookingStatusPendingPaymentLabel,
+    BookingStatus.paymentUnderReview => s.bookingStatusPaymentUnderReviewLabel,
+    BookingStatus.confirmed => s.bookingStatusConfirmedLabel,
+    BookingStatus.pickedUp => s.bookingStatusPickedUpLabel,
+    BookingStatus.inTransit => s.bookingStatusInTransitLabel,
+    BookingStatus.deliveredPendingReview => s.bookingStatusDeliveredPendingReviewLabel,
+    BookingStatus.completed => s.bookingStatusCompletedLabel,
+    BookingStatus.cancelled => s.bookingStatusCancelledLabel,
+    BookingStatus.disputed => s.bookingStatusDisputedLabel,
+  };
 }

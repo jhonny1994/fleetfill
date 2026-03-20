@@ -21,6 +21,34 @@ class BookingRepository {
 
   SupabaseClient get _client => Supabase.instance.client;
 
+  Future<List<BookingRecord>> fetchCarrierBookings({
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final response = await _client
+        .from('bookings')
+        .select()
+        .range(offset, offset + limit - 1)
+        .order('updated_at', ascending: false);
+    return (response as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(BookingRecord.fromJson)
+        .toList(growable: false);
+  }
+
+  Future<List<TrackingEventRecord>> fetchTrackingEvents(String bookingId) async {
+    final response = await _client
+        .from('tracking_events')
+        .select()
+        .eq('booking_id', bookingId)
+        .order('recorded_at', ascending: false)
+        .order('created_at', ascending: false);
+    return (response as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(TrackingEventRecord.fromJson)
+        .toList(growable: false);
+  }
+
   Future<BookingRecord?> fetchBookingById(String bookingId) async {
     final response = await _client
         .from('bookings')
@@ -60,6 +88,36 @@ class BookingRepository {
                 .first,
         'p_include_insurance': includeInsurance,
         'p_idempotency_key': idempotencyKey,
+      },
+    );
+    return BookingRecord.fromJson(response);
+  }
+
+  Future<BookingRecord> carrierRecordMilestone({
+    required String bookingId,
+    required String milestone,
+    String? note,
+  }) async {
+    final response = await _client.rpc<Map<String, dynamic>>(
+      'carrier_record_booking_milestone',
+      params: {
+        'p_booking_id': bookingId,
+        'p_milestone': milestone,
+        'p_note': note,
+      },
+    );
+    return BookingRecord.fromJson(response);
+  }
+
+  Future<BookingRecord> shipperConfirmDelivery({
+    required String bookingId,
+    String? note,
+  }) async {
+    final response = await _client.rpc<Map<String, dynamic>>(
+      'shipper_confirm_delivery',
+      params: {
+        'p_booking_id': bookingId,
+        'p_note': note,
       },
     );
     return BookingRecord.fromJson(response);

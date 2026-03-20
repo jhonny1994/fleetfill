@@ -41,17 +41,21 @@ Deno.serve(async (req) => {
     const { data: expiredRejectedBookings, error: paymentExpiryError } = await serviceClient.rpc(
       'expire_payment_resubmission_deadlines',
     )
+    const { data: autoCompletedDeliveries, error: deliveryExpiryError } = await serviceClient.rpc(
+      'auto_complete_delivered_bookings',
+    )
 
-    if (recoveryError != null || paymentExpiryError != null) {
+    if (recoveryError != null || paymentExpiryError != null || deliveryExpiryError != null) {
       console.error('recover_stale_email_outbox_jobs failed', recoveryError)
       console.error('expire_payment_resubmission_deadlines failed', paymentExpiryError)
+      console.error('auto_complete_delivered_bookings failed', deliveryExpiryError)
       return jsonResponse({ error: 'Failed to run scheduled maintenance' }, 500)
     }
 
     return jsonResponse({
       email_dispatch: workerPayload,
       recovered_stale_jobs: recoveredJobs ?? 0,
-      delivery_grace_window_expiry: 'not_implemented_yet',
+      delivery_grace_window_expiry: autoCompletedDeliveries ?? 0,
       payment_resubmission_expiry: expiredRejectedBookings ?? 0,
     })
   } catch (error) {

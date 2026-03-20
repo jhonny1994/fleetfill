@@ -299,25 +299,33 @@ Phase 8 progress notes:
 
 ### Tracking Domain
 
-- [ ] Implement append-only tracking event creation
-- [ ] Derive visible booking progress from authoritative events/statuses
-- [ ] Support milestone events: payment under review, confirmed, picked up, in transit, delivered pending review, completed, cancelled, disputed
+- [x] Implement append-only tracking event creation
+- [x] Derive visible booking progress from authoritative events/statuses
+- [x] Support milestone events: payment under review, confirmed, picked up, in transit, delivered pending review, completed, cancelled, disputed
 
 ### Carrier Progress UX
 
-- [ ] Build carrier booking worklist
-- [ ] Build milestone update actions for `picked_up`, `in_transit`, and `delivered`
-- [ ] Add optional notes where allowed
-- [ ] Present milestone updates as sheets/actions from booking detail rather than separate standalone pages where possible
+- [x] Build carrier booking worklist
+- [x] Build milestone update actions for `picked_up`, `in_transit`, and `delivered`
+- [x] Add optional notes where allowed
+- [x] Present milestone updates as sheets/actions from booking detail rather than separate standalone pages where possible
 
 ### Delivery Confirmation
 
-- [ ] Implement `delivered_pending_review` grace window handling
-- [ ] Build shipper confirm-delivery action
-- [ ] Build auto-complete after grace period expires with no dispute
-- [ ] Record delivery confirmation timestamps and audit trail
-- [ ] Keep delivery confirmation, dispute opening, and rating entry attached to booking/tracking detail rather than scattered success routes
-- [ ] Implement durable scheduled/background execution for grace-window expiry
+- [x] Implement `delivered_pending_review` grace window handling
+- [x] Build shipper confirm-delivery action
+- [x] Build auto-complete after grace period expires with no dispute
+- [x] Record delivery confirmation timestamps and audit trail
+- [x] Keep delivery confirmation, dispute opening, and rating entry attached to booking/tracking detail rather than scattered success routes
+- [x] Implement durable scheduled/background execution for grace-window expiry
+
+Phase 9 progress notes:
+
+- carrier booking worklists now exist and route into a real shared tracking detail instead of a placeholder branch screen
+- tracking is now append-only through `append_tracking_event(...)`, and carrier milestone changes plus shipper delivery confirmation are server-controlled through dedicated RPCs
+- shared tracking detail now exposes timeline history plus carrier milestone actions and shipper delivery confirmation in-context instead of separate success routes
+- scheduled automation now auto-completes delivered bookings after the configured delivery-review grace window
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120500_create_tracking_and_delivery_rpc.sql` and `test/tracking_delivery_flow_contract_test.dart`
 
 ## Phase 10 - Disputes, Refunds, And Payouts
 

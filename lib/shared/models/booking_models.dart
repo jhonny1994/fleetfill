@@ -245,3 +245,38 @@ class GeneratedDocumentRecord {
   final String? generatedBy;
   final DateTime? createdAt;
 }
+
+class TrackingEventRecord {
+  const TrackingEventRecord({
+    required this.id,
+    required this.bookingId,
+    required this.eventType,
+    required this.visibility,
+    required this.note,
+    required this.createdBy,
+    required this.recordedAt,
+    required this.createdAt,
+  });
+
+  factory TrackingEventRecord.fromJson(Map<String, dynamic> json) {
+    return TrackingEventRecord(
+      id: json['id'] as String,
+      bookingId: json['booking_id'] as String,
+      eventType: (json['event_type'] as String?)?.trim() ?? '',
+      visibility: (json['visibility'] as String?)?.trim() ?? '',
+      note: (json['note'] as String?)?.trim(),
+      createdBy: json['created_by'] as String?,
+      recordedAt: DateTime.parse(json['recorded_at'] as String),
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+    );
+  }
+
+  final String id;
+  final String bookingId;
+  final String eventType;
+  final String visibility;
+  final String? note;
+  final String? createdBy;
+  final DateTime recordedAt;
+  final DateTime? createdAt;
+}

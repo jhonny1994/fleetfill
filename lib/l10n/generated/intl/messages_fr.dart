@@ -384,6 +384,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "carrierHomeNavLabel": MessageLookupByLibrary.simpleMessage("Home"),
     "carrierHomeTitle": MessageLookupByLibrary.simpleMessage("Carrier home"),
+    "carrierMilestoneUpdatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Etape de reservation mise a jour.",
+    ),
     "carrierProfileDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier verification status, payout reminders, and profile tools live here.",
     ),
@@ -430,6 +433,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Resume de verification",
     ),
     "confirmLabel": MessageLookupByLibrary.simpleMessage("Confirmer"),
+    "deliveryConfirmAction": MessageLookupByLibrary.simpleMessage(
+      "Confirmer la livraison",
+    ),
+    "deliveryConfirmedMessage": MessageLookupByLibrary.simpleMessage(
+      "Livraison confirmee.",
+    ),
     "documentViewerDescription": MessageLookupByLibrary.simpleMessage(
       "Ouvrez ce document dans un visualiseur securise lorsque l\'acces est pret.",
     ),
@@ -1157,6 +1166,34 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
     "trackingDetailTitle": m15,
+    "trackingEventCancelledLabel": MessageLookupByLibrary.simpleMessage(
+      "Annulee",
+    ),
+    "trackingEventCompletedLabel": MessageLookupByLibrary.simpleMessage(
+      "Terminee",
+    ),
+    "trackingEventConfirmedLabel": MessageLookupByLibrary.simpleMessage(
+      "Confirmee",
+    ),
+    "trackingEventDeliveredPendingReviewLabel":
+        MessageLookupByLibrary.simpleMessage("Livree en attente de revue"),
+    "trackingEventDisputedLabel": MessageLookupByLibrary.simpleMessage(
+      "Contestee",
+    ),
+    "trackingEventInTransitLabel": MessageLookupByLibrary.simpleMessage(
+      "En transit",
+    ),
+    "trackingEventPaymentUnderReviewLabel":
+        MessageLookupByLibrary.simpleMessage("Paiement en verification"),
+    "trackingEventPickedUpLabel": MessageLookupByLibrary.simpleMessage(
+      "Ramassee",
+    ),
+    "trackingTimelineEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Aucun evenement de suivi n\'est encore disponible.",
+    ),
+    "trackingTimelineTitle": MessageLookupByLibrary.simpleMessage(
+      "Chronologie du suivi",
+    ),
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
       "Mettez FleetFill a jour pour continuer avec la version prise en charge.",
     ),
