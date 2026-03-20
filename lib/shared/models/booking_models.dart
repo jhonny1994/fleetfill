@@ -280,3 +280,146 @@ class TrackingEventRecord {
   final DateTime recordedAt;
   final DateTime? createdAt;
 }
+
+class DisputeRecord {
+  const DisputeRecord({
+    required this.id,
+    required this.bookingId,
+    required this.openedBy,
+    required this.reason,
+    required this.description,
+    required this.status,
+    required this.resolution,
+    required this.resolutionNote,
+    required this.resolvedBy,
+    required this.resolvedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory DisputeRecord.fromJson(Map<String, dynamic> json) {
+    return DisputeRecord(
+      id: json['id'] as String,
+      bookingId: json['booking_id'] as String,
+      openedBy: json['opened_by'] as String,
+      reason: (json['reason'] as String?)?.trim() ?? '',
+      description: (json['description'] as String?)?.trim(),
+      status: (json['status'] as String?)?.trim() ?? 'open',
+      resolution: (json['resolution'] as String?)?.trim(),
+      resolutionNote: (json['resolution_note'] as String?)?.trim(),
+      resolvedBy: json['resolved_by'] as String?,
+      resolvedAt: DateTime.tryParse(json['resolved_at'] as String? ?? ''),
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+      updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
+    );
+  }
+
+  final String id;
+  final String bookingId;
+  final String openedBy;
+  final String reason;
+  final String? description;
+  final String status;
+  final String? resolution;
+  final String? resolutionNote;
+  final String? resolvedBy;
+  final DateTime? resolvedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+}
+
+class RefundRecord {
+  const RefundRecord({
+    required this.id,
+    required this.bookingId,
+    required this.disputeId,
+    required this.amountDzd,
+    required this.status,
+    required this.reason,
+    required this.externalReference,
+    required this.processedBy,
+    required this.processedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory RefundRecord.fromJson(Map<String, dynamic> json) {
+    return RefundRecord(
+      id: json['id'] as String,
+      bookingId: json['booking_id'] as String,
+      disputeId: json['dispute_id'] as String?,
+      amountDzd: (json['amount_dzd'] as num).toDouble(),
+      status: (json['status'] as String?)?.trim() ?? 'pending',
+      reason: (json['reason'] as String?)?.trim() ?? '',
+      externalReference: (json['external_reference'] as String?)?.trim(),
+      processedBy: json['processed_by'] as String?,
+      processedAt: DateTime.tryParse(json['processed_at'] as String? ?? ''),
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+      updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
+    );
+  }
+
+  final String id;
+  final String bookingId;
+  final String? disputeId;
+  final double amountDzd;
+  final String status;
+  final String reason;
+  final String? externalReference;
+  final String? processedBy;
+  final DateTime? processedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+}
+
+class PayoutRecord {
+  const PayoutRecord({
+    required this.id,
+    required this.bookingId,
+    required this.carrierId,
+    required this.payoutAccountId,
+    required this.payoutAccountSnapshot,
+    required this.amountDzd,
+    required this.status,
+    required this.externalReference,
+    required this.processedBy,
+    required this.processedAt,
+    required this.failureReason,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory PayoutRecord.fromJson(Map<String, dynamic> json) {
+    return PayoutRecord(
+      id: json['id'] as String,
+      bookingId: json['booking_id'] as String,
+      carrierId: json['carrier_id'] as String,
+      payoutAccountId: json['payout_account_id'] as String,
+      payoutAccountSnapshot: Map<String, dynamic>.from(
+        (json['payout_account_snapshot'] as Map?) ?? const <String, dynamic>{},
+      ),
+      amountDzd: (json['amount_dzd'] as num).toDouble(),
+      status: (json['status'] as String?)?.trim() ?? 'pending',
+      externalReference: (json['external_reference'] as String?)?.trim(),
+      processedBy: json['processed_by'] as String?,
+      processedAt: DateTime.tryParse(json['processed_at'] as String? ?? ''),
+      failureReason: (json['failure_reason'] as String?)?.trim(),
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+      updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
+    );
+  }
+
+  final String id;
+  final String bookingId;
+  final String carrierId;
+  final String payoutAccountId;
+  final Map<String, dynamic> payoutAccountSnapshot;
+  final double amountDzd;
+  final String status;
+  final String? externalReference;
+  final String? processedBy;
+  final DateTime? processedAt;
+  final String? failureReason;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+}

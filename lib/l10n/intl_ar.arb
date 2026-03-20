@@ -534,6 +534,12 @@
   "trackingEventCompletedLabel": "مكتمل",
   "trackingEventCancelledLabel": "ملغى",
   "trackingEventDisputedLabel": "متنازع عليه",
+  "adminPaymentProofQueueTitle": "مراجعة إثباتات الدفع",
+  "adminPaymentProofQueueEmptyMessage": "لا توجد إثباتات دفع تحتاج إلى مراجعة الآن.",
+  "adminDisputesQueueTitle": "طابور النزاعات",
+  "adminDisputesQueueEmptyMessage": "لا توجد نزاعات بانتظار المراجعة الآن.",
+  "adminPayoutQueueTitle": "طابور التحويلات",
+  "adminPayoutQueueEmptyMessage": "لم يتم تحرير أي تحويلات بعد.",
   "searchCarrierRatingLabel": "تقييم الناقل",
   "searchResultTypeLabel": "نوع السعة"
   ,"bookingStatusPendingPaymentLabel": "بانتظار الدفع"

@@ -73,11 +73,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminDashboardTitle": MessageLookupByLibrary.simpleMessage(
       "Admin dashboard",
     ),
+    "adminDisputesQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد نزاعات بانتظار المراجعة الآن.",
+    ),
+    "adminDisputesQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "طابور النزاعات",
+    ),
     "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لا توجد إثباتات دفع تحتاج إلى مراجعة الآن.",
     ),
     "adminPaymentProofQueueTitle": MessageLookupByLibrary.simpleMessage(
       "مراجعة إثباتات الدفع",
+    ),
+    "adminPayoutQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لم يتم تحرير أي تحويلات بعد.",
+    ),
+    "adminPayoutQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "طابور التحويلات",
     ),
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
       "Payments, verification, disputes, payouts, and email queues stay segmented inside one page.",
