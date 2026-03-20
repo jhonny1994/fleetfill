@@ -377,6 +377,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "carrierHomeNavLabel": MessageLookupByLibrary.simpleMessage("Home"),
     "carrierHomeTitle": MessageLookupByLibrary.simpleMessage("Carrier home"),
+    "carrierMilestoneUpdatedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تحديث مرحلة الحجز.",
+    ),
     "carrierProfileDescription": MessageLookupByLibrary.simpleMessage(
       "Carrier verification status, payout reminders, and profile tools live here.",
     ),
@@ -423,6 +426,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "ملخص التحقق",
     ),
     "confirmLabel": MessageLookupByLibrary.simpleMessage("تأكيد"),
+    "deliveryConfirmAction": MessageLookupByLibrary.simpleMessage(
+      "تأكيد التسليم",
+    ),
+    "deliveryConfirmedMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تأكيد التسليم.",
+    ),
     "documentViewerDescription": MessageLookupByLibrary.simpleMessage(
       "افتح هذا المستند عبر العارض الآمن عندما يصبح الوصول جاهزا.",
     ),
@@ -1106,6 +1115,30 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
     "trackingDetailTitle": m15,
+    "trackingEventCancelledLabel": MessageLookupByLibrary.simpleMessage("ملغى"),
+    "trackingEventCompletedLabel": MessageLookupByLibrary.simpleMessage(
+      "مكتمل",
+    ),
+    "trackingEventConfirmedLabel": MessageLookupByLibrary.simpleMessage("مؤكد"),
+    "trackingEventDeliveredPendingReviewLabel":
+        MessageLookupByLibrary.simpleMessage("تم التسليم وبانتظار المراجعة"),
+    "trackingEventDisputedLabel": MessageLookupByLibrary.simpleMessage(
+      "متنازع عليه",
+    ),
+    "trackingEventInTransitLabel": MessageLookupByLibrary.simpleMessage(
+      "في الطريق",
+    ),
+    "trackingEventPaymentUnderReviewLabel":
+        MessageLookupByLibrary.simpleMessage("الدفع قيد المراجعة"),
+    "trackingEventPickedUpLabel": MessageLookupByLibrary.simpleMessage(
+      "تم الاستلام",
+    ),
+    "trackingTimelineEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "لا توجد أحداث تتبع متاحة بعد.",
+    ),
+    "trackingTimelineTitle": MessageLookupByLibrary.simpleMessage(
+      "الخط الزمني للتتبع",
+    ),
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
       "حدّث FleetFill للمتابعة باستخدام الإصدار المدعوم.",
     ),
