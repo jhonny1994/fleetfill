@@ -1803,10 +1803,17 @@ class _SearchResultsSection extends StatelessWidget {
           separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
           itemBuilder: (context, index) {
             final result = results[index];
+            final capacitySummary = result.remainingVolumeM3 == null
+                ? '${BidiFormatters.latinIdentifier(result.remainingCapacityKg.toStringAsFixed(0))} kg'
+                : '${BidiFormatters.latinIdentifier(result.remainingCapacityKg.toStringAsFixed(0))} kg • ${BidiFormatters.latinIdentifier(result.remainingVolumeM3!.toStringAsFixed(1))} m3';
             return AppListCard(
               title: result.carrierName,
-              subtitle:
-                  '${_formatDateTime(context, result.departureAt)} • ${BidiFormatters.latinIdentifier(result.estimatedTotalDzd.toStringAsFixed(0))} ${s.priceCurrencyLabel}',
+              subtitle: [
+                _formatDateTime(context, result.departureAt),
+                '${s.searchEstimatedPriceLabel}: ${BidiFormatters.latinIdentifier(result.estimatedTotalDzd.toStringAsFixed(0))} ${s.priceCurrencyLabel}',
+                '${s.vehicleCapacityWeightLabel}: $capacitySummary',
+                '${s.searchCarrierRatingLabel}: ${BidiFormatters.latinIdentifier(result.ratingAverage.toStringAsFixed(1))} (${BidiFormatters.latinIdentifier('${result.ratingCount}')})',
+              ].join('\n'),
               leading: AppStatusChip(
                 label: result.sourceType == 'route'
                     ? s.searchTripsRecurringLabel

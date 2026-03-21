@@ -71,12 +71,12 @@ Rules:
 ## Seed Data
 
 - target best practice is deterministic local seeding through `supabase/seed.sql` or `supabase/seeds/`
-- FleetFill seeds locations from `supabase/seeds/locations.sql`, generated from the canonical JSON in `docs/wilayas-with-municipalities.json`
+- FleetFill seeds locations from `supabase/seeds/locations.sql`, generated from the canonical JSON in `data/locations/wilayas-with-municipalities.json`
 - regenerate the SQL seed with:
-  - `dart run tool/generate_supabase_location_seed.dart`
+  - `dart run tool/locations/generate_supabase_location_seed.dart`
 - the importer below remains available as maintenance tooling, not the primary local bootstrap path
-- `tool/import_locations.dart`
-  - reads `docs/wilayas-with-municipalities.json` directly
+- `tool/locations/import_locations.dart`
+  - reads `data/locations/wilayas-with-municipalities.json` directly
   - clears `public.communes` first, then `public.wilayas`
   - imports wilayas as `id`, `name`, and `name_ar`
   - imports communes as `id`, `wilaya_id`, `name`, and `name_ar`
@@ -84,7 +84,7 @@ Rules:
 
 Run it locally with:
 
-- `dart run tool/import_locations.dart`
+- `dart run tool/locations/import_locations.dart`
 
 ## Auth Providers
 
@@ -174,6 +174,7 @@ Production-grade alignment notes:
 ## Scheduling Posture
 
 - preferred pattern: `pg_cron` triggers one Edge Function worker every minute
+- repo-managed scheduler setup now lives in `supabase/scripts/configure_scheduled_automation.sql`
 - initial worker scope:
   - email outbox draining
   - delivery grace-window expiry

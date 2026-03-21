@@ -1,5 +1,5 @@
--- Generated from docs/wilayas-with-municipalities.json
--- Regenerate with: dart run tool/generate_supabase_location_seed.dart
+-- Generated from data/locations/wilayas-with-municipalities.json
+-- Regenerate with: dart run tool/locations/generate_supabase_location_seed.dart
 truncate table public.communes restart identity cascade;
 truncate table public.wilayas restart identity cascade;
 

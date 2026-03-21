@@ -507,6 +507,16 @@ class S {
     );
   }
 
+  /// `This account role is already set and cannot be changed here.`
+  String get authRoleAlreadyAssignedMessage {
+    return Intl.message(
+      'This account role is already set and cannot be changed here.',
+      name: 'authRoleAlreadyAssignedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Continue with Google`
   String get authGoogleAction {
     return Intl.message(
@@ -2507,6 +2517,46 @@ class S {
     return Intl.message(
       'Language, theme, support, and notification preferences stay inside shared settings.',
       name: 'settingsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Theme`
+  String get settingsThemeModeTitle {
+    return Intl.message(
+      'Theme',
+      name: 'settingsThemeModeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `System`
+  String get settingsThemeModeSystemLabel {
+    return Intl.message(
+      'System',
+      name: 'settingsThemeModeSystemLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light`
+  String get settingsThemeModeLightLabel {
+    return Intl.message(
+      'Light',
+      name: 'settingsThemeModeLightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark`
+  String get settingsThemeModeDarkLabel {
+    return Intl.message(
+      'Dark',
+      name: 'settingsThemeModeDarkLabel',
       desc: '',
       args: [],
     );

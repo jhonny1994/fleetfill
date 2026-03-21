@@ -16,6 +16,7 @@ class RoleSelectionScreen extends ConsumerWidget {
     final s = S.of(context);
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
     final selectedRole = auth?.role;
+    final canSelectRole = selectedRole == null;
 
     return AppPageScaffold(
       title: s.roleSelectionTitle,
@@ -31,14 +32,16 @@ class RoleSelectionScreen extends ConsumerWidget {
             description: s.roleSelectionShipperDescription,
             icon: Icons.inventory_2_outlined,
             selected: selectedRole == AppUserRole.shipper,
-            onTap: () => unawaited(
-              _saveRole(
-                context: context,
-                ref: ref,
-                role: AppUserRole.shipper,
-                existingProfile: auth?.profile,
-              ),
-            ),
+            onTap: canSelectRole
+                ? () => unawaited(
+                    _saveRole(
+                      context: context,
+                      ref: ref,
+                      role: AppUserRole.shipper,
+                      existingProfile: auth?.profile,
+                    ),
+                  )
+                : null,
           ),
           const SizedBox(height: AppSpacing.md),
           _RoleChoiceCard(
@@ -46,14 +49,16 @@ class RoleSelectionScreen extends ConsumerWidget {
             description: s.roleSelectionCarrierDescription,
             icon: Icons.local_shipping_outlined,
             selected: selectedRole == AppUserRole.carrier,
-            onTap: () => unawaited(
-              _saveRole(
-                context: context,
-                ref: ref,
-                role: AppUserRole.carrier,
-                existingProfile: auth?.profile,
-              ),
-            ),
+            onTap: canSelectRole
+                ? () => unawaited(
+                    _saveRole(
+                      context: context,
+                      ref: ref,
+                      role: AppUserRole.carrier,
+                      existingProfile: auth?.profile,
+                    ),
+                  )
+                : null,
           ),
         ],
       ),
@@ -359,7 +364,7 @@ class _RoleChoiceCard extends StatelessWidget {
   final String description;
   final IconData icon;
   final bool selected;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

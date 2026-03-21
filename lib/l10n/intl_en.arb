@@ -52,6 +52,7 @@
   "authForgotPasswordDescription": "Request a password reset link for your FleetFill account.",
   "authForgotPasswordTitle": "Forgot password",
   "authGenericErrorMessage": "FleetFill could not complete this auth request.",
+  "authRoleAlreadyAssignedMessage": "This account role is already set and cannot be changed here.",
   "authGoogleAction": "Continue with Google",
   "authGoogleUnavailableMessage": "Google sign-in is not available in this environment.",
   "authGoogleStartedMessage": "Google sign-in started. Return here after approval.",
@@ -322,6 +323,10 @@
   "sampleTotalLabel": "Total",
   "settingsAccountSectionTitle": "Account",
   "settingsDescription": "Language, theme, support, and notification preferences stay inside shared settings.",
+  "settingsThemeModeTitle": "Theme",
+  "settingsThemeModeSystemLabel": "System",
+  "settingsThemeModeLightLabel": "Light",
+  "settingsThemeModeDarkLabel": "Dark",
   "settingsSignedOutMessage": "You have been signed out.",
   "settingsSignOutAction": "Sign out",
   "settingsTitle": "Settings",
@@ -484,254 +489,252 @@
   "routeSaveAction": "Save route",
   "routeSavedMessage": "Recurring route updated.",
   "routeStatusLabel": "Publication status",
-  "routeVehicleLabel": "Assigned vehicle"
-  ,"loadMoreLabel": "Load more"
-  ,"pricePerKgUnitLabel": "DZD/kg"
-  ,"oneOffTripActivateConfirmationMessage": "Activate this trip for new bookings?"
-  ,"oneOffTripDeactivateConfirmationMessage": "Deactivate this trip for new bookings? Existing bookings will stay unchanged."
-  ,"oneOffTripDeleteConfirmationMessage": "Delete this one-off trip from FleetFill?"
-  ,"priceCurrencyLabel": "DZD"
-  ,"shipmentCreateAction": "Create shipment"
-  ,"shipmentCreateTitle": "Create shipment draft"
-  ,"shipmentEditAction": "Edit shipment"
-  ,"shipmentEditTitle": "Edit shipment draft"
-  ,"shipmentSaveAction": "Save shipment"
-  ,"shipmentSavedMessage": "Shipment draft saved."
-  ,"shipmentDeleteAction": "Delete shipment"
-  ,"shipmentDeleteConfirmationMessage": "Delete this shipment draft from FleetFill?"
-  ,"shipmentDeletedMessage": "Shipment draft removed."
-  ,"shipmentsEmptyMessage": "Create a shipment draft before searching exact capacity."
-  ,"shipmentCategoryLabel": "Category"
-  ,"shipmentDescriptionLabel": "Description"
-  ,"shipmentPickupStartLabel": "Pickup window start"
-  ,"shipmentPickupEndLabel": "Pickup window end"
-  ,"shipmentPickupWindowOrderMessage": "Pickup window end must be after pickup window start."
-  ,"shipmentItemsTitle": "Shipment items"
-  ,"shipmentItemTitle": "Item {index}"
-  ,"@shipmentItemTitle": {
+  "routeVehicleLabel": "Assigned vehicle",
+  "loadMoreLabel": "Load more",
+  "pricePerKgUnitLabel": "DZD/kg",
+  "oneOffTripActivateConfirmationMessage": "Activate this trip for new bookings?",
+  "oneOffTripDeactivateConfirmationMessage": "Deactivate this trip for new bookings? Existing bookings will stay unchanged.",
+  "oneOffTripDeleteConfirmationMessage": "Delete this one-off trip from FleetFill?",
+  "priceCurrencyLabel": "DZD",
+  "shipmentCreateAction": "Create shipment",
+  "shipmentCreateTitle": "Create shipment draft",
+  "shipmentEditAction": "Edit shipment",
+  "shipmentEditTitle": "Edit shipment draft",
+  "shipmentSaveAction": "Save shipment",
+  "shipmentSavedMessage": "Shipment draft saved.",
+  "shipmentDeleteAction": "Delete shipment",
+  "shipmentDeleteConfirmationMessage": "Delete this shipment draft from FleetFill?",
+  "shipmentDeletedMessage": "Shipment draft removed.",
+  "shipmentsEmptyMessage": "Create a shipment draft before searching exact capacity.",
+  "shipmentCategoryLabel": "Category",
+  "shipmentDescriptionLabel": "Description",
+  "shipmentPickupStartLabel": "Pickup window start",
+  "shipmentPickupEndLabel": "Pickup window end",
+  "shipmentPickupWindowOrderMessage": "Pickup window end must be after pickup window start.",
+  "shipmentItemsTitle": "Shipment items",
+  "shipmentItemTitle": "Item {index}",
+  "@shipmentItemTitle": {
     "placeholders": {
       "index": {}
     }
-  }
-  ,"shipmentAddItemAction": "Add item"
-  ,"shipmentRemoveItemAction": "Remove item"
-  ,"shipmentItemLabelField": "Item label"
-  ,"shipmentItemQuantityLabel": "Quantity"
-  ,"shipmentItemWeightLabel": "Item weight (kg)"
-  ,"shipmentItemVolumeLabel": "Item volume (m3)"
-  ,"shipmentItemNotesLabel": "Item notes"
-  ,"shipmentStatusDraftLabel": "Draft"
-  ,"shipmentStatusBookedLabel": "Booked"
-  ,"shipmentStatusCancelledLabel": "Cancelled"
-  ,"searchTripsRequiresDraftMessage": "Create at least one shipment draft to search exact lane capacity."
-  ,"searchShipmentSelectorLabel": "Shipment draft"
-  ,"searchRequestedDateLabel": "Requested departure date"
-  ,"searchShipmentSummaryTitle": "Shipment summary"
-  ,"searchTripsAction": "Search exact capacity"
-  ,"searchTripsControlsAction": "Sort and filters"
-  ,"searchSortRecommendedLabel": "Recommended"
-  ,"searchSortTopRatedLabel": "Top rated"
-  ,"searchSortLowestPriceLabel": "Lowest price"
-  ,"searchSortNearestDepartureLabel": "Nearest departure"
-  ,"searchCarrierLabel": "Carrier"
-  ,"searchEstimatedPriceLabel": "Estimated total"
-  ,"searchDepartureLabel": "Departure"
-  ,"searchTripsNearestDateTitle": "Nearest exact dates found"
-  ,"searchTripsNearestDateMessage": "No same-day exact result is available. Showing nearest exact dates: {dates}"
-  ,"@searchTripsNearestDateMessage": {
+  },
+  "shipmentAddItemAction": "Add item",
+  "shipmentRemoveItemAction": "Remove item",
+  "shipmentItemLabelField": "Item label",
+  "shipmentItemQuantityLabel": "Quantity",
+  "shipmentItemWeightLabel": "Item weight (kg)",
+  "shipmentItemVolumeLabel": "Item volume (m3)",
+  "shipmentItemNotesLabel": "Item notes",
+  "shipmentStatusDraftLabel": "Draft",
+  "shipmentStatusBookedLabel": "Booked",
+  "shipmentStatusCancelledLabel": "Cancelled",
+  "searchTripsRequiresDraftMessage": "Create at least one shipment draft to search exact lane capacity.",
+  "searchShipmentSelectorLabel": "Shipment draft",
+  "searchRequestedDateLabel": "Requested departure date",
+  "searchShipmentSummaryTitle": "Shipment summary",
+  "searchTripsAction": "Search exact capacity",
+  "searchTripsControlsAction": "Sort and filters",
+  "searchSortRecommendedLabel": "Recommended",
+  "searchSortTopRatedLabel": "Top rated",
+  "searchSortLowestPriceLabel": "Lowest price",
+  "searchSortNearestDepartureLabel": "Nearest departure",
+  "searchCarrierLabel": "Carrier",
+  "searchEstimatedPriceLabel": "Estimated total",
+  "searchDepartureLabel": "Departure",
+  "searchTripsNearestDateTitle": "Nearest exact dates found",
+  "searchTripsNearestDateMessage": "No same-day exact result is available. Showing nearest exact dates: {dates}",
+  "@searchTripsNearestDateMessage": {
     "placeholders": {
       "dates": {}
     }
-  }
-  ,"searchTripsNoRouteTitle": "Redefine your search"
-  ,"searchTripsNoRouteMessage": "No exact route exists for this lane in the nearby search window."
-  ,"searchTripsFilterEmptyMessage": "No result matches the current sort and filter selection."
-  ,"searchTripsResultsTitle": "Search results ({count})"
-  ,"@searchTripsResultsTitle": {
+  },
+  "searchTripsNoRouteTitle": "Redefine your search",
+  "searchTripsNoRouteMessage": "No exact route exists for this lane in the nearby search window.",
+  "searchTripsFilterEmptyMessage": "No result matches the current sort and filter selection.",
+  "searchTripsResultsTitle": "Search results ({count})",
+  "@searchTripsResultsTitle": {
     "placeholders": {
       "count": {}
     }
-  }
-  ,"searchTripsRecurringLabel": "Recurring route"
-  ,"searchTripsOneOffLabel": "One-off trip"
-  ,"bookingConfirmAction": "Confirm booking"
-  ,"bookingCreatedMessage": "Booking created. Continue to payment instructions."
-  ,"bookingInsuranceAction": "Insurance option"
-  ,"bookingInsuranceLabel": "Insurance"
-  ,"bookingInsuranceDescription": "Insurance is optional and calculated as a percentage with a minimum fee floor."
-  ,"bookingInsuranceIncludedLabel": "Included"
-  ,"bookingInsuranceNotIncludedLabel": "Not included"
-  ,"bookingPricingBreakdownAction": "Pricing breakdown"
-  ,"bookingBasePriceLabel": "Base price"
-  ,"bookingPlatformFeeLabel": "Platform fee"
-  ,"bookingCarrierFeeLabel": "Carrier fee"
-  ,"bookingInsuranceFeeLabel": "Insurance fee"
-  ,"bookingTaxFeeLabel": "Tax fee"
-  ,"bookingCarrierPayoutLabel": "Carrier payout"
-  ,"bookingTotalLabel": "Final total"
-  ,"bookingPaymentReferenceLabel": "Payment reference"
-  ,"bookingTrackingNumberLabel": "Tracking number"
-  ,"paymentInstructionsTitle": "Payment instructions"
-  ,"adminPaymentProofQueueTitle": "Payment proof review"
-  ,"adminPaymentProofQueueEmptyMessage": "No payment proofs need review right now."
-  ,"paymentProofSectionTitle": "Payment proof"
-  ,"paymentProofLatestTitle": "Latest submitted proof"
-  ,"paymentProofEmptyMessage": "Upload a payment proof after completing your external payment."
-  ,"paymentProofUploadAction": "Upload payment proof"
-  ,"paymentProofResubmitAction": "Resubmit payment proof"
-  ,"paymentProofUploadedMessage": "Payment proof uploaded."
-  ,"paymentProofAmountLabel": "Submitted amount"
-  ,"paymentProofReferenceLabel": "Submitted reference"
-  ,"paymentProofStatusLabel": "Proof status"
-  ,"paymentProofStatusPendingLabel": "Pending review"
-  ,"paymentProofStatusVerifiedLabel": "Verified"
-  ,"paymentProofStatusRejectedLabel": "Rejected"
-  ,"paymentProofVerifiedAmountLabel": "Verified amount"
-  ,"paymentProofVerifiedReferenceLabel": "Verified reference"
-  ,"paymentProofDecisionNoteLabel": "Decision note"
-  ,"paymentProofRejectionReasonLabel": "Rejection reason"
-  ,"paymentProofRejectionReasonRequiredMessage": "A rejection reason is required."
-  ,"paymentProofApprovedMessage": "Payment proof approved."
-  ,"paymentProofRejectedMessage": "Payment proof rejected."
-  ,"generatedDocumentsTitle": "Generated documents"
-  ,"generatedDocumentsEmptyMessage": "Generated invoice and receipt documents will appear here when available."
-  ,"generatedDocumentsTapReadyHint": "Tap any ready document to open it securely."
-  ,"paymentProofPendingWindowMessage": "Payment proof can only be submitted while payment is still pending."
-  ,"paymentProofExactAmountRequiredMessage": "The verified payment amount must match the booking total exactly."
-  ,"paymentProofAlreadyReviewedMessage": "This payment proof has already been reviewed."
-  ,"trackingTimelineTitle": "Tracking timeline"
-  ,"trackingTimelineEmptyMessage": "No tracking events are available yet."
-  ,"deliveryConfirmAction": "Confirm delivery"
-  ,"deliveryConfirmedMessage": "Delivery confirmed."
-  ,"carrierMilestoneUpdatedMessage": "Booking milestone updated."
-  ,"trackingEventPaymentUnderReviewLabel": "Payment under review"
-  ,"trackingEventConfirmedLabel": "Confirmed"
-  ,"trackingEventPickedUpLabel": "Picked up"
-  ,"trackingEventInTransitLabel": "In transit"
-  ,"trackingEventDeliveredPendingReviewLabel": "Delivered pending review"
-  ,"trackingEventCompletedLabel": "Completed"
-  ,"trackingEventCancelledLabel": "Cancelled"
-  ,"trackingEventDisputedLabel": "Disputed"
-  ,"adminPaymentProofQueueTitle": "Payment proof review"
-  ,"adminPaymentProofQueueEmptyMessage": "No payment proofs need review right now."
-  ,"adminDisputesQueueTitle": "Dispute queue"
-  ,"adminDisputesQueueEmptyMessage": "No disputes are waiting for review right now."
-  ,"adminPayoutQueueTitle": "Payout queue"
-  ,"adminPayoutQueueEmptyMessage": "No payouts have been released yet."
-  ,"supportSubjectLabel": "Support subject"
-  ,"supportMessageLabel": "Support message"
-  ,"supportConfiguredEmailMessage": "Support email: {supportEmail}"
-  ,"@supportConfiguredEmailMessage": {
+  },
+  "searchTripsRecurringLabel": "Recurring route",
+  "searchTripsOneOffLabel": "One-off trip",
+  "bookingConfirmAction": "Confirm booking",
+  "bookingCreatedMessage": "Booking created. Continue to payment instructions.",
+  "bookingInsuranceAction": "Insurance option",
+  "bookingInsuranceLabel": "Insurance",
+  "bookingInsuranceDescription": "Insurance is optional and calculated as a percentage with a minimum fee floor.",
+  "bookingInsuranceIncludedLabel": "Included",
+  "bookingInsuranceNotIncludedLabel": "Not included",
+  "bookingPricingBreakdownAction": "Pricing breakdown",
+  "bookingBasePriceLabel": "Base price",
+  "bookingPlatformFeeLabel": "Platform fee",
+  "bookingCarrierFeeLabel": "Carrier fee",
+  "bookingInsuranceFeeLabel": "Insurance fee",
+  "bookingTaxFeeLabel": "Tax fee",
+  "bookingCarrierPayoutLabel": "Carrier payout",
+  "bookingTotalLabel": "Final total",
+  "bookingPaymentReferenceLabel": "Payment reference",
+  "bookingTrackingNumberLabel": "Tracking number",
+  "paymentInstructionsTitle": "Payment instructions",
+  "adminPaymentProofQueueTitle": "Payment proof review",
+  "adminPaymentProofQueueEmptyMessage": "No payment proofs need review right now.",
+  "paymentProofSectionTitle": "Payment proof",
+  "paymentProofLatestTitle": "Latest submitted proof",
+  "paymentProofEmptyMessage": "Upload a payment proof after completing your external payment.",
+  "paymentProofUploadAction": "Upload payment proof",
+  "paymentProofResubmitAction": "Resubmit payment proof",
+  "paymentProofUploadedMessage": "Payment proof uploaded.",
+  "paymentProofAmountLabel": "Submitted amount",
+  "paymentProofReferenceLabel": "Submitted reference",
+  "paymentProofStatusLabel": "Proof status",
+  "paymentProofStatusPendingLabel": "Pending review",
+  "paymentProofStatusVerifiedLabel": "Verified",
+  "paymentProofStatusRejectedLabel": "Rejected",
+  "paymentProofVerifiedAmountLabel": "Verified amount",
+  "paymentProofVerifiedReferenceLabel": "Verified reference",
+  "paymentProofDecisionNoteLabel": "Decision note",
+  "paymentProofRejectionReasonLabel": "Rejection reason",
+  "paymentProofRejectionReasonRequiredMessage": "A rejection reason is required.",
+  "paymentProofApprovedMessage": "Payment proof approved.",
+  "paymentProofRejectedMessage": "Payment proof rejected.",
+  "generatedDocumentsTitle": "Generated documents",
+  "generatedDocumentsEmptyMessage": "Generated invoice and receipt documents will appear here when available.",
+  "generatedDocumentsTapReadyHint": "Tap any ready document to open it securely.",
+  "paymentProofPendingWindowMessage": "Payment proof can only be submitted while payment is still pending.",
+  "paymentProofExactAmountRequiredMessage": "The verified payment amount must match the booking total exactly.",
+  "paymentProofAlreadyReviewedMessage": "This payment proof has already been reviewed.",
+  "trackingTimelineTitle": "Tracking timeline",
+  "trackingTimelineEmptyMessage": "No tracking events are available yet.",
+  "deliveryConfirmAction": "Confirm delivery",
+  "deliveryConfirmedMessage": "Delivery confirmed.",
+  "carrierMilestoneUpdatedMessage": "Booking milestone updated.",
+  "trackingEventPaymentUnderReviewLabel": "Payment under review",
+  "trackingEventConfirmedLabel": "Confirmed",
+  "trackingEventPickedUpLabel": "Picked up",
+  "trackingEventInTransitLabel": "In transit",
+  "trackingEventDeliveredPendingReviewLabel": "Delivered pending review",
+  "trackingEventCompletedLabel": "Completed",
+  "trackingEventCancelledLabel": "Cancelled",
+  "trackingEventDisputedLabel": "Disputed",
+  "adminDisputesQueueTitle": "Dispute queue",
+  "adminDisputesQueueEmptyMessage": "No disputes are waiting for review right now.",
+  "adminPayoutQueueTitle": "Payout queue",
+  "adminPayoutQueueEmptyMessage": "No payouts have been released yet.",
+  "supportSubjectLabel": "Support subject",
+  "supportMessageLabel": "Support message",
+  "supportConfiguredEmailMessage": "Support email: {supportEmail}",
+  "@supportConfiguredEmailMessage": {
     "placeholders": {
       "supportEmail": {}
     }
-  }
-  ,"supportReferenceHintMessage": "Include any booking ID, tracking number, or payment reference that can help support investigate faster."
-  ,"supportSendAction": "Send support email"
-  ,"supportMessageSentMessage": "Support message sent."
-  ,"legalPoliciesTitle": "Policies and disclosures"
-  ,"legalPoliciesDescription": "Review the terms, privacy, payment, and dispute rules that apply before production use."
-  ,"legalPoliciesSupportHint": "If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action."
-  ,"legalTermsTitle": "Terms of service"
-  ,"legalTermsBody": "FleetFill accepts shipper payment before any carrier payout. Each booking covers one shipment on one confirmed route or trip. Shippers are responsible for accurate shipment details, and carriers are responsible for valid operating documents and lawful transport compliance."
-  ,"legalPrivacyTitle": "Privacy and retention"
-  ,"legalPrivacyBody": "FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff."
-  ,"legalPaymentDisclosureTitle": "Payment and escrow disclosure"
-  ,"legalPaymentDisclosureBody": "Pricing breakdown, platform fees, taxes, and optional insurance are shown before proof submission. FleetFill verifies payment proof against the booking total, secures funds before delivery completion, and releases carrier payout only after the booking becomes payout-eligible."
-  ,"legalDisputePolicyTitle": "Dispute policy"
-  ,"legalDisputePolicyBody": "Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome."
-  ,"searchCarrierRatingLabel": "Carrier rating"
-  ,"searchResultTypeLabel": "Capacity type"
-  ,"ratingSubmitAction": "Submit review"
-  ,"ratingCommentLabel": "Review comment"
-  ,"ratingSubmittedMessage": "Carrier review submitted."
-  ,"bookingStatusPendingPaymentLabel": "Waiting for payment"
-  ,"bookingStatusPaymentUnderReviewLabel": "Payment under review"
-  ,"bookingStatusConfirmedLabel": "Confirmed"
-  ,"bookingStatusPickedUpLabel": "Picked up"
-  ,"bookingStatusInTransitLabel": "In transit"
-  ,"bookingStatusDeliveredPendingReviewLabel": "Delivered pending review"
-  ,"bookingStatusCompletedLabel": "Completed"
-  ,"bookingStatusCancelledLabel": "Cancelled"
-  ,"bookingStatusDisputedLabel": "Disputed"
-  ,"paymentStatusUnpaidLabel": "Unpaid"
-  ,"paymentStatusProofSubmittedLabel": "Proof submitted"
-  ,"paymentStatusUnderVerificationLabel": "Under verification"
-  ,"paymentStatusSecuredLabel": "Secured"
-  ,"paymentStatusRejectedLabel": "Rejected"
-  ,"paymentStatusRefundedLabel": "Refunded"
-  ,"paymentStatusReleasedToCarrierLabel": "Released to carrier"
-  ,"adminDashboardBacklogHealthTitle": "Backlog health"
-  ,"adminDashboardAutomationTitle": "Automation health"
-  ,"adminDashboardOverdueDeliveryReviewsLabel": "Overdue delivery reviews"
-  ,"adminDashboardOverduePaymentResubmissionsLabel": "Overdue payment resubmissions"
-  ,"adminDashboardEmailHealthTitle": "Email health"
-  ,"adminDashboardEmailBacklogLabel": "Email backlog"
-  ,"adminDashboardDeadLetterLabel": "Dead-letter emails"
-  ,"adminQueuePaymentsTabLabel": "Payments"
-  ,"adminQueueVerificationTabLabel": "Verification"
-  ,"adminQueueDisputesTabLabel": "Disputes"
-  ,"adminQueuePayoutsTabLabel": "Payouts"
-  ,"adminQueueEmailTabLabel": "Email"
-  ,"adminEligiblePayoutsEmptyMessage": "No carrier payouts are eligible for release right now."
-  ,"adminPayoutEligibleTitle": "Eligible payouts"
-  ,"adminPayoutReleaseAction": "Release payout"
-  ,"adminEmailQueueTitle": "Email delivery monitoring"
-  ,"adminEmailSearchLabel": "Search email logs"
-  ,"adminEmailStatusFilterLabel": "Email status"
-  ,"adminEmailStatusAllLabel": "All statuses"
-  ,"adminEmailStatusQueuedLabel": "Queued"
-  ,"adminEmailStatusSentLabel": "Sent"
-  ,"adminEmailStatusDeliveredLabel": "Delivered"
-  ,"adminEmailStatusSoftFailedLabel": "Soft failed"
-  ,"adminEmailStatusHardFailedLabel": "Hard failed"
-  ,"adminEmailStatusBouncedLabel": "Bounced"
-  ,"adminEmailStatusSuppressedLabel": "Suppressed"
-  ,"adminEmailStatusDeadLetterLabel": "Dead letter"
-  ,"adminEmailResendAction": "Resend"
-  ,"adminEmailResendSuccess": "Email resend queued."
-  ,"adminEmailDeadLetterTitle": "Dead-letter queue"
-  ,"adminEmailDeadLetterEmptyMessage": "No dead-letter email jobs need attention right now."
-  ,"adminEmailQueueEmptyMessage": "No email delivery logs match the current filters."
-  ,"adminUsersSearchLabel": "Search users"
-  ,"adminUsersEmptyMessage": "No users match the current search."
-  ,"adminUserAccountSectionTitle": "Account overview"
-  ,"adminUserRoleLabel": "Role"
-  ,"adminUserStatusLabel": "Account status"
-  ,"adminUserStatusActiveLabel": "Active"
-  ,"adminUserStatusSuspendedLabel": "Suspended"
-  ,"adminUserSuspendAction": "Suspend user"
-  ,"adminUserReactivateAction": "Reactivate user"
-  ,"adminUserReasonHint": "Add an operational reason for this change."
-  ,"adminUserReactivateSuccess": "User reactivated."
-  ,"adminUserSuspendSuccess": "User suspended."
-  ,"adminUserBookingsSectionTitle": "Related bookings"
-  ,"adminUserBookingsEmptyMessage": "No bookings are linked to this user yet."
-  ,"adminUserVehiclesSectionTitle": "Vehicles"
-  ,"adminUserVehiclesEmptyMessage": "No vehicles are linked to this user."
-  ,"adminUserDocumentsSectionTitle": "Verification documents"
-  ,"adminUserDocumentsEmptyMessage": "No verification documents are available for this user."
-  ,"adminUserEmailSectionTitle": "Recent emails"
-  ,"adminUserEmailEmptyMessage": "No recent email logs are available for this user."
-  ,"adminUserRoleShipperLabel": "Shipper"
-  ,"adminUserRoleCarrierLabel": "Carrier"
-  ,"adminUserRoleAdminLabel": "Admin"
-  ,"adminSettingsMonitoringSummaryTitle": "Monitoring summary"
-  ,"adminSettingsRuntimeSectionTitle": "Runtime policy"
-  ,"adminSettingsMaintenanceModeLabel": "Maintenance mode"
-  ,"adminSettingsForceUpdateLabel": "Force update required"
-  ,"adminSettingsMinimumAndroidVersionLabel": "Minimum Android version"
-  ,"adminSettingsMinimumIosVersionLabel": "Minimum iOS version"
-  ,"adminSettingsSaveAction": "Save settings"
-  ,"adminSettingsSavedMessage": "Admin settings updated."
-  ,"adminSettingsPricingSectionTitle": "Booking pricing policy"
-  ,"adminSettingsPlatformFeeRateLabel": "Platform fee rate"
-  ,"adminSettingsInsuranceRateLabel": "Insurance rate"
-  ,"adminSettingsInsuranceMinimumLabel": "Insurance minimum fee"
-  ,"adminSettingsPaymentDeadlineLabel": "Payment resubmission deadline (hours)"
-  ,"adminSettingsDeliverySectionTitle": "Delivery review policy"
-  ,"adminSettingsDeliveryGraceLabel": "Delivery grace window (hours)"
-  ,"adminSettingsFeatureFlagsSectionTitle": "Feature flags"
-  ,"adminSettingsEmailResendEnabledLabel": "Enable admin email resend"
-  ,"adminAuditLogEmptyMessage": "No admin audit events have been recorded yet."
+  },
+  "supportReferenceHintMessage": "Include any booking ID, tracking number, or payment reference that can help support investigate faster.",
+  "supportSendAction": "Send support email",
+  "supportMessageSentMessage": "Support message sent.",
+  "legalPoliciesTitle": "Policies and disclosures",
+  "legalPoliciesDescription": "Review the terms, privacy, payment, and dispute rules that apply before production use.",
+  "legalPoliciesSupportHint": "If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action.",
+  "legalTermsTitle": "Terms of service",
+  "legalTermsBody": "FleetFill accepts shipper payment before any carrier payout. Each booking covers one shipment on one confirmed route or trip. Shippers are responsible for accurate shipment details, and carriers are responsible for valid operating documents and lawful transport compliance.",
+  "legalPrivacyTitle": "Privacy and retention",
+  "legalPrivacyBody": "FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff.",
+  "legalPaymentDisclosureTitle": "Payment and escrow disclosure",
+  "legalPaymentDisclosureBody": "Pricing breakdown, platform fees, taxes, and optional insurance are shown before proof submission. FleetFill verifies payment proof against the booking total, secures funds before delivery completion, and releases carrier payout only after the booking becomes payout-eligible.",
+  "legalDisputePolicyTitle": "Dispute policy",
+  "legalDisputePolicyBody": "Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome.",
+  "searchCarrierRatingLabel": "Carrier rating",
+  "searchResultTypeLabel": "Capacity type",
+  "ratingSubmitAction": "Submit review",
+  "ratingCommentLabel": "Review comment",
+  "ratingSubmittedMessage": "Carrier review submitted.",
+  "bookingStatusPendingPaymentLabel": "Waiting for payment",
+  "bookingStatusPaymentUnderReviewLabel": "Payment under review",
+  "bookingStatusConfirmedLabel": "Confirmed",
+  "bookingStatusPickedUpLabel": "Picked up",
+  "bookingStatusInTransitLabel": "In transit",
+  "bookingStatusDeliveredPendingReviewLabel": "Delivered pending review",
+  "bookingStatusCompletedLabel": "Completed",
+  "bookingStatusCancelledLabel": "Cancelled",
+  "bookingStatusDisputedLabel": "Disputed",
+  "paymentStatusUnpaidLabel": "Unpaid",
+  "paymentStatusProofSubmittedLabel": "Proof submitted",
+  "paymentStatusUnderVerificationLabel": "Under verification",
+  "paymentStatusSecuredLabel": "Secured",
+  "paymentStatusRejectedLabel": "Rejected",
+  "paymentStatusRefundedLabel": "Refunded",
+  "paymentStatusReleasedToCarrierLabel": "Released to carrier",
+  "adminDashboardBacklogHealthTitle": "Backlog health",
+  "adminDashboardAutomationTitle": "Automation health",
+  "adminDashboardOverdueDeliveryReviewsLabel": "Overdue delivery reviews",
+  "adminDashboardOverduePaymentResubmissionsLabel": "Overdue payment resubmissions",
+  "adminDashboardEmailHealthTitle": "Email health",
+  "adminDashboardEmailBacklogLabel": "Email backlog",
+  "adminDashboardDeadLetterLabel": "Dead-letter emails",
+  "adminQueuePaymentsTabLabel": "Payments",
+  "adminQueueVerificationTabLabel": "Verification",
+  "adminQueueDisputesTabLabel": "Disputes",
+  "adminQueuePayoutsTabLabel": "Payouts",
+  "adminQueueEmailTabLabel": "Email",
+  "adminEligiblePayoutsEmptyMessage": "No carrier payouts are eligible for release right now.",
+  "adminPayoutEligibleTitle": "Eligible payouts",
+  "adminPayoutReleaseAction": "Release payout",
+  "adminEmailQueueTitle": "Email delivery monitoring",
+  "adminEmailSearchLabel": "Search email logs",
+  "adminEmailStatusFilterLabel": "Email status",
+  "adminEmailStatusAllLabel": "All statuses",
+  "adminEmailStatusQueuedLabel": "Queued",
+  "adminEmailStatusSentLabel": "Sent",
+  "adminEmailStatusDeliveredLabel": "Delivered",
+  "adminEmailStatusSoftFailedLabel": "Soft failed",
+  "adminEmailStatusHardFailedLabel": "Hard failed",
+  "adminEmailStatusBouncedLabel": "Bounced",
+  "adminEmailStatusSuppressedLabel": "Suppressed",
+  "adminEmailStatusDeadLetterLabel": "Dead letter",
+  "adminEmailResendAction": "Resend",
+  "adminEmailResendSuccess": "Email resend queued.",
+  "adminEmailDeadLetterTitle": "Dead-letter queue",
+  "adminEmailDeadLetterEmptyMessage": "No dead-letter email jobs need attention right now.",
+  "adminEmailQueueEmptyMessage": "No email delivery logs match the current filters.",
+  "adminUsersSearchLabel": "Search users",
+  "adminUsersEmptyMessage": "No users match the current search.",
+  "adminUserAccountSectionTitle": "Account overview",
+  "adminUserRoleLabel": "Role",
+  "adminUserStatusLabel": "Account status",
+  "adminUserStatusActiveLabel": "Active",
+  "adminUserStatusSuspendedLabel": "Suspended",
+  "adminUserSuspendAction": "Suspend user",
+  "adminUserReactivateAction": "Reactivate user",
+  "adminUserReasonHint": "Add an operational reason for this change.",
+  "adminUserReactivateSuccess": "User reactivated.",
+  "adminUserSuspendSuccess": "User suspended.",
+  "adminUserBookingsSectionTitle": "Related bookings",
+  "adminUserBookingsEmptyMessage": "No bookings are linked to this user yet.",
+  "adminUserVehiclesSectionTitle": "Vehicles",
+  "adminUserVehiclesEmptyMessage": "No vehicles are linked to this user.",
+  "adminUserDocumentsSectionTitle": "Verification documents",
+  "adminUserDocumentsEmptyMessage": "No verification documents are available for this user.",
+  "adminUserEmailSectionTitle": "Recent emails",
+  "adminUserEmailEmptyMessage": "No recent email logs are available for this user.",
+  "adminUserRoleShipperLabel": "Shipper",
+  "adminUserRoleCarrierLabel": "Carrier",
+  "adminUserRoleAdminLabel": "Admin",
+  "adminSettingsMonitoringSummaryTitle": "Monitoring summary",
+  "adminSettingsRuntimeSectionTitle": "Runtime policy",
+  "adminSettingsMaintenanceModeLabel": "Maintenance mode",
+  "adminSettingsForceUpdateLabel": "Force update required",
+  "adminSettingsMinimumAndroidVersionLabel": "Minimum Android version",
+  "adminSettingsMinimumIosVersionLabel": "Minimum iOS version",
+  "adminSettingsSaveAction": "Save settings",
+  "adminSettingsSavedMessage": "Admin settings updated.",
+  "adminSettingsPricingSectionTitle": "Booking pricing policy",
+  "adminSettingsPlatformFeeRateLabel": "Platform fee rate",
+  "adminSettingsInsuranceRateLabel": "Insurance rate",
+  "adminSettingsInsuranceMinimumLabel": "Insurance minimum fee",
+  "adminSettingsPaymentDeadlineLabel": "Payment resubmission deadline (hours)",
+  "adminSettingsDeliverySectionTitle": "Delivery review policy",
+  "adminSettingsDeliveryGraceLabel": "Delivery grace window (hours)",
+  "adminSettingsFeatureFlagsSectionTitle": "Feature flags",
+  "adminSettingsEmailResendEnabledLabel": "Enable admin email resend",
+  "adminAuditLogEmptyMessage": "No admin audit events have been recorded yet."
 }

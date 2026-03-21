@@ -34,8 +34,14 @@ class AppRouteGuards {
   const AppRouteGuards._();
 
   static bool _needsPhoneForOperationalAction(String location) {
-    return location == AppRoutePath.shipperSearch ||
+    return location == AppRoutePath.shipperShipments ||
+        location.startsWith('${AppRoutePath.shipperShipments}/') ||
+        location == AppRoutePath.shipperSearch ||
         location.startsWith('${AppRoutePath.shipperSearch}/') ||
+        location == AppRoutePath.shipperBookingReview ||
+        location.startsWith('${AppRoutePath.shipperBookingReview}/') ||
+        location == AppRoutePath.shipperPaymentFlow ||
+        location.startsWith('${AppRoutePath.shipperPaymentFlow}/') ||
         location == AppRoutePath.carrierRoutes ||
         location.startsWith('${AppRoutePath.carrierRoutes}/') ||
         location == AppRoutePath.carrierBookings ||
@@ -56,6 +62,14 @@ class AppRouteGuards {
 
   static bool _isAdminLocation(String location) {
     return location.startsWith('/admin');
+  }
+
+  static bool _isShipperLocation(String location) {
+    return location.startsWith('/shipper');
+  }
+
+  static bool _isCarrierLocation(String location) {
+    return location.startsWith('/carrier');
   }
 
   static RouteGuardDecision evaluate({
@@ -105,6 +119,10 @@ class AppRouteGuards {
       return const RouteGuardDecision(target: AppRedirectTarget.resetPassword);
     }
 
+    if (inOnboarding && location == AppRoutePath.roleSelection && auth.role != null) {
+      return const RouteGuardDecision(target: AppRedirectTarget.home);
+    }
+
     if (inAuthFlow && !auth.isPasswordRecovery) {
       return const RouteGuardDecision(target: AppRedirectTarget.home);
     }
@@ -119,6 +137,20 @@ class AppRouteGuards {
 
     final needsPhoneForOperationalAction =
         _needsPhoneForOperationalAction(location) && !inPermissions;
+
+    if (_isShipperLocation(location) && auth.role != AppUserRole.shipper) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.forbidden,
+        reason: 'shipper_only',
+      );
+    }
+
+    if (_isCarrierLocation(location) && auth.role != AppUserRole.carrier) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.forbidden,
+        reason: 'carrier_only',
+      );
+    }
 
     if (needsPhoneForOperationalAction && !auth.hasPhoneNumber) {
       return const RouteGuardDecision(

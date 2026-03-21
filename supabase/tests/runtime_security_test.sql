@@ -684,12 +684,26 @@ values
   (
     '90000000-0000-4000-8000-000000000002',
     'payment_secured',
-    'payment_secured:60000000-0000-4000-8000-000000000005',
+    'payment_secured:shipper:60000000-0000-4000-8000-000000000005',
     '10000000-0000-4000-8000-000000000001',
     '50000000-0000-4000-8000-000000000005',
     'payment_secured',
     'en',
     'shipper1@example.com',
+    'high',
+    'queued',
+    now(),
+    '{}'::jsonb
+  ),
+  (
+    '90000000-0000-4000-8000-000000000004',
+    'payment_secured',
+    'payment_secured:carrier:60000000-0000-4000-8000-000000000005',
+    '10000000-0000-4000-8000-000000000003',
+    '50000000-0000-4000-8000-000000000005',
+    'payment_secured',
+    'en',
+    'carrier1@example.com',
     'high',
     'queued',
     now(),
@@ -909,7 +923,7 @@ select pg_temp.set_claims(
   'shipper1@example.com'
 );
 
-select matches(
+select is(
   pg_temp.capture_error(
     $$
       select public.create_booking_from_search_result(
@@ -922,8 +936,8 @@ select matches(
       )
     $$
   ),
-  '.*duplicate key value violates unique constraint.*',
-  'booking creation surfaces outbox dedupe conflicts'
+  null::text,
+  'booking creation no longer depends on premature email outbox side effects'
 );
 
 select is(
@@ -932,8 +946,8 @@ select is(
     from public.bookings
     where shipment_id = '40000000-0000-4000-8000-000000000004'
   ),
-  0,
-  'booking creation rolls back the booking row when outbox insert fails'
+  1,
+  'booking creation persists the booking row without outbox side effects'
 );
 
 select is(
@@ -942,8 +956,8 @@ select is(
     from public.shipments
     where id = '40000000-0000-4000-8000-000000000004'
   ),
-  'draft',
-  'booking creation rollback leaves the shipment in draft status'
+  'booked',
+  'booking creation updates the shipment status to booked'
 );
 
 reset role;

@@ -24,6 +24,21 @@ jobs:
           echo "Commit SHA: $GITHUB_SHA"
           echo "Tagged release required before production rollout."
 
+      - name: Verify changelog entry matches app version
+        run: |
+          VERSION=$(python - <<'PY'
+          import re
+          from pathlib import Path
+          content = Path('pubspec.yaml').read_text(encoding='utf-8')
+          match = re.search(r'^version:\s*([^\s]+)', content, re.MULTILINE)
+          if not match:
+              raise SystemExit('pubspec version not found')
+          print(match.group(1).split('+')[0])
+          PY
+          )
+          grep -q "## \[$VERSION\]" CHANGELOG.md
+          echo "Verified CHANGELOG.md entry for version $VERSION"
+
       - name: Require environment secrets at runtime
         run: |
           test -n "${{ secrets.SUPABASE_ACCESS_TOKEN }}"

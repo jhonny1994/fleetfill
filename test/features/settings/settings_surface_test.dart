@@ -1,20 +1,14 @@
-import 'package:fleetfill/core/auth/auth.dart';
-import 'package:fleetfill/core/config/config.dart';
-import 'package:fleetfill/core/localization/localization.dart';
-import 'package:fleetfill/core/theme/theme_controller.dart';
+import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('settings keeps support and policy surfaces reachable', (
+  testWidgets('SettingsScreen keeps language, theme, support, and policy surfaces reachable', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues(const <String, Object>{});
@@ -52,9 +46,29 @@ void main() {
 
     final context = tester.element(find.byType(SettingsScreen));
     final s = S.of(context);
+    final listView = find.byType(ListView).first;
+    final cardTitles = <String>{};
 
-    expect(find.text(s.supportTitle), findsOneWidget);
-    expect(find.text(s.legalPoliciesTitle), findsOneWidget);
+    for (var i = 0; i < 6; i++) {
+      cardTitles.addAll(
+        tester
+            .widgetList<AppListCard>(find.byType(AppListCard))
+            .map((card) => card.title),
+      );
+      await tester.drag(listView, const Offset(0, -300));
+      await tester.pumpAndSettle();
+    }
+
+    for (final label in [
+      s.languageSelectionTitle,
+      s.settingsThemeModeTitle,
+      s.notificationsPermissionTitle,
+      s.notificationsCenterTitle,
+      s.supportTitle,
+      s.legalPoliciesTitle,
+    ]) {
+      expect(cardTitles, contains(label));
+    }
   });
 }
 

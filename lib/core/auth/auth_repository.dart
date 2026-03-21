@@ -118,13 +118,21 @@ class AuthRepository {
       throw const AuthException('authentication_required');
     }
 
+    final existingProfile = await _fetchCurrentProfile(user.id);
+    final existingRole = existingProfile?.role;
+    if (existingRole != null && existingRole != role) {
+      throw const AuthException('role_already_assigned');
+    }
+
     final payload = <String, Object?>{
       'id': user.id,
       'email': user.email?.trim() ?? '',
-      'role': role.databaseValue,
-      'full_name': _nullable(fullName),
-      'company_name': _nullable(companyName),
-      'phone_number': _nullable(phoneNumber),
+      'role': (existingRole ?? role).databaseValue,
+      'full_name': _nullable(fullName) ?? existingProfile?.fullName,
+      'company_name': existingRole == AppUserRole.carrier || role == AppUserRole.carrier
+          ? _nullable(companyName) ?? existingProfile?.companyName
+          : null,
+      'phone_number': _nullable(phoneNumber) ?? existingProfile?.phoneNumber,
     };
 
     await _client.from('profiles').upsert(payload, onConflict: 'id');

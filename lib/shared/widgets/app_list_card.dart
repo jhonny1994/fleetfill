@@ -19,18 +19,25 @@ class AppListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        minVerticalPadding: AppSpacing.sm,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.xs,
+    final semanticsLabel = subtitle == null ? title : '$title. $subtitle';
+
+    return Semantics(
+      container: true,
+      button: onTap != null,
+      label: semanticsLabel,
+      child: Card(
+        child: ListTile(
+          minVerticalPadding: AppSpacing.sm,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.xs,
+          ),
+          onTap: onTap,
+          leading: leading,
+          title: Text(title),
+          subtitle: subtitle == null ? null : Text(subtitle!),
+          trailing: trailing,
         ),
-        onTap: onTap,
-        leading: leading,
-        title: Text(title),
-        subtitle: subtitle == null ? null : Text(subtitle!),
-        trailing: trailing,
       ),
     );
   }

@@ -38,8 +38,8 @@ Consolidation note:
 
 These are supporting assets, not narrative docs:
 
-- `docs/wilayas-with-municipalities.json` - Algeria location seed data
-- `docs/logo.png` - project asset
+- `data/locations/wilayas-with-municipalities.json` - Algeria location seed data
+- `assets/logo.png` - project asset
 - `docs/adr/` - architecture decision records for irreversible or high-cost decisions
 
 ## Update Rules

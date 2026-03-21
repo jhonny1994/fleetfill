@@ -159,6 +159,22 @@ void main() {
       expect(decision.target, AppRedirectTarget.none);
     });
 
+    test('gates shipper shipments behind phone completion', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.shipper,
+        hasCompletedOnboarding: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.shipperShipments,
+      );
+
+      expect(decision.target, AppRedirectTarget.phoneCompletion);
+    });
+
     test('gates operational shipper search behind phone completion', () {
       final auth = authSnapshot(
         status: AuthStatus.authenticated,
@@ -176,6 +192,73 @@ void main() {
       expect(
         AppRouteGuards.redirectLocation(decision, auth: auth),
         AppRoutePath.phoneCompletion,
+      );
+    });
+
+    test('redirects carriers away from shipper-only surfaces', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.carrier,
+        hasCompletedOnboarding: true,
+        hasPhoneNumber: true,
+        isCarrierVerified: true,
+        hasPayoutAccount: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.shipperHome,
+      );
+
+      expect(decision.target, AppRedirectTarget.forbidden);
+      expect(decision.reason, 'shipper_only');
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.carrierHome,
+      );
+    });
+
+    test('redirects shippers away from carrier-only surfaces', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.shipper,
+        hasCompletedOnboarding: true,
+        hasPhoneNumber: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.carrierHome,
+      );
+
+      expect(decision.target, AppRedirectTarget.forbidden);
+      expect(decision.reason, 'carrier_only');
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.shipperHome,
+      );
+    });
+
+    test('redirects users away from role selection once role is assigned', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.shipper,
+        hasCompletedOnboarding: true,
+        hasPhoneNumber: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.roleSelection,
+      );
+
+      expect(decision.target, AppRedirectTarget.home);
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.shipperHome,
       );
     });
 

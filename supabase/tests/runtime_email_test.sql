@@ -396,6 +396,8 @@ select is(
     select status::text
     from public.email_delivery_logs
     where provider_message_id = 'provider-msg-1'
+    order by created_at desc, id desc
+    limit 1
   ),
   'sent',
   'complete_email_outbox_job creates an email delivery log entry'
