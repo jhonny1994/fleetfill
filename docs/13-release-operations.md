@@ -20,7 +20,6 @@ This file defines the operational release workflow for FleetFill staging, releas
 ## Staging Checklist
 
 - validate the current commit with `dart analyze`, `flutter test`, `supabase db reset --yes`, and `supabase db lint --debug`
-- on Windows runners, ensure the Visual Studio C++ and ATL desktop build prerequisites are installed before running desktop integration tests that depend on `flutter_secure_storage_windows`
 - confirm staging secrets remain distinct from production secrets
 - seed staging reference data and current platform settings
 - verify shipper, carrier, and admin critical flows with staging data

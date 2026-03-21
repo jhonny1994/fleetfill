@@ -28,6 +28,12 @@ jobs:
       - name: Lint database
         run: supabase db lint --debug
 
+      - name: Run runtime security tests
+        run: supabase test db "supabase/tests/runtime_security_test.sql"
+
+      - name: Run runtime email tests
+        run: supabase test db "supabase/tests/runtime_email_test.sql"
+
       - name: Stop local Supabase
         if: always()
         run: supabase stop

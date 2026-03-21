@@ -16,6 +16,7 @@ class SettingsScreen extends ConsumerWidget {
     final s = S.of(context);
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
     final locale = ref.watch(effectiveLocaleProvider);
+    final themeMode = ref.watch(themeControllerProvider);
 
     return AppPageScaffold(
       title: s.settingsTitle,
@@ -38,9 +39,48 @@ class SettingsScreen extends ConsumerWidget {
                 label: s.languageSelectionTitle,
                 value: locale.languageCode.toUpperCase(),
               ),
+              ProfileSummaryRow(
+                label: s.settingsThemeModeTitle,
+                value: _themeModeLabel(s, themeMode),
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
+          AppListCard(
+            title: s.languageSelectionTitle,
+            subtitle: s.languageSelectionCurrentMessage(
+              locale.languageCode.toUpperCase(),
+            ),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.languageSelection),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.settingsThemeModeTitle,
+            subtitle: _themeModeLabel(s, themeMode),
+            trailing: const Icon(Icons.palette_outlined),
+            onTap: () => unawaited(
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (context) => const _ThemeSelectionSheet(),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.notificationsPermissionTitle,
+            subtitle: s.notificationsPermissionDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.notificationsHelp),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.notificationsCenterTitle,
+            subtitle: s.notificationsCenterDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.sharedNotifications),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           AppListCard(
             title: s.supportTitle,
             subtitle: s.supportDescription,
@@ -547,6 +587,52 @@ class _PayoutAccountEditorSheetState
   }
 }
 
+class _ThemeSelectionSheet extends ConsumerWidget {
+  const _ThemeSelectionSheet();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final themeMode = ref.watch(themeControllerProvider);
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              s.settingsThemeModeTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            for (final mode in ThemeMode.values) ...[
+              ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                title: Text(_themeModeLabel(s, mode)),
+                trailing: Icon(
+                  themeMode == mode
+                      ? Icons.check_circle_rounded
+                      : Icons.chevron_right_rounded,
+                ),
+                onTap: () {
+                  unawaited(
+                    ref.read(themeControllerProvider.notifier).setThemeMode(mode),
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 String _payoutAccountTypeLabel(S s, PayoutAccountType type) {
   return switch (type) {
     PayoutAccountType.ccp => s.payoutAccountTypeCcpLabel,
@@ -564,4 +650,12 @@ String _payoutAccountSubtitle(CarrierPayoutAccount account) {
     if ((account.bankOrCcpName ?? '').isNotEmpty) account.bankOrCcpName!,
     masked,
   ].join(' • ');
+}
+
+String _themeModeLabel(S s, ThemeMode mode) {
+  return switch (mode) {
+    ThemeMode.system => s.settingsThemeModeSystemLabel,
+    ThemeMode.light => s.settingsThemeModeLightLabel,
+    ThemeMode.dark => s.settingsThemeModeDarkLabel,
+  };
 }

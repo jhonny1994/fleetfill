@@ -30,14 +30,18 @@ class AppStatusChip extends StatelessWidget {
       AppStatusTone.neutral => palette.neutral,
     };
 
-    return Chip(
-      label: Text(label),
-      backgroundColor: color.withValues(alpha: 0.12),
-      side: BorderSide(color: color.withValues(alpha: 0.24)),
-      labelStyle: Theme.of(
-        context,
-      ).textTheme.labelLarge?.copyWith(color: color),
-      visualDensity: VisualDensity.compact,
+    return Semantics(
+      container: true,
+      label: label,
+      child: Chip(
+        label: Text(label),
+        backgroundColor: color.withValues(alpha: 0.12),
+        side: BorderSide(color: color.withValues(alpha: 0.24)),
+        labelStyle: Theme.of(
+          context,
+        ).textTheme.labelLarge?.copyWith(color: color),
+        visualDensity: VisualDensity.compact,
+      ),
     );
   }
 }

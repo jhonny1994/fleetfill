@@ -480,6 +480,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "authResetPasswordUnavailableMessage": MessageLookupByLibrary.simpleMessage(
       "Open this screen from the password recovery link to set a new password.",
     ),
+    "authRoleAlreadyAssignedMessage": MessageLookupByLibrary.simpleMessage(
+      "This account role is already set and cannot be changed here.",
+    ),
     "authSendResetAction": MessageLookupByLibrary.simpleMessage(
       "Send reset link",
     ),
@@ -1421,6 +1424,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsSignedOutMessage": MessageLookupByLibrary.simpleMessage(
       "You have been signed out.",
     ),
+    "settingsThemeModeDarkLabel": MessageLookupByLibrary.simpleMessage("Dark"),
+    "settingsThemeModeLightLabel": MessageLookupByLibrary.simpleMessage(
+      "Light",
+    ),
+    "settingsThemeModeSystemLabel": MessageLookupByLibrary.simpleMessage(
+      "System",
+    ),
+    "settingsThemeModeTitle": MessageLookupByLibrary.simpleMessage("Theme"),
     "settingsTitle": MessageLookupByLibrary.simpleMessage("Settings"),
     "sharedScaffoldPreviewMessage": MessageLookupByLibrary.simpleMessage(
       "Shared cards and shells stay consistent across role surfaces.",

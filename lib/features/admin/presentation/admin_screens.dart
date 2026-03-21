@@ -392,6 +392,180 @@ class _AdminQueuesScreenState extends ConsumerState<AdminQueuesScreen> {
   }
 }
 
+class AdminPaymentProofDetailScreen extends ConsumerWidget {
+  const AdminPaymentProofDetailScreen({required this.proofId, super.key});
+
+  final String proofId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final queueAsync = ref.watch(pendingPaymentProofsProvider);
+
+    return AppPageScaffold(
+      title: s.adminPaymentProofQueueTitle,
+      child: AppAsyncStateView<List<AdminPaymentProofQueueItem>>(
+        value: queueAsync,
+        onRetry: () => ref.invalidate(pendingPaymentProofsProvider),
+        data: (items) {
+          final item = items.where((candidate) => candidate.proof.id == proofId).firstOrNull;
+          if (item == null) {
+            return AppEmptyState(
+              title: s.adminPaymentProofQueueTitle,
+              message: s.notFoundMessage,
+            );
+          }
+          return _PaymentProofReviewSheet(item: item);
+        },
+      ),
+    );
+  }
+}
+
+class AdminDisputeDetailScreen extends ConsumerWidget {
+  const AdminDisputeDetailScreen({required this.disputeId, super.key});
+
+  final String disputeId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final disputesAsync = ref.watch(openDisputesProvider);
+
+    return AppPageScaffold(
+      title: s.adminDisputesQueueTitle,
+      child: AppAsyncStateView<List<DisputeRecord>>(
+        value: disputesAsync,
+        onRetry: () => ref.invalidate(openDisputesProvider),
+        data: (items) {
+          final item = items.where((candidate) => candidate.id == disputeId).firstOrNull;
+          if (item == null) {
+            return AppEmptyState(
+              title: s.adminDisputesQueueTitle,
+              message: s.notFoundMessage,
+            );
+          }
+          return _DisputeResolutionSheet(item: item);
+        },
+      ),
+    );
+  }
+}
+
+class AdminPayoutDetailScreen extends ConsumerWidget {
+  const AdminPayoutDetailScreen({required this.bookingId, super.key});
+
+  final String bookingId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final payoutsAsync = ref.watch(adminEligiblePayoutsProvider);
+
+    return AppPageScaffold(
+      title: s.adminPayoutEligibleTitle,
+      child: AppAsyncStateView<List<EligiblePayoutQueueItem>>(
+        value: payoutsAsync,
+        onRetry: () => ref.invalidate(adminEligiblePayoutsProvider),
+        data: (items) {
+          final item = items.where((candidate) => candidate.booking.id == bookingId).firstOrNull;
+          if (item == null) {
+            return AppEmptyState(
+              title: s.adminPayoutEligibleTitle,
+              message: s.notFoundMessage,
+            );
+          }
+
+          return ListView(
+            children: [
+              ProfileSummaryCard(
+                title: item.booking.trackingNumber,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.searchCarrierLabel,
+                    value: item.carrier?.companyName ?? item.carrier?.fullName ?? item.booking.carrierId,
+                  ),
+                  ProfileSummaryRow(
+                    label: s.bookingCarrierPayoutLabel,
+                    value: BidiFormatters.latinIdentifier(item.booking.carrierPayoutDzd.toStringAsFixed(0)),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.paymentStatusSecuredLabel,
+                    value: item.booking.paymentStatus.name,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              FilledButton(
+                onPressed: () => unawaited(
+                  ref
+                      .read(adminDisputePayoutWorkflowControllerProvider)
+                      .releasePayout(bookingId: item.booking.id),
+                ),
+                child: Text(s.adminPayoutReleaseAction),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AdminEmailLogDetailScreen extends ConsumerWidget {
+  const AdminEmailLogDetailScreen({required this.logId, super.key});
+
+  final String logId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final logsAsync = ref.watch(
+      adminFilteredEmailLogsProvider((status: null, query: null)),
+    );
+
+    return AppPageScaffold(
+      title: s.adminEmailQueueTitle,
+      child: AppAsyncStateView<List<EmailDeliveryLogRecord>>(
+        value: logsAsync,
+        onRetry: () => ref.invalidate(
+          adminFilteredEmailLogsProvider((status: null, query: null)),
+        ),
+        data: (items) {
+          final item = items.where((candidate) => candidate.id == logId).firstOrNull;
+          if (item == null) {
+            return AppEmptyState(
+              title: s.adminEmailQueueTitle,
+              message: s.notFoundMessage,
+            );
+          }
+
+          return ListView(
+            children: [
+              ProfileSummaryCard(
+                title: item.recipientEmail,
+                rows: [
+                  ProfileSummaryRow(label: s.adminEmailStatusFilterLabel, value: _emailStatusLabel(s, item.status)),
+                  ProfileSummaryRow(label: s.adminEmailSearchLabel, value: item.templateKey),
+                  ProfileSummaryRow(label: s.bookingTrackingNumberLabel, value: item.bookingId ?? '-'),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              if (_canResendEmail(item.status))
+                FilledButton(
+                  onPressed: () => unawaited(
+                    ref.read(adminOperationsWorkflowControllerProvider).resendEmail(item.id),
+                  ),
+                  child: Text(s.adminEmailResendAction),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
 class _AdminPaymentsQueueSection extends ConsumerStatefulWidget {
   @override
   ConsumerState<_AdminPaymentsQueueSection> createState() =>
@@ -447,22 +621,16 @@ class _AdminPaymentsQueueSectionState
                   .map(
                     (item) => Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      child: AppListCard(
-                        title: item.booking.trackingNumber,
-                        subtitle:
-                            '${_formatDate(item.proof.submittedAt)} • ${BidiFormatters.latinIdentifier(item.proof.submittedAmountDzd.toStringAsFixed(0))}',
-                        trailing: const Icon(Icons.chevron_right_rounded),
-                        onTap: () => unawaited(
-                          showModalBottomSheet<void>(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) => _PaymentProofReviewSheet(
-                              item: item,
-                            ),
+                        child: AppListCard(
+                          title: item.booking.trackingNumber,
+                          subtitle:
+                              '${_formatDate(item.proof.submittedAt)} • ${BidiFormatters.latinIdentifier(item.proof.submittedAmountDzd.toStringAsFixed(0))}',
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: () => context.push(
+                            AppRoutePath.adminQueuesPaymentProof(item.proof.id),
                           ),
                         ),
                       ),
-                    ),
                   )
                   .toList(growable: false),
             );
@@ -645,20 +813,15 @@ class _AdminDisputesQueueSectionState
                   .map(
                     (item) => Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      child: AppListCard(
-                        title: item.reason,
-                        subtitle: item.description ?? item.bookingId,
-                        trailing: const Icon(Icons.chevron_right_rounded),
-                        onTap: () => unawaited(
-                          showModalBottomSheet<void>(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) =>
-                                _DisputeResolutionSheet(item: item),
+                        child: AppListCard(
+                          title: item.reason,
+                          subtitle: item.description ?? item.bookingId,
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: () => context.push(
+                            AppRoutePath.adminQueuesDispute(item.id),
                           ),
                         ),
                       ),
-                    ),
                   )
                   .toList(growable: false),
             );
@@ -740,15 +903,9 @@ class _AdminPayoutsQueueSectionState
                         title: item.booking.trackingNumber,
                         subtitle:
                             '${item.carrier?.companyName ?? item.carrier?.fullName ?? item.booking.carrierId} • ${BidiFormatters.latinIdentifier(item.booking.carrierPayoutDzd.toStringAsFixed(0))}',
-                        trailing: FilledButton(
-                          onPressed: () => unawaited(
-                            ref
-                                .read(
-                                  adminDisputePayoutWorkflowControllerProvider,
-                                )
-                                .releasePayout(bookingId: item.booking.id),
-                          ),
-                          child: Text(s.adminPayoutReleaseAction),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => context.push(
+                          AppRoutePath.adminQueuesPayout(item.booking.id),
                         ),
                       ),
                     ),
@@ -916,6 +1073,9 @@ class _AdminEmailQueueSectionState
                         title: log.recipientEmail,
                         subtitle:
                             '${log.templateKey} • ${_emailStatusLabel(s, log.status)}',
+                        onTap: () => context.push(
+                          AppRoutePath.adminQueuesEmailLog(log.id),
+                        ),
                         trailing: resendEnabled && _canResendEmail(log.status)
                             ? TextButton(
                                 onPressed: () => unawaited(_resend(log.id)),
