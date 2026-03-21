@@ -11,8 +11,8 @@ final communesProvider = FutureProvider<List<AlgeriaCommune>>((ref) {
   return ref.read(locationRepositoryProvider).fetchCommunes();
 });
 
-final publicCarrierProfileProvider =
-    FutureProvider.autoDispose.family<CarrierPublicProfileView, String>((ref, carrierId) {
+final publicCarrierProfileProvider = FutureProvider.autoDispose
+    .family<CarrierPublicProfileView, String>((ref, carrierId) {
       return ref
           .read(authRepositoryProvider)
           .fetchCarrierPublicProfile(carrierId);
@@ -22,33 +22,36 @@ final myVehiclesProvider = FutureProvider<List<CarrierVehicle>>((ref) {
   return ref.read(vehicleRepositoryProvider).fetchMyVehicles();
 });
 
-final myPayoutAccountsProvider = FutureProvider<List<CarrierPayoutAccount>>((ref) {
+final myPayoutAccountsProvider = FutureProvider<List<CarrierPayoutAccount>>((
+  ref,
+) {
   return ref.read(payoutAccountRepositoryProvider).fetchMyPayoutAccounts();
 });
 
-final myShipperShipmentsProvider =
-    FutureProvider<List<ShipmentDraftRecord>>((ref) {
-      return ref.read(shipmentRepositoryProvider).fetchMyShipments();
-    });
+final myShipperShipmentsProvider = FutureProvider<List<ShipmentDraftRecord>>((
+  ref,
+) {
+  return ref.read(shipmentRepositoryProvider).fetchMyShipments();
+});
 
-final shipmentDetailProvider =
-    FutureProvider.autoDispose.family<ShipmentDraftRecord?, String>((
+final shipmentDetailProvider = FutureProvider.autoDispose
+    .family<ShipmentDraftRecord?, String>((
       ref,
       shipmentId,
     ) {
       return ref.read(shipmentRepositoryProvider).fetchShipmentById(shipmentId);
     });
 
-final bookingDetailProvider =
-    FutureProvider.autoDispose.family<BookingRecord?, String>((
+final bookingDetailProvider = FutureProvider.autoDispose
+    .family<BookingRecord?, String>((
       ref,
       bookingId,
     ) {
       return ref.read(bookingRepositoryProvider).fetchBookingById(bookingId);
     });
 
-final trackingEventsProvider =
-    FutureProvider.autoDispose.family<List<TrackingEventRecord>, String>((
+final trackingEventsProvider = FutureProvider.autoDispose
+    .family<List<TrackingEventRecord>, String>((
       ref,
       bookingId,
     ) {
@@ -71,8 +74,8 @@ final payoutsProvider = FutureProvider<List<PayoutRecord>>((ref) {
   return ref.read(disputeRepositoryProvider).fetchPayouts();
 });
 
-final paymentProofsForBookingProvider =
-    FutureProvider.autoDispose.family<List<PaymentProofRecord>, String>((
+final paymentProofsForBookingProvider = FutureProvider.autoDispose
+    .family<List<PaymentProofRecord>, String>((
       ref,
       bookingId,
     ) {
@@ -81,16 +84,18 @@ final paymentProofsForBookingProvider =
           .fetchPaymentProofsForBooking(bookingId);
     });
 
-final paymentProofDetailProvider =
-    FutureProvider.autoDispose.family<PaymentProofRecord?, String>((
+final paymentProofDetailProvider = FutureProvider.autoDispose
+    .family<PaymentProofRecord?, String>((
       ref,
       proofId,
     ) {
-      return ref.read(paymentProofRepositoryProvider).fetchPaymentProofById(proofId);
+      return ref
+          .read(paymentProofRepositoryProvider)
+          .fetchPaymentProofById(proofId);
     });
 
-final generatedDocumentsForBookingProvider =
-    FutureProvider.autoDispose.family<List<GeneratedDocumentRecord>, String>((
+final generatedDocumentsForBookingProvider = FutureProvider.autoDispose
+    .family<List<GeneratedDocumentRecord>, String>((
       ref,
       bookingId,
     ) {
@@ -99,8 +104,8 @@ final generatedDocumentsForBookingProvider =
           .fetchGeneratedDocumentsForBooking(bookingId);
     });
 
-final generatedDocumentDetailProvider =
-    FutureProvider.autoDispose.family<GeneratedDocumentRecord?, String>((
+final generatedDocumentDetailProvider = FutureProvider.autoDispose
+    .family<GeneratedDocumentRecord?, String>((
       ref,
       documentId,
     ) {
@@ -111,7 +116,9 @@ final generatedDocumentDetailProvider =
 
 final pendingPaymentProofsProvider =
     FutureProvider<List<AdminPaymentProofQueueItem>>((ref) {
-      return ref.read(paymentAdminRepositoryProvider).fetchPendingPaymentProofs();
+      return ref
+          .read(paymentAdminRepositoryProvider)
+          .fetchPendingPaymentProofs();
     });
 
 final adminPaymentProofSearchResultsProvider = FutureProvider.autoDispose
@@ -121,47 +128,61 @@ final adminPaymentProofSearchResultsProvider = FutureProvider.autoDispose
           .fetchPaymentProofQueue(query: query);
     });
 
-final adminOperationalSummaryProvider = FutureProvider<AdminOperationalSummary>((
-  ref,
-) {
-  return ref.read(adminOperationsRepositoryProvider).fetchOperationalSummary();
-});
+final adminOperationalSummaryProvider = FutureProvider<AdminOperationalSummary>(
+  (
+    ref,
+  ) {
+    return ref
+        .read(adminOperationsRepositoryProvider)
+        .fetchOperationalSummary();
+  },
+);
 
 final adminUsersProvider = FutureProvider<List<AdminUserListItem>>((ref) {
   return ref.read(adminOperationsRepositoryProvider).fetchUsers();
 });
 
-final adminUserSearchResultsProvider =
-    FutureProvider.autoDispose.family<List<AdminUserListItem>, String>((
+final adminUserSearchResultsProvider = FutureProvider.autoDispose
+    .family<List<AdminUserListItem>, String>((
       ref,
       query,
     ) {
-      return ref.read(adminOperationsRepositoryProvider).fetchUsers(query: query);
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchUsers(query: query);
     });
 
-final adminUserDetailProvider =
-    FutureProvider.autoDispose.family<AdminUserDetail?, String>((
+final adminUserDetailProvider = FutureProvider.autoDispose
+    .family<AdminUserDetail?, String>((
       ref,
       profileId,
     ) {
-      return ref.read(adminOperationsRepositoryProvider).fetchUserDetail(profileId);
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchUserDetail(profileId);
     });
 
-final adminBookingSearchResultsProvider =
-    FutureProvider.autoDispose.family<List<BookingRecord>, String>((ref, query) {
-      return ref.read(adminOperationsRepositoryProvider).fetchBookings(query: query);
+final adminBookingSearchResultsProvider = FutureProvider.autoDispose
+    .family<List<BookingRecord>, String>((ref, query) {
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchBookings(query: query);
     });
- 
+
 final adminPlatformSettingsProvider =
     FutureProvider<List<PlatformSettingRecord>>((ref) {
-      return ref.read(adminOperationsRepositoryProvider).fetchPlatformSettings();
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchPlatformSettings();
     });
 
 final adminAuditLogsProvider = FutureProvider<List<AdminAuditLogRecord>>((ref) {
   return ref.read(adminOperationsRepositoryProvider).fetchAuditLogs();
 });
 
-final adminEmailLogsProvider = FutureProvider<List<EmailDeliveryLogRecord>>((ref) {
+final adminEmailLogsProvider = FutureProvider<List<EmailDeliveryLogRecord>>((
+  ref,
+) {
   return ref.read(adminOperationsRepositoryProvider).fetchEmailLogs();
 });
 
@@ -170,7 +191,9 @@ final adminFilteredEmailLogsProvider = FutureProvider.autoDispose
       ref,
       filter,
     ) {
-      return ref.read(adminOperationsRepositoryProvider).fetchEmailLogs(
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchEmailLogs(
             status: filter.status,
             query: filter.query,
           );
@@ -178,7 +201,9 @@ final adminFilteredEmailLogsProvider = FutureProvider.autoDispose
 
 final adminDeadLetterEmailJobsProvider =
     FutureProvider<List<EmailOutboxJobRecord>>((ref) {
-      return ref.read(adminOperationsRepositoryProvider).fetchDeadLetterEmailJobs();
+      return ref
+          .read(adminOperationsRepositoryProvider)
+          .fetchDeadLetterEmailJobs();
     });
 
 final adminEligiblePayoutsProvider =
@@ -213,62 +238,67 @@ final adminAutomationAlertsProvider =
           .read(adminOperationsRepositoryProvider)
           .fetchOverdueAutomationAlerts();
     });
- 
+
 final clientSettingsProvider = FutureProvider<ClientSettings>((ref) {
   return ref.read(bookingRepositoryProvider).fetchClientSettings();
 });
 
-final myNotificationsProvider = FutureProvider<List<AppNotificationRecord>>((ref) {
-  return ref.read(notificationRepositoryProvider).fetchMyNotifications();
-});
-
-final notificationDetailProvider =
-    FutureProvider.autoDispose.family<AppNotificationRecord?, String>((
+final notificationDetailProvider = FutureProvider.autoDispose
+    .family<AppNotificationRecord?, String>((
       ref,
       notificationId,
     ) {
-      return ref.read(notificationRepositoryProvider).fetchNotificationById(notificationId);
+      return ref
+          .read(notificationRepositoryProvider)
+          .fetchNotificationById(notificationId);
     });
 
-final vehicleDetailProvider = FutureProvider.autoDispose.family<CarrierVehicle?, String>((
-  ref,
-  vehicleId,
-) {
-  return ref.read(vehicleRepositoryProvider).fetchVehicleById(vehicleId);
-});
+final vehicleDetailProvider = FutureProvider.autoDispose
+    .family<CarrierVehicle?, String>((
+      ref,
+      vehicleId,
+    ) {
+      return ref.read(vehicleRepositoryProvider).fetchVehicleById(vehicleId);
+    });
 
 final myCarrierRoutesProvider = FutureProvider.family<List<CarrierRoute>, int>((
   ref,
   limit,
 ) {
-  return ref.read(carrierPublicationRepositoryProvider).fetchMyRoutes(limit: limit);
+  return ref
+      .read(carrierPublicationRepositoryProvider)
+      .fetchMyRoutes(limit: limit);
 });
 
-final carrierRouteDetailProvider = FutureProvider.autoDispose.family<CarrierRoute?, String>((
-  ref,
-  routeId,
-) {
-  return ref.read(carrierPublicationRepositoryProvider).fetchRouteById(routeId);
-});
+final carrierRouteDetailProvider = FutureProvider.autoDispose
+    .family<CarrierRoute?, String>((
+      ref,
+      routeId,
+    ) {
+      return ref
+          .read(carrierPublicationRepositoryProvider)
+          .fetchRouteById(routeId);
+    });
 
-final routeRevisionsProvider =
-    FutureProvider.autoDispose.family<List<RouteRevisionRecord>, String>((ref, routeId) {
+final routeRevisionsProvider = FutureProvider.autoDispose
+    .family<List<RouteRevisionRecord>, String>((ref, routeId) {
       return ref
           .read(carrierPublicationRepositoryProvider)
           .fetchRouteRevisions(routeId);
     });
 
-final myOneOffTripsProvider = FutureProvider.family<List<CarrierOneOffTrip>, int>((
-  ref,
-  limit,
-) {
-  return ref
-      .read(carrierPublicationRepositoryProvider)
-      .fetchMyOneOffTrips(limit: limit);
-});
+final myOneOffTripsProvider =
+    FutureProvider.family<List<CarrierOneOffTrip>, int>((
+      ref,
+      limit,
+    ) {
+      return ref
+          .read(carrierPublicationRepositoryProvider)
+          .fetchMyOneOffTrips(limit: limit);
+    });
 
-final oneOffTripDetailProvider =
-    FutureProvider.autoDispose.family<CarrierOneOffTrip?, String>((ref, tripId) {
+final oneOffTripDetailProvider = FutureProvider.autoDispose
+    .family<CarrierOneOffTrip?, String>((ref, tripId) {
       return ref
           .read(carrierPublicationRepositoryProvider)
           .fetchOneOffTripById(tripId);
@@ -276,7 +306,9 @@ final oneOffTripDetailProvider =
 
 final capacityPublicationSummaryProvider =
     FutureProvider<CapacityPublicationSummary>((ref) {
-      return ref.read(carrierPublicationRepositoryProvider).fetchPublicationSummary();
+      return ref
+          .read(carrierPublicationRepositoryProvider)
+          .fetchPublicationSummary();
     });
 
 final myVerificationDocumentsProvider =
@@ -284,8 +316,8 @@ final myVerificationDocumentsProvider =
       return ref.read(vehicleRepositoryProvider).fetchMyVerificationDocuments();
     });
 
-final verificationDocumentDetailProvider =
-    FutureProvider.autoDispose.family<VerificationDocumentRecord?, String>((
+final verificationDocumentDetailProvider = FutureProvider.autoDispose
+    .family<VerificationDocumentRecord?, String>((
       ref,
       documentId,
     ) {
@@ -294,8 +326,8 @@ final verificationDocumentDetailProvider =
           .fetchVerificationDocumentById(documentId);
     });
 
-final verificationDocumentsForEntityProvider =
-    FutureProvider.autoDispose.family<
+final verificationDocumentsForEntityProvider = FutureProvider.autoDispose
+    .family<
       List<VerificationDocumentRecord>,
       ({
         VerificationEntityType entityType,
@@ -317,8 +349,8 @@ final pendingVerificationPacketsProvider =
           .fetchPendingReviewPackets();
     });
 
-final pendingVerificationPacketProvider =
-    FutureProvider.autoDispose.family<VerificationReviewPacket?, String>((ref, carrierId) {
+final pendingVerificationPacketProvider = FutureProvider.autoDispose
+    .family<VerificationReviewPacket?, String>((ref, carrierId) {
       return ref
           .read(verificationAdminRepositoryProvider)
           .fetchPendingReviewPacketByCarrierId(carrierId);

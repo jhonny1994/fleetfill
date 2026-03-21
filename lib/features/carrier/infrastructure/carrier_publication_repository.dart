@@ -8,7 +8,10 @@ final carrierPublicationRepositoryProvider =
     Provider<CarrierPublicationRepository>((ref) {
       final environment = ref.watch(appEnvironmentConfigProvider);
       final logger = ref.watch(appLoggerProvider);
-      return CarrierPublicationRepository(environment: environment, logger: logger);
+      return CarrierPublicationRepository(
+        environment: environment,
+        logger: logger,
+      );
     });
 
 class CarrierPublicationRepository {
@@ -131,7 +134,10 @@ class CarrierPublicationRepository {
       },
     );
 
-    logger.info('Updated carrier route with revision', context: {'routeId': routeId});
+    logger.info(
+      'Updated carrier route with revision',
+      context: {'routeId': routeId},
+    );
     return CarrierRoute.fromJson(response);
   }
 
@@ -285,32 +291,47 @@ class CarrierPublicationRepository {
     final departureResponse = await _client
         .from('route_departure_instances')
         .select('reserved_capacity_kg')
-        .gte('departure_date', DateTime(today.year, today.month, today.day).toIso8601String());
+        .gte(
+          'departure_date',
+          DateTime(today.year, today.month, today.day).toIso8601String(),
+        );
 
-    final departureInstances = (departureResponse as List<dynamic>).cast<Map<String, dynamic>>();
-    final routes = (routesResponse as List<dynamic>).cast<Map<String, dynamic>>();
+    final departureInstances = (departureResponse as List<dynamic>)
+        .cast<Map<String, dynamic>>();
+    final routes = (routesResponse as List<dynamic>)
+        .cast<Map<String, dynamic>>();
     final trips = (tripsResponse as List<dynamic>).cast<Map<String, dynamic>>();
 
-    final activeRoutes = routes.where((route) => route['is_active'] == true).toList(growable: false);
-    final activeTrips = trips.where((trip) {
-      if (trip['is_active'] != true) {
-        return false;
-      }
-      final departureAt = DateTime.tryParse(trip['departure_at'] as String? ?? '');
-      return departureAt != null && !departureAt.isBefore(today);
-    }).toList(growable: false);
+    final activeRoutes = routes
+        .where((route) => route['is_active'] == true)
+        .toList(growable: false);
+    final activeTrips = trips
+        .where((trip) {
+          if (trip['is_active'] != true) {
+            return false;
+          }
+          final departureAt = DateTime.tryParse(
+            trip['departure_at'] as String? ?? '',
+          );
+          return departureAt != null && !departureAt.isBefore(today);
+        })
+        .toList(growable: false);
 
-    final publishedCapacityKg = activeRoutes.fold<double>(
+    final publishedCapacityKg =
+        activeRoutes.fold<double>(
           0,
-          (sum, route) => sum + ((route['total_capacity_kg'] as num?)?.toDouble() ?? 0),
+          (sum, route) =>
+              sum + ((route['total_capacity_kg'] as num?)?.toDouble() ?? 0),
         ) +
         activeTrips.fold<double>(
           0,
-          (sum, trip) => sum + ((trip['total_capacity_kg'] as num?)?.toDouble() ?? 0),
+          (sum, trip) =>
+              sum + ((trip['total_capacity_kg'] as num?)?.toDouble() ?? 0),
         );
     final reservedCapacityKg = departureInstances.fold<double>(
       0,
-      (sum, item) => sum + ((item['reserved_capacity_kg'] as num?)?.toDouble() ?? 0),
+      (sum, item) =>
+          sum + ((item['reserved_capacity_kg'] as num?)?.toDouble() ?? 0),
     );
 
     return CapacityPublicationSummary(

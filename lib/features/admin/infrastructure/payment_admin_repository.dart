@@ -40,18 +40,24 @@ class PaymentAdminRepository {
         .limit(50);
     final proofMaps = (proofsResponse as List<dynamic>)
         .cast<Map<String, dynamic>>();
-    final proofs = proofMaps.map(PaymentProofRecord.fromJson).toList(growable: false);
+    final proofs = proofMaps
+        .map(PaymentProofRecord.fromJson)
+        .toList(growable: false);
     if (proofs.isEmpty) {
       return const <AdminPaymentProofQueueItem>[];
     }
 
-    final bookingIds = proofs.map((proof) => proof.bookingId).toSet().toList(growable: false);
+    final bookingIds = proofs
+        .map((proof) => proof.bookingId)
+        .toSet()
+        .toList(growable: false);
     final bookingsResponse = await _client
         .from('bookings')
         .select()
         .inFilter('id', bookingIds);
     final bookingMap = {
-      for (final item in (bookingsResponse as List<dynamic>).cast<Map<String, dynamic>>())
+      for (final item
+          in (bookingsResponse as List<dynamic>).cast<Map<String, dynamic>>())
         (item['id'] as String): BookingRecord.fromJson(item),
     };
 

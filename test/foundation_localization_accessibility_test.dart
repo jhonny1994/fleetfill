@@ -62,13 +62,11 @@ void main() {
         buildTestApp(child: const AppVerificationGateState()),
       );
 
-      expect(find.text('Verification required'), findsOneWidget);
-      expect(
-        find.text(
-          'Complete the required verification steps before continuing.',
-        ),
-        findsOneWidget,
-      );
+      final context = tester.element(find.byType(AppVerificationGateState));
+      final s = S.of(context);
+
+      expect(find.text(s.verificationRequiredTitle), findsOneWidget);
+      expect(find.text(s.verificationRequiredMessage), findsOneWidget);
     });
 
     testWidgets('forbidden state can show admin step-up guidance', (
@@ -96,10 +94,9 @@ void main() {
         ),
       );
 
-      expect(
-        find.text('You are offline. Some actions are temporarily unavailable.'),
-        findsOneWidget,
-      );
+      final context = tester.element(find.byType(AppOfflineBanner));
+
+      expect(find.text(S.of(context).offlineMessage), findsOneWidget);
     });
 
     testWidgets('navigation destinations keep accessible nav controls', (

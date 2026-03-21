@@ -35,8 +35,7 @@ class AdminOperationalSummary {
       eligiblePayouts: (json['eligible_payouts'] as num?)?.toInt() ?? 0,
       emailBacklog: (json['email_backlog'] as num?)?.toInt() ?? 0,
       emailDeadLetter: (json['email_dead_letter'] as num?)?.toInt() ?? 0,
-      auditEventsLast24h:
-          (json['audit_events_last_24h'] as num?)?.toInt() ?? 0,
+      auditEventsLast24h: (json['audit_events_last_24h'] as num?)?.toInt() ?? 0,
       overdueDeliveryReviews:
           (json['overdue_delivery_reviews'] as num?)?.toInt() ?? 0,
       overduePaymentResubmissions:
@@ -159,7 +158,9 @@ class EmailDeliveryLogRecord {
       status: (json['status'] as String?)?.trim() ?? 'queued',
       provider: (json['provider'] as String?)?.trim() ?? '',
       attemptCount: (json['attempt_count'] as num?)?.toInt() ?? 0,
-      lastAttemptAt: DateTime.tryParse(json['last_attempt_at'] as String? ?? ''),
+      lastAttemptAt: DateTime.tryParse(
+        json['last_attempt_at'] as String? ?? '',
+      ),
       nextRetryAt: DateTime.tryParse(json['next_retry_at'] as String? ?? ''),
       lastErrorAt: DateTime.tryParse(json['last_error_at'] as String? ?? ''),
       errorCode: (json['error_code'] as String?)?.trim(),

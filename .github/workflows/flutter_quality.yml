@@ -1,0 +1,52 @@
+name: Flutter Quality
+
+on:
+  push:
+    branches:
+      - main
+      - phase14-16-release-readiness
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify generated localization output
+        run: dart run intl_utils:generate
+
+      - name: Analyze
+        run: dart analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build Android debug sanity artifact
+        run: flutter build apk --debug --dart-define=APP_ENV=local
+
+  windows-integration-smoke:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run integration smoke test on Windows
+        run: flutter test integration_test/settings_support_and_policies_smoke_test.dart -d windows

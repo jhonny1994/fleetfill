@@ -16,7 +16,9 @@ class AdminDisputePayoutWorkflowController {
     required String disputeId,
     String? resolutionNote,
   }) async {
-    await ref.read(disputeRepositoryProvider).resolveComplete(
+    await ref
+        .read(disputeRepositoryProvider)
+        .resolveComplete(
           disputeId: disputeId,
           resolutionNote: resolutionNote,
         );
@@ -36,7 +38,9 @@ class AdminDisputePayoutWorkflowController {
     String? externalReference,
     String? resolutionNote,
   }) async {
-    await ref.read(disputeRepositoryProvider).resolveRefund(
+    await ref
+        .read(disputeRepositoryProvider)
+        .resolveRefund(
           disputeId: disputeId,
           refundAmountDzd: refundAmountDzd,
           refundReason: refundReason,
@@ -57,7 +61,9 @@ class AdminDisputePayoutWorkflowController {
     String? externalReference,
     String? note,
   }) async {
-    await ref.read(disputeRepositoryProvider).releasePayout(
+    await ref
+        .read(disputeRepositoryProvider)
+        .releasePayout(
           bookingId: bookingId,
           externalReference: externalReference,
           note: note,

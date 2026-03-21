@@ -5,6 +5,11 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val releaseKeystorePath = providers.gradleProperty("FLEETFILL_RELEASE_STORE_FILE")
+val releaseKeystorePassword = providers.gradleProperty("FLEETFILL_RELEASE_STORE_PASSWORD")
+val releaseKeyAlias = providers.gradleProperty("FLEETFILL_RELEASE_KEY_ALIAS")
+val releaseKeyPassword = providers.gradleProperty("FLEETFILL_RELEASE_KEY_PASSWORD")
+
 android {
     namespace = "com.carbodex.fleetfill"
     compileSdk = flutter.compileSdkVersion
@@ -17,6 +22,23 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+
+    signingConfigs {
+        create("release") {
+            val hasReleaseSigning =
+                releaseKeystorePath.isPresent &&
+                    releaseKeystorePassword.isPresent &&
+                    releaseKeyAlias.isPresent &&
+                    releaseKeyPassword.isPresent
+
+            if (hasReleaseSigning) {
+                storeFile = file(releaseKeystorePath.get())
+                storePassword = releaseKeystorePassword.get()
+                keyAlias = releaseKeyAlias.get()
+                keyPassword = releaseKeyPassword.get()
+            }
+        }
     }
 
     defaultConfig {
@@ -32,9 +54,16 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            val hasReleaseSigning =
+                releaseKeystorePath.isPresent &&
+                    releaseKeystorePassword.isPresent &&
+                    releaseKeyAlias.isPresent &&
+                    releaseKeyPassword.isPresent
+            signingConfig = if (hasReleaseSigning) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }

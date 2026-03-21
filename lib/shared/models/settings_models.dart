@@ -15,9 +15,9 @@ class ClientSettings {
         _asMap(json['delivery_review']),
       ),
       appRuntime: AppRuntimeSettings.fromJson(_asMap(json['app_runtime'])),
-      paymentAccounts: _asList(json['platform_payment_accounts'])
-          .map(PlatformPaymentAccountSettings.fromJson)
-          .toList(growable: false),
+      paymentAccounts: _asList(
+        json['platform_payment_accounts'],
+      ).map(PlatformPaymentAccountSettings.fromJson).toList(growable: false),
     );
   }
 
@@ -111,8 +111,7 @@ class PlatformPaymentAccountSettings {
       paymentRail: (json['payment_rail'] as String?)?.trim() ?? '',
       displayName: (json['display_name'] as String?)?.trim() ?? '',
       accountIdentifier: (json['account_identifier'] as String?)?.trim() ?? '',
-      accountHolderName:
-          (json['account_holder_name'] as String?)?.trim() ?? '',
+      accountHolderName: (json['account_holder_name'] as String?)?.trim() ?? '',
       instructionsText: (json['instructions_text'] as String?)?.trim(),
     );
   }

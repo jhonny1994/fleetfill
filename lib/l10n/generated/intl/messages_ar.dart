@@ -739,6 +739,37 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Language selection",
     ),
+    "legalDisputePolicyBody": MessageLookupByLibrary.simpleMessage(
+      "يجب فتح النزاعات خلال نافذة مراجعة التسليم. تراجع FleetFill سجلات الشحنة والإثبات والتتبع والمالية قبل حسم الحالة. وقد تنتهي المعالجة بإكمال الحجز أو إلغائه أو رد المبلغ بحسب النتيجة التشغيلية الموثقة.",
+    ),
+    "legalDisputePolicyTitle": MessageLookupByLibrary.simpleMessage(
+      "سياسة النزاعات",
+    ),
+    "legalPaymentDisclosureBody": MessageLookupByLibrary.simpleMessage(
+      "يظهر تفصيل السعر ورسوم المنصة والضرائب وخيار التأمين قبل إرسال إثبات الدفع. تتحقق FleetFill من إثبات الدفع مقابل إجمالي الحجز، وتؤمن الأموال قبل اكتمال التسليم، ولا تطلق مستحق الناقل إلا بعد أن يصبح الحجز مؤهلا للتحويل.",
+    ),
+    "legalPaymentDisclosureTitle": MessageLookupByLibrary.simpleMessage(
+      "إفصاح الدفع والضمان",
+    ),
+    "legalPoliciesDescription": MessageLookupByLibrary.simpleMessage(
+      "راجع شروط الخدمة والخصوصية والدفع والنزاعات قبل استخدام المنتج في بيئة الإنتاج.",
+    ),
+    "legalPoliciesSupportHint": MessageLookupByLibrary.simpleMessage(
+      "إذا احتجت إلى توضيح حول هذه السياسات، فتواصل مع دعم FleetFill قبل متابعة الحجز أو الدفع أو النزاع.",
+    ),
+    "legalPoliciesTitle": MessageLookupByLibrary.simpleMessage(
+      "السياسات والإفصاحات",
+    ),
+    "legalPrivacyBody": MessageLookupByLibrary.simpleMessage(
+      "تحتفظ FleetFill بسجلات التشغيل والدفع والإثبات والمالية والدعم والتدقيق فقط بالقدر اللازم لتشغيل الخدمة والتحقيق في النزاعات والوفاء بالالتزامات المالية أو التنظيمية. يظل الوصول محصورا بدور المستخدم والموظفين التشغيليين المصرح لهم.",
+    ),
+    "legalPrivacyTitle": MessageLookupByLibrary.simpleMessage(
+      "الخصوصية والاحتفاظ بالبيانات",
+    ),
+    "legalTermsBody": MessageLookupByLibrary.simpleMessage(
+      "تستلم FleetFill دفعة الشاحن قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى الشاحن مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.",
+    ),
+    "legalTermsTitle": MessageLookupByLibrary.simpleMessage("شروط الخدمة"),
     "loadMoreLabel": MessageLookupByLibrary.simpleMessage("تحميل المزيد"),
     "loadingMessage": MessageLookupByLibrary.simpleMessage(
       "يقوم FleetFill بتحضير مساحة العمل الخاصة بك.",
@@ -820,11 +851,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "تعذر العثور على الصفحة أو العنصر المطلوب.",
     ),
     "notFoundTitle": MessageLookupByLibrary.simpleMessage("غير موجود"),
-    "notificationBookingCreatedBody": MessageLookupByLibrary.simpleMessage(
-      "أصبح الحجز جاهزا. تابع إلى تعليمات الدفع لمواصلة الإجراء.",
+    "notificationBookingConfirmedBody": MessageLookupByLibrary.simpleMessage(
+      "تم تسجيل الحجز. تابع إلى تعليمات الدفع لمواصلة الإجراء.",
     ),
-    "notificationBookingCreatedTitle": MessageLookupByLibrary.simpleMessage(
-      "تم إنشاء الحجز",
+    "notificationBookingConfirmedTitle": MessageLookupByLibrary.simpleMessage(
+      "تم تأكيد الحجز",
     ),
     "notificationBookingMilestoneUpdatedBody": m7,
     "notificationBookingMilestoneUpdatedTitle":
@@ -839,6 +870,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "راجع التفاصيل الكاملة لهذا الإشعار.",
     ),
     "notificationDetailTitle": m8,
+    "notificationDisputeOpenedBody": MessageLookupByLibrary.simpleMessage(
+      "تم فتح نزاع لهذا الحجز وهو بانتظار مراجعة الإدارة.",
+    ),
+    "notificationDisputeOpenedTitle": MessageLookupByLibrary.simpleMessage(
+      "تم فتح النزاع",
+    ),
+    "notificationDisputeResolvedBody": MessageLookupByLibrary.simpleMessage(
+      "تم حل النزاع المرتبط بهذا الحجز. راجع آخر نتيجة للحجز والدفع.",
+    ),
+    "notificationDisputeResolvedTitle": MessageLookupByLibrary.simpleMessage(
+      "تم حل النزاع",
+    ),
     "notificationGeneratedDocumentReadyBody": m9,
     "notificationGeneratedDocumentReadyTitle":
         MessageLookupByLibrary.simpleMessage("المستند جاهز"),
@@ -857,6 +900,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notificationPaymentSecuredTitle": MessageLookupByLibrary.simpleMessage(
       "تم تأمين الدفع",
+    ),
+    "notificationPayoutReleasedBody": MessageLookupByLibrary.simpleMessage(
+      "تم صرف مستحق الناقل لهذا الحجز.",
+    ),
+    "notificationPayoutReleasedTitle": MessageLookupByLibrary.simpleMessage(
+      "تم صرف مستحق الناقل",
     ),
     "notificationsCenterDescription": MessageLookupByLibrary.simpleMessage(
       "راجع التنبيهات الأخيرة وتحديثات الحجوزات والتذكيرات المهمة.",

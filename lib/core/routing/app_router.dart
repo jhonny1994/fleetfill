@@ -454,6 +454,12 @@ List<RouteBase> _sharedRoutes(GlobalKey<NavigatorState> rootNavigatorKey) {
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
+      path: AppRoutePath.sharedPolicies,
+      name: AppRouteName.sharedPolicies.name,
+      builder: (context, state) => const LegalPoliciesScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
       path: AppRoutePath.sharedShipmentDetail,
       name: AppRouteName.sharedShipmentDetail.name,
       builder: (context, state) => ShipmentDetailScreen(

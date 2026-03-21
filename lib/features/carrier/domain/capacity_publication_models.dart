@@ -29,11 +29,12 @@ class CarrierRoute {
       pricePerKgDzd: (json['price_per_kg_dzd'] as num).toDouble(),
       defaultDepartureTime:
           (json['default_departure_time'] as String?)?.trim() ?? '',
-      recurringDaysOfWeek: (json['recurring_days_of_week'] as List<dynamic>? ??
-              const <dynamic>[])
-          .cast<num>()
-          .map((value) => value.toInt())
-          .toList(growable: false),
+      recurringDaysOfWeek:
+          (json['recurring_days_of_week'] as List<dynamic>? ??
+                  const <dynamic>[])
+              .cast<num>()
+              .map((value) => value.toInt())
+              .toList(growable: false),
       effectiveFrom: DateTime.parse(json['effective_from'] as String),
       isActive: json['is_active'] as bool? ?? false,
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
@@ -131,11 +132,12 @@ class RouteRevisionRecord {
       pricePerKgDzd: (json['price_per_kg_dzd'] as num).toDouble(),
       defaultDepartureTime:
           (json['default_departure_time'] as String?)?.trim() ?? '',
-      recurringDaysOfWeek: (json['recurring_days_of_week'] as List<dynamic>? ??
-              const <dynamic>[])
-          .cast<num>()
-          .map((value) => value.toInt())
-          .toList(growable: false),
+      recurringDaysOfWeek:
+          (json['recurring_days_of_week'] as List<dynamic>? ??
+                  const <dynamic>[])
+              .cast<num>()
+              .map((value) => value.toInt())
+              .toList(growable: false),
       effectiveFrom: DateTime.parse(json['effective_from'] as String),
       createdBy: json['created_by'] as String?,
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),

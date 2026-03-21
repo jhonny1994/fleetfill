@@ -10,6 +10,8 @@ Target coverage for FleetFill:
 - append-only route revision history
 - verification review helper privilege boundaries
 - booked-capacity delete guards
+- support email enqueue RPC boundaries
+- generated document worker claim/complete/fail recovery boundaries
 
 When database test execution is added, keep tests:
 

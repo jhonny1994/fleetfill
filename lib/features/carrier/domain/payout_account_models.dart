@@ -1,4 +1,9 @@
-enum PayoutAccountType { ccp, dahabia, bank;
+enum PayoutAccountType {
+  ccp,
+  dahabia,
+  bank
+  ;
+
   static PayoutAccountType fromDatabase(Object? value) {
     return switch (value) {
       'ccp' => PayoutAccountType.ccp,

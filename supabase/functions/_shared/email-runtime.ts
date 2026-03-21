@@ -1,5 +1,6 @@
-export { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
+
+export { createClient }
 
 export type JsonValue = string | number | boolean | null | JsonValue[] | {
   [key: string]: JsonValue
@@ -104,6 +105,26 @@ export function buildSubjectPreview(
       return bookingReference == null
         ? 'Payment rejected'
         : `Payment rejected - ${bookingReference}`
+    case 'payment_secured':
+      return bookingReference == null
+        ? 'Payment secured'
+        : `Payment secured - ${bookingReference}`
+    case 'delivered_pending_review':
+      return bookingReference == null
+        ? 'Delivery pending review'
+        : `Delivery pending review - ${bookingReference}`
+    case 'dispute_opened':
+      return bookingReference == null
+        ? 'Dispute opened'
+        : `Dispute opened - ${bookingReference}`
+    case 'dispute_resolved':
+      return bookingReference == null
+        ? 'Dispute resolved'
+        : `Dispute resolved - ${bookingReference}`
+    case 'payout_released':
+      return bookingReference == null
+        ? 'Payout released'
+        : `Payout released - ${bookingReference}`
     case 'generated_document_available':
       return bookingReference == null
         ? 'Generated document available'

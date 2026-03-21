@@ -22,8 +22,54 @@ security definer
 set search_path = public
 as $$
 declare
+  v_actor_id uuid := (select auth.uid());
+  v_booking public.bookings;
+  v_document_type text := lower(trim(coalesce(p_document_type, '')));
+  v_storage_path text := trim(coalesce(p_storage_path, ''));
   v_result public.generated_documents;
 begin
+  if p_booking_id is null then
+    raise exception 'Booking id is required';
+  end if;
+
+  if v_document_type not in ('booking_invoice', 'payment_receipt', 'payout_receipt') then
+    raise exception 'Unsupported generated document type';
+  end if;
+
+  if v_storage_path = '' then
+    raise exception 'Generated document storage path is required';
+  end if;
+
+  if not public.is_service_role() and not public.is_admin() then
+    raise exception 'Generated document creation requires privileged access';
+  end if;
+
+  select * into v_booking
+  from public.bookings
+  where id = p_booking_id
+  for update;
+
+  if not found then
+    raise exception 'Booking not found';
+  end if;
+
+  if v_document_type in ('booking_invoice', 'payment_receipt')
+     and v_booking.payment_status not in ('secured', 'released_to_carrier') then
+    raise exception 'Booking financial documents require secured payment';
+  end if;
+
+  if v_document_type = 'payout_receipt'
+     and v_booking.payment_status <> 'released_to_carrier' then
+    raise exception 'Payout receipt requires released payout state';
+  end if;
+
+  if v_storage_path <> format('generated/%s/%s-v1.pdf', p_booking_id, replace(v_document_type, '_', '-'))
+     and v_storage_path <> format('generated/%s/%s-v%s.pdf', p_booking_id, replace(v_document_type, '_', '-'), 1) then
+    if v_storage_path !~ ('^generated/' || p_booking_id::text || '/' || replace(v_document_type, '_', '-') || '-v[0-9]+\.pdf$') then
+      raise exception 'Generated document path does not match canonical format';
+    end if;
+  end if;
+
   insert into public.generated_documents (
     booking_id,
     document_type,
@@ -32,15 +78,15 @@ begin
     generated_by
   ) values (
     p_booking_id,
-    p_document_type,
-    p_storage_path,
+    v_document_type,
+    v_storage_path,
     (
       select coalesce(max(version), 0) + 1
       from public.generated_documents
       where booking_id = p_booking_id
-        and document_type = p_document_type
+        and document_type = v_document_type
     ),
-    (select auth.uid())
+    v_actor_id
   )
   returning * into v_result;
 
@@ -218,9 +264,26 @@ begin
   returning * into v_result;
 
   update public.bookings
-  set payment_status = 'proof_submitted',
+  set payment_status = 'under_verification',
+      booking_status = 'payment_under_review',
       updated_at = now()
   where id = v_booking.id;
+
+  insert into public.tracking_events (
+    booking_id,
+    event_type,
+    visibility,
+    note,
+    created_by,
+    recorded_at
+  ) values (
+    v_booking.id,
+    'payment_under_review',
+    'user_visible',
+    'Payment proof submitted and under review.',
+    (select auth.uid()),
+    now()
+  );
 
   insert into public.notifications (profile_id, type, title, body, data)
   values (
@@ -229,6 +292,26 @@ begin
     'payment_proof_submitted_title',
     'payment_proof_submitted_body',
     jsonb_build_object('booking_id', v_booking.id, 'payment_proof_id', v_result.id)
+  );
+
+  perform public.enqueue_transactional_email(
+    'payment_proof_received',
+    v_booking.shipper_id,
+    (
+      select lower(trim(email))
+      from public.profiles
+      where id = v_booking.shipper_id
+    ),
+    v_booking.id,
+    'payment_proof_received',
+    null,
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'booking_reference', v_booking.tracking_number,
+      'payment_proof_id', v_result.id
+    ),
+    'payment_proof_received:' || v_result.id::text,
+    'high'
   );
 
   update public.upload_sessions
@@ -258,6 +341,8 @@ begin
   if not public.is_admin() and not public.is_service_role() then
     raise exception 'Payment proof approval requires privileged access';
   end if;
+
+  perform public.require_recent_admin_step_up();
 
   select * into v_proof
   from public.payment_proofs
@@ -338,6 +423,39 @@ begin
     jsonb_build_object('booking_id', v_booking.id, 'payment_proof_id', v_result.id)
   );
 
+  perform public.enqueue_transactional_email(
+    'payment_secured',
+    v_booking.shipper_id,
+    (
+      select lower(trim(email))
+      from public.profiles
+      where id = v_booking.shipper_id
+    ),
+    v_booking.id,
+    'payment_secured',
+    null,
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'booking_reference', v_booking.tracking_number,
+      'payment_proof_id', v_result.id
+    ),
+    'payment_secured:' || v_result.id::text,
+    'high'
+  );
+
+  perform public.write_admin_audit_log(
+    'payment_proof_approved',
+    'payment_proof',
+    v_result.id,
+    'success',
+    left(nullif(trim(p_decision_note), ''), 500),
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'verified_amount_dzd', p_verified_amount_dzd,
+      'verified_reference', public.normalize_reference_value(p_verified_reference)
+    )
+  );
+
   perform set_config('app.trusted_operation', 'false', true);
   return v_result;
 exception
@@ -365,6 +483,8 @@ begin
   if not public.is_admin() and not public.is_service_role() then
     raise exception 'Payment proof rejection requires privileged access';
   end if;
+
+  perform public.require_recent_admin_step_up();
 
   if nullif(trim(p_rejection_reason), '') is null then
     raise exception 'Payment proof rejection requires a reason';
@@ -426,6 +546,39 @@ begin
     'payment_rejected_title',
     'payment_rejected_body',
     jsonb_build_object('booking_id', v_booking.id, 'payment_proof_id', v_result.id)
+  );
+
+  perform public.enqueue_transactional_email(
+    'payment_rejected',
+    v_booking.shipper_id,
+    (
+      select lower(trim(email))
+      from public.profiles
+      where id = v_booking.shipper_id
+    ),
+    v_booking.id,
+    'payment_rejected',
+    null,
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'booking_reference', v_booking.tracking_number,
+      'payment_proof_id', v_result.id,
+      'rejection_reason', left(trim(p_rejection_reason), 500)
+    ),
+    'payment_rejected:' || v_result.id::text,
+    'high'
+  );
+
+  perform public.write_admin_audit_log(
+    'payment_proof_rejected',
+    'payment_proof',
+    v_result.id,
+    'success',
+    left(trim(p_rejection_reason), 500),
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'decision_note', left(nullif(trim(p_decision_note), ''), 500)
+    )
   );
 
   perform set_config('app.trusted_operation', 'false', true);
@@ -520,8 +673,8 @@ begin
 end;
 $$;
 
-revoke all on function public.create_generated_document_record(uuid, text, text) from public, anon;
-grant execute on function public.create_generated_document_record(uuid, text, text) to authenticated, service_role;
+revoke all on function public.create_generated_document_record(uuid, text, text) from public, anon, authenticated;
+grant execute on function public.create_generated_document_record(uuid, text, text) to service_role;
 
 revoke all on function public.record_refund_ledger_entry(uuid, numeric, text, text) from public, anon;
 grant execute on function public.record_refund_ledger_entry(uuid, numeric, text, text) to authenticated, service_role;

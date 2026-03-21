@@ -51,7 +51,9 @@ class BookingRepository {
         .toList(growable: false);
   }
 
-  Future<List<TrackingEventRecord>> fetchTrackingEvents(String bookingId) async {
+  Future<List<TrackingEventRecord>> fetchTrackingEvents(
+    String bookingId,
+  ) async {
     final response = await _client
         .from('tracking_events')
         .select()
@@ -77,7 +79,9 @@ class BookingRepository {
   }
 
   Future<ClientSettings> fetchClientSettings() async {
-    final response = await _client.rpc<Map<String, dynamic>>('get_client_settings');
+    final response = await _client.rpc<Map<String, dynamic>>(
+      'get_client_settings',
+    );
     return ClientSettings.fromJson(response);
   }
 
@@ -97,10 +101,11 @@ class BookingRepository {
         'p_source_id': sourceId,
         'p_departure_date': departureDate == null
             ? null
-            : DateTime(departureDate.year, departureDate.month, departureDate.day)
-                .toIso8601String()
-                .split('T')
-                .first,
+            : DateTime(
+                departureDate.year,
+                departureDate.month,
+                departureDate.day,
+              ).toIso8601String().split('T').first,
         'p_include_insurance': includeInsurance,
         'p_idempotency_key': idempotencyKey,
       },

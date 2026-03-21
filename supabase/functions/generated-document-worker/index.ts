@@ -9,6 +9,8 @@ type GeneratedDocumentRow = {
   storage_path: string
   version: number
   status: string
+  locked_at?: string | null
+  locked_by?: string | null
 }
 
 type BookingRow = {
@@ -134,32 +136,6 @@ async function renderDocumentPdf(params: {
   return await pdf.save()
 }
 
-async function enqueueDocumentAvailabilityEmail(params: {
-  serviceClient: ReturnType<typeof createServiceClient>
-  profile: ProfileRow
-  booking: BookingRow
-  document: GeneratedDocumentRow
-}) {
-  const { serviceClient, profile, booking, document } = params
-  await serviceClient.rpc('enqueue_transactional_email', {
-    p_event_key: 'generated_document_available',
-    p_profile_id: profile.id,
-    p_recipient_email: profile.email,
-    p_booking_id: booking.id,
-    p_template_key: 'generated_document_available',
-    p_locale: null,
-    p_payload_snapshot: {
-      booking_id: booking.id,
-      booking_reference: booking.tracking_number,
-      document_id: document.id,
-      document_type: document.document_type,
-      document_route: `/shared/generated-document/${document.id}`,
-    },
-    p_dedupe_key: `generated_document_available:${document.id}`,
-    p_priority: 'normal',
-  })
-}
-
 Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405)
@@ -176,12 +152,14 @@ Deno.serve(async (req: Request) => {
     const batchSize = Math.max(1, Math.min(body.batch_size ?? 5, 20))
     const serviceClient = createServiceClient()
 
-    const { data: documents, error: documentError } = await serviceClient
-      .from('generated_documents')
-      .select('id, booking_id, document_type, storage_path, version, status')
-      .eq('status', 'pending')
-      .order('created_at', { ascending: true })
-      .limit(batchSize)
+    const workerId = `edge:${crypto.randomUUID()}`
+    const { data: documents, error: documentError } = await serviceClient.rpc(
+      'claim_generated_document_jobs',
+      {
+        p_worker_id: workerId,
+        p_batch_size: batchSize,
+      },
+    )
 
     if (documentError != null) {
       console.error(
@@ -261,45 +239,18 @@ Deno.serve(async (req: Request) => {
           throw new Error(`storage_upload_failed:${upload.error.message}`)
         }
 
-        const { error: updateError } = await serviceClient
-          .from('generated_documents')
-          .update({
-            status: 'ready',
-            content_type: 'application/pdf',
-            byte_size: pdfBytes.byteLength,
-            checksum_sha256: checksum,
-            available_at: new Date().toISOString(),
-            failure_reason: null,
-          })
-          .eq('id', document.id)
+        const { error: updateError } = await serviceClient.rpc(
+          'complete_generated_document_processing',
+          {
+            p_document_id: document.id,
+            p_content_type: 'application/pdf',
+            p_byte_size: pdfBytes.byteLength,
+            p_checksum_sha256: checksum,
+          },
+        )
 
         if (updateError != null) {
           throw new Error(`document_update_failed:${updateError.message}`)
-        }
-
-        const notificationProfile = document.document_type === 'payout_receipt'
-          ? profileMap.get(booking.carrier_id) ?? null
-          : profileMap.get(booking.shipper_id) ?? null
-
-        if (notificationProfile != null) {
-          await serviceClient.from('notifications').insert({
-            profile_id: notificationProfile.id,
-            type: 'generated_document_ready',
-            title: 'generated_document_ready_title',
-            body: 'generated_document_ready_body',
-            data: {
-              booking_id: booking.id,
-              document_id: document.id,
-              document_type: document.document_type,
-            },
-          })
-
-          await enqueueDocumentAvailabilityEmail({
-            serviceClient,
-            profile: notificationProfile,
-            booking,
-            document,
-          })
         }
 
         results.push({
@@ -312,14 +263,10 @@ Deno.serve(async (req: Request) => {
           : 'generated_document_failed:Unknown error'
         const separatorIndex = message.indexOf(':')
         const failureReason = separatorIndex >= 0 ? message.slice(separatorIndex + 1) : message
-        await serviceClient
-          .from('generated_documents')
-          .update({
-            status: 'failed',
-            failure_reason: failureReason,
-            available_at: null,
-          })
-          .eq('id', document.id)
+        await serviceClient.rpc('fail_generated_document_processing', {
+          p_document_id: document.id,
+          p_failure_reason: failureReason,
+        })
         results.push({
           document_id: document.id,
           status: 'failed',

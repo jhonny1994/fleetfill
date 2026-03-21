@@ -1717,21 +1717,21 @@ class S {
     );
   }
 
-  /// `Booking created`
-  String get notificationBookingCreatedTitle {
+  /// `Booking confirmed`
+  String get notificationBookingConfirmedTitle {
     return Intl.message(
-      'Booking created',
-      name: 'notificationBookingCreatedTitle',
+      'Booking confirmed',
+      name: 'notificationBookingConfirmedTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your booking is ready. Continue to payment instructions to keep it moving.`
-  String get notificationBookingCreatedBody {
+  /// `Your booking is recorded. Continue to payment instructions to keep it moving.`
+  String get notificationBookingConfirmedBody {
     return Intl.message(
-      'Your booking is ready. Continue to payment instructions to keep it moving.',
-      name: 'notificationBookingCreatedBody',
+      'Your booking is recorded. Continue to payment instructions to keep it moving.',
+      name: 'notificationBookingConfirmedBody',
       desc: '',
       args: [],
     );
@@ -1792,6 +1792,66 @@ class S {
     return Intl.message(
       'Your payment proof was rejected. Review the reason and resubmit before the deadline.',
       name: 'notificationPaymentRejectedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dispute opened`
+  String get notificationDisputeOpenedTitle {
+    return Intl.message(
+      'Dispute opened',
+      name: 'notificationDisputeOpenedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A dispute has been opened for this booking and is waiting for admin review.`
+  String get notificationDisputeOpenedBody {
+    return Intl.message(
+      'A dispute has been opened for this booking and is waiting for admin review.',
+      name: 'notificationDisputeOpenedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dispute resolved`
+  String get notificationDisputeResolvedTitle {
+    return Intl.message(
+      'Dispute resolved',
+      name: 'notificationDisputeResolvedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The dispute for this booking has been resolved. Review the latest booking and payment outcome.`
+  String get notificationDisputeResolvedBody {
+    return Intl.message(
+      'The dispute for this booking has been resolved. Review the latest booking and payment outcome.',
+      name: 'notificationDisputeResolvedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payout released`
+  String get notificationPayoutReleasedTitle {
+    return Intl.message(
+      'Payout released',
+      name: 'notificationPayoutReleasedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The carrier payout has been released for this booking.`
+  String get notificationPayoutReleasedBody {
+    return Intl.message(
+      'The carrier payout has been released for this booking.',
+      name: 'notificationPayoutReleasedBody',
       desc: '',
       args: [],
     );
@@ -5022,6 +5082,116 @@ class S {
     return Intl.message(
       'Support message sent.',
       name: 'supportMessageSentMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Policies and disclosures`
+  String get legalPoliciesTitle {
+    return Intl.message(
+      'Policies and disclosures',
+      name: 'legalPoliciesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review the terms, privacy, payment, and dispute rules that apply before production use.`
+  String get legalPoliciesDescription {
+    return Intl.message(
+      'Review the terms, privacy, payment, and dispute rules that apply before production use.',
+      name: 'legalPoliciesDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action.`
+  String get legalPoliciesSupportHint {
+    return Intl.message(
+      'If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action.',
+      name: 'legalPoliciesSupportHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of service`
+  String get legalTermsTitle {
+    return Intl.message(
+      'Terms of service',
+      name: 'legalTermsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill accepts shipper payment before any carrier payout. Each booking covers one shipment on one confirmed route or trip. Shippers are responsible for accurate shipment details, and carriers are responsible for valid operating documents and lawful transport compliance.`
+  String get legalTermsBody {
+    return Intl.message(
+      'FleetFill accepts shipper payment before any carrier payout. Each booking covers one shipment on one confirmed route or trip. Shippers are responsible for accurate shipment details, and carriers are responsible for valid operating documents and lawful transport compliance.',
+      name: 'legalTermsBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy and retention`
+  String get legalPrivacyTitle {
+    return Intl.message(
+      'Privacy and retention',
+      name: 'legalPrivacyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff.`
+  String get legalPrivacyBody {
+    return Intl.message(
+      'FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff.',
+      name: 'legalPrivacyBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment and escrow disclosure`
+  String get legalPaymentDisclosureTitle {
+    return Intl.message(
+      'Payment and escrow disclosure',
+      name: 'legalPaymentDisclosureTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pricing breakdown, platform fees, taxes, and optional insurance are shown before proof submission. FleetFill verifies payment proof against the booking total, secures funds before delivery completion, and releases carrier payout only after the booking becomes payout-eligible.`
+  String get legalPaymentDisclosureBody {
+    return Intl.message(
+      'Pricing breakdown, platform fees, taxes, and optional insurance are shown before proof submission. FleetFill verifies payment proof against the booking total, secures funds before delivery completion, and releases carrier payout only after the booking becomes payout-eligible.',
+      name: 'legalPaymentDisclosureBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dispute policy`
+  String get legalDisputePolicyTitle {
+    return Intl.message(
+      'Dispute policy',
+      name: 'legalDisputePolicyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome.`
+  String get legalDisputePolicyBody {
+    return Intl.message(
+      'Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome.',
+      name: 'legalDisputePolicyBody',
       desc: '',
       args: [],
     );

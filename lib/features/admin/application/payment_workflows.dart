@@ -3,7 +3,9 @@ import 'package:fleetfill/shared/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final adminPaymentWorkflowControllerProvider =
-    Provider<AdminPaymentWorkflowController>(AdminPaymentWorkflowController.new);
+    Provider<AdminPaymentWorkflowController>(
+      AdminPaymentWorkflowController.new,
+    );
 
 class AdminPaymentWorkflowController {
   const AdminPaymentWorkflowController(this.ref);
@@ -16,7 +18,9 @@ class AdminPaymentWorkflowController {
     String? verifiedReference,
     String? decisionNote,
   }) async {
-    await ref.read(paymentAdminRepositoryProvider).approvePaymentProof(
+    await ref
+        .read(paymentAdminRepositoryProvider)
+        .approvePaymentProof(
           proofId: proofId,
           verifiedAmountDzd: verifiedAmountDzd,
           verifiedReference: verifiedReference,
@@ -35,7 +39,9 @@ class AdminPaymentWorkflowController {
     required String rejectionReason,
     String? decisionNote,
   }) async {
-    await ref.read(paymentAdminRepositoryProvider).rejectPaymentProof(
+    await ref
+        .read(paymentAdminRepositoryProvider)
+        .rejectPaymentProof(
           proofId: proofId,
           rejectionReason: rejectionReason,
           decisionNote: decisionNote,

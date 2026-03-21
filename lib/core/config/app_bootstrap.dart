@@ -27,7 +27,7 @@ final appEnvironmentConfigProvider = Provider<AppEnvironmentConfig>((ref) {
 
 final appLoggerProvider = Provider<AppLogger>((ref) => const DebugAppLogger());
 final crashReporterProvider = Provider<CrashReporter>(
-  (ref) => const NoopCrashReporter(),
+  (ref) => NoopCrashReporter(logger: ref.watch(appLoggerProvider)),
 );
 
 class PreparedAppDependencies {
@@ -58,8 +58,8 @@ Future<PreparedAppDependencies> prepareAppDependencies() async {
   final environmentConfig = AppEnvironmentConfig.fromDefines();
   const logger = DebugAppLogger();
   final crashReporter = environmentConfig.crashReportingEnabled
-      ? const DeferredCrashReporter()
-      : const NoopCrashReporter();
+      ? const DeferredCrashReporter(logger: logger)
+      : const NoopCrashReporter(logger: logger);
   final supabaseInitialized = await _initializeSupabase(environmentConfig);
 
   return PreparedAppDependencies(
@@ -95,7 +95,8 @@ Future<bool> _initializeSupabase(AppEnvironmentConfig environment) async {
 Future<AppEnvironmentConfig> _resolveRuntimeEnvironment(
   AppEnvironmentConfig environment,
 ) async {
-  if (!environment.hasSupabaseConfig || !AppBootstrapController.supabaseInitialized) {
+  if (!environment.hasSupabaseConfig ||
+      !AppBootstrapController.supabaseInitialized) {
     return environment;
   }
 
@@ -108,9 +109,12 @@ Future<AppEnvironmentConfig> _resolveRuntimeEnvironment(
     );
 
     return environment.copyWith(
-      maintenanceMode: appRuntime['maintenance_mode'] as bool? ?? environment.maintenanceMode,
+      maintenanceMode:
+          appRuntime['maintenance_mode'] as bool? ??
+          environment.maintenanceMode,
       forceUpdateRequired:
-          appRuntime['force_update_required'] as bool? ?? environment.forceUpdateRequired,
+          appRuntime['force_update_required'] as bool? ??
+          environment.forceUpdateRequired,
     );
   } on Object {
     return environment;
@@ -148,7 +152,9 @@ class AppBootstrapController extends _$AppBootstrapController {
     final logger = ref.watch(appLoggerProvider);
 
     try {
-      final environment = await _resolveRuntimeEnvironment(configuredEnvironment);
+      final environment = await _resolveRuntimeEnvironment(
+        configuredEnvironment,
+      );
       final auth = await ref
           .read(authRepositoryProvider)
           .buildSnapshot(
@@ -160,9 +166,9 @@ class AppBootstrapController extends _$AppBootstrapController {
         logger.info('Supabase initialized for ${environment.environment.name}');
       }
 
-        return AppBootstrapState(
-          status: BootstrapStateStatus.ready,
-          environment: environment,
+      return AppBootstrapState(
+        status: BootstrapStateStatus.ready,
+        environment: environment,
         auth: auth,
       );
     } on Object catch (error, stackTrace) {
@@ -172,11 +178,11 @@ class AppBootstrapController extends _$AppBootstrapController {
         stackTrace: stackTrace,
       );
 
-        return AppBootstrapState(
-          status: BootstrapStateStatus.failed,
-          environment: configuredEnvironment,
-          auth: const AuthSnapshot(status: AuthStatus.unauthenticated),
-          error: error,
+      return AppBootstrapState(
+        status: BootstrapStateStatus.failed,
+        environment: configuredEnvironment,
+        auth: const AuthSnapshot(status: AuthStatus.unauthenticated),
+        error: error,
         stackTrace: stackTrace,
       );
     }

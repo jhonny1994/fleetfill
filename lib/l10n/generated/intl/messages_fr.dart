@@ -751,6 +751,39 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Language selection",
     ),
+    "legalDisputePolicyBody": MessageLookupByLibrary.simpleMessage(
+      "Les litiges doivent etre ouverts pendant la fenetre de revue de livraison. FleetFill examine les enregistrements d\'expedition, de preuve, de suivi et de finance avant de resoudre le dossier. La resolution peut finaliser la reservation, l\'annuler ou emettre un remboursement selon l\'issue operationnelle documentee.",
+    ),
+    "legalDisputePolicyTitle": MessageLookupByLibrary.simpleMessage(
+      "Politique de litige",
+    ),
+    "legalPaymentDisclosureBody": MessageLookupByLibrary.simpleMessage(
+      "Le detail du prix, les frais plateforme, les taxes et l\'assurance facultative sont affiches avant l\'envoi de la preuve. FleetFill verifie la preuve de paiement par rapport au total de la reservation, securise les fonds avant la fin de livraison et ne libere le versement transporteur qu\'une fois la reservation eligible.",
+    ),
+    "legalPaymentDisclosureTitle": MessageLookupByLibrary.simpleMessage(
+      "Information paiement et sequestre",
+    ),
+    "legalPoliciesDescription": MessageLookupByLibrary.simpleMessage(
+      "Consultez les regles sur les conditions, la confidentialite, le paiement et les litiges avant un usage en production.",
+    ),
+    "legalPoliciesSupportHint": MessageLookupByLibrary.simpleMessage(
+      "Si vous avez besoin d\'une clarification sur ces politiques, contactez le support FleetFill avant de poursuivre une reservation, un paiement ou un litige.",
+    ),
+    "legalPoliciesTitle": MessageLookupByLibrary.simpleMessage(
+      "Politiques et informations",
+    ),
+    "legalPrivacyBody": MessageLookupByLibrary.simpleMessage(
+      "FleetFill conserve les donnees operationnelles, de paiement, de preuve, de finance, de support et d\'audit uniquement pendant la duree necessaire pour exploiter le service, traiter les litiges et satisfaire les obligations financieres ou de conformite. L\'acces reste limite au role utilisateur et au personnel operationnel autorise.",
+    ),
+    "legalPrivacyTitle": MessageLookupByLibrary.simpleMessage(
+      "Confidentialite et retention",
+    ),
+    "legalTermsBody": MessageLookupByLibrary.simpleMessage(
+      "FleetFill recoit le paiement de l\'expediteur avant tout versement au transporteur. Chaque reservation couvre une expedition sur une seule ligne ou un seul trajet confirme. L\'expediteur reste responsable de l\'exactitude des details d\'expedition et le transporteur reste responsable de documents valides et du respect des obligations de transport.",
+    ),
+    "legalTermsTitle": MessageLookupByLibrary.simpleMessage(
+      "Conditions d\'utilisation",
+    ),
     "loadMoreLabel": MessageLookupByLibrary.simpleMessage("Charger plus"),
     "loadingMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill prepare votre espace de travail.",
@@ -836,11 +869,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "The requested page or entity could not be found.",
     ),
     "notFoundTitle": MessageLookupByLibrary.simpleMessage("Not found"),
-    "notificationBookingCreatedBody": MessageLookupByLibrary.simpleMessage(
-      "Votre reservation est prete. Continuez vers les instructions de paiement pour la faire avancer.",
+    "notificationBookingConfirmedBody": MessageLookupByLibrary.simpleMessage(
+      "Votre reservation est enregistree. Continuez vers les instructions de paiement pour la faire avancer.",
     ),
-    "notificationBookingCreatedTitle": MessageLookupByLibrary.simpleMessage(
-      "Reservation creee",
+    "notificationBookingConfirmedTitle": MessageLookupByLibrary.simpleMessage(
+      "Reservation confirmee",
     ),
     "notificationBookingMilestoneUpdatedBody": m7,
     "notificationBookingMilestoneUpdatedTitle":
@@ -857,6 +890,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Consultez le detail complet de cette notification.",
     ),
     "notificationDetailTitle": m8,
+    "notificationDisputeOpenedBody": MessageLookupByLibrary.simpleMessage(
+      "Un litige a ete ouvert pour cette reservation et attend une revue admin.",
+    ),
+    "notificationDisputeOpenedTitle": MessageLookupByLibrary.simpleMessage(
+      "Litige ouvert",
+    ),
+    "notificationDisputeResolvedBody": MessageLookupByLibrary.simpleMessage(
+      "Le litige pour cette reservation a ete resolu. Consultez le dernier resultat de reservation et de paiement.",
+    ),
+    "notificationDisputeResolvedTitle": MessageLookupByLibrary.simpleMessage(
+      "Litige resolu",
+    ),
     "notificationGeneratedDocumentReadyBody": m9,
     "notificationGeneratedDocumentReadyTitle":
         MessageLookupByLibrary.simpleMessage("Document pret"),
@@ -877,6 +922,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notificationPaymentSecuredTitle": MessageLookupByLibrary.simpleMessage(
       "Paiement securise",
+    ),
+    "notificationPayoutReleasedBody": MessageLookupByLibrary.simpleMessage(
+      "Le paiement du transporteur a ete libere pour cette reservation.",
+    ),
+    "notificationPayoutReleasedTitle": MessageLookupByLibrary.simpleMessage(
+      "Paiement transporteur libere",
     ),
     "notificationsCenterDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez les alertes recentes, les mises a jour de reservation et les rappels utiles.",

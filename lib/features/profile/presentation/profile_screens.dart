@@ -41,6 +41,20 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
+          AppListCard(
+            title: s.supportTitle,
+            subtitle: s.supportDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.sharedSupport),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppListCard(
+            title: s.legalPoliciesTitle,
+            subtitle: s.legalPoliciesDescription,
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutePath.sharedPolicies),
+          ),
+          const SizedBox(height: AppSpacing.md),
           const SignOutButton(),
         ],
       ),
@@ -205,7 +219,6 @@ class CarrierProfileScreen extends ConsumerWidget {
       ),
     );
   }
-
 }
 
 class EditCarrierProfileScreen extends StatelessWidget {
@@ -366,7 +379,9 @@ class _PayoutAccountEditorSheetState
               const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<PayoutAccountType>(
                 initialValue: _selectedType,
-                decoration: InputDecoration(labelText: s.payoutAccountTypeLabel),
+                decoration: InputDecoration(
+                  labelText: s.payoutAccountTypeLabel,
+                ),
                 items: PayoutAccountType.values
                     .map(
                       (type) => DropdownMenuItem(
@@ -504,7 +519,9 @@ class _PayoutAccountEditorSheetState
 
     setState(() => _isSaving = true);
     try {
-      await ref.read(payoutAccountRepositoryProvider).deletePayoutAccount(account.id);
+      await ref
+          .read(payoutAccountRepositoryProvider)
+          .deletePayoutAccount(account.id);
       ref.invalidate(myPayoutAccountsProvider);
       await ref.read(authSessionControllerProvider.notifier).refresh();
       if (!mounted) {

@@ -16,7 +16,7 @@ Primary stack:
 - Postgres for data and policies
 - Supabase Storage for private files
 - transactional email provider API for operational email delivery
-- FCM plus in-app notifications for delivery
+- in-app notifications plus device-token registration support for future push delivery
 
 ## 2. Client Architecture
 
@@ -401,9 +401,14 @@ Notifications should be event-driven and channel-agnostic.
 
 Current channels:
 
-- push notifications
 - in-app notifications
 - email via transactional provider
+
+Current push posture:
+
+- device tokens can be registered and normalized through the backend boundary
+- no mobile push transport client or provider integration is implemented yet
+- push delivery remains a planned follow-up, not a current production capability
 
 Future channels can be added later without replacing the event model.
 

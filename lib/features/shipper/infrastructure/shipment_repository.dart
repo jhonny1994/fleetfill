@@ -65,7 +65,9 @@ class ShipmentRepository {
         .toList(growable: false);
   }
 
-  Future<ShipmentDraftRecord> createShipmentDraft(ShipmentDraftInput input) async {
+  Future<ShipmentDraftRecord> createShipmentDraft(
+    ShipmentDraftInput input,
+  ) async {
     final userId = _requireUserId();
     final shipment = await _client
         .from('shipments')
@@ -147,7 +149,9 @@ class ShipmentRepository {
       return;
     }
 
-    await _client.from('shipment_items').insert(
+    await _client
+        .from('shipment_items')
+        .insert(
           items
               .map(
                 (item) => {

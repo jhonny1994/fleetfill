@@ -33,8 +33,56 @@ security definer
 set search_path = public
 as $$
 declare
+  v_actor_id uuid := (select auth.uid());
+  v_booking public.bookings;
+  v_event_type text := lower(trim(coalesce(p_event_type, '')));
   v_result public.tracking_events;
 begin
+  if p_booking_id is null then
+    raise exception 'Booking id is required';
+  end if;
+
+  if v_event_type not in (
+    'payment_under_review',
+    'confirmed',
+    'picked_up',
+    'in_transit',
+    'delivered_pending_review',
+    'completed',
+    'cancelled',
+    'disputed',
+    'refund_processed',
+    'payout_released'
+  ) then
+    raise exception 'Unsupported tracking event type';
+  end if;
+
+  select * into v_booking
+  from public.bookings
+  where id = p_booking_id;
+
+  if not found then
+    raise exception 'Booking not found';
+  end if;
+
+  if not public.is_service_role() then
+    if v_actor_id is null then
+      raise exception 'authentication_required';
+    end if;
+
+    if not (
+      v_booking.shipper_id = v_actor_id
+      or v_booking.carrier_id = v_actor_id
+      or public.is_admin()
+    ) then
+      raise exception 'Tracking events require booking access';
+    end if;
+  end if;
+
+  if p_visibility = 'internal' and not (public.is_admin() or public.is_service_role()) then
+    raise exception 'Internal tracking events require privileged access';
+  end if;
+
   insert into public.tracking_events (
     booking_id,
     event_type,
@@ -44,10 +92,13 @@ begin
     recorded_at
   ) values (
     p_booking_id,
-    left(trim(p_event_type), 120),
+    left(v_event_type, 120),
     p_visibility,
     left(nullif(trim(p_note), ''), 500),
-    coalesce(p_created_by, (select auth.uid())),
+    case
+      when public.is_service_role() or public.is_admin() then coalesce(p_created_by, v_actor_id)
+      else v_actor_id
+    end,
     now()
   ) returning * into v_result;
 
@@ -124,6 +175,28 @@ begin
     'booking_milestone_updated_body',
     jsonb_build_object('booking_id', v_booking.id, 'milestone', v_milestone)
   );
+
+  if v_milestone = 'delivered_pending_review' then
+    perform public.enqueue_transactional_email(
+      'delivered_pending_review',
+      v_booking.shipper_id,
+      (
+        select lower(trim(email))
+        from public.profiles
+        where id = v_booking.shipper_id
+      ),
+      v_booking.id,
+      'delivered_pending_review',
+      null,
+      jsonb_build_object(
+        'booking_id', v_booking.id,
+        'booking_reference', v_booking.tracking_number,
+        'milestone', v_milestone
+      ),
+      'delivered_pending_review:' || v_booking.id::text,
+      'high'
+    );
+  end if;
 
   return v_booking;
 end;

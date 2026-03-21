@@ -191,7 +191,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                   companyController: _companyController,
                   phoneController: _phoneController,
                   isSubmitting: _isSubmitting,
-                  onSubmit: role == null ? null : () => unawaited(_submit(role)),
+                  onSubmit: role == null
+                      ? null
+                      : () => unawaited(_submit(role)),
                 ),
               ),
             ),

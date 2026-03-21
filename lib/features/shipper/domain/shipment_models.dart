@@ -1,4 +1,9 @@
-enum ShipmentStatus { draft, booked, cancelled;
+enum ShipmentStatus {
+  draft,
+  booked,
+  cancelled
+  ;
+
   static ShipmentStatus fromDatabase(Object? value) {
     return switch (value) {
       'booked' => ShipmentStatus.booked,
@@ -119,7 +124,12 @@ class ShipmentDraftInput {
   final List<ShipmentItemDraft> items;
 }
 
-enum SearchResultMode { exact, nearestDate, redefineSearch;
+enum SearchResultMode {
+  exact,
+  nearestDate,
+  redefineSearch
+  ;
+
   static SearchResultMode fromDatabase(String value) {
     return switch (value) {
       'nearest_date' => SearchResultMode.nearestDate,
@@ -189,7 +199,8 @@ class ShipmentSearchResult {
       departureAt: DateTime.parse(json['departure_at'] as String),
       departureDate: DateTime.parse(json['departure_date'] as String),
       totalCapacityKg: (json['total_capacity_kg'] as num).toDouble(),
-      totalCapacityVolumeM3: (json['total_capacity_volume_m3'] as num?)?.toDouble(),
+      totalCapacityVolumeM3: (json['total_capacity_volume_m3'] as num?)
+          ?.toDouble(),
       remainingCapacityKg: (json['remaining_capacity_kg'] as num).toDouble(),
       remainingVolumeM3: (json['remaining_volume_m3'] as num?)?.toDouble(),
       pricePerKgDzd: (json['price_per_kg_dzd'] as num).toDouble(),
@@ -236,9 +247,10 @@ class ShipmentSearchResponse {
           .cast<Map<String, dynamic>>()
           .map(ShipmentSearchResult.fromJson)
           .toList(growable: false),
-      nearestDates: ((json['nearest_dates'] as List<dynamic>?) ?? const <dynamic>[])
-          .map((value) => DateTime.parse(value as String))
-          .toList(growable: false),
+      nearestDates:
+          ((json['nearest_dates'] as List<dynamic>?) ?? const <dynamic>[])
+              .map((value) => DateTime.parse(value as String))
+              .toList(growable: false),
       nextOffset: (json['next_offset'] as num?)?.toInt(),
       totalCount: (json['total_count'] as num?)?.toInt() ?? 0,
     );
