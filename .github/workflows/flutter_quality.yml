@@ -22,6 +22,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Materialize Android Firebase config
+        if: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON != '' }}
+        shell: bash
+        run: |
+          cat > android/app/google-services.json <<'EOF'
+          ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+          EOF
+
       - name: Verify generated localization output
         run: dart run intl_utils:generate
 
@@ -32,7 +40,12 @@ jobs:
         run: flutter test
 
       - name: Build Android debug sanity artifact
+        if: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON != '' }}
         run: flutter build apk --debug --dart-define=APP_ENV=local
+
+      - name: Skip Android debug sanity artifact when Firebase config is unavailable
+        if: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON == '' }}
+        run: echo "Skipping Android build because ANDROID_GOOGLE_SERVICES_JSON is not configured."
 
   windows-integration-smoke:
     runs-on: windows-latest

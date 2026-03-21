@@ -8,7 +8,6 @@ import 'package:fleetfill/core/config/config.dart';
 import 'package:fleetfill/core/routing/routing.dart';
 import 'package:fleetfill/core/utils/app_logger.dart';
 import 'package:fleetfill/features/notifications/infrastructure/notification_repository.dart';
-import 'package:fleetfill/firebase_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,8 +47,7 @@ class PushNotificationService {
       (defaultTargetPlatform == TargetPlatform.android ||
           defaultTargetPlatform == TargetPlatform.iOS);
 
-  bool get isConfiguredForCurrentPlatform =>
-      firebaseOptionsForCurrentPlatform(environment) != null;
+  bool get isConfiguredForCurrentPlatform => isSupportedOnCurrentPlatform;
 
   FirebaseOptions? firebaseOptionsForCurrentPlatform(
     AppEnvironmentConfig config,
@@ -58,7 +56,7 @@ class PushNotificationService {
     final projectId = config.firebaseProjectId.trim();
     final senderId = config.firebaseMessagingSenderId.trim();
     if (apiKey.isEmpty || projectId.isEmpty || senderId.isEmpty) {
-      return DefaultFirebaseOptions.currentPlatform;
+      return null;
     }
 
     final storageBucket = config.firebaseStorageBucket.trim();
@@ -99,7 +97,10 @@ class PushNotificationService {
       return;
     }
 
-    await _ensureFirebaseInitialized();
+    final firebaseReady = await _ensureFirebaseInitialized();
+    if (!firebaseReady) {
+      return;
+    }
     await _ensureForegroundPresentation();
     await _ensureTokenRefreshRegistration(auth.userId!, locale.languageCode);
 
@@ -139,7 +140,10 @@ class PushNotificationService {
       return;
     }
 
-    await _ensureFirebaseInitialized();
+    final firebaseReady = await _ensureFirebaseInitialized();
+    if (!firebaseReady) {
+      return;
+    }
     if (!_initialMessageHandled) {
       _initialMessageHandled = true;
       final initialMessage = await FirebaseMessaging.instance
@@ -154,12 +158,27 @@ class PushNotificationService {
     );
   }
 
-  Future<void> _ensureFirebaseInitialized() async {
-    final options = firebaseOptionsForCurrentPlatform(environment);
-    if (options == null || Firebase.apps.isNotEmpty) {
-      return;
+  Future<bool> _ensureFirebaseInitialized() async {
+    if (Firebase.apps.isNotEmpty) {
+      return true;
     }
-    await Firebase.initializeApp(options: options);
+
+    try {
+      final options = firebaseOptionsForCurrentPlatform(environment);
+      if (options != null) {
+        await Firebase.initializeApp(options: options);
+      } else {
+        await Firebase.initializeApp();
+      }
+      return true;
+    } on Exception catch (error, stackTrace) {
+      logger.error(
+        'Firebase initialization failed for push notifications',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      return false;
+    }
   }
 
   Future<void> _ensureForegroundPresentation() async {

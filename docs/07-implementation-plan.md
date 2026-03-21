@@ -485,7 +485,7 @@ Phase 14 progress notes:
 - CI-capable cross-feature flow coverage now exists in `test/critical_workflow_flows_test.dart` for startup theme-locale restoration, shipper booking-payment state, carrier milestone progression, and admin queue refresh behavior
 - testers now have a real push-delivery path through Firebase client registration plus the scheduled FCM HTTP v1 worker, subject to environment secrets being configured
 - dispute creation now supports private evidence attachments with secure signed access from admin review flows
-- Android Firebase client wiring now prefers checked-in FlutterFire options while server push auth is handled separately through a service-account secret in the Edge runtime
+- Android Firebase client wiring now follows the native Firebase config path for production builds, while server push auth is handled separately through a service-account secret in the Edge runtime
 
 ## Phase 15 - Staging Launch And Production Readiness
 
