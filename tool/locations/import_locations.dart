@@ -63,13 +63,13 @@ Future<_SupabaseEnv> _resolveSupabaseEnv() async {
 }
 
 Future<List<_WilayaInput>> _loadDataset() async {
-  final file = File('docs/wilayas-with-municipalities.json');
+  final file = File('data/locations/wilayas-with-municipalities.json');
   final raw = await file.readAsString();
   final decoded = jsonDecode(raw);
 
   if (decoded is! List) {
     throw StateError(
-      'Expected a JSON array in docs/wilayas-with-municipalities.json.',
+      'Expected a JSON array in data/locations/wilayas-with-municipalities.json.',
     );
   }
 

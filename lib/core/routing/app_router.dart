@@ -383,10 +383,38 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const AdminQueuesScreen(),
             routes: [
               GoRoute(
+                path: 'payments/:proofId',
+                name: AppRouteName.adminPaymentProofDetail.name,
+                builder: (context, state) => AdminPaymentProofDetailScreen(
+                  proofId: state.pathParameters['proofId']!,
+                ),
+              ),
+              GoRoute(
                 path: 'verification/:carrierId',
                 name: AppRouteName.adminVerificationPacket.name,
                 builder: (context, state) => AdminVerificationPacketScreen(
                   carrierId: state.pathParameters['carrierId']!,
+                ),
+              ),
+              GoRoute(
+                path: 'disputes/:disputeId',
+                name: AppRouteName.adminDisputeDetail.name,
+                builder: (context, state) => AdminDisputeDetailScreen(
+                  disputeId: state.pathParameters['disputeId']!,
+                ),
+              ),
+              GoRoute(
+                path: 'payouts/:bookingId',
+                name: AppRouteName.adminPayoutDetail.name,
+                builder: (context, state) => AdminPayoutDetailScreen(
+                  bookingId: state.pathParameters['bookingId']!,
+                ),
+              ),
+              GoRoute(
+                path: 'email/:logId',
+                name: AppRouteName.adminEmailLogDetail.name,
+                builder: (context, state) => AdminEmailLogDetailScreen(
+                  logId: state.pathParameters['logId']!,
                 ),
               ),
             ],

@@ -66,7 +66,7 @@ Cross-phase UX note:
 
 - [x] Create Postgres enums and base tables from `docs/04-data-and-security-model.md` and `docs/09-supabase-implementation-notes.md`
 - [x] Create `profiles`, `vehicles`, `payout_accounts`, `platform_payment_accounts`, `verification_documents`, `routes`, `route_revisions`, `oneoff_trips`, `shipments`, `shipment_items`, `bookings`, `payment_proofs`, `tracking_events`, `carrier_reviews`, `financial_ledger_entries`, `disputes`, `refunds`, `payouts`, `generated_documents`, `email_delivery_logs`, `email_outbox_jobs`, `notifications`, `user_devices`, `platform_settings`, and `admin_audit_logs`
-- [x] Seed wilayas and communes from `docs/wilayas-with-municipalities.json`
+- [x] Seed wilayas and communes from `data/locations/wilayas-with-municipalities.json`
 - [x] Create indexes for search, booking, payment, document review, ledger, and email queue performance
 - [x] Create private storage buckets for payment proofs, verification documents, and generated documents
 - [x] Define canonical storage path patterns for each private file type
@@ -129,7 +129,7 @@ Current implementation notes:
 
 Verification notes:
 
-- auth/onboarding/profile redirects and gates are covered by feature tests in `test/auth_routing_guard_test.dart`
+- auth/onboarding/profile redirects and gates are covered by feature tests in `test/core/routing/auth_routing_guard_test.dart`
 - password recovery routes now preserve auth flow and enforce reset-password destination when recovery state is active
 - session-expired, suspended, forbidden, verification, onboarding, and phone-completion gate handling are validated via guard tests and UI state wiring
 
@@ -156,7 +156,7 @@ Verification notes:
 - carrier verification now lives under the carrier profile branch with dedicated vehicle CRUD, verification center, document upload/replace flows, and visible rejection reasons in localized copy
 - admin verification now uses privileged SQL review functions for document review and packet approval so append-only history and audit logging stay server-controlled
 - verification packet aggregation now keeps the latest document version per document type while preserving older history records in `verification_documents`
-- feature coverage was expanded in `test/verification_workflows_test.dart` for latest-document selection, carrier operational gates, and Phase 4 SQL contract safeguards
+- feature coverage was expanded in `test/features/verification/verification_workflows_test.dart` for latest-document selection, carrier operational gates, and Phase 4 SQL contract safeguards
 - validation passed with `dart analyze`, `flutter test`, `supabase db lint`, and `supabase db reset --yes`
 
 ## Phase 5 - Carrier Capacity Publication
@@ -478,11 +478,11 @@ Phase 13 progress notes:
 Phase 14 progress notes:
 
 - pricing calculation and shared field validation helpers now live in reusable application/shared helpers with direct unit coverage instead of remaining embedded inside screens
-- phase 14 test coverage now includes pricing, validation, repository mapping, executed Supabase runtime security and email tests, shared settings smoke coverage, and CI-capable critical workflow coverage in `test/critical_workflow_flows_test.dart`
+- phase 14 test coverage now includes pricing, validation, repository mapping, executed Supabase runtime security and email tests, shared settings smoke coverage, and CI-capable critical workflow coverage in `test/features/critical/critical_workflow_flows_test.dart`
 - shared settings now expose support and production policy surfaces directly, keeping legal and support entry points reachable from one shared route cluster
 - crash reporting now records through the existing logger path in both disabled and deferred modes so uncaught errors are still observable during release hardening
 - notifications now load through explicit paged repository/controller state with refresh and load-more behavior instead of a single shallow bounded fetch
-- CI-capable cross-feature flow coverage now exists in `test/critical_workflow_flows_test.dart` for startup theme-locale restoration, shipper booking-payment state, carrier milestone progression, and admin queue refresh behavior
+- CI-capable cross-feature flow coverage now exists in `test/features/critical/critical_workflow_flows_test.dart` for startup theme-locale restoration, shipper booking-payment state, carrier milestone progression, and admin queue refresh behavior
 - testers now have a real push-delivery path through Firebase client registration plus the scheduled FCM HTTP v1 worker, subject to environment secrets being configured
 - dispute creation now supports private evidence attachments with secure signed access from admin review flows
 - Android Firebase client wiring now follows the native Firebase config path for production builds, while server push auth is handled separately through a service-account secret in the Edge runtime

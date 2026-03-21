@@ -622,7 +622,7 @@ Recommended fields:
 
 ### 2.21 `wilayas` and `communes`
 
-Purpose: Algeria location seed tables sourced from `docs/wilayas-with-municipalities.json`.
+Purpose: Algeria location seed tables sourced from `data/locations/wilayas-with-municipalities.json`.
 
 Import rules:
 

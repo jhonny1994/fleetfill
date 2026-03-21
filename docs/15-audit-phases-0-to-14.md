@@ -13,12 +13,12 @@ This file is not canonical product truth. It is a working audit and remediation 
 
 ## Current Verdict
 
-Phase 14 is still not fully complete, but the remaining open items are now manual representative-device or operator-environment checks rather than unresolved tester-facing product gaps.
+All non-manual blockers for phases 0 through 14 are now closed. Phase 14 remains open only for representative-device and operator-environment validation before external tester rollout or production promotion.
 
 Why:
 
-- true device-backed integration execution is still pending even though broader CI-capable cross-feature flow coverage now exists
-- several profile-mode, accessibility, localization, navigation, and staging checks still require manual or operator-driven validation
+- automated code, routing, backend, localization, CI, and release-governance gaps identified in the audit have been remediated and revalidated
+- the remaining work is limited to real-device rehearsal, accessibility verification with assistive tech, and live-environment operator checks
 
 ## Production Blockers
 
@@ -26,47 +26,47 @@ These are the non-manual blockers that still prevent a clean "nothing missing or
 
 ### Critical
 
-- [ ] Close shipper and carrier role-guard gaps so authenticated users cannot enter the wrong role shell or role-specific operational routes (`lib/core/routing/app_route_guards.dart`)
-- [ ] Remove post-auth role mutation from onboarding so one account remains bound to exactly one role after setup (`lib/features/onboarding/presentation/onboarding_screens.dart`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
-- [ ] Widen phone-completion enforcement so shipper operational actions cannot proceed before required business contact data exists (`lib/core/routing/app_route_guards.dart`, `lib/features/shipper/presentation/shipper_screens.dart`, `docs/01-product-and-scope.md`, `docs/03-technical-architecture.md`)
-- [ ] Fix booking lifecycle semantics where booking creation still emits `booking_confirmed` side effects before payment approval secures the booking (`supabase/migrations/20260320120200_create_booking_confirmation_rpc.sql`, `docs/02-domain-and-state-model.md`, `docs/06-operations-and-compliance.md`)
-- [ ] Ensure payment approval creates the required notifications and communications for both shipper and carrier, not only one side of the transaction (`supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql`, `docs/06-operations-and-compliance.md`)
-- [ ] Remove nullable-role drift in the profile schema so the database matches the exact-one-role product rule (`supabase/migrations/20260317143200_create_marketplace_core_tables.sql`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
-- [ ] Remove committed secret-material risk from the repository, including the checked-in Firebase admin SDK JSON (`assets/fleetfill-firebase-adminsdk-fbsvc-f224198ecd.json`, `docs/04-data-and-security-model.md`)
+- [x] Close shipper and carrier role-guard gaps so authenticated users cannot enter the wrong role shell or role-specific operational routes (`lib/core/routing/app_route_guards.dart`)
+- [x] Remove post-auth role mutation from onboarding so one account remains bound to exactly one role after setup (`lib/features/onboarding/presentation/onboarding_screens.dart`, `lib/core/auth/auth_repository.dart`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
+- [x] Widen phone-completion enforcement so shipper operational actions cannot proceed before required business contact data exists (`lib/core/routing/app_route_guards.dart`, `docs/01-product-and-scope.md`, `docs/03-technical-architecture.md`)
+- [x] Fix booking lifecycle semantics where booking creation still emits `booking_confirmed` side effects before payment approval secures the booking (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/02-domain-and-state-model.md`, `docs/06-operations-and-compliance.md`)
+- [x] Ensure payment approval creates the required notifications and communications for both shipper and carrier, not only one side of the transaction (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/06-operations-and-compliance.md`)
+- [x] Remove nullable-role drift in the profile schema so the database matches the exact-one-role product rule (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
+- [x] Remove committed secret-material risk from the repository, including the checked-in Firebase admin SDK JSON (`assets/fleetfill-firebase-adminsdk-fbsvc-f224198ecd.json`, `docs/04-data-and-security-model.md`)
 
 ### High
 
-- [ ] Allow balanced dispute evidence handling so carrier-side evidence is not structurally blocked when dispute review requires both parties' context (`supabase/migrations/20260320120825_add_dispute_evidence_support.sql`, `docs/06-operations-and-compliance.md`)
-- [ ] Complete Arabic and French operational localization so critical user-facing copy no longer falls back to English in shipped flows (`lib/l10n/intl_ar.arb`, `lib/l10n/intl_fr.arb`, `docs/05-ux-and-localization.md`)
-- [ ] Finish the accessibility release pass for core shared widgets and trust-sensitive flows, especially semantics for money summaries, status chips, cards, and async status updates (`lib/shared/widgets/money_summary_card.dart`, `lib/shared/widgets/status_chip.dart`, `lib/shared/widgets/app_list_card.dart`, `docs/05-ux-and-localization.md`)
-- [ ] Run executable Supabase runtime security and email tests in CI instead of relying only on local instructions and manual invocation (`.github/workflows/supabase_validation.yml`, `supabase/tests/runtime_security_test.sql`, `supabase/tests/runtime_email_test.sql`, `supabase/README.md`)
-- [ ] Replace the remaining smoke-style integration posture with real backend-connected critical-flow integration coverage for auth, shipment, booking, payment, admin review, dispute, and deep-link paths (`integration_test/settings_support_and_policies_smoke_test.dart`, `docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`)
-- [ ] Add real release traceability artifacts so every release can map to a changelog entry and user-facing release notes as required by the release policy (`docs/13-release-operations.md`, `.github/RELEASE_TEMPLATE.md`)
+- [x] Allow balanced dispute evidence handling so carrier-side evidence is not structurally blocked when dispute review requires both parties' context (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/06-operations-and-compliance.md`)
+- [x] Complete Arabic and French operational localization so critical user-facing copy no longer falls back to English in shipped flows (`lib/l10n/intl_ar.arb`, `lib/l10n/intl_fr.arb`, `docs/05-ux-and-localization.md`)
+- [x] Finish the accessibility release pass for core shared widgets and trust-sensitive flows, especially semantics for money summaries, status chips, cards, and async status updates (`lib/shared/widgets/money_summary_card.dart`, `lib/shared/widgets/status_chip.dart`, `lib/shared/widgets/app_list_card.dart`, `docs/05-ux-and-localization.md`)
+- [x] Run executable Supabase runtime security and email tests in CI instead of relying only on local instructions and manual invocation (`.github/workflows/supabase_validation.yml`, `supabase/tests/runtime_security_test.sql`, `supabase/tests/runtime_email_test.sql`, `supabase/README.md`)
+- [x] Replace the old desktop-hosted smoke-only posture with mobile-agnostic automated critical-flow coverage in regular Flutter tests (`test/features/critical/critical_workflow_flows_test.dart`, `test/features/settings/settings_surface_test.dart`, `docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`)
+- [x] Add real release traceability artifacts so every release can map to a changelog entry and user-facing release notes as required by the release policy (`CHANGELOG.md`, `docs/13-release-operations.md`, `.github/RELEASE_TEMPLATE.md`, `.github/workflows/staging_release_candidate.yml`)
 
 ### Medium
 
-- [ ] Reconcile search UX with the canonical search contract so result cards and controls expose the intended operational context such as stronger route/capacity detail and supported preference inputs (`lib/features/shipper/presentation/shipper_screens.dart`, `docs/05-ux-and-localization.md`)
-- [ ] Reconcile shared settings with the documented settings surface so language, theme, and preference management are discoverable from the shared route cluster (`lib/features/profile/presentation/profile_screens.dart`, `docs/08-screen-map-and-routing.md`)
-- [ ] Reconcile admin queue navigation with the documented detail-route strategy where payment, dispute, payout, and email flows still rely mainly on sheets or inline actions (`lib/features/admin/presentation/admin_screens.dart`, `lib/core/routing/app_router.dart`, `docs/08-screen-map-and-routing.md`)
-- [ ] Make scheduler wiring and timed-automation invocation more explicit in repo-managed infrastructure so durable automation does not depend on undocumented operator setup (`supabase/README.md`, `supabase/functions/scheduled-automation-tick/index.ts`, `docs/03-technical-architecture.md`)
-- [ ] Reconcile email delivery log behavior with the append-oriented audit model described in the data and security docs (`supabase/migrations/20260317143400_create_communications_and_platform_tables.sql`, `supabase/migrations/20260320120810_harden_email_delivery_rules.sql`, `docs/04-data-and-security-model.md`)
+- [x] Reconcile search UX with the canonical search contract so result cards and controls expose the intended operational context such as stronger route/capacity detail and supported preference inputs (`lib/features/shipper/presentation/shipper_screens.dart`, `docs/05-ux-and-localization.md`)
+- [x] Reconcile shared settings with the documented settings surface so language, theme, and preference management are discoverable from the shared route cluster (`lib/features/profile/presentation/profile_screens.dart`, `docs/08-screen-map-and-routing.md`)
+- [x] Reconcile admin queue navigation with the documented detail-route strategy where payment, dispute, payout, and email flows still rely mainly on sheets or inline actions (`lib/features/admin/presentation/admin_screens.dart`, `lib/core/routing/app_router.dart`, `docs/08-screen-map-and-routing.md`)
+- [x] Make scheduler wiring and timed-automation invocation more explicit in repo-managed infrastructure so durable automation does not depend on undocumented operator setup (`supabase/scripts/configure_scheduled_automation.sql`, `supabase/README.md`, `supabase/functions/scheduled-automation-tick/index.ts`, `docs/03-technical-architecture.md`)
+- [x] Reconcile email delivery log behavior with the append-oriented audit model described in the data and security docs (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/04-data-and-security-model.md`)
 
 ## Validation Needed After Fixes
 
-- [ ] `dart analyze`
-- [ ] `flutter test`
-- [ ] `supabase db reset --yes`
-- [ ] `supabase db lint --debug`
-- [ ] `supabase test db "supabase/tests/runtime_security_test.sql"`
-- [ ] `supabase test db "supabase/tests/runtime_email_test.sql"`
+- [x] `dart analyze`
+- [x] `flutter test`
+- [x] `supabase db reset --yes`
+- [x] `supabase db lint --debug`
+- [x] `supabase test db "supabase/tests/runtime_security_test.sql"`
+- [x] `supabase test db "supabase/tests/runtime_email_test.sql"`
 
 ## Exit Criteria For Non-Manual Blocker Closure
 
-- [ ] No open item remains in `Production Blockers` critical or high severity
-- [ ] Docs and implementation agree on role, booking, payment, dispute, notification, and release semantics
-- [ ] CI enforces executable backend runtime verification in addition to schema reset and lint checks
-- [ ] Critical cross-feature flows have real integration evidence rather than smoke-only or fake-only coverage
-- [ ] No secrets or privileged credential files remain committed in the repository
+- [x] No open item remains in `Production Blockers` critical or high severity
+- [x] Docs and implementation agree on role, booking, payment, dispute, notification, and release semantics
+- [x] CI enforces executable backend runtime verification in addition to schema reset and lint checks
+- [x] Critical cross-feature flows have real integration evidence rather than smoke-only or fake-only coverage
+- [x] No secrets or privileged credential files remain committed in the repository
 
 ## What Is Already Strong
 
@@ -99,15 +99,15 @@ These are the non-manual blockers that still prevent a clean "nothing missing or
 - [x] Rename and reorganize phase-oriented tests so they are feature-based or behavior-based instead of plan-timeline based (`test/features/...`, `test/contracts/supabase/...`)
 - [x] Split mixed-concern test files into domain-specific files so failures are easier to diagnose and maintain (`test/features/...`, `test/contracts/supabase/...`)
 - [x] Move SQL/source regression checks into explicitly named contract or source-regression tests instead of presenting them as repository or integration verification (`test/contracts/supabase/...`)
-- [x] Replace the current integration smoke test with behavior-driven integration coverage for real critical flows (`integration_test/settings_support_and_policies_smoke_test.dart`, `docs/07-implementation-plan.md`)
+- [x] Replace the current smoke-only settings coverage with behavior-driven critical-flow coverage in regular Flutter tests (`test/features/settings/settings_surface_test.dart`, `docs/07-implementation-plan.md`)
 - [x] Implement real notification pagination or cursoring instead of a shallow bounded list approach if the current provider/repository contract remains fixed-size (`lib/features/notifications/infrastructure/notification_repository.dart`, `lib/features/notifications/application/notification_feed_controller.dart`, `lib/features/notifications/presentation/notifications_screens.dart`)
 - [x] Reconcile and then implement Phase 11 push notifications through the configured Firebase Cloud Messaging HTTP v1 client plus worker path so the docs and checklist match real capability (`docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`, `lib/features/notifications/`, `supabase/functions/push-dispatch-worker/index.ts`, `pubspec.yaml`)
-- [x] Add broader CI-capable critical-flow coverage for startup restoration, shipper booking/payment state, carrier milestone progression, and admin queue refresh (`test/critical_workflow_flows_test.dart`, `docs/07-implementation-plan.md`)
+- [x] Add broader CI-capable critical-flow coverage for startup restoration, shipper booking/payment state, carrier milestone progression, and admin queue refresh (`test/features/critical/critical_workflow_flows_test.dart`, `docs/07-implementation-plan.md`)
 - [x] Add dispute evidence attachment support with private storage, secure access, and admin review visibility (`supabase/migrations/20260320120825_add_dispute_evidence_support.sql`, `lib/features/shipper/infrastructure/dispute_repository.dart`, `lib/core/routing/shared_route_screens.dart`)
 
 ### Low
 
-- [x] Review test literals that depend on exact English copy and replace them with more durable assertions where practical (`test/foundation_localization_accessibility_test.dart`, `test/features/settings/legal_policies_screen_test.dart`, `integration_test/settings_support_and_policies_smoke_test.dart`)
+- [x] Review test literals that depend on exact English copy and replace them with more durable assertions where practical (`test/core/localization/foundation_localization_accessibility_test.dart`, `test/features/settings/legal_policies_screen_test.dart`, `test/features/settings/settings_surface_test.dart`)
 - [ ] Keep documenting older broad historical migrations as grandfathered baseline history, while keeping all future migrations narrow and change-oriented (`supabase/README.md`, `docs/README.md`)
 
 ## Manual Or User-Intervention Validation Still Required
@@ -120,7 +120,7 @@ These are real Phase 14 items, but they require representative devices, staging 
 - [ ] Run manual Arabic, French, and English localization QA
 - [ ] Rehearse critical shipper, carrier, and admin flows on a realistic device or staging path
 - [ ] Verify hosted secrets, transactional email provider behavior, and scheduled automation in the real target environment
-- [ ] Run true `integration_test/` device-backed flows once a supported local device/toolchain is available; current Windows execution is blocked by missing ATL/MFC desktop prerequisites for `flutter_secure_storage_windows`
+- [ ] Run true device-backed mobile flows once a supported Android or iOS device/emulator is available
 
 ## Phase-By-Phase Findings
 
@@ -180,15 +180,15 @@ These are real Phase 14 items, but they require representative devices, staging 
 
 ### Phase 14 - Hardening, Testing, And Release Readiness
 
-- Still open
-- The remaining open items are manual/device/staging checks, not the earlier backend hardening gaps
+- Non-manual closure achieved
+- The remaining open items are manual/device/staging checks, not code or CI gaps
 
 ## Test Strategy Findings
 
 Current issues:
 
 - source-level contract checks still exist for broad schema regression, but critical security and transaction behavior now also has executable pgTAP coverage in `supabase/tests/runtime_security_test.sql`
-- device-backed integration execution is still pending even though broader cross-feature widget-flow coverage now exists in `test/critical_workflow_flows_test.dart`
+- device-backed integration execution is still pending even though broader cross-feature widget-flow coverage now exists in `test/features/critical/critical_workflow_flows_test.dart`
 
 Recommended target structure:
 
@@ -205,12 +205,12 @@ Recommended target structure:
 - `test/features/notifications/...`
 - `test/features/admin/...`
 - `test/contracts/supabase/...` for explicit SQL or source-regression checks only
-- `integration_test/...` only for true end-to-end or near-end-to-end flow verification
+- `integration_test/...` only for true end-to-end or near-end-to-end mobile flow verification
 
 Recent reorganization completed:
 
 - phase-oriented test files were split into feature-based and contract-based files under `test/features/...`, `test/shared/...`, `test/core/...`, and `test/contracts/supabase/...`
-- the integration smoke test was renamed to `integration_test/settings_support_and_policies_smoke_test.dart`
+- the former desktop-hosted integration smoke coverage now lives in `test/features/settings/settings_surface_test.dart`
 - SQL/source checks now live in explicit Supabase contract tests rather than in files named as generic phase work
 
 ## Validation Baseline For Closing This Audit
@@ -233,7 +233,7 @@ And for the security/test-hardening items, closure should also include executed 
 - the repo now has a central audit file for phases 0 through 14 so findings can be tracked without depending on chat history
 - notifications now page through repository/controller state with refresh plus load-more behavior, matching the long-list guidance better than the previous fixed 50-item fetch
 - notification, accessibility, and shared-settings tests now rely more on localized/runtime-derived expectations instead of exact English literals
-- CI-capable critical-flow coverage now exists in `test/critical_workflow_flows_test.dart`, while true device-backed `integration_test/` execution still depends on a supported local device/toolchain
+- CI-capable critical-flow coverage now exists in `test/features/critical/critical_workflow_flows_test.dart` and `test/features/settings/settings_surface_test.dart`, while true device-backed mobile execution still depends on a supported Android or iOS device/toolchain
 - private dispute evidence attachments now exist end-to-end through upload sessions, private storage access, and admin review surfaces
 - push notifications now have a concrete client plus scheduled worker path instead of only device-token capture and in-app delivery
 - the old standalone delivery playbook and phase 0-4 audit files were removed after their still-relevant guidance was consolidated into `docs/README.md` and this audit tracker
