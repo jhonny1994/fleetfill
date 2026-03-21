@@ -122,7 +122,7 @@ Example root `.env` entries:
 Notes:
 
 - `SUPABASE_PUBLISHABLE_KEY` is not required by the current app/runtime path and is intentionally not part of the baseline env template.
-- FlutterFire client config should normally come from `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, and `lib/firebase_options.dart`; the `FIREBASE_*` app vars are optional overrides, not baseline production requirements.
+- The app push path should normally use native Firebase client config files (`google-services.json` / `GoogleService-Info.plist`) supplied outside git, while the optional `FIREBASE_*` app vars remain available only as explicit runtime overrides.
 
 ## Runtime Boundaries
 

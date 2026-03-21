@@ -39,6 +39,7 @@ firebase.json
 .firebaserc
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
 assets/*firebase-adminsdk*.json
 assets/*service-account*.json
 **/service-account*.json
