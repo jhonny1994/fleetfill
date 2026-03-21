@@ -17,6 +17,12 @@ begin
     raise exception 'authentication_required';
   end if;
 
+  perform public.assert_rate_limit(
+    'dispute_creation:' || v_actor_id::text,
+    5,
+    3600
+  );
+
   if nullif(trim(p_reason), '') is null then
     raise exception 'Dispute reason is required';
   end if;
@@ -55,6 +61,36 @@ begin
       updated_at = now()
   where id = p_booking_id;
 
+  insert into public.notifications (profile_id, type, title, body, data)
+  values (
+    v_booking.carrier_id,
+    'dispute_opened',
+    'dispute_opened_title',
+    'dispute_opened_body',
+    jsonb_build_object('booking_id', p_booking_id, 'dispute_id', v_dispute.id)
+  );
+
+  perform public.enqueue_transactional_email(
+    'dispute_opened',
+    v_booking.carrier_id,
+    (
+      select lower(trim(email))
+      from public.profiles
+      where id = v_booking.carrier_id
+    ),
+    v_booking.id,
+    'dispute_opened',
+    null,
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'booking_reference', v_booking.tracking_number,
+      'dispute_id', v_dispute.id,
+      'reason', left(trim(p_reason), 500)
+    ),
+    'dispute_opened:' || v_dispute.id::text,
+    'high'
+  );
+
   perform public.append_tracking_event(
     p_booking_id,
     'disputed',
@@ -82,6 +118,8 @@ begin
   if not public.is_admin() and not public.is_service_role() then
     raise exception 'Dispute resolution requires privileged access';
   end if;
+
+  perform public.require_recent_admin_step_up();
 
   select * into v_dispute
   from public.disputes
@@ -120,6 +158,60 @@ begin
     (select auth.uid())
   );
 
+  insert into public.notifications (profile_id, type, title, body, data)
+  values (
+    (
+      select shipper_id
+      from public.bookings
+      where id = v_dispute.booking_id
+    ),
+    'dispute_resolved',
+    'dispute_resolved_title',
+    'dispute_resolved_body',
+    jsonb_build_object('booking_id', v_dispute.booking_id, 'dispute_id', v_dispute.id, 'resolution', 'completed')
+  );
+
+  perform public.enqueue_transactional_email(
+    'dispute_resolved',
+    (
+      select shipper_id
+      from public.bookings
+      where id = v_dispute.booking_id
+    ),
+    (
+      select lower(trim(email))
+      from public.profiles
+      where id = (
+        select shipper_id
+        from public.bookings
+        where id = v_dispute.booking_id
+      )
+    ),
+    v_dispute.booking_id,
+    'dispute_resolved',
+    null,
+    jsonb_build_object(
+      'booking_id', v_dispute.booking_id,
+      'booking_reference', (select tracking_number from public.bookings where id = v_dispute.booking_id),
+      'dispute_id', v_dispute.id,
+      'resolution', 'completed'
+    ),
+    'dispute_resolved:' || v_dispute.id::text || ':completed',
+    'high'
+  );
+
+  perform public.write_admin_audit_log(
+    'dispute_resolved_complete',
+    'dispute',
+    v_dispute.id,
+    'success',
+    left(nullif(trim(p_resolution_note), ''), 500),
+    jsonb_build_object(
+      'booking_id', v_dispute.booking_id,
+      'resolution', 'completed'
+    )
+  );
+
   return v_dispute;
 end;
 $$;
@@ -143,6 +235,8 @@ begin
   if not public.is_admin() and not public.is_service_role() then
     raise exception 'Dispute resolution requires privileged access';
   end if;
+
+  perform public.require_recent_admin_step_up();
 
   select * into v_dispute
   from public.disputes
@@ -214,6 +308,51 @@ begin
     (select auth.uid())
   );
 
+  insert into public.notifications (profile_id, type, title, body, data)
+  values (
+    v_booking.shipper_id,
+    'dispute_resolved',
+    'dispute_resolved_title',
+    'dispute_resolved_body',
+    jsonb_build_object('booking_id', v_booking.id, 'dispute_id', v_dispute.id, 'resolution', 'refunded')
+  );
+
+  perform public.enqueue_transactional_email(
+    'dispute_resolved',
+    v_booking.shipper_id,
+    (
+      select lower(trim(email))
+      from public.profiles
+      where id = v_booking.shipper_id
+    ),
+    v_booking.id,
+    'dispute_resolved',
+    null,
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'booking_reference', v_booking.tracking_number,
+      'dispute_id', v_dispute.id,
+      'resolution', 'refunded',
+      'refund_amount_dzd', p_refund_amount_dzd
+    ),
+    'dispute_resolved:' || v_dispute.id::text || ':refunded',
+    'high'
+  );
+
+  perform public.write_admin_audit_log(
+    'dispute_resolved_refund',
+    'dispute',
+    v_dispute.id,
+    'success',
+    left(trim(p_refund_reason), 500),
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'resolution', 'refunded',
+      'refund_amount_dzd', p_refund_amount_dzd,
+      'external_reference', public.normalize_reference_value(p_external_reference)
+    )
+  );
+
   return v_dispute;
 end;
 $$;
@@ -236,6 +375,8 @@ begin
   if not public.is_admin() and not public.is_service_role() then
     raise exception 'Payout release requires privileged access';
   end if;
+
+  perform public.require_recent_admin_step_up();
 
   select * into v_booking
   from public.bookings
@@ -318,10 +459,62 @@ begin
       updated_at = now()
   where id = v_booking.id;
 
+  perform public.append_tracking_event(
+    v_booking.id,
+    'payout_released',
+    'internal',
+    p_note,
+    (select auth.uid())
+  );
+
   perform public.create_generated_document_record(
     v_booking.id,
     'payout_receipt',
     format('generated/%s/payout-receipt-v1.pdf', v_booking.id)
+  );
+
+  insert into public.notifications (profile_id, type, title, body, data)
+  values (
+    v_booking.carrier_id,
+    'payout_released',
+    'payout_released_title',
+    'payout_released_body',
+    jsonb_build_object('booking_id', v_booking.id, 'payout_id', v_payout.id)
+  );
+
+  perform public.enqueue_transactional_email(
+    'payout_released',
+    v_booking.carrier_id,
+    (
+      select lower(trim(email))
+      from public.profiles
+      where id = v_booking.carrier_id
+    ),
+    v_booking.id,
+    'payout_released',
+    null,
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'booking_reference', v_booking.tracking_number,
+      'payout_id', v_payout.id,
+      'payout_amount_dzd', v_booking.carrier_payout_dzd
+    ),
+    'payout_released:' || v_payout.id::text,
+    'high'
+  );
+
+  perform public.write_admin_audit_log(
+    'payout_released',
+    'payout',
+    v_payout.id,
+    'success',
+    left(nullif(trim(p_note), ''), 500),
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'carrier_id', v_booking.carrier_id,
+      'amount_dzd', v_booking.carrier_payout_dzd,
+      'external_reference', public.normalize_reference_value(p_external_reference)
+    )
   );
 
   return v_payout;

@@ -766,6 +766,37 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageSelectionTitle": MessageLookupByLibrary.simpleMessage(
       "Language selection",
     ),
+    "legalDisputePolicyBody": MessageLookupByLibrary.simpleMessage(
+      "Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome.",
+    ),
+    "legalDisputePolicyTitle": MessageLookupByLibrary.simpleMessage(
+      "Dispute policy",
+    ),
+    "legalPaymentDisclosureBody": MessageLookupByLibrary.simpleMessage(
+      "Pricing breakdown, platform fees, taxes, and optional insurance are shown before proof submission. FleetFill verifies payment proof against the booking total, secures funds before delivery completion, and releases carrier payout only after the booking becomes payout-eligible.",
+    ),
+    "legalPaymentDisclosureTitle": MessageLookupByLibrary.simpleMessage(
+      "Payment and escrow disclosure",
+    ),
+    "legalPoliciesDescription": MessageLookupByLibrary.simpleMessage(
+      "Review the terms, privacy, payment, and dispute rules that apply before production use.",
+    ),
+    "legalPoliciesSupportHint": MessageLookupByLibrary.simpleMessage(
+      "If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action.",
+    ),
+    "legalPoliciesTitle": MessageLookupByLibrary.simpleMessage(
+      "Policies and disclosures",
+    ),
+    "legalPrivacyBody": MessageLookupByLibrary.simpleMessage(
+      "FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff.",
+    ),
+    "legalPrivacyTitle": MessageLookupByLibrary.simpleMessage(
+      "Privacy and retention",
+    ),
+    "legalTermsBody": MessageLookupByLibrary.simpleMessage(
+      "FleetFill accepts shipper payment before any carrier payout. Each booking covers one shipment on one confirmed route or trip. Shippers are responsible for accurate shipment details, and carriers are responsible for valid operating documents and lawful transport compliance.",
+    ),
+    "legalTermsTitle": MessageLookupByLibrary.simpleMessage("Terms of service"),
     "loadMoreLabel": MessageLookupByLibrary.simpleMessage("Load more"),
     "loadingMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill is preparing your workspace.",
@@ -847,11 +878,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "The requested page or entity could not be found.",
     ),
     "notFoundTitle": MessageLookupByLibrary.simpleMessage("Not found"),
-    "notificationBookingCreatedBody": MessageLookupByLibrary.simpleMessage(
-      "Your booking is ready. Continue to payment instructions to keep it moving.",
+    "notificationBookingConfirmedBody": MessageLookupByLibrary.simpleMessage(
+      "Your booking is recorded. Continue to payment instructions to keep it moving.",
     ),
-    "notificationBookingCreatedTitle": MessageLookupByLibrary.simpleMessage(
-      "Booking created",
+    "notificationBookingConfirmedTitle": MessageLookupByLibrary.simpleMessage(
+      "Booking confirmed",
     ),
     "notificationBookingMilestoneUpdatedBody": m7,
     "notificationBookingMilestoneUpdatedTitle":
@@ -866,6 +897,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Review the full details for this notification.",
     ),
     "notificationDetailTitle": m8,
+    "notificationDisputeOpenedBody": MessageLookupByLibrary.simpleMessage(
+      "A dispute has been opened for this booking and is waiting for admin review.",
+    ),
+    "notificationDisputeOpenedTitle": MessageLookupByLibrary.simpleMessage(
+      "Dispute opened",
+    ),
+    "notificationDisputeResolvedBody": MessageLookupByLibrary.simpleMessage(
+      "The dispute for this booking has been resolved. Review the latest booking and payment outcome.",
+    ),
+    "notificationDisputeResolvedTitle": MessageLookupByLibrary.simpleMessage(
+      "Dispute resolved",
+    ),
     "notificationGeneratedDocumentReadyBody": m9,
     "notificationGeneratedDocumentReadyTitle":
         MessageLookupByLibrary.simpleMessage("Document ready"),
@@ -886,6 +929,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notificationPaymentSecuredTitle": MessageLookupByLibrary.simpleMessage(
       "Payment secured",
+    ),
+    "notificationPayoutReleasedBody": MessageLookupByLibrary.simpleMessage(
+      "The carrier payout has been released for this booking.",
+    ),
+    "notificationPayoutReleasedTitle": MessageLookupByLibrary.simpleMessage(
+      "Payout released",
     ),
     "notificationsCenterDescription": MessageLookupByLibrary.simpleMessage(
       "Review recent alerts, booking updates, and operational reminders.",

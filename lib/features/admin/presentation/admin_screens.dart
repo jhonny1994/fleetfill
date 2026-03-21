@@ -162,24 +162,32 @@ class AdminDashboardScreen extends ConsumerWidget {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: AppSpacing.md),
-                        ...alerts.take(6).map(
-                          (alert) => Padding(
-                            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                            child: AppListCard(
-                              title: alert.booking.trackingNumber,
-                              subtitle: alert.kind == 'delivery_review_overdue'
-                                  ? s.adminDashboardOverdueDeliveryReviewsLabel
-                                  : s.adminDashboardOverduePaymentResubmissionsLabel,
-                              trailing: const Icon(Icons.chevron_right_rounded),
-                              onTap: () => context.push(
-                                AppRoutePath.sharedBookingDetail.replaceFirst(
-                                  ':id',
-                                  alert.booking.id,
+                        ...alerts
+                            .take(6)
+                            .map(
+                              (alert) => Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.sm,
+                                ),
+                                child: AppListCard(
+                                  title: alert.booking.trackingNumber,
+                                  subtitle:
+                                      alert.kind == 'delivery_review_overdue'
+                                      ? s.adminDashboardOverdueDeliveryReviewsLabel
+                                      : s.adminDashboardOverduePaymentResubmissionsLabel,
+                                  trailing: const Icon(
+                                    Icons.chevron_right_rounded,
+                                  ),
+                                  onTap: () => context.push(
+                                    AppRoutePath.sharedBookingDetail
+                                        .replaceFirst(
+                                          ':id',
+                                          alert.booking.id,
+                                        ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
                       ],
                     ),
               loading: () => const SizedBox.shrink(),
@@ -304,7 +312,8 @@ class _AdminBookingSearchSectionState
               message: mapAppErrorMessage(s, error),
               technicalDetails: stackTrace.toString(),
             ),
-            onRetry: () => ref.invalidate(adminBookingSearchResultsProvider(query)),
+            onRetry: () =>
+                ref.invalidate(adminBookingSearchResultsProvider(query)),
           ),
         ),
       ],
@@ -537,16 +546,24 @@ class _AdminVerificationQueueSectionState
                           packet.vehicles.length,
                         ),
                         leading: AppStatusChip(
-                          label: verificationStatusLabel(s, packet.profileStatus),
-                          tone: packet.profileStatus == AppVerificationState.rejected
+                          label: verificationStatusLabel(
+                            s,
+                            packet.profileStatus,
+                          ),
+                          tone:
+                              packet.profileStatus ==
+                                  AppVerificationState.rejected
                               ? AppStatusTone.danger
-                              : packet.profileStatus == AppVerificationState.verified
+                              : packet.profileStatus ==
+                                    AppVerificationState.verified
                               ? AppStatusTone.success
                               : AppStatusTone.warning,
                         ),
                         trailing: const Icon(Icons.chevron_right_rounded),
                         onTap: () => context.push(
-                          AppRoutePath.adminQueuesVerification(packet.carrierId),
+                          AppRoutePath.adminQueuesVerification(
+                            packet.carrierId,
+                          ),
                         ),
                       ),
                     ),
@@ -563,7 +580,9 @@ class _AdminVerificationQueueSectionState
             ),
             onRetry: () => query.isEmpty
                 ? ref.invalidate(pendingVerificationPacketsProvider)
-                : ref.invalidate(adminVerificationQueueSearchResultsProvider(query)),
+                : ref.invalidate(
+                    adminVerificationQueueSearchResultsProvider(query),
+                  ),
           ),
         ),
       ],
@@ -746,7 +765,9 @@ class _AdminPayoutsQueueSectionState
             ),
             onRetry: () => query.isEmpty
                 ? ref.invalidate(adminEligiblePayoutsProvider)
-                : ref.invalidate(adminEligiblePayoutSearchResultsProvider(query)),
+                : ref.invalidate(
+                    adminEligiblePayoutSearchResultsProvider(query),
+                  ),
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -800,7 +821,8 @@ class _AdminEmailQueueSection extends ConsumerStatefulWidget {
       _AdminEmailQueueSectionState();
 }
 
-class _AdminEmailQueueSectionState extends ConsumerState<_AdminEmailQueueSection> {
+class _AdminEmailQueueSectionState
+    extends ConsumerState<_AdminEmailQueueSection> {
   final TextEditingController _queryController = TextEditingController();
   String? _selectedStatus;
 
@@ -820,20 +842,23 @@ class _AdminEmailQueueSectionState extends ConsumerState<_AdminEmailQueueSection
       ),
     );
     final deadLettersAsync = ref.watch(adminDeadLetterEmailJobsProvider);
-    final resendEnabled = settingsAsync.asData?.value
-            .firstWhere(
-              (item) => item.key == 'feature_flags',
-              orElse: () => const PlatformSettingRecord(
-                key: 'feature_flags',
-                value: <String, dynamic>{'admin_email_resend_enabled': true},
-                isPublic: false,
-                description: null,
-                updatedBy: null,
-                updatedAt: null,
-              ),
-            )
-            .value['admin_email_resend_enabled']
-        as bool? ??
+    final resendEnabled =
+        settingsAsync.asData?.value
+                .firstWhere(
+                  (item) => item.key == 'feature_flags',
+                  orElse: () => const PlatformSettingRecord(
+                    key: 'feature_flags',
+                    value: <String, dynamic>{
+                      'admin_email_resend_enabled': true,
+                    },
+                    isPublic: false,
+                    description: null,
+                    updatedBy: null,
+                    updatedAt: null,
+                  ),
+                )
+                .value['admin_email_resend_enabled']
+            as bool? ??
         true;
 
     return Column(
@@ -855,13 +880,20 @@ class _AdminEmailQueueSectionState extends ConsumerState<_AdminEmailQueueSection
           decoration: InputDecoration(labelText: s.adminEmailStatusFilterLabel),
           items: [
             DropdownMenuItem<String?>(child: Text(s.adminEmailStatusAllLabel)),
-            ...['queued', 'sent', 'delivered', 'soft_failed', 'hard_failed', 'bounced', 'suppressed']
-                .map(
-                  (status) => DropdownMenuItem<String?>(
-                    value: status,
-                    child: Text(_emailStatusLabel(s, status)),
-                  ),
-                ),
+            ...[
+              'queued',
+              'sent',
+              'delivered',
+              'soft_failed',
+              'hard_failed',
+              'bounced',
+              'suppressed',
+            ].map(
+              (status) => DropdownMenuItem<String?>(
+                value: status,
+                child: Text(_emailStatusLabel(s, status)),
+              ),
+            ),
           ],
           onChanged: (value) => setState(() => _selectedStatus = value),
         ),
@@ -937,13 +969,14 @@ class _AdminEmailQueueSectionState extends ConsumerState<_AdminEmailQueueSection
                         title: job.recipientEmail,
                         subtitle:
                             '${job.templateKey} • ${job.lastErrorMessage ?? job.status}',
-                       leading: AppStatusChip(
+                        leading: AppStatusChip(
                           label: s.adminEmailStatusDeadLetterLabel,
                           tone: AppStatusTone.danger,
                         ),
                         trailing: resendEnabled && _canResendDeadLetter(job)
                             ? TextButton(
-                                onPressed: () => unawaited(_resendDeadLetter(job.id)),
+                                onPressed: () =>
+                                    unawaited(_resendDeadLetter(job.id)),
                                 child: Text(s.adminEmailResendAction),
                               )
                             : null,
@@ -1142,7 +1175,10 @@ class _AdminDocumentGroup extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              _verificationDocumentLabel(s, document.documentType),
+                              _verificationDocumentLabel(
+                                s,
+                                document.documentType,
+                              ),
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ),
@@ -1225,11 +1261,11 @@ class _AdminDocumentGroup extends ConsumerWidget {
     final s = S.of(context);
     String? reason;
     if (nextStatus == AppVerificationState.rejected) {
-        reason = await _showReasonDialog(
-          context,
-          title: s.adminVerificationRejectReasonTitle,
-          hintText: s.adminVerificationRejectReasonHint,
-        );
+      reason = await _showReasonDialog(
+        context,
+        title: s.adminVerificationRejectReasonTitle,
+        hintText: s.adminVerificationRejectReasonHint,
+      );
       if (!context.mounted || reason == null || reason.trim().isEmpty) {
         return;
       }
@@ -1258,7 +1294,6 @@ class _AdminDocumentGroup extends ConsumerWidget {
       }
     }
   }
-
 }
 
 class UsersScreen extends ConsumerStatefulWidget {
@@ -1395,7 +1430,10 @@ class UserDetailScreen extends ConsumerWidget {
               ProfileSummaryCard(
                 title: s.adminUserAccountSectionTitle,
                 rows: [
-                  ProfileSummaryRow(label: s.authEmailLabel, value: profile.email),
+                  ProfileSummaryRow(
+                    label: s.authEmailLabel,
+                    value: profile.email,
+                  ),
                   ProfileSummaryRow(
                     label: s.adminUserRoleLabel,
                     value: _roleLabel(s, profile.role),
@@ -1482,7 +1520,10 @@ class UserDetailScreen extends ConsumerWidget {
                 children: detail.verificationDocuments
                     .map(
                       (document) => AppListCard(
-                        title: _verificationDocumentLabel(s, document.documentType),
+                        title: _verificationDocumentLabel(
+                          s,
+                          document.documentType,
+                        ),
                         subtitle: verificationStatusLabel(s, document.status),
                         onTap: () => context.push(
                           AppRoutePath.sharedDocumentViewer.replaceFirst(
@@ -1532,7 +1573,9 @@ class UserDetailScreen extends ConsumerWidget {
     }
 
     try {
-      await ref.read(adminOperationsWorkflowControllerProvider).setUserActive(
+      await ref
+          .read(adminOperationsWorkflowControllerProvider)
+          .setUserActive(
             profileId: profileId,
             isActive: isActive,
             reason: reason,
@@ -1542,9 +1585,7 @@ class UserDetailScreen extends ConsumerWidget {
       }
       AppFeedback.showSnackBar(
         context,
-        isActive
-            ? s.adminUserReactivateSuccess
-            : s.adminUserSuspendSuccess,
+        isActive ? s.adminUserReactivateSuccess : s.adminUserSuspendSuccess,
       );
     } on PostgrestException catch (error) {
       if (context.mounted) {
@@ -1590,20 +1631,25 @@ class AdminSettingsScreen extends ConsumerStatefulWidget {
   const AdminSettingsScreen({super.key});
 
   @override
-  ConsumerState<AdminSettingsScreen> createState() => _AdminSettingsScreenState();
+  ConsumerState<AdminSettingsScreen> createState() =>
+      _AdminSettingsScreenState();
 }
 
 class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
   bool _initialized = false;
   bool _maintenanceMode = false;
   bool _forceUpdateRequired = false;
-  final TextEditingController _androidVersionController = TextEditingController();
+  final TextEditingController _androidVersionController =
+      TextEditingController();
   final TextEditingController _iosVersionController = TextEditingController();
   final TextEditingController _platformFeeController = TextEditingController();
-  final TextEditingController _insuranceRateController = TextEditingController();
+  final TextEditingController _insuranceRateController =
+      TextEditingController();
   final TextEditingController _insuranceMinController = TextEditingController();
-  final TextEditingController _paymentDeadlineController = TextEditingController();
-  final TextEditingController _deliveryGraceController = TextEditingController();
+  final TextEditingController _paymentDeadlineController =
+      TextEditingController();
+  final TextEditingController _deliveryGraceController =
+      TextEditingController();
   bool _adminEmailResendEnabled = true;
 
   @override
@@ -1687,13 +1733,15 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
                       contentPadding: EdgeInsets.zero,
                       title: Text(s.adminSettingsMaintenanceModeLabel),
                       value: _maintenanceMode,
-                      onChanged: (value) => setState(() => _maintenanceMode = value),
+                      onChanged: (value) =>
+                          setState(() => _maintenanceMode = value),
                     ),
                     SwitchListTile.adaptive(
                       contentPadding: EdgeInsets.zero,
                       title: Text(s.adminSettingsForceUpdateLabel),
                       value: _forceUpdateRequired,
-                      onChanged: (value) => setState(() => _forceUpdateRequired = value),
+                      onChanged: (value) =>
+                          setState(() => _forceUpdateRequired = value),
                     ),
                     AuthTextField(
                       controller: _androidVersionController,
@@ -1710,7 +1758,8 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
                     Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: FilledButton(
-                        onPressed: () => unawaited(_saveRuntimeSettings(context)),
+                        onPressed: () =>
+                            unawaited(_saveRuntimeSettings(context)),
                         child: Text(s.adminSettingsSaveAction),
                       ),
                     ),
@@ -1725,19 +1774,25 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
                     AuthTextField(
                       controller: _platformFeeController,
                       label: s.adminSettingsPlatformFeeRateLabel,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     AuthTextField(
                       controller: _insuranceRateController,
                       label: s.adminSettingsInsuranceRateLabel,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     AuthTextField(
                       controller: _insuranceMinController,
                       label: s.adminSettingsInsuranceMinimumLabel,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     AuthTextField(
@@ -1749,7 +1804,8 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
                     Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: FilledButton(
-                        onPressed: () => unawaited(_savePricingSettings(context)),
+                        onPressed: () =>
+                            unawaited(_savePricingSettings(context)),
                         child: Text(s.adminSettingsSaveAction),
                       ),
                     ),
@@ -1770,7 +1826,8 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
                     Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: FilledButton(
-                        onPressed: () => unawaited(_saveDeliverySettings(context)),
+                        onPressed: () =>
+                            unawaited(_saveDeliverySettings(context)),
                         child: Text(s.adminSettingsSaveAction),
                       ),
                     ),
@@ -1818,7 +1875,8 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
         byKey['booking_pricing']?.value ?? const <String, dynamic>{};
     final deliveryReview =
         byKey['delivery_review']?.value ?? const <String, dynamic>{};
-    final featureFlags = byKey['feature_flags']?.value ?? const <String, dynamic>{};
+    final featureFlags =
+        byKey['feature_flags']?.value ?? const <String, dynamic>{};
 
     _maintenanceMode = appRuntime['maintenance_mode'] as bool? ?? false;
     _forceUpdateRequired =
@@ -1871,7 +1929,10 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
     final insuranceRate = double.tryParse(_insuranceRateController.text.trim());
     final insuranceMin = double.tryParse(_insuranceMinController.text.trim());
     final deadline = int.tryParse(_paymentDeadlineController.text.trim());
-    if (platformFee == null || insuranceRate == null || insuranceMin == null || deadline == null) {
+    if (platformFee == null ||
+        insuranceRate == null ||
+        insuranceMin == null ||
+        deadline == null) {
       AppFeedback.showSnackBar(context, s.vehiclePositiveNumberMessage);
       return;
     }
@@ -1929,7 +1990,9 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
   }) async {
     final s = S.of(context);
     try {
-      await ref.read(adminOperationsWorkflowControllerProvider).updatePlatformSetting(
+      await ref
+          .read(adminOperationsWorkflowControllerProvider)
+          .updatePlatformSetting(
             key: key,
             value: value,
             isPublic: isPublic,
@@ -2004,7 +2067,8 @@ class AdminAuditLogScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: AppListCard(
                     title: log.action,
-                    subtitle: '${log.targetType} • ${log.reason ?? log.outcome}',
+                    subtitle:
+                        '${log.targetType} • ${log.reason ?? log.outcome}',
                     trailing: log.createdAt == null
                         ? null
                         : Text(_formatDate(log.createdAt!)),
@@ -2065,7 +2129,8 @@ Future<String?> _showReasonDialog(
               child: Text(s.cancelLabel),
             ),
             FilledButton(
-              onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+              onPressed: () =>
+                  Navigator.of(context).pop(controller.text.trim()),
               child: Text(s.confirmLabel),
             ),
           ],
@@ -2142,8 +2207,10 @@ AppStatusTone _emailStatusTone(String status) {
     'delivered' => AppStatusTone.success,
     'queued' || 'sent' => AppStatusTone.info,
     'soft_failed' => AppStatusTone.warning,
-    'hard_failed' || 'bounced' || 'suppressed' || 'dead_letter' =>
-      AppStatusTone.danger,
+    'hard_failed' ||
+    'bounced' ||
+    'suppressed' ||
+    'dead_letter' => AppStatusTone.danger,
     _ => AppStatusTone.neutral,
   };
 }
@@ -2154,10 +2221,12 @@ class _PaymentProofReviewSheet extends ConsumerStatefulWidget {
   final AdminPaymentProofQueueItem item;
 
   @override
-  ConsumerState<_PaymentProofReviewSheet> createState() => _PaymentProofReviewSheetState();
+  ConsumerState<_PaymentProofReviewSheet> createState() =>
+      _PaymentProofReviewSheetState();
 }
 
-class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewSheet> {
+class _PaymentProofReviewSheetState
+    extends ConsumerState<_PaymentProofReviewSheet> {
   late final TextEditingController _amountController;
   late final TextEditingController _referenceController;
   final TextEditingController _reasonController = TextEditingController();
@@ -2171,7 +2240,9 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
       text: widget.item.booking.shipperTotalDzd.toStringAsFixed(0),
     );
     _referenceController = TextEditingController(
-      text: widget.item.proof.submittedReference ?? widget.item.booking.paymentReference,
+      text:
+          widget.item.proof.submittedReference ??
+          widget.item.booking.paymentReference,
     );
   }
 
@@ -2198,14 +2269,28 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
       child: ListView(
         shrinkWrap: true,
         children: [
-          Text(s.adminPaymentProofQueueTitle, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            s.adminPaymentProofQueueTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: AppSpacing.md),
           ProfileSummaryCard(
             title: item.booking.trackingNumber,
             rows: [
-              ProfileSummaryRow(label: s.bookingPaymentReferenceLabel, value: item.booking.paymentReference),
-              ProfileSummaryRow(label: s.paymentProofAmountLabel, value: BidiFormatters.latinIdentifier(item.proof.submittedAmountDzd.toStringAsFixed(0))),
-              ProfileSummaryRow(label: s.paymentProofReferenceLabel, value: item.proof.submittedReference ?? '-'),
+              ProfileSummaryRow(
+                label: s.bookingPaymentReferenceLabel,
+                value: item.booking.paymentReference,
+              ),
+              ProfileSummaryRow(
+                label: s.paymentProofAmountLabel,
+                value: BidiFormatters.latinIdentifier(
+                  item.proof.submittedAmountDzd.toStringAsFixed(0),
+                ),
+              ),
+              ProfileSummaryRow(
+                label: s.paymentProofReferenceLabel,
+                value: item.proof.submittedReference ?? '-',
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -2214,7 +2299,10 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
               Expanded(
                 child: OutlinedButton(
                   onPressed: () => context.push(
-                    AppRoutePath.sharedProofViewer.replaceFirst(':id', item.proof.id),
+                    AppRoutePath.sharedProofViewer.replaceFirst(
+                      ':id',
+                      item.proof.id,
+                    ),
                   ),
                   child: Text(s.documentViewerOpenAction),
                 ),
@@ -2222,13 +2310,26 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          AuthTextField(controller: _amountController, label: s.paymentProofVerifiedAmountLabel, keyboardType: const TextInputType.numberWithOptions(decimal: true)),
+          AuthTextField(
+            controller: _amountController,
+            label: s.paymentProofVerifiedAmountLabel,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          ),
           const SizedBox(height: AppSpacing.md),
-          AuthTextField(controller: _referenceController, label: s.paymentProofVerifiedReferenceLabel),
+          AuthTextField(
+            controller: _referenceController,
+            label: s.paymentProofVerifiedReferenceLabel,
+          ),
           const SizedBox(height: AppSpacing.md),
-          AuthTextField(controller: _noteController, label: s.paymentProofDecisionNoteLabel),
+          AuthTextField(
+            controller: _noteController,
+            label: s.paymentProofDecisionNoteLabel,
+          ),
           const SizedBox(height: AppSpacing.md),
-          AuthTextField(controller: _reasonController, label: s.paymentProofRejectionReasonLabel),
+          AuthTextField(
+            controller: _reasonController,
+            label: s.paymentProofRejectionReasonLabel,
+          ),
           const SizedBox(height: AppSpacing.lg),
           Row(
             children: [
@@ -2256,7 +2357,9 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
     final s = S.of(context);
     setState(() => _isSubmitting = true);
     try {
-      await ref.read(adminPaymentWorkflowControllerProvider).approvePaymentProof(
+      await ref
+          .read(adminPaymentWorkflowControllerProvider)
+          .approvePaymentProof(
             proofId: widget.item.proof.id,
             verifiedAmountDzd: double.parse(_amountController.text.trim()),
             verifiedReference: _referenceController.text,
@@ -2266,7 +2369,9 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
       AppFeedback.showSnackBar(context, s.paymentProofApprovedMessage);
       Navigator.of(context).pop();
     } on PostgrestException catch (error) {
-      if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      if (mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -2275,12 +2380,17 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
   Future<void> _reject() async {
     final s = S.of(context);
     if (_reasonController.text.trim().isEmpty) {
-      AppFeedback.showSnackBar(context, s.paymentProofRejectionReasonRequiredMessage);
+      AppFeedback.showSnackBar(
+        context,
+        s.paymentProofRejectionReasonRequiredMessage,
+      );
       return;
     }
     setState(() => _isSubmitting = true);
     try {
-      await ref.read(adminPaymentWorkflowControllerProvider).rejectPaymentProof(
+      await ref
+          .read(adminPaymentWorkflowControllerProvider)
+          .rejectPaymentProof(
             proofId: widget.item.proof.id,
             rejectionReason: _reasonController.text,
             decisionNote: _noteController.text,
@@ -2289,7 +2399,9 @@ class _PaymentProofReviewSheetState extends ConsumerState<_PaymentProofReviewShe
       AppFeedback.showSnackBar(context, s.paymentProofRejectedMessage);
       Navigator.of(context).pop();
     } on PostgrestException catch (error) {
-      if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      if (mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -2302,14 +2414,18 @@ class _DisputeResolutionSheet extends ConsumerStatefulWidget {
   final DisputeRecord item;
 
   @override
-  ConsumerState<_DisputeResolutionSheet> createState() => _DisputeResolutionSheetState();
+  ConsumerState<_DisputeResolutionSheet> createState() =>
+      _DisputeResolutionSheetState();
 }
 
-class _DisputeResolutionSheetState extends ConsumerState<_DisputeResolutionSheet> {
+class _DisputeResolutionSheetState
+    extends ConsumerState<_DisputeResolutionSheet> {
   final TextEditingController _refundAmountController = TextEditingController();
   final TextEditingController _refundReasonController = TextEditingController();
-  final TextEditingController _externalReferenceController = TextEditingController();
-  final TextEditingController _resolutionNoteController = TextEditingController();
+  final TextEditingController _externalReferenceController =
+      TextEditingController();
+  final TextEditingController _resolutionNoteController =
+      TextEditingController();
   bool _isSubmitting = false;
 
   @override
@@ -2334,36 +2450,62 @@ class _DisputeResolutionSheetState extends ConsumerState<_DisputeResolutionSheet
       child: ListView(
         shrinkWrap: true,
         children: [
-          Text(s.adminDisputesQueueTitle, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            s.adminDisputesQueueTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: AppSpacing.md),
           ProfileSummaryCard(
             title: widget.item.reason,
             rows: [
-              ProfileSummaryRow(label: s.shipmentDescriptionLabel, value: widget.item.description ?? '-'),
-              ProfileSummaryRow(label: s.routeStatusLabel, value: widget.item.status),
+              ProfileSummaryRow(
+                label: s.shipmentDescriptionLabel,
+                value: widget.item.description ?? '-',
+              ),
+              ProfileSummaryRow(
+                label: s.routeStatusLabel,
+                value: widget.item.status,
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          AuthTextField(controller: _resolutionNoteController, label: s.paymentProofDecisionNoteLabel),
+          AuthTextField(
+            controller: _resolutionNoteController,
+            label: s.paymentProofDecisionNoteLabel,
+          ),
           const SizedBox(height: AppSpacing.md),
-          AuthTextField(controller: _refundAmountController, label: s.paymentProofAmountLabel, keyboardType: const TextInputType.numberWithOptions(decimal: true)),
+          AuthTextField(
+            controller: _refundAmountController,
+            label: s.paymentProofAmountLabel,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          ),
           const SizedBox(height: AppSpacing.md),
-          AuthTextField(controller: _refundReasonController, label: s.paymentProofRejectionReasonLabel),
+          AuthTextField(
+            controller: _refundReasonController,
+            label: s.paymentProofRejectionReasonLabel,
+          ),
           const SizedBox(height: AppSpacing.md),
-          AuthTextField(controller: _externalReferenceController, label: s.paymentProofVerifiedReferenceLabel),
+          AuthTextField(
+            controller: _externalReferenceController,
+            label: s.paymentProofVerifiedReferenceLabel,
+          ),
           const SizedBox(height: AppSpacing.lg),
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: _isSubmitting ? null : () => unawaited(_resolveComplete()),
+                  onPressed: _isSubmitting
+                      ? null
+                      : () => unawaited(_resolveComplete()),
                   child: Text(s.bookingStatusCompletedLabel),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: FilledButton(
-                  onPressed: _isSubmitting ? null : () => unawaited(_resolveRefund()),
+                  onPressed: _isSubmitting
+                      ? null
+                      : () => unawaited(_resolveRefund()),
                   child: Text(s.paymentStatusRefundedLabel),
                 ),
               ),
@@ -2378,7 +2520,9 @@ class _DisputeResolutionSheetState extends ConsumerState<_DisputeResolutionSheet
     final s = S.of(context);
     setState(() => _isSubmitting = true);
     try {
-      await ref.read(adminDisputePayoutWorkflowControllerProvider).resolveDisputeComplete(
+      await ref
+          .read(adminDisputePayoutWorkflowControllerProvider)
+          .resolveDisputeComplete(
             disputeId: widget.item.id,
             resolutionNote: _resolutionNoteController.text,
           );
@@ -2386,7 +2530,9 @@ class _DisputeResolutionSheetState extends ConsumerState<_DisputeResolutionSheet
       AppFeedback.showSnackBar(context, s.bookingStatusCompletedLabel);
       Navigator.of(context).pop();
     } on PostgrestException catch (error) {
-      if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      if (mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -2395,13 +2541,17 @@ class _DisputeResolutionSheetState extends ConsumerState<_DisputeResolutionSheet
   Future<void> _resolveRefund() async {
     final s = S.of(context);
     final amount = double.tryParse(_refundAmountController.text.trim());
-    if (amount == null || amount <= 0 || _refundReasonController.text.trim().isEmpty) {
+    if (amount == null ||
+        amount <= 0 ||
+        _refundReasonController.text.trim().isEmpty) {
       AppFeedback.showSnackBar(context, s.authRequiredFieldMessage);
       return;
     }
     setState(() => _isSubmitting = true);
     try {
-      await ref.read(adminDisputePayoutWorkflowControllerProvider).resolveDisputeRefund(
+      await ref
+          .read(adminDisputePayoutWorkflowControllerProvider)
+          .resolveDisputeRefund(
             disputeId: widget.item.id,
             refundAmountDzd: amount,
             refundReason: _refundReasonController.text,
@@ -2412,7 +2562,9 @@ class _DisputeResolutionSheetState extends ConsumerState<_DisputeResolutionSheet
       AppFeedback.showSnackBar(context, s.paymentStatusRefundedLabel);
       Navigator.of(context).pop();
     } on PostgrestException catch (error) {
-      if (mounted) AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      if (mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }

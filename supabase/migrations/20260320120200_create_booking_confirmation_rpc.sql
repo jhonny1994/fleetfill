@@ -330,9 +330,9 @@ begin
   insert into public.notifications (profile_id, type, title, body, data)
   values (
     v_actor_id,
-    'booking_created',
-    'booking_created_title',
-    'booking_created_body',
+    'booking_confirmed',
+    'booking_confirmed_title',
+    'booking_confirmed_body',
     jsonb_build_object('booking_id', v_booking.id)
   );
 
@@ -350,11 +350,11 @@ begin
     payload_snapshot
   )
   select
-    'booking_created',
-    'booking_created:' || coalesce(nullif(trim(p_idempotency_key), ''), v_booking.id::text),
+    'booking_confirmed',
+    'booking_confirmed:' || coalesce(nullif(trim(p_idempotency_key), ''), v_booking.id::text),
     p.id,
     v_booking.id,
-    'booking_created',
+    'booking_confirmed',
     'en',
     p.email,
     'high',

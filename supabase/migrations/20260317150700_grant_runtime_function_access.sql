@@ -1,6 +1,9 @@
 revoke all on function public.write_admin_audit_log(text, text, uuid, text, text, jsonb) from public, anon, authenticated;
 grant execute on function public.write_admin_audit_log(text, text, uuid, text, text, jsonb) to service_role;
 
+revoke all on function public.require_recent_admin_step_up() from public, anon, authenticated;
+grant execute on function public.require_recent_admin_step_up() to service_role;
+
 revoke all on function public.get_client_settings() from public, anon;
 grant execute on function public.get_client_settings() to authenticated, service_role;
 

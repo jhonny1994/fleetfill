@@ -9,7 +9,9 @@ void main() {
   final raw = jsonDecode(source.readAsStringSync()) as List<dynamic>;
   final buffer = StringBuffer()
     ..writeln('-- Generated from docs/wilayas-with-municipalities.json')
-    ..writeln('-- Regenerate with: dart run tool/generate_supabase_location_seed.dart')
+    ..writeln(
+      '-- Regenerate with: dart run tool/generate_supabase_location_seed.dart',
+    )
     ..writeln('truncate table public.communes restart identity cascade;')
     ..writeln('truncate table public.wilayas restart identity cascade;')
     ..writeln()
@@ -27,7 +29,8 @@ void main() {
   final communes = <Map<String, dynamic>>[];
   for (final wilaya in raw.cast<Map<String, dynamic>>()) {
     final wilayaCode = wilaya['wilayaCode'] as int;
-    for (final commune in (wilaya['communes'] as List<dynamic>).cast<Map<String, dynamic>>()) {
+    for (final commune
+        in (wilaya['communes'] as List<dynamic>).cast<Map<String, dynamic>>()) {
       final id = commune['id'];
       if (id == null) {
         continue;

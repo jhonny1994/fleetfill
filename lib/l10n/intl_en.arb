@@ -216,14 +216,20 @@
   },
   "notificationsCenterDescription": "Review recent alerts, booking updates, and operational reminders.",
   "notificationsCenterTitle": "Notifications",
-  "notificationBookingCreatedTitle": "Booking created",
-  "notificationBookingCreatedBody": "Your booking is ready. Continue to payment instructions to keep it moving.",
+  "notificationBookingConfirmedTitle": "Booking confirmed",
+  "notificationBookingConfirmedBody": "Your booking is recorded. Continue to payment instructions to keep it moving.",
   "notificationPaymentProofSubmittedTitle": "Payment proof submitted",
   "notificationPaymentProofSubmittedBody": "Your payment proof is waiting for review.",
   "notificationPaymentSecuredTitle": "Payment secured",
   "notificationPaymentSecuredBody": "Your payment has been secured and the booking is confirmed.",
   "notificationPaymentRejectedTitle": "Payment proof rejected",
   "notificationPaymentRejectedBody": "Your payment proof was rejected. Review the reason and resubmit before the deadline.",
+  "notificationDisputeOpenedTitle": "Dispute opened",
+  "notificationDisputeOpenedBody": "A dispute has been opened for this booking and is waiting for admin review.",
+  "notificationDisputeResolvedTitle": "Dispute resolved",
+  "notificationDisputeResolvedBody": "The dispute for this booking has been resolved. Review the latest booking and payment outcome.",
+  "notificationPayoutReleasedTitle": "Payout released",
+  "notificationPayoutReleasedBody": "The carrier payout has been released for this booking.",
   "notificationBookingMilestoneUpdatedTitle": "Booking milestone updated",
   "notificationBookingMilestoneUpdatedBody": "Latest milestone: {milestoneLabel}",
   "@notificationBookingMilestoneUpdatedBody": {
@@ -614,6 +620,17 @@
   ,"supportReferenceHintMessage": "Include any booking ID, tracking number, or payment reference that can help support investigate faster."
   ,"supportSendAction": "Send support email"
   ,"supportMessageSentMessage": "Support message sent."
+  ,"legalPoliciesTitle": "Policies and disclosures"
+  ,"legalPoliciesDescription": "Review the terms, privacy, payment, and dispute rules that apply before production use."
+  ,"legalPoliciesSupportHint": "If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action."
+  ,"legalTermsTitle": "Terms of service"
+  ,"legalTermsBody": "FleetFill accepts shipper payment before any carrier payout. Each booking covers one shipment on one confirmed route or trip. Shippers are responsible for accurate shipment details, and carriers are responsible for valid operating documents and lawful transport compliance."
+  ,"legalPrivacyTitle": "Privacy and retention"
+  ,"legalPrivacyBody": "FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff."
+  ,"legalPaymentDisclosureTitle": "Payment and escrow disclosure"
+  ,"legalPaymentDisclosureBody": "Pricing breakdown, platform fees, taxes, and optional insurance are shown before proof submission. FleetFill verifies payment proof against the booking total, secures funds before delivery completion, and releases carrier payout only after the booking becomes payout-eligible."
+  ,"legalDisputePolicyTitle": "Dispute policy"
+  ,"legalDisputePolicyBody": "Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome."
   ,"searchCarrierRatingLabel": "Carrier rating"
   ,"searchResultTypeLabel": "Capacity type"
   ,"ratingSubmitAction": "Submit review"

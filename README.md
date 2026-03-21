@@ -57,6 +57,15 @@ FleetFill is designed for:
 
 Support starts with email-based assistance inside the app.
 
+## Policies And Disclosures
+
+Before production launch, FleetFill exposes in-app policy surfaces that cover:
+
+- terms of service
+- privacy and retention
+- payment and escrow disclosure
+- dispute handling policy
+
 ## Product Status
 
 FleetFill is under active development.

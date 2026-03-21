@@ -232,9 +232,10 @@ void main() {
     });
 
     test('protects sensitive columns on insert as well as update', () {
-      final securityMigration = File(
-        'supabase/migrations/20260317150600_create_storage_policies_and_security_triggers.sql',
-      ).readAsStringSync() +
+      final securityMigration =
+          File(
+            'supabase/migrations/20260317150600_create_storage_policies_and_security_triggers.sql',
+          ).readAsStringSync() +
           File(
             'supabase/migrations/20260317150100_create_security_and_storage_helpers.sql',
           ).readAsStringSync();
@@ -266,9 +267,10 @@ void main() {
     });
 
     test('keeps payment proof access restricted and validates uploaded objects', () {
-      final securityMigration = File(
-        'supabase/migrations/20260317150500_enable_rls_and_create_table_policies.sql',
-      ).readAsStringSync() +
+      final securityMigration =
+          File(
+            'supabase/migrations/20260317150500_enable_rls_and_create_table_policies.sql',
+          ).readAsStringSync() +
           File(
             'supabase/migrations/20260317150200_create_client_upload_and_finalize_rpc.sql',
           ).readAsStringSync() +

@@ -25,7 +25,10 @@ class AdminOperationsRepository {
     return AdminOperationalSummary.fromJson(response);
   }
 
-  Future<List<AdminUserListItem>> fetchUsers({String? query, int limit = 50}) async {
+  Future<List<AdminUserListItem>> fetchUsers({
+    String? query,
+    int limit = 50,
+  }) async {
     var request = _client.from('profiles').select();
 
     final trimmedQuery = query?.trim();
@@ -35,7 +38,9 @@ class AdminOperationsRepository {
       );
     }
 
-    final response = await request.order('updated_at', ascending: false).limit(limit);
+    final response = await request
+        .order('updated_at', ascending: false)
+        .limit(limit);
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
         .map(AppProfile.fromJson)
@@ -70,7 +75,9 @@ class AdminOperationsRepository {
         : const <dynamic>[];
 
     final vehicleMaps = vehiclesResponse.cast<Map<String, dynamic>>();
-    final vehicleIds = vehicleMaps.map((item) => item['id'] as String).toList(growable: false);
+    final vehicleIds = vehicleMaps
+        .map((item) => item['id'] as String)
+        .toList(growable: false);
 
     final documentsResponse = await _fetchUserVerificationDocuments(
       profileId: profileId,
@@ -163,14 +170,18 @@ class AdminOperationsRepository {
       );
     }
 
-    final response = await request.order('created_at', ascending: false).limit(limit);
+    final response = await request
+        .order('created_at', ascending: false)
+        .limit(limit);
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
         .map(EmailDeliveryLogRecord.fromJson)
         .toList(growable: false);
   }
 
-  Future<List<EmailOutboxJobRecord>> fetchDeadLetterEmailJobs({int limit = 50}) async {
+  Future<List<EmailOutboxJobRecord>> fetchDeadLetterEmailJobs({
+    int limit = 50,
+  }) async {
     final response = await _client
         .from('email_outbox_jobs')
         .select()
@@ -232,7 +243,9 @@ class AdminOperationsRepository {
       return const <EligiblePayoutQueueItem>[];
     }
 
-    final bookingIds = allBookings.map((booking) => booking.id).toList(growable: false);
+    final bookingIds = allBookings
+        .map((booking) => booking.id)
+        .toList(growable: false);
     final disputesResponse = await _client
         .from('disputes')
         .select('booking_id')
@@ -244,9 +257,11 @@ class AdminOperationsRepository {
         .inFilter('booking_id', bookingIds);
 
     final blockedBookingIds = {
-      for (final item in (disputesResponse as List<dynamic>).cast<Map<String, dynamic>>())
+      for (final item
+          in (disputesResponse as List<dynamic>).cast<Map<String, dynamic>>())
         item['booking_id'] as String,
-      for (final item in (payoutsResponse as List<dynamic>).cast<Map<String, dynamic>>())
+      for (final item
+          in (payoutsResponse as List<dynamic>).cast<Map<String, dynamic>>())
         item['booking_id'] as String,
     };
 
@@ -257,13 +272,17 @@ class AdminOperationsRepository {
       return const <EligiblePayoutQueueItem>[];
     }
 
-    final carrierIds = eligibleBookings.map((booking) => booking.carrierId).toSet().toList(growable: false);
+    final carrierIds = eligibleBookings
+        .map((booking) => booking.carrierId)
+        .toSet()
+        .toList(growable: false);
     final carriersResponse = await _client
         .from('profiles')
         .select()
         .inFilter('id', carrierIds);
     final carriersById = {
-      for (final item in (carriersResponse as List<dynamic>).cast<Map<String, dynamic>>())
+      for (final item
+          in (carriersResponse as List<dynamic>).cast<Map<String, dynamic>>())
         (item['id'] as String): AppProfile.fromJson(item),
     };
 
@@ -289,18 +308,24 @@ class AdminOperationsRepository {
         .limit(limit * 2);
     final proofMaps = (proofsResponse as List<dynamic>)
         .cast<Map<String, dynamic>>();
-    final proofs = proofMaps.map(PaymentProofRecord.fromJson).toList(growable: false);
+    final proofs = proofMaps
+        .map(PaymentProofRecord.fromJson)
+        .toList(growable: false);
     if (proofs.isEmpty) {
       return const <AdminPaymentProofQueueItem>[];
     }
 
-    final bookingIds = proofs.map((proof) => proof.bookingId).toSet().toList(growable: false);
+    final bookingIds = proofs
+        .map((proof) => proof.bookingId)
+        .toSet()
+        .toList(growable: false);
     final bookingsResponse = await _client
         .from('bookings')
         .select()
         .inFilter('id', bookingIds);
     final bookingMap = {
-      for (final item in (bookingsResponse as List<dynamic>).cast<Map<String, dynamic>>())
+      for (final item
+          in (bookingsResponse as List<dynamic>).cast<Map<String, dynamic>>())
         (item['id'] as String): BookingRecord.fromJson(item),
     };
 
@@ -321,9 +346,17 @@ class AdminOperationsRepository {
 
     return items
         .where(
-          (item) => item.booking.trackingNumber.toLowerCase().contains(trimmedQuery) ||
-              item.booking.paymentReference.toLowerCase().contains(trimmedQuery) ||
-              (item.proof.submittedReference?.toLowerCase().contains(trimmedQuery) ?? false) ||
+          (item) =>
+              item.booking.trackingNumber.toLowerCase().contains(
+                trimmedQuery,
+              ) ||
+              item.booking.paymentReference.toLowerCase().contains(
+                trimmedQuery,
+              ) ||
+              (item.proof.submittedReference?.toLowerCase().contains(
+                    trimmedQuery,
+                  ) ??
+                  false) ||
               item.booking.id.toLowerCase().contains(trimmedQuery) ||
               item.proof.id.toLowerCase().contains(trimmedQuery),
         )
@@ -344,18 +377,25 @@ class AdminOperationsRepository {
 
     return items
         .where(
-          (item) => item.displayName.toLowerCase().contains(trimmedQuery) ||
+          (item) =>
+              item.displayName.toLowerCase().contains(trimmedQuery) ||
               item.carrierId.toLowerCase().contains(trimmedQuery) ||
-              (item.companyName?.toLowerCase().contains(trimmedQuery) ?? false) ||
+              (item.companyName?.toLowerCase().contains(trimmedQuery) ??
+                  false) ||
               item.vehicles.any(
-                (vehicle) => vehicle.vehicle.plateNumber.toLowerCase().contains(trimmedQuery),
+                (vehicle) => vehicle.vehicle.plateNumber.toLowerCase().contains(
+                  trimmedQuery,
+                ),
               ),
         )
         .take(limit)
         .toList(growable: false);
   }
 
-  Future<List<DisputeRecord>> fetchDisputeQueue({String? query, int limit = 50}) async {
+  Future<List<DisputeRecord>> fetchDisputeQueue({
+    String? query,
+    int limit = 50,
+  }) async {
     final response = await _client
         .from('disputes')
         .select()
@@ -375,14 +415,18 @@ class AdminOperationsRepository {
 
     return disputes
         .where(
-          (item) => item.bookingId.toLowerCase().contains(trimmedQuery) ||
+          (item) =>
+              item.bookingId.toLowerCase().contains(trimmedQuery) ||
               item.reason.toLowerCase().contains(trimmedQuery) ||
               (item.description?.toLowerCase().contains(trimmedQuery) ?? false),
         )
         .toList(growable: false);
   }
 
-  Future<List<BookingRecord>> fetchBookings({String? query, int limit = 50}) async {
+  Future<List<BookingRecord>> fetchBookings({
+    String? query,
+    int limit = 50,
+  }) async {
     var request = _client.from('bookings').select();
 
     final trimmedQuery = query?.trim();
@@ -392,7 +436,9 @@ class AdminOperationsRepository {
       );
     }
 
-    final response = await request.order('updated_at', ascending: false).limit(limit);
+    final response = await request
+        .order('updated_at', ascending: false)
+        .limit(limit);
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
         .map(BookingRecord.fromJson)
@@ -411,10 +457,17 @@ class AdminOperationsRepository {
 
     return items
         .where(
-          (item) => item.booking.trackingNumber.toLowerCase().contains(trimmedQuery) ||
+          (item) =>
+              item.booking.trackingNumber.toLowerCase().contains(
+                trimmedQuery,
+              ) ||
               item.booking.id.toLowerCase().contains(trimmedQuery) ||
-              (item.carrier?.companyName?.toLowerCase().contains(trimmedQuery) ?? false) ||
-              (item.carrier?.fullName?.toLowerCase().contains(trimmedQuery) ?? false) ||
+              (item.carrier?.companyName?.toLowerCase().contains(
+                    trimmedQuery,
+                  ) ??
+                  false) ||
+              (item.carrier?.fullName?.toLowerCase().contains(trimmedQuery) ??
+                  false) ||
               item.booking.carrierId.toLowerCase().contains(trimmedQuery),
         )
         .take(limit)
@@ -443,13 +496,17 @@ class AdminOperationsRepository {
     final deliveredItems = (deliveredResponse as List<dynamic>)
         .cast<Map<String, dynamic>>()
         .map((item) {
-          final deliveredAt = DateTime.tryParse(item['delivered_at'] as String? ?? '');
+          final deliveredAt = DateTime.tryParse(
+            item['delivered_at'] as String? ?? '',
+          );
           if (deliveredAt == null) {
             return null;
           }
           final booking = BookingRecord.fromJson(item);
           final isOverdue = deliveredAt.isBefore(
-            DateTime.now().toUtc().subtract(Duration(hours: deliveryGraceHours)),
+            DateTime.now().toUtc().subtract(
+              Duration(hours: deliveryGraceHours),
+            ),
           );
           if (!isOverdue) {
             return null;
@@ -483,12 +540,14 @@ class AdminOperationsRepository {
         .order('reviewed_at', ascending: false);
 
     final latestRejectedByBooking = <String, PaymentProofRecord>{};
-    for (final item in (proofResponse as List<dynamic>).cast<Map<String, dynamic>>()) {
+    for (final item
+        in (proofResponse as List<dynamic>).cast<Map<String, dynamic>>()) {
       final proof = PaymentProofRecord.fromJson(item);
       final current = latestRejectedByBooking[proof.bookingId];
       if (current == null ||
           (proof.reviewedAt != null &&
-              (current.reviewedAt == null || proof.reviewedAt!.isAfter(current.reviewedAt!)))) {
+              (current.reviewedAt == null ||
+                  proof.reviewedAt!.isAfter(current.reviewedAt!)))) {
         latestRejectedByBooking[proof.bookingId] = proof;
       }
     }
@@ -499,7 +558,9 @@ class AdminOperationsRepository {
           final reviewedAt = proof?.reviewedAt;
           return reviewedAt != null &&
               reviewedAt.isBefore(
-                DateTime.now().toUtc().subtract(Duration(hours: paymentDeadlineHours)),
+                DateTime.now().toUtc().subtract(
+                  Duration(hours: paymentDeadlineHours),
+                ),
               );
         })
         .map(
@@ -567,6 +628,7 @@ class AdminOperationsRepository {
     final value = Map<String, dynamic>.from(
       (response?['value'] as Map?) ?? const <String, dynamic>{},
     );
-    return (value['payment_resubmission_deadline_hours'] as num?)?.toInt() ?? 24;
+    return (value['payment_resubmission_deadline_hours'] as num?)?.toInt() ??
+        24;
   }
 }

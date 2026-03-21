@@ -35,6 +35,29 @@ Current local baseline is split into:
 - `migrations/20260319120500_create_capacity_publication_oneoff_trip_rpc.sql`
 - `migrations/20260319120600_enable_capacity_publication_policies.sql`
 - `migrations/20260319120700_harden_verification_helper_access.sql`
+- `migrations/20260320120000_add_shipment_domain_constraints.sql`
+- `migrations/20260320120100_create_exact_lane_search_rpc.sql`
+- `migrations/20260320120200_create_booking_confirmation_rpc.sql`
+- `migrations/20260320120300_enforce_booking_status_transitions.sql`
+- `migrations/20260320120400_create_payment_proof_review_rpc.sql`
+- `migrations/20260320120500_create_tracking_and_delivery_rpc.sql`
+- `migrations/20260320120600_create_dispute_and_payout_rpc.sql`
+- `migrations/20260320120700_create_carrier_review_rpc.sql`
+- `migrations/20260320120710_create_notification_device_rpc.sql`
+- `migrations/20260320120720_create_transactional_email_enqueue_rpc.sql`
+- `migrations/20260320120800_harden_notification_device_rules.sql`
+- `migrations/20260320120810_harden_email_delivery_rules.sql`
+- `migrations/20260320120820_create_support_request_email_rpc.sql`
+- `migrations/20260320120900_seed_runtime_and_feature_flag_settings.sql`
+- `migrations/20260320121000_create_typed_client_settings_rpc.sql`
+- `migrations/20260320121100_create_admin_operational_summary_rpc.sql`
+- `migrations/20260320121110_create_admin_platform_settings_rpc.sql`
+- `migrations/20260320121120_create_admin_profile_activation_rpc.sql`
+- `migrations/20260320121130_create_admin_email_retry_rpc.sql`
+- `migrations/20260320121200_track_generated_document_processing.sql`
+- `migrations/20260320121210_update_generated_document_record_helper.sql`
+- `migrations/20260320121220_add_generated_document_processing_locks.sql`
+- `migrations/20260320121230_create_generated_document_processing_rpc.sql`
 
 Rules:
 
@@ -92,6 +115,11 @@ Database functions / RPC responsibilities:
 - `create_upload_session`
 - `finalize_payment_proof`
 - `finalize_verification_document`
+- `enqueue_support_request_emails`
+- `claim_generated_document_jobs`
+- `complete_generated_document_processing`
+- `fail_generated_document_processing`
+- `recover_stale_generated_document_jobs`
 
 Edge Function responsibilities:
 
@@ -100,6 +128,14 @@ Edge Function responsibilities:
 - `email-provider-webhook`
 - `signed-file-url`
 - `support-email-dispatch`
+- `generated-document-worker`
+
+Production-grade alignment notes:
+
+- Edge Functions should orchestrate only HTTP/integration work and call RPC for canonical mutations
+- support email queueing is server-controlled through `enqueue_support_request_emails(...)`, not direct table inserts from Edge code
+- generated document workers claim, complete, fail, and recover jobs through RPC instead of mutating queue state ad hoc
+- scheduled maintenance recovers both email and generated-document worker locks before running expiry automation
 
 ## Secrets Placement
 
@@ -125,3 +161,7 @@ Edge Function responsibilities:
 
 - baseline SQL contract checks live in `supabase/tests/contracts.sql`
 - run them after reset against the local database with your preferred `psql` workflow
+- executable runtime security coverage lives in `supabase/tests/runtime_security_test.sql`
+- run it with `supabase test db "supabase/tests/runtime_security_test.sql"` after `supabase db reset --yes`
+- executable email outbox and webhook coverage lives in `supabase/tests/runtime_email_test.sql`
+- run it with `supabase test db "supabase/tests/runtime_email_test.sql"` after `supabase db reset --yes`

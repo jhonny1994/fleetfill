@@ -8,9 +8,10 @@ void main() {
     late String securityMigration;
 
     setUpAll(() {
-      schemaMigration = File(
-        'supabase/migrations/20260317143200_create_marketplace_core_tables.sql',
-      ).readAsStringSync() +
+      schemaMigration =
+          File(
+            'supabase/migrations/20260317143200_create_marketplace_core_tables.sql',
+          ).readAsStringSync() +
           File(
             'supabase/migrations/20260317143400_create_communications_and_platform_tables.sql',
           ).readAsStringSync();

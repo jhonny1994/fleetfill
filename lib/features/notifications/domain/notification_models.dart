@@ -16,7 +16,9 @@ class AppNotificationRecord {
       type: (json['type'] as String?)?.trim() ?? '',
       title: (json['title'] as String?)?.trim() ?? '',
       body: (json['body'] as String?)?.trim() ?? '',
-      data: Map<String, dynamic>.from((json['data'] as Map?) ?? const <String, dynamic>{}),
+      data: Map<String, dynamic>.from(
+        (json['data'] as Map?) ?? const <String, dynamic>{},
+      ),
       isRead: json['is_read'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String),
       readAt: DateTime.tryParse(json['read_at'] as String? ?? ''),
@@ -31,4 +33,18 @@ class AppNotificationRecord {
   final bool isRead;
   final DateTime createdAt;
   final DateTime? readAt;
+}
+
+class NotificationPage {
+  const NotificationPage({
+    required this.items,
+    required this.offset,
+    required this.limit,
+    required this.hasMore,
+  });
+
+  final List<AppNotificationRecord> items;
+  final int offset;
+  final int limit;
+  final bool hasMore;
 }

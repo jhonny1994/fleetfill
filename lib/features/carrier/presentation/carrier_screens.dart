@@ -149,7 +149,10 @@ class CarrierBookingsScreen extends ConsumerWidget {
                     '${_carrierBookingStatusLabel(s, booking.bookingStatus)} • ${BidiFormatters.latinIdentifier(booking.weightKg.toStringAsFixed(0))} kg',
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => context.push(
-                  AppRoutePath.sharedTrackingDetail.replaceFirst(':id', booking.id),
+                  AppRoutePath.sharedTrackingDetail.replaceFirst(
+                    ':id',
+                    booking.id,
+                  ),
                 ),
               );
             },
@@ -455,29 +458,27 @@ class _VehicleEditorScreenState extends ConsumerState<VehicleEditorScreen> {
   }
 
   String? _requiredValidator(String? value) {
-    return (value ?? '').trim().isEmpty
-        ? S.of(context).authRequiredFieldMessage
-        : null;
+    return validateRequiredField(S.of(context), value);
   }
 
   String? _positiveNumberValidator(String? value) {
-    final normalized = double.tryParse((value ?? '').trim());
-    if (normalized == null || normalized <= 0) {
-      return S.of(context).vehiclePositiveNumberMessage;
+    final s = S.of(context);
+    if ((value ?? '').trim().isEmpty) {
+      return s.authRequiredFieldMessage;
     }
-    return null;
+    return validatePositiveNumberField(
+      s,
+      value,
+      invalidMessage: s.vehiclePositiveNumberMessage,
+    );
   }
 
   String? _optionalNumberValidator(String? value) {
-    final trimmed = (value ?? '').trim();
-    if (trimmed.isEmpty) {
-      return null;
-    }
-    final normalized = double.tryParse(trimmed);
-    if (normalized == null || normalized <= 0) {
-      return S.of(context).vehiclePositiveNumberMessage;
-    }
-    return null;
+    return validateOptionalPositiveNumberField(
+      S.of(context),
+      value,
+      invalidMessage: S.of(context).vehiclePositiveNumberMessage,
+    );
   }
 
   double? _parseOptionalDouble(String value) {
@@ -903,7 +904,8 @@ String _carrierBookingStatusLabel(S s, BookingStatus status) {
     BookingStatus.confirmed => s.bookingStatusConfirmedLabel,
     BookingStatus.pickedUp => s.bookingStatusPickedUpLabel,
     BookingStatus.inTransit => s.bookingStatusInTransitLabel,
-    BookingStatus.deliveredPendingReview => s.bookingStatusDeliveredPendingReviewLabel,
+    BookingStatus.deliveredPendingReview =>
+      s.bookingStatusDeliveredPendingReviewLabel,
     BookingStatus.completed => s.bookingStatusCompletedLabel,
     BookingStatus.cancelled => s.bookingStatusCancelledLabel,
     BookingStatus.disputed => s.bookingStatusDisputedLabel,

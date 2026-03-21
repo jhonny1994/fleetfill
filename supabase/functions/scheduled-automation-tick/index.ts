@@ -60,6 +60,13 @@ Deno.serve(async (req: Request) => {
         'recover_stale_email_outbox_jobs',
         { p_lock_age_seconds: 900 },
       )
+    const {
+      data: recoveredDocumentJobs,
+      error: documentRecoveryError,
+    } = await serviceClient.rpc(
+      'recover_stale_generated_document_jobs',
+      { p_lock_age_seconds: 900 },
+    )
 
     const { data: expiredRejectedBookings, error: paymentExpiryError } = await serviceClient.rpc(
       'expire_payment_resubmission_deadlines',
@@ -69,10 +76,14 @@ Deno.serve(async (req: Request) => {
     )
 
     if (
-      recoveryError != null || paymentExpiryError != null ||
+      recoveryError != null || documentRecoveryError != null || paymentExpiryError != null ||
       deliveryExpiryError != null
     ) {
       console.error('recover_stale_email_outbox_jobs failed', recoveryError)
+      console.error(
+        'recover_stale_generated_document_jobs failed',
+        documentRecoveryError,
+      )
       console.error(
         'expire_payment_resubmission_deadlines failed',
         paymentExpiryError,
@@ -91,6 +102,7 @@ Deno.serve(async (req: Request) => {
       email_dispatch: workerPayload,
       generated_documents: documentWorkerPayload,
       recovered_stale_jobs: recoveredJobs ?? 0,
+      recovered_stale_generated_document_jobs: recoveredDocumentJobs ?? 0,
       delivery_grace_window_expiry: autoCompletedDeliveries ?? 0,
       payment_resubmission_expiry: expiredRejectedBookings ?? 0,
     })
