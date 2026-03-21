@@ -329,6 +329,16 @@ Terms and policies must clearly communicate:
 
 These terms and policies must exist as real user-facing surfaces before production launch.
 
+Required user-facing baseline copy must state all of the following in substance:
+
+- FleetFill receives shipper payment before carrier payout
+- each booking covers one shipment on one confirmed route or trip
+- shippers are responsible for accurate shipment details and uploaded proof accuracy
+- carriers are responsible for valid transport documents and lawful operating compliance
+- pricing breakdown, taxes, platform fees, and optional insurance are shown before proof submission
+- disputes must be opened during the documented delivery review window
+- finance, proof, support, and audit records may be retained for operational, compliance, and dispute handling needs
+
 ## 15. Release And Change Management
 
 Operational release rules:

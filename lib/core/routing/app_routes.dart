@@ -16,6 +16,7 @@ enum AppRouteName {
   sharedNotificationDetail,
   sharedSettings,
   sharedSupport,
+  sharedPolicies,
   sharedShipmentDetail,
   sharedBookingDetail,
   sharedTrackingDetail,
@@ -76,6 +77,7 @@ abstract final class AppRoutePath {
   static const sharedNotificationDetail = '/shared/notification/:id';
   static const sharedSettings = '/shared/settings';
   static const sharedSupport = '/shared/support';
+  static const sharedPolicies = '/shared/policies';
   static const sharedShipmentDetail = '/shared/shipment/:id';
   static const sharedBookingDetail = '/shared/booking/:id';
   static const sharedTrackingDetail = '/shared/tracking/:id';
@@ -100,7 +102,8 @@ abstract final class AppRoutePath {
   static const carrierProfile = '/carrier/profile';
   static const carrierVerification = '/carrier/profile/verification';
   static String carrierRouteCreate() => '$carrierRoutes/new-route';
-  static String carrierRouteDetail(String routeId) => '$carrierRoutes/route/$routeId';
+  static String carrierRouteDetail(String routeId) =>
+      '$carrierRoutes/route/$routeId';
   static String carrierRouteEdit(String routeId) =>
       '${carrierRouteDetail(routeId)}/edit';
   static String carrierOneOffTripCreate() => '$carrierRoutes/new-trip';

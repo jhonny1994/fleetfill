@@ -16,47 +16,106 @@ class NotificationsCenterScreen extends ConsumerWidget {
 
     return AppPageScaffold(
       title: s.notificationsCenterTitle,
-      child: AppAsyncStateView<List<AppNotificationRecord>>(
+      child: AppAsyncStateView<NotificationFeedState>(
         value: notificationsAsync,
-        onRetry: () => ref.invalidate(myNotificationsProvider),
-        data: (items) {
+        onRetry: () => ref.read(myNotificationsProvider.notifier).refresh(),
+        data: (feed) {
+          final items = feed.items;
           if (items.isEmpty) {
             return AppEmptyState(
               title: s.notificationsCenterTitle,
               message: s.notificationsCenterDescription,
             );
           }
-          return ListView.separated(
-            key: const PageStorageKey<String>('notifications-center-list'),
-            itemCount: items.length,
-            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-            itemBuilder: (context, index) {
-              final item = items[index];
-              final content = _notificationContent(context, item);
-              return AppListCard(
-                title: content.title,
-                subtitle: content.body,
-                leading: AppStatusChip(
-                  label: item.isRead
-                      ? s.statusReadyLabel
-                      : s.statusNeedsReviewLabel,
-                  tone: item.isRead
-                      ? AppStatusTone.success
-                      : AppStatusTone.warning,
-                ),
-                trailing: Text(
-                  _formatNotificationDate(context, item.createdAt),
-                ),
-                onTap: () => context.push(
-                  AppRoutePath.sharedNotificationDetail.replaceFirst(
-                    ':id',
-                    item.id,
+          final showFooter = feed.hasMore || feed.isLoadingMore;
+          return RefreshIndicator(
+            onRefresh: () =>
+                ref.read(myNotificationsProvider.notifier).refresh(),
+            child: ListView.separated(
+              key: const PageStorageKey<String>('notifications-center-list'),
+              itemCount: items.length + (showFooter ? 1 : 0),
+              separatorBuilder: (_, index) =>
+                  index == items.length - 1 && !showFooter
+                  ? const SizedBox.shrink()
+                  : const SizedBox(height: AppSpacing.sm),
+              itemBuilder: (context, index) {
+                if (index >= items.length) {
+                  return _NotificationsFooter(
+                    isLoadingMore: feed.isLoadingMore,
+                    onLoadMore: feed.isLoadingMore
+                        ? null
+                        : () => unawaited(_loadMore(context, ref)),
+                  );
+                }
+
+                final item = items[index];
+                final content = _notificationContent(context, item);
+                return AppListCard(
+                  title: content.title,
+                  subtitle: content.body,
+                  leading: AppStatusChip(
+                    label: item.isRead
+                        ? s.statusReadyLabel
+                        : s.statusNeedsReviewLabel,
+                    tone: item.isRead
+                        ? AppStatusTone.success
+                        : AppStatusTone.warning,
                   ),
-                ),
-              );
-            },
+                  trailing: Text(
+                    _formatNotificationDate(context, item.createdAt),
+                  ),
+                  onTap: () => context.push(
+                    AppRoutePath.sharedNotificationDetail.replaceFirst(
+                      ':id',
+                      item.id,
+                    ),
+                  ),
+                );
+              },
+            ),
           );
         },
+      ),
+    );
+  }
+
+  Future<void> _loadMore(BuildContext context, WidgetRef ref) async {
+    try {
+      await ref.read(myNotificationsProvider.notifier).loadMore();
+    } on Exception catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(
+        context,
+        mapAppErrorMessage(S.of(context), error),
+      );
+    }
+  }
+}
+
+class _NotificationsFooter extends StatelessWidget {
+  const _NotificationsFooter({
+    required this.isLoadingMore,
+    required this.onLoadMore,
+  });
+
+  final bool isLoadingMore;
+  final VoidCallback? onLoadMore;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return Center(
+      child: OutlinedButton(
+        onPressed: onLoadMore,
+        child: Text(S.of(context).loadMoreLabel),
       ),
     );
   }
@@ -167,9 +226,9 @@ _NotificationContent _notificationContent(
 ) {
   final s = S.of(context);
   return switch (notification.type) {
-    'booking_created' => _NotificationContent(
-      title: s.notificationBookingCreatedTitle,
-      body: s.notificationBookingCreatedBody,
+    'booking_confirmed' => _NotificationContent(
+      title: s.notificationBookingConfirmedTitle,
+      body: s.notificationBookingConfirmedBody,
     ),
     'payment_proof_submitted' => _NotificationContent(
       title: s.notificationPaymentProofSubmittedTitle,
@@ -192,6 +251,18 @@ _NotificationContent _notificationContent(
     'carrier_review_submitted' => _NotificationContent(
       title: s.notificationCarrierReviewSubmittedTitle,
       body: s.notificationCarrierReviewSubmittedBody,
+    ),
+    'dispute_opened' => _NotificationContent(
+      title: s.notificationDisputeOpenedTitle,
+      body: s.notificationDisputeOpenedBody,
+    ),
+    'dispute_resolved' => _NotificationContent(
+      title: s.notificationDisputeResolvedTitle,
+      body: s.notificationDisputeResolvedBody,
+    ),
+    'payout_released' => _NotificationContent(
+      title: s.notificationPayoutReleasedTitle,
+      body: s.notificationPayoutReleasedBody,
     ),
     'generated_document_ready' => _NotificationContent(
       title: s.notificationGeneratedDocumentReadyTitle,

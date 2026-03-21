@@ -19,6 +19,30 @@ begin
   end if;
 
   if not exists (
+    select 1 from pg_proc where proname = 'enqueue_support_request_emails'
+  ) then
+    raise exception 'Expected enqueue_support_request_emails to exist';
+  end if;
+
+  if not exists (
+    select 1 from pg_proc where proname = 'claim_generated_document_jobs'
+  ) then
+    raise exception 'Expected claim_generated_document_jobs to exist';
+  end if;
+
+  if not exists (
+    select 1 from pg_proc where proname = 'complete_generated_document_processing'
+  ) then
+    raise exception 'Expected complete_generated_document_processing to exist';
+  end if;
+
+  if not exists (
+    select 1 from pg_proc where proname = 'recover_stale_generated_document_jobs'
+  ) then
+    raise exception 'Expected recover_stale_generated_document_jobs to exist';
+  end if;
+
+  if not exists (
     select 1
     from pg_policies
     where schemaname = 'public'

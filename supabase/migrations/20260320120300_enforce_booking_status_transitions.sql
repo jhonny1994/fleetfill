@@ -8,7 +8,7 @@ immutable
 as $$
   select case p_old
     when 'pending_payment' then p_new in ('pending_payment', 'payment_under_review', 'cancelled')
-    when 'payment_under_review' then p_new in ('payment_under_review', 'confirmed', 'cancelled')
+    when 'payment_under_review' then p_new in ('pending_payment', 'payment_under_review', 'confirmed', 'cancelled')
     when 'confirmed' then p_new in ('confirmed', 'picked_up', 'cancelled')
     when 'picked_up' then p_new in ('picked_up', 'in_transit')
     when 'in_transit' then p_new in ('in_transit', 'delivered_pending_review')

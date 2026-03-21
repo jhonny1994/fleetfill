@@ -11,26 +11,49 @@ final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
 });
 
 class NotificationRepository {
-  const NotificationRepository({required this.environment, required this.logger});
+  const NotificationRepository({
+    required this.environment,
+    required this.logger,
+  });
+
+  static const int notificationsPageSize = 50;
 
   final AppEnvironmentConfig environment;
   final AppLogger logger;
 
   SupabaseClient get _client => Supabase.instance.client;
 
-  Future<List<AppNotificationRecord>> fetchMyNotifications() async {
+  Future<NotificationPage> fetchMyNotificationsPage({
+    int offset = 0,
+    int limit = notificationsPageSize,
+  }) async {
+    final normalizedOffset = offset < 0 ? 0 : offset;
+    final normalizedLimit = limit < 1 ? notificationsPageSize : limit;
     final response = await _client
         .from('notifications')
         .select()
         .order('created_at', ascending: false)
-        .limit(100);
-    return (response as List<dynamic>)
+        .range(normalizedOffset, normalizedOffset + normalizedLimit - 1);
+    final items = (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
         .map(AppNotificationRecord.fromJson)
         .toList(growable: false);
+    return NotificationPage(
+      items: items,
+      offset: normalizedOffset,
+      limit: normalizedLimit,
+      hasMore: items.length >= normalizedLimit,
+    );
   }
 
-  Future<AppNotificationRecord?> fetchNotificationById(String notificationId) async {
+  Future<List<AppNotificationRecord>> fetchMyNotifications() async {
+    final page = await fetchMyNotificationsPage();
+    return page.items;
+  }
+
+  Future<AppNotificationRecord?> fetchNotificationById(
+    String notificationId,
+  ) async {
     final response = await _client
         .from('notifications')
         .select()
@@ -40,7 +63,9 @@ class NotificationRepository {
     return AppNotificationRecord.fromJson(response);
   }
 
-  Future<AppNotificationRecord> markNotificationRead(String notificationId) async {
+  Future<AppNotificationRecord> markNotificationRead(
+    String notificationId,
+  ) async {
     final response = await _client.rpc<Map<String, dynamic>>(
       'mark_notification_read',
       params: {'p_notification_id': notificationId},
@@ -53,10 +78,13 @@ class NotificationRepository {
     required String platform,
     String? locale,
   }) async {
-    await _client.rpc<Map<String, dynamic>>('register_user_device', params: {
-      'p_push_token': pushToken,
-      'p_platform': platform,
-      'p_locale': locale,
-    });
+    await _client.rpc<Map<String, dynamic>>(
+      'register_user_device',
+      params: {
+        'p_push_token': pushToken,
+        'p_platform': platform,
+        'p_locale': locale,
+      },
+    );
   }
 }

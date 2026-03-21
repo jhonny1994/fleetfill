@@ -1,0 +1,187 @@
+# FleetFill Audit For Phases 0 To 14
+
+This document is the active cross-phase audit and production-readiness tracker for phases 0 through 14.
+
+Use it to:
+
+- review what is actually implemented, not what was only intended
+- track concrete remediation work with file references
+- separate code-fix work from manual or operator-only validation
+- avoid losing important findings in chat history
+
+This file is not canonical product truth. It is a working audit and remediation tracker.
+
+## Current Verdict
+
+Phase 14 is still not fully complete, but the remaining open items are now mostly representative-device or operator-environment checks rather than unresolved backend/product-code gaps.
+
+Why:
+
+- true device-backed integration execution is still pending even though broader CI-capable cross-feature flow coverage now exists
+- several profile-mode, accessibility, localization, navigation, and staging checks still require manual or operator-driven validation
+
+## What Is Already Strong
+
+- phases 0 through 4 are materially aligned after the earlier remediation pass
+- core route and booking architecture is broadly aligned with the canonical docs
+- newer Supabase migration naming and separation is much better aligned with `docs/09-supabase-implementation-notes.md` and `docs/11-delivery-playbook.md`
+- generated document processing now has a clearer worker boundary with claim and recovery semantics
+- typed client settings remain aligned with the controlled settings contract
+
+## Active Remediation Checklist
+
+### Critical
+
+- [x] Restrict `public.create_generated_document_record(...)` so it cannot be called by arbitrary authenticated users without strict ownership and workflow checks (`supabase/migrations/20260320121210_update_generated_document_record_helper.sql`, `supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql`)
+- [x] Harden `public.append_tracking_event(...)` with participant authorization, event allowlisting, and actor integrity so timeline events cannot be forged (`supabase/migrations/20260320120500_create_tracking_and_delivery_rpc.sql`)
+- [x] Add required admin audit logging to payment approval and rejection workflows (`supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql`, `docs/06-operations-and-compliance.md`)
+- [x] Add required admin audit logging to dispute resolution and payout release workflows (`supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `docs/06-operations-and-compliance.md`)
+- [x] Apply recent admin step-up enforcement consistently to dispute resolution and payout release, not only to settings/profile/email retry actions (`supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `supabase/migrations/20260320121110_create_admin_platform_settings_rpc.sql`, `supabase/migrations/20260320121130_create_admin_email_retry_rpc.sql`)
+
+### High
+
+- [x] Fix the dead-letter email resend safety bug so non-retryable failures stay blocked (`supabase/migrations/20260320121130_create_admin_email_retry_rpc.sql`)
+- [x] Add explicit rate limiting to dispute creation because the canonical docs classify it as high-risk (`supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `docs/04-data-and-security-model.md`)
+- [x] Complete the transactional email event inventory so implementation matches the intended lifecycle events for booking, payment, delivery review, dispute, and payout (`supabase/functions/_shared/email-runtime.ts`, `docs/06-operations-and-compliance.md`)
+- [x] Align booking lifecycle event naming and behavior where implementation still drifts from canonical semantics such as `booking_confirmed` vs current alternatives (`supabase/migrations/20260320120200_create_booking_confirmation_rpc.sql`, `docs/03-technical-architecture.md`, `docs/06-operations-and-compliance.md`)
+- [x] Replace source-text security evidence tests with executed runtime tests for RLS, signed URLs, upload restrictions, audit logging, rate limiting, and transaction boundaries (`supabase/tests/runtime_security_test.sql`, `supabase/tests/contracts.sql`)
+
+### Medium
+
+- [x] Rename and reorganize phase-oriented tests so they are feature-based or behavior-based instead of plan-timeline based (`test/features/...`, `test/contracts/supabase/...`)
+- [x] Split mixed-concern test files into domain-specific files so failures are easier to diagnose and maintain (`test/features/...`, `test/contracts/supabase/...`)
+- [x] Move SQL/source regression checks into explicitly named contract or source-regression tests instead of presenting them as repository or integration verification (`test/contracts/supabase/...`)
+- [x] Replace the current integration smoke test with behavior-driven integration coverage for real critical flows (`integration_test/settings_support_and_policies_smoke_test.dart`, `docs/07-implementation-plan.md`)
+- [x] Implement real notification pagination or cursoring instead of a shallow bounded list approach if the current provider/repository contract remains fixed-size (`lib/features/notifications/infrastructure/notification_repository.dart`, `lib/features/notifications/application/notification_feed_controller.dart`, `lib/features/notifications/presentation/notifications_screens.dart`)
+- [x] Reconcile Phase 11 push-notification claims with actual implementation state so the docs and checklist do not overstate capability (`docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`, `pubspec.yaml`)
+- [x] Add broader CI-capable critical-flow coverage for startup restoration, shipper booking/payment state, carrier milestone progression, and admin queue refresh (`test/critical_workflow_flows_test.dart`, `docs/07-implementation-plan.md`)
+
+### Low
+
+- [x] Review test literals that depend on exact English copy and replace them with more durable assertions where practical (`test/foundation_localization_accessibility_test.dart`, `test/features/settings/legal_policies_screen_test.dart`, `integration_test/settings_support_and_policies_smoke_test.dart`)
+- [ ] Keep documenting older broad historical migrations as grandfathered baseline history, while keeping all future migrations narrow and change-oriented (`supabase/README.md`, `docs/11-delivery-playbook.md`)
+
+## Manual Or User-Intervention Validation Still Required
+
+These are real Phase 14 items, but they require representative devices, staging setup, or operator execution rather than local code changes alone.
+
+- [ ] Profile the app on a representative Android device in profile mode
+- [ ] Validate repeated jank and long-list behavior on the target device class
+- [ ] Run TalkBack and large-text accessibility checks
+- [ ] Run manual Arabic, French, and English localization QA
+- [ ] Rehearse critical shipper, carrier, and admin flows on a realistic device or staging path
+- [ ] Verify hosted secrets, transactional email provider behavior, and scheduled automation in the real target environment
+- [ ] Run true `integration_test/` device-backed flows once a supported local device/toolchain is available; current Windows execution is blocked by missing ATL/MFC desktop prerequisites for `flutter_secure_storage_windows`
+
+## Phase-By-Phase Findings
+
+### Phases 0 To 4
+
+- Broadly aligned after the earlier remediation work
+- Historical findings remain tracked in `docs/10-audit-phases-0-to-4.md`
+- No current blocker here is the main reason Phase 14 remains open
+
+### Phase 5 - Capacity Publication
+
+- Capacity publication exists and is materially aligned
+- Verified-carrier and vehicle gating is server-backed
+- Remaining issue is mostly test quality rather than missing feature truth
+
+### Phase 6 - Search
+
+- Exact-lane search exists and is server-driven
+- Search contract behavior is stronger than some later flows
+- Performance and pagination still need real validation beyond local confidence
+
+### Phase 7 - Booking And Pricing
+
+- Core booking transaction shape is good: reservation, booking record, notifications, and outbox enqueueing are bundled in DB logic
+- Remaining drift is mainly lifecycle naming and comms completeness
+
+### Phase 8 - Payment Proof, Escrow, And Ledger
+
+- Core payment review and ledger model is present
+- Sensitive admin review actions still need mandatory audit logging to match the operational docs
+
+### Phase 9 - Tracking, Delivery, And Completion
+
+- Tracking append-only posture exists conceptually
+- Current RPC hardening is not sufficient yet because timeline event insertion is too permissive
+
+### Phase 10 - Disputes, Refunds, And Payouts
+
+- This is the biggest remaining business-control gap
+- Dispute and payout actions need both audit logging and fresh-step-up enforcement consistency
+
+### Phase 11 - Ratings, Notifications, And Support
+
+- In-app notifications and support surfaces exist
+- Push delivery is still overstated vs actual implementation
+- Support email queueing and email lifecycle should be hardened and fully aligned with the event model
+
+### Phase 12 - Admin Surface And Operations
+
+- Admin shell and operational pages are real and useful
+- But the most sensitive admin actions are still less hardened than some lower-risk admin controls
+
+### Phase 13 - Generated Documents
+
+- Generated-document processing is one of the stronger backend areas after the recent worker separation work
+- The remaining blocker is the exposed helper/grant model, not the overall architecture direction
+
+### Phase 14 - Hardening, Testing, And Release Readiness
+
+- Still open
+- The current automation proves some intent and structure, but not enough executed behavior to justify full completion
+
+## Test Strategy Findings
+
+Current issues:
+
+- source-level contract checks still exist for broad schema regression, but critical security and transaction behavior now also has executable pgTAP coverage in `supabase/tests/runtime_security_test.sql`
+- device-backed integration execution is still pending even though broader cross-feature widget-flow coverage now exists in `test/critical_workflow_flows_test.dart`
+
+Recommended target structure:
+
+- `test/core/...`
+- `test/shared/...`
+- `test/features/auth/...`
+- `test/features/verification/...`
+- `test/features/capacity/...`
+- `test/features/search/...`
+- `test/features/booking/...`
+- `test/features/payment/...`
+- `test/features/tracking/...`
+- `test/features/disputes/...`
+- `test/features/notifications/...`
+- `test/features/admin/...`
+- `test/contracts/supabase/...` for explicit SQL or source-regression checks only
+- `integration_test/...` only for true end-to-end or near-end-to-end flow verification
+
+Recent reorganization completed:
+
+- phase-oriented test files were split into feature-based and contract-based files under `test/features/...`, `test/shared/...`, `test/core/...`, and `test/contracts/supabase/...`
+- the integration smoke test was renamed to `integration_test/settings_support_and_policies_smoke_test.dart`
+- SQL/source checks now live in explicit Supabase contract tests rather than in files named as generic phase work
+
+## Validation Baseline For Closing This Audit
+
+Do not close the critical or high items above unless the relevant validations pass again:
+
+- `dart analyze`
+- `flutter test`
+- `supabase db reset --yes`
+- `supabase db lint --debug`
+
+And for the security/test-hardening items, closure should also include executed verification, not just source-file assertions.
+
+## Progress Notes
+
+- executable runtime DB coverage now exercises RLS, upload-session enforcement, signed URL limits, admin step-up enforcement, audit logging, rollback-sensitive workflows, and email outbox/provider-event handling through `supabase/tests/runtime_security_test.sql` and `supabase/tests/runtime_email_test.sql`
+- newer Supabase migrations are now more change-oriented and easier to review than the earlier broad phase bundles
+- support email enqueueing and generated-document worker orchestration are more aligned with the intended Edge Function vs RPC boundary
+- the highest-risk Supabase findings from the recent audit were remediated in migrations covering generated documents, tracking events, payment review, disputes, payouts, and admin step-up enforcement
+- the repo now has a central audit file for phases 0 through 14 so findings can be tracked without depending on chat history
+- notifications now page through repository/controller state with refresh plus load-more behavior, matching the long-list guidance better than the previous fixed 50-item fetch
+- notification, accessibility, and shared-settings tests now rely more on localized/runtime-derived expectations instead of exact English literals
+- CI-capable critical-flow coverage now exists in `test/critical_workflow_flows_test.dart`, while true device-backed `integration_test/` execution still depends on a supported local device/toolchain

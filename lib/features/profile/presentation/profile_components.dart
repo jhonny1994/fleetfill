@@ -100,7 +100,9 @@ class ProfileDetailsFormFields extends StatelessWidget {
         AuthTextField(
           controller: nameController,
           label: s.profileFullNameLabel,
-          textInputAction: isCarrier ? TextInputAction.next : TextInputAction.done,
+          textInputAction: isCarrier
+              ? TextInputAction.next
+              : TextInputAction.done,
           validator: requiredValidator,
         ),
         if (isCarrier) ...[

@@ -1,6 +1,5 @@
 import {
   createClient,
-  createServiceClient,
   jsonResponse,
   normalizeSupportedLocale,
   requiredEnv,
@@ -51,82 +50,42 @@ Deno.serve(async (req: Request) => {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 
-    const serviceClient = createServiceClient()
     const profileId = user.id
     const locale = normalizeSupportedLocale(payload.locale)
     const recipientEmail = user.email.trim().toLowerCase()
     const supportInbox = requiredEnv('SUPPORT_EMAIL_TO').trim().toLowerCase()
-    const ackDedupeKey = `support_ack:${profileId}:${crypto.randomUUID()}`
-    const forwardDedupeKey = `support_forward:${profileId}:${crypto.randomUUID()}`
-
-    const { error: rateLimitError } = await serviceClient.rpc(
-      'assert_rate_limit',
+    const { data, error } = await userClient.rpc(
+      'enqueue_support_request_emails',
       {
-        p_key: `support-email-dispatch:${profileId}`,
-        p_limit: 3,
-        p_window_seconds: 3600,
+        p_locale: locale,
+        p_subject: payload.subject.trim(),
+        p_message: payload.message.trim(),
+        p_support_inbox_email: supportInbox,
       },
     )
 
-    if (rateLimitError != null) {
-      return jsonResponse({
-        error: 'Support acknowledgement rate limit exceeded',
-      }, 429)
-    }
+    if (error != null) {
+      const message = error.message.toLowerCase()
+      if (message.includes('rate limit')) {
+        return jsonResponse({
+          error: 'Support acknowledgement rate limit exceeded',
+        }, 429)
+      }
 
-    const { data: insertedJobs, error: insertJobsError } = await serviceClient
-      .from('email_outbox_jobs')
-      .insert([
-        {
-          event_key: 'support_acknowledgement',
-          dedupe_key: ackDedupeKey,
-          profile_id: profileId,
-          template_key: 'support_acknowledgement',
-          locale,
-          recipient_email: recipientEmail,
-          priority: 'high',
-          status: 'queued',
-          available_at: new Date().toISOString(),
-          payload_snapshot: {
-            subject: payload.subject.trim(),
-            message: payload.message.trim(),
-          },
-        },
-        {
-          event_key: 'support_request_forwarded',
-          dedupe_key: forwardDedupeKey,
-          profile_id: profileId,
-          template_key: 'support_request_forwarded',
-          locale,
-          recipient_email: supportInbox,
-          priority: 'high',
-          status: 'queued',
-          available_at: new Date().toISOString(),
-          payload_snapshot: {
-            subject: payload.subject.trim(),
-            message: payload.message.trim(),
-            sender_email: recipientEmail,
-            profile_id: profileId,
-          },
-        },
-      ])
-      .select()
-
-    if (insertJobsError != null) {
-      console.error('support email enqueue failed', insertJobsError)
+      console.error('support email enqueue failed', error)
       return jsonResponse({ error: 'Failed to enqueue support request' }, 500)
     }
 
-    const jobs = (insertedJobs ?? []) as Array<
-      { id: string; event_key: string }
-    >
-    const acknowledgementJob = jobs.find((job) => job.event_key === 'support_acknowledgement')
-    const forwardJob = jobs.find((job) => job.event_key === 'support_request_forwarded')
+    const result = (data ?? {}) as {
+      acknowledgement_job_id?: string
+      forward_job_id?: string
+      status?: string
+    }
 
     return jsonResponse({
-      acknowledgement_job_id: acknowledgementJob?.id,
-      forward_job_id: forwardJob?.id,
-      status: 'queued',
+      acknowledgement_job_id: result.acknowledgement_job_id,
+      forward_job_id: result.forward_job_id,
+      status: result.status ?? 'queued',
     })
   } catch (error) {
     console.error('support-email-dispatch failed', error)

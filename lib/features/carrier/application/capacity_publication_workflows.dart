@@ -43,7 +43,9 @@ class CapacityPublicationWorkflowController {
     required DateTime effectiveFrom,
     required bool isActive,
   }) async {
-    final route = await ref.read(carrierPublicationRepositoryProvider).createRoute(
+    final route = await ref
+        .read(carrierPublicationRepositoryProvider)
+        .createRoute(
           vehicleId: vehicleId,
           originCommuneId: originCommuneId,
           destinationCommuneId: destinationCommuneId,
@@ -117,7 +119,9 @@ class CapacityPublicationWorkflowController {
     required double pricePerKgDzd,
     required bool isActive,
   }) async {
-    final trip = await ref.read(carrierPublicationRepositoryProvider).createOneOffTrip(
+    final trip = await ref
+        .read(carrierPublicationRepositoryProvider)
+        .createOneOffTrip(
           vehicleId: vehicleId,
           originCommuneId: originCommuneId,
           destinationCommuneId: destinationCommuneId,
@@ -142,7 +146,9 @@ class CapacityPublicationWorkflowController {
     required double pricePerKgDzd,
     required bool isActive,
   }) async {
-    final trip = await ref.read(carrierPublicationRepositoryProvider).updateOneOffTrip(
+    final trip = await ref
+        .read(carrierPublicationRepositoryProvider)
+        .updateOneOffTrip(
           tripId: tripId,
           vehicleId: vehicleId,
           originCommuneId: originCommuneId,
@@ -158,7 +164,9 @@ class CapacityPublicationWorkflowController {
   }
 
   Future<void> deleteOneOffTrip(String tripId) async {
-    await ref.read(carrierPublicationRepositoryProvider).deleteOneOffTrip(tripId);
+    await ref
+        .read(carrierPublicationRepositoryProvider)
+        .deleteOneOffTrip(tripId);
     invalidateOneOffTrip(tripId);
   }
 

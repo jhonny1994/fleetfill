@@ -116,16 +116,20 @@ class _MyRoutesScreenState extends ConsumerState<MyRoutesScreen> {
               routesAsync: routesAsync,
               communesAsync: communesAsync,
               vehiclesAsync: vehiclesAsync,
-              onLoadMore: () =>
-                  setState(() => _routeLimit += CarrierPublicationRepository.defaultPageSize),
+              onLoadMore: () => setState(
+                () =>
+                    _routeLimit += CarrierPublicationRepository.defaultPageSize,
+              ),
             )
           else
             _PublicationOneOffTripList(
               tripsAsync: tripsAsync,
               communesAsync: communesAsync,
               vehiclesAsync: vehiclesAsync,
-              onLoadMore: () =>
-                  setState(() => _tripLimit += CarrierPublicationRepository.defaultPageSize),
+              onLoadMore: () => setState(
+                () =>
+                    _tripLimit += CarrierPublicationRepository.defaultPageSize,
+              ),
             ),
         ],
       ),
@@ -149,7 +153,9 @@ class _MyRoutesScreenState extends ConsumerState<MyRoutesScreen> {
                   subtitle: s.routeEditorDescription,
                   onTap: () {
                     Navigator.of(context).pop();
-                    unawaited(this.context.push(AppRoutePath.carrierRouteCreate()));
+                    unawaited(
+                      this.context.push(AppRoutePath.carrierRouteCreate()),
+                    );
                   },
                   trailing: const Icon(Icons.chevron_right_rounded),
                 ),
@@ -228,7 +234,8 @@ class _PublicationRouteList extends StatelessWidget {
           );
         }
 
-        final canLoadMore = routes.length >= CarrierPublicationRepository.defaultPageSize;
+        final canLoadMore =
+            routes.length >= CarrierPublicationRepository.defaultPageSize;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,8 +249,17 @@ class _PublicationRouteList extends StatelessWidget {
               (route) => Padding(
                 padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                 child: AppListCard(
-                  title: _laneLabel(context, communeMap, route.originCommuneId, route.destinationCommuneId),
-                  subtitle: _routeSubtitle(context, route, vehicleMap[route.vehicleId]),
+                  title: _laneLabel(
+                    context,
+                    communeMap,
+                    route.originCommuneId,
+                    route.destinationCommuneId,
+                  ),
+                  subtitle: _routeSubtitle(
+                    context,
+                    route,
+                    vehicleMap[route.vehicleId],
+                  ),
                   leading: AppStatusChip(
                     label: route.isActive
                         ? s.publicationActiveLabel
@@ -332,7 +348,8 @@ class _PublicationOneOffTripList extends StatelessWidget {
           );
         }
 
-        final canLoadMore = trips.length >= CarrierPublicationRepository.defaultPageSize;
+        final canLoadMore =
+            trips.length >= CarrierPublicationRepository.defaultPageSize;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -424,10 +441,12 @@ class CarrierRouteDetailScreen extends ConsumerWidget {
             return const AppLoadingState();
           }
           final communeMap = {
-            for (final commune in communesAsync.requireValue) commune.id: commune,
+            for (final commune in communesAsync.requireValue)
+              commune.id: commune,
           };
           final vehicleMap = {
-            for (final vehicle in vehiclesAsync.requireValue) vehicle.id: vehicle,
+            for (final vehicle in vehiclesAsync.requireValue)
+              vehicle.id: vehicle,
           };
 
           return ListView(
@@ -447,7 +466,9 @@ class CarrierRouteDetailScreen extends ConsumerWidget {
                 rows: [
                   ProfileSummaryRow(
                     label: s.routeVehicleLabel,
-                    value: vehicleMap[route.vehicleId]?.plateNumber ?? route.vehicleId,
+                    value:
+                        vehicleMap[route.vehicleId]?.plateNumber ??
+                        route.vehicleId,
                   ),
                   ProfileSummaryRow(
                     label: s.routeDepartureTimeLabel,
@@ -463,11 +484,13 @@ class CarrierRouteDetailScreen extends ConsumerWidget {
                   ),
                   ProfileSummaryRow(
                     label: s.routePricePerKgLabel,
-                    value: '${BidiFormatters.latinIdentifier(route.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
+                    value:
+                        '${BidiFormatters.latinIdentifier(route.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
                   ),
                   ProfileSummaryRow(
                     label: s.vehicleCapacityWeightLabel,
-                    value: '${BidiFormatters.latinIdentifier(route.totalCapacityKg.toStringAsFixed(0))} kg',
+                    value:
+                        '${BidiFormatters.latinIdentifier(route.totalCapacityKg.toStringAsFixed(0))} kg',
                   ),
                   ProfileSummaryRow(
                     label: s.vehicleCapacityVolumeLabel,
@@ -512,9 +535,14 @@ class CarrierRouteDetailScreen extends ConsumerWidget {
                     children: revisions
                         .map(
                           (revision) => Padding(
-                            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.sm,
+                            ),
                             child: AppListCard(
-                              title: _formatDate(context, revision.effectiveFrom),
+                              title: _formatDate(
+                                context,
+                                revision.effectiveFrom,
+                              ),
                               subtitle:
                                   '${_formatSqlTime(context, revision.defaultDepartureTime)} • ${BidiFormatters.latinIdentifier(revision.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
                             ),
@@ -574,7 +602,11 @@ class CarrierRouteDetailScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _deleteRoute(BuildContext context, WidgetRef ref, String routeId) async {
+  Future<void> _deleteRoute(
+    BuildContext context,
+    WidgetRef ref,
+    String routeId,
+  ) async {
     final s = S.of(context);
     try {
       final confirmed = await _confirmPublicationAction(
@@ -586,7 +618,9 @@ class CarrierRouteDetailScreen extends ConsumerWidget {
         return;
       }
 
-      await ref.read(capacityPublicationWorkflowControllerProvider).deleteRoute(routeId);
+      await ref
+          .read(capacityPublicationWorkflowControllerProvider)
+          .deleteRoute(routeId);
       if (!context.mounted) {
         return;
       }
@@ -633,10 +667,12 @@ class CarrierOneOffTripDetailScreen extends ConsumerWidget {
             return const AppLoadingState();
           }
           final communeMap = {
-            for (final commune in communesAsync.requireValue) commune.id: commune,
+            for (final commune in communesAsync.requireValue)
+              commune.id: commune,
           };
           final vehicleMap = {
-            for (final vehicle in vehiclesAsync.requireValue) vehicle.id: vehicle,
+            for (final vehicle in vehiclesAsync.requireValue)
+              vehicle.id: vehicle,
           };
 
           return ListView(
@@ -656,7 +692,9 @@ class CarrierOneOffTripDetailScreen extends ConsumerWidget {
                 rows: [
                   ProfileSummaryRow(
                     label: s.routeVehicleLabel,
-                    value: vehicleMap[trip.vehicleId]?.plateNumber ?? trip.vehicleId,
+                    value:
+                        vehicleMap[trip.vehicleId]?.plateNumber ??
+                        trip.vehicleId,
                   ),
                   ProfileSummaryRow(
                     label: s.oneOffTripDepartureLabel,
@@ -664,11 +702,13 @@ class CarrierOneOffTripDetailScreen extends ConsumerWidget {
                   ),
                   ProfileSummaryRow(
                     label: s.routePricePerKgLabel,
-                    value: '${BidiFormatters.latinIdentifier(trip.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
+                    value:
+                        '${BidiFormatters.latinIdentifier(trip.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
                   ),
                   ProfileSummaryRow(
                     label: s.vehicleCapacityWeightLabel,
-                    value: '${BidiFormatters.latinIdentifier(trip.totalCapacityKg.toStringAsFixed(0))} kg',
+                    value:
+                        '${BidiFormatters.latinIdentifier(trip.totalCapacityKg.toStringAsFixed(0))} kg',
                   ),
                   ProfileSummaryRow(
                     label: s.vehicleCapacityVolumeLabel,
@@ -711,7 +751,9 @@ class CarrierOneOffTripDetailScreen extends ConsumerWidget {
     try {
       final confirmed = await _confirmPublicationAction(
         context,
-        title: trip.isActive ? s.oneOffTripDeactivateAction : s.oneOffTripActivateAction,
+        title: trip.isActive
+            ? s.oneOffTripDeactivateAction
+            : s.oneOffTripActivateAction,
         message: trip.isActive
             ? s.oneOffTripDeactivateConfirmationMessage
             : s.oneOffTripActivateConfirmationMessage,
@@ -739,7 +781,11 @@ class CarrierOneOffTripDetailScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _deleteTrip(BuildContext context, WidgetRef ref, String tripId) async {
+  Future<void> _deleteTrip(
+    BuildContext context,
+    WidgetRef ref,
+    String tripId,
+  ) async {
     final s = S.of(context);
     try {
       final confirmed = await _confirmPublicationAction(
@@ -776,7 +822,8 @@ class RouteEditorScreen extends ConsumerStatefulWidget {
   ConsumerState<RouteEditorScreen> createState() => _RouteEditorScreenState();
 }
 
-class _RouteEditorScreenState extends _BasePublicationEditorState<RouteEditorScreen> {
+class _RouteEditorScreenState
+    extends _BasePublicationEditorState<RouteEditorScreen> {
   final Set<int> _selectedDays = <int>{};
   DateTime? _effectiveDate;
   TimeOfDay? _departureTime;
@@ -803,7 +850,8 @@ class _RouteEditorScreenState extends _BasePublicationEditorState<RouteEditorScr
         _selectedVehicleId = route?.vehicleId;
         _selectedOriginCommuneId = route?.originCommuneId;
         _selectedDestinationCommuneId = route?.destinationCommuneId;
-        _weightController.text = route?.totalCapacityKg.toStringAsFixed(0) ?? '';
+        _weightController.text =
+            route?.totalCapacityKg.toStringAsFixed(0) ?? '';
         _volumeController.text = route?.totalCapacityVolumeM3?.toString() ?? '';
         _priceController.text = route?.pricePerKgDzd.toStringAsFixed(0) ?? '';
         _isActive = route?.isActive ?? true;
@@ -832,7 +880,8 @@ class _RouteEditorScreenState extends _BasePublicationEditorState<RouteEditorScr
               label: s.routeOriginLabel,
               communeId: _selectedOriginCommuneId,
               communes: communes,
-              onSelect: (value) => setState(() => _selectedOriginCommuneId = value),
+              onSelect: (value) =>
+                  setState(() => _selectedOriginCommuneId = value),
             ),
             const SizedBox(height: AppSpacing.md),
             _CommuneSelectorField(
@@ -868,7 +917,9 @@ class _RouteEditorScreenState extends _BasePublicationEditorState<RouteEditorScr
             const SizedBox(height: AppSpacing.md),
             _DateButtonField(
               label: s.routeEffectiveFromLabel,
-              value: _effectiveDate == null ? null : _formatDate(context, _effectiveDate!),
+              value: _effectiveDate == null
+                  ? null
+                  : _formatDate(context, _effectiveDate!),
               onPressed: () => unawaited(_pickEffectiveDate(context)),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -913,7 +964,9 @@ class _RouteEditorScreenState extends _BasePublicationEditorState<RouteEditorScr
             ),
             const SizedBox(height: AppSpacing.lg),
             AuthSubmitButton(
-              label: widget.routeId == null ? s.myRoutesCreateRouteAction : s.routeSaveAction,
+              label: widget.routeId == null
+                  ? s.myRoutesCreateRouteAction
+                  : s.routeSaveAction,
               isLoading: _isSaving,
               onPressed: () => unawaited(_save(context)),
             ),
@@ -1020,7 +1073,8 @@ class OneOffTripEditorScreen extends ConsumerStatefulWidget {
   final String? tripId;
 
   @override
-  ConsumerState<OneOffTripEditorScreen> createState() => _OneOffTripEditorScreenState();
+  ConsumerState<OneOffTripEditorScreen> createState() =>
+      _OneOffTripEditorScreenState();
 }
 
 class _OneOffTripEditorScreenState
@@ -1036,7 +1090,9 @@ class _OneOffTripEditorScreenState
 
     return _buildEditorScaffold<CarrierOneOffTrip?>(
       context: context,
-      title: widget.tripId == null ? s.oneOffTripCreateTitle : s.oneOffTripEditTitle,
+      title: widget.tripId == null
+          ? s.oneOffTripCreateTitle
+          : s.oneOffTripEditTitle,
       description: s.oneOffTripEditorDescription,
       recordAsync: tripAsync,
       onRetry: widget.tripId == null
@@ -1053,7 +1109,8 @@ class _OneOffTripEditorScreenState
         _volumeController.text = trip?.totalCapacityVolumeM3?.toString() ?? '';
         _priceController.text = trip?.pricePerKgDzd.toStringAsFixed(0) ?? '';
         _isActive = trip?.isActive ?? true;
-        _departureAt = trip?.departureAt ?? DateTime.now().add(const Duration(days: 1));
+        _departureAt =
+            trip?.departureAt ?? DateTime.now().add(const Duration(days: 1));
         _initialized = true;
       },
       buildFields: (context, vehicles, communes, trip) {
@@ -1072,7 +1129,8 @@ class _OneOffTripEditorScreenState
               label: s.routeOriginLabel,
               communeId: _selectedOriginCommuneId,
               communes: communes,
-              onSelect: (value) => setState(() => _selectedOriginCommuneId = value),
+              onSelect: (value) =>
+                  setState(() => _selectedOriginCommuneId = value),
             ),
             const SizedBox(height: AppSpacing.md),
             _CommuneSelectorField(
@@ -1108,7 +1166,9 @@ class _OneOffTripEditorScreenState
             const SizedBox(height: AppSpacing.md),
             _DateButtonField(
               label: s.oneOffTripDepartureLabel,
-              value: _departureAt == null ? null : _formatDateTime(context, _departureAt!),
+              value: _departureAt == null
+                  ? null
+                  : _formatDateTime(context, _departureAt!),
               onPressed: () => unawaited(_pickDepartureAt(context)),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -1154,7 +1214,13 @@ class _OneOffTripEditorScreenState
       return;
     }
     setState(() {
-      _departureAt = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      _departureAt = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
     });
   }
 
@@ -1250,7 +1316,8 @@ abstract class _BasePublicationEditorState<T extends ConsumerStatefulWidget>
       List<CarrierVehicle> vehicles,
       List<AlgeriaCommune> communes,
       R record,
-    ) buildFields,
+    )
+    buildFields,
   }) {
     return AppPageScaffold(
       title: title,
@@ -1454,7 +1521,8 @@ class _VehicleSelectorField extends StatelessWidget {
           )
           .toList(growable: false),
       onChanged: onChanged,
-      validator: (value) => value == null ? S.of(context).authRequiredFieldMessage : null,
+      validator: (value) =>
+          value == null ? S.of(context).authRequiredFieldMessage : null,
     );
   }
 }
@@ -1508,7 +1576,9 @@ class _DateButtonField extends StatelessWidget {
       onPressed: onPressed,
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Text('$label: ${value ?? S.of(context).publicationSelectValueAction}'),
+        child: Text(
+          '$label: ${value ?? S.of(context).publicationSelectValueAction}',
+        ),
       ),
     );
   }
@@ -1560,9 +1630,11 @@ String _laneLabel(
   int destinationId,
 ) {
   final locale = Localizations.localeOf(context);
-  final origin = communeMap[originId]?.displayName(locale) ??
+  final origin =
+      communeMap[originId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(originId.toString());
-  final destination = communeMap[destinationId]?.displayName(locale) ??
+  final destination =
+      communeMap[destinationId]?.displayName(locale) ??
       BidiFormatters.latinIdentifier(destinationId.toString());
   return '$origin -> $destination';
 }
@@ -1572,7 +1644,9 @@ String _routeSubtitle(
   CarrierRoute route,
   CarrierVehicle? vehicle,
 ) {
-  final price = BidiFormatters.latinIdentifier(route.pricePerKgDzd.toStringAsFixed(0));
+  final price = BidiFormatters.latinIdentifier(
+    route.pricePerKgDzd.toStringAsFixed(0),
+  );
   return '${_formatWeekdays(context, route.recurringDaysOfWeek)} • ${vehicle?.plateNumber ?? route.vehicleId} • $price ${S.of(context).pricePerKgUnitLabel}';
 }
 

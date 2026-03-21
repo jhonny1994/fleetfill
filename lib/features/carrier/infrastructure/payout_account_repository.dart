@@ -5,7 +5,9 @@ import 'package:fleetfill/features/carrier/domain/payout_account_models.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final payoutAccountRepositoryProvider = Provider<PayoutAccountRepository>((ref) {
+final payoutAccountRepositoryProvider = Provider<PayoutAccountRepository>((
+  ref,
+) {
   final environment = ref.watch(appEnvironmentConfigProvider);
   final logger = ref.watch(appLoggerProvider);
   return PayoutAccountRepository(environment: environment, logger: logger);

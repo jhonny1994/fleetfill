@@ -40,6 +40,10 @@ client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
 secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET)"
 skip_nonce_check = false
 
+[edge_runtime]
+enabled = true
+policy = "per_worker"
+
 [functions.scheduled-automation-tick]
 verify_jwt = true
 
@@ -53,4 +57,7 @@ verify_jwt = false
 verify_jwt = true
 
 [functions.support-email-dispatch]
+verify_jwt = true
+
+[functions.generated-document-worker]
 verify_jwt = true

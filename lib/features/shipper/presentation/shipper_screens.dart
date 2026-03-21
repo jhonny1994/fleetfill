@@ -59,6 +59,8 @@ class ShipperHomeScreen extends ConsumerWidget {
     final shipmentsAsync = ref.watch(myShipperShipmentsProvider);
     final bookingsAsync = ref.watch(myShipperBookingsProvider);
     final notificationsAsync = ref.watch(myNotificationsProvider);
+    final notificationItems =
+        notificationsAsync.asData?.value.items ?? const [];
     final activeBookings =
         bookingsAsync.asData?.value
             .where(
@@ -68,7 +70,7 @@ class ShipperHomeScreen extends ConsumerWidget {
             )
             .length ??
         0;
-    final latestNotification = notificationsAsync.asData?.value.firstOrNull;
+    final latestNotification = notificationItems.firstOrNull;
 
     return AppPageScaffold(
       title: s.shipperHomeTitle,
@@ -98,10 +100,9 @@ class ShipperHomeScreen extends ConsumerWidget {
               ProfileSummaryRow(
                 label: s.shipperHomeUnreadNotificationsLabel,
                 value: BidiFormatters.latinIdentifier(
-                  (notificationsAsync.asData?.value
-                              .where((n) => !n.isRead)
-                              .length ??
-                          0)
+                  notificationItems
+                      .where((notification) => !notification.isRead)
+                      .length
                       .toString(),
                 ),
               ),
@@ -694,7 +695,7 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
       );
     }
 
-    final quote = _quoteFromSelection(
+    final quote = calculateBookingQuote(
       bookingSelection: bookingSelection,
       includeInsurance: _includeInsurance,
       settings: clientSettingsAsync.asData?.value,
@@ -1695,29 +1696,27 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   }
 
   String? _requiredValidator(String? value) {
-    return (value ?? '').trim().isEmpty
-        ? S.of(context).authRequiredFieldMessage
-        : null;
+    return validateRequiredField(S.of(context), value);
   }
 
   String? _positiveValidator(String? value) {
-    final trimmed = (value ?? '').trim();
-    if (trimmed.isEmpty) return S.of(context).authRequiredFieldMessage;
-    final parsed = double.tryParse(trimmed);
-    if (parsed == null || parsed <= 0) {
-      return S.of(context).vehiclePositiveNumberMessage;
+    final s = S.of(context);
+    if ((value ?? '').trim().isEmpty) {
+      return s.authRequiredFieldMessage;
     }
-    return null;
+    return validatePositiveNumberField(
+      s,
+      value,
+      invalidMessage: s.vehiclePositiveNumberMessage,
+    );
   }
 
   String? _optionalPositiveValidator(String? value) {
-    final trimmed = (value ?? '').trim();
-    if (trimmed.isEmpty) return null;
-    final parsed = double.tryParse(trimmed);
-    if (parsed == null || parsed <= 0) {
-      return S.of(context).vehiclePositiveNumberMessage;
-    }
-    return null;
+    return validateOptionalPositiveNumberField(
+      S.of(context),
+      value,
+      invalidMessage: S.of(context).vehiclePositiveNumberMessage,
+    );
   }
 
   double? _parseOptional(String value) {
@@ -1968,12 +1967,15 @@ String _notificationPreviewTitle(
 ) {
   final s = S.of(context);
   return switch (notification.type) {
-    'booking_created' => s.notificationBookingCreatedTitle,
+    'booking_confirmed' => s.notificationBookingConfirmedTitle,
     'payment_proof_submitted' => s.notificationPaymentProofSubmittedTitle,
     'payment_secured' => s.notificationPaymentSecuredTitle,
     'payment_rejected' => s.notificationPaymentRejectedTitle,
     'booking_milestone_updated' => s.notificationBookingMilestoneUpdatedTitle,
     'carrier_review_submitted' => s.notificationCarrierReviewSubmittedTitle,
+    'dispute_opened' => s.notificationDisputeOpenedTitle,
+    'dispute_resolved' => s.notificationDisputeResolvedTitle,
+    'payout_released' => s.notificationPayoutReleasedTitle,
     'generated_document_ready' => s.notificationGeneratedDocumentReadyTitle,
     _ => notification.title,
   };
@@ -1985,7 +1987,7 @@ String _notificationPreviewBody(
 ) {
   final s = S.of(context);
   return switch (notification.type) {
-    'booking_created' => s.notificationBookingCreatedBody,
+    'booking_confirmed' => s.notificationBookingConfirmedBody,
     'payment_proof_submitted' => s.notificationPaymentProofSubmittedBody,
     'payment_secured' => s.notificationPaymentSecuredBody,
     'payment_rejected' => s.notificationPaymentRejectedBody,
@@ -2004,6 +2006,9 @@ String _notificationPreviewBody(
       },
     ),
     'carrier_review_submitted' => s.notificationCarrierReviewSubmittedBody,
+    'dispute_opened' => s.notificationDisputeOpenedBody,
+    'dispute_resolved' => s.notificationDisputeResolvedBody,
+    'payout_released' => s.notificationPayoutReleasedBody,
     'generated_document_ready' => s.notificationGeneratedDocumentReadyBody(
       _generatedDocumentTypeLabel(
         s,
@@ -2057,45 +2062,6 @@ String _formatDateTime(BuildContext context, DateTime value) {
 
 extension<T> on Iterable<T> {
   T? get firstOrNull => isEmpty ? null : first;
-}
-
-BookingPricingQuote _quoteFromSelection({
-  required BookingReviewSelection bookingSelection,
-  required bool includeInsurance,
-  required ClientSettings? settings,
-}) {
-  final pricing = settings?.bookingPricing;
-  final platformFeeRate = pricing?.platformFeeRate ?? 0.05;
-  final carrierFeeRate = pricing?.carrierFeeRate ?? 0;
-  final insuranceRate = pricing?.insuranceRate ?? 0.01;
-  final insuranceMinFee = pricing?.insuranceMinFeeDzd ?? 100;
-  final taxRate = pricing?.taxRate ?? 0;
-
-  final base =
-      bookingSelection.shipment.totalWeightKg *
-      bookingSelection.result.pricePerKgDzd;
-  final platformFee = base * platformFeeRate;
-  final carrierFee = base * carrierFeeRate;
-  final insuranceFee = includeInsurance
-      ? (base * insuranceRate) < insuranceMinFee
-            ? insuranceMinFee
-            : base * insuranceRate
-      : 0.0;
-  final taxFee = (base + platformFee + carrierFee + insuranceFee) * taxRate;
-  final total = base + platformFee + carrierFee + insuranceFee + taxFee;
-  final payout = base + carrierFee;
-
-  return BookingPricingQuote(
-    pricePerKgDzd: bookingSelection.result.pricePerKgDzd,
-    basePriceDzd: base,
-    platformFeeDzd: platformFee,
-    carrierFeeDzd: carrierFee,
-    insuranceRate: includeInsurance ? insuranceRate : null,
-    insuranceFeeDzd: insuranceFee,
-    taxFeeDzd: taxFee,
-    shipperTotalDzd: total,
-    carrierPayoutDzd: payout,
-  );
 }
 
 String _money(S s, double amount) {

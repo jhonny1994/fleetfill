@@ -1,5 +1,10 @@
 # FleetFill Audit For Phases 0 To 4
 
+Historical note:
+
+- this file remains the focused remediation record for phases 0 through 4 only
+- the current cross-phase audit now lives in `docs/15-audit-phases-0-to-14.md`
+
 This document captures the audit findings for work that is already claimed complete in phases 0 through 4.
 
 Use the checklist at the top as the active remediation list.

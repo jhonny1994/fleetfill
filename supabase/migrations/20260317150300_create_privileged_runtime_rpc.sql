@@ -46,6 +46,29 @@ begin
 end;
 $$;
 
+create or replace function public.require_recent_admin_step_up()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if public.is_service_role() then
+    return;
+  end if;
+
+  if not public.is_admin() then
+    raise exception 'Privileged execution requires admin access';
+  end if;
+
+  if (
+    extract(epoch from now()) - coalesce((auth.jwt()->>'iat')::bigint, 0)
+  ) > 900 then
+    raise exception 'Recent admin step-up is required for this action';
+  end if;
+end;
+$$;
+
 create or replace function public.claim_email_outbox_jobs(
   p_worker_id text,
   p_batch_size integer default 10

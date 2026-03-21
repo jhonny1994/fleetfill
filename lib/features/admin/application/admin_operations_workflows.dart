@@ -18,7 +18,9 @@ class AdminOperationsWorkflowController {
     required bool isPublic,
     String? description,
   }) async {
-    await ref.read(adminOperationsRepositoryProvider).upsertPlatformSetting(
+    await ref
+        .read(adminOperationsRepositoryProvider)
+        .upsertPlatformSetting(
           key: key,
           value: value,
           isPublic: isPublic,
@@ -34,7 +36,9 @@ class AdminOperationsWorkflowController {
   }
 
   Future<void> resendEmail(String deliveryLogId) async {
-    await ref.read(adminOperationsRepositoryProvider).resendEmailDelivery(
+    await ref
+        .read(adminOperationsRepositoryProvider)
+        .resendEmailDelivery(
           deliveryLogId,
         );
     ref
@@ -49,7 +53,9 @@ class AdminOperationsWorkflowController {
   }
 
   Future<void> resendDeadLetterEmail(String jobId) async {
-    await ref.read(adminOperationsRepositoryProvider).resendDeadLetterEmailJob(
+    await ref
+        .read(adminOperationsRepositoryProvider)
+        .resendDeadLetterEmailJob(
           jobId,
         );
     ref
@@ -68,7 +74,9 @@ class AdminOperationsWorkflowController {
     required bool isActive,
     String? reason,
   }) async {
-    await ref.read(adminOperationsRepositoryProvider).setProfileActive(
+    await ref
+        .read(adminOperationsRepositoryProvider)
+        .setProfileActive(
           profileId: profileId,
           isActive: isActive,
           reason: reason,
