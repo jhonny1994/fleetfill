@@ -29,42 +29,44 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m3(reason) => "Verification needs attention: ${reason}";
 
-  static String m4(documentId) => "Document ${documentId}";
+  static String m4(count) => "Selected files: ${count}";
 
-  static String m5(documentId) => "Generated document ${documentId}";
+  static String m5(documentId) => "Document ${documentId}";
 
-  static String m6(languageCode) => "Current language: ${languageCode}";
+  static String m6(documentId) => "Generated document ${documentId}";
 
-  static String m7(milestoneLabel) => "Latest milestone: ${milestoneLabel}";
+  static String m7(languageCode) => "Current language: ${languageCode}";
 
-  static String m8(notificationId) => "Notification ${notificationId}";
+  static String m8(milestoneLabel) => "Latest milestone: ${milestoneLabel}";
 
-  static String m9(documentType) =>
+  static String m9(notificationId) => "Notification ${notificationId}";
+
+  static String m10(documentType) =>
       "Your ${documentType} is ready to view securely.";
 
-  static String m10(tripId) => "One-off trip ${tripId}";
+  static String m11(tripId) => "One-off trip ${tripId}";
 
-  static String m11(proofId) => "Proof ${proofId}";
+  static String m12(proofId) => "Proof ${proofId}";
 
-  static String m12(routeId) => "Route ${routeId}";
+  static String m13(routeId) => "Route ${routeId}";
 
-  static String m13(dates) =>
+  static String m14(dates) =>
       "No same-day exact result is available. Showing nearest exact dates: ${dates}";
 
-  static String m14(count) => "Search results (${count})";
+  static String m15(count) => "Search results (${count})";
 
-  static String m15(shipmentId) => "Shipment ${shipmentId}";
+  static String m16(shipmentId) => "Shipment ${shipmentId}";
 
-  static String m16(index) => "Item ${index}";
+  static String m17(index) => "Item ${index}";
 
-  static String m17(supportEmail) => "Support email: ${supportEmail}";
+  static String m18(supportEmail) => "Support email: ${supportEmail}";
 
-  static String m18(bookingId) => "Tracking ${bookingId}";
+  static String m19(bookingId) => "Tracking ${bookingId}";
 
-  static String m19(reason) =>
+  static String m20(reason) =>
       "Vehicle verification needs attention: ${reason}";
 
-  static String m20(reason) => "Rejected: ${reason}";
+  static String m21(reason) => "Rejected: ${reason}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -675,13 +677,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "deliveryConfirmedMessage": MessageLookupByLibrary.simpleMessage(
       "Delivery confirmed.",
     ),
+    "disputeEvidenceAddAction": MessageLookupByLibrary.simpleMessage(
+      "Add evidence files",
+    ),
+    "disputeEvidenceEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "No evidence files have been attached to this dispute yet.",
+    ),
+    "disputeEvidenceSelectedCount": m4,
+    "disputeEvidenceTitle": MessageLookupByLibrary.simpleMessage(
+      "Dispute evidence",
+    ),
     "documentViewerDescription": MessageLookupByLibrary.simpleMessage(
       "Open this document in your secure viewer when access is ready.",
     ),
     "documentViewerOpenAction": MessageLookupByLibrary.simpleMessage(
       "Open Document",
     ),
-    "documentViewerTitle": m4,
+    "documentViewerTitle": m5,
     "documentViewerUnavailableMessage": MessageLookupByLibrary.simpleMessage(
       "Secure document access is temporarily unavailable.",
     ),
@@ -746,7 +758,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generatedDocumentViewerDescription": MessageLookupByLibrary.simpleMessage(
       "Open generated invoices and receipts from a secure shared route.",
     ),
-    "generatedDocumentViewerTitle": m5,
+    "generatedDocumentViewerTitle": m6,
     "generatedDocumentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "Generated invoice and receipt documents will appear here when available.",
     ),
@@ -759,7 +771,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageOptionArabic": MessageLookupByLibrary.simpleMessage("Arabic"),
     "languageOptionEnglish": MessageLookupByLibrary.simpleMessage("English"),
     "languageOptionFrench": MessageLookupByLibrary.simpleMessage("French"),
-    "languageSelectionCurrentMessage": m6,
+    "languageSelectionCurrentMessage": m7,
     "languageSelectionDescription": MessageLookupByLibrary.simpleMessage(
       "Choose the language you want FleetFill to use.",
     ),
@@ -884,7 +896,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationBookingConfirmedTitle": MessageLookupByLibrary.simpleMessage(
       "Booking confirmed",
     ),
-    "notificationBookingMilestoneUpdatedBody": m7,
+    "notificationBookingMilestoneUpdatedBody": m8,
     "notificationBookingMilestoneUpdatedTitle":
         MessageLookupByLibrary.simpleMessage("Booking milestone updated"),
     "notificationCarrierReviewSubmittedBody":
@@ -896,7 +908,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Review the full details for this notification.",
     ),
-    "notificationDetailTitle": m8,
+    "notificationDetailTitle": m9,
     "notificationDisputeOpenedBody": MessageLookupByLibrary.simpleMessage(
       "A dispute has been opened for this booking and is waiting for admin review.",
     ),
@@ -909,7 +921,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationDisputeResolvedTitle": MessageLookupByLibrary.simpleMessage(
       "Dispute resolved",
     ),
-    "notificationGeneratedDocumentReadyBody": m9,
+    "notificationGeneratedDocumentReadyBody": m10,
     "notificationGeneratedDocumentReadyTitle":
         MessageLookupByLibrary.simpleMessage("Document ready"),
     "notificationPaymentProofSubmittedBody":
@@ -994,7 +1006,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Review this one-off trip before booking or operational follow-up.",
     ),
-    "oneOffTripDetailTitle": m10,
+    "oneOffTripDetailTitle": m11,
     "oneOffTripEditTitle": MessageLookupByLibrary.simpleMessage(
       "Edit one-off trip",
     ),
@@ -1185,7 +1197,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "proofViewerDescription": MessageLookupByLibrary.simpleMessage(
       "Open this proof from a secure shared route when access is ready.",
     ),
-    "proofViewerTitle": m11,
+    "proofViewerTitle": m12,
     "publicationActiveLabel": MessageLookupByLibrary.simpleMessage("Active"),
     "publicationEffectiveDateFutureMessage":
         MessageLookupByLibrary.simpleMessage(
@@ -1293,7 +1305,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shared route detail presentation sits above the role shells.",
     ),
-    "routeDetailTitle": m12,
+    "routeDetailTitle": m13,
     "routeEditTitle": MessageLookupByLibrary.simpleMessage(
       "Edit recurring route",
     ),
@@ -1378,7 +1390,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No result matches the current sort and filter selection.",
     ),
     "searchTripsNavLabel": MessageLookupByLibrary.simpleMessage("Search"),
-    "searchTripsNearestDateMessage": m13,
+    "searchTripsNearestDateMessage": m14,
     "searchTripsNearestDateTitle": MessageLookupByLibrary.simpleMessage(
       "Nearest exact dates found",
     ),
@@ -1397,7 +1409,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchTripsRequiresDraftMessage": MessageLookupByLibrary.simpleMessage(
       "Create at least one shipment draft to search exact lane capacity.",
     ),
-    "searchTripsResultsTitle": m14,
+    "searchTripsResultsTitle": m15,
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage("Search trips"),
     "settingsAccountSectionTitle": MessageLookupByLibrary.simpleMessage(
       "Account",
@@ -1439,7 +1451,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Shipment summary, items, and linked booking summary live here.",
     ),
-    "shipmentDetailTitle": m15,
+    "shipmentDetailTitle": m16,
     "shipmentEditAction": MessageLookupByLibrary.simpleMessage("Edit shipment"),
     "shipmentEditTitle": MessageLookupByLibrary.simpleMessage(
       "Edit shipment draft",
@@ -1453,7 +1465,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shipmentItemQuantityLabel": MessageLookupByLibrary.simpleMessage(
       "Quantity",
     ),
-    "shipmentItemTitle": m16,
+    "shipmentItemTitle": m17,
     "shipmentItemVolumeLabel": MessageLookupByLibrary.simpleMessage(
       "Item volume (m3)",
     ),
@@ -1526,7 +1538,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Needs review",
     ),
     "statusReadyLabel": MessageLookupByLibrary.simpleMessage("Ready"),
-    "supportConfiguredEmailMessage": m17,
+    "supportConfiguredEmailMessage": m18,
     "supportDescription": MessageLookupByLibrary.simpleMessage(
       "Support starts with clear email guidance and structured issue details.",
     ),
@@ -1553,7 +1565,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
     ),
-    "trackingDetailTitle": m18,
+    "trackingDetailTitle": m19,
     "trackingEventCancelledLabel": MessageLookupByLibrary.simpleMessage(
       "Cancelled",
     ),
@@ -1637,7 +1649,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vehicleVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
       "Vehicle verification documents",
     ),
-    "vehicleVerificationRejectedBanner": m19,
+    "vehicleVerificationRejectedBanner": m20,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
       "Vehicles remain under the carrier profile branch.",
     ),
@@ -1661,7 +1673,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
       "Uploaded and waiting for admin review.",
     ),
-    "verificationDocumentRejectedMessage": m20,
+    "verificationDocumentRejectedMessage": m21,
     "verificationDocumentReplacedMessage": MessageLookupByLibrary.simpleMessage(
       "Verification document replaced.",
     ),

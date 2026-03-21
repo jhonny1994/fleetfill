@@ -523,6 +523,7 @@ class _FakeFlowStore {
       resolutionNote: null,
       resolvedBy: null,
       resolvedAt: null,
+      evidenceCount: 0,
       createdAt: null,
       updatedAt: null,
     ),
@@ -1005,6 +1006,7 @@ class _FakeDisputeRepository extends DisputeRepository {
       resolutionNote: resolutionNote,
       resolvedBy: 'admin-1',
       resolvedAt: DateTime.utc(2026, 3, 21, 5),
+      evidenceCount: dispute.evidenceCount,
       createdAt: dispute.createdAt,
       updatedAt: DateTime.utc(2026, 3, 21, 5),
     );

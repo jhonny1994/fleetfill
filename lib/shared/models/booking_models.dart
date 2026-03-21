@@ -331,6 +331,7 @@ class DisputeRecord {
     required this.resolutionNote,
     required this.resolvedBy,
     required this.resolvedAt,
+    required this.evidenceCount,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -347,6 +348,7 @@ class DisputeRecord {
       resolutionNote: (json['resolution_note'] as String?)?.trim(),
       resolvedBy: json['resolved_by'] as String?,
       resolvedAt: DateTime.tryParse(json['resolved_at'] as String? ?? ''),
+      evidenceCount: (json['evidence_count'] as num?)?.toInt() ?? 0,
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
@@ -362,8 +364,46 @@ class DisputeRecord {
   final String? resolutionNote;
   final String? resolvedBy;
   final DateTime? resolvedAt;
+  final int evidenceCount;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+}
+
+class DisputeEvidenceRecord {
+  const DisputeEvidenceRecord({
+    required this.id,
+    required this.disputeId,
+    required this.storagePath,
+    required this.note,
+    required this.contentType,
+    required this.byteSize,
+    required this.uploadedBy,
+    required this.createdAt,
+  });
+
+  factory DisputeEvidenceRecord.fromJson(Map<String, dynamic> json) {
+    return DisputeEvidenceRecord(
+      id: json['id'] as String,
+      disputeId: json['dispute_id'] as String,
+      storagePath: (json['storage_path'] as String?)?.trim() ?? '',
+      note: (json['note'] as String?)?.trim(),
+      contentType: (json['content_type'] as String?)?.trim(),
+      byteSize: (json['byte_size'] as num?)?.toInt(),
+      uploadedBy: json['uploaded_by'] as String?,
+      createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+    );
+  }
+
+  final String id;
+  final String disputeId;
+  final String storagePath;
+  final String? note;
+  final String? contentType;
+  final int? byteSize;
+  final String? uploadedBy;
+  final DateTime? createdAt;
+
+  bool get isPdf => (contentType ?? '').toLowerCase() == 'application/pdf';
 }
 
 class RefundRecord {

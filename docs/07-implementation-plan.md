@@ -332,7 +332,7 @@ Phase 9 progress notes:
 ### Disputes
 
 - [x] Build dispute creation flow from `delivered_pending_review`
-- [ ] Support evidence/notes attachment if included in scope
+- [x] Support evidence/notes attachment if included in scope
 - [x] Build admin dispute review screen with booking, proof, tracking, and ledger context
 - [x] Support dispute outcomes: complete, cancel, refund
 - [x] Record all dispute outcomes in audit log and ledger where relevant
@@ -352,11 +352,12 @@ Phase 9 progress notes:
 Phase 10 progress notes:
 
 - shippers can now open disputes only from `delivered_pending_review`, which moves the booking into `disputed` and appends a user-visible tracking event
+- shippers can now attach private dispute evidence files during dispute creation, and admins can open those evidence files from the dispute-resolution surface
 - admins now have dispute-resolution paths for complete and refund outcomes, with booking state, ledger, and tracking updates handled on the server
 - refunds and payouts now use first-class records instead of relying on booking/payment status alone
 - payout release now snapshots the chosen payout account, blocks on open disputes, writes payout ledger entries, and generates a payout receipt record
 - the schema now enforces a single active payout account per carrier through a partial unique index
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `test/contracts/supabase/dispute_payout_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `supabase/migrations/20260320120825_add_dispute_evidence_support.sql`, `test/contracts/supabase/dispute_payout_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
 
 ## Phase 11 - Ratings, Notifications, And Support
 
@@ -372,7 +373,7 @@ Phase 10 progress notes:
 - [x] Build in-app notifications table consumption
 - [x] Register and normalize push device tokens through a server-controlled boundary
 - [x] Trigger in-app notifications for critical lifecycle events
-- [ ] Deliver real push notifications for critical lifecycle events once a client transport/provider integration exists
+- [x] Deliver real push notifications for critical lifecycle events through the configured FCM worker path
 - [x] Build notifications center UI
 - [x] Open notifications from shared routes or home/profile entry points rather than dedicated shipper/carrier bottom tabs
 
@@ -386,7 +387,7 @@ Phase 10 progress notes:
 - [x] Build support acknowledgement email flow
 - [x] Expose support email entry points in app
 - [x] Implement webhook authenticity verification, idempotency, and out-of-order event handling
-- [ ] Define and implement the full transactional email event set from the canonical docs, not support acknowledgement only
+- [x] Define and implement the full transactional email event set from the canonical docs, not support acknowledgement only
 
 Phase 11 progress notes:
 
@@ -395,8 +396,9 @@ Phase 11 progress notes:
 - support now has a real in-app email entry surface backed by the provider-agnostic support dispatch function, with visible support email guidance and structured issue-entry hints
 - support dispatch now normalizes locale inputs and queues both acknowledgement and support-forward emails through the outbox path instead of sending inline in the user request
 - generated document shared routes now resolve to secure signed-URL viewers instead of placeholders
-- user-device registration and notification marking are now server-controlled RPCs, with additional Phase 11 hardening for locale normalization, token validation, webhook event ordering, and notification write integrity before push rollout
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120700_create_carrier_review_rpc.sql`, `supabase/migrations/20260320120710_create_notification_device_rpc.sql`, `supabase/migrations/20260320120720_create_transactional_email_enqueue_rpc.sql`, `supabase/migrations/20260320120800_harden_notification_device_rules.sql`, `supabase/migrations/20260320120810_harden_email_delivery_rules.sql`, `supabase/migrations/20260320120820_create_support_request_email_rpc.sql`, and `test/contracts/supabase/engagement_support_contract_test.dart`
+- user-device registration and notification marking are now server-controlled RPCs, and notification inserts now feed a scheduled Firebase Cloud Messaging HTTP v1 worker so push and in-app delivery share one canonical event source
+- the transactional email inventory now covers booking confirmation, payment proof receipt, payment rejection, payment secured, delivered-pending-review, dispute opened, dispute resolved, payout released, generated document availability, support acknowledgement, and support forwarding
+- supporting migration and contract coverage was added in `supabase/migrations/20260320120700_create_carrier_review_rpc.sql`, `supabase/migrations/20260320120710_create_notification_device_rpc.sql`, `supabase/migrations/20260320120720_create_transactional_email_enqueue_rpc.sql`, `supabase/migrations/20260320120800_harden_notification_device_rules.sql`, `supabase/migrations/20260320120810_harden_email_delivery_rules.sql`, `supabase/migrations/20260320120820_create_support_request_email_rpc.sql`, `supabase/migrations/20260320120830_create_push_notification_runtime.sql`, and `test/contracts/supabase/engagement_support_contract_test.dart`
 
 ## Phase 12 - Admin Surface And Operations
 
@@ -471,16 +473,19 @@ Phase 13 progress notes:
 - [ ] Validate shell navigation, back-stack behavior, and deep links for shared above-shell detail routes
 - [ ] Validate that microflows use sheets/dialogs/inline states instead of unnecessary full pages
 - [ ] Validate pagination/cursoring behavior for search, notifications, timelines, reviews, and admin queues
-- [ ] Resolve CI-capable integration coverage for the documented critical flows
+- [x] Resolve CI-capable integration coverage for the documented critical flows
 
 Phase 14 progress notes:
 
 - pricing calculation and shared field validation helpers now live in reusable application/shared helpers with direct unit coverage instead of remaining embedded inside screens
-- phase 14 test coverage now includes pricing, validation, repository mapping, executed Supabase runtime security and email tests, settings/policy UI coverage, and a renamed integration smoke test for shared settings surfaces
+- phase 14 test coverage now includes pricing, validation, repository mapping, executed Supabase runtime security and email tests, shared settings smoke coverage, and CI-capable critical workflow coverage in `test/critical_workflow_flows_test.dart`
 - shared settings now expose support and production policy surfaces directly, keeping legal and support entry points reachable from one shared route cluster
 - crash reporting now records through the existing logger path in both disabled and deferred modes so uncaught errors are still observable during release hardening
 - notifications now load through explicit paged repository/controller state with refresh and load-more behavior instead of a single shallow bounded fetch
 - CI-capable cross-feature flow coverage now exists in `test/critical_workflow_flows_test.dart` for startup theme-locale restoration, shipper booking-payment state, carrier milestone progression, and admin queue refresh behavior
+- testers now have a real push-delivery path through Firebase client registration plus the scheduled FCM HTTP v1 worker, subject to environment secrets being configured
+- dispute creation now supports private evidence attachments with secure signed access from admin review flows
+- Android Firebase client wiring now prefers checked-in FlutterFire options while server push auth is handled separately through a service-account secret in the Edge runtime
 
 ## Phase 15 - Staging Launch And Production Readiness
 
@@ -515,7 +520,7 @@ Phase 15 progress notes:
 - GitHub Actions workflow scaffolding now covers Flutter quality gates, Supabase validation, and a manual staging or release-candidate verification entry point
 - release operations are now documented in `docs/13-release-operations.md`, including branch/tag conventions, versioning rules, staging gates, release-candidate checks, monitoring, and rollback expectations
 - Android release configuration now prefers explicit release signing credentials while still falling back to debug signing for local-only release runs until secrets are supplied
-- README and environment example files now reflect user-facing policy posture, support routing, environment selection, and release-related configuration inputs
+- README and environment example files now reflect the baseline production env shape more accurately, including required push/email worker secrets and optional FlutterFire override posture
 
 ## Phase 16 - Post-Launch Stabilization
 

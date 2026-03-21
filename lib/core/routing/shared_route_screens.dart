@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/core/errors/app_error.dart';
 import 'package:fleetfill/core/errors/app_error_messages.dart';
@@ -12,6 +13,7 @@ import 'package:fleetfill/features/shipper/shipper.dart';
 import 'package:fleetfill/shared/models/models.dart';
 import 'package:fleetfill/shared/providers/providers.dart';
 import 'package:fleetfill/shared/widgets/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -567,40 +569,75 @@ class BookingTrackingScreen extends ConsumerWidget {
     final s = S.of(context);
     final reasonController = TextEditingController();
     final descriptionController = TextEditingController();
+    final selectedFiles = <PlatformFile>[];
     final confirmed = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          left: AppSpacing.md,
-          right: AppSpacing.md,
-          top: AppSpacing.md,
-          bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              s.bookingStatusDisputedLabel,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AuthTextField(
-              controller: reasonController,
-              label: s.paymentProofRejectionReasonLabel,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AuthTextField(
-              controller: descriptionController,
-              label: s.shipmentDescriptionLabel,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(s.confirmLabel),
-            ),
-          ],
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Padding(
+          padding: EdgeInsets.only(
+            left: AppSpacing.md,
+            right: AppSpacing.md,
+            top: AppSpacing.md,
+            bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                s.bookingStatusDisputedLabel,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AuthTextField(
+                controller: reasonController,
+                label: s.paymentProofRejectionReasonLabel,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AuthTextField(
+                controller: descriptionController,
+                label: s.shipmentDescriptionLabel,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              OutlinedButton.icon(
+                onPressed: () async {
+                  final result = await FilePicker.platform.pickFiles(
+                    allowMultiple: true,
+                    withData: kIsWeb,
+                    type: FileType.custom,
+                    allowedExtensions: const ['jpg', 'jpeg', 'png', 'pdf'],
+                  );
+                  if (result == null) {
+                    return;
+                  }
+                  setModalState(() {
+                    selectedFiles
+                      ..clear()
+                      ..addAll(result.files);
+                  });
+                },
+                icon: const Icon(Icons.attach_file_rounded),
+                label: Text(s.disputeEvidenceAddAction),
+              ),
+              if (selectedFiles.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Text(s.disputeEvidenceSelectedCount(selectedFiles.length)),
+                const SizedBox(height: AppSpacing.xs),
+                ...selectedFiles.map(
+                  (file) => Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                    child: Text(file.name),
+                  ),
+                ),
+              ],
+              const SizedBox(height: AppSpacing.md),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(s.confirmLabel),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -610,13 +647,24 @@ class BookingTrackingScreen extends ConsumerWidget {
       return;
     }
     try {
-      await ref
+      final dispute = await ref
           .read(disputeRepositoryProvider)
           .createDispute(
             bookingId: booking.id,
             reason: reasonController.text,
             description: descriptionController.text,
           );
+
+      for (final file in selectedFiles) {
+        await ref
+            .read(disputeRepositoryProvider)
+            .uploadDisputeEvidence(
+              disputeId: dispute.id,
+              draft: _verificationUploadDraftFromFile(file),
+              note: descriptionController.text,
+            );
+      }
+
       ref
         ..invalidate(bookingDetailProvider(booking.id))
         ..invalidate(trackingEventsProvider(booking.id))
@@ -1061,6 +1109,97 @@ class ProofViewerScreen extends ConsumerWidget {
                 icon: Icons.receipt_long_outlined,
                 title: s.proofViewerTitle(formattedProofId),
                 message: s.verificationDocumentOpenPreparedMessage,
+                action: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: () => unawaited(_openExternal(snapshot.data!)),
+                      icon: const Icon(Icons.open_in_new_rounded),
+                      label: Text(s.documentViewerOpenAction),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    SelectableText(snapshot.data!),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+VerificationUploadDraft _verificationUploadDraftFromFile(PlatformFile file) {
+  final extension = (file.extension ?? '').toLowerCase();
+  final contentType = switch (extension) {
+    'jpg' || 'jpeg' => 'image/jpeg',
+    'png' => 'image/png',
+    _ => 'application/pdf',
+  };
+  return VerificationUploadDraft(
+    path: file.path ?? file.name,
+    filename: file.name,
+    extension: extension,
+    contentType: contentType,
+    byteSize: file.size,
+    bytes: file.bytes,
+  );
+}
+
+class DisputeEvidenceViewerScreen extends ConsumerWidget {
+  const DisputeEvidenceViewerScreen({required this.evidenceId, super.key});
+
+  final String evidenceId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final formattedEvidenceId = BidiFormatters.latinIdentifier(evidenceId);
+    final evidenceAsync = ref.watch(disputeEvidenceDetailProvider(evidenceId));
+
+    return AppPageScaffold(
+      title: s.documentViewerTitle(formattedEvidenceId),
+      child: AppAsyncStateView<DisputeEvidenceRecord?>(
+        value: evidenceAsync,
+        onRetry: () =>
+            ref.invalidate(disputeEvidenceDetailProvider(evidenceId)),
+        data: (evidence) {
+          if (evidence == null) {
+            return const AppNotFoundState();
+          }
+
+          return FutureBuilder<String>(
+            future: ref
+                .read(disputeRepositoryProvider)
+                .createSignedDisputeEvidenceUrl(evidence),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const AppLoadingState();
+              }
+              if (snapshot.hasError || !snapshot.hasData) {
+                return AppErrorState(
+                  error: AppError(
+                    code: 'dispute_evidence_signed_url_failed',
+                    message: mapAppErrorMessage(
+                      s,
+                      snapshot.error ??
+                          Exception('document_signed_url_unavailable'),
+                    ),
+                    technicalDetails: snapshot.error?.toString(),
+                  ),
+                  onRetry: () => ref.invalidate(
+                    disputeEvidenceDetailProvider(evidenceId),
+                  ),
+                );
+              }
+
+              return AppStateMessage(
+                icon: Icons.attach_file_rounded,
+                title: s.documentViewerTitle(formattedEvidenceId),
+                message: evidence.note?.trim().isNotEmpty == true
+                    ? evidence.note!
+                    : s.verificationDocumentOpenPreparedMessage,
                 action: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

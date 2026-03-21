@@ -13,7 +13,7 @@ This file is not canonical product truth. It is a working audit and remediation 
 
 ## Current Verdict
 
-Phase 14 is still not fully complete, but the remaining open items are now mostly representative-device or operator-environment checks rather than unresolved backend/product-code gaps.
+Phase 14 is still not fully complete, but the remaining open items are now manual representative-device or operator-environment checks rather than unresolved tester-facing product gaps.
 
 Why:
 
@@ -24,7 +24,7 @@ Why:
 
 - phases 0 through 4 are materially aligned after the earlier remediation pass
 - core route and booking architecture is broadly aligned with the canonical docs
-- newer Supabase migration naming and separation is much better aligned with `docs/09-supabase-implementation-notes.md` and `docs/11-delivery-playbook.md`
+- newer Supabase migration naming and separation is much better aligned with `docs/09-supabase-implementation-notes.md` and the consolidated update rules in `docs/README.md`
 - generated document processing now has a clearer worker boundary with claim and recovery semantics
 - typed client settings remain aligned with the controlled settings contract
 
@@ -53,13 +53,14 @@ Why:
 - [x] Move SQL/source regression checks into explicitly named contract or source-regression tests instead of presenting them as repository or integration verification (`test/contracts/supabase/...`)
 - [x] Replace the current integration smoke test with behavior-driven integration coverage for real critical flows (`integration_test/settings_support_and_policies_smoke_test.dart`, `docs/07-implementation-plan.md`)
 - [x] Implement real notification pagination or cursoring instead of a shallow bounded list approach if the current provider/repository contract remains fixed-size (`lib/features/notifications/infrastructure/notification_repository.dart`, `lib/features/notifications/application/notification_feed_controller.dart`, `lib/features/notifications/presentation/notifications_screens.dart`)
-- [x] Reconcile Phase 11 push-notification claims with actual implementation state so the docs and checklist do not overstate capability (`docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`, `pubspec.yaml`)
+- [x] Reconcile and then implement Phase 11 push notifications through the configured Firebase Cloud Messaging HTTP v1 client plus worker path so the docs and checklist match real capability (`docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`, `lib/features/notifications/`, `supabase/functions/push-dispatch-worker/index.ts`, `pubspec.yaml`)
 - [x] Add broader CI-capable critical-flow coverage for startup restoration, shipper booking/payment state, carrier milestone progression, and admin queue refresh (`test/critical_workflow_flows_test.dart`, `docs/07-implementation-plan.md`)
+- [x] Add dispute evidence attachment support with private storage, secure access, and admin review visibility (`supabase/migrations/20260320120825_add_dispute_evidence_support.sql`, `lib/features/shipper/infrastructure/dispute_repository.dart`, `lib/core/routing/shared_route_screens.dart`)
 
 ### Low
 
 - [x] Review test literals that depend on exact English copy and replace them with more durable assertions where practical (`test/foundation_localization_accessibility_test.dart`, `test/features/settings/legal_policies_screen_test.dart`, `integration_test/settings_support_and_policies_smoke_test.dart`)
-- [ ] Keep documenting older broad historical migrations as grandfathered baseline history, while keeping all future migrations narrow and change-oriented (`supabase/README.md`, `docs/11-delivery-playbook.md`)
+- [ ] Keep documenting older broad historical migrations as grandfathered baseline history, while keeping all future migrations narrow and change-oriented (`supabase/README.md`, `docs/README.md`)
 
 ## Manual Or User-Intervention Validation Still Required
 
@@ -78,7 +79,7 @@ These are real Phase 14 items, but they require representative devices, staging 
 ### Phases 0 To 4
 
 - Broadly aligned after the earlier remediation work
-- Historical findings remain tracked in `docs/10-audit-phases-0-to-4.md`
+- Historical phases 0-4 findings were consolidated into this audit after the separate file became stale and redundant
 - No current blocker here is the main reason Phase 14 remains open
 
 ### Phase 5 - Capacity Publication
@@ -101,38 +102,38 @@ These are real Phase 14 items, but they require representative devices, staging 
 ### Phase 8 - Payment Proof, Escrow, And Ledger
 
 - Core payment review and ledger model is present
-- Sensitive admin review actions still need mandatory audit logging to match the operational docs
+- Sensitive admin review actions now have audit logging and state-transition coverage aligned with the operational docs
 
 ### Phase 9 - Tracking, Delivery, And Completion
 
 - Tracking append-only posture exists conceptually
-- Current RPC hardening is not sufficient yet because timeline event insertion is too permissive
+- Timeline event insertion is now server-hardened; remaining confidence work is mainly real-device and operational validation
 
 ### Phase 10 - Disputes, Refunds, And Payouts
 
-- This is the biggest remaining business-control gap
-- Dispute and payout actions need both audit logging and fresh-step-up enforcement consistency
+- Core dispute, refund, payout, audit, and step-up controls are implemented
+- Remaining work here is representative-flow rehearsal rather than a known product-code gap
 
 ### Phase 11 - Ratings, Notifications, And Support
 
 - In-app notifications and support surfaces exist
-- Push delivery is still overstated vs actual implementation
-- Support email queueing and email lifecycle should be hardened and fully aligned with the event model
+- Push delivery now has a concrete Firebase Cloud Messaging HTTP v1 path with client registration, queueing, and worker dispatch
+- Support email queueing and email lifecycle are materially aligned; remaining work is real-environment secret/provider verification
 
 ### Phase 12 - Admin Surface And Operations
 
 - Admin shell and operational pages are real and useful
-- But the most sensitive admin actions are still less hardened than some lower-risk admin controls
+- Sensitive admin actions now have stronger step-up, audit, and runtime coverage than earlier audit snapshots reflected
 
 ### Phase 13 - Generated Documents
 
 - Generated-document processing is one of the stronger backend areas after the recent worker separation work
-- The remaining blocker is the exposed helper/grant model, not the overall architecture direction
+- Helper and privilege boundaries are now tighter; remaining validation is mostly runtime and operator-side
 
 ### Phase 14 - Hardening, Testing, And Release Readiness
 
 - Still open
-- The current automation proves some intent and structure, but not enough executed behavior to justify full completion
+- The remaining open items are manual/device/staging checks, not the earlier backend hardening gaps
 
 ## Test Strategy Findings
 
@@ -185,3 +186,6 @@ And for the security/test-hardening items, closure should also include executed 
 - notifications now page through repository/controller state with refresh plus load-more behavior, matching the long-list guidance better than the previous fixed 50-item fetch
 - notification, accessibility, and shared-settings tests now rely more on localized/runtime-derived expectations instead of exact English literals
 - CI-capable critical-flow coverage now exists in `test/critical_workflow_flows_test.dart`, while true device-backed `integration_test/` execution still depends on a supported local device/toolchain
+- private dispute evidence attachments now exist end-to-end through upload sessions, private storage access, and admin review surfaces
+- push notifications now have a concrete client plus scheduled worker path instead of only device-token capture and in-app delivery
+- the old standalone delivery playbook and phase 0-4 audit files were removed after their still-relevant guidance was consolidated into `docs/README.md` and this audit tracker

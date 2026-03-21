@@ -228,6 +228,15 @@
   "notificationDisputeOpenedBody": "A dispute has been opened for this booking and is waiting for admin review.",
   "notificationDisputeResolvedTitle": "Dispute resolved",
   "notificationDisputeResolvedBody": "The dispute for this booking has been resolved. Review the latest booking and payment outcome.",
+  "disputeEvidenceTitle": "Dispute evidence",
+  "disputeEvidenceAddAction": "Add evidence files",
+  "disputeEvidenceEmptyMessage": "No evidence files have been attached to this dispute yet.",
+  "disputeEvidenceSelectedCount": "Selected files: {count}",
+  "@disputeEvidenceSelectedCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "notificationPayoutReleasedTitle": "Payout released",
   "notificationPayoutReleasedBody": "The carrier payout has been released for this booking.",
   "notificationBookingMilestoneUpdatedTitle": "Booking milestone updated",

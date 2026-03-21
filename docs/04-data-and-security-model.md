@@ -289,6 +289,24 @@ Amount verification rule:
 - the verified payment amount must match the expected booking amount exactly
 - underpayment and overpayment are both rejected with a reason in the canonical flow
 
+### 2.10b `dispute_evidence`
+
+Purpose: durable private evidence files attached to an open dispute.
+
+Recommended fields:
+
+- `id uuid pk`
+- `dispute_id uuid fk -> disputes.id`
+- `storage_path text`
+- `note text null`
+- `content_type text null`
+- `byte_size bigint null`
+- `checksum_sha256 text null`
+- `uploaded_by uuid null fk -> profiles.id`
+- `upload_session_id uuid null fk -> upload_sessions.id`
+- `version integer default 1`
+- `created_at timestamptz`
+
 ### 2.11 `tracking_events`
 
 Purpose: append-only shipment and settlement timeline.
@@ -527,6 +545,34 @@ Recommended fields:
 - `is_read boolean default false`
 - `created_at timestamptz`
 - `read_at timestamptz null`
+
+### 2.17b `push_outbox_jobs`
+
+Purpose: durable queue for server-controlled push delivery retries and recovery.
+
+Recommended fields:
+
+- `id uuid pk`
+- `notification_id uuid unique fk -> notifications.id`
+- `profile_id uuid fk -> profiles.id`
+- `event_key text`
+- `dedupe_key text unique`
+- `title text`
+- `body text`
+- `payload_snapshot jsonb null`
+- `status text`
+- `attempt_count integer`
+- `max_attempts integer`
+- `available_at timestamptz`
+- `locked_at timestamptz null`
+- `locked_by text null`
+- `provider text null`
+- `provider_message_id text null`
+- `last_error_code text null`
+- `last_error_message text null`
+- `delivered_at timestamptz null`
+- `created_at timestamptz`
+- `updated_at timestamptz`
 
 ### 2.18 `user_devices`
 

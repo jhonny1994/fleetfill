@@ -61,3 +61,6 @@ verify_jwt = true
 
 [functions.generated-document-worker]
 verify_jwt = true
+
+[functions.push-dispatch-worker]
+verify_jwt = true

@@ -25,12 +25,14 @@ Only these files should define product truth.
 
 These files are important, but they are not parallel sources of product truth:
 
-- `docs/10-audit-phases-0-to-4.md` - historical remediation audit for already-passed phases 0-4
-- `docs/11-delivery-playbook.md` - delivery rules, execution posture, and apply-now vs defer guidance
 - `docs/12-polish-backlog.md` - deferred polish backlog
 - `docs/13-release-operations.md` - staging, release-candidate, versioning, and rollback procedures
 - `docs/14-post-launch-stabilization.md` - post-launch operating cadence
 - `docs/15-audit-phases-0-to-14.md` - current cross-phase audit and production-readiness tracker
+
+Consolidation note:
+
+- the old phase 0-4 audit and delivery playbook were folded into `docs/15-audit-phases-0-to-14.md` and this index to remove stale parallel guidance
 
 ## Reference Assets
 
@@ -44,9 +46,8 @@ These are supporting assets, not narrative docs:
 
 - Do not create parallel truth sources for product rules, states, pricing, schema, or security behavior.
 - Update the canonical file instead of adding overlapping notes elsewhere.
-- Use `docs/11-delivery-playbook.md` for delivery behavior and pickup guidance, not for changing product truth.
 - Use `docs/12-polish-backlog.md` only for deferred polish work, not for domain or security truth.
-- Use `docs/10-audit-phases-0-to-4.md` and `docs/15-audit-phases-0-to-14.md` to track findings, remediation, and verification status.
+- Use `docs/15-audit-phases-0-to-14.md` to track findings, remediation, validation status, and historical audit carry-forward notes.
 - If a decision changes the domain, update `docs/02-domain-and-state-model.md` first.
 - If a decision changes data ownership, RLS, or storage, update `docs/04-data-and-security-model.md`.
 - If a decision changes user flows or UI behavior, update `docs/05-ux-and-localization.md`.

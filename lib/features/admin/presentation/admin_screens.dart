@@ -2440,6 +2440,7 @@ class _DisputeResolutionSheetState
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final evidenceAsync = ref.watch(disputeEvidenceProvider(widget.item.id));
     return Padding(
       padding: EdgeInsets.only(
         left: AppSpacing.md,
@@ -2466,7 +2467,53 @@ class _DisputeResolutionSheetState
                 label: s.routeStatusLabel,
                 value: widget.item.status,
               ),
+              ProfileSummaryRow(
+                label: s.disputeEvidenceTitle,
+                value: widget.item.evidenceCount.toString(),
+              ),
             ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            s.disputeEvidenceTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          evidenceAsync.when(
+            data: (items) => items.isEmpty
+                ? Text(s.disputeEvidenceEmptyMessage)
+                : Column(
+                    children: items
+                        .map(
+                          (item) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.sm,
+                            ),
+                            child: AppListCard(
+                              title: item.note?.trim().isNotEmpty == true
+                                  ? item.note!
+                                  : item.storagePath.split('/').last,
+                              subtitle: item.contentType ?? '-',
+                              trailing: const Icon(Icons.chevron_right_rounded),
+                              onTap: () => context.push(
+                                AppRoutePath.sharedDisputeEvidenceViewer
+                                    .replaceFirst(':id', item.id),
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
+            loading: () => const AppLoadingState(),
+            error: (error, stackTrace) => AppErrorState(
+              error: AppError(
+                code: 'dispute_evidence_load_failed',
+                message: mapAppErrorMessage(s, error),
+                technicalDetails: stackTrace.toString(),
+              ),
+              onRetry: () =>
+                  ref.invalidate(disputeEvidenceProvider(widget.item.id)),
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
           AuthTextField(

@@ -35,6 +35,16 @@ migrate_working_dir/
 .env
 .env.*
 !.env.example
+firebase.json
+.firebaserc
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+assets/*firebase-adminsdk*.json
+assets/*service-account*.json
+**/service-account*.json
+**/firebase-service-account*.json
+firebase-debug.log
+firebase-debug.*.log
 supabase/.branches/
 supabase/.temp/
 

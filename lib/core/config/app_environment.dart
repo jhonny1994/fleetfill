@@ -11,6 +11,12 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     required AppEnvironment environment,
     @Default('') String supabaseUrl,
     @Default('') String supabaseAnonKey,
+    @Default('') String firebaseApiKey,
+    @Default('') String firebaseMessagingSenderId,
+    @Default('') String firebaseProjectId,
+    @Default('') String firebaseStorageBucket,
+    @Default('') String firebaseAndroidAppId,
+    @Default('') String firebaseIosAppId,
     @Default(false) bool googleAuthEnabled,
     @Default(false) bool maintenanceMode,
     @Default(false) bool forceUpdateRequired,
@@ -31,6 +37,30 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
       supabaseAnonKey: _firstNonEmpty([
         const String.fromEnvironment('SUPABASE_ANON_KEY'),
         const String.fromEnvironment('APP_SUPABASE_ANON_KEY'),
+      ]),
+      firebaseApiKey: _firstNonEmpty([
+        const String.fromEnvironment('FIREBASE_API_KEY'),
+        const String.fromEnvironment('APP_FIREBASE_API_KEY'),
+      ]),
+      firebaseMessagingSenderId: _firstNonEmpty([
+        const String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID'),
+        const String.fromEnvironment('APP_FIREBASE_MESSAGING_SENDER_ID'),
+      ]),
+      firebaseProjectId: _firstNonEmpty([
+        const String.fromEnvironment('FIREBASE_PROJECT_ID'),
+        const String.fromEnvironment('APP_FIREBASE_PROJECT_ID'),
+      ]),
+      firebaseStorageBucket: _firstNonEmpty([
+        const String.fromEnvironment('FIREBASE_STORAGE_BUCKET'),
+        const String.fromEnvironment('APP_FIREBASE_STORAGE_BUCKET'),
+      ]),
+      firebaseAndroidAppId: _firstNonEmpty([
+        const String.fromEnvironment('FIREBASE_ANDROID_APP_ID'),
+        const String.fromEnvironment('APP_FIREBASE_ANDROID_APP_ID'),
+      ]),
+      firebaseIosAppId: _firstNonEmpty([
+        const String.fromEnvironment('FIREBASE_IOS_APP_ID'),
+        const String.fromEnvironment('APP_FIREBASE_IOS_APP_ID'),
       ]),
       googleAuthEnabled: _parseBool(
         _firstNonEmpty([

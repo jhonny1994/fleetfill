@@ -243,6 +243,15 @@
       "documentType": {}
     }
   },
+  "disputeEvidenceTitle": "أدلة النزاع",
+  "disputeEvidenceAddAction": "إضافة ملفات دليل",
+  "disputeEvidenceEmptyMessage": "لم يتم إرفاق أي ملفات دليل بهذا النزاع بعد.",
+  "disputeEvidenceSelectedCount": "الملفات المحددة: {count}",
+  "@disputeEvidenceSelectedCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "forbiddenMessage": "هذا القسم غير متاح لهذا الحساب.",
   "forbiddenTitle": "الوصول مقيّد",
   "forbiddenAdminStepUpMessage": "أعد تسجيل التحقق حديثا قبل فتح هذا القسم الإداري الحساس.",

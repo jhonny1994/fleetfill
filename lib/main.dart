@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fleetfill/core/core.dart';
+import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,35 +76,39 @@ class FleetFillApp extends ConsumerWidget {
 
         return Directionality(
           textDirection: textDirection,
-          child: AppFocusTraversal.largeScreen(
-            child: bootstrap.when(
-              data: (_) => authSession.when(
-                data: (_) => child ?? const SizedBox.shrink(),
+          child: PushNotificationCoordinator(
+            child: AppFocusTraversal.largeScreen(
+              child: bootstrap.when(
+                data: (_) => authSession.when(
+                  data: (_) => child ?? const SizedBox.shrink(),
+                  loading: () => const SplashScreen(),
+                  error: (error, stackTrace) => AppErrorState(
+                    error: AppError(
+                      code: 'auth_session_failed',
+                      message: S.of(context).routeErrorMessage,
+                      technicalDetails: BidiFormatters.latinIdentifier(
+                        stackTrace.toString(),
+                      ),
+                    ),
+                    onRetry: () => unawaited(
+                      ref
+                          .read(authSessionControllerProvider.notifier)
+                          .refresh(),
+                    ),
+                  ),
+                ),
                 loading: () => const SplashScreen(),
                 error: (error, stackTrace) => AppErrorState(
                   error: AppError(
-                    code: 'auth_session_failed',
+                    code: 'bootstrap_failed',
                     message: S.of(context).routeErrorMessage,
                     technicalDetails: BidiFormatters.latinIdentifier(
                       stackTrace.toString(),
                     ),
                   ),
                   onRetry: () => unawaited(
-                    ref.read(authSessionControllerProvider.notifier).refresh(),
+                    ref.read(appBootstrapControllerProvider.notifier).retry(),
                   ),
-                ),
-              ),
-              loading: () => const SplashScreen(),
-              error: (error, stackTrace) => AppErrorState(
-                error: AppError(
-                  code: 'bootstrap_failed',
-                  message: S.of(context).routeErrorMessage,
-                  technicalDetails: BidiFormatters.latinIdentifier(
-                    stackTrace.toString(),
-                  ),
-                ),
-                onRetry: () => unawaited(
-                  ref.read(appBootstrapControllerProvider.notifier).retry(),
                 ),
               ),
             ),

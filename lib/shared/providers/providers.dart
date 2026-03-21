@@ -70,6 +70,20 @@ final openDisputesProvider = FutureProvider<List<DisputeRecord>>((ref) {
   return ref.read(disputeRepositoryProvider).fetchOpenDisputes();
 });
 
+final disputeEvidenceProvider = FutureProvider.autoDispose
+    .family<List<DisputeEvidenceRecord>, String>((ref, disputeId) {
+      return ref
+          .read(disputeRepositoryProvider)
+          .fetchDisputeEvidence(disputeId);
+    });
+
+final disputeEvidenceDetailProvider = FutureProvider.autoDispose
+    .family<DisputeEvidenceRecord?, String>((ref, evidenceId) {
+      return ref
+          .read(disputeRepositoryProvider)
+          .fetchDisputeEvidenceById(evidenceId);
+    });
+
 final payoutsProvider = FutureProvider<List<PayoutRecord>>((ref) {
   return ref.read(disputeRepositoryProvider).fetchPayouts();
 });
