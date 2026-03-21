@@ -1837,6 +1837,46 @@ class S {
     );
   }
 
+  /// `Dispute evidence`
+  String get disputeEvidenceTitle {
+    return Intl.message(
+      'Dispute evidence',
+      name: 'disputeEvidenceTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add evidence files`
+  String get disputeEvidenceAddAction {
+    return Intl.message(
+      'Add evidence files',
+      name: 'disputeEvidenceAddAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No evidence files have been attached to this dispute yet.`
+  String get disputeEvidenceEmptyMessage {
+    return Intl.message(
+      'No evidence files have been attached to this dispute yet.',
+      name: 'disputeEvidenceEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selected files: {count}`
+  String disputeEvidenceSelectedCount(Object count) {
+    return Intl.message(
+      'Selected files: $count',
+      name: 'disputeEvidenceSelectedCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `Payout released`
   String get notificationPayoutReleasedTitle {
     return Intl.message(

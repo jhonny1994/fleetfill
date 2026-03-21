@@ -26,6 +26,18 @@ Deno.serve(async (req: Request) => {
       },
     )
 
+    const pushWorkerResponse = await fetch(
+      `${Deno.env.get('SUPABASE_URL')}/functions/v1/push-dispatch-worker`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ batch_size: 10 }),
+      },
+    )
+
     const documentWorkerResponse = await fetch(
       `${Deno.env.get('SUPABASE_URL')}/functions/v1/generated-document-worker`,
       {
@@ -55,6 +67,13 @@ Deno.serve(async (req: Request) => {
       documentWorkerPayload = {}
     }
 
+    let pushWorkerPayload: Record<string, unknown> = {}
+    try {
+      pushWorkerPayload = await pushWorkerResponse.json() as Record<string, unknown>
+    } catch (_) {
+      pushWorkerPayload = {}
+    }
+
     const { data: recoveredJobs, error: recoveryError } = await serviceClient
       .rpc(
         'recover_stale_email_outbox_jobs',
@@ -67,6 +86,10 @@ Deno.serve(async (req: Request) => {
       'recover_stale_generated_document_jobs',
       { p_lock_age_seconds: 900 },
     )
+    const { data: recoveredPushJobs, error: pushRecoveryError } = await serviceClient.rpc(
+      'recover_stale_push_outbox_jobs',
+      { p_lock_age_seconds: 900 },
+    )
 
     const { data: expiredRejectedBookings, error: paymentExpiryError } = await serviceClient.rpc(
       'expire_payment_resubmission_deadlines',
@@ -76,13 +99,17 @@ Deno.serve(async (req: Request) => {
     )
 
     if (
-      recoveryError != null || documentRecoveryError != null || paymentExpiryError != null ||
-      deliveryExpiryError != null
+      recoveryError != null || documentRecoveryError != null || pushRecoveryError != null ||
+      paymentExpiryError != null || deliveryExpiryError != null
     ) {
       console.error('recover_stale_email_outbox_jobs failed', recoveryError)
       console.error(
         'recover_stale_generated_document_jobs failed',
         documentRecoveryError,
+      )
+      console.error(
+        'recover_stale_push_outbox_jobs failed',
+        pushRecoveryError,
       )
       console.error(
         'expire_payment_resubmission_deadlines failed',
@@ -100,9 +127,11 @@ Deno.serve(async (req: Request) => {
 
     return jsonResponse({
       email_dispatch: workerPayload,
+      push_dispatch: pushWorkerPayload,
       generated_documents: documentWorkerPayload,
       recovered_stale_jobs: recoveredJobs ?? 0,
       recovered_stale_generated_document_jobs: recoveredDocumentJobs ?? 0,
+      recovered_stale_push_jobs: recoveredPushJobs ?? 0,
       delivery_grace_window_expiry: autoCompletedDeliveries ?? 0,
       payment_resubmission_expiry: expiredRejectedBookings ?? 0,
     })

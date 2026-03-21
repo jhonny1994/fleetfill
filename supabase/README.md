@@ -48,6 +48,8 @@ Current local baseline is split into:
 - `migrations/20260320120800_harden_notification_device_rules.sql`
 - `migrations/20260320120810_harden_email_delivery_rules.sql`
 - `migrations/20260320120820_create_support_request_email_rpc.sql`
+- `migrations/20260320120825_add_dispute_evidence_support.sql`
+- `migrations/20260320120830_create_push_notification_runtime.sql`
 - `migrations/20260320120900_seed_runtime_and_feature_flag_settings.sql`
 - `migrations/20260320121000_create_typed_client_settings_rpc.sql`
 - `migrations/20260320121100_create_admin_operational_summary_rpc.sql`
@@ -97,15 +99,30 @@ Run it locally with:
 
 Example root `.env` entries:
 
-- `SUPABASE_URL=http://127.0.0.1:54321`
+- `APP_ENV=production`
+- `SUPABASE_URL=https://your-project-ref.supabase.co`
 - `SUPABASE_ANON_KEY=...`
-- `SUPABASE_PUBLISHABLE_KEY=...`
 - `SUPABASE_SERVICE_ROLE_KEY=...`
+- `GOOGLE_AUTH_ENABLED=true`
+- `MAINTENANCE_MODE=false`
+- `FORCE_UPDATE_REQUIRED=false`
+- `CRASH_REPORTING_ENABLED=false`
+- `SUPPORT_EMAIL=support@example.com`
+- `SUPPORT_EMAIL_TO=support@example.com`
+- `PUSH_NOTIFICATIONS_ENABLED=true`
+- `PUSH_NOTIFICATIONS_PROVIDER=fcm_v1`
+- `FIREBASE_SERVICE_ACCOUNT_JSON={...}`
 - `TRANSACTIONAL_EMAIL_PROVIDER=...`
+- `TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT=https://api.provider.example/send`
 - `TRANSACTIONAL_EMAIL_PROVIDER_API_KEY=...`
 - `TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET=...`
 - `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=your-google-web-client-id`
 - `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=your-google-client-secret`
+
+Notes:
+
+- `SUPABASE_PUBLISHABLE_KEY` is not required by the current app/runtime path and is intentionally not part of the baseline env template.
+- FlutterFire client config should normally come from `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, and `lib/firebase_options.dart`; the `FIREBASE_*` app vars are optional overrides, not baseline production requirements.
 
 ## Runtime Boundaries
 
@@ -115,7 +132,12 @@ Database functions / RPC responsibilities:
 - `create_upload_session`
 - `finalize_payment_proof`
 - `finalize_verification_document`
+- `finalize_dispute_evidence`
 - `enqueue_support_request_emails`
+- `claim_push_outbox_jobs`
+- `complete_push_outbox_job`
+- `release_retryable_push_job`
+- `recover_stale_push_outbox_jobs`
 - `claim_generated_document_jobs`
 - `complete_generated_document_processing`
 - `fail_generated_document_processing`
@@ -129,17 +151,19 @@ Edge Function responsibilities:
 - `signed-file-url`
 - `support-email-dispatch`
 - `generated-document-worker`
+- `push-dispatch-worker`
 
 Production-grade alignment notes:
 
 - Edge Functions should orchestrate only HTTP/integration work and call RPC for canonical mutations
 - support email queueing is server-controlled through `enqueue_support_request_emails(...)`, not direct table inserts from Edge code
 - generated document workers claim, complete, fail, and recover jobs through RPC instead of mutating queue state ad hoc
-- scheduled maintenance recovers both email and generated-document worker locks before running expiry automation
+- scheduled maintenance recovers email, push, and generated-document worker locks before running expiry automation
 
 ## Secrets Placement
 
 - Supabase project / Edge Function secrets
+  - Firebase service account JSON for FCM HTTP v1 push delivery
   - transactional email provider API key
   - transactional email provider webhook verification secret where supported
   - any direct integration secrets consumed by Edge Functions

@@ -243,6 +243,15 @@
       "documentType": {}
     }
   },
+  "disputeEvidenceTitle": "Pieces du litige",
+  "disputeEvidenceAddAction": "Ajouter des fichiers de preuve",
+  "disputeEvidenceEmptyMessage": "Aucun fichier de preuve n'a encore ete joint a ce litige.",
+  "disputeEvidenceSelectedCount": "Fichiers selectionnes : {count}",
+  "@disputeEvidenceSelectedCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "forbiddenMessage": "This area is not available for your account.",
   "forbiddenTitle": "Access restricted",
   "forbiddenAdminStepUpMessage": "Re-authenticate recently before opening this sensitive admin surface.",
