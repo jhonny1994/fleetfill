@@ -20,6 +20,54 @@ Why:
 - true device-backed integration execution is still pending even though broader CI-capable cross-feature flow coverage now exists
 - several profile-mode, accessibility, localization, navigation, and staging checks still require manual or operator-driven validation
 
+## Production Blockers
+
+These are the non-manual blockers that still prevent a clean "nothing missing or broken" signoff for phases 0 through 14.
+
+### Critical
+
+- [ ] Close shipper and carrier role-guard gaps so authenticated users cannot enter the wrong role shell or role-specific operational routes (`lib/core/routing/app_route_guards.dart`)
+- [ ] Remove post-auth role mutation from onboarding so one account remains bound to exactly one role after setup (`lib/features/onboarding/presentation/onboarding_screens.dart`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
+- [ ] Widen phone-completion enforcement so shipper operational actions cannot proceed before required business contact data exists (`lib/core/routing/app_route_guards.dart`, `lib/features/shipper/presentation/shipper_screens.dart`, `docs/01-product-and-scope.md`, `docs/03-technical-architecture.md`)
+- [ ] Fix booking lifecycle semantics where booking creation still emits `booking_confirmed` side effects before payment approval secures the booking (`supabase/migrations/20260320120200_create_booking_confirmation_rpc.sql`, `docs/02-domain-and-state-model.md`, `docs/06-operations-and-compliance.md`)
+- [ ] Ensure payment approval creates the required notifications and communications for both shipper and carrier, not only one side of the transaction (`supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql`, `docs/06-operations-and-compliance.md`)
+- [ ] Remove nullable-role drift in the profile schema so the database matches the exact-one-role product rule (`supabase/migrations/20260317143200_create_marketplace_core_tables.sql`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
+- [ ] Remove committed secret-material risk from the repository, including the checked-in Firebase admin SDK JSON (`assets/fleetfill-firebase-adminsdk-fbsvc-f224198ecd.json`, `docs/04-data-and-security-model.md`)
+
+### High
+
+- [ ] Allow balanced dispute evidence handling so carrier-side evidence is not structurally blocked when dispute review requires both parties' context (`supabase/migrations/20260320120825_add_dispute_evidence_support.sql`, `docs/06-operations-and-compliance.md`)
+- [ ] Complete Arabic and French operational localization so critical user-facing copy no longer falls back to English in shipped flows (`lib/l10n/intl_ar.arb`, `lib/l10n/intl_fr.arb`, `docs/05-ux-and-localization.md`)
+- [ ] Finish the accessibility release pass for core shared widgets and trust-sensitive flows, especially semantics for money summaries, status chips, cards, and async status updates (`lib/shared/widgets/money_summary_card.dart`, `lib/shared/widgets/status_chip.dart`, `lib/shared/widgets/app_list_card.dart`, `docs/05-ux-and-localization.md`)
+- [ ] Run executable Supabase runtime security and email tests in CI instead of relying only on local instructions and manual invocation (`.github/workflows/supabase_validation.yml`, `supabase/tests/runtime_security_test.sql`, `supabase/tests/runtime_email_test.sql`, `supabase/README.md`)
+- [ ] Replace the remaining smoke-style integration posture with real backend-connected critical-flow integration coverage for auth, shipment, booking, payment, admin review, dispute, and deep-link paths (`integration_test/settings_support_and_policies_smoke_test.dart`, `docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`)
+- [ ] Add real release traceability artifacts so every release can map to a changelog entry and user-facing release notes as required by the release policy (`docs/13-release-operations.md`, `.github/RELEASE_TEMPLATE.md`)
+
+### Medium
+
+- [ ] Reconcile search UX with the canonical search contract so result cards and controls expose the intended operational context such as stronger route/capacity detail and supported preference inputs (`lib/features/shipper/presentation/shipper_screens.dart`, `docs/05-ux-and-localization.md`)
+- [ ] Reconcile shared settings with the documented settings surface so language, theme, and preference management are discoverable from the shared route cluster (`lib/features/profile/presentation/profile_screens.dart`, `docs/08-screen-map-and-routing.md`)
+- [ ] Reconcile admin queue navigation with the documented detail-route strategy where payment, dispute, payout, and email flows still rely mainly on sheets or inline actions (`lib/features/admin/presentation/admin_screens.dart`, `lib/core/routing/app_router.dart`, `docs/08-screen-map-and-routing.md`)
+- [ ] Make scheduler wiring and timed-automation invocation more explicit in repo-managed infrastructure so durable automation does not depend on undocumented operator setup (`supabase/README.md`, `supabase/functions/scheduled-automation-tick/index.ts`, `docs/03-technical-architecture.md`)
+- [ ] Reconcile email delivery log behavior with the append-oriented audit model described in the data and security docs (`supabase/migrations/20260317143400_create_communications_and_platform_tables.sql`, `supabase/migrations/20260320120810_harden_email_delivery_rules.sql`, `docs/04-data-and-security-model.md`)
+
+## Validation Needed After Fixes
+
+- [ ] `dart analyze`
+- [ ] `flutter test`
+- [ ] `supabase db reset --yes`
+- [ ] `supabase db lint --debug`
+- [ ] `supabase test db "supabase/tests/runtime_security_test.sql"`
+- [ ] `supabase test db "supabase/tests/runtime_email_test.sql"`
+
+## Exit Criteria For Non-Manual Blocker Closure
+
+- [ ] No open item remains in `Production Blockers` critical or high severity
+- [ ] Docs and implementation agree on role, booking, payment, dispute, notification, and release semantics
+- [ ] CI enforces executable backend runtime verification in addition to schema reset and lint checks
+- [ ] Critical cross-feature flows have real integration evidence rather than smoke-only or fake-only coverage
+- [ ] No secrets or privileged credential files remain committed in the repository
+
 ## What Is Already Strong
 
 - phases 0 through 4 are materially aligned after the earlier remediation pass
