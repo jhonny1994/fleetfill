@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:fleetfill/core/config/config.dart';
 import 'package:fleetfill/core/utils/app_logger.dart';
+import 'package:fleetfill/features/carrier/domain/vehicle_models.dart';
 import 'package:fleetfill/shared/models/models.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,12 +25,12 @@ class DisputeRepository {
   Future<List<DisputeRecord>> fetchOpenDisputes() async {
     final response = await _client
         .from('disputes')
-        .select()
+        .select('*, dispute_evidence(count)')
         .eq('status', 'open')
         .order('created_at', ascending: true);
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
-        .map(DisputeRecord.fromJson)
+        .map(_mapDispute)
         .toList(growable: false);
   }
 
@@ -43,7 +47,106 @@ class DisputeRepository {
         'p_description': description,
       },
     );
-    return DisputeRecord.fromJson(response);
+    return _mapDispute(response);
+  }
+
+  Future<List<DisputeEvidenceRecord>> fetchDisputeEvidence(
+    String disputeId,
+  ) async {
+    final response = await _client
+        .from('dispute_evidence')
+        .select()
+        .eq('dispute_id', disputeId)
+        .order('created_at', ascending: false);
+    return (response as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(DisputeEvidenceRecord.fromJson)
+        .toList(growable: false);
+  }
+
+  Future<DisputeEvidenceRecord?> fetchDisputeEvidenceById(
+    String evidenceId,
+  ) async {
+    final response = await _client
+        .from('dispute_evidence')
+        .select()
+        .eq('id', evidenceId)
+        .maybeSingle();
+    if (response == null) {
+      return null;
+    }
+    return DisputeEvidenceRecord.fromJson(response);
+  }
+
+  Future<DisputeEvidenceRecord> uploadDisputeEvidence({
+    required String disputeId,
+    required VerificationUploadDraft draft,
+    String? note,
+  }) async {
+    final uploadSessionResponse = await _client.rpc<List<dynamic>>(
+      'create_upload_session',
+      params: {
+        'p_upload_kind': 'dispute_evidence',
+        'p_entity_type': 'dispute',
+        'p_entity_id': disputeId,
+        'p_document_type': 'evidence',
+        'p_file_extension': draft.extension,
+        'p_content_type': draft.contentType,
+        'p_byte_size': draft.byteSize,
+        'p_checksum_sha256': null,
+      },
+    );
+
+    final uploadSession = uploadSessionResponse
+        .cast<Map<String, dynamic>>()
+        .single;
+    final bucketId = uploadSession['bucket_id'] as String;
+    final objectPath = uploadSession['object_path'] as String;
+    final sessionId = uploadSession['upload_session_id'] as String;
+    final storage = _client.storage.from(bucketId);
+    final fileOptions = FileOptions(contentType: draft.contentType);
+
+    if (draft.bytes != null) {
+      await storage.uploadBinary(
+        objectPath,
+        Uint8List.fromList(draft.bytes!),
+        fileOptions: fileOptions,
+      );
+    } else {
+      await storage.upload(
+        objectPath,
+        File(draft.path),
+        fileOptions: fileOptions,
+      );
+    }
+
+    final response = await _client.rpc<Map<String, dynamic>>(
+      'finalize_dispute_evidence',
+      params: {
+        'p_upload_session_id': sessionId,
+        'p_note': note,
+      },
+    );
+    return DisputeEvidenceRecord.fromJson(response);
+  }
+
+  Future<String> createSignedDisputeEvidenceUrl(
+    DisputeEvidenceRecord evidence,
+  ) async {
+    final response = await _client.functions.invoke(
+      'signed-file-url',
+      body: {
+        'bucket_id': 'dispute-evidence',
+        'object_path': evidence.storagePath,
+      },
+    );
+    final data = response.data as Map<String, dynamic>?;
+    if (data == null || data['signed_url'] == null) {
+      throw const PostgrestException(
+        message: 'document_signed_url_unavailable',
+      );
+    }
+    return data['signed_url'] as String;
   }
 
   Future<DisputeRecord> resolveComplete({
@@ -54,7 +157,7 @@ class DisputeRepository {
       'admin_resolve_dispute_complete',
       params: {'p_dispute_id': disputeId, 'p_resolution_note': resolutionNote},
     );
-    return DisputeRecord.fromJson(response);
+    return _mapDispute(response);
   }
 
   Future<DisputeRecord> resolveRefund({
@@ -74,7 +177,7 @@ class DisputeRepository {
         'p_resolution_note': resolutionNote,
       },
     );
-    return DisputeRecord.fromJson(response);
+    return _mapDispute(response);
   }
 
   Future<List<PayoutRecord>> fetchPayouts() async {
@@ -102,5 +205,20 @@ class DisputeRepository {
       },
     );
     return PayoutRecord.fromJson(response);
+  }
+
+  DisputeRecord _mapDispute(Map<String, dynamic> json) {
+    final evidenceRelation = json['dispute_evidence'];
+    final evidenceCount = switch (evidenceRelation) {
+      final List<dynamic> relation when relation.isNotEmpty =>
+        ((relation.first as Map<String, dynamic>)['count'] as num?)?.toInt() ??
+            0,
+      _ => 0,
+    };
+
+    return DisputeRecord.fromJson({
+      ...json,
+      'evidence_count': evidenceCount,
+    });
   }
 }

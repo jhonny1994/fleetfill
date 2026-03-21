@@ -516,6 +516,14 @@ List<RouteBase> _sharedRoutes(GlobalKey<NavigatorState> rootNavigatorKey) {
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
+      path: AppRoutePath.sharedDisputeEvidenceViewer,
+      name: AppRouteName.sharedDisputeEvidenceViewer.name,
+      builder: (context, state) => DisputeEvidenceViewerScreen(
+        evidenceId: state.pathParameters['id']!,
+      ),
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
       path: AppRoutePath.sharedDocumentViewer,
       name: AppRouteName.sharedDocumentViewer.name,
       builder: (context, state) => DocumentViewerScreen(

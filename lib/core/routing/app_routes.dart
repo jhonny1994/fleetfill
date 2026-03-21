@@ -24,6 +24,7 @@ enum AppRouteName {
   sharedRouteDetail,
   sharedOneOffTripDetail,
   sharedProofViewer,
+  sharedDisputeEvidenceViewer,
   sharedDocumentViewer,
   sharedGeneratedDocumentViewer,
   shipperHome,
@@ -85,6 +86,7 @@ abstract final class AppRoutePath {
   static const sharedRouteDetail = '/shared/route/:id';
   static const sharedOneOffTripDetail = '/shared/oneoff-trip/:id';
   static const sharedProofViewer = '/shared/proof/:id';
+  static const sharedDisputeEvidenceViewer = '/shared/dispute-evidence/:id';
   static const sharedDocumentViewer = '/shared/document/:id';
   static const sharedGeneratedDocumentViewer = '/shared/generated-document/:id';
 
