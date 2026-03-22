@@ -30,7 +30,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
-    final environment = ref.watch(appEnvironmentConfigProvider);
+    ref.watch(appEnvironmentConfigProvider);
 
     return AuthScaffold(
       title: s.authSignInTitle,
@@ -103,14 +103,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   onPressed: () => unawaited(_submit()),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                if (environment.googleAuthEnabled)
-                  OutlinedButton.icon(
-                    onPressed: _isSubmitting
-                        ? null
-                        : () => unawaited(_signInWithGoogle()),
-                    icon: const Icon(Icons.open_in_new_rounded),
-                    label: Text(s.authGoogleAction),
-                  ),
+                OutlinedButton.icon(
+                  onPressed: _isSubmitting
+                      ? null
+                      : () => unawaited(_signInWithGoogle()),
+                  icon: const Icon(Icons.open_in_new_rounded),
+                  label: Text(s.authGoogleAction),
+                ),
               ],
             ),
           ),
@@ -205,7 +204,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final environment = ref.watch(appEnvironmentConfigProvider);
+    ref.watch(appEnvironmentConfigProvider);
 
     return AuthScaffold(
       title: s.authSignUpTitle,
@@ -271,18 +270,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   isLoading: _isSubmitting,
                   onPressed: () => unawaited(_submit()),
                 ),
-                if (environment.googleAuthEnabled) ...[
-                  const SizedBox(height: AppSpacing.lg),
-                  AuthDivider(label: s.authContinueWithLabel),
-                  const SizedBox(height: AppSpacing.lg),
-                  OutlinedButton.icon(
-                    onPressed: _isSubmitting
-                        ? null
-                        : () => unawaited(_signInWithGoogle()),
-                    icon: const Icon(Icons.open_in_new_rounded),
-                    label: Text(s.authGoogleAction),
-                  ),
-                ],
+                const SizedBox(height: AppSpacing.lg),
+                AuthDivider(label: s.authContinueWithLabel),
+                const SizedBox(height: AppSpacing.lg),
+                OutlinedButton.icon(
+                  onPressed: _isSubmitting
+                      ? null
+                      : () => unawaited(_signInWithGoogle()),
+                  icon: const Icon(Icons.open_in_new_rounded),
+                  label: Text(s.authGoogleAction),
+                ),
               ],
             ),
           ),

@@ -17,7 +17,6 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     @Default('') String firebaseStorageBucket,
     @Default('') String firebaseAndroidAppId,
     @Default('') String firebaseIosAppId,
-    @Default(false) bool googleAuthEnabled,
     @Default(false) bool maintenanceMode,
     @Default(false) bool forceUpdateRequired,
     @Default(false) bool crashReportingEnabled,
@@ -28,16 +27,27 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
       _$AppEnvironmentConfigFromJson(json);
 
   factory AppEnvironmentConfig.fromDefines() {
+    final environment = _parseEnvironment(const String.fromEnvironment('APP_ENV'));
+    final publishableKey = _firstNonEmpty([
+      const String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY'),
+      const String.fromEnvironment('APP_SUPABASE_PUBLISHABLE_KEY'),
+    ]);
+    final anonKey = _firstNonEmpty([
+      const String.fromEnvironment('SUPABASE_ANON_KEY'),
+      const String.fromEnvironment('APP_SUPABASE_ANON_KEY'),
+    ]);
+
     return AppEnvironmentConfig(
-      environment: _parseEnvironment(const String.fromEnvironment('APP_ENV')),
+      environment: environment,
       supabaseUrl: _firstNonEmpty([
         const String.fromEnvironment('SUPABASE_URL'),
         const String.fromEnvironment('APP_SUPABASE_URL'),
       ]),
-      supabaseAnonKey: _firstNonEmpty([
-        const String.fromEnvironment('SUPABASE_ANON_KEY'),
-        const String.fromEnvironment('APP_SUPABASE_ANON_KEY'),
-      ]),
+      supabaseAnonKey: _resolveClientKey(
+        environment: environment,
+        publishableKey: publishableKey,
+        anonKey: anonKey,
+      ),
       firebaseApiKey: _firstNonEmpty([
         const String.fromEnvironment('FIREBASE_API_KEY'),
         const String.fromEnvironment('APP_FIREBASE_API_KEY'),
@@ -62,12 +72,6 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
         const String.fromEnvironment('FIREBASE_IOS_APP_ID'),
         const String.fromEnvironment('APP_FIREBASE_IOS_APP_ID'),
       ]),
-      googleAuthEnabled: _parseBool(
-        _firstNonEmpty([
-          const String.fromEnvironment('GOOGLE_AUTH_ENABLED'),
-          const String.fromEnvironment('APP_GOOGLE_AUTH_ENABLED'),
-        ]),
-      ),
       maintenanceMode: _parseBool(
         const String.fromEnvironment('MAINTENANCE_MODE'),
       ),
@@ -91,6 +95,38 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
   }
 
   static bool _parseBool(String value) => value.toLowerCase() == 'true';
+
+  static String resolveClientKeyForTesting({
+    required AppEnvironment environment,
+    String publishableKey = '',
+    String anonKey = '',
+  }) {
+    return _resolveClientKey(
+      environment: environment,
+      publishableKey: publishableKey,
+      anonKey: anonKey,
+    );
+  }
+
+  static String _resolveClientKey({
+    required AppEnvironment environment,
+    required String publishableKey,
+    required String anonKey,
+  }) {
+    final normalizedPublishableKey = publishableKey.trim();
+    final normalizedAnonKey = anonKey.trim();
+
+    return switch (environment) {
+      AppEnvironment.local => _firstNonEmpty([
+          normalizedAnonKey,
+          normalizedPublishableKey,
+        ]),
+      AppEnvironment.staging || AppEnvironment.production => _firstNonEmpty([
+          normalizedPublishableKey,
+          normalizedAnonKey,
+        ]),
+    };
+  }
 
   static String _firstNonEmpty(List<String> values) {
     for (final value in values) {

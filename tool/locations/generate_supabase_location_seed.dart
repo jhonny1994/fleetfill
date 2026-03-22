@@ -3,12 +3,16 @@ import 'dart:io';
 
 void main() {
   final root = Directory.current;
-  final source = File('${root.path}/data/locations/wilayas-with-municipalities.json');
+  final source = File(
+    '${root.path}/data/locations/wilayas-with-municipalities.json',
+  );
   final target = File('${root.path}/supabase/seeds/locations.sql');
 
   final raw = jsonDecode(source.readAsStringSync()) as List<dynamic>;
   final buffer = StringBuffer()
-    ..writeln('-- Generated from data/locations/wilayas-with-municipalities.json')
+    ..writeln(
+      '-- Generated from data/locations/wilayas-with-municipalities.json',
+    )
     ..writeln(
       '-- Regenerate with: dart run tool/locations/generate_supabase_location_seed.dart',
     )

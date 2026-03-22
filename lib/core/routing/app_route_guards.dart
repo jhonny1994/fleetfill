@@ -1,12 +1,14 @@
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/core/config/app_bootstrap.dart';
 import 'package:fleetfill/core/routing/app_routes.dart';
+import 'package:fleetfill/features/onboarding/onboarding.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum AppRedirectTarget {
   none,
   maintenance,
   updateRequired,
+  welcome,
   signIn,
   resetPassword,
   home,
@@ -72,10 +74,17 @@ class AppRouteGuards {
     return location.startsWith('/carrier');
   }
 
+  static bool _isPublicSignedOutLocation(String location) {
+    return location == AppRoutePath.welcome ||
+        location == AppRoutePath.languageSelection ||
+        location == AppRoutePath.sharedPolicies;
+  }
+
   static RouteGuardDecision evaluate({
     required AppBootstrapState bootstrap,
     required AuthSnapshot auth,
     required String location,
+    bool hasSeenPreAuthOnboarding = false,
   }) {
     if (bootstrap.environment.maintenanceMode &&
         location != AppRoutePath.maintenance) {
@@ -90,6 +99,8 @@ class AppRouteGuards {
     final inAuthFlow = location.startsWith('/auth');
     final inOnboarding = location.startsWith('/onboarding');
     final inPermissions = location.startsWith('/permissions');
+    final inWelcome = location == AppRoutePath.welcome;
+    final inPublicSignedOutLocation = _isPublicSignedOutLocation(location);
 
     if (auth.isSessionExpired && !inAuthFlow) {
       return const RouteGuardDecision(target: AppRedirectTarget.sessionExpired);
@@ -97,8 +108,13 @@ class AppRouteGuards {
 
     if (!auth.isAuthenticated &&
         auth.status != AuthStatus.unconfigured &&
-        !inAuthFlow) {
-      return const RouteGuardDecision(target: AppRedirectTarget.signIn);
+        !inAuthFlow &&
+        !inPublicSignedOutLocation) {
+      return RouteGuardDecision(
+        target: hasSeenPreAuthOnboarding
+            ? AppRedirectTarget.signIn
+            : AppRedirectTarget.welcome,
+      );
     }
 
     if (!auth.isAuthenticated) {
@@ -119,11 +135,13 @@ class AppRouteGuards {
       return const RouteGuardDecision(target: AppRedirectTarget.resetPassword);
     }
 
-    if (inOnboarding && location == AppRoutePath.roleSelection && auth.role != null) {
+    if (inOnboarding &&
+        location == AppRoutePath.roleSelection &&
+        auth.role != null) {
       return const RouteGuardDecision(target: AppRedirectTarget.home);
     }
 
-    if (inAuthFlow && !auth.isPasswordRecovery) {
+    if ((inAuthFlow || inWelcome) && !auth.isPasswordRecovery) {
       return const RouteGuardDecision(target: AppRedirectTarget.home);
     }
 
@@ -194,6 +212,8 @@ class AppRouteGuards {
         return AppRoutePath.maintenance;
       case AppRedirectTarget.updateRequired:
         return AppRoutePath.updateRequired;
+      case AppRedirectTarget.welcome:
+        return AppRoutePath.welcome;
       case AppRedirectTarget.signIn:
       case AppRedirectTarget.sessionExpired:
         return AppRoutePath.signIn;
@@ -248,6 +268,9 @@ final routeGuardDecisionProvider = Provider.family<RouteGuardDecision, String>(
   (ref, location) {
     final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    final hasSeenPreAuthOnboarding = ref.watch(
+      preAuthOnboardingControllerProvider,
+    );
     if (bootstrap == null || auth == null) {
       return const RouteGuardDecision.none();
     }
@@ -256,6 +279,7 @@ final routeGuardDecisionProvider = Provider.family<RouteGuardDecision, String>(
       bootstrap: bootstrap,
       auth: auth,
       location: location,
+      hasSeenPreAuthOnboarding: hasSeenPreAuthOnboarding,
     );
     if (decision.hasRedirect) {
       return decision;

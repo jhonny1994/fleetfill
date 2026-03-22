@@ -28,17 +28,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final carrierNavigatorKey = ref.watch(carrierShellNavigatorKeyProvider);
   final adminNavigatorKey = ref.watch(adminShellNavigatorKeyProvider);
   final bootstrapState = ref.watch(appBootstrapControllerProvider);
-  ref.watch(authSessionControllerProvider);
+  final authSessionState = ref.watch(authSessionControllerProvider);
 
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: AppRoutePath.splash,
     redirect: (context, state) {
       final resolvedBootstrap = bootstrapState.asData?.value;
-      final resolvedAuth = ref
-          .read(authSessionControllerProvider)
-          .asData
-          ?.value;
+      final resolvedAuth = authSessionState.asData?.value;
       if (resolvedBootstrap == null) {
         return state.matchedLocation == AppRoutePath.splash
             ? null
@@ -116,6 +113,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutePath.updateRequired,
         name: AppRouteName.updateRequired.name,
         builder: (context, state) => const ForceUpdateScreen(),
+      ),
+      GoRoute(
+        path: AppRoutePath.welcome,
+        name: AppRouteName.welcome.name,
+        builder: (context, state) => const WelcomeScreen(),
       ),
       GoRoute(
         path: AppRoutePath.signIn,
