@@ -48,21 +48,7 @@ class ShipmentRepository {
       return null;
     }
 
-    final items = await fetchShipmentItems(shipmentId);
-    return ShipmentDraftRecord.fromJson(shipment, items: items);
-  }
-
-  Future<List<ShipmentItemDraft>> fetchShipmentItems(String shipmentId) async {
-    final response = await _client
-        .from('shipment_items')
-        .select()
-        .eq('shipment_id', shipmentId)
-        .order('created_at', ascending: true);
-
-    return (response as List<dynamic>)
-        .cast<Map<String, dynamic>>()
-        .map(ShipmentItemDraft.fromJson)
-        .toList(growable: false);
+    return ShipmentDraftRecord.fromJson(shipment);
   }
 
   Future<ShipmentDraftRecord> createShipmentDraft(
@@ -75,19 +61,16 @@ class ShipmentRepository {
           'shipper_id': userId,
           'origin_commune_id': input.originCommuneId,
           'destination_commune_id': input.destinationCommuneId,
-          'pickup_window_start': input.pickupWindowStart.toIso8601String(),
-          'pickup_window_end': input.pickupWindowEnd.toIso8601String(),
+          'pickup_date': _dateOnly(input.pickupDate),
           'total_weight_kg': input.totalWeightKg,
           'total_volume_m3': input.totalVolumeM3,
-          'category': input.category.trim(),
-          'description': _nullable(input.description),
+          'description': _nullable(input.details),
           'status': ShipmentStatus.draft.databaseValue,
         })
         .select()
         .single();
 
-    await _replaceShipmentItems(shipment['id'] as String, input.items);
-    return (await fetchShipmentById(shipment['id'] as String))!;
+    return ShipmentDraftRecord.fromJson(shipment);
   }
 
   Future<ShipmentDraftRecord> updateShipmentDraft({
@@ -99,17 +82,19 @@ class ShipmentRepository {
         .update({
           'origin_commune_id': input.originCommuneId,
           'destination_commune_id': input.destinationCommuneId,
-          'pickup_window_start': input.pickupWindowStart.toIso8601String(),
-          'pickup_window_end': input.pickupWindowEnd.toIso8601String(),
+          'pickup_date': _dateOnly(input.pickupDate),
           'total_weight_kg': input.totalWeightKg,
           'total_volume_m3': input.totalVolumeM3,
-          'category': input.category.trim(),
-          'description': _nullable(input.description),
+          'description': _nullable(input.details),
         })
         .eq('id', shipmentId);
 
-    await _replaceShipmentItems(shipmentId, input.items);
-    return (await fetchShipmentById(shipmentId))!;
+    final shipment = await _client
+        .from('shipments')
+        .select()
+        .eq('id', shipmentId)
+        .single();
+    return ShipmentDraftRecord.fromJson(shipment);
   }
 
   Future<void> deleteShipmentDraft(String shipmentId) async {
@@ -138,33 +123,6 @@ class ShipmentRepository {
       },
     );
     return ShipmentSearchResponse.fromJson(response);
-  }
-
-  Future<void> _replaceShipmentItems(
-    String shipmentId,
-    List<ShipmentItemDraft> items,
-  ) async {
-    await _client.from('shipment_items').delete().eq('shipment_id', shipmentId);
-    if (items.isEmpty) {
-      return;
-    }
-
-    await _client
-        .from('shipment_items')
-        .insert(
-          items
-              .map(
-                (item) => {
-                  'shipment_id': shipmentId,
-                  'label': item.label.trim(),
-                  'quantity': item.quantity,
-                  'weight_kg': item.weightKg,
-                  'volume_m3': item.volumeM3,
-                  'notes': _nullable(item.notes),
-                },
-              )
-              .toList(growable: false),
-        );
   }
 
   String _requireUserId() {

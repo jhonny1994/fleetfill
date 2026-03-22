@@ -296,10 +296,9 @@ class _ShipperJourneyHarnessState
                         .read(shipmentRepositoryProvider)
                         .searchExactLaneCapacity(
                           ShipmentSearchQuery(
-                            shipmentId: shipment.id,
                             originCommuneId: shipment.originCommuneId,
                             destinationCommuneId: shipment.destinationCommuneId,
-                            requestedDate: shipment.pickupWindowStart,
+                            requestedDate: shipment.pickupDate,
                             totalWeightKg: shipment.totalWeightKg,
                             totalVolumeM3: shipment.totalVolumeM3,
                           ),
@@ -586,16 +585,13 @@ class _FakeFlowStore {
         shipperId: 'shipper-1',
         originCommuneId: 1601,
         destinationCommuneId: 3101,
-        pickupWindowStart: DateTime.utc(2026, 3, 21, 8),
-        pickupWindowEnd: DateTime.utc(2026, 3, 21, 12),
+        pickupDate: DateTime.utc(2026, 3, 21),
         totalWeightKg: 50,
         totalVolumeM3: 1,
-        category: 'electronics',
-        description: 'Fragile boxes',
+        details: 'Fragile boxes',
         status: ShipmentStatus.booked,
         createdAt: DateTime.utc(2026, 3, 20),
         updatedAt: DateTime.utc(2026, 3, 20),
-        items: const <ShipmentItemDraft>[],
       ),
     );
     bookings.add(
@@ -677,16 +673,13 @@ class _FakeShipmentRepository extends ShipmentRepository {
       shipperId: 'shipper-1',
       originCommuneId: input.originCommuneId,
       destinationCommuneId: input.destinationCommuneId,
-      pickupWindowStart: input.pickupWindowStart,
-      pickupWindowEnd: input.pickupWindowEnd,
+      pickupDate: input.pickupDate,
       totalWeightKg: input.totalWeightKg,
       totalVolumeM3: input.totalVolumeM3,
-      category: input.category,
-      description: input.description,
+      details: input.details,
       status: ShipmentStatus.draft,
       createdAt: DateTime.utc(2026, 3, 21),
       updatedAt: DateTime.utc(2026, 3, 21),
-      items: input.items,
     );
     store.shipments.insert(0, shipment);
     return shipment;
@@ -696,7 +689,7 @@ class _FakeShipmentRepository extends ShipmentRepository {
   Future<ShipmentSearchResponse> searchExactLaneCapacity(
     ShipmentSearchQuery query,
   ) async {
-    return store.searchResponseFor(query.shipmentId);
+    return store.searchResponseFor(store.shipments.first.id);
   }
 }
 
@@ -1079,15 +1072,10 @@ ShipmentDraftInput _shipmentInput() {
   return ShipmentDraftInput(
     originCommuneId: 1601,
     destinationCommuneId: 3101,
-    pickupWindowStart: DateTime.utc(2026, 3, 21, 8),
-    pickupWindowEnd: DateTime.utc(2026, 3, 21, 12),
+    pickupDate: DateTime.utc(2026, 3, 21),
     totalWeightKg: 50,
     totalVolumeM3: 1,
-    category: 'electronics',
-    description: 'Fragile boxes',
-    items: const [
-      ShipmentItemDraft(label: 'Box', quantity: 1, weightKg: 50, volumeM3: 1),
-    ],
+    details: 'Fragile boxes',
   );
 }
 

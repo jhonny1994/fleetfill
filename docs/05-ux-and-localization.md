@@ -75,9 +75,10 @@ Rules:
 
 ### 4.1 Search Inputs
 
-- origin commune
-- destination commune
-- desired date
+- shipment draft
+- origin wilaya and commune
+- destination wilaya and commune
+- pickup date from the selected shipment
 - shipment weight
 - optional vehicle type preference
 
@@ -137,18 +138,16 @@ Recommended skeleton targets in FleetFill:
 
 The shipment form should capture:
 
-- origin
-- destination
-- pickup window
+- origin wilaya
+- origin commune
+- destination wilaya
+- destination commune
+- pickup date
 - weight
 - optional volume
-- category
-- item/package breakdown
-- optional description
+- shipment details
 
-### 5.2 Multi-Item Shipment UX
-
-Users may add multiple package lines, but the screen must reinforce that all items will travel together on one truck.
+The shipment form should not ask for category, item rows, or separate notes fields.
 
 ## 6. Adaptive Layout Rules
 

@@ -7,6 +7,7 @@ void main() {
     late String constraintsMigration;
     late String searchMigration;
     late String bookingSchemaMigration;
+    late String simplificationMigration;
 
     setUpAll(() {
       constraintsMigration = File(
@@ -18,6 +19,9 @@ void main() {
       bookingSchemaMigration = File(
         'supabase/migrations/20260317143200_create_marketplace_core_tables.sql',
       ).readAsStringSync();
+      simplificationMigration = File(
+        'supabase/migrations/20260322123000_simplify_shipment_domain.sql',
+      ).readAsStringSync();
     });
 
     test('keeps shipment and departure constraints in schema', () {
@@ -26,17 +30,19 @@ void main() {
         isTrue,
       );
       expect(
-        constraintsMigration.contains('shipments_pickup_window_order_check'),
-        isTrue,
-      );
-      expect(
-        constraintsMigration.contains('shipment_items_positive_quantity_check'),
-        isTrue,
-      );
-      expect(
-        constraintsMigration.contains(
-          'route_departure_instances_route_date_unique_idx',
+        simplificationMigration.contains(
+          'drop column if exists pickup_window_end',
         ),
+        isTrue,
+      );
+      expect(
+        simplificationMigration.contains(
+          'drop table if exists public.shipment_items cascade',
+        ),
+        isTrue,
+      );
+      expect(
+        simplificationMigration.contains('shipments_lane_pickup_date_idx'),
         isTrue,
       );
       expect(

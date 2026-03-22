@@ -15,72 +15,34 @@ enum ShipmentStatus {
   String get databaseValue => name;
 }
 
-class ShipmentItemDraft {
-  const ShipmentItemDraft({
-    required this.label,
-    required this.quantity,
-    this.id,
-    this.weightKg,
-    this.volumeM3,
-    this.notes,
-  });
-
-  factory ShipmentItemDraft.fromJson(Map<String, dynamic> json) {
-    return ShipmentItemDraft(
-      id: json['id'] as String?,
-      label: (json['label'] as String?)?.trim() ?? '',
-      quantity: (json['quantity'] as num?)?.toInt() ?? 1,
-      weightKg: (json['weight_kg'] as num?)?.toDouble(),
-      volumeM3: (json['volume_m3'] as num?)?.toDouble(),
-      notes: (json['notes'] as String?)?.trim(),
-    );
-  }
-
-  final String? id;
-  final String label;
-  final int quantity;
-  final double? weightKg;
-  final double? volumeM3;
-  final String? notes;
-}
-
 class ShipmentDraftRecord {
   const ShipmentDraftRecord({
     required this.id,
     required this.shipperId,
     required this.originCommuneId,
     required this.destinationCommuneId,
-    required this.pickupWindowStart,
-    required this.pickupWindowEnd,
+    required this.pickupDate,
     required this.totalWeightKg,
     required this.totalVolumeM3,
-    required this.category,
-    required this.description,
+    required this.details,
     required this.status,
     required this.createdAt,
     required this.updatedAt,
-    required this.items,
   });
 
-  factory ShipmentDraftRecord.fromJson(
-    Map<String, dynamic> json, {
-    List<ShipmentItemDraft> items = const <ShipmentItemDraft>[],
-  }) {
+  factory ShipmentDraftRecord.fromJson(Map<String, dynamic> json) {
     return ShipmentDraftRecord(
       id: json['id'] as String,
       shipperId: json['shipper_id'] as String,
       originCommuneId: json['origin_commune_id'] as int,
       destinationCommuneId: json['destination_commune_id'] as int,
-      pickupWindowStart: DateTime.parse(json['pickup_window_start'] as String),
-      pickupWindowEnd: DateTime.parse(json['pickup_window_end'] as String),
+      pickupDate: DateTime.parse(json['pickup_date'] as String),
       totalWeightKg: (json['total_weight_kg'] as num).toDouble(),
       totalVolumeM3: (json['total_volume_m3'] as num?)?.toDouble(),
-      category: (json['category'] as String?)?.trim() ?? '',
-      description: (json['description'] as String?)?.trim(),
+      details: (json['description'] as String?)?.trim(),
       status: ShipmentStatus.fromDatabase(json['status']),
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
-      items: items,
     );
   }
 
@@ -88,40 +50,31 @@ class ShipmentDraftRecord {
   final String shipperId;
   final int originCommuneId;
   final int destinationCommuneId;
-  final DateTime pickupWindowStart;
-  final DateTime pickupWindowEnd;
+  final DateTime pickupDate;
   final double totalWeightKg;
   final double? totalVolumeM3;
-  final String category;
-  final String? description;
+  final String? details;
   final ShipmentStatus status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final List<ShipmentItemDraft> items;
 }
 
 class ShipmentDraftInput {
   const ShipmentDraftInput({
     required this.originCommuneId,
     required this.destinationCommuneId,
-    required this.pickupWindowStart,
-    required this.pickupWindowEnd,
+    required this.pickupDate,
     required this.totalWeightKg,
     required this.totalVolumeM3,
-    required this.category,
-    required this.description,
-    required this.items,
+    required this.details,
   });
 
   final int originCommuneId;
   final int destinationCommuneId;
-  final DateTime pickupWindowStart;
-  final DateTime pickupWindowEnd;
+  final DateTime pickupDate;
   final double totalWeightKg;
   final double? totalVolumeM3;
-  final String category;
-  final String? description;
-  final List<ShipmentItemDraft> items;
+  final String? details;
 }
 
 enum SearchResultMode {
@@ -143,7 +96,6 @@ enum SearchSortOption { recommended, topRated, lowestPrice, nearestDeparture }
 
 class ShipmentSearchQuery {
   const ShipmentSearchQuery({
-    required this.shipmentId,
     required this.originCommuneId,
     required this.destinationCommuneId,
     required this.requestedDate,
@@ -154,7 +106,6 @@ class ShipmentSearchQuery {
     this.limit = 20,
   });
 
-  final String shipmentId;
   final int originCommuneId;
   final int destinationCommuneId;
   final DateTime requestedDate;

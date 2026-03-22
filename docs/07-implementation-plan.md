@@ -65,7 +65,7 @@ Cross-phase UX note:
 ### Database And Storage Foundation
 
 - [x] Create Postgres enums and base tables from `docs/04-data-and-security-model.md` and `docs/09-supabase-implementation-notes.md`
-- [x] Create `profiles`, `vehicles`, `payout_accounts`, `platform_payment_accounts`, `verification_documents`, `routes`, `route_revisions`, `oneoff_trips`, `shipments`, `shipment_items`, `bookings`, `payment_proofs`, `tracking_events`, `carrier_reviews`, `financial_ledger_entries`, `disputes`, `refunds`, `payouts`, `generated_documents`, `email_delivery_logs`, `email_outbox_jobs`, `notifications`, `user_devices`, `platform_settings`, and `admin_audit_logs`
+- [x] Create `profiles`, `vehicles`, `payout_accounts`, `platform_payment_accounts`, `verification_documents`, `routes`, `route_revisions`, `oneoff_trips`, `shipments`, `bookings`, `payment_proofs`, `tracking_events`, `carrier_reviews`, `financial_ledger_entries`, `disputes`, `refunds`, `payouts`, `generated_documents`, `email_delivery_logs`, `email_outbox_jobs`, `notifications`, `user_devices`, `platform_settings`, and `admin_audit_logs`
 - [x] Seed wilayas and communes from `data/locations/wilayas-with-municipalities.json`
 - [x] Create indexes for search, booking, payment, document review, ledger, and email queue performance
 - [x] Create private storage buckets for payment proofs, verification documents, and generated documents
@@ -194,9 +194,9 @@ Phase 5 notes:
 ### Shipment Domain
 
 - [x] Build shipment CRUD for shipper drafts and active shipments
-- [x] Support multiple shipment items inside one shipment
+- [x] Simplify shipments to one route/date request with one shipment details field
 - [x] Enforce one shipment -> one booking rule in code and DB
-- [x] Validate pickup window, weight, and required inputs
+- [x] Validate pickup date, weight, and required inputs
 
 ### Search Engine And Results
 
@@ -219,7 +219,7 @@ Phase 5 notes:
 
 Phase 6 progress notes:
 
-- shipper shipment drafts now support direct CRUD with multiple shipment items, shared validation, and shared detail rendering over the existing draft-safe RLS model
+- shipper shipment drafts now use a simplified single-request model with wilaya/commune selection, one pickup date, optional volume, and one shipment details field
 - shipment search is now server-driven through `search_exact_lane_capacity(...)`, using exact lane matching, recurring route expansion by requested date, one-off trip inclusion, server-side remaining-capacity checks, recommended ranking, nearest-date fallback, and redefine-search mode
 - shipper search UI now lets users search from a selected shipment draft, review exact/nearest matches inline, debounce and invalidate stale searches, switch sort/filter controls from a bottom sheet, and hand off a selected result into booking review without routed micro-success pages
 - shipment draft selection and the unique booking constraint now preserve the one-shipment -> one-booking model in both app flow and DB truth
