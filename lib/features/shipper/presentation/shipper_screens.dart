@@ -172,7 +172,7 @@ class MyShipmentsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final shipmentsAsync = ref.watch(myShipperShipmentsProvider);
-    final communesAsync = ref.watch(communesProvider);
+    final locationDirectoryAsync = ref.watch(locationDirectoryProvider);
 
     return AppPageScaffold(
       title: s.myShipmentsTitle,
@@ -189,29 +189,25 @@ class MyShipmentsScreen extends ConsumerWidget {
             return AppEmptyState(
               title: s.myShipmentsTitle,
               message: s.shipmentsEmptyMessage,
-              action: FilledButton(
-                onPressed: () => _openShipmentEditor(context),
-                child: Text(s.shipmentCreateAction),
-              ),
             );
           }
-          if (communesAsync.isLoading) {
+          if (locationDirectoryAsync.isLoading) {
             return const AppLoadingState();
           }
-          if (communesAsync.hasError) {
+          if (locationDirectoryAsync.hasError) {
             return AppErrorState(
               error: AppError(
                 code: 'shipment_communes_load_failed',
                 message: mapAppErrorMessage(
                   s,
-                  communesAsync.error ?? Exception('unknown'),
+                  locationDirectoryAsync.error ?? Exception('unknown'),
                 ),
               ),
-              onRetry: () => ref.invalidate(communesProvider),
+              onRetry: () => ref.invalidate(locationDirectoryProvider),
             );
           }
           final communeMap = {
-            for (final commune in communesAsync.requireValue)
+            for (final commune in locationDirectoryAsync.requireValue.communes)
               commune.id: commune,
           };
 
@@ -276,7 +272,6 @@ class SearchTripsScreen extends ConsumerStatefulWidget {
 
 class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
   String? _selectedShipmentId;
-  DateTime? _requestedDate;
   SearchSortOption _sort = SearchSortOption.recommended;
   bool _includeRecurring = true;
   bool _includeOneOff = true;
@@ -295,7 +290,7 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final shipmentsAsync = ref.watch(myShipperShipmentsProvider);
-    final communesAsync = ref.watch(communesProvider);
+    final locationDirectoryAsync = ref.watch(locationDirectoryProvider);
 
     return AppPageScaffold(
       title: s.searchTripsTitle,
@@ -312,15 +307,25 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
               message: s.searchTripsRequiresDraftMessage,
             );
           }
+          if (locationDirectoryAsync.isLoading) {
+            return const AppLoadingState();
+          }
+          if (locationDirectoryAsync.hasError) {
+            return AppErrorState(
+              error: AppError(
+                code: 'search_locations_load_failed',
+                message: mapAppErrorMessage(
+                  s,
+                  locationDirectoryAsync.error ?? Exception('unknown'),
+                ),
+              ),
+              onRetry: () => ref.invalidate(locationDirectoryProvider),
+            );
+          }
           _selectedShipmentId ??= draftShipments.first.id;
           final selectedShipment = draftShipments.firstWhere(
             (shipment) => shipment.id == _selectedShipmentId,
             orElse: () => draftShipments.first,
-          );
-          _requestedDate ??= DateTime(
-            selectedShipment.pickupWindowStart.year,
-            selectedShipment.pickupWindowStart.month,
-            selectedShipment.pickupWindowStart.day,
           );
 
           return ListView(
@@ -346,7 +351,11 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                             (shipment) => DropdownMenuItem(
                               value: shipment.id,
                               child: Text(
-                                _shipmentCompactLabel(context, shipment),
+                                _shipmentSelectorLabel(
+                                  context,
+                                  shipment,
+                                  locationDirectoryAsync.asData!.value.communes,
+                                ),
                               ),
                             ),
                           )
@@ -360,23 +369,10 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                         );
                         setState(() {
                           _selectedShipmentId = value;
-                          _requestedDate = DateTime(
-                            nextShipment.pickupWindowStart.year,
-                            nextShipment.pickupWindowStart.month,
-                            nextShipment.pickupWindowStart.day,
-                          );
                           _response = null;
                         });
                         _scheduleSearch(nextShipment, reset: true);
                       },
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _DateButtonField(
-                      label: s.searchRequestedDateLabel,
-                      value: _requestedDate == null
-                          ? null
-                          : _formatDate(_requestedDate!),
-                      onPressed: () => unawaited(_pickRequestedDate(context)),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     ProfileSummaryCard(
@@ -386,7 +382,7 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                           label: s.routeOriginLabel,
                           value: _communeName(
                             context,
-                            communesAsync.asData?.value,
+                            locationDirectoryAsync.asData?.value.communes,
                             selectedShipment.originCommuneId,
                           ),
                         ),
@@ -394,7 +390,7 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                           label: s.routeDestinationLabel,
                           value: _communeName(
                             context,
-                            communesAsync.asData?.value,
+                            locationDirectoryAsync.asData?.value.communes,
                             selectedShipment.destinationCommuneId,
                           ),
                         ),
@@ -412,10 +408,11 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                                       .toStringAsFixed(1),
                                 ),
                         ),
-                        ProfileSummaryRow(
-                          label: s.shipmentCategoryLabel,
-                          value: selectedShipment.category,
-                        ),
+                        if ((selectedShipment.details ?? '').trim().isNotEmpty)
+                          ProfileSummaryRow(
+                            label: s.shipmentDescriptionLabel,
+                            value: selectedShipment.details!,
+                          ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.lg),
@@ -459,46 +456,6 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
         },
       ),
     );
-  }
-
-  Future<void> _pickRequestedDate(BuildContext context) async {
-    final initial = _requestedDate ?? DateTime.now();
-    final selected = await showDatePicker(
-      context: context,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 90)),
-      initialDate: initial,
-    );
-    if (selected == null || !mounted) {
-      return;
-    }
-    final shipment = ref
-        .read(myShipperShipmentsProvider)
-        .asData
-        ?.value
-        .firstWhere(
-          (item) => item.id == _selectedShipmentId,
-          orElse: () => ShipmentDraftRecord(
-            id: '',
-            shipperId: '',
-            originCommuneId: 0,
-            destinationCommuneId: 0,
-            pickupWindowStart: selected,
-            pickupWindowEnd: selected.add(const Duration(hours: 1)),
-            totalWeightKg: 1,
-            totalVolumeM3: null,
-            category: '',
-            description: null,
-            status: ShipmentStatus.draft,
-            createdAt: null,
-            updatedAt: null,
-            items: const <ShipmentItemDraft>[],
-          ),
-        );
-    setState(() => _requestedDate = selected);
-    if (shipment != null && shipment.id.isNotEmpty) {
-      _scheduleSearch(shipment, reset: true);
-    }
   }
 
   void _scheduleSearch(ShipmentDraftRecord shipment, {required bool reset}) {
@@ -620,10 +577,6 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
     ShipmentDraftRecord shipment, {
     required bool reset,
   }) async {
-    final requestedDate = _requestedDate;
-    if (requestedDate == null) {
-      return;
-    }
     final token = ++_searchToken;
     setState(() => _isSearching = true);
     try {
@@ -631,10 +584,9 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
           .read(shipmentRepositoryProvider)
           .searchExactLaneCapacity(
             ShipmentSearchQuery(
-              shipmentId: shipment.id,
               originCommuneId: shipment.originCommuneId,
               destinationCommuneId: shipment.destinationCommuneId,
-              requestedDate: requestedDate,
+              requestedDate: shipment.pickupDate,
               totalWeightKg: shipment.totalWeightKg,
               totalVolumeM3: shipment.totalVolumeM3,
               sort: _sort,
@@ -745,10 +697,11 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
           ProfileSummaryCard(
             title: s.searchShipmentSummaryTitle,
             rows: [
-              ProfileSummaryRow(
-                label: s.shipmentCategoryLabel,
-                value: bookingSelection.shipment.category,
-              ),
+              if ((bookingSelection.shipment.details ?? '').trim().isNotEmpty)
+                ProfileSummaryRow(
+                  label: s.shipmentDescriptionLabel,
+                  value: bookingSelection.shipment.details!,
+                ),
               ProfileSummaryRow(
                 label: s.vehicleCapacityWeightLabel,
                 value:
@@ -1388,14 +1341,13 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   final _formKey = GlobalKey<FormState>();
   final _weightController = TextEditingController();
   final _volumeController = TextEditingController();
-  final _categoryController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final List<_ShipmentItemController> _items = [];
+  final _detailsController = TextEditingController();
 
+  int? _originWilayaId;
   int? _originCommuneId;
+  int? _destinationWilayaId;
   int? _destinationCommuneId;
-  DateTime? _pickupStart;
-  DateTime? _pickupEnd;
+  DateTime? _pickupDate;
   bool _isSaving = false;
   bool _initialized = false;
 
@@ -1403,33 +1355,25 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   void dispose() {
     _weightController.dispose();
     _volumeController.dispose();
-    _categoryController.dispose();
-    _descriptionController.dispose();
-    for (final item in _items) {
-      item.dispose();
-    }
+    _detailsController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final communesAsync = ref.watch(communesProvider);
+    final locationDirectoryAsync = ref.watch(locationDirectoryProvider);
 
     if (!_initialized) {
       final shipment = widget.shipment;
       _originCommuneId = shipment?.originCommuneId;
+      _originWilayaId = null;
       _destinationCommuneId = shipment?.destinationCommuneId;
-      _pickupStart = shipment?.pickupWindowStart;
-      _pickupEnd = shipment?.pickupWindowEnd;
+      _destinationWilayaId = null;
+      _pickupDate = shipment?.pickupDate;
       _weightController.text = shipment?.totalWeightKg.toStringAsFixed(0) ?? '';
       _volumeController.text = shipment?.totalVolumeM3?.toString() ?? '';
-      _categoryController.text = shipment?.category ?? '';
-      _descriptionController.text = shipment?.description ?? '';
-      final baseItems = shipment?.items.isNotEmpty == true
-          ? shipment!.items
-          : const [ShipmentItemDraft(label: '', quantity: 1)];
-      _items.addAll(baseItems.map(_ShipmentItemController.fromDraft));
+      _detailsController.text = shipment?.details ?? '';
       _initialized = true;
     }
 
@@ -1441,10 +1385,21 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
       ),
       child: AppFocusTraversal.sheet(
-        child: AppAsyncStateView<List<AlgeriaCommune>>(
-          value: communesAsync,
-          onRetry: () => ref.invalidate(communesProvider),
-          data: (communes) {
+        child: AppAsyncStateView<AlgeriaLocationDirectory>(
+          value: locationDirectoryAsync,
+          onRetry: () => ref.invalidate(locationDirectoryProvider),
+          data: (directory) {
+            final wilayas = directory.wilayas;
+            final communes = directory.communes;
+            _originWilayaId ??= communes
+                .where((item) => item.id == _originCommuneId)
+                .firstOrNull
+                ?.wilayaId;
+            _destinationWilayaId ??= communes
+                .where((item) => item.id == _destinationCommuneId)
+                .firstOrNull
+                ?.wilayaId;
+
             return Form(
               key: _formKey,
               child: ListView(
@@ -1457,36 +1412,54 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _CommuneSelectorField(
+                  _WilayaDropdownField(
+                    label: s.routeOriginWilayaLabel,
+                    value: _originWilayaId,
+                    wilayas: wilayas,
+                    onChanged: (value) => setState(() {
+                      _originWilayaId = value;
+                      _originCommuneId = null;
+                    }),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _CommuneDropdownField(
                     label: s.routeOriginLabel,
-                    communeId: _originCommuneId,
-                    communes: communes,
-                    onSelect: (value) =>
+                    value: _originCommuneId,
+                    enabled: _originWilayaId != null,
+                    communeOptions: communes
+                        .where((item) => item.wilayaId == _originWilayaId)
+                        .toList(growable: false),
+                    onChanged: (value) =>
                         setState(() => _originCommuneId = value),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _CommuneSelectorField(
+                  _WilayaDropdownField(
+                    label: s.routeDestinationWilayaLabel,
+                    value: _destinationWilayaId,
+                    wilayas: wilayas,
+                    onChanged: (value) => setState(() {
+                      _destinationWilayaId = value;
+                      _destinationCommuneId = null;
+                    }),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _CommuneDropdownField(
                     label: s.routeDestinationLabel,
-                    communeId: _destinationCommuneId,
-                    communes: communes,
-                    onSelect: (value) =>
+                    value: _destinationCommuneId,
+                    enabled: _destinationWilayaId != null,
+                    communeOptions: communes
+                        .where((item) => item.wilayaId == _destinationWilayaId)
+                        .toList(growable: false),
+                    onChanged: (value) =>
                         setState(() => _destinationCommuneId = value),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   _DateButtonField(
-                    label: s.shipmentPickupStartLabel,
-                    value: _pickupStart == null
+                    label: s.shipmentPickupDateLabel,
+                    value: _pickupDate == null
                         ? null
-                        : _formatDateTime(context, _pickupStart!),
-                    onPressed: () => unawaited(_pickDateTime(context, true)),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  _DateButtonField(
-                    label: s.shipmentPickupEndLabel,
-                    value: _pickupEnd == null
-                        ? null
-                        : _formatDateTime(context, _pickupEnd!),
-                    onPressed: () => unawaited(_pickDateTime(context, false)),
+                        : _formatDate(_pickupDate!),
+                    onPressed: () => unawaited(_pickDate(context)),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AuthTextField(
@@ -1508,44 +1481,10 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AuthTextField(
-                    controller: _categoryController,
-                    label: s.shipmentCategoryLabel,
-                    validator: _requiredValidator,
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  AuthTextField(
-                    controller: _descriptionController,
+                    controller: _detailsController,
                     label: s.shipmentDescriptionLabel,
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    s.shipmentItemsTitle,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  ..._items.asMap().entries.map(
-                    (entry) => Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      child: _ShipmentItemEditor(
-                        controller: entry.value,
-                        title: s.shipmentItemTitle(
-                          BidiFormatters.latinIdentifier('${entry.key + 1}'),
-                        ),
-                        onRemove: _items.length == 1
-                            ? null
-                            : () => setState(() {
-                                entry.value.dispose();
-                                _items.removeAt(entry.key);
-                              }),
-                      ),
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: () => setState(() {
-                      _items.add(_ShipmentItemController.empty());
-                    }),
-                    icon: const Icon(Icons.add_rounded),
-                    label: Text(s.shipmentAddItemAction),
+                    maxLines: 4,
+                    textInputAction: TextInputAction.newline,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   AuthSubmitButton(
@@ -1571,10 +1510,8 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
     );
   }
 
-  Future<void> _pickDateTime(BuildContext context, bool start) async {
-    final initial = start
-        ? (_pickupStart ?? DateTime.now())
-        : (_pickupEnd ?? DateTime.now().add(const Duration(hours: 2)));
+  Future<void> _pickDate(BuildContext context) async {
+    final initial = _pickupDate ?? DateTime.now();
     final date = await showDatePicker(
       context: context,
       firstDate: DateTime.now(),
@@ -1582,26 +1519,7 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
       initialDate: initial,
     );
     if (date == null || !mounted) return;
-    if (!context.mounted) return;
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(initial),
-    );
-    if (time == null || !mounted) return;
-    final picked = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      time.hour,
-      time.minute,
-    );
-    setState(() {
-      if (start) {
-        _pickupStart = picked;
-      } else {
-        _pickupEnd = picked;
-      }
-    });
+    setState(() => _pickupDate = DateTime(date.year, date.month, date.day));
   }
 
   Future<void> _save() async {
@@ -1609,8 +1527,7 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
     if (!_formKey.currentState!.validate()) return;
     if (_originCommuneId == null ||
         _destinationCommuneId == null ||
-        _pickupStart == null ||
-        _pickupEnd == null) {
+        _pickupDate == null) {
       AppFeedback.showSnackBar(context, s.authRequiredFieldMessage);
       return;
     }
@@ -1618,22 +1535,15 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
       AppFeedback.showSnackBar(context, s.publicationSameLaneErrorMessage);
       return;
     }
-    if (!_pickupEnd!.isAfter(_pickupStart!)) {
-      AppFeedback.showSnackBar(context, s.shipmentPickupWindowOrderMessage);
-      return;
-    }
     setState(() => _isSaving = true);
     try {
       final input = ShipmentDraftInput(
         originCommuneId: _originCommuneId!,
         destinationCommuneId: _destinationCommuneId!,
-        pickupWindowStart: _pickupStart!,
-        pickupWindowEnd: _pickupEnd!,
+        pickupDate: _pickupDate!,
         totalWeightKg: double.parse(_weightController.text.trim()),
         totalVolumeM3: _parseOptional(_volumeController.text),
-        category: _categoryController.text.trim(),
-        description: _descriptionController.text,
-        items: _items.map((item) => item.toDraft()).toList(growable: false),
+        details: _detailsController.text,
       );
       final workflow = ref.read(shipmentWorkflowControllerProvider);
       if (widget.shipment == null) {
@@ -1695,10 +1605,6 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
-  }
-
-  String? _requiredValidator(String? value) {
-    return validateRequiredField(S.of(context), value);
   }
 
   String? _positiveValidator(String? value) {
@@ -1842,119 +1748,6 @@ class _SearchResultsSection extends StatelessWidget {
   }
 }
 
-class _ShipmentItemEditor extends StatelessWidget {
-  const _ShipmentItemEditor({
-    required this.controller,
-    required this.title,
-    required this.onRemove,
-  });
-
-  final _ShipmentItemController controller;
-  final String title;
-  final VoidCallback? onRemove;
-
-  @override
-  Widget build(BuildContext context) {
-    final s = S.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
-                if (onRemove != null)
-                  IconButton(
-                    onPressed: onRemove,
-                    icon: const Icon(Icons.delete_outline_rounded),
-                    tooltip: s.shipmentRemoveItemAction,
-                  ),
-              ],
-            ),
-            AuthTextField(
-              controller: controller.label,
-              label: s.shipmentItemLabelField,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AuthTextField(
-              controller: controller.quantity,
-              label: s.shipmentItemQuantityLabel,
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AuthTextField(
-              controller: controller.weight,
-              label: s.shipmentItemWeightLabel,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AuthTextField(
-              controller: controller.volume,
-              label: s.shipmentItemVolumeLabel,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AuthTextField(
-              controller: controller.notes,
-              label: s.shipmentItemNotesLabel,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ShipmentItemController {
-  _ShipmentItemController({required ShipmentItemDraft draft})
-    : label = TextEditingController(text: draft.label),
-      quantity = TextEditingController(text: draft.quantity.toString()),
-      weight = TextEditingController(text: draft.weightKg?.toString() ?? ''),
-      volume = TextEditingController(text: draft.volumeM3?.toString() ?? ''),
-      notes = TextEditingController(text: draft.notes ?? '');
-
-  factory _ShipmentItemController.empty() => _ShipmentItemController(
-    draft: const ShipmentItemDraft(label: '', quantity: 1),
-  );
-
-  factory _ShipmentItemController.fromDraft(ShipmentItemDraft draft) =>
-      _ShipmentItemController(draft: draft);
-
-  final TextEditingController label;
-  final TextEditingController quantity;
-  final TextEditingController weight;
-  final TextEditingController volume;
-  final TextEditingController notes;
-
-  ShipmentItemDraft toDraft() {
-    return ShipmentItemDraft(
-      label: label.text.trim(),
-      quantity: int.tryParse(quantity.text.trim()) ?? 1,
-      weightKg: double.tryParse(weight.text.trim()),
-      volumeM3: double.tryParse(volume.text.trim()),
-      notes: notes.text,
-    );
-  }
-
-  void dispose() {
-    label.dispose();
-    quantity.dispose();
-    weight.dispose();
-    volume.dispose();
-    notes.dispose();
-  }
-}
-
 String _shipmentLaneLabel(
   BuildContext context,
   ShipmentDraftRecord shipment,
@@ -1963,10 +1756,10 @@ String _shipmentLaneLabel(
   final locale = Localizations.localeOf(context);
   final origin =
       communeMap[shipment.originCommuneId]?.displayName(locale) ??
-      BidiFormatters.latinIdentifier(shipment.originCommuneId.toString());
+      S.of(context).locationUnavailableLabel;
   final destination =
       communeMap[shipment.destinationCommuneId]?.displayName(locale) ??
-      BidiFormatters.latinIdentifier(shipment.destinationCommuneId.toString());
+      S.of(context).locationUnavailableLabel;
   return '$origin -> $destination';
 }
 
@@ -2028,16 +1821,32 @@ String _notificationPreviewBody(
   };
 }
 
-String _shipmentCompactLabel(
-  BuildContext context,
-  ShipmentDraftRecord shipment,
-) {
-  return '${shipment.category} • ${_formatDate(shipment.pickupWindowStart)}';
-}
-
 String _shipmentSubtitle(BuildContext context, ShipmentDraftRecord shipment) {
   final s = S.of(context);
-  return '${shipment.category} • ${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg • ${s.shipmentPickupStartLabel}: ${_formatDateTime(context, shipment.pickupWindowStart)}';
+  final parts = <String>[
+    '${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg',
+    '${s.shipmentPickupDateLabel}: ${_formatDate(shipment.pickupDate)}',
+  ];
+  if (shipment.totalVolumeM3 != null) {
+    parts.add(
+      '${BidiFormatters.latinIdentifier(shipment.totalVolumeM3!.toStringAsFixed(1))} m3',
+    );
+  }
+  final details = (shipment.details ?? '').trim();
+  if (details.isNotEmpty) {
+    parts.add(details);
+  }
+  return parts.join(' • ');
+}
+
+String _shipmentSelectorLabel(
+  BuildContext context,
+  ShipmentDraftRecord shipment,
+  List<AlgeriaCommune> communes,
+) {
+  final communeMap = {for (final commune in communes) commune.id: commune};
+  final lane = _shipmentLaneLabel(context, shipment, communeMap);
+  return '$lane • ${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg • ${_formatDate(shipment.pickupDate)}';
 }
 
 String _shipmentStatusLabel(S s, ShipmentStatus status) {
@@ -2055,8 +1864,7 @@ String _communeName(
 ) {
   final locale = Localizations.localeOf(context);
   final commune = communes?.where((item) => item.id == communeId).firstOrNull;
-  return commune?.displayName(locale) ??
-      BidiFormatters.latinIdentifier('$communeId');
+  return commune?.displayName(locale) ?? S.of(context).locationUnavailableLabel;
 }
 
 String _formatDate(DateTime value) {
@@ -2155,85 +1963,84 @@ class _PlatformPaymentAccountView {
   final String accountHolderName;
 }
 
-class _CommuneSelectorField extends StatelessWidget {
-  const _CommuneSelectorField({
+class _WilayaDropdownField extends StatelessWidget {
+  const _WilayaDropdownField({
     required this.label,
-    required this.communeId,
-    required this.communes,
-    required this.onSelect,
+    required this.value,
+    required this.wilayas,
+    required this.onChanged,
   });
 
   final String label;
-  final int? communeId;
-  final List<AlgeriaCommune> communes;
-  final ValueChanged<int> onSelect;
+  final int? value;
+  final List<AlgeriaWilaya> wilayas;
+  final ValueChanged<int?> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final selected = communeId == null
-        ? null
-        : communes.where((item) => item.id == communeId).firstOrNull;
-
-    return _DateButtonField(
-      label: label,
-      value: selected?.displayName(locale),
-      onPressed: () => unawaited(_showPicker(context)),
-    );
-  }
-
-  Future<void> _showPicker(BuildContext context) async {
-    final selection = await showModalBottomSheet<AlgeriaCommune>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        var query = '';
-        final locale = Localizations.localeOf(context);
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            final filtered = communes
-                .where((commune) => commune.matchesQuery(query))
-                .toList(growable: false);
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      onChanged: (value) => setModalState(() => query = value),
-                      decoration: InputDecoration(
-                        labelText: S.of(context).publicationSearchCommunesHint,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Flexible(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: filtered.length,
-                        itemBuilder: (context, index) {
-                          final commune = filtered[index];
-                          return AppListCard(
-                            title: commune.displayName(locale),
-                            subtitle: BidiFormatters.latinIdentifier(
-                              commune.id.toString(),
-                            ),
-                            onTap: () => Navigator.of(context).pop(commune),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
+    return DropdownButtonFormField<int>(
+      key: ValueKey<String>('wilaya-$label-$value'),
+      initialValue: value,
+      decoration: InputDecoration(labelText: label),
+      items: wilayas
+          .map(
+            (wilaya) => DropdownMenuItem<int>(
+              value: wilaya.id,
+              child: Text(wilaya.displayName(locale)),
+            ),
+          )
+          .toList(growable: false),
+      onChanged: onChanged,
+      validator: (selected) {
+        if (selected == null) {
+          return S.of(context).authRequiredFieldMessage;
+        }
+        return null;
       },
     );
-    if (selection != null) {
-      onSelect(selection.id);
-    }
+  }
+}
+
+class _CommuneDropdownField extends StatelessWidget {
+  const _CommuneDropdownField({
+    required this.label,
+    required this.value,
+    required this.communeOptions,
+    required this.enabled,
+    required this.onChanged,
+  });
+
+  final String label;
+  final int? value;
+  final List<AlgeriaCommune> communeOptions;
+  final bool enabled;
+  final ValueChanged<int?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+
+    return DropdownButtonFormField<int>(
+      key: ValueKey<String>('commune-$label-$value-$enabled'),
+      initialValue: value,
+      decoration: InputDecoration(labelText: label),
+      items: communeOptions
+          .map(
+            (commune) => DropdownMenuItem<int>(
+              value: commune.id,
+              child: Text(commune.displayName(locale)),
+            ),
+          )
+          .toList(growable: false),
+      onChanged: enabled ? onChanged : null,
+      validator: (selected) {
+        if (!enabled || selected != null) {
+          return null;
+        }
+        return S.of(context).authRequiredFieldMessage;
+      },
+    );
   }
 }
 

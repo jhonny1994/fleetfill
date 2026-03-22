@@ -287,7 +287,6 @@ Inline sections:
 Full pages:
 
 - `MyShipmentsScreen`
-- `ShipmentFormScreen` for create/edit draft
 
 Use in-page tabs/segments instead of separate routes for:
 
@@ -299,12 +298,10 @@ Use sheets/dialogs instead of routes for:
 
 - cancel shipment confirm
 - draft saved feedback
-- item editor
-- origin/destination/date/category pickers where practical
+- origin/destination wilaya and commune pickers where practical
 
 Use sections inside `ShipmentDetailScreen` for:
 
-- shipment items
 - shipment summary
 - linked booking summary
 

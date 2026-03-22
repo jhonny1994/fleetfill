@@ -39,7 +39,43 @@ class AlgeriaCommune {
     }
 
     return nameFr.toLowerCase().contains(normalized) ||
-        nameAr.toLowerCase().contains(normalized) ||
-        id.toString().contains(normalized);
+        nameAr.toLowerCase().contains(normalized);
   }
+}
+
+class AlgeriaWilaya {
+  const AlgeriaWilaya({
+    required this.id,
+    required this.nameFr,
+    required this.nameAr,
+  });
+
+  factory AlgeriaWilaya.fromJson(Map<String, dynamic> json) {
+    return AlgeriaWilaya(
+      id: json['id'] as int,
+      nameFr: (json['name'] as String?)?.trim() ?? '',
+      nameAr: (json['name_ar'] as String?)?.trim() ?? '',
+    );
+  }
+
+  final int id;
+  final String nameFr;
+  final String nameAr;
+
+  String displayName(Locale locale) {
+    if (locale.languageCode == 'ar' && nameAr.isNotEmpty) {
+      return nameAr;
+    }
+    return nameFr;
+  }
+}
+
+class AlgeriaLocationDirectory {
+  const AlgeriaLocationDirectory({
+    required this.wilayas,
+    required this.communes,
+  });
+
+  final List<AlgeriaWilaya> wilayas;
+  final List<AlgeriaCommune> communes;
 }

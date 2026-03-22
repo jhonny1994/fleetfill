@@ -11,6 +11,16 @@ final communesProvider = FutureProvider<List<AlgeriaCommune>>((ref) {
   return ref.read(locationRepositoryProvider).fetchCommunes();
 });
 
+final wilayasProvider = FutureProvider<List<AlgeriaWilaya>>((ref) {
+  return ref.read(locationRepositoryProvider).fetchWilayas();
+});
+
+final locationDirectoryProvider = FutureProvider<AlgeriaLocationDirectory>((
+  ref,
+) {
+  return ref.read(locationRepositoryProvider).fetchLocationDirectory();
+});
+
 final publicCarrierProfileProvider = FutureProvider.autoDispose
     .family<CarrierPublicProfileView, String>((ref, carrierId) {
       return ref
