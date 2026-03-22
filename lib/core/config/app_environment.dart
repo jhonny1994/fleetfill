@@ -27,7 +27,9 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
       _$AppEnvironmentConfigFromJson(json);
 
   factory AppEnvironmentConfig.fromDefines() {
-    final environment = _parseEnvironment(const String.fromEnvironment('APP_ENV'));
+    final environment = _parseEnvironment(
+      const String.fromEnvironment('APP_ENV'),
+    );
     final publishableKey = _firstNonEmpty([
       const String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY'),
       const String.fromEnvironment('APP_SUPABASE_PUBLISHABLE_KEY'),
@@ -118,13 +120,13 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
 
     return switch (environment) {
       AppEnvironment.local => _firstNonEmpty([
-          normalizedAnonKey,
-          normalizedPublishableKey,
-        ]),
+        normalizedAnonKey,
+        normalizedPublishableKey,
+      ]),
       AppEnvironment.staging || AppEnvironment.production => _firstNonEmpty([
-          normalizedPublishableKey,
-          normalizedAnonKey,
-        ]),
+        normalizedPublishableKey,
+        normalizedAnonKey,
+      ]),
     };
   }
 
