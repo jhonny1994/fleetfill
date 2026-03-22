@@ -41,6 +41,7 @@ class PushNotificationService {
   String? _lastRegisteredToken;
   String? _lastRegisteredUserId;
   String? _lastRegisteredLocale;
+  Future<void>? _syncSessionFuture;
 
   bool get isSupportedOnCurrentPlatform =>
       !kIsWeb &&
@@ -83,6 +84,27 @@ class PushNotificationService {
   }
 
   Future<void> syncAuthenticatedSession({
+    required AuthSnapshot auth,
+    required Locale locale,
+  }) async {
+    if (_syncSessionFuture != null) {
+      await _syncSessionFuture;
+      return;
+    }
+
+    _syncSessionFuture = _syncAuthenticatedSessionInternal(
+      auth: auth,
+      locale: locale,
+    );
+
+    try {
+      await _syncSessionFuture;
+    } finally {
+      _syncSessionFuture = null;
+    }
+  }
+
+  Future<void> _syncAuthenticatedSessionInternal({
     required AuthSnapshot auth,
     required Locale locale,
   }) async {

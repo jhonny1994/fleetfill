@@ -46,6 +46,7 @@ class _MyRoutesScreenState extends ConsumerState<MyRoutesScreen> {
           AppSectionHeader(
             title: s.myRoutesTitle,
             subtitle: s.myRoutesDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           AppAsyncStateView<CapacityPublicationSummary>(

@@ -188,7 +188,12 @@ class _ProfileEditFormState extends ConsumerState<ProfileEditForm> {
       title: widget.title,
       child: ListView(
         children: [
-          AppSectionHeader(title: widget.title, subtitle: widget.description),
+          Text(
+            widget.description,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: AppSpacing.lg),
           AppFocusTraversal.form(
             child: AuthCard(
