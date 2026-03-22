@@ -620,7 +620,9 @@ class _ThemeSelectionSheet extends ConsumerWidget {
                 ),
                 onTap: () {
                   unawaited(
-                    ref.read(themeControllerProvider.notifier).setThemeMode(mode),
+                    ref
+                        .read(themeControllerProvider.notifier)
+                        .setThemeMode(mode),
                   );
                   Navigator.of(context).pop();
                 },

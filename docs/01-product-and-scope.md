@@ -136,6 +136,7 @@ Phone number is mandatory on the profile before the user can perform operational
 - Financial ledger for money movement and auditability
 - Multi-language support: Arabic, French, English
 - Theme persistence and accessibility support
+- One app language preference per account across shipper and carrier surfaces
 
 ### 6.2 Explicit Product Constraints
 

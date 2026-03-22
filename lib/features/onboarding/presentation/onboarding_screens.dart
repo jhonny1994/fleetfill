@@ -8,6 +8,312 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+class WelcomeScreen extends ConsumerStatefulWidget {
+  const WelcomeScreen({super.key});
+
+  @override
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
+  static const _stepCount = 3;
+  int _currentStep = 0;
+
+  Future<void> _continueToAuth(
+    BuildContext context,
+    WidgetRef ref,
+    String location,
+  ) async {
+    await ref.read(preAuthOnboardingControllerProvider.notifier).markSeen();
+    if (!context.mounted) {
+      return;
+    }
+    context.go(location);
+  }
+
+  void _goToStep(int index) {
+    setState(() => _currentStep = index.clamp(0, _stepCount - 1));
+  }
+
+  Widget _buildStep(S s) {
+    return switch (_currentStep) {
+      0 => _WelcomeOverviewStep(
+        key: const ValueKey('welcome-step-overview'),
+        highlightsMessage: s.welcomeHighlightsMessage,
+        shipperTitle: s.welcomeShipperTitle,
+        shipperDescription: s.welcomeShipperDescription,
+        carrierTitle: s.welcomeCarrierTitle,
+        carrierDescription: s.welcomeCarrierDescription,
+      ),
+      1 => _WelcomeTrustStep(
+        key: const ValueKey('welcome-step-trust'),
+        title: s.welcomeTrustTitle,
+        description: s.welcomeTrustDescription,
+        exactMatchTitle: s.welcomeExactMatchTitle,
+        exactMatchDescription: s.welcomeExactMatchDescription,
+        paymentTitle: s.welcomePaymentTitle,
+        paymentDescription: s.welcomePaymentDescription,
+      ),
+      _ => _WelcomeLanguageStep(
+        key: const ValueKey('welcome-step-language'),
+        title: s.welcomeLanguageTitle,
+        description: s.welcomeLanguageDescription,
+      ),
+    };
+  }
+
+  Widget _buildProgressDots(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(_stepCount, (index) {
+        final isActive = index == _currentStep;
+        return AnimatedContainer(
+          duration: MotionPolicy.duration(context, AppMotion.fast),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: isActive ? 22 : 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: isActive ? colorScheme.primary : colorScheme.outlineVariant,
+            borderRadius: BorderRadius.circular(999),
+          ),
+        );
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final isLastStep = _currentStep == _stepCount - 1;
+
+    return AuthScaffold(
+      title: s.welcomeTitle,
+      subtitle: s.welcomeDescription,
+      heroIcon: Icons.local_shipping_rounded,
+      footer: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildProgressDots(context),
+          const SizedBox(height: AppSpacing.md),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
+            children: [
+              if (!isLastStep)
+                TextButton(
+                  onPressed: () => _goToStep(_stepCount - 1),
+                  child: Text(s.welcomeSkipAction),
+                ),
+              TextButton(
+                onPressed: () => context.go(AppRoutePath.sharedPolicies),
+                child: Text(s.legalPoliciesTitle),
+              ),
+            ],
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AnimatedSwitcher(
+            duration: MotionPolicy.duration(context, AppMotion.medium),
+            switchInCurve: AppMotion.emphasized,
+            switchOutCurve: AppMotion.emphasized,
+            child: _buildStep(s),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          if (isLastStep) ...[
+            AuthSubmitButton(
+              label: s.authCreateAccountAction,
+              isLoading: false,
+              onPressed: () => unawaited(
+                _continueToAuth(context, ref, AppRoutePath.signUp),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            OutlinedButton(
+              onPressed: () => unawaited(
+                _continueToAuth(context, ref, AppRoutePath.signIn),
+              ),
+              child: Text(s.authSignInAction),
+            ),
+          ] else ...[
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: _currentStep == 0
+                        ? null
+                        : () => _goToStep(_currentStep - 1),
+                    child: Text(s.welcomeBackAction),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => _goToStep(_currentStep + 1),
+                    child: Text(s.welcomeNextAction),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: AppSpacing.lg),
+        ],
+      ),
+    );
+  }
+}
+
+class _WelcomeOverviewStep extends StatelessWidget {
+  const _WelcomeOverviewStep({
+    required super.key,
+    required this.highlightsMessage,
+    required this.shipperTitle,
+    required this.shipperDescription,
+    required this.carrierTitle,
+    required this.carrierDescription,
+  });
+
+  final String highlightsMessage;
+  final String shipperTitle;
+  final String shipperDescription;
+  final String carrierTitle;
+  final String carrierDescription;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AuthInfoBanner(
+          message: highlightsMessage,
+          icon: Icons.verified_user_outlined,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        _WelcomeBenefitTile(
+          icon: Icons.inventory_2_outlined,
+          title: shipperTitle,
+          description: shipperDescription,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        _WelcomeBenefitTile(
+          icon: Icons.local_shipping_outlined,
+          title: carrierTitle,
+          description: carrierDescription,
+        ),
+      ],
+    );
+  }
+}
+
+class _WelcomeTrustStep extends StatelessWidget {
+  const _WelcomeTrustStep({
+    required super.key,
+    required this.title,
+    required this.description,
+    required this.exactMatchTitle,
+    required this.exactMatchDescription,
+    required this.paymentTitle,
+    required this.paymentDescription,
+  });
+
+  final String title;
+  final String description;
+  final String exactMatchTitle;
+  final String exactMatchDescription;
+  final String paymentTitle;
+  final String paymentDescription;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AppSectionHeader(title: title, subtitle: description),
+        const SizedBox(height: AppSpacing.md),
+        _WelcomeBenefitTile(
+          icon: Icons.route_outlined,
+          title: exactMatchTitle,
+          description: exactMatchDescription,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        _WelcomeBenefitTile(
+          icon: Icons.receipt_long_outlined,
+          title: paymentTitle,
+          description: paymentDescription,
+        ),
+      ],
+    );
+  }
+}
+
+class _WelcomeLanguageStep extends ConsumerWidget {
+  const _WelcomeLanguageStep({
+    required super.key,
+    required this.title,
+    required this.description,
+  });
+
+  final String title;
+  final String description;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context);
+    final currentLocale = ref.watch(effectiveLocaleProvider);
+    final currentLanguageName = localizedLanguageName(currentLocale, s);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AppSectionHeader(title: title, subtitle: description),
+        const SizedBox(height: AppSpacing.md),
+        ...const [Locale('en'), Locale('fr'), Locale('ar')].map(
+          (locale) => Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: _LanguageChoiceTile(locale: locale),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        AuthInfoBanner(
+          message: s.languageSelectionCurrentMessage(currentLanguageName),
+        ),
+      ],
+    );
+  }
+}
+
+class _WelcomeBenefitTile extends StatelessWidget {
+  const _WelcomeBenefitTile({
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
+
+  final IconData icon;
+  final String title;
+  final String description;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      tileColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(description),
+    );
+  }
+}
+
 class RoleSelectionScreen extends ConsumerWidget {
   const RoleSelectionScreen({super.key});
 
@@ -415,11 +721,8 @@ class _LanguageChoiceTile extends ConsumerWidget {
     final currentLocale = ref.watch(effectiveLocaleProvider);
     final isSelected = currentLocale.languageCode == locale.languageCode;
 
-    final title = switch (locale.languageCode) {
-      'ar' => s.languageOptionArabic,
-      'fr' => s.languageOptionFrench,
-      _ => s.languageOptionEnglish,
-    };
+    final title = nativeLanguageName(locale);
+    final subtitle = localizedLanguageName(locale, s);
 
     return ListTile(
       shape: RoundedRectangleBorder(
@@ -429,6 +732,7 @@ class _LanguageChoiceTile extends ConsumerWidget {
           ? Theme.of(context).colorScheme.secondaryContainer
           : null,
       title: Text(title),
+      subtitle: title == subtitle ? null : Text(subtitle),
       trailing: Icon(
         isSelected ? Icons.check_circle_rounded : Icons.language_rounded,
       ),
@@ -437,4 +741,20 @@ class _LanguageChoiceTile extends ConsumerWidget {
       },
     );
   }
+}
+
+String localizedLanguageName(Locale locale, S s) {
+  return switch (locale.languageCode) {
+    'ar' => s.languageOptionArabic,
+    'fr' => s.languageOptionFrench,
+    _ => s.languageOptionEnglish,
+  };
+}
+
+String nativeLanguageName(Locale locale) {
+  return switch (locale.languageCode) {
+    'ar' => 'العربية',
+    'fr' => 'Francais',
+    _ => 'English',
+  };
 }

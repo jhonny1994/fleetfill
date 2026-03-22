@@ -408,7 +408,9 @@ class AdminPaymentProofDetailScreen extends ConsumerWidget {
         value: queueAsync,
         onRetry: () => ref.invalidate(pendingPaymentProofsProvider),
         data: (items) {
-          final item = items.where((candidate) => candidate.proof.id == proofId).firstOrNull;
+          final item = items
+              .where((candidate) => candidate.proof.id == proofId)
+              .firstOrNull;
           if (item == null) {
             return AppEmptyState(
               title: s.adminPaymentProofQueueTitle,
@@ -438,7 +440,9 @@ class AdminDisputeDetailScreen extends ConsumerWidget {
         value: disputesAsync,
         onRetry: () => ref.invalidate(openDisputesProvider),
         data: (items) {
-          final item = items.where((candidate) => candidate.id == disputeId).firstOrNull;
+          final item = items
+              .where((candidate) => candidate.id == disputeId)
+              .firstOrNull;
           if (item == null) {
             return AppEmptyState(
               title: s.adminDisputesQueueTitle,
@@ -468,7 +472,9 @@ class AdminPayoutDetailScreen extends ConsumerWidget {
         value: payoutsAsync,
         onRetry: () => ref.invalidate(adminEligiblePayoutsProvider),
         data: (items) {
-          final item = items.where((candidate) => candidate.booking.id == bookingId).firstOrNull;
+          final item = items
+              .where((candidate) => candidate.booking.id == bookingId)
+              .firstOrNull;
           if (item == null) {
             return AppEmptyState(
               title: s.adminPayoutEligibleTitle,
@@ -483,11 +489,16 @@ class AdminPayoutDetailScreen extends ConsumerWidget {
                 rows: [
                   ProfileSummaryRow(
                     label: s.searchCarrierLabel,
-                    value: item.carrier?.companyName ?? item.carrier?.fullName ?? item.booking.carrierId,
+                    value:
+                        item.carrier?.companyName ??
+                        item.carrier?.fullName ??
+                        item.booking.carrierId,
                   ),
                   ProfileSummaryRow(
                     label: s.bookingCarrierPayoutLabel,
-                    value: BidiFormatters.latinIdentifier(item.booking.carrierPayoutDzd.toStringAsFixed(0)),
+                    value: BidiFormatters.latinIdentifier(
+                      item.booking.carrierPayoutDzd.toStringAsFixed(0),
+                    ),
                   ),
                   ProfileSummaryRow(
                     label: s.paymentStatusSecuredLabel,
@@ -532,7 +543,9 @@ class AdminEmailLogDetailScreen extends ConsumerWidget {
           adminFilteredEmailLogsProvider((status: null, query: null)),
         ),
         data: (items) {
-          final item = items.where((candidate) => candidate.id == logId).firstOrNull;
+          final item = items
+              .where((candidate) => candidate.id == logId)
+              .firstOrNull;
           if (item == null) {
             return AppEmptyState(
               title: s.adminEmailQueueTitle,
@@ -545,16 +558,27 @@ class AdminEmailLogDetailScreen extends ConsumerWidget {
               ProfileSummaryCard(
                 title: item.recipientEmail,
                 rows: [
-                  ProfileSummaryRow(label: s.adminEmailStatusFilterLabel, value: _emailStatusLabel(s, item.status)),
-                  ProfileSummaryRow(label: s.adminEmailSearchLabel, value: item.templateKey),
-                  ProfileSummaryRow(label: s.bookingTrackingNumberLabel, value: item.bookingId ?? '-'),
+                  ProfileSummaryRow(
+                    label: s.adminEmailStatusFilterLabel,
+                    value: _emailStatusLabel(s, item.status),
+                  ),
+                  ProfileSummaryRow(
+                    label: s.adminEmailSearchLabel,
+                    value: item.templateKey,
+                  ),
+                  ProfileSummaryRow(
+                    label: s.bookingTrackingNumberLabel,
+                    value: item.bookingId ?? '-',
+                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
               if (_canResendEmail(item.status))
                 FilledButton(
                   onPressed: () => unawaited(
-                    ref.read(adminOperationsWorkflowControllerProvider).resendEmail(item.id),
+                    ref
+                        .read(adminOperationsWorkflowControllerProvider)
+                        .resendEmail(item.id),
                   ),
                   child: Text(s.adminEmailResendAction),
                 ),
@@ -621,16 +645,16 @@ class _AdminPaymentsQueueSectionState
                   .map(
                     (item) => Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        child: AppListCard(
-                          title: item.booking.trackingNumber,
-                          subtitle:
-                              '${_formatDate(item.proof.submittedAt)} • ${BidiFormatters.latinIdentifier(item.proof.submittedAmountDzd.toStringAsFixed(0))}',
-                          trailing: const Icon(Icons.chevron_right_rounded),
-                          onTap: () => context.push(
-                            AppRoutePath.adminQueuesPaymentProof(item.proof.id),
-                          ),
+                      child: AppListCard(
+                        title: item.booking.trackingNumber,
+                        subtitle:
+                            '${_formatDate(item.proof.submittedAt)} • ${BidiFormatters.latinIdentifier(item.proof.submittedAmountDzd.toStringAsFixed(0))}',
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => context.push(
+                          AppRoutePath.adminQueuesPaymentProof(item.proof.id),
                         ),
                       ),
+                    ),
                   )
                   .toList(growable: false),
             );
@@ -813,15 +837,15 @@ class _AdminDisputesQueueSectionState
                   .map(
                     (item) => Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        child: AppListCard(
-                          title: item.reason,
-                          subtitle: item.description ?? item.bookingId,
-                          trailing: const Icon(Icons.chevron_right_rounded),
-                          onTap: () => context.push(
-                            AppRoutePath.adminQueuesDispute(item.id),
-                          ),
+                      child: AppListCard(
+                        title: item.reason,
+                        subtitle: item.description ?? item.bookingId,
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => context.push(
+                          AppRoutePath.adminQueuesDispute(item.id),
                         ),
                       ),
+                    ),
                   )
                   .toList(growable: false),
             );

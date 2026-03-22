@@ -35,14 +35,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m6(documentId) => "Generated document ${documentId}";
 
-  static String m7(languageCode) => "Current language: ${languageCode}";
+  static String m7(languageCode) => "Current app language: ${languageCode}";
 
-  static String m8(milestoneLabel) => "Latest milestone: ${milestoneLabel}";
+  static String m8(milestoneLabel) => "Current status: ${milestoneLabel}";
 
   static String m9(notificationId) => "Notification ${notificationId}";
 
   static String m10(documentType) =>
-      "Your ${documentType} is ready to view securely.";
+      "Your ${documentType} is ready to view or download.";
 
   static String m11(tripId) => "One-off trip ${tripId}";
 
@@ -80,22 +80,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "Admin audit log",
     ),
     "adminDashboardAutomationTitle": MessageLookupByLibrary.simpleMessage(
-      "Automation health",
+      "Time-sensitive tasks",
     ),
     "adminDashboardBacklogHealthTitle": MessageLookupByLibrary.simpleMessage(
-      "Backlog health",
+      "Pending work",
     ),
     "adminDashboardDeadLetterLabel": MessageLookupByLibrary.simpleMessage(
-      "Dead-letter emails",
+      "Failed emails",
     ),
     "adminDashboardDescription": MessageLookupByLibrary.simpleMessage(
-      "Monitor queue health, alerts, and the current operational backlog.",
+      "Monitor pending work, alerts, and service health.",
     ),
     "adminDashboardEmailBacklogLabel": MessageLookupByLibrary.simpleMessage(
-      "Email backlog",
+      "Emails waiting",
     ),
     "adminDashboardEmailHealthTitle": MessageLookupByLibrary.simpleMessage(
-      "Email health",
+      "Email delivery",
     ),
     "adminDashboardNavLabel": MessageLookupByLibrary.simpleMessage("Dashboard"),
     "adminDashboardOverdueDeliveryReviewsLabel":
@@ -108,27 +108,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminDisputesQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No disputes are waiting for review right now.",
     ),
-    "adminDisputesQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "Dispute queue",
-    ),
+    "adminDisputesQueueTitle": MessageLookupByLibrary.simpleMessage("Disputes"),
     "adminEligiblePayoutsEmptyMessage": MessageLookupByLibrary.simpleMessage(
-      "No carrier payouts are eligible for release right now.",
+      "No payouts are ready to release right now.",
     ),
     "adminEmailDeadLetterEmptyMessage": MessageLookupByLibrary.simpleMessage(
-      "No dead-letter email jobs need attention right now.",
+      "No failed emails need attention right now.",
     ),
     "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
-      "Dead-letter queue",
+      "Failed emails",
     ),
     "adminEmailQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No email delivery logs match the current filters.",
     ),
     "adminEmailQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "Email delivery monitoring",
+      "Email delivery",
     ),
     "adminEmailResendAction": MessageLookupByLibrary.simpleMessage("Resend"),
     "adminEmailResendSuccess": MessageLookupByLibrary.simpleMessage(
-      "Email resend queued.",
+      "Email resend requested.",
     ),
     "adminEmailSearchLabel": MessageLookupByLibrary.simpleMessage(
       "Search email logs",
@@ -140,7 +138,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Bounced",
     ),
     "adminEmailStatusDeadLetterLabel": MessageLookupByLibrary.simpleMessage(
-      "Dead letter",
+      "Failed",
     ),
     "adminEmailStatusDeliveredLabel": MessageLookupByLibrary.simpleMessage(
       "Delivered",
@@ -173,9 +171,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminPayoutQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No payouts have been released yet.",
     ),
-    "adminPayoutQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "Payout queue",
-    ),
+    "adminPayoutQueueTitle": MessageLookupByLibrary.simpleMessage("Payouts"),
     "adminPayoutReleaseAction": MessageLookupByLibrary.simpleMessage(
       "Release payout",
     ),
@@ -193,10 +189,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Verification",
     ),
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
-      "Review payments, verification, disputes, payouts, and email work from one queue hub.",
+      "Review payments, verification, disputes, payouts, and email issues in one place.",
     ),
-    "adminQueuesNavLabel": MessageLookupByLibrary.simpleMessage("Queues"),
-    "adminQueuesTitle": MessageLookupByLibrary.simpleMessage("Admin queues"),
+    "adminQueuesNavLabel": MessageLookupByLibrary.simpleMessage("Operations"),
+    "adminQueuesTitle": MessageLookupByLibrary.simpleMessage("Operations"),
     "adminSettingsDeliveryGraceLabel": MessageLookupByLibrary.simpleMessage(
       "Delivery grace window (hours)",
     ),
@@ -204,12 +200,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Delivery review policy",
     ),
     "adminSettingsDescription": MessageLookupByLibrary.simpleMessage(
-      "Manage platform settings, maintenance controls, version policy, and monitoring summaries.",
+      "Manage app access, pricing rules, maintenance mode, and email tools.",
     ),
     "adminSettingsEmailResendEnabledLabel":
         MessageLookupByLibrary.simpleMessage("Enable admin email resend"),
     "adminSettingsFeatureFlagsSectionTitle":
-        MessageLookupByLibrary.simpleMessage("Feature flags"),
+        MessageLookupByLibrary.simpleMessage("Optional features"),
     "adminSettingsForceUpdateLabel": MessageLookupByLibrary.simpleMessage(
       "Force update required",
     ),
@@ -228,7 +224,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Minimum iOS version",
     ),
     "adminSettingsMonitoringSummaryTitle": MessageLookupByLibrary.simpleMessage(
-      "Monitoring summary",
+      "Service summary",
     ),
     "adminSettingsNavLabel": MessageLookupByLibrary.simpleMessage("Settings"),
     "adminSettingsPaymentDeadlineLabel": MessageLookupByLibrary.simpleMessage(
@@ -241,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Booking pricing policy",
     ),
     "adminSettingsRuntimeSectionTitle": MessageLookupByLibrary.simpleMessage(
-      "Runtime policy",
+      "App access",
     ),
     "adminSettingsSaveAction": MessageLookupByLibrary.simpleMessage(
       "Save settings",
@@ -280,7 +276,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "User reactivated.",
     ),
     "adminUserReasonHint": MessageLookupByLibrary.simpleMessage(
-      "Add an operational reason for this change.",
+      "Add a reason for this change.",
     ),
     "adminUserRoleAdminLabel": MessageLookupByLibrary.simpleMessage("Admin"),
     "adminUserRoleCarrierLabel": MessageLookupByLibrary.simpleMessage(
@@ -312,7 +308,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vehicles",
     ),
     "adminUsersDescription": MessageLookupByLibrary.simpleMessage(
-      "Search for users and review account details when operations need context.",
+      "Search for users and review account details, bookings, and documents.",
     ),
     "adminUsersEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No users match the current search.",
@@ -329,7 +325,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Approve all",
     ),
     "adminVerificationApproveAllSuccess": MessageLookupByLibrary.simpleMessage(
-      "Verification packet approved.",
+      "Verification approved.",
     ),
     "adminVerificationApprovedMessage": MessageLookupByLibrary.simpleMessage(
       "Verification document approved.",
@@ -345,22 +341,22 @@ class MessageLookup extends MessageLookupByLibrary {
           "No submitted verification documents yet.",
         ),
     "adminVerificationPacketDescription": MessageLookupByLibrary.simpleMessage(
-      "Review profile and vehicle documents together before approving operational access.",
+      "Review profile and vehicle documents before approving the carrier.",
     ),
     "adminVerificationPacketTitle": MessageLookupByLibrary.simpleMessage(
-      "Verification packet",
+      "Verification details",
     ),
     "adminVerificationPendingDocumentsLabel":
         MessageLookupByLibrary.simpleMessage("Pending documents"),
     "adminVerificationQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
-      "No carrier verification packets need review right now.",
+      "No carrier verifications need review right now.",
     ),
     "adminVerificationQueueItemSubtitle": m0,
     "adminVerificationQueueSummaryTitle": MessageLookupByLibrary.simpleMessage(
-      "Verification queue summary",
+      "Verification summary",
     ),
     "adminVerificationQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "Carrier verification queue",
+      "Carrier verifications",
     ),
     "adminVerificationRejectAction": MessageLookupByLibrary.simpleMessage(
       "Reject",
@@ -530,10 +526,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Confirm booking",
     ),
     "bookingCreatedMessage": MessageLookupByLibrary.simpleMessage(
-      "Booking created. Continue to payment instructions.",
+      "Booking created. Continue to payment.",
     ),
     "bookingDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Shared booking detail routes sit above role shells.",
+      "Review the booking status, payment details, and price breakdown.",
     ),
     "bookingDetailTitle": m1,
     "bookingInsuranceAction": MessageLookupByLibrary.simpleMessage(
@@ -599,14 +595,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "cancelLabel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "carrierBookingsDescription": MessageLookupByLibrary.simpleMessage(
-      "Active and historical booking worklists live in this branch.",
+      "Track current bookings, delivery progress, and completed jobs.",
     ),
     "carrierBookingsNavLabel": MessageLookupByLibrary.simpleMessage("Bookings"),
     "carrierBookingsTitle": MessageLookupByLibrary.simpleMessage(
       "Carrier bookings",
     ),
     "carrierHomeDescription": MessageLookupByLibrary.simpleMessage(
-      "Verification, trips, booking actions, and payout reminders live here.",
+      "Check your verification status, fleet readiness, and next tasks.",
     ),
     "carrierHomeNavLabel": MessageLookupByLibrary.simpleMessage("Home"),
     "carrierHomeTitle": MessageLookupByLibrary.simpleMessage("Carrier home"),
@@ -614,7 +610,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Booking milestone updated.",
     ),
     "carrierProfileDescription": MessageLookupByLibrary.simpleMessage(
-      "Carrier verification status, payout reminders, and profile tools live here.",
+      "Manage your business details, verification, payout accounts, and vehicles.",
     ),
     "carrierProfileNavLabel": MessageLookupByLibrary.simpleMessage("Profile"),
     "carrierProfileSectionTitle": MessageLookupByLibrary.simpleMessage(
@@ -657,23 +653,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "carrierVehiclesShortcutDescription": MessageLookupByLibrary.simpleMessage(
       "Manage trucks, upload missing documents, and resolve verification blockers.",
     ),
-    "carrierVerificationCenterDescription": MessageLookupByLibrary.simpleMessage(
-      "Upload and replace profile or vehicle verification documents from one place.",
-    ),
+    "carrierVerificationCenterDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "Upload and replace profile or vehicle verification documents.",
+        ),
     "carrierVerificationCenterTitle": MessageLookupByLibrary.simpleMessage(
       "Verification center",
     ),
     "carrierVerificationPendingBanner": MessageLookupByLibrary.simpleMessage(
-      "Your verification packet is under review. Upload any missing documents to keep approval moving.",
+      "Your verification is under review. Upload any missing documents to keep it moving.",
     ),
     "carrierVerificationQueueHint": MessageLookupByLibrary.simpleMessage(
-      "Verification requirements and missing documents stay grouped under your profile branch.",
+      "Finish the remaining verification steps from your profile.",
     ),
     "carrierVerificationRejectedBanner": m3,
     "carrierVerificationSummaryTitle": MessageLookupByLibrary.simpleMessage(
       "Verification summary",
     ),
     "confirmLabel": MessageLookupByLibrary.simpleMessage("Confirm"),
+    "contactSupportAction": MessageLookupByLibrary.simpleMessage(
+      "Contact support",
+    ),
     "deliveryConfirmAction": MessageLookupByLibrary.simpleMessage(
       "Confirm delivery",
     ),
@@ -690,11 +690,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "disputeEvidenceTitle": MessageLookupByLibrary.simpleMessage(
       "Dispute evidence",
     ),
+    "documentPreviewUnavailableMessage": MessageLookupByLibrary.simpleMessage(
+      "Preview is not available for this file. Open it in another app.",
+    ),
     "documentViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "Open this document in your secure viewer when access is ready.",
+      "View this document here or open it in another app.",
     ),
     "documentViewerOpenAction": MessageLookupByLibrary.simpleMessage(
-      "Open Document",
+      "Open document",
     ),
     "documentViewerTitle": m5,
     "documentViewerUnavailableMessage": MessageLookupByLibrary.simpleMessage(
@@ -759,7 +762,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Payout receipt",
     ),
     "generatedDocumentViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "Open generated invoices and receipts from a secure shared route.",
+      "View or download your invoice or receipt.",
     ),
     "generatedDocumentViewerTitle": m6,
     "generatedDocumentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
@@ -771,6 +774,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generatedDocumentsTitle": MessageLookupByLibrary.simpleMessage(
       "Generated documents",
     ),
+    "goBackAction": MessageLookupByLibrary.simpleMessage("Go back"),
     "languageOptionArabic": MessageLookupByLibrary.simpleMessage("Arabic"),
     "languageOptionEnglish": MessageLookupByLibrary.simpleMessage("English"),
     "languageOptionFrench": MessageLookupByLibrary.simpleMessage("French"),
@@ -782,7 +786,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Language selection",
     ),
     "legalDisputePolicyBody": MessageLookupByLibrary.simpleMessage(
-      "Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome.",
+      "Disputes must be opened during the delivery review window. FleetFill reviews shipment, payment proof, tracking, and related records before resolving the case. A dispute may end with a completed booking, a cancellation, or a refund.",
     ),
     "legalDisputePolicyTitle": MessageLookupByLibrary.simpleMessage(
       "Dispute policy",
@@ -794,7 +798,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Payment and escrow disclosure",
     ),
     "legalPoliciesDescription": MessageLookupByLibrary.simpleMessage(
-      "Review the terms, privacy, payment, and dispute rules that apply before production use.",
+      "Review the terms, privacy, payment, and dispute rules that apply when you use FleetFill.",
     ),
     "legalPoliciesSupportHint": MessageLookupByLibrary.simpleMessage(
       "If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action.",
@@ -803,7 +807,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Policies and disclosures",
     ),
     "legalPrivacyBody": MessageLookupByLibrary.simpleMessage(
-      "FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff.",
+      "FleetFill stores payment, shipment, support, and audit records only when needed to run the service, investigate disputes, and meet legal or financial obligations. Access is limited to the account owner and authorized staff.",
     ),
     "legalPrivacyTitle": MessageLookupByLibrary.simpleMessage(
       "Privacy and retention",
@@ -814,20 +818,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "legalTermsTitle": MessageLookupByLibrary.simpleMessage("Terms of service"),
     "loadMoreLabel": MessageLookupByLibrary.simpleMessage("Load more"),
     "loadingMessage": MessageLookupByLibrary.simpleMessage(
-      "FleetFill is preparing your workspace.",
+      "Getting things ready for you.",
     ),
     "loadingTitle": MessageLookupByLibrary.simpleMessage("Loading"),
     "maintenanceDescription": MessageLookupByLibrary.simpleMessage(
-      "FleetFill is temporarily unavailable while maintenance is in progress.",
+      "FleetFill is temporarily unavailable while we make improvements. Please try again soon.",
     ),
     "maintenanceTitle": MessageLookupByLibrary.simpleMessage(
-      "Maintenance mode",
+      "We\'ll be back soon",
     ),
     "mediaUploadPermissionDescription": MessageLookupByLibrary.simpleMessage(
-      "Guide the user back to media access when they need to upload proof or documents.",
+      "Allow photo and file access so you can upload payment proof and documents.",
     ),
     "mediaUploadPermissionTitle": MessageLookupByLibrary.simpleMessage(
-      "Media upload permission",
+      "Allow photo and file access",
     ),
     "moneySummaryTitle": MessageLookupByLibrary.simpleMessage(
       "Pricing summary",
@@ -846,7 +850,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Add one-off trip",
     ),
     "myRoutesDescription": MessageLookupByLibrary.simpleMessage(
-      "Recurring routes and one-off trips stay grouped in one branch.",
+      "Manage your recurring routes and one-off trips.",
     ),
     "myRoutesEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "Publish a recurring route or one-off trip to start offering capacity.",
@@ -879,7 +883,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Utilization",
     ),
     "myShipmentsDescription": MessageLookupByLibrary.simpleMessage(
-      "Active, history, and draft shipment states stay inside this branch.",
+      "Create shipments, review drafts, and track booked loads.",
     ),
     "myShipmentsNavLabel": MessageLookupByLibrary.simpleMessage("Shipments"),
     "myShipmentsTitle": MessageLookupByLibrary.simpleMessage("My shipments"),
@@ -894,7 +898,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notFoundTitle": MessageLookupByLibrary.simpleMessage("Not found"),
     "notificationBookingConfirmedBody": MessageLookupByLibrary.simpleMessage(
-      "Your booking is recorded. Continue to payment instructions to keep it moving.",
+      "Your booking is confirmed. Follow the payment steps to keep it on track.",
     ),
     "notificationBookingConfirmedTitle": MessageLookupByLibrary.simpleMessage(
       "Booking confirmed",
@@ -904,7 +908,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("Booking milestone updated"),
     "notificationCarrierReviewSubmittedBody":
         MessageLookupByLibrary.simpleMessage(
-          "A new shipper review has been added to your profile.",
+          "A new review has been added to your profile.",
         ),
     "notificationCarrierReviewSubmittedTitle":
         MessageLookupByLibrary.simpleMessage("Carrier review received"),
@@ -913,13 +917,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notificationDetailTitle": m9,
     "notificationDisputeOpenedBody": MessageLookupByLibrary.simpleMessage(
-      "A dispute has been opened for this booking and is waiting for admin review.",
+      "Your dispute has been opened and is waiting for review.",
     ),
     "notificationDisputeOpenedTitle": MessageLookupByLibrary.simpleMessage(
       "Dispute opened",
     ),
     "notificationDisputeResolvedBody": MessageLookupByLibrary.simpleMessage(
-      "The dispute for this booking has been resolved. Review the latest booking and payment outcome.",
+      "Your dispute has been resolved. Check the latest booking and payment update.",
     ),
     "notificationDisputeResolvedTitle": MessageLookupByLibrary.simpleMessage(
       "Dispute resolved",
@@ -929,12 +933,12 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("Document ready"),
     "notificationPaymentProofSubmittedBody":
         MessageLookupByLibrary.simpleMessage(
-          "Your payment proof is waiting for review.",
+          "We received your payment proof. We will review it shortly.",
         ),
     "notificationPaymentProofSubmittedTitle":
         MessageLookupByLibrary.simpleMessage("Payment proof submitted"),
     "notificationPaymentRejectedBody": MessageLookupByLibrary.simpleMessage(
-      "Your payment proof was rejected. Review the reason and resubmit before the deadline.",
+      "Your payment proof was rejected. Check the reason and send a new one before the deadline.",
     ),
     "notificationPaymentRejectedTitle": MessageLookupByLibrary.simpleMessage(
       "Payment proof rejected",
@@ -952,16 +956,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "Payout released",
     ),
     "notificationsCenterDescription": MessageLookupByLibrary.simpleMessage(
-      "Review recent alerts, booking updates, and operational reminders.",
+      "Stay up to date with bookings, payments, delivery progress, and account alerts.",
     ),
     "notificationsCenterTitle": MessageLookupByLibrary.simpleMessage(
       "Notifications",
     ),
     "notificationsPermissionDescription": MessageLookupByLibrary.simpleMessage(
-      "Explain why tracking and booking updates matter before opening system settings.",
+      "Turn on notifications to get booking updates, delivery milestones, and payment alerts.",
     ),
     "notificationsPermissionTitle": MessageLookupByLibrary.simpleMessage(
-      "Notifications permission",
+      "Turn on notifications",
     ),
     "offlineMessage": MessageLookupByLibrary.simpleMessage(
       "You are offline. Some actions are temporarily unavailable.",
@@ -1007,7 +1011,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Departure",
     ),
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Review this one-off trip before booking or operational follow-up.",
+      "Review this trip before booking.",
     ),
     "oneOffTripDetailTitle": m11,
     "oneOffTripEditTitle": MessageLookupByLibrary.simpleMessage(
@@ -1020,10 +1024,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "oneOffTripSavedMessage": MessageLookupByLibrary.simpleMessage(
       "One-off trip updated.",
     ),
-    "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
-      "Instructions, reference, proof upload, and payment status remain in one coherent flow.",
+    "openNotificationsAction": MessageLookupByLibrary.simpleMessage(
+      "Open notifications",
     ),
-    "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment flow"),
+    "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
+      "Follow the payment steps, upload proof, and track the review status.",
+    ),
+    "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment"),
     "paymentInstructionsTitle": MessageLookupByLibrary.simpleMessage(
       "Payment instructions",
     ),
@@ -1034,7 +1041,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Submitted amount",
     ),
     "paymentProofApprovedMessage": MessageLookupByLibrary.simpleMessage(
-      "Payment proof approved.",
+      "Payment confirmed.",
     ),
     "paymentProofDecisionNoteLabel": MessageLookupByLibrary.simpleMessage(
       "Decision note",
@@ -1085,7 +1092,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Upload payment proof",
     ),
     "paymentProofUploadedMessage": MessageLookupByLibrary.simpleMessage(
-      "Payment proof uploaded.",
+      "Payment proof received.",
     ),
     "paymentProofVerifiedAmountLabel": MessageLookupByLibrary.simpleMessage(
       "Verified amount",
@@ -1157,13 +1164,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Payout rail",
     ),
     "payoutAccountsDescription": MessageLookupByLibrary.simpleMessage(
-      "Carrier payout accounts stay grouped under the profile branch.",
+      "Add and manage the accounts where you receive payouts.",
     ),
     "payoutAccountsTitle": MessageLookupByLibrary.simpleMessage(
       "Payout accounts",
     ),
     "phoneCompletionDescription": MessageLookupByLibrary.simpleMessage(
-      "Operational actions stay gated until a phone number is present.",
+      "Add a phone number to keep using FleetFill.",
     ),
     "phoneCompletionSaveAction": MessageLookupByLibrary.simpleMessage(
       "Save phone number",
@@ -1172,7 +1179,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Phone number saved.",
     ),
     "phoneCompletionTitle": MessageLookupByLibrary.simpleMessage(
-      "Phone completion",
+      "Add phone number",
     ),
     "priceCurrencyLabel": MessageLookupByLibrary.simpleMessage("DZD"),
     "pricePerKgUnitLabel": MessageLookupByLibrary.simpleMessage("DZD/kg"),
@@ -1185,7 +1192,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profileFullNameLabel": MessageLookupByLibrary.simpleMessage("Full name"),
     "profilePhoneLabel": MessageLookupByLibrary.simpleMessage("Phone number"),
     "profileSetupDescription": MessageLookupByLibrary.simpleMessage(
-      "Complete the required profile details before using operational features.",
+      "Add your details so customers, carriers, and support can reach you.",
     ),
     "profileSetupSaveAction": MessageLookupByLibrary.simpleMessage(
       "Save profile",
@@ -1198,7 +1205,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Profile verification documents",
     ),
     "proofViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "Open this proof from a secure shared route when access is ready.",
+      "View the payment proof for this booking here or open it in another app.",
     ),
     "proofViewerTitle": m12,
     "publicationActiveLabel": MessageLookupByLibrary.simpleMessage("Active"),
@@ -1254,7 +1261,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Continue as a carrier",
     ),
     "roleSelectionDescription": MessageLookupByLibrary.simpleMessage(
-      "One account selects one role before operational access begins.",
+      "Choose how you want to use FleetFill. This sets up the right tools for your account.",
     ),
     "roleSelectionShipperDescription": MessageLookupByLibrary.simpleMessage(
       "Create shipments, compare exact trips, and follow delivery progress.",
@@ -1306,7 +1313,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Destination commune",
     ),
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Shared route detail presentation sits above the role shells.",
+      "Review this route before booking.",
     ),
     "routeDetailTitle": m13,
     "routeEditTitle": MessageLookupByLibrary.simpleMessage(
@@ -1387,7 +1394,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sort and filters",
     ),
     "searchTripsDescription": MessageLookupByLibrary.simpleMessage(
-      "The search form and exact-route results stay on one page with inline states.",
+      "Choose a shipment and date to find matching trips.",
     ),
     "searchTripsFilterEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No result matches the current sort and filter selection.",
@@ -1410,7 +1417,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Recurring route",
     ),
     "searchTripsRequiresDraftMessage": MessageLookupByLibrary.simpleMessage(
-      "Create at least one shipment draft to search exact lane capacity.",
+      "Create a shipment draft before searching for matching trips.",
     ),
     "searchTripsResultsTitle": m15,
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage("Search trips"),
@@ -1418,7 +1425,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Account",
     ),
     "settingsDescription": MessageLookupByLibrary.simpleMessage(
-      "Language, theme, support, and notification preferences stay inside shared settings.",
+      "Manage your language, appearance, notifications, and support options.",
     ),
     "settingsSignOutAction": MessageLookupByLibrary.simpleMessage("Sign out"),
     "settingsSignedOutMessage": MessageLookupByLibrary.simpleMessage(
@@ -1434,10 +1441,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsThemeModeTitle": MessageLookupByLibrary.simpleMessage("Theme"),
     "settingsTitle": MessageLookupByLibrary.simpleMessage("Settings"),
     "sharedScaffoldPreviewMessage": MessageLookupByLibrary.simpleMessage(
-      "Shared cards and shells stay consistent across role surfaces.",
+      "This feature is on the way.",
     ),
     "sharedScaffoldPreviewTitle": MessageLookupByLibrary.simpleMessage(
-      "Shared foundation preview",
+      "Coming soon",
     ),
     "shipmentAddItemAction": MessageLookupByLibrary.simpleMessage("Add item"),
     "shipmentCategoryLabel": MessageLookupByLibrary.simpleMessage("Category"),
@@ -1460,7 +1467,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Description",
     ),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Shipment summary, items, and linked booking summary live here.",
+      "Review shipment details, items, and booking status.",
     ),
     "shipmentDetailTitle": m16,
     "shipmentEditAction": MessageLookupByLibrary.simpleMessage("Edit shipment"),
@@ -1514,12 +1521,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Active bookings",
     ),
     "shipperHomeDescription": MessageLookupByLibrary.simpleMessage(
-      "Active bookings, recent notifications, quick actions, and support shortcut live here.",
+      "Track active bookings, check updates, and jump to your most-used actions.",
     ),
     "shipperHomeNavLabel": MessageLookupByLibrary.simpleMessage("Home"),
     "shipperHomeNoRecentNotificationMessage":
         MessageLookupByLibrary.simpleMessage(
-          "Your latest operational updates will appear here.",
+          "Your latest updates will appear here.",
         ),
     "shipperHomeQuickActionsTitle": MessageLookupByLibrary.simpleMessage(
       "Quick actions",
@@ -1532,7 +1539,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Unread notifications",
     ),
     "shipperProfileDescription": MessageLookupByLibrary.simpleMessage(
-      "Profile, phone, preferences, and support shortcuts stay in one branch.",
+      "Manage your contact details, settings, and support options.",
     ),
     "shipperProfileNavLabel": MessageLookupByLibrary.simpleMessage("Profile"),
     "shipperProfileSectionTitle": MessageLookupByLibrary.simpleMessage(
@@ -1542,16 +1549,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "Shipper profile",
     ),
     "splashDescription": MessageLookupByLibrary.simpleMessage(
-      "Bootstrap and blocking initialization states start here.",
+      "Getting FleetFill ready for you.",
     ),
-    "splashTitle": MessageLookupByLibrary.simpleMessage("Splash"),
+    "splashTitle": MessageLookupByLibrary.simpleMessage("Getting ready"),
+    "startupConfigurationRequiredMessage": MessageLookupByLibrary.simpleMessage(
+      "FleetFill is not available right now. Please try again later.",
+    ),
+    "startupConfigurationRequiredTitle": MessageLookupByLibrary.simpleMessage(
+      "FleetFill is unavailable",
+    ),
     "statusNeedsReviewLabel": MessageLookupByLibrary.simpleMessage(
       "Needs review",
     ),
     "statusReadyLabel": MessageLookupByLibrary.simpleMessage("Ready"),
     "supportConfiguredEmailMessage": m18,
     "supportDescription": MessageLookupByLibrary.simpleMessage(
-      "Support starts with clear email guidance and structured issue details.",
+      "Send a question, report a problem, or ask for help with a booking or payment.",
     ),
     "supportMessageLabel": MessageLookupByLibrary.simpleMessage(
       "Support message",
@@ -1562,9 +1575,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "supportReferenceHintMessage": MessageLookupByLibrary.simpleMessage(
       "Include any booking ID, tracking number, or payment reference that can help support investigate faster.",
     ),
-    "supportSendAction": MessageLookupByLibrary.simpleMessage(
-      "Send support email",
-    ),
+    "supportSendAction": MessageLookupByLibrary.simpleMessage("Send message"),
     "supportSubjectLabel": MessageLookupByLibrary.simpleMessage(
       "Support subject",
     ),
@@ -1574,7 +1585,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "suspendedTitle": MessageLookupByLibrary.simpleMessage("Account suspended"),
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.",
+      "Follow delivery progress, confirm delivery, open a dispute, or leave a review.",
     ),
     "trackingDetailTitle": m19,
     "trackingEventCancelledLabel": MessageLookupByLibrary.simpleMessage(
@@ -1606,13 +1617,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tracking timeline",
     ),
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
-      "Update FleetFill to continue with the latest supported version.",
+      "Update FleetFill to keep using the latest supported version.",
     ),
     "updateRequiredTitle": MessageLookupByLibrary.simpleMessage(
       "Update required",
     ),
     "userDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Shipper and carrier specifics remain section-based inside one user detail view.",
+      "Review account details, bookings, vehicles, and documents.",
     ),
     "userDetailTitle": MessageLookupByLibrary.simpleMessage("User detail"),
     "vehicleCapacityVolumeLabel": MessageLookupByLibrary.simpleMessage(
@@ -1643,7 +1654,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "vehicleEditTitle": MessageLookupByLibrary.simpleMessage("Edit vehicle"),
     "vehicleEditorDescription": MessageLookupByLibrary.simpleMessage(
-      "Keep vehicle data current so route and verification flows stay valid.",
+      "Keep vehicle details up to date before publishing trips.",
     ),
     "vehiclePlateLabel": MessageLookupByLibrary.simpleMessage("Plate number"),
     "vehiclePositiveNumberMessage": MessageLookupByLibrary.simpleMessage(
@@ -1662,7 +1673,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "vehicleVerificationRejectedBanner": m20,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
-      "Vehicles remain under the carrier profile branch.",
+      "Add and manage the vehicles you use for transport.",
     ),
     "vehiclesEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "Add a vehicle before you publish capacity or complete full verification.",
@@ -1678,9 +1689,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "Review the rejection reason and upload a replacement.",
         ),
     "verificationDocumentOpenPreparedMessage":
-        MessageLookupByLibrary.simpleMessage(
-          "Secure document access prepared.",
-        ),
+        MessageLookupByLibrary.simpleMessage("Your document is ready to open."),
     "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
       "Uploaded and waiting for admin review.",
     ),
@@ -1712,5 +1721,60 @@ class MessageLookup extends MessageLookupByLibrary {
       "Verification required",
     ),
     "verificationUploadAction": MessageLookupByLibrary.simpleMessage("Upload"),
+    "welcomeBackAction": MessageLookupByLibrary.simpleMessage("Back"),
+    "welcomeCarrierDescription": MessageLookupByLibrary.simpleMessage(
+      "Publish availability and review matching shipments.",
+    ),
+    "welcomeCarrierTitle": MessageLookupByLibrary.simpleMessage(
+      "Have transport capacity",
+    ),
+    "welcomeDescription": MessageLookupByLibrary.simpleMessage(
+      "FleetFill connects shipments with available transport.",
+    ),
+    "welcomeExactMatchDescription": MessageLookupByLibrary.simpleMessage(
+      "Search and posting tools connect the right route and date.",
+    ),
+    "welcomeExactMatchTitle": MessageLookupByLibrary.simpleMessage(
+      "Match shipments and transport",
+    ),
+    "welcomeHighlightsMessage": MessageLookupByLibrary.simpleMessage(
+      "Match shipments, confirm payment proof, and follow delivery updates in one place.",
+    ),
+    "welcomeLanguageAction": MessageLookupByLibrary.simpleMessage(
+      "Choose language",
+    ),
+    "welcomeLanguageDescription": MessageLookupByLibrary.simpleMessage(
+      "Choose the app language for your account. You can change it later in Settings.",
+    ),
+    "welcomeLanguageTitle": MessageLookupByLibrary.simpleMessage(
+      "Choose your language",
+    ),
+    "welcomeNextAction": MessageLookupByLibrary.simpleMessage("Next"),
+    "welcomePaymentDescription": MessageLookupByLibrary.simpleMessage(
+      "Payment proof and booking updates stay visible from start to delivery.",
+    ),
+    "welcomePaymentTitle": MessageLookupByLibrary.simpleMessage(
+      "Keep every booking clear",
+    ),
+    "welcomeShipperDescription": MessageLookupByLibrary.simpleMessage(
+      "Create a shipment and review matching transport options.",
+    ),
+    "welcomeShipperTitle": MessageLookupByLibrary.simpleMessage(
+      "Need to move goods",
+    ),
+    "welcomeSkipAction": MessageLookupByLibrary.simpleMessage("Skip"),
+    "welcomeTitle": MessageLookupByLibrary.simpleMessage(
+      "Move goods or offer transport",
+    ),
+    "welcomeTrackingDescription": MessageLookupByLibrary.simpleMessage(
+      "Follow clear status updates from booking to delivery without fake live maps.",
+    ),
+    "welcomeTrackingTitle": MessageLookupByLibrary.simpleMessage(
+      "Simple milestone tracking",
+    ),
+    "welcomeTrustDescription": MessageLookupByLibrary.simpleMessage(
+      "FleetFill keeps matching and booking updates clear for both sides.",
+    ),
+    "welcomeTrustTitle": MessageLookupByLibrary.simpleMessage("How it works"),
   };
 }

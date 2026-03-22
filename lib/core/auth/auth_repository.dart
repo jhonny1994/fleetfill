@@ -82,10 +82,6 @@ class AuthRepository {
   }
 
   Future<void> signInWithGoogle() {
-    if (!environment.googleAuthEnabled) {
-      throw const AuthException('google_auth_disabled');
-    }
-
     return _client.auth.signInWithOAuth(
       OAuthProvider.google,
       redirectTo: authRedirectUri,
@@ -129,7 +125,8 @@ class AuthRepository {
       'email': user.email?.trim() ?? '',
       'role': (existingRole ?? role).databaseValue,
       'full_name': _nullable(fullName) ?? existingProfile?.fullName,
-      'company_name': existingRole == AppUserRole.carrier || role == AppUserRole.carrier
+      'company_name':
+          existingRole == AppUserRole.carrier || role == AppUserRole.carrier
           ? _nullable(companyName) ?? existingProfile?.companyName
           : null,
       'phone_number': _nullable(phoneNumber) ?? existingProfile?.phoneNumber,

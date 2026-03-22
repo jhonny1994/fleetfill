@@ -51,6 +51,14 @@ Avoid vague labels such as:
 - `Your order is awesome`
 - `We are processing magic`
 
+### 3.2.1 Entry Flow
+
+- first launch should open a lightweight welcome/onboarding entry before auth
+- sign in and sign up are separate identity screens, not the first product explanation screen
+- once the user continues past welcome, persist that choice and avoid repeating the intro on every signed-out launch
+- authenticated onboarding should then continue with role selection, profile setup, and phone completion in that order when required
+- language selection is an app-wide preference, not a separate language mode per role
+
 ### 3.3 Material 3 And Theme Contract
 
 FleetFill should use Material 3 as the default Flutter design system baseline.

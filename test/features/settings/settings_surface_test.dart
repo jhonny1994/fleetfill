@@ -8,68 +8,73 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('SettingsScreen keeps language, theme, support, and policy surfaces reachable', (
-    tester,
-  ) async {
-    SharedPreferences.setMockInitialValues(const <String, Object>{});
-    final sharedPreferences = await SharedPreferences.getInstance();
+  testWidgets(
+    'SettingsScreen keeps language, theme, support, and policy surfaces reachable',
+    (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues(const <String, Object>{});
+      final sharedPreferences = await SharedPreferences.getInstance();
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-          secureStorageProvider.overrideWithValue(const FlutterSecureStorage()),
-          appEnvironmentConfigProvider.overrideWithValue(
-            const AppEnvironmentConfig(environment: AppEnvironment.local),
-          ),
-          initialThemeModeProvider.overrideWithValue(ThemeMode.light),
-          initialLocaleProvider.overrideWithValue(const Locale('en')),
-          authSessionControllerProvider.overrideWith(
-            _FakeAuthSessionController.new,
-          ),
-        ],
-        child: MaterialApp(
-          locale: const Locale('en'),
-          supportedLocales: S.delegate.supportedLocales,
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+            secureStorageProvider.overrideWithValue(
+              const FlutterSecureStorage(),
+            ),
+            appEnvironmentConfigProvider.overrideWithValue(
+              const AppEnvironmentConfig(environment: AppEnvironment.local),
+            ),
+            initialThemeModeProvider.overrideWithValue(ThemeMode.light),
+            initialLocaleProvider.overrideWithValue(const Locale('en')),
+            authSessionControllerProvider.overrideWith(
+              _FakeAuthSessionController.new,
+            ),
           ],
-          home: const SettingsScreen(),
+          child: MaterialApp(
+            locale: const Locale('en'),
+            supportedLocales: S.delegate.supportedLocales,
+            localizationsDelegates: const [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            home: const SettingsScreen(),
+          ),
         ),
-      ),
-    );
-
-    await tester.pumpAndSettle();
-
-    final context = tester.element(find.byType(SettingsScreen));
-    final s = S.of(context);
-    final listView = find.byType(ListView).first;
-    final cardTitles = <String>{};
-
-    for (var i = 0; i < 6; i++) {
-      cardTitles.addAll(
-        tester
-            .widgetList<AppListCard>(find.byType(AppListCard))
-            .map((card) => card.title),
       );
-      await tester.drag(listView, const Offset(0, -300));
-      await tester.pumpAndSettle();
-    }
 
-    for (final label in [
-      s.languageSelectionTitle,
-      s.settingsThemeModeTitle,
-      s.notificationsPermissionTitle,
-      s.notificationsCenterTitle,
-      s.supportTitle,
-      s.legalPoliciesTitle,
-    ]) {
-      expect(cardTitles, contains(label));
-    }
-  });
+      await tester.pumpAndSettle();
+
+      final context = tester.element(find.byType(SettingsScreen));
+      final s = S.of(context);
+      final listView = find.byType(ListView).first;
+      final cardTitles = <String>{};
+
+      for (var i = 0; i < 6; i++) {
+        cardTitles.addAll(
+          tester
+              .widgetList<AppListCard>(find.byType(AppListCard))
+              .map((card) => card.title),
+        );
+        await tester.drag(listView, const Offset(0, -300));
+        await tester.pumpAndSettle();
+      }
+
+      for (final label in [
+        s.languageSelectionTitle,
+        s.settingsThemeModeTitle,
+        s.notificationsPermissionTitle,
+        s.notificationsCenterTitle,
+        s.supportTitle,
+        s.legalPoliciesTitle,
+      ]) {
+        expect(cardTitles, contains(label));
+      }
+    },
+  );
 }
 
 class _FakeAuthSessionController extends AuthSessionController {

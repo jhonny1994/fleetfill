@@ -105,10 +105,10 @@ class CarrierHomeScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           AppListCard(
-            title: s.adminQueuesTitle,
+            title: s.carrierVerificationCenterTitle,
             subtitle: s.carrierVerificationQueueHint,
             trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.go(AppRoutePath.carrierProfile),
+            onTap: () => context.go(AppRoutePath.carrierVerification),
           ),
         ],
       ),

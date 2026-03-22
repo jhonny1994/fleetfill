@@ -86,7 +86,7 @@ Recommended storage path patterns:
 Client-safe values may be exposed to the app through controlled configuration such as:
 
 - Supabase project URL
-- Supabase anon key
+- Supabase publishable key for hosted staging/production, or legacy anon key for local CLI/self-hosted development
 - public support and release URLs
 - non-secret environment labels
 

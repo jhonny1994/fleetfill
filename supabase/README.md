@@ -101,9 +101,9 @@ Example root `.env` entries:
 
 - `APP_ENV=production`
 - `SUPABASE_URL=https://your-project-ref.supabase.co`
-- `SUPABASE_ANON_KEY=...`
+- `SUPABASE_PUBLISHABLE_KEY=...`
+- `SUPABASE_ANON_KEY=...` (local CLI/self-hosted only)
 - `SUPABASE_SERVICE_ROLE_KEY=...`
-- `GOOGLE_AUTH_ENABLED=true`
 - `MAINTENANCE_MODE=false`
 - `FORCE_UPDATE_REQUIRED=false`
 - `CRASH_REPORTING_ENABLED=false`
@@ -121,7 +121,9 @@ Example root `.env` entries:
 
 Notes:
 
-- `SUPABASE_PUBLISHABLE_KEY` is not required by the current app/runtime path and is intentionally not part of the baseline env template.
+- The mobile app uses `SUPABASE_ANON_KEY` first in `APP_ENV=local`, because local CLI/self-hosted Supabase does not manage hosted publishable keys.
+- The mobile app uses `SUPABASE_PUBLISHABLE_KEY` first in `APP_ENV=staging` and `APP_ENV=production`, with `SUPABASE_ANON_KEY` only as a compatibility fallback.
+- Google auth is always treated as enabled in the client runtime. Control availability through Supabase provider setup, not app flags.
 - The app push path should normally use native Firebase client config files (`google-services.json` / `GoogleService-Info.plist`) supplied outside git, while the optional `FIREBASE_*` app vars remain available only as explicit runtime overrides.
 
 ## Runtime Boundaries

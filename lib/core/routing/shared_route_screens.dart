@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:fleetfill/core/auth/auth.dart';
+import 'package:fleetfill/core/config/app_bootstrap.dart';
 import 'package:fleetfill/core/errors/app_error.dart';
 import 'package:fleetfill/core/errors/app_error_messages.dart';
 import 'package:fleetfill/core/localization/localization.dart';
@@ -21,17 +22,55 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends ConsumerWidget {
   const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final environment = ref.watch(appEnvironmentConfigProvider);
+    final authState = ref.watch(authSessionControllerProvider);
 
-    return AppPlaceholderScreen(
-      title: s.splashTitle,
-      description: s.splashDescription,
-      showSummary: false,
+    if (!environment.hasSupabaseConfig) {
+      return Scaffold(
+        body: SafeArea(
+          child: AppStateMessage(
+            icon: Icons.settings_rounded,
+            title: s.startupConfigurationRequiredTitle,
+            message: s.startupConfigurationRequiredMessage,
+          ),
+        ),
+      );
+    }
+
+    if (authState.isLoading) {
+      return Scaffold(
+        body: SafeArea(
+          child: AppStateMessage(
+            icon: Icons.local_shipping_outlined,
+            title: s.loadingTitle,
+            message: s.loadingMessage,
+            action: const Padding(
+              padding: EdgeInsets.only(top: AppSpacing.sm),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: AppStateMessage(
+          icon: Icons.local_shipping_outlined,
+          title: s.splashTitle,
+          message: s.splashDescription,
+          action: const Padding(
+            padding: EdgeInsets.only(top: AppSpacing.sm),
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -43,10 +82,18 @@ class MaintenanceModeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.maintenanceTitle,
-      description: s.maintenanceDescription,
-      showSummary: false,
+      child: AppStateMessage(
+        icon: Icons.build_circle_outlined,
+        title: s.maintenanceTitle,
+        message: s.maintenanceDescription,
+        action: FilledButton.icon(
+          onPressed: () => context.go(AppRoutePath.splash),
+          icon: const Icon(Icons.refresh_rounded),
+          label: Text(s.retryLabel),
+        ),
+      ),
     );
   }
 }
@@ -58,10 +105,18 @@ class ForceUpdateScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = S.of(context);
 
-    return AppPlaceholderScreen(
+    return AppPageScaffold(
       title: s.updateRequiredTitle,
-      description: s.updateRequiredDescription,
-      showSummary: false,
+      child: AppStateMessage(
+        icon: Icons.system_update_alt_rounded,
+        title: s.updateRequiredTitle,
+        message: s.updateRequiredDescription,
+        action: FilledButton.icon(
+          onPressed: () => context.go(AppRoutePath.splash),
+          icon: const Icon(Icons.refresh_rounded),
+          label: Text(s.retryLabel),
+        ),
+      ),
     );
   }
 }
@@ -1105,22 +1160,11 @@ class ProofViewerScreen extends ConsumerWidget {
                       ref.invalidate(paymentProofDetailProvider(proofId)),
                 );
               }
-              return AppStateMessage(
-                icon: Icons.receipt_long_outlined,
+              return _SignedFileViewer(
                 title: s.proofViewerTitle(formattedProofId),
-                message: s.verificationDocumentOpenPreparedMessage,
-                action: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FilledButton.icon(
-                      onPressed: () => unawaited(_openExternal(snapshot.data!)),
-                      icon: const Icon(Icons.open_in_new_rounded),
-                      label: Text(s.documentViewerOpenAction),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    SelectableText(snapshot.data!),
-                  ],
-                ),
+                message: s.proofViewerDescription,
+                signedUrl: snapshot.data!,
+                storagePath: proof.storagePath,
               );
             },
           );
@@ -1194,24 +1238,14 @@ class DisputeEvidenceViewerScreen extends ConsumerWidget {
                 );
               }
 
-              return AppStateMessage(
-                icon: Icons.attach_file_rounded,
+              return _SignedFileViewer(
                 title: s.documentViewerTitle(formattedEvidenceId),
                 message: evidence.note?.trim().isNotEmpty == true
                     ? evidence.note!
-                    : s.verificationDocumentOpenPreparedMessage,
-                action: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FilledButton.icon(
-                      onPressed: () => unawaited(_openExternal(snapshot.data!)),
-                      icon: const Icon(Icons.open_in_new_rounded),
-                      label: Text(s.documentViewerOpenAction),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    SelectableText(snapshot.data!),
-                  ],
-                ),
+                    : s.documentViewerDescription,
+                signedUrl: snapshot.data!,
+                storagePath: evidence.storagePath,
+                contentType: evidence.contentType,
               );
             },
           );
@@ -1271,27 +1305,12 @@ class DocumentViewerScreen extends ConsumerWidget {
                 );
               }
 
-              return AppStateMessage(
-                icon: Icons.description_outlined,
+              return _SignedFileViewer(
                 title: s.documentViewerTitle(formattedDocumentId),
-                message: s.verificationDocumentOpenPreparedMessage,
-                action: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FilledButton.icon(
-                      onPressed: () => unawaited(
-                        launchUrl(
-                          Uri.parse(snapshot.data!),
-                          mode: LaunchMode.externalApplication,
-                        ),
-                      ),
-                      icon: const Icon(Icons.open_in_new_rounded),
-                      label: Text(s.documentViewerOpenAction),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    SelectionArea(child: Text(snapshot.data!)),
-                  ],
-                ),
+                message: s.documentViewerDescription,
+                signedUrl: snapshot.data!,
+                storagePath: document.storagePath,
+                contentType: document.contentType,
               );
             },
           );
@@ -1468,6 +1487,195 @@ String _sharedLaneLabel(
 Future<void> _openExternal(String url) async {
   final uri = Uri.parse(url);
   await launchUrl(uri, mode: LaunchMode.externalApplication);
+}
+
+class _SignedFileViewer extends StatelessWidget {
+  const _SignedFileViewer({
+    required this.title,
+    required this.message,
+    required this.signedUrl,
+    required this.storagePath,
+    this.contentType,
+  });
+
+  final String title;
+  final String message;
+  final String signedUrl;
+  final String storagePath;
+  final String? contentType;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              runSpacing: AppSpacing.sm,
+              spacing: AppSpacing.sm,
+              children: [
+                SizedBox(
+                  width: 320,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(message),
+                    ],
+                  ),
+                ),
+                FilledButton.icon(
+                  onPressed: () => unawaited(_openExternal(signedUrl)),
+                  icon: const Icon(Icons.open_in_new_rounded),
+                  label: Text(s.documentViewerOpenAction),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Expanded(
+          child: _SignedFilePreview(
+            signedUrl: signedUrl,
+            storagePath: storagePath,
+            contentType: contentType,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SignedFilePreview extends StatelessWidget {
+  const _SignedFilePreview({
+    required this.signedUrl,
+    required this.storagePath,
+    this.contentType,
+  });
+
+  final String signedUrl;
+  final String storagePath;
+  final String? contentType;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+
+    if (_looksLikePdf(contentType, storagePath, signedUrl)) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: SfPdfViewer.network(signedUrl),
+      );
+    }
+
+    if (_looksLikeImage(contentType, storagePath, signedUrl)) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: InteractiveViewer(
+          minScale: 1,
+          maxScale: 4,
+          child: Container(
+            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            alignment: Alignment.center,
+            child: Image.network(
+              signedUrl,
+              fit: BoxFit.contain,
+              loadingBuilder: (context, child, progress) {
+                if (progress == null) {
+                  return child;
+                }
+
+                return const Center(child: CircularProgressIndicator());
+              },
+              errorBuilder: (context, error, stackTrace) => _PreviewFallback(
+                message: s.documentPreviewUnavailableMessage,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return _PreviewFallback(message: s.documentPreviewUnavailableMessage);
+  }
+}
+
+class _PreviewFallback extends StatelessWidget {
+  const _PreviewFallback({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.description_outlined, size: 40),
+              const SizedBox(height: AppSpacing.md),
+              Text(message, textAlign: TextAlign.center),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+bool _looksLikePdf(String? contentType, String storagePath, String signedUrl) {
+  final normalizedType = (contentType ?? '').toLowerCase();
+  if (normalizedType.contains('pdf')) {
+    return true;
+  }
+
+  return _pathLooksLike(storagePath, signedUrl, const ['.pdf']);
+}
+
+bool _looksLikeImage(
+  String? contentType,
+  String storagePath,
+  String signedUrl,
+) {
+  final normalizedType = (contentType ?? '').toLowerCase();
+  if (normalizedType.startsWith('image/')) {
+    return true;
+  }
+
+  return _pathLooksLike(
+    storagePath,
+    signedUrl,
+    const ['.jpg', '.jpeg', '.png', '.webp', '.gif'],
+  );
+}
+
+bool _pathLooksLike(
+  String storagePath,
+  String signedUrl,
+  List<String> suffixes,
+) {
+  final normalizedStoragePath = storagePath.toLowerCase();
+  final normalizedSignedUrl =
+      Uri.tryParse(signedUrl)?.path.toLowerCase() ?? signedUrl.toLowerCase();
+
+  return suffixes.any(
+    (suffix) =>
+        normalizedStoragePath.endsWith(suffix) ||
+        normalizedSignedUrl.endsWith(suffix),
+  );
 }
 
 String _sharedShipmentLaneLabel(

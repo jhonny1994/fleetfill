@@ -98,6 +98,60 @@ void main() {
   });
 
   group('Auth guard decisions', () {
+    test('routes unauthenticated users to the welcome screen', () {
+      final auth = authSnapshot(status: AuthStatus.unauthenticated);
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.shipperHome,
+      );
+
+      expect(decision.target, AppRedirectTarget.welcome);
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.welcome,
+      );
+    });
+
+    test('routes returning signed-out users to sign-in after onboarding', () {
+      final auth = authSnapshot(status: AuthStatus.unauthenticated);
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.shipperHome,
+        hasSeenPreAuthOnboarding: true,
+      );
+
+      expect(decision.target, AppRedirectTarget.signIn);
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.signIn,
+      );
+    });
+
+    test('redirects authenticated users away from the welcome screen', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.shipper,
+        hasCompletedOnboarding: true,
+        hasPhoneNumber: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.welcome,
+      );
+
+      expect(decision.target, AppRedirectTarget.home);
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.shipperHome,
+      );
+    });
+
     test('keeps suspended accounts on the sign-in holding route', () {
       final auth = authSnapshot(
         status: AuthStatus.authenticated,

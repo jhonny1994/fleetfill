@@ -82,6 +82,7 @@ Do not use snackbars for critical decisions or critical failure explanation.
   splash
   maintenance
   update-required
+  welcome
 
   auth/
     sign-in
@@ -220,6 +221,12 @@ These should usually live inside `SettingsScreen` rather than as separate routed
 
 Use one lean auth shell.
 
+Auth is separate from first-run onboarding entry.
+
+- signed-out first launch should open `WelcomeScreen`
+- after the user continues once, persist that state and return later signed-out sessions to `SignInScreen`
+- auth screens stay focused on identity tasks only
+
 - `SignInScreen`
 - `SignUpScreen`
 - `ForgotPasswordScreen`
@@ -234,6 +241,8 @@ Use dialog or inline handling instead of extra full pages for:
 ## 7. Onboarding Screens
 
 Keep onboarding guided and minimal.
+
+First-run welcome is a separate pre-auth entry screen, not part of the authenticated onboarding gate sequence.
 
 ### Shared Onboarding Pages
 
