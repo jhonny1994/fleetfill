@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'package:flutter/foundation.dart';
 
 abstract class AppLogger {
   void debug(String message, {Map<String, Object?> context = const {}});
@@ -25,12 +25,12 @@ class DebugAppLogger implements AppLogger {
 
   @override
   void debug(String message, {Map<String, Object?> context = const {}}) {
-    developer.log(message, name: 'FleetFill.debug', error: context);
+    _write('DEBUG', message, context: context);
   }
 
   @override
   void info(String message, {Map<String, Object?> context = const {}}) {
-    developer.log(message, name: 'FleetFill.info', error: context);
+    _write('INFO', message, context: context);
   }
 
   @override
@@ -40,12 +40,12 @@ class DebugAppLogger implements AppLogger {
     StackTrace? stackTrace,
     Map<String, Object?> context = const {},
   }) {
-    developer.log(
+    _write(
+      'WARN',
       message,
-      name: 'FleetFill.warning',
-      error: error ?? context,
+      context: context,
+      error: error,
       stackTrace: stackTrace,
-      level: 900,
     );
   }
 
@@ -56,12 +56,40 @@ class DebugAppLogger implements AppLogger {
     StackTrace? stackTrace,
     Map<String, Object?> context = const {},
   }) {
-    developer.log(
+    _write(
+      'ERROR',
       message,
-      name: 'FleetFill.error',
-      error: error ?? context,
+      context: context,
+      error: error,
       stackTrace: stackTrace,
-      level: 1000,
     );
+  }
+
+  void _write(
+    String level,
+    String message, {
+    Map<String, Object?> context = const {},
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    debugPrint('[FleetFill][$level] $message');
+
+    if (context.isNotEmpty) {
+      debugPrint('[FleetFill][$level][context] ${_formatContext(context)}');
+    }
+
+    if (error != null) {
+      debugPrint('[FleetFill][$level][error] $error');
+    }
+
+    if (stackTrace != null) {
+      debugPrint('[FleetFill][$level][stack] $stackTrace');
+    }
+  }
+
+  String _formatContext(Map<String, Object?> context) {
+    return context.entries
+        .map((entry) => '${entry.key}=${entry.value}')
+        .join(', ');
   }
 }
