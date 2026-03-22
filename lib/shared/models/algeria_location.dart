@@ -39,7 +39,8 @@ class AlgeriaCommune {
     }
 
     return nameFr.toLowerCase().contains(normalized) ||
-        nameAr.toLowerCase().contains(normalized);
+        nameAr.toLowerCase().contains(normalized) ||
+        id.toString().contains(normalized);
   }
 }
 
