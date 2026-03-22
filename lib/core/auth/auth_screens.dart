@@ -137,13 +137,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       if (!mounted) {
         return;
       }
-      final auth = ref.read(authSessionControllerProvider).asData?.value;
       AppFeedback.showSnackBar(context, s.authSignInSuccess);
-      context.go(
-        auth == null
-            ? AppRoutePath.signIn
-            : AppRouteGuards.authenticatedEntryLocation(auth),
-      );
     } on AuthException catch (error) {
       if (!mounted) {
         return;

@@ -37,6 +37,7 @@ class _SupportHomeScreenState extends ConsumerState<SupportHomeScreen> {
           AppSectionHeader(
             title: s.supportTitle,
             subtitle: s.supportDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           if (supportEmail != null) ...[
@@ -130,6 +131,7 @@ class LegalPoliciesScreen extends StatelessWidget {
           AppSectionHeader(
             title: s.legalPoliciesTitle,
             subtitle: s.legalPoliciesDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           if (supportEmail != null) ...[

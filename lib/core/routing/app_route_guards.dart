@@ -8,6 +8,7 @@ enum AppRedirectTarget {
   none,
   maintenance,
   updateRequired,
+  authenticatedEntry,
   welcome,
   signIn,
   resetPassword,
@@ -128,6 +129,12 @@ class AppRouteGuards {
       );
     }
 
+    if (location == AppRoutePath.splash) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.authenticatedEntry,
+      );
+    }
+
     if (auth.isPasswordRecovery &&
         location != AppRoutePath.resetPassword &&
         location != AppRoutePath.signIn &&
@@ -142,7 +149,9 @@ class AppRouteGuards {
     }
 
     if ((inAuthFlow || inWelcome) && !auth.isPasswordRecovery) {
-      return const RouteGuardDecision(target: AppRedirectTarget.home);
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.authenticatedEntry,
+      );
     }
 
     if (auth.role == null && !inOnboarding) {
@@ -212,6 +221,8 @@ class AppRouteGuards {
         return AppRoutePath.maintenance;
       case AppRedirectTarget.updateRequired:
         return AppRoutePath.updateRequired;
+      case AppRedirectTarget.authenticatedEntry:
+        return AppRoutePath.authenticatedEntry;
       case AppRedirectTarget.welcome:
         return AppRoutePath.welcome;
       case AppRedirectTarget.signIn:
@@ -266,8 +277,12 @@ class AppRouteGuards {
 
 final routeGuardDecisionProvider = Provider.family<RouteGuardDecision, String>(
   (ref, location) {
-    final bootstrap = ref.watch(appBootstrapControllerProvider).asData?.value;
-    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    final bootstrapState = ref.watch(appBootstrapControllerProvider);
+    final authState = ref.watch(authSessionControllerProvider);
+    final bootstrap = bootstrapState.hasValue
+        ? bootstrapState.requireValue
+        : null;
+    final auth = authState.hasValue ? authState.requireValue : bootstrap?.auth;
     final hasSeenPreAuthOnboarding = ref.watch(
       preAuthOnboardingControllerProvider,
     );

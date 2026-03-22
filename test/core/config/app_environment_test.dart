@@ -47,4 +47,36 @@ void main() {
       expect(key, 'legacy_anon_prod');
     });
   });
+
+  group('AppEnvironmentConfig local Supabase URL normalization', () {
+    test('maps localhost to 10.0.2.2 on Android local builds', () {
+      final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
+        'http://127.0.0.1:54321',
+        environment: AppEnvironment.local,
+        isAndroid: true,
+      );
+
+      expect(normalized, 'http://10.0.2.2:54321');
+    });
+
+    test('keeps hosted URLs unchanged', () {
+      final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
+        'https://example.supabase.co',
+        environment: AppEnvironment.local,
+        isAndroid: true,
+      );
+
+      expect(normalized, 'https://example.supabase.co');
+    });
+
+    test('keeps localhost unchanged outside Android local builds', () {
+      final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
+        'http://localhost:54321',
+        environment: AppEnvironment.production,
+        isAndroid: true,
+      );
+
+      expect(normalized, 'http://localhost:54321');
+    });
+  });
 }

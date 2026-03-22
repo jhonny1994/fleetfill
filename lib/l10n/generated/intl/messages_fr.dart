@@ -642,8 +642,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "carrierProfileVerificationVerified": MessageLookupByLibrary.simpleMessage(
       "Verifiee",
     ),
+    "carrierPublicProfileCommentsTitle": MessageLookupByLibrary.simpleMessage(
+      "Commentaires recents",
+    ),
     "carrierPublicProfileDescription": MessageLookupByLibrary.simpleMessage(
       "La reputation publique du transporteur et les indicateurs de confiance apparaissent ici.",
+    ),
+    "carrierPublicProfileNoCommentsMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Aucun commentaire d\'avis n\'est encore visible.",
+        ),
+    "carrierPublicProfileRatingLabel": MessageLookupByLibrary.simpleMessage(
+      "Note moyenne",
+    ),
+    "carrierPublicProfileReviewCountLabel":
+        MessageLookupByLibrary.simpleMessage("Nombre d\'avis"),
+    "carrierPublicProfileSummaryTitle": MessageLookupByLibrary.simpleMessage(
+      "Resume du transporteur",
     ),
     "carrierPublicProfileTitle": m2,
     "carrierVehiclesShortcutDescription": MessageLookupByLibrary.simpleMessage(
@@ -701,11 +716,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "editCarrierProfileDescription": MessageLookupByLibrary.simpleMessage(
       "Mettez a jour vos coordonnees et informations transporteur.",
     ),
+    "editCarrierProfileSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Profil transporteur mis a jour.",
+    ),
     "editCarrierProfileTitle": MessageLookupByLibrary.simpleMessage(
       "Modifier le profil transporteur",
     ),
     "editShipperProfileDescription": MessageLookupByLibrary.simpleMessage(
       "Mettez a jour vos coordonnees expediteur.",
+    ),
+    "editShipperProfileSavedMessage": MessageLookupByLibrary.simpleMessage(
+      "Profil expediteur mis a jour.",
     ),
     "editShipperProfileTitle": MessageLookupByLibrary.simpleMessage(
       "Modifier le profil expediteur",
@@ -1427,8 +1448,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage(
       "Rechercher un trajet",
     ),
+    "settingsAccountSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Compte",
+    ),
     "settingsDescription": MessageLookupByLibrary.simpleMessage(
       "Gerez la langue, l\'apparence, les notifications et les options de support.",
+    ),
+    "settingsSignOutAction": MessageLookupByLibrary.simpleMessage(
+      "Se deconnecter",
     ),
     "settingsSignedOutMessage": MessageLookupByLibrary.simpleMessage(
       "Votre session a ete fermee.",
@@ -1558,6 +1585,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Gerez vos coordonnees, vos reglages et vos options de support.",
     ),
     "shipperProfileNavLabel": MessageLookupByLibrary.simpleMessage("Profil"),
+    "shipperProfileSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Details expediteur",
+    ),
     "shipperProfileTitle": MessageLookupByLibrary.simpleMessage(
       "Profil expediteur",
     ),

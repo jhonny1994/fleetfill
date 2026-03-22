@@ -145,10 +145,31 @@ void main() {
         location: AppRoutePath.welcome,
       );
 
-      expect(decision.target, AppRedirectTarget.home);
+      expect(decision.target, AppRedirectTarget.authenticatedEntry);
       expect(
         AppRouteGuards.redirectLocation(decision, auth: auth),
-        AppRoutePath.shipperHome,
+        AppRoutePath.authenticatedEntry,
+      );
+    });
+
+    test('redirects authenticated users away from splash to auth entry', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.shipper,
+        hasCompletedOnboarding: true,
+        hasPhoneNumber: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.splash,
+      );
+
+      expect(decision.target, AppRedirectTarget.authenticatedEntry);
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.authenticatedEntry,
       );
     });
 

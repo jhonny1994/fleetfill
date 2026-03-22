@@ -2,6 +2,7 @@ enum AppRouteName {
   splash,
   maintenance,
   updateRequired,
+  authenticatedEntry,
   welcome,
   signIn,
   signUp,
@@ -65,6 +66,7 @@ abstract final class AppRoutePath {
   static const splash = '/';
   static const maintenance = '/maintenance';
   static const updateRequired = '/update-required';
+  static const authenticatedEntry = '/authenticated-entry';
   static const welcome = '/welcome';
 
   static const signIn = '/auth/sign-in';

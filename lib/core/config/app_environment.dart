@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_environment.freezed.dart';
@@ -41,10 +42,13 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
 
     return AppEnvironmentConfig(
       environment: environment,
-      supabaseUrl: _firstNonEmpty([
-        const String.fromEnvironment('SUPABASE_URL'),
-        const String.fromEnvironment('APP_SUPABASE_URL'),
-      ]),
+      supabaseUrl: _normalizeSupabaseUrl(
+        _firstNonEmpty([
+          const String.fromEnvironment('SUPABASE_URL'),
+          const String.fromEnvironment('APP_SUPABASE_URL'),
+        ]),
+        environment: environment,
+      ),
       supabaseAnonKey: _resolveClientKey(
         environment: environment,
         publishableKey: publishableKey,
@@ -139,5 +143,51 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     }
 
     return '';
+  }
+
+  static String normalizeSupabaseUrlForTesting(
+    String url, {
+    required AppEnvironment environment,
+    required bool isAndroid,
+    bool isWeb = false,
+  }) {
+    return _normalizeSupabaseUrl(
+      url,
+      environment: environment,
+      isAndroidOverride: isAndroid,
+      isWebOverride: isWeb,
+    );
+  }
+
+  static String _normalizeSupabaseUrl(
+    String url, {
+    required AppEnvironment environment,
+    bool? isAndroidOverride,
+    bool? isWebOverride,
+  }) {
+    final trimmed = url.trim();
+    if (trimmed.isEmpty || environment != AppEnvironment.local) {
+      return trimmed;
+    }
+
+    final isWebPlatform = isWebOverride ?? kIsWeb;
+    final isAndroidPlatform =
+        isAndroidOverride ??
+        (!isWebPlatform && defaultTargetPlatform == TargetPlatform.android);
+    if (!isAndroidPlatform) {
+      return trimmed;
+    }
+
+    final uri = Uri.tryParse(trimmed);
+    if (uri == null) {
+      return trimmed;
+    }
+
+    final host = uri.host.toLowerCase();
+    if (host != '127.0.0.1' && host != 'localhost') {
+      return trimmed;
+    }
+
+    return uri.replace(host: '10.0.2.2').toString();
   }
 }

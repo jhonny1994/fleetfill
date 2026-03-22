@@ -265,7 +265,11 @@ class _WelcomeLanguageStep extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final currentLocale = ref.watch(effectiveLocaleProvider);
-    final currentLanguageName = localizedLanguageName(currentLocale, s);
+    final currentLanguageName = localizedLanguageName(
+      context,
+      currentLocale,
+      s,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -331,6 +335,7 @@ class RoleSelectionScreen extends ConsumerWidget {
           AppSectionHeader(
             title: s.roleSelectionTitle,
             subtitle: s.roleSelectionDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           _RoleChoiceCard(
@@ -418,6 +423,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
           AppSectionHeader(
             title: s.languageSelectionTitle,
             subtitle: s.languageSelectionDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           ...const [
@@ -433,7 +439,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.md),
           AuthInfoBanner(
             message: s.languageSelectionCurrentMessage(
-              currentLocale.languageCode,
+              localizedLanguageName(context, currentLocale, s),
             ),
           ),
         ],
@@ -490,6 +496,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
           AppSectionHeader(
             title: s.profileSetupTitle,
             subtitle: s.profileSetupDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           AppFocusTraversal.form(
@@ -592,6 +599,7 @@ class _PhoneCompletionScreenState extends ConsumerState<PhoneCompletionScreen> {
           AppSectionHeader(
             title: s.phoneCompletionTitle,
             subtitle: s.phoneCompletionDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           AppFocusTraversal.form(
@@ -722,7 +730,7 @@ class _LanguageChoiceTile extends ConsumerWidget {
     final isSelected = currentLocale.languageCode == locale.languageCode;
 
     final title = nativeLanguageName(locale);
-    final subtitle = localizedLanguageName(locale, s);
+    final subtitle = localizedLanguageName(context, locale, s);
 
     return ListTile(
       shape: RoundedRectangleBorder(
@@ -741,20 +749,4 @@ class _LanguageChoiceTile extends ConsumerWidget {
       },
     );
   }
-}
-
-String localizedLanguageName(Locale locale, S s) {
-  return switch (locale.languageCode) {
-    'ar' => s.languageOptionArabic,
-    'fr' => s.languageOptionFrench,
-    _ => s.languageOptionEnglish,
-  };
-}
-
-String nativeLanguageName(Locale locale) {
-  return switch (locale.languageCode) {
-    'ar' => 'العربية',
-    'fr' => 'Francais',
-    _ => 'English',
-  };
 }

@@ -34,8 +34,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     navigatorKey: rootNavigatorKey,
     initialLocation: AppRoutePath.splash,
     redirect: (context, state) {
-      final resolvedBootstrap = bootstrapState.asData?.value;
-      final resolvedAuth = authSessionState.asData?.value;
+      final resolvedBootstrap = bootstrapState.hasValue
+          ? bootstrapState.requireValue
+          : null;
+      final resolvedAuth = authSessionState.hasValue
+          ? authSessionState.requireValue
+          : resolvedBootstrap?.auth;
       if (resolvedBootstrap == null) {
         return state.matchedLocation == AppRoutePath.splash
             ? null
@@ -69,10 +73,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     errorBuilder: (context, state) {
       final bootstrap = bootstrapState.asData?.value;
-      final authSnapshot = ref
-          .watch(authSessionControllerProvider)
-          .asData
-          ?.value;
+      final authSessionValue = ref.watch(authSessionControllerProvider);
+      final authSnapshot = authSessionValue.hasValue
+          ? authSessionValue.requireValue
+          : bootstrap?.auth;
       final decision = bootstrap == null
           ? const RouteGuardDecision.none()
           : ref.read(routeGuardDecisionProvider(state.matchedLocation));
@@ -113,6 +117,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutePath.updateRequired,
         name: AppRouteName.updateRequired.name,
         builder: (context, state) => const ForceUpdateScreen(),
+      ),
+      GoRoute(
+        path: AppRoutePath.authenticatedEntry,
+        name: AppRouteName.authenticatedEntry.name,
+        builder: (context, state) => const AuthenticatedEntryScreen(),
       ),
       GoRoute(
         path: AppRoutePath.welcome,

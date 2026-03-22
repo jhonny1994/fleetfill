@@ -16,6 +16,7 @@ class SettingsScreen extends ConsumerWidget {
     final s = S.of(context);
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
     final locale = ref.watch(effectiveLocaleProvider);
+    final localizedLanguage = localizedLanguageName(context, locale, s);
     final themeMode = ref.watch(themeControllerProvider);
 
     return AppPageScaffold(
@@ -26,6 +27,7 @@ class SettingsScreen extends ConsumerWidget {
           AppSectionHeader(
             title: s.settingsTitle,
             subtitle: s.settingsDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           ProfileSummaryCard(
@@ -37,7 +39,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               ProfileSummaryRow(
                 label: s.languageSelectionTitle,
-                value: locale.languageCode.toUpperCase(),
+                value: localizedLanguage,
               ),
               ProfileSummaryRow(
                 label: s.settingsThemeModeTitle,
@@ -48,9 +50,7 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.md),
           AppListCard(
             title: s.languageSelectionTitle,
-            subtitle: s.languageSelectionCurrentMessage(
-              locale.languageCode.toUpperCase(),
-            ),
+            subtitle: s.languageSelectionCurrentMessage(localizedLanguage),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => context.push(AppRoutePath.languageSelection),
           ),
@@ -128,6 +128,7 @@ class ShipperProfileScreen extends ConsumerWidget {
           AppSectionHeader(
             title: s.shipperProfileTitle,
             subtitle: s.shipperProfileDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           ProfileSummaryCard(
@@ -202,6 +203,7 @@ class CarrierProfileScreen extends ConsumerWidget {
           AppSectionHeader(
             title: s.carrierProfileTitle,
             subtitle: s.carrierProfileDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           ProfileSummaryCard(
