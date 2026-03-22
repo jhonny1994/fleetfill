@@ -194,33 +194,15 @@ Recommended fields:
 - `shipper_id uuid fk -> profiles.id`
 - `origin_commune_id integer`
 - `destination_commune_id integer`
-- `pickup_window_start timestamptz`
-- `pickup_window_end timestamptz`
+- `pickup_date date`
 - `total_weight_kg numeric`
 - `total_volume_m3 numeric null`
-- `category text`
-- `description text null`
+- `description text null` -- shipment details
 - `status text check in ('draft','booked','cancelled')`
 - `created_at timestamptz`
 - `updated_at timestamptz`
 
-### 2.8 `shipment_items`
-
-Purpose: multiple boxes or item groups inside one shipment.
-
-Recommended fields:
-
-- `id uuid pk`
-- `shipment_id uuid fk -> shipments.id`
-- `label text`
-- `quantity integer`
-- `weight_kg numeric null`
-- `volume_m3 numeric null`
-- `notes text null`
-- `created_at timestamptz`
-- `updated_at timestamptz`
-
-### 2.9 `bookings`
+### 2.8 `bookings`
 
 Purpose: one shipment bound to one route-date or one-off trip.
 
@@ -259,7 +241,7 @@ Recommended fields:
 - `created_at timestamptz`
 - `updated_at timestamptz`
 
-### 2.10 `payment_proofs`
+### 2.9 `payment_proofs`
 
 Purpose: submitted evidence for external payment.
 

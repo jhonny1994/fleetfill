@@ -112,8 +112,7 @@ The auditable record of money released to the carrier.
 
 ### 3.2 Shipment Packaging
 
-- A shipment may contain multiple package lines.
-- Package lines are descriptive and operational, not separate bookings.
+- A shipment is one transport request with one shipment-level details field.
 - Weight is the mandatory and authoritative capacity constraint.
 - Volume is optional and is enforced only when both the shipment and the route/trip publish volume values.
 - If volume is missing on either side, matching still proceeds using weight rules only.

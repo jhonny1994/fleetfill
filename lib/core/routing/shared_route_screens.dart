@@ -225,16 +225,8 @@ class ShipmentDetailScreen extends ConsumerWidget {
                 title: s.searchShipmentSummaryTitle,
                 rows: [
                   ProfileSummaryRow(
-                    label: s.shipmentCategoryLabel,
-                    value: shipment.category,
-                  ),
-                  ProfileSummaryRow(
-                    label: s.shipmentPickupStartLabel,
-                    value: _sharedFormatDate(shipment.pickupWindowStart),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.shipmentPickupEndLabel,
-                    value: _sharedFormatDate(shipment.pickupWindowEnd),
+                    label: s.shipmentPickupDateLabel,
+                    value: _sharedFormatDate(shipment.pickupDate),
                   ),
                   ProfileSummaryRow(
                     label: s.vehicleCapacityWeightLabel,
@@ -258,26 +250,13 @@ class ShipmentDetailScreen extends ConsumerWidget {
                       ShipmentStatus.draft => s.shipmentStatusDraftLabel,
                     },
                   ),
+                  if ((shipment.details ?? '').trim().isNotEmpty)
+                    ProfileSummaryRow(
+                      label: s.shipmentDescriptionLabel,
+                      value: shipment.details!,
+                    ),
                 ],
               ),
-              if (shipment.items.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.lg),
-                Text(
-                  s.shipmentItemsTitle,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                ...shipment.items.map(
-                  (item) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                    child: AppListCard(
-                      title: item.label,
-                      subtitle:
-                          '${BidiFormatters.latinIdentifier(item.quantity.toString())} • ${item.notes ?? ''}',
-                    ),
-                  ),
-                ),
-              ],
             ],
           );
         },
@@ -1510,10 +1489,10 @@ String _sharedLaneLabel(
   final locale = Localizations.localeOf(context);
   final origin =
       communeMap[originId]?.displayName(locale) ??
-      BidiFormatters.latinIdentifier(originId.toString());
+      S.of(context).locationUnavailableLabel;
   final destination =
       communeMap[destinationId]?.displayName(locale) ??
-      BidiFormatters.latinIdentifier(destinationId.toString());
+      S.of(context).locationUnavailableLabel;
   return '$origin -> $destination';
 }
 

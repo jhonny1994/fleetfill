@@ -57,16 +57,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(shipmentId) => "Shipment ${shipmentId}";
 
-  static String m17(index) => "Item ${index}";
+  static String m17(supportEmail) => "Support email: ${supportEmail}";
 
-  static String m18(supportEmail) => "Support email: ${supportEmail}";
+  static String m18(bookingId) => "Tracking ${bookingId}";
 
-  static String m19(bookingId) => "Tracking ${bookingId}";
-
-  static String m20(reason) =>
+  static String m19(reason) =>
       "Vehicle verification needs attention: ${reason}";
 
-  static String m21(reason) => "Rejected: ${reason}";
+  static String m20(reason) => "Rejected: ${reason}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -821,6 +819,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Getting things ready for you.",
     ),
     "loadingTitle": MessageLookupByLibrary.simpleMessage("Loading"),
+    "locationUnavailableLabel": MessageLookupByLibrary.simpleMessage(
+      "Location unavailable",
+    ),
     "maintenanceDescription": MessageLookupByLibrary.simpleMessage(
       "FleetFill is temporarily unavailable while we make improvements. Please try again soon.",
     ),
@@ -1312,6 +1313,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeDestinationLabel": MessageLookupByLibrary.simpleMessage(
       "Destination commune",
     ),
+    "routeDestinationWilayaLabel": MessageLookupByLibrary.simpleMessage(
+      "Destination wilaya",
+    ),
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Review this route before booking.",
     ),
@@ -1329,6 +1333,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "FleetFill could not open this route.",
     ),
     "routeOriginLabel": MessageLookupByLibrary.simpleMessage("Origin commune"),
+    "routeOriginWilayaLabel": MessageLookupByLibrary.simpleMessage(
+      "Origin wilaya",
+    ),
     "routePricePerKgLabel": MessageLookupByLibrary.simpleMessage(
       "Price per kg (DZD)",
     ),
@@ -1417,7 +1424,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Recurring route",
     ),
     "searchTripsRequiresDraftMessage": MessageLookupByLibrary.simpleMessage(
-      "Create a shipment draft before searching for matching trips.",
+      "Create a shipment before searching for matching trips.",
     ),
     "searchTripsResultsTitle": m15,
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage("Search trips"),
@@ -1446,68 +1453,36 @@ class MessageLookup extends MessageLookupByLibrary {
     "sharedScaffoldPreviewTitle": MessageLookupByLibrary.simpleMessage(
       "Coming soon",
     ),
-    "shipmentAddItemAction": MessageLookupByLibrary.simpleMessage("Add item"),
-    "shipmentCategoryLabel": MessageLookupByLibrary.simpleMessage("Category"),
     "shipmentCreateAction": MessageLookupByLibrary.simpleMessage(
       "Create shipment",
     ),
     "shipmentCreateTitle": MessageLookupByLibrary.simpleMessage(
-      "Create shipment draft",
+      "Create shipment",
     ),
     "shipmentDeleteAction": MessageLookupByLibrary.simpleMessage(
       "Delete shipment",
     ),
     "shipmentDeleteConfirmationMessage": MessageLookupByLibrary.simpleMessage(
-      "Delete this shipment draft from FleetFill?",
+      "Delete this shipment?",
     ),
     "shipmentDeletedMessage": MessageLookupByLibrary.simpleMessage(
-      "Shipment draft removed.",
+      "Shipment removed.",
     ),
     "shipmentDescriptionLabel": MessageLookupByLibrary.simpleMessage(
-      "Description",
+      "Shipment details",
     ),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Review shipment details, items, and booking status.",
+      "Review the route, pickup date, weight, volume, and shipment details.",
     ),
     "shipmentDetailTitle": m16,
     "shipmentEditAction": MessageLookupByLibrary.simpleMessage("Edit shipment"),
-    "shipmentEditTitle": MessageLookupByLibrary.simpleMessage(
-      "Edit shipment draft",
-    ),
-    "shipmentItemLabelField": MessageLookupByLibrary.simpleMessage(
-      "Item label",
-    ),
-    "shipmentItemNotesLabel": MessageLookupByLibrary.simpleMessage(
-      "Item notes",
-    ),
-    "shipmentItemQuantityLabel": MessageLookupByLibrary.simpleMessage(
-      "Quantity",
-    ),
-    "shipmentItemTitle": m17,
-    "shipmentItemVolumeLabel": MessageLookupByLibrary.simpleMessage(
-      "Item volume (m3)",
-    ),
-    "shipmentItemWeightLabel": MessageLookupByLibrary.simpleMessage(
-      "Item weight (kg)",
-    ),
-    "shipmentItemsTitle": MessageLookupByLibrary.simpleMessage(
-      "Shipment items",
-    ),
-    "shipmentPickupEndLabel": MessageLookupByLibrary.simpleMessage(
-      "Pickup window end",
-    ),
-    "shipmentPickupStartLabel": MessageLookupByLibrary.simpleMessage(
-      "Pickup window start",
-    ),
-    "shipmentPickupWindowOrderMessage": MessageLookupByLibrary.simpleMessage(
-      "Pickup window end must be after pickup window start.",
-    ),
-    "shipmentRemoveItemAction": MessageLookupByLibrary.simpleMessage(
-      "Remove item",
+    "shipmentEditTitle": MessageLookupByLibrary.simpleMessage("Edit shipment"),
+    "shipmentPickupDateLabel": MessageLookupByLibrary.simpleMessage(
+      "Pickup date",
     ),
     "shipmentSaveAction": MessageLookupByLibrary.simpleMessage("Save shipment"),
     "shipmentSavedMessage": MessageLookupByLibrary.simpleMessage(
-      "Shipment draft saved.",
+      "Shipment saved.",
     ),
     "shipmentStatusBookedLabel": MessageLookupByLibrary.simpleMessage("Booked"),
     "shipmentStatusCancelledLabel": MessageLookupByLibrary.simpleMessage(
@@ -1562,7 +1537,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Needs review",
     ),
     "statusReadyLabel": MessageLookupByLibrary.simpleMessage("Ready"),
-    "supportConfiguredEmailMessage": m18,
+    "supportConfiguredEmailMessage": m17,
     "supportDescription": MessageLookupByLibrary.simpleMessage(
       "Send a question, report a problem, or ask for help with a booking or payment.",
     ),
@@ -1587,7 +1562,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Follow delivery progress, confirm delivery, open a dispute, or leave a review.",
     ),
-    "trackingDetailTitle": m19,
+    "trackingDetailTitle": m18,
     "trackingEventCancelledLabel": MessageLookupByLibrary.simpleMessage(
       "Cancelled",
     ),
@@ -1671,7 +1646,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vehicleVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
       "Vehicle verification documents",
     ),
-    "vehicleVerificationRejectedBanner": m20,
+    "vehicleVerificationRejectedBanner": m19,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
       "Add and manage the vehicles you use for transport.",
     ),
@@ -1693,7 +1668,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
       "Uploaded and waiting for admin review.",
     ),
-    "verificationDocumentRejectedMessage": m21,
+    "verificationDocumentRejectedMessage": m20,
     "verificationDocumentReplacedMessage": MessageLookupByLibrary.simpleMessage(
       "Verification document replaced.",
     ),

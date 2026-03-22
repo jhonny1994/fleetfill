@@ -9,7 +9,7 @@ void main() {
 
     setUpAll(() {
       bookingRpcMigration = File(
-        'supabase/migrations/20260320120200_create_booking_confirmation_rpc.sql',
+        'supabase/migrations/20260322123000_simplify_shipment_domain.sql',
       ).readAsStringSync();
       transitionMigration = File(
         'supabase/migrations/20260320120300_enforce_booking_status_transitions.sql',

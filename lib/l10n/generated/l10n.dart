@@ -2832,10 +2832,10 @@ class S {
     );
   }
 
-  /// `Review shipment details, items, and booking status.`
+  /// `Review the route, pickup date, weight, volume, and shipment details.`
   String get shipmentDetailDescription {
     return Intl.message(
-      'Review shipment details, items, and booking status.',
+      'Review the route, pickup date, weight, volume, and shipment details.',
       name: 'shipmentDetailDescription',
       desc: '',
       args: [],
@@ -4247,10 +4247,10 @@ class S {
     );
   }
 
-  /// `Create shipment draft`
+  /// `Create shipment`
   String get shipmentCreateTitle {
     return Intl.message(
-      'Create shipment draft',
+      'Create shipment',
       name: 'shipmentCreateTitle',
       desc: '',
       args: [],
@@ -4267,10 +4267,10 @@ class S {
     );
   }
 
-  /// `Edit shipment draft`
+  /// `Edit shipment`
   String get shipmentEditTitle {
     return Intl.message(
-      'Edit shipment draft',
+      'Edit shipment',
       name: 'shipmentEditTitle',
       desc: '',
       args: [],
@@ -4287,10 +4287,10 @@ class S {
     );
   }
 
-  /// `Shipment draft saved.`
+  /// `Shipment saved.`
   String get shipmentSavedMessage {
     return Intl.message(
-      'Shipment draft saved.',
+      'Shipment saved.',
       name: 'shipmentSavedMessage',
       desc: '',
       args: [],
@@ -4307,20 +4307,20 @@ class S {
     );
   }
 
-  /// `Delete this shipment draft from FleetFill?`
+  /// `Delete this shipment?`
   String get shipmentDeleteConfirmationMessage {
     return Intl.message(
-      'Delete this shipment draft from FleetFill?',
+      'Delete this shipment?',
       name: 'shipmentDeleteConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Shipment draft removed.`
+  /// `Shipment removed.`
   String get shipmentDeletedMessage {
     return Intl.message(
-      'Shipment draft removed.',
+      'Shipment removed.',
       name: 'shipmentDeletedMessage',
       desc: '',
       args: [],
@@ -4337,141 +4337,11 @@ class S {
     );
   }
 
-  /// `Category`
-  String get shipmentCategoryLabel {
-    return Intl.message(
-      'Category',
-      name: 'shipmentCategoryLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Description`
+  /// `Shipment details`
   String get shipmentDescriptionLabel {
     return Intl.message(
-      'Description',
+      'Shipment details',
       name: 'shipmentDescriptionLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Pickup window start`
-  String get shipmentPickupStartLabel {
-    return Intl.message(
-      'Pickup window start',
-      name: 'shipmentPickupStartLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Pickup window end`
-  String get shipmentPickupEndLabel {
-    return Intl.message(
-      'Pickup window end',
-      name: 'shipmentPickupEndLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Pickup window end must be after pickup window start.`
-  String get shipmentPickupWindowOrderMessage {
-    return Intl.message(
-      'Pickup window end must be after pickup window start.',
-      name: 'shipmentPickupWindowOrderMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shipment items`
-  String get shipmentItemsTitle {
-    return Intl.message(
-      'Shipment items',
-      name: 'shipmentItemsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Item {index}`
-  String shipmentItemTitle(Object index) {
-    return Intl.message(
-      'Item $index',
-      name: 'shipmentItemTitle',
-      desc: '',
-      args: [index],
-    );
-  }
-
-  /// `Add item`
-  String get shipmentAddItemAction {
-    return Intl.message(
-      'Add item',
-      name: 'shipmentAddItemAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Remove item`
-  String get shipmentRemoveItemAction {
-    return Intl.message(
-      'Remove item',
-      name: 'shipmentRemoveItemAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Item label`
-  String get shipmentItemLabelField {
-    return Intl.message(
-      'Item label',
-      name: 'shipmentItemLabelField',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Quantity`
-  String get shipmentItemQuantityLabel {
-    return Intl.message(
-      'Quantity',
-      name: 'shipmentItemQuantityLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Item weight (kg)`
-  String get shipmentItemWeightLabel {
-    return Intl.message(
-      'Item weight (kg)',
-      name: 'shipmentItemWeightLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Item volume (m3)`
-  String get shipmentItemVolumeLabel {
-    return Intl.message(
-      'Item volume (m3)',
-      name: 'shipmentItemVolumeLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Item notes`
-  String get shipmentItemNotesLabel {
-    return Intl.message(
-      'Item notes',
-      name: 'shipmentItemNotesLabel',
       desc: '',
       args: [],
     );
@@ -4507,10 +4377,10 @@ class S {
     );
   }
 
-  /// `Create a shipment draft before searching for matching trips.`
+  /// `Create a shipment before searching for matching trips.`
   String get searchTripsRequiresDraftMessage {
     return Intl.message(
-      'Create a shipment draft before searching for matching trips.',
+      'Create a shipment before searching for matching trips.',
       name: 'searchTripsRequiresDraftMessage',
       desc: '',
       args: [],
@@ -6472,6 +6342,46 @@ class S {
     return Intl.message(
       'No admin audit events have been recorded yet.',
       name: 'adminAuditLogEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Origin wilaya`
+  String get routeOriginWilayaLabel {
+    return Intl.message(
+      'Origin wilaya',
+      name: 'routeOriginWilayaLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Destination wilaya`
+  String get routeDestinationWilayaLabel {
+    return Intl.message(
+      'Destination wilaya',
+      name: 'routeDestinationWilayaLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pickup date`
+  String get shipmentPickupDateLabel {
+    return Intl.message(
+      'Pickup date',
+      name: 'shipmentPickupDateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location unavailable`
+  String get locationUnavailableLabel {
+    return Intl.message(
+      'Location unavailable',
+      name: 'locationUnavailableLabel',
       desc: '',
       args: [],
     );
