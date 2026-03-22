@@ -6,6 +6,7 @@ import 'package:fleetfill/core/config/app_bootstrap.dart';
 import 'package:fleetfill/core/errors/app_error.dart';
 import 'package:fleetfill/core/errors/app_error_messages.dart';
 import 'package:fleetfill/core/localization/localization.dart';
+import 'package:fleetfill/core/routing/app_route_guards.dart';
 import 'package:fleetfill/core/routing/app_routes.dart';
 import 'package:fleetfill/core/theme/design_tokens.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
@@ -118,6 +119,36 @@ class ForceUpdateScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class AuthenticatedEntryScreen extends ConsumerStatefulWidget {
+  const AuthenticatedEntryScreen({super.key});
+
+  @override
+  ConsumerState<AuthenticatedEntryScreen> createState() =>
+      _AuthenticatedEntryScreenState();
+}
+
+class _AuthenticatedEntryScreenState
+    extends ConsumerState<AuthenticatedEntryScreen> {
+  bool _scheduled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+
+    if (!_scheduled && auth != null && auth.isAuthenticated) {
+      _scheduled = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          return;
+        }
+        context.go(AppRouteGuards.homeLocation(auth));
+      });
+    }
+
+    return const SplashScreen();
   }
 }
 
@@ -280,6 +311,7 @@ class BookingDetailScreen extends ConsumerWidget {
               AppSectionHeader(
                 title: s.bookingDetailTitle(formattedBookingId),
                 subtitle: s.bookingDetailDescription,
+                showTitle: false,
               ),
               const SizedBox(height: AppSpacing.lg),
               ProfileSummaryCard(
@@ -395,6 +427,7 @@ class BookingTrackingScreen extends ConsumerWidget {
               AppSectionHeader(
                 title: s.trackingDetailTitle(formattedBookingId),
                 subtitle: s.trackingDetailDescription,
+                showTitle: false,
               ),
               const SizedBox(height: AppSpacing.lg),
               ProfileSummaryCard(

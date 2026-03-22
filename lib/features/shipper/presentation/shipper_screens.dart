@@ -80,6 +80,7 @@ class ShipperHomeScreen extends ConsumerWidget {
           AppSectionHeader(
             title: s.shipperHomeTitle,
             subtitle: s.shipperHomeDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           ProfileSummaryCard(
@@ -328,6 +329,7 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
               AppSectionHeader(
                 title: s.searchTripsTitle,
                 subtitle: s.searchTripsDescription,
+                showTitle: false,
               ),
               const SizedBox(height: AppSpacing.lg),
               AuthCard(

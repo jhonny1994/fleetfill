@@ -62,6 +62,7 @@ class CarrierHomeScreen extends ConsumerWidget {
           AppSectionHeader(
             title: s.carrierHomeTitle,
             subtitle: s.carrierHomeDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           ProfileSummaryCard(
@@ -612,6 +613,7 @@ class CarrierVerificationCenterScreen extends ConsumerWidget {
           AppSectionHeader(
             title: s.carrierVerificationCenterTitle,
             subtitle: s.carrierVerificationCenterDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           _VerificationDocumentsSection(

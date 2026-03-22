@@ -4,6 +4,7 @@ import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
@@ -62,13 +63,13 @@ class FleetFillApp extends ConsumerWidget {
       },
       localizationsDelegates: const [
         S.delegate,
+        LocaleNamesLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       builder: (context, child) {
         final bootstrap = ref.watch(appBootstrapControllerProvider);
-        final authSession = ref.watch(authSessionControllerProvider);
         final currentLocale = Localizations.localeOf(context);
         final textDirection = currentLocale.languageCode == 'ar'
             ? TextDirection.rtl
@@ -78,38 +79,11 @@ class FleetFillApp extends ConsumerWidget {
           textDirection: textDirection,
           child: PushNotificationCoordinator(
             child: AppFocusTraversal.largeScreen(
-              child: bootstrap.when(
-                data: (_) => authSession.when(
-                  data: (_) => child ?? const SizedBox.shrink(),
-                  loading: () => const SplashScreen(),
-                  error: (error, stackTrace) => AppErrorState(
-                    error: AppError(
-                      code: 'auth_session_failed',
-                      message: S.of(context).routeErrorMessage,
-                      technicalDetails: BidiFormatters.latinIdentifier(
-                        stackTrace.toString(),
-                      ),
-                    ),
-                    onRetry: () => unawaited(
-                      ref
-                          .read(authSessionControllerProvider.notifier)
-                          .refresh(),
-                    ),
-                  ),
-                ),
-                loading: () => const SplashScreen(),
-                error: (error, stackTrace) => AppErrorState(
-                  error: AppError(
-                    code: 'bootstrap_failed',
-                    message: S.of(context).routeErrorMessage,
-                    technicalDetails: BidiFormatters.latinIdentifier(
-                      stackTrace.toString(),
-                    ),
-                  ),
-                  onRetry: () => unawaited(
-                    ref.read(appBootstrapControllerProvider.notifier).retry(),
-                  ),
-                ),
+              child: _buildBootstrapAwareChild(
+                context,
+                ref,
+                child,
+                bootstrap,
               ),
             ),
           ),
@@ -117,5 +91,33 @@ class FleetFillApp extends ConsumerWidget {
       },
       routerConfig: router,
     );
+  }
+
+  Widget _buildBootstrapAwareChild(
+    BuildContext context,
+    WidgetRef ref,
+    Widget? child,
+    AsyncValue<AppBootstrapState> bootstrap,
+  ) {
+    if (bootstrap.hasError && !bootstrap.hasValue) {
+      return AppErrorState(
+        error: AppError(
+          code: 'bootstrap_failed',
+          message: S.of(context).routeErrorMessage,
+          technicalDetails: BidiFormatters.latinIdentifier(
+            bootstrap.stackTrace?.toString() ?? bootstrap.error.toString(),
+          ),
+        ),
+        onRetry: () => unawaited(
+          ref.read(appBootstrapControllerProvider.notifier).retry(),
+        ),
+      );
+    }
+
+    if (!bootstrap.hasValue) {
+      return const SplashScreen();
+    }
+
+    return child ?? const SizedBox.shrink();
   }
 }

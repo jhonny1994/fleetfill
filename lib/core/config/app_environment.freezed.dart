@@ -13,7 +13,7 @@ part of 'app_environment.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$AppEnvironmentConfig {
+mixin _$AppEnvironmentConfig implements DiagnosticableTreeMixin {
 
  AppEnvironment get environment; String get supabaseUrl; String get supabaseAnonKey; String get firebaseApiKey; String get firebaseMessagingSenderId; String get firebaseProjectId; String get firebaseStorageBucket; String get firebaseAndroidAppId; String get firebaseIosAppId; bool get maintenanceMode; bool get forceUpdateRequired; bool get crashReportingEnabled;
 /// Create a copy of AppEnvironmentConfig
@@ -25,6 +25,12 @@ $AppEnvironmentConfigCopyWith<AppEnvironmentConfig> get copyWith => _$AppEnviron
   /// Serializes this AppEnvironmentConfig to a JSON map.
   Map<String, dynamic> toJson();
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'AppEnvironmentConfig'))
+    ..add(DiagnosticsProperty('environment', environment))..add(DiagnosticsProperty('supabaseUrl', supabaseUrl))..add(DiagnosticsProperty('supabaseAnonKey', supabaseAnonKey))..add(DiagnosticsProperty('firebaseApiKey', firebaseApiKey))..add(DiagnosticsProperty('firebaseMessagingSenderId', firebaseMessagingSenderId))..add(DiagnosticsProperty('firebaseProjectId', firebaseProjectId))..add(DiagnosticsProperty('firebaseStorageBucket', firebaseStorageBucket))..add(DiagnosticsProperty('firebaseAndroidAppId', firebaseAndroidAppId))..add(DiagnosticsProperty('firebaseIosAppId', firebaseIosAppId))..add(DiagnosticsProperty('maintenanceMode', maintenanceMode))..add(DiagnosticsProperty('forceUpdateRequired', forceUpdateRequired))..add(DiagnosticsProperty('crashReportingEnabled', crashReportingEnabled));
+}
 
 @override
 bool operator ==(Object other) {
@@ -36,7 +42,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,environment,supabaseUrl,supabaseAnonKey,firebaseApiKey,firebaseMessagingSenderId,firebaseProjectId,firebaseStorageBucket,firebaseAndroidAppId,firebaseIosAppId,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'AppEnvironmentConfig(environment: $environment, supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, firebaseApiKey: $firebaseApiKey, firebaseMessagingSenderId: $firebaseMessagingSenderId, firebaseProjectId: $firebaseProjectId, firebaseStorageBucket: $firebaseStorageBucket, firebaseAndroidAppId: $firebaseAndroidAppId, firebaseIosAppId: $firebaseIosAppId, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
 }
 
@@ -219,7 +225,7 @@ return $default(_that.environment,_that.supabaseUrl,_that.supabaseAnonKey,_that.
 /// @nodoc
 @JsonSerializable()
 
-class _AppEnvironmentConfig extends AppEnvironmentConfig {
+class _AppEnvironmentConfig extends AppEnvironmentConfig with DiagnosticableTreeMixin {
   const _AppEnvironmentConfig({required this.environment, this.supabaseUrl = '', this.supabaseAnonKey = '', this.firebaseApiKey = '', this.firebaseMessagingSenderId = '', this.firebaseProjectId = '', this.firebaseStorageBucket = '', this.firebaseAndroidAppId = '', this.firebaseIosAppId = '', this.maintenanceMode = false, this.forceUpdateRequired = false, this.crashReportingEnabled = false}): super._();
   factory _AppEnvironmentConfig.fromJson(Map<String, dynamic> json) => _$AppEnvironmentConfigFromJson(json);
 
@@ -246,6 +252,12 @@ _$AppEnvironmentConfigCopyWith<_AppEnvironmentConfig> get copyWith => __$AppEnvi
 Map<String, dynamic> toJson() {
   return _$AppEnvironmentConfigToJson(this, );
 }
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'AppEnvironmentConfig'))
+    ..add(DiagnosticsProperty('environment', environment))..add(DiagnosticsProperty('supabaseUrl', supabaseUrl))..add(DiagnosticsProperty('supabaseAnonKey', supabaseAnonKey))..add(DiagnosticsProperty('firebaseApiKey', firebaseApiKey))..add(DiagnosticsProperty('firebaseMessagingSenderId', firebaseMessagingSenderId))..add(DiagnosticsProperty('firebaseProjectId', firebaseProjectId))..add(DiagnosticsProperty('firebaseStorageBucket', firebaseStorageBucket))..add(DiagnosticsProperty('firebaseAndroidAppId', firebaseAndroidAppId))..add(DiagnosticsProperty('firebaseIosAppId', firebaseIosAppId))..add(DiagnosticsProperty('maintenanceMode', maintenanceMode))..add(DiagnosticsProperty('forceUpdateRequired', forceUpdateRequired))..add(DiagnosticsProperty('crashReportingEnabled', crashReportingEnabled));
+}
 
 @override
 bool operator ==(Object other) {
@@ -257,7 +269,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,environment,supabaseUrl,supabaseAnonKey,firebaseApiKey,firebaseMessagingSenderId,firebaseProjectId,firebaseStorageBucket,firebaseAndroidAppId,firebaseIosAppId,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'AppEnvironmentConfig(environment: $environment, supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, firebaseApiKey: $firebaseApiKey, firebaseMessagingSenderId: $firebaseMessagingSenderId, firebaseProjectId: $firebaseProjectId, firebaseStorageBucket: $firebaseStorageBucket, firebaseAndroidAppId: $firebaseAndroidAppId, firebaseIosAppId: $firebaseIosAppId, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
 }
 

@@ -77,6 +77,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             AppSectionHeader(
               title: s.adminDashboardTitle,
               subtitle: s.adminDashboardDescription,
+              showTitle: false,
             ),
             const SizedBox(height: AppSpacing.lg),
             ProfileSummaryCard(
@@ -343,6 +344,7 @@ class _AdminQueuesScreenState extends ConsumerState<AdminQueuesScreen> {
           AppSectionHeader(
             title: s.adminQueuesTitle,
             subtitle: s.adminQueuesDescription,
+            showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
           SegmentedButton<AdminQueueSegment>(
