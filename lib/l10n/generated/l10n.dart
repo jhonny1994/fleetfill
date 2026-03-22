@@ -89,10 +89,10 @@ class S {
     );
   }
 
-  /// `Monitor queue health, alerts, and the current operational backlog.`
+  /// `Monitor pending work, alerts, and service health.`
   String get adminDashboardDescription {
     return Intl.message(
-      'Monitor queue health, alerts, and the current operational backlog.',
+      'Monitor pending work, alerts, and service health.',
       name: 'adminDashboardDescription',
       desc: '',
       args: [],
@@ -119,30 +119,30 @@ class S {
     );
   }
 
-  /// `Review payments, verification, disputes, payouts, and email work from one queue hub.`
+  /// `Review payments, verification, disputes, payouts, and email issues in one place.`
   String get adminQueuesDescription {
     return Intl.message(
-      'Review payments, verification, disputes, payouts, and email work from one queue hub.',
+      'Review payments, verification, disputes, payouts, and email issues in one place.',
       name: 'adminQueuesDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Queues`
+  /// `Operations`
   String get adminQueuesNavLabel {
     return Intl.message(
-      'Queues',
+      'Operations',
       name: 'adminQueuesNavLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Admin queues`
+  /// `Operations`
   String get adminQueuesTitle {
     return Intl.message(
-      'Admin queues',
+      'Operations',
       name: 'adminQueuesTitle',
       desc: '',
       args: [],
@@ -169,10 +169,10 @@ class S {
     );
   }
 
-  /// `Verification packet approved.`
+  /// `Verification approved.`
   String get adminVerificationApproveAllSuccess {
     return Intl.message(
-      'Verification packet approved.',
+      'Verification approved.',
       name: 'adminVerificationApproveAllSuccess',
       desc: '',
       args: [],
@@ -219,20 +219,20 @@ class S {
     );
   }
 
-  /// `Review profile and vehicle documents together before approving operational access.`
+  /// `Review profile and vehicle documents before approving the carrier.`
   String get adminVerificationPacketDescription {
     return Intl.message(
-      'Review profile and vehicle documents together before approving operational access.',
+      'Review profile and vehicle documents before approving the carrier.',
       name: 'adminVerificationPacketDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification packet`
+  /// `Verification details`
   String get adminVerificationPacketTitle {
     return Intl.message(
-      'Verification packet',
+      'Verification details',
       name: 'adminVerificationPacketTitle',
       desc: '',
       args: [],
@@ -249,30 +249,30 @@ class S {
     );
   }
 
-  /// `No carrier verification packets need review right now.`
+  /// `No carrier verifications need review right now.`
   String get adminVerificationQueueEmptyMessage {
     return Intl.message(
-      'No carrier verification packets need review right now.',
+      'No carrier verifications need review right now.',
       name: 'adminVerificationQueueEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification queue summary`
+  /// `Verification summary`
   String get adminVerificationQueueSummaryTitle {
     return Intl.message(
-      'Verification queue summary',
+      'Verification summary',
       name: 'adminVerificationQueueSummaryTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier verification queue`
+  /// `Carrier verifications`
   String get adminVerificationQueueTitle {
     return Intl.message(
-      'Carrier verification queue',
+      'Carrier verifications',
       name: 'adminVerificationQueueTitle',
       desc: '',
       args: [],
@@ -332,10 +332,10 @@ class S {
     );
   }
 
-  /// `Manage platform settings, maintenance controls, version policy, and monitoring summaries.`
+  /// `Manage app access, pricing rules, maintenance mode, and email tools.`
   String get adminSettingsDescription {
     return Intl.message(
-      'Manage platform settings, maintenance controls, version policy, and monitoring summaries.',
+      'Manage app access, pricing rules, maintenance mode, and email tools.',
       name: 'adminSettingsDescription',
       desc: '',
       args: [],
@@ -362,10 +362,10 @@ class S {
     );
   }
 
-  /// `Search for users and review account details when operations need context.`
+  /// `Search for users and review account details, bookings, and documents.`
   String get adminUsersDescription {
     return Intl.message(
-      'Search for users and review account details when operations need context.',
+      'Search for users and review account details, bookings, and documents.',
       name: 'adminUsersDescription',
       desc: '',
       args: [],
@@ -892,10 +892,205 @@ class S {
     );
   }
 
-  /// `Shared booking detail routes sit above role shells.`
+  /// `Move goods or offer transport`
+  String get welcomeTitle {
+    return Intl.message(
+      'Move goods or offer transport',
+      name: 'welcomeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill connects shipments with available transport.`
+  String get welcomeDescription {
+    return Intl.message(
+      'FleetFill connects shipments with available transport.',
+      name: 'welcomeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose language`
+  String get welcomeLanguageAction {
+    return Intl.message(
+      'Choose language',
+      name: 'welcomeLanguageAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Match shipments, confirm payment proof, and follow delivery updates in one place.`
+  String get welcomeHighlightsMessage {
+    return Intl.message(
+      'Match shipments, confirm payment proof, and follow delivery updates in one place.',
+      name: 'welcomeHighlightsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Need to move goods`
+  String get welcomeShipperTitle {
+    return Intl.message(
+      'Need to move goods',
+      name: 'welcomeShipperTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create a shipment and review matching transport options.`
+  String get welcomeShipperDescription {
+    return Intl.message(
+      'Create a shipment and review matching transport options.',
+      name: 'welcomeShipperDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Have transport capacity`
+  String get welcomeCarrierTitle {
+    return Intl.message(
+      'Have transport capacity',
+      name: 'welcomeCarrierTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publish availability and review matching shipments.`
+  String get welcomeCarrierDescription {
+    return Intl.message(
+      'Publish availability and review matching shipments.',
+      name: 'welcomeCarrierDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Skip`
+  String get welcomeSkipAction {
+    return Intl.message('Skip', name: 'welcomeSkipAction', desc: '', args: []);
+  }
+
+  /// `Back`
+  String get welcomeBackAction {
+    return Intl.message('Back', name: 'welcomeBackAction', desc: '', args: []);
+  }
+
+  /// `Next`
+  String get welcomeNextAction {
+    return Intl.message('Next', name: 'welcomeNextAction', desc: '', args: []);
+  }
+
+  /// `How it works`
+  String get welcomeTrustTitle {
+    return Intl.message(
+      'How it works',
+      name: 'welcomeTrustTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill keeps matching and booking updates clear for both sides.`
+  String get welcomeTrustDescription {
+    return Intl.message(
+      'FleetFill keeps matching and booking updates clear for both sides.',
+      name: 'welcomeTrustDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Match shipments and transport`
+  String get welcomeExactMatchTitle {
+    return Intl.message(
+      'Match shipments and transport',
+      name: 'welcomeExactMatchTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search and posting tools connect the right route and date.`
+  String get welcomeExactMatchDescription {
+    return Intl.message(
+      'Search and posting tools connect the right route and date.',
+      name: 'welcomeExactMatchDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep every booking clear`
+  String get welcomePaymentTitle {
+    return Intl.message(
+      'Keep every booking clear',
+      name: 'welcomePaymentTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment proof and booking updates stay visible from start to delivery.`
+  String get welcomePaymentDescription {
+    return Intl.message(
+      'Payment proof and booking updates stay visible from start to delivery.',
+      name: 'welcomePaymentDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Simple milestone tracking`
+  String get welcomeTrackingTitle {
+    return Intl.message(
+      'Simple milestone tracking',
+      name: 'welcomeTrackingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Follow clear status updates from booking to delivery without fake live maps.`
+  String get welcomeTrackingDescription {
+    return Intl.message(
+      'Follow clear status updates from booking to delivery without fake live maps.',
+      name: 'welcomeTrackingDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose your language`
+  String get welcomeLanguageTitle {
+    return Intl.message(
+      'Choose your language',
+      name: 'welcomeLanguageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose the app language for your account. You can change it later in Settings.`
+  String get welcomeLanguageDescription {
+    return Intl.message(
+      'Choose the app language for your account. You can change it later in Settings.',
+      name: 'welcomeLanguageDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Review the booking status, payment details, and price breakdown.`
   String get bookingDetailDescription {
     return Intl.message(
-      'Shared booking detail routes sit above role shells.',
+      'Review the booking status, payment details, and price breakdown.',
       name: 'bookingDetailDescription',
       desc: '',
       args: [],
@@ -937,10 +1132,10 @@ class S {
     return Intl.message('Cancel', name: 'cancelLabel', desc: '', args: []);
   }
 
-  /// `Active and historical booking worklists live in this branch.`
+  /// `Track current bookings, delivery progress, and completed jobs.`
   String get carrierBookingsDescription {
     return Intl.message(
-      'Active and historical booking worklists live in this branch.',
+      'Track current bookings, delivery progress, and completed jobs.',
       name: 'carrierBookingsDescription',
       desc: '',
       args: [],
@@ -967,10 +1162,10 @@ class S {
     );
   }
 
-  /// `Verification, trips, booking actions, and payout reminders live here.`
+  /// `Check your verification status, fleet readiness, and next tasks.`
   String get carrierHomeDescription {
     return Intl.message(
-      'Verification, trips, booking actions, and payout reminders live here.',
+      'Check your verification status, fleet readiness, and next tasks.',
       name: 'carrierHomeDescription',
       desc: '',
       args: [],
@@ -997,10 +1192,10 @@ class S {
     );
   }
 
-  /// `Carrier verification status, payout reminders, and profile tools live here.`
+  /// `Manage your business details, verification, payout accounts, and vehicles.`
   String get carrierProfileDescription {
     return Intl.message(
-      'Carrier verification status, payout reminders, and profile tools live here.',
+      'Manage your business details, verification, payout accounts, and vehicles.',
       name: 'carrierProfileDescription',
       desc: '',
       args: [],
@@ -1077,10 +1272,10 @@ class S {
     );
   }
 
-  /// `Upload and replace profile or vehicle verification documents from one place.`
+  /// `Upload and replace profile or vehicle verification documents.`
   String get carrierVerificationCenterDescription {
     return Intl.message(
-      'Upload and replace profile or vehicle verification documents from one place.',
+      'Upload and replace profile or vehicle verification documents.',
       name: 'carrierVerificationCenterDescription',
       desc: '',
       args: [],
@@ -1097,20 +1292,20 @@ class S {
     );
   }
 
-  /// `Your verification packet is under review. Upload any missing documents to keep approval moving.`
+  /// `Your verification is under review. Upload any missing documents to keep it moving.`
   String get carrierVerificationPendingBanner {
     return Intl.message(
-      'Your verification packet is under review. Upload any missing documents to keep approval moving.',
+      'Your verification is under review. Upload any missing documents to keep it moving.',
       name: 'carrierVerificationPendingBanner',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification requirements and missing documents stay grouped under your profile branch.`
+  /// `Finish the remaining verification steps from your profile.`
   String get carrierVerificationQueueHint {
     return Intl.message(
-      'Verification requirements and missing documents stay grouped under your profile branch.',
+      'Finish the remaining verification steps from your profile.',
       name: 'carrierVerificationQueueHint',
       desc: '',
       args: [],
@@ -1222,20 +1417,20 @@ class S {
     return Intl.message('Confirm', name: 'confirmLabel', desc: '', args: []);
   }
 
-  /// `Open this document in your secure viewer when access is ready.`
+  /// `View this document here or open it in another app.`
   String get documentViewerDescription {
     return Intl.message(
-      'Open this document in your secure viewer when access is ready.',
+      'View this document here or open it in another app.',
       name: 'documentViewerDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Open Document`
+  /// `Open document`
   String get documentViewerOpenAction {
     return Intl.message(
-      'Open Document',
+      'Open document',
       name: 'documentViewerOpenAction',
       desc: '',
       args: [],
@@ -1362,10 +1557,10 @@ class S {
     );
   }
 
-  /// `Open generated invoices and receipts from a secure shared route.`
+  /// `View or download your invoice or receipt.`
   String get generatedDocumentViewerDescription {
     return Intl.message(
-      'Open generated invoices and receipts from a secure shared route.',
+      'View or download your invoice or receipt.',
       name: 'generatedDocumentViewerDescription',
       desc: '',
       args: [],
@@ -1502,10 +1697,10 @@ class S {
     );
   }
 
-  /// `Your {documentType} is ready to view securely.`
+  /// `Your {documentType} is ready to view or download.`
   String notificationGeneratedDocumentReadyBody(Object documentType) {
     return Intl.message(
-      'Your $documentType is ready to view securely.',
+      'Your $documentType is ready to view or download.',
       name: 'notificationGeneratedDocumentReadyBody',
       desc: '',
       args: [documentType],
@@ -1542,20 +1737,20 @@ class S {
     );
   }
 
-  /// `Current language: {languageCode}`
+  /// `Current app language: {languageCode}`
   String languageSelectionCurrentMessage(Object languageCode) {
     return Intl.message(
-      'Current language: $languageCode',
+      'Current app language: $languageCode',
       name: 'languageSelectionCurrentMessage',
       desc: '',
       args: [languageCode],
     );
   }
 
-  /// `FleetFill is preparing your workspace.`
+  /// `Getting things ready for you.`
   String get loadingMessage {
     return Intl.message(
-      'FleetFill is preparing your workspace.',
+      'Getting things ready for you.',
       name: 'loadingMessage',
       desc: '',
       args: [],
@@ -1567,40 +1762,40 @@ class S {
     return Intl.message('Loading', name: 'loadingTitle', desc: '', args: []);
   }
 
-  /// `FleetFill is temporarily unavailable while maintenance is in progress.`
+  /// `FleetFill is temporarily unavailable while we make improvements. Please try again soon.`
   String get maintenanceDescription {
     return Intl.message(
-      'FleetFill is temporarily unavailable while maintenance is in progress.',
+      'FleetFill is temporarily unavailable while we make improvements. Please try again soon.',
       name: 'maintenanceDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Maintenance mode`
+  /// `We'll be back soon`
   String get maintenanceTitle {
     return Intl.message(
-      'Maintenance mode',
+      'We\'ll be back soon',
       name: 'maintenanceTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Guide the user back to media access when they need to upload proof or documents.`
+  /// `Allow photo and file access so you can upload payment proof and documents.`
   String get mediaUploadPermissionDescription {
     return Intl.message(
-      'Guide the user back to media access when they need to upload proof or documents.',
+      'Allow photo and file access so you can upload payment proof and documents.',
       name: 'mediaUploadPermissionDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Media upload permission`
+  /// `Allow photo and file access`
   String get mediaUploadPermissionTitle {
     return Intl.message(
-      'Media upload permission',
+      'Allow photo and file access',
       name: 'mediaUploadPermissionTitle',
       desc: '',
       args: [],
@@ -1617,10 +1812,10 @@ class S {
     );
   }
 
-  /// `Recurring routes and one-off trips stay grouped in one branch.`
+  /// `Manage your recurring routes and one-off trips.`
   String get myRoutesDescription {
     return Intl.message(
-      'Recurring routes and one-off trips stay grouped in one branch.',
+      'Manage your recurring routes and one-off trips.',
       name: 'myRoutesDescription',
       desc: '',
       args: [],
@@ -1637,10 +1832,10 @@ class S {
     return Intl.message('My routes', name: 'myRoutesTitle', desc: '', args: []);
   }
 
-  /// `Active, history, and draft shipment states stay inside this branch.`
+  /// `Create shipments, review drafts, and track booked loads.`
   String get myShipmentsDescription {
     return Intl.message(
-      'Active, history, and draft shipment states stay inside this branch.',
+      'Create shipments, review drafts, and track booked loads.',
       name: 'myShipmentsDescription',
       desc: '',
       args: [],
@@ -1707,10 +1902,10 @@ class S {
     );
   }
 
-  /// `Review recent alerts, booking updates, and operational reminders.`
+  /// `Stay up to date with bookings, payments, delivery progress, and account alerts.`
   String get notificationsCenterDescription {
     return Intl.message(
-      'Review recent alerts, booking updates, and operational reminders.',
+      'Stay up to date with bookings, payments, delivery progress, and account alerts.',
       name: 'notificationsCenterDescription',
       desc: '',
       args: [],
@@ -1737,10 +1932,10 @@ class S {
     );
   }
 
-  /// `Your booking is recorded. Continue to payment instructions to keep it moving.`
+  /// `Your booking is confirmed. Follow the payment steps to keep it on track.`
   String get notificationBookingConfirmedBody {
     return Intl.message(
-      'Your booking is recorded. Continue to payment instructions to keep it moving.',
+      'Your booking is confirmed. Follow the payment steps to keep it on track.',
       name: 'notificationBookingConfirmedBody',
       desc: '',
       args: [],
@@ -1757,10 +1952,10 @@ class S {
     );
   }
 
-  /// `Your payment proof is waiting for review.`
+  /// `We received your payment proof. We will review it shortly.`
   String get notificationPaymentProofSubmittedBody {
     return Intl.message(
-      'Your payment proof is waiting for review.',
+      'We received your payment proof. We will review it shortly.',
       name: 'notificationPaymentProofSubmittedBody',
       desc: '',
       args: [],
@@ -1797,10 +1992,10 @@ class S {
     );
   }
 
-  /// `Your payment proof was rejected. Review the reason and resubmit before the deadline.`
+  /// `Your payment proof was rejected. Check the reason and send a new one before the deadline.`
   String get notificationPaymentRejectedBody {
     return Intl.message(
-      'Your payment proof was rejected. Review the reason and resubmit before the deadline.',
+      'Your payment proof was rejected. Check the reason and send a new one before the deadline.',
       name: 'notificationPaymentRejectedBody',
       desc: '',
       args: [],
@@ -1817,10 +2012,10 @@ class S {
     );
   }
 
-  /// `A dispute has been opened for this booking and is waiting for admin review.`
+  /// `Your dispute has been opened and is waiting for review.`
   String get notificationDisputeOpenedBody {
     return Intl.message(
-      'A dispute has been opened for this booking and is waiting for admin review.',
+      'Your dispute has been opened and is waiting for review.',
       name: 'notificationDisputeOpenedBody',
       desc: '',
       args: [],
@@ -1837,10 +2032,10 @@ class S {
     );
   }
 
-  /// `The dispute for this booking has been resolved. Review the latest booking and payment outcome.`
+  /// `Your dispute has been resolved. Check the latest booking and payment update.`
   String get notificationDisputeResolvedBody {
     return Intl.message(
-      'The dispute for this booking has been resolved. Review the latest booking and payment outcome.',
+      'Your dispute has been resolved. Check the latest booking and payment update.',
       name: 'notificationDisputeResolvedBody',
       desc: '',
       args: [],
@@ -1917,10 +2112,10 @@ class S {
     );
   }
 
-  /// `Latest milestone: {milestoneLabel}`
+  /// `Current status: {milestoneLabel}`
   String notificationBookingMilestoneUpdatedBody(Object milestoneLabel) {
     return Intl.message(
-      'Latest milestone: $milestoneLabel',
+      'Current status: $milestoneLabel',
       name: 'notificationBookingMilestoneUpdatedBody',
       desc: '',
       args: [milestoneLabel],
@@ -1937,30 +2132,30 @@ class S {
     );
   }
 
-  /// `A new shipper review has been added to your profile.`
+  /// `A new review has been added to your profile.`
   String get notificationCarrierReviewSubmittedBody {
     return Intl.message(
-      'A new shipper review has been added to your profile.',
+      'A new review has been added to your profile.',
       name: 'notificationCarrierReviewSubmittedBody',
       desc: '',
       args: [],
     );
   }
 
-  /// `Explain why tracking and booking updates matter before opening system settings.`
+  /// `Turn on notifications to get booking updates, delivery milestones, and payment alerts.`
   String get notificationsPermissionDescription {
     return Intl.message(
-      'Explain why tracking and booking updates matter before opening system settings.',
+      'Turn on notifications to get booking updates, delivery milestones, and payment alerts.',
       name: 'notificationsPermissionDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Notifications permission`
+  /// `Turn on notifications`
   String get notificationsPermissionTitle {
     return Intl.message(
-      'Notifications permission',
+      'Turn on notifications',
       name: 'notificationsPermissionTitle',
       desc: '',
       args: [],
@@ -1992,10 +2187,10 @@ class S {
     );
   }
 
-  /// `Review this one-off trip before booking or operational follow-up.`
+  /// `Review this trip before booking.`
   String get oneOffTripDetailDescription {
     return Intl.message(
-      'Review this one-off trip before booking or operational follow-up.',
+      'Review this trip before booking.',
       name: 'oneOffTripDetailDescription',
       desc: '',
       args: [],
@@ -2012,30 +2207,30 @@ class S {
     );
   }
 
-  /// `Instructions, reference, proof upload, and payment status remain in one coherent flow.`
+  /// `Follow the payment steps, upload proof, and track the review status.`
   String get paymentFlowDescription {
     return Intl.message(
-      'Instructions, reference, proof upload, and payment status remain in one coherent flow.',
+      'Follow the payment steps, upload proof, and track the review status.',
       name: 'paymentFlowDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment flow`
+  /// `Payment`
   String get paymentFlowTitle {
     return Intl.message(
-      'Payment flow',
+      'Payment',
       name: 'paymentFlowTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier payout accounts stay grouped under the profile branch.`
+  /// `Add and manage the accounts where you receive payouts.`
   String get payoutAccountsDescription {
     return Intl.message(
-      'Carrier payout accounts stay grouped under the profile branch.',
+      'Add and manage the accounts where you receive payouts.',
       name: 'payoutAccountsDescription',
       desc: '',
       args: [],
@@ -2202,10 +2397,10 @@ class S {
     );
   }
 
-  /// `Operational actions stay gated until a phone number is present.`
+  /// `Add a phone number to keep using FleetFill.`
   String get phoneCompletionDescription {
     return Intl.message(
-      'Operational actions stay gated until a phone number is present.',
+      'Add a phone number to keep using FleetFill.',
       name: 'phoneCompletionDescription',
       desc: '',
       args: [],
@@ -2232,10 +2427,10 @@ class S {
     );
   }
 
-  /// `Phone completion`
+  /// `Add phone number`
   String get phoneCompletionTitle {
     return Intl.message(
-      'Phone completion',
+      'Add phone number',
       name: 'phoneCompletionTitle',
       desc: '',
       args: [],
@@ -2292,10 +2487,10 @@ class S {
     );
   }
 
-  /// `Complete the required profile details before using operational features.`
+  /// `Add your details so customers, carriers, and support can reach you.`
   String get profileSetupDescription {
     return Intl.message(
-      'Complete the required profile details before using operational features.',
+      'Add your details so customers, carriers, and support can reach you.',
       name: 'profileSetupDescription',
       desc: '',
       args: [],
@@ -2332,10 +2527,10 @@ class S {
     );
   }
 
-  /// `Open this proof from a secure shared route when access is ready.`
+  /// `View the payment proof for this booking here or open it in another app.`
   String get proofViewerDescription {
     return Intl.message(
-      'Open this proof from a secure shared route when access is ready.',
+      'View the payment proof for this booking here or open it in another app.',
       name: 'proofViewerDescription',
       desc: '',
       args: [],
@@ -2377,10 +2572,10 @@ class S {
     );
   }
 
-  /// `One account selects one role before operational access begins.`
+  /// `Choose how you want to use FleetFill. This sets up the right tools for your account.`
   String get roleSelectionDescription {
     return Intl.message(
-      'One account selects one role before operational access begins.',
+      'Choose how you want to use FleetFill. This sets up the right tools for your account.',
       name: 'roleSelectionDescription',
       desc: '',
       args: [],
@@ -2417,10 +2612,10 @@ class S {
     );
   }
 
-  /// `Shared route detail presentation sits above the role shells.`
+  /// `Review this route before booking.`
   String get routeDetailDescription {
     return Intl.message(
-      'Shared route detail presentation sits above the role shells.',
+      'Review this route before booking.',
       name: 'routeDetailDescription',
       desc: '',
       args: [],
@@ -2447,10 +2642,10 @@ class S {
     );
   }
 
-  /// `The search form and exact-route results stay on one page with inline states.`
+  /// `Choose a shipment and date to find matching trips.`
   String get searchTripsDescription {
     return Intl.message(
-      'The search form and exact-route results stay on one page with inline states.',
+      'Choose a shipment and date to find matching trips.',
       name: 'searchTripsDescription',
       desc: '',
       args: [],
@@ -2512,10 +2707,10 @@ class S {
     );
   }
 
-  /// `Language, theme, support, and notification preferences stay inside shared settings.`
+  /// `Manage your language, appearance, notifications, and support options.`
   String get settingsDescription {
     return Intl.message(
-      'Language, theme, support, and notification preferences stay inside shared settings.',
+      'Manage your language, appearance, notifications, and support options.',
       name: 'settingsDescription',
       desc: '',
       args: [],
@@ -2587,20 +2782,20 @@ class S {
     return Intl.message('Settings', name: 'settingsTitle', desc: '', args: []);
   }
 
-  /// `Shared cards and shells stay consistent across role surfaces.`
+  /// `This feature is on the way.`
   String get sharedScaffoldPreviewMessage {
     return Intl.message(
-      'Shared cards and shells stay consistent across role surfaces.',
+      'This feature is on the way.',
       name: 'sharedScaffoldPreviewMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Shared foundation preview`
+  /// `Coming soon`
   String get sharedScaffoldPreviewTitle {
     return Intl.message(
-      'Shared foundation preview',
+      'Coming soon',
       name: 'sharedScaffoldPreviewTitle',
       desc: '',
       args: [],
@@ -2637,10 +2832,10 @@ class S {
     );
   }
 
-  /// `Shipment summary, items, and linked booking summary live here.`
+  /// `Review shipment details, items, and booking status.`
   String get shipmentDetailDescription {
     return Intl.message(
-      'Shipment summary, items, and linked booking summary live here.',
+      'Review shipment details, items, and booking status.',
       name: 'shipmentDetailDescription',
       desc: '',
       args: [],
@@ -2657,10 +2852,10 @@ class S {
     );
   }
 
-  /// `Active bookings, recent notifications, quick actions, and support shortcut live here.`
+  /// `Track active bookings, check updates, and jump to your most-used actions.`
   String get shipperHomeDescription {
     return Intl.message(
-      'Active bookings, recent notifications, quick actions, and support shortcut live here.',
+      'Track active bookings, check updates, and jump to your most-used actions.',
       name: 'shipperHomeDescription',
       desc: '',
       args: [],
@@ -2697,10 +2892,10 @@ class S {
     );
   }
 
-  /// `Your latest operational updates will appear here.`
+  /// `Your latest updates will appear here.`
   String get shipperHomeNoRecentNotificationMessage {
     return Intl.message(
-      'Your latest operational updates will appear here.',
+      'Your latest updates will appear here.',
       name: 'shipperHomeNoRecentNotificationMessage',
       desc: '',
       args: [],
@@ -2737,10 +2932,10 @@ class S {
     );
   }
 
-  /// `Profile, phone, preferences, and support shortcuts stay in one branch.`
+  /// `Manage your contact details, settings, and support options.`
   String get shipperProfileDescription {
     return Intl.message(
-      'Profile, phone, preferences, and support shortcuts stay in one branch.',
+      'Manage your contact details, settings, and support options.',
       name: 'shipperProfileDescription',
       desc: '',
       args: [],
@@ -2777,19 +2972,44 @@ class S {
     );
   }
 
-  /// `Bootstrap and blocking initialization states start here.`
+  /// `Getting FleetFill ready for you.`
   String get splashDescription {
     return Intl.message(
-      'Bootstrap and blocking initialization states start here.',
+      'Getting FleetFill ready for you.',
       name: 'splashDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Splash`
+  /// `Getting ready`
   String get splashTitle {
-    return Intl.message('Splash', name: 'splashTitle', desc: '', args: []);
+    return Intl.message(
+      'Getting ready',
+      name: 'splashTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill is unavailable`
+  String get startupConfigurationRequiredTitle {
+    return Intl.message(
+      'FleetFill is unavailable',
+      name: 'startupConfigurationRequiredTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill is not available right now. Please try again later.`
+  String get startupConfigurationRequiredMessage {
+    return Intl.message(
+      'FleetFill is not available right now. Please try again later.',
+      name: 'startupConfigurationRequiredMessage',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Needs review`
@@ -2807,10 +3027,10 @@ class S {
     return Intl.message('Ready', name: 'statusReadyLabel', desc: '', args: []);
   }
 
-  /// `Support starts with clear email guidance and structured issue details.`
+  /// `Send a question, report a problem, or ask for help with a booking or payment.`
   String get supportDescription {
     return Intl.message(
-      'Support starts with clear email guidance and structured issue details.',
+      'Send a question, report a problem, or ask for help with a booking or payment.',
       name: 'supportDescription',
       desc: '',
       args: [],
@@ -2842,10 +3062,10 @@ class S {
     );
   }
 
-  /// `Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.`
+  /// `Follow delivery progress, confirm delivery, open a dispute, or leave a review.`
   String get trackingDetailDescription {
     return Intl.message(
-      'Tracking timeline, delivery confirmation, dispute, and rating actions stay together here.',
+      'Follow delivery progress, confirm delivery, open a dispute, or leave a review.',
       name: 'trackingDetailDescription',
       desc: '',
       args: [],
@@ -2862,10 +3082,10 @@ class S {
     );
   }
 
-  /// `Update FleetFill to continue with the latest supported version.`
+  /// `Update FleetFill to keep using the latest supported version.`
   String get updateRequiredDescription {
     return Intl.message(
-      'Update FleetFill to continue with the latest supported version.',
+      'Update FleetFill to keep using the latest supported version.',
       name: 'updateRequiredDescription',
       desc: '',
       args: [],
@@ -2882,10 +3102,10 @@ class S {
     );
   }
 
-  /// `Shipper and carrier specifics remain section-based inside one user detail view.`
+  /// `Review account details, bookings, vehicles, and documents.`
   String get userDetailDescription {
     return Intl.message(
-      'Shipper and carrier specifics remain section-based inside one user detail view.',
+      'Review account details, bookings, vehicles, and documents.',
       name: 'userDetailDescription',
       desc: '',
       args: [],
@@ -3012,10 +3232,10 @@ class S {
     );
   }
 
-  /// `Keep vehicle data current so route and verification flows stay valid.`
+  /// `Keep vehicle details up to date before publishing trips.`
   String get vehicleEditorDescription {
     return Intl.message(
-      'Keep vehicle data current so route and verification flows stay valid.',
+      'Keep vehicle details up to date before publishing trips.',
       name: 'vehicleEditorDescription',
       desc: '',
       args: [],
@@ -3092,10 +3312,10 @@ class S {
     );
   }
 
-  /// `Vehicles remain under the carrier profile branch.`
+  /// `Add and manage the vehicles you use for transport.`
   String get vehiclesDescription {
     return Intl.message(
-      'Vehicles remain under the carrier profile branch.',
+      'Add and manage the vehicles you use for transport.',
       name: 'vehiclesDescription',
       desc: '',
       args: [],
@@ -3157,10 +3377,10 @@ class S {
     );
   }
 
-  /// `Secure document access prepared.`
+  /// `Your document is ready to open.`
   String get verificationDocumentOpenPreparedMessage {
     return Intl.message(
-      'Secure document access prepared.',
+      'Your document is ready to open.',
       name: 'verificationDocumentOpenPreparedMessage',
       desc: '',
       args: [],
@@ -4287,11 +4507,46 @@ class S {
     );
   }
 
-  /// `Create at least one shipment draft to search exact lane capacity.`
+  /// `Create a shipment draft before searching for matching trips.`
   String get searchTripsRequiresDraftMessage {
     return Intl.message(
-      'Create at least one shipment draft to search exact lane capacity.',
+      'Create a shipment draft before searching for matching trips.',
       name: 'searchTripsRequiresDraftMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact support`
+  String get contactSupportAction {
+    return Intl.message(
+      'Contact support',
+      name: 'contactSupportAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go back`
+  String get goBackAction {
+    return Intl.message('Go back', name: 'goBackAction', desc: '', args: []);
+  }
+
+  /// `Open notifications`
+  String get openNotificationsAction {
+    return Intl.message(
+      'Open notifications',
+      name: 'openNotificationsAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preview is not available for this file. Open it in another app.`
+  String get documentPreviewUnavailableMessage {
+    return Intl.message(
+      'Preview is not available for this file. Open it in another app.',
+      name: 'documentPreviewUnavailableMessage',
       desc: '',
       args: [],
     );
@@ -4507,10 +4762,10 @@ class S {
     );
   }
 
-  /// `Booking created. Continue to payment instructions.`
+  /// `Booking created. Continue to payment.`
   String get bookingCreatedMessage {
     return Intl.message(
-      'Booking created. Continue to payment instructions.',
+      'Booking created. Continue to payment.',
       name: 'bookingCreatedMessage',
       desc: '',
       args: [],
@@ -4747,10 +5002,10 @@ class S {
     );
   }
 
-  /// `Payment proof uploaded.`
+  /// `Payment proof received.`
   String get paymentProofUploadedMessage {
     return Intl.message(
-      'Payment proof uploaded.',
+      'Payment proof received.',
       name: 'paymentProofUploadedMessage',
       desc: '',
       args: [],
@@ -4867,10 +5122,10 @@ class S {
     );
   }
 
-  /// `Payment proof approved.`
+  /// `Payment confirmed.`
   String get paymentProofApprovedMessage {
     return Intl.message(
-      'Payment proof approved.',
+      'Payment confirmed.',
       name: 'paymentProofApprovedMessage',
       desc: '',
       args: [],
@@ -5077,10 +5332,10 @@ class S {
     );
   }
 
-  /// `Dispute queue`
+  /// `Disputes`
   String get adminDisputesQueueTitle {
     return Intl.message(
-      'Dispute queue',
+      'Disputes',
       name: 'adminDisputesQueueTitle',
       desc: '',
       args: [],
@@ -5097,10 +5352,10 @@ class S {
     );
   }
 
-  /// `Payout queue`
+  /// `Payouts`
   String get adminPayoutQueueTitle {
     return Intl.message(
-      'Payout queue',
+      'Payouts',
       name: 'adminPayoutQueueTitle',
       desc: '',
       args: [],
@@ -5157,10 +5412,10 @@ class S {
     );
   }
 
-  /// `Send support email`
+  /// `Send message`
   String get supportSendAction {
     return Intl.message(
-      'Send support email',
+      'Send message',
       name: 'supportSendAction',
       desc: '',
       args: [],
@@ -5187,10 +5442,10 @@ class S {
     );
   }
 
-  /// `Review the terms, privacy, payment, and dispute rules that apply before production use.`
+  /// `Review the terms, privacy, payment, and dispute rules that apply when you use FleetFill.`
   String get legalPoliciesDescription {
     return Intl.message(
-      'Review the terms, privacy, payment, and dispute rules that apply before production use.',
+      'Review the terms, privacy, payment, and dispute rules that apply when you use FleetFill.',
       name: 'legalPoliciesDescription',
       desc: '',
       args: [],
@@ -5237,10 +5492,10 @@ class S {
     );
   }
 
-  /// `FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff.`
+  /// `FleetFill stores payment, shipment, support, and audit records only when needed to run the service, investigate disputes, and meet legal or financial obligations. Access is limited to the account owner and authorized staff.`
   String get legalPrivacyBody {
     return Intl.message(
-      'FleetFill stores operational, payment, proof, finance, support, and audit records only as needed to run the service, investigate disputes, and satisfy finance or compliance obligations. Access stays limited to the user role and authorized operational staff.',
+      'FleetFill stores payment, shipment, support, and audit records only when needed to run the service, investigate disputes, and meet legal or financial obligations. Access is limited to the account owner and authorized staff.',
       name: 'legalPrivacyBody',
       desc: '',
       args: [],
@@ -5277,10 +5532,10 @@ class S {
     );
   }
 
-  /// `Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome.`
+  /// `Disputes must be opened during the delivery review window. FleetFill reviews shipment, payment proof, tracking, and related records before resolving the case. A dispute may end with a completed booking, a cancellation, or a refund.`
   String get legalDisputePolicyBody {
     return Intl.message(
-      'Disputes must be opened during the delivery review window. FleetFill reviews shipment, proof, tracking, and finance records before resolving the case. Resolution may complete the booking, cancel it, or issue a refund according to the documented operational outcome.',
+      'Disputes must be opened during the delivery review window. FleetFill reviews shipment, payment proof, tracking, and related records before resolving the case. A dispute may end with a completed booking, a cancellation, or a refund.',
       name: 'legalDisputePolicyBody',
       desc: '',
       args: [],
@@ -5497,20 +5752,20 @@ class S {
     );
   }
 
-  /// `Backlog health`
+  /// `Pending work`
   String get adminDashboardBacklogHealthTitle {
     return Intl.message(
-      'Backlog health',
+      'Pending work',
       name: 'adminDashboardBacklogHealthTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Automation health`
+  /// `Time-sensitive tasks`
   String get adminDashboardAutomationTitle {
     return Intl.message(
-      'Automation health',
+      'Time-sensitive tasks',
       name: 'adminDashboardAutomationTitle',
       desc: '',
       args: [],
@@ -5537,30 +5792,30 @@ class S {
     );
   }
 
-  /// `Email health`
+  /// `Email delivery`
   String get adminDashboardEmailHealthTitle {
     return Intl.message(
-      'Email health',
+      'Email delivery',
       name: 'adminDashboardEmailHealthTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Email backlog`
+  /// `Emails waiting`
   String get adminDashboardEmailBacklogLabel {
     return Intl.message(
-      'Email backlog',
+      'Emails waiting',
       name: 'adminDashboardEmailBacklogLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dead-letter emails`
+  /// `Failed emails`
   String get adminDashboardDeadLetterLabel {
     return Intl.message(
-      'Dead-letter emails',
+      'Failed emails',
       name: 'adminDashboardDeadLetterLabel',
       desc: '',
       args: [],
@@ -5617,10 +5872,10 @@ class S {
     );
   }
 
-  /// `No carrier payouts are eligible for release right now.`
+  /// `No payouts are ready to release right now.`
   String get adminEligiblePayoutsEmptyMessage {
     return Intl.message(
-      'No carrier payouts are eligible for release right now.',
+      'No payouts are ready to release right now.',
       name: 'adminEligiblePayoutsEmptyMessage',
       desc: '',
       args: [],
@@ -5647,10 +5902,10 @@ class S {
     );
   }
 
-  /// `Email delivery monitoring`
+  /// `Email delivery`
   String get adminEmailQueueTitle {
     return Intl.message(
-      'Email delivery monitoring',
+      'Email delivery',
       name: 'adminEmailQueueTitle',
       desc: '',
       args: [],
@@ -5757,10 +6012,10 @@ class S {
     );
   }
 
-  /// `Dead letter`
+  /// `Failed`
   String get adminEmailStatusDeadLetterLabel {
     return Intl.message(
-      'Dead letter',
+      'Failed',
       name: 'adminEmailStatusDeadLetterLabel',
       desc: '',
       args: [],
@@ -5777,30 +6032,30 @@ class S {
     );
   }
 
-  /// `Email resend queued.`
+  /// `Email resend requested.`
   String get adminEmailResendSuccess {
     return Intl.message(
-      'Email resend queued.',
+      'Email resend requested.',
       name: 'adminEmailResendSuccess',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dead-letter queue`
+  /// `Failed emails`
   String get adminEmailDeadLetterTitle {
     return Intl.message(
-      'Dead-letter queue',
+      'Failed emails',
       name: 'adminEmailDeadLetterTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `No dead-letter email jobs need attention right now.`
+  /// `No failed emails need attention right now.`
   String get adminEmailDeadLetterEmptyMessage {
     return Intl.message(
-      'No dead-letter email jobs need attention right now.',
+      'No failed emails need attention right now.',
       name: 'adminEmailDeadLetterEmptyMessage',
       desc: '',
       args: [],
@@ -5902,10 +6157,10 @@ class S {
     );
   }
 
-  /// `Add an operational reason for this change.`
+  /// `Add a reason for this change.`
   String get adminUserReasonHint {
     return Intl.message(
-      'Add an operational reason for this change.',
+      'Add a reason for this change.',
       name: 'adminUserReasonHint',
       desc: '',
       args: [],
@@ -6042,20 +6297,20 @@ class S {
     );
   }
 
-  /// `Monitoring summary`
+  /// `Service summary`
   String get adminSettingsMonitoringSummaryTitle {
     return Intl.message(
-      'Monitoring summary',
+      'Service summary',
       name: 'adminSettingsMonitoringSummaryTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Runtime policy`
+  /// `App access`
   String get adminSettingsRuntimeSectionTitle {
     return Intl.message(
-      'Runtime policy',
+      'App access',
       name: 'adminSettingsRuntimeSectionTitle',
       desc: '',
       args: [],
@@ -6192,10 +6447,10 @@ class S {
     );
   }
 
-  /// `Feature flags`
+  /// `Optional features`
   String get adminSettingsFeatureFlagsSectionTitle {
     return Intl.message(
-      'Feature flags',
+      'Optional features',
       name: 'adminSettingsFeatureFlagsSectionTitle',
       desc: '',
       args: [],

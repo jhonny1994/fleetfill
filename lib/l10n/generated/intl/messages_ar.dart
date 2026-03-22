@@ -35,9 +35,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m6(documentId) => "المستند المُولَّد ${documentId}";
 
-  static String m7(languageCode) => "اللغة الحالية: ${languageCode}";
+  static String m7(languageCode) => "لغة التطبيق الحالية: ${languageCode}";
 
-  static String m8(milestoneLabel) => "آخر مرحلة: ${milestoneLabel}";
+  static String m8(milestoneLabel) => "الحالة الحالية: ${milestoneLabel}";
 
   static String m9(notificationId) => "الإشعار ${notificationId}";
 
@@ -78,22 +78,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "سجل تدقيق الإدارة",
     ),
     "adminDashboardAutomationTitle": MessageLookupByLibrary.simpleMessage(
-      "صحة الأتمتة",
+      "المهام الحساسة للوقت",
     ),
     "adminDashboardBacklogHealthTitle": MessageLookupByLibrary.simpleMessage(
-      "صحة قوائم الانتظار",
+      "العمل المعلّق",
     ),
     "adminDashboardDeadLetterLabel": MessageLookupByLibrary.simpleMessage(
-      "الرسائل المعطلة",
+      "الرسائل الفاشلة",
     ),
     "adminDashboardDescription": MessageLookupByLibrary.simpleMessage(
       "تظهر هنا صحة التراكم التشغيلي والتنبيهات والعدادات السريعة.",
     ),
     "adminDashboardEmailBacklogLabel": MessageLookupByLibrary.simpleMessage(
-      "تراكم البريد الإلكتروني",
+      "رسائل بانتظار الإرسال",
     ),
     "adminDashboardEmailHealthTitle": MessageLookupByLibrary.simpleMessage(
-      "صحة البريد الإلكتروني",
+      "تسليم البريد الإلكتروني",
     ),
     "adminDashboardNavLabel": MessageLookupByLibrary.simpleMessage(
       "لوحة المعلومات",
@@ -108,23 +108,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminDisputesQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لا توجد نزاعات بانتظار المراجعة الآن.",
     ),
-    "adminDisputesQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "طابور النزاعات",
-    ),
+    "adminDisputesQueueTitle": MessageLookupByLibrary.simpleMessage("النزاعات"),
     "adminEligiblePayoutsEmptyMessage": MessageLookupByLibrary.simpleMessage(
-      "لا توجد دفعات مؤهلة للإطلاق حاليا.",
+      "لا توجد تحويلات جاهزة للإطلاق حاليا.",
     ),
     "adminEmailDeadLetterEmptyMessage": MessageLookupByLibrary.simpleMessage(
-      "لا توجد مهام بريد إلكتروني معطلة تحتاج إلى متابعة الآن.",
+      "لا توجد رسائل فاشلة تحتاج إلى متابعة الآن.",
     ),
     "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
-      "طابور الرسائل المعطلة",
+      "الرسائل الفاشلة",
     ),
     "adminEmailQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لا توجد سجلات بريد إلكتروني تطابق عوامل التصفية الحالية.",
     ),
     "adminEmailQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "مراقبة تسليم البريد الإلكتروني",
+      "تسليم البريد الإلكتروني",
     ),
     "adminEmailResendAction": MessageLookupByLibrary.simpleMessage(
       "إعادة الإرسال",
@@ -177,9 +175,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminPayoutQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لم يتم تحرير أي تحويلات بعد.",
     ),
-    "adminPayoutQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "طابور التحويلات",
-    ),
+    "adminPayoutQueueTitle": MessageLookupByLibrary.simpleMessage("التحويلات"),
     "adminPayoutReleaseAction": MessageLookupByLibrary.simpleMessage(
       "إطلاق الدفعة",
     ),
@@ -201,8 +197,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminQueuesDescription": MessageLookupByLibrary.simpleMessage(
       "تبقى طوابير المدفوعات والتحقق والنزاعات والتحويلات والبريد الإلكتروني منفصلة داخل صفحة واحدة.",
     ),
-    "adminQueuesNavLabel": MessageLookupByLibrary.simpleMessage("الطوابير"),
-    "adminQueuesTitle": MessageLookupByLibrary.simpleMessage("طوابير الإدارة"),
+    "adminQueuesNavLabel": MessageLookupByLibrary.simpleMessage("العمليات"),
+    "adminQueuesTitle": MessageLookupByLibrary.simpleMessage("العمليات"),
     "adminSettingsDeliveryGraceLabel": MessageLookupByLibrary.simpleMessage(
       "نافذة السماح للتسليم (بالساعات)",
     ),
@@ -210,14 +206,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "سياسة مراجعة التسليم",
     ),
     "adminSettingsDescription": MessageLookupByLibrary.simpleMessage(
-      "تظهر هنا إعدادات المنصة ووضع الصيانة وسياسة الإصدارات وملخص المراقبة.",
+      "أدر الوصول إلى التطبيق وقواعد التسعير ووضع الصيانة وأدوات البريد الإلكتروني.",
     ),
     "adminSettingsEmailResendEnabledLabel":
         MessageLookupByLibrary.simpleMessage(
           "تفعيل إعادة إرسال البريد الإلكتروني من الإدارة",
         ),
     "adminSettingsFeatureFlagsSectionTitle":
-        MessageLookupByLibrary.simpleMessage("إشارات الميزات"),
+        MessageLookupByLibrary.simpleMessage("الميزات الاختيارية"),
     "adminSettingsForceUpdateLabel": MessageLookupByLibrary.simpleMessage(
       "فرض التحديث",
     ),
@@ -236,7 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "الحد الأدنى لإصدار iOS",
     ),
     "adminSettingsMonitoringSummaryTitle": MessageLookupByLibrary.simpleMessage(
-      "ملخص المراقبة",
+      "ملخص الخدمة",
     ),
     "adminSettingsNavLabel": MessageLookupByLibrary.simpleMessage("الإعدادات"),
     "adminSettingsPaymentDeadlineLabel": MessageLookupByLibrary.simpleMessage(
@@ -249,7 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "سياسة التسعير",
     ),
     "adminSettingsRuntimeSectionTitle": MessageLookupByLibrary.simpleMessage(
-      "سياسة التشغيل",
+      "الوصول إلى التطبيق",
     ),
     "adminSettingsSaveAction": MessageLookupByLibrary.simpleMessage(
       "حفظ الإعدادات",
@@ -312,7 +308,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "المركبات",
     ),
     "adminUsersDescription": MessageLookupByLibrary.simpleMessage(
-      "تظهر هنا أدوات البحث عن المستخدمين والتحقيق.",
+      "ابحث عن المستخدمين وراجع الحسابات والحجوزات والوثائق.",
     ),
     "adminUsersEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لا يوجد مستخدمون يطابقون هذا البحث.",
@@ -358,7 +354,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ملخص طابور التحقق",
     ),
     "adminVerificationQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "طابور تحقق الناقلين",
+      "تحقق الناقلين",
     ),
     "adminVerificationRejectAction": MessageLookupByLibrary.simpleMessage(
       "رفض",
@@ -528,10 +524,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "bookingConfirmAction": MessageLookupByLibrary.simpleMessage("تأكيد الحجز"),
     "bookingCreatedMessage": MessageLookupByLibrary.simpleMessage(
-      "تم إنشاء الحجز. تابع إلى تعليمات الدفع.",
+      "تم إنشاء الحجز. تابع إلى الدفع.",
     ),
     "bookingDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "توجد مسارات تفاصيل الحجز المشتركة فوق واجهات الأدوار.",
+      "راجع حالة الحجز وتفاصيل الدفع وملخص السعر.",
     ),
     "bookingDetailTitle": m1,
     "bookingInsuranceAction": MessageLookupByLibrary.simpleMessage(
@@ -593,14 +589,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "cancelLabel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "carrierBookingsDescription": MessageLookupByLibrary.simpleMessage(
-      "توجد هنا قوائم عمل الحجوزات النشطة والسابقة ضمن هذا الفرع.",
+      "تابع الحجوزات الحالية وتقدم التسليم والرحلات المكتملة.",
     ),
     "carrierBookingsNavLabel": MessageLookupByLibrary.simpleMessage("الحجوزات"),
     "carrierBookingsTitle": MessageLookupByLibrary.simpleMessage(
       "حجوزات الناقل",
     ),
     "carrierHomeDescription": MessageLookupByLibrary.simpleMessage(
-      "توجد هنا حالات التحقق والرحلات وإجراءات الحجز وتذكيرات التحويل.",
+      "راجع حالة التحقق وجهوزية أسطولك والمهام التالية.",
     ),
     "carrierHomeNavLabel": MessageLookupByLibrary.simpleMessage("الرئيسية"),
     "carrierHomeTitle": MessageLookupByLibrary.simpleMessage("الرئيسية للناقل"),
@@ -608,7 +604,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم تحديث مرحلة الحجز.",
     ),
     "carrierProfileDescription": MessageLookupByLibrary.simpleMessage(
-      "توجد هنا حالة تحقق الناقل وتذكيرات التحويل وأدوات الملف الشخصي.",
+      "أدر بيانات نشاطك والتحقق وحسابات التحويل والمركبات.",
     ),
     "carrierProfileNavLabel": MessageLookupByLibrary.simpleMessage(
       "الملف الشخصي",
@@ -646,13 +642,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "ملف التحقق الخاص بك قيد المراجعة. ارفع أي وثائق ناقصة لتسريع الاعتماد.",
     ),
     "carrierVerificationQueueHint": MessageLookupByLibrary.simpleMessage(
-      "تبقى متطلبات التحقق والوثائق الناقصة مجمعة داخل فرع الملف الشخصي.",
+      "أكمل خطوات التحقق المتبقية من ملفك الشخصي.",
     ),
     "carrierVerificationRejectedBanner": m3,
     "carrierVerificationSummaryTitle": MessageLookupByLibrary.simpleMessage(
       "ملخص التحقق",
     ),
     "confirmLabel": MessageLookupByLibrary.simpleMessage("تأكيد"),
+    "contactSupportAction": MessageLookupByLibrary.simpleMessage(
+      "التواصل مع الدعم",
+    ),
     "deliveryConfirmAction": MessageLookupByLibrary.simpleMessage(
       "تأكيد التسليم",
     ),
@@ -667,8 +666,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disputeEvidenceSelectedCount": m4,
     "disputeEvidenceTitle": MessageLookupByLibrary.simpleMessage("أدلة النزاع"),
+    "documentPreviewUnavailableMessage": MessageLookupByLibrary.simpleMessage(
+      "المعاينة غير متاحة لهذا الملف. افتحه في تطبيق آخر.",
+    ),
     "documentViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "افتح هذا المستند عبر العارض الآمن عندما يصبح الوصول جاهزا.",
+      "اعرض هذا المستند هنا أو افتحه في تطبيق آخر.",
     ),
     "documentViewerOpenAction": MessageLookupByLibrary.simpleMessage(
       "افتح المستند",
@@ -730,7 +732,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "إيصال التحويل",
     ),
     "generatedDocumentViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "افتح الفواتير والإيصالات المولدة من مسار مشترك وآمن.",
+      "اعرض فاتورتك أو إيصالك أو نزله.",
     ),
     "generatedDocumentViewerTitle": m6,
     "generatedDocumentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
@@ -742,6 +744,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generatedDocumentsTitle": MessageLookupByLibrary.simpleMessage(
       "المستندات المولدة",
     ),
+    "goBackAction": MessageLookupByLibrary.simpleMessage("رجوع"),
     "languageOptionArabic": MessageLookupByLibrary.simpleMessage("العربية"),
     "languageOptionEnglish": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
     "languageOptionFrench": MessageLookupByLibrary.simpleMessage("الفرنسية"),
@@ -753,7 +756,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "اختيار اللغة",
     ),
     "legalDisputePolicyBody": MessageLookupByLibrary.simpleMessage(
-      "يجب فتح النزاعات خلال نافذة مراجعة التسليم. تراجع FleetFill سجلات الشحنة والإثبات والتتبع والمالية قبل حسم الحالة. وقد تنتهي المعالجة بإكمال الحجز أو إلغائه أو رد المبلغ بحسب النتيجة التشغيلية الموثقة.",
+      "يجب فتح النزاعات خلال نافذة مراجعة التسليم. تراجع FleetFill الشحنة وإثبات الدفع والتتبع والمستندات المرتبطة قبل حسم الحالة. وقد ينتهي النزاع بإكمال الحجز أو إلغائه أو رد المبلغ.",
     ),
     "legalDisputePolicyTitle": MessageLookupByLibrary.simpleMessage(
       "سياسة النزاعات",
@@ -765,7 +768,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "إفصاح الدفع والضمان",
     ),
     "legalPoliciesDescription": MessageLookupByLibrary.simpleMessage(
-      "راجع شروط الخدمة والخصوصية والدفع والنزاعات قبل استخدام المنتج في بيئة الإنتاج.",
+      "راجع شروط الخدمة والخصوصية والدفع والنزاعات قبل استخدام FleetFill.",
     ),
     "legalPoliciesSupportHint": MessageLookupByLibrary.simpleMessage(
       "إذا احتجت إلى توضيح حول هذه السياسات، فتواصل مع دعم FleetFill قبل متابعة الحجز أو الدفع أو النزاع.",
@@ -774,7 +777,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "السياسات والإفصاحات",
     ),
     "legalPrivacyBody": MessageLookupByLibrary.simpleMessage(
-      "تحتفظ FleetFill بسجلات التشغيل والدفع والإثبات والمالية والدعم والتدقيق فقط بالقدر اللازم لتشغيل الخدمة والتحقيق في النزاعات والوفاء بالالتزامات المالية أو التنظيمية. يظل الوصول محصورا بدور المستخدم والموظفين التشغيليين المصرح لهم.",
+      "تحتفظ FleetFill ببيانات الدفع والشحن والدعم والتدقيق فقط عند الحاجة لتشغيل الخدمة والتحقيق في النزاعات والوفاء بالالتزامات القانونية أو المالية. ويظل الوصول محصورا بصاحب الحساب والموظفين المصرح لهم.",
     ),
     "legalPrivacyTitle": MessageLookupByLibrary.simpleMessage(
       "الخصوصية والاحتفاظ بالبيانات",
@@ -785,18 +788,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "legalTermsTitle": MessageLookupByLibrary.simpleMessage("شروط الخدمة"),
     "loadMoreLabel": MessageLookupByLibrary.simpleMessage("تحميل المزيد"),
     "loadingMessage": MessageLookupByLibrary.simpleMessage(
-      "يقوم FleetFill بتحضير مساحة العمل الخاصة بك.",
+      "جارٍ تجهيز كل شيء لك.",
     ),
     "loadingTitle": MessageLookupByLibrary.simpleMessage("جار التحميل"),
     "maintenanceDescription": MessageLookupByLibrary.simpleMessage(
-      "خدمة FleetFill غير متاحة مؤقتا أثناء أعمال الصيانة.",
+      "FleetFill غير متاح مؤقتا بينما نجري بعض التحسينات. حاول مرة أخرى قريبا.",
     ),
-    "maintenanceTitle": MessageLookupByLibrary.simpleMessage("وضع الصيانة"),
+    "maintenanceTitle": MessageLookupByLibrary.simpleMessage("سنعود قريبا"),
     "mediaUploadPermissionDescription": MessageLookupByLibrary.simpleMessage(
-      "وجّه المستخدم إلى تفعيل الوصول إلى الوسائط عندما يحتاج إلى رفع إثبات أو وثائق.",
+      "اسمح بالوصول إلى الصور والملفات حتى تتمكن من رفع إثبات الدفع والوثائق.",
     ),
     "mediaUploadPermissionTitle": MessageLookupByLibrary.simpleMessage(
-      "إذن رفع الوسائط",
+      "السماح بالصور والملفات",
     ),
     "moneySummaryTitle": MessageLookupByLibrary.simpleMessage("ملخص التسعير"),
     "myRoutesActiveRoutesLabel": MessageLookupByLibrary.simpleMessage(
@@ -813,7 +816,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "إضافة رحلة فردية",
     ),
     "myRoutesDescription": MessageLookupByLibrary.simpleMessage(
-      "تبقى المسارات المتكررة والرحلات الفردية مجمعة داخل فرع واحد.",
+      "أدر مساراتك المتكررة ورحلاتك الفردية.",
     ),
     "myRoutesEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "انشر مسارا متكررا أو رحلة فردية لبدء عرض السعة.",
@@ -848,7 +851,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "معدل الاستخدام",
     ),
     "myShipmentsDescription": MessageLookupByLibrary.simpleMessage(
-      "تبقى حالات الشحنات النشطة والسابقة والمسودات داخل هذا الفرع.",
+      "أنشئ الشحنات وراجع المسودات وتابع الأحمال المحجوزة.",
     ),
     "myShipmentsNavLabel": MessageLookupByLibrary.simpleMessage("الشحنات"),
     "myShipmentsTitle": MessageLookupByLibrary.simpleMessage("شحناتي"),
@@ -863,7 +866,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notFoundTitle": MessageLookupByLibrary.simpleMessage("غير موجود"),
     "notificationBookingConfirmedBody": MessageLookupByLibrary.simpleMessage(
-      "تم تسجيل الحجز. تابع إلى تعليمات الدفع لمواصلة الإجراء.",
+      "تم تأكيد الحجز. اتبع خطوات الدفع للحفاظ على سيره.",
     ),
     "notificationBookingConfirmedTitle": MessageLookupByLibrary.simpleMessage(
       "تم تأكيد الحجز",
@@ -873,7 +876,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("تم تحديث مرحلة الحجز"),
     "notificationCarrierReviewSubmittedBody":
         MessageLookupByLibrary.simpleMessage(
-          "تمت إضافة تقييم جديد من مرسل إلى ملفك الشخصي.",
+          "تمت إضافة تقييم جديد إلى ملفك الشخصي.",
         ),
     "notificationCarrierReviewSubmittedTitle":
         MessageLookupByLibrary.simpleMessage("تم استلام تقييم الناقل"),
@@ -882,13 +885,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notificationDetailTitle": m9,
     "notificationDisputeOpenedBody": MessageLookupByLibrary.simpleMessage(
-      "تم فتح نزاع لهذا الحجز وهو بانتظار مراجعة الإدارة.",
+      "تم فتح النزاع وهو بانتظار المراجعة.",
     ),
     "notificationDisputeOpenedTitle": MessageLookupByLibrary.simpleMessage(
       "تم فتح النزاع",
     ),
     "notificationDisputeResolvedBody": MessageLookupByLibrary.simpleMessage(
-      "تم حل النزاع المرتبط بهذا الحجز. راجع آخر نتيجة للحجز والدفع.",
+      "تم حل النزاع. راجع آخر تحديث للحجز والدفع.",
     ),
     "notificationDisputeResolvedTitle": MessageLookupByLibrary.simpleMessage(
       "تم حل النزاع",
@@ -897,11 +900,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationGeneratedDocumentReadyTitle":
         MessageLookupByLibrary.simpleMessage("المستند جاهز"),
     "notificationPaymentProofSubmittedBody":
-        MessageLookupByLibrary.simpleMessage("إثبات الدفع بانتظار المراجعة."),
+        MessageLookupByLibrary.simpleMessage(
+          "استلمنا إثبات الدفع. سنراجعه قريبا.",
+        ),
     "notificationPaymentProofSubmittedTitle":
         MessageLookupByLibrary.simpleMessage("تم إرسال إثبات الدفع"),
     "notificationPaymentRejectedBody": MessageLookupByLibrary.simpleMessage(
-      "تم رفض إثبات الدفع. راجع السبب وأعد الإرسال قبل انتهاء المهلة.",
+      "تم رفض إثبات الدفع. تحقق من السبب وأرسل إثباتا جديدا قبل انتهاء المهلة.",
     ),
     "notificationPaymentRejectedTitle": MessageLookupByLibrary.simpleMessage(
       "تم رفض إثبات الدفع",
@@ -919,16 +924,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم صرف مستحق الناقل",
     ),
     "notificationsCenterDescription": MessageLookupByLibrary.simpleMessage(
-      "راجع التنبيهات الأخيرة وتحديثات الحجوزات والتذكيرات المهمة.",
+      "ابق على اطلاع على الحجوزات والمدفوعات ومراحل التسليم وتنبيهات الحساب.",
     ),
     "notificationsCenterTitle": MessageLookupByLibrary.simpleMessage(
       "الإشعارات",
     ),
     "notificationsPermissionDescription": MessageLookupByLibrary.simpleMessage(
-      "اشرح لماذا تهم تحديثات التتبع والحجوزات قبل فتح إعدادات النظام.",
+      "فعّل الإشعارات لتصلك تحديثات الحجز ومراحل التسليم وتنبيهات الدفع.",
     ),
     "notificationsPermissionTitle": MessageLookupByLibrary.simpleMessage(
-      "إذن الإشعارات",
+      "تفعيل الإشعارات",
     ),
     "offlineMessage": MessageLookupByLibrary.simpleMessage(
       "أنت غير متصل حاليا. بعض الإجراءات غير متاحة مؤقتا.",
@@ -974,7 +979,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "الانطلاق",
     ),
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "راجع تفاصيل هذه الرحلة الفردية قبل الحجز أو المتابعة التشغيلية.",
+      "راجع هذه الرحلة قبل الحجز.",
     ),
     "oneOffTripDetailTitle": m11,
     "oneOffTripEditTitle": MessageLookupByLibrary.simpleMessage(
@@ -987,10 +992,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "oneOffTripSavedMessage": MessageLookupByLibrary.simpleMessage(
       "تم تحديث الرحلة الفردية.",
     ),
-    "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
-      "تبقى التعليمات والمرجع ورفع الإثبات وحالة الدفع ضمن مسار واحد متماسك.",
+    "openNotificationsAction": MessageLookupByLibrary.simpleMessage(
+      "فتح الإشعارات",
     ),
-    "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("مسار الدفع"),
+    "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
+      "اتبع خطوات الدفع وارفع الإثبات وتابع حالة المراجعة.",
+    ),
+    "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("الدفع"),
     "paymentInstructionsTitle": MessageLookupByLibrary.simpleMessage(
       "تعليمات الدفع",
     ),
@@ -1001,7 +1009,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "المبلغ المرسل",
     ),
     "paymentProofApprovedMessage": MessageLookupByLibrary.simpleMessage(
-      "تمت الموافقة على إثبات الدفع.",
+      "تم تأكيد الدفع.",
     ),
     "paymentProofDecisionNoteLabel": MessageLookupByLibrary.simpleMessage(
       "ملاحظة القرار",
@@ -1052,7 +1060,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "رفع إثبات الدفع",
     ),
     "paymentProofUploadedMessage": MessageLookupByLibrary.simpleMessage(
-      "تم رفع إثبات الدفع.",
+      "تم استلام إثبات الدفع.",
     ),
     "paymentProofVerifiedAmountLabel": MessageLookupByLibrary.simpleMessage(
       "المبلغ المتحقق منه",
@@ -1122,13 +1130,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "وسيلة التحويل",
     ),
     "payoutAccountsDescription": MessageLookupByLibrary.simpleMessage(
-      "تبقى حسابات تحويل الناقل مجمعة ضمن فرع الملف الشخصي.",
+      "أضف الحسابات التي تستقبل عليها التحويلات وأدرها.",
     ),
     "payoutAccountsTitle": MessageLookupByLibrary.simpleMessage(
       "حسابات التحويل",
     ),
     "phoneCompletionDescription": MessageLookupByLibrary.simpleMessage(
-      "تبقى الإجراءات التشغيلية مقيدة حتى يتم إدخال رقم الهاتف.",
+      "أضف رقم هاتف لمواصلة استخدام FleetFill.",
     ),
     "phoneCompletionSaveAction": MessageLookupByLibrary.simpleMessage(
       "حفظ رقم الهاتف",
@@ -1152,7 +1160,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "profilePhoneLabel": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
     "profileSetupDescription": MessageLookupByLibrary.simpleMessage(
-      "أكمل بيانات الملف المطلوبة قبل استخدام الميزات التشغيلية.",
+      "أضف بياناتك حتى يتمكن العملاء والناقلون والدعم من التواصل معك.",
     ),
     "profileSetupSaveAction": MessageLookupByLibrary.simpleMessage(
       "حفظ الملف الشخصي",
@@ -1167,7 +1175,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "وثائق تحقق الملف الشخصي",
     ),
     "proofViewerDescription": MessageLookupByLibrary.simpleMessage(
-      "افتح هذا الإثبات من خلال مسار مشترك وآمن عندما يصبح الوصول جاهزا.",
+      "اعرض إثبات الدفع لهذا الحجز هنا أو افتحه في تطبيق آخر.",
     ),
     "proofViewerTitle": m12,
     "publicationActiveLabel": MessageLookupByLibrary.simpleMessage("نشط"),
@@ -1215,7 +1223,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "المتابعة كناقل",
     ),
     "roleSelectionDescription": MessageLookupByLibrary.simpleMessage(
-      "اختر دورا واحدا لهذا الحساب قبل بدء الاستخدام التشغيلي.",
+      "اختر كيف تريد استخدام FleetFill حتى نجهز الأدوات المناسبة لحسابك.",
     ),
     "roleSelectionShipperDescription": MessageLookupByLibrary.simpleMessage(
       "أنشئ الشحنات، وقارن الرحلات المطابقة، وتابع التسليم.",
@@ -1263,7 +1271,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "بلدية الوصول",
     ),
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "راجع تفاصيل هذا المسار قبل الحجز أو المتابعة.",
+      "راجع هذا المسار قبل الحجز.",
     ),
     "routeDetailTitle": m13,
     "routeEditTitle": MessageLookupByLibrary.simpleMessage(
@@ -1338,7 +1346,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "الترتيب والفلاتر",
     ),
     "searchTripsDescription": MessageLookupByLibrary.simpleMessage(
-      "يبقى نموذج البحث ونتائج المسار المطابق داخل صفحة واحدة مع حالات مدمجة.",
+      "اختر شحنة وتاريخا للعثور على الرحلات المناسبة.",
     ),
     "searchTripsFilterEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لا توجد نتائج تطابق الترتيب والفلاتر الحالية.",
@@ -1361,12 +1369,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "مسار متكرر",
     ),
     "searchTripsRequiresDraftMessage": MessageLookupByLibrary.simpleMessage(
-      "أنشئ مسودة شحنة واحدة على الأقل للبحث عن سعة مطابقة.",
+      "أنشئ مسودة شحنة قبل البحث عن الرحلات المناسبة.",
     ),
     "searchTripsResultsTitle": m15,
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage("البحث عن رحلة"),
     "settingsDescription": MessageLookupByLibrary.simpleMessage(
-      "أدر اللغة والمظهر والدعم وتفضيلات الإشعارات.",
+      "أدر اللغة والمظهر والإشعارات وخيارات الدعم.",
     ),
     "settingsSignedOutMessage": MessageLookupByLibrary.simpleMessage(
       "تم تسجيل خروجك.",
@@ -1381,11 +1389,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "settingsThemeModeTitle": MessageLookupByLibrary.simpleMessage("السمة"),
     "settingsTitle": MessageLookupByLibrary.simpleMessage("الإعدادات"),
     "sharedScaffoldPreviewMessage": MessageLookupByLibrary.simpleMessage(
-      "تبقى البطاقات والقوالب المشتركة متسقة عبر جميع أسطح الأدوار.",
+      "هذه الميزة ستتوفر قريبا.",
     ),
-    "sharedScaffoldPreviewTitle": MessageLookupByLibrary.simpleMessage(
-      "معاينة الأساس المشترك",
-    ),
+    "sharedScaffoldPreviewTitle": MessageLookupByLibrary.simpleMessage("قريبا"),
     "shipmentAddItemAction": MessageLookupByLibrary.simpleMessage("إضافة عنصر"),
     "shipmentCategoryLabel": MessageLookupByLibrary.simpleMessage("الفئة"),
     "shipmentCreateAction": MessageLookupByLibrary.simpleMessage("إنشاء شحنة"),
@@ -1401,7 +1407,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "shipmentDescriptionLabel": MessageLookupByLibrary.simpleMessage("الوصف"),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "راجع ملخص الشحنة ومحتوياتها والحجز المرتبط بها.",
+      "راجع تفاصيل الشحنة ومحتوياتها وحالة الحجز.",
     ),
     "shipmentDetailTitle": m16,
     "shipmentEditAction": MessageLookupByLibrary.simpleMessage("تعديل الشحنة"),
@@ -1451,13 +1457,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "الحجوزات النشطة",
     ),
     "shipperHomeDescription": MessageLookupByLibrary.simpleMessage(
-      "توجد هنا الحجوزات النشطة والإشعارات الأخيرة والإجراءات السريعة واختصار الدعم.",
+      "تابع حجوزاتك النشطة وراجع التحديثات وانتقل بسرعة إلى أهم الإجراءات.",
     ),
     "shipperHomeNavLabel": MessageLookupByLibrary.simpleMessage("الرئيسية"),
     "shipperHomeNoRecentNotificationMessage":
-        MessageLookupByLibrary.simpleMessage(
-          "ستظهر آخر التحديثات التشغيلية هنا.",
-        ),
+        MessageLookupByLibrary.simpleMessage("ستظهر آخر التحديثات هنا."),
     "shipperHomeQuickActionsTitle": MessageLookupByLibrary.simpleMessage(
       "إجراءات سريعة",
     ),
@@ -1469,21 +1473,27 @@ class MessageLookup extends MessageLookupByLibrary {
       "الإشعارات غير المقروءة",
     ),
     "shipperProfileDescription": MessageLookupByLibrary.simpleMessage(
-      "يبقى الملف الشخصي والهاتف والتفضيلات واختصارات الدعم داخل فرع واحد.",
+      "أدر بيانات التواصل والإعدادات وخيارات الدعم.",
     ),
     "shipperProfileNavLabel": MessageLookupByLibrary.simpleMessage("الملف"),
     "shipperProfileTitle": MessageLookupByLibrary.simpleMessage("ملف الشاحن"),
     "splashDescription": MessageLookupByLibrary.simpleMessage(
-      "تبدأ هنا عمليات التهيئة وحالات الحجب.",
+      "نجهز FleetFill لك الآن.",
     ),
-    "splashTitle": MessageLookupByLibrary.simpleMessage("التمهيد"),
+    "splashTitle": MessageLookupByLibrary.simpleMessage("جارٍ التجهيز"),
+    "startupConfigurationRequiredMessage": MessageLookupByLibrary.simpleMessage(
+      "FleetFill غير متاح حاليا. يرجى المحاولة لاحقا.",
+    ),
+    "startupConfigurationRequiredTitle": MessageLookupByLibrary.simpleMessage(
+      "FleetFill غير متاح",
+    ),
     "statusNeedsReviewLabel": MessageLookupByLibrary.simpleMessage(
       "يحتاج مراجعة",
     ),
     "statusReadyLabel": MessageLookupByLibrary.simpleMessage("جاهز"),
     "supportConfiguredEmailMessage": m18,
     "supportDescription": MessageLookupByLibrary.simpleMessage(
-      "يبدأ الدعم بإرشادات بريد واضحة وتفاصيل مشكلة منظمة.",
+      "اطرح سؤالا أو أبلغ عن مشكلة أو اطلب المساعدة بشأن حجز أو دفعة.",
     ),
     "supportMessageLabel": MessageLookupByLibrary.simpleMessage("رسالة الدعم"),
     "supportMessageSentMessage": MessageLookupByLibrary.simpleMessage(
@@ -1492,9 +1502,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "supportReferenceHintMessage": MessageLookupByLibrary.simpleMessage(
       "أضف أي معرّف حجز أو رقم تتبع أو مرجع دفع يساعد فريق الدعم على التحقيق بسرعة أكبر.",
     ),
-    "supportSendAction": MessageLookupByLibrary.simpleMessage(
-      "إرسال بريد الدعم",
-    ),
+    "supportSendAction": MessageLookupByLibrary.simpleMessage("إرسال الرسالة"),
     "supportSubjectLabel": MessageLookupByLibrary.simpleMessage("موضوع الدعم"),
     "supportTitle": MessageLookupByLibrary.simpleMessage("الدعم"),
     "suspendedMessage": MessageLookupByLibrary.simpleMessage(
@@ -1502,7 +1510,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "suspendedTitle": MessageLookupByLibrary.simpleMessage("الحساب موقوف"),
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "يبقى هنا خط التتبع وتأكيد التسليم وفتح النزاع وإرسال التقييم معا.",
+      "تابع تقدم التسليم وأكد الاستلام وافتح نزاعا أو اترك تقييما.",
     ),
     "trackingDetailTitle": m19,
     "trackingEventCancelledLabel": MessageLookupByLibrary.simpleMessage("ملغى"),
@@ -1530,7 +1538,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "الخط الزمني للتتبع",
     ),
     "updateRequiredDescription": MessageLookupByLibrary.simpleMessage(
-      "حدّث FleetFill للمتابعة باستخدام الإصدار المدعوم.",
+      "حدّث FleetFill لمتابعة الاستخدام بأحدث إصدار مدعوم.",
     ),
     "updateRequiredTitle": MessageLookupByLibrary.simpleMessage("تحديث مطلوب"),
     "userDetailDescription": MessageLookupByLibrary.simpleMessage(
@@ -1580,7 +1588,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "vehicleVerificationRejectedBanner": m20,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
-      "تبقى المركبات تحت فرع ملف الناقل.",
+      "أضف المركبات التي تستخدمها للنقل وأدرها.",
     ),
     "vehiclesEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "أضف مركبة قبل نشر السعة أو إكمال التحقق الكامل.",
@@ -1594,9 +1602,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "verificationDocumentNeedsAttentionMessage":
         MessageLookupByLibrary.simpleMessage("راجع سبب الرفض ثم ارفع بديلا."),
     "verificationDocumentOpenPreparedMessage":
-        MessageLookupByLibrary.simpleMessage(
-          "تم تجهيز الوصول الآمن إلى الوثيقة.",
-        ),
+        MessageLookupByLibrary.simpleMessage("وثيقتك جاهزة للفتح."),
     "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
       "تم الرفع وينتظر مراجعة الإدارة.",
     ),
@@ -1628,5 +1634,58 @@ class MessageLookup extends MessageLookupByLibrary {
       "التحقق مطلوب",
     ),
     "verificationUploadAction": MessageLookupByLibrary.simpleMessage("رفع"),
+    "welcomeBackAction": MessageLookupByLibrary.simpleMessage("رجوع"),
+    "welcomeCarrierDescription": MessageLookupByLibrary.simpleMessage(
+      "انشر السعة المتاحة وراجع الشحنات المناسبة.",
+    ),
+    "welcomeCarrierTitle": MessageLookupByLibrary.simpleMessage(
+      "لديك سعة نقل متاحة",
+    ),
+    "welcomeDescription": MessageLookupByLibrary.simpleMessage(
+      "يربط FleetFill بين الشحنات وسعة النقل المتاحة.",
+    ),
+    "welcomeExactMatchDescription": MessageLookupByLibrary.simpleMessage(
+      "تربط أدوات البحث والنشر بين المسار والتاريخ المناسبين.",
+    ),
+    "welcomeExactMatchTitle": MessageLookupByLibrary.simpleMessage(
+      "مطابقة الشحنات والنقل",
+    ),
+    "welcomeHighlightsMessage": MessageLookupByLibrary.simpleMessage(
+      "طابق الشحنات مع النقل المتاح وتابع إثبات الدفع وتحديثات التسليم في مكان واحد.",
+    ),
+    "welcomeLanguageAction": MessageLookupByLibrary.simpleMessage(
+      "اختيار اللغة",
+    ),
+    "welcomeLanguageDescription": MessageLookupByLibrary.simpleMessage(
+      "اختر لغة التطبيق لحسابك. يمكنك تغييرها لاحقا من الإعدادات.",
+    ),
+    "welcomeLanguageTitle": MessageLookupByLibrary.simpleMessage("اختر لغتك"),
+    "welcomeNextAction": MessageLookupByLibrary.simpleMessage("التالي"),
+    "welcomePaymentDescription": MessageLookupByLibrary.simpleMessage(
+      "يبقى إثبات الدفع وتحديثات الحجز واضحة من البداية حتى التسليم.",
+    ),
+    "welcomePaymentTitle": MessageLookupByLibrary.simpleMessage(
+      "اجعل كل حجز واضحا",
+    ),
+    "welcomeShipperDescription": MessageLookupByLibrary.simpleMessage(
+      "أنشئ شحنة وراجع خيارات النقل المناسبة.",
+    ),
+    "welcomeShipperTitle": MessageLookupByLibrary.simpleMessage(
+      "لديك بضائع تريد نقلها",
+    ),
+    "welcomeSkipAction": MessageLookupByLibrary.simpleMessage("تخطي"),
+    "welcomeTitle": MessageLookupByLibrary.simpleMessage(
+      "انقل البضائع أو وفّر النقل",
+    ),
+    "welcomeTrackingDescription": MessageLookupByLibrary.simpleMessage(
+      "تابع تحديثات حالة واضحة من الحجز حتى التسليم من دون خرائط مباشرة وهمية.",
+    ),
+    "welcomeTrackingTitle": MessageLookupByLibrary.simpleMessage(
+      "تتبع بسيط بالمراحل",
+    ),
+    "welcomeTrustDescription": MessageLookupByLibrary.simpleMessage(
+      "يبقي FleetFill المطابقة وتحديثات الحجز واضحة للطرفين.",
+    ),
+    "welcomeTrustTitle": MessageLookupByLibrary.simpleMessage("كيف يعمل"),
   };
 }

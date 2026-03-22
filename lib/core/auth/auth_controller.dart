@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fleetfill/core/auth/auth_repository.dart';
 import 'package:fleetfill/core/auth/auth_state.dart';
+import 'package:fleetfill/core/config/app_bootstrap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -19,6 +20,14 @@ class AuthSessionController extends AsyncNotifier<AuthSnapshot> {
   @override
   Future<AuthSnapshot> build() async {
     final repository = ref.watch(authRepositoryProvider);
+
+    if (!repository.environment.hasSupabaseConfig ||
+        !AppBootstrapController.supabaseInitialized) {
+      return repository.buildSnapshot(
+        isPasswordRecovery: _passwordRecoveryActive,
+        isSessionExpired: _sessionExpired,
+      );
+    }
 
     _subscription ??= repository.authStateChanges.listen(
       _handleAuthStateChange,
