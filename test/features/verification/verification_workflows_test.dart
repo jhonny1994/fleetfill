@@ -163,9 +163,9 @@ void main() {
 
     setUpAll(() {
       verificationMigration = [
-        'supabase/migrations/20260318170000_create_verification_effective_document_helpers.sql',
-        'supabase/migrations/20260318170100_create_verification_admin_review_actions.sql',
-        'supabase/migrations/20260318170200_create_verification_packet_approval.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
       ].map((path) => File(path).readAsStringSync()).join('\n');
       signedFileUrlFunction = File(
         'supabase/functions/signed-file-url/index.ts',
@@ -234,10 +234,10 @@ void main() {
     test('protects sensitive columns on insert as well as update', () {
       final securityMigration =
           File(
-            'supabase/migrations/20260317150600_create_storage_policies_and_security_triggers.sql',
+            'supabase/migrations/20260317010000_create_foundation_layer.sql',
           ).readAsStringSync() +
           File(
-            'supabase/migrations/20260317150100_create_security_and_storage_helpers.sql',
+            'supabase/migrations/20260317010000_create_foundation_layer.sql',
           ).readAsStringSync();
 
       expect(
@@ -269,13 +269,13 @@ void main() {
     test('keeps payment proof access restricted and validates uploaded objects', () {
       final securityMigration =
           File(
-            'supabase/migrations/20260317150500_enable_rls_and_create_table_policies.sql',
+            'supabase/migrations/20260317010000_create_foundation_layer.sql',
           ).readAsStringSync() +
           File(
-            'supabase/migrations/20260317150200_create_client_upload_and_finalize_rpc.sql',
+            'supabase/migrations/20260317010000_create_foundation_layer.sql',
           ).readAsStringSync() +
           File(
-            'supabase/migrations/20260317150100_create_security_and_storage_helpers.sql',
+            'supabase/migrations/20260317010000_create_foundation_layer.sql',
           ).readAsStringSync();
 
       expect(

@@ -2,43 +2,71 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
+String _extractLastSqlBlock(String source, String marker) {
+  final start = source.lastIndexOf(marker);
+  if (start == -1) {
+    return '';
+  }
+
+  const sqlBlockTerminator = '\n\$\$;';
+  final end = source.indexOf(sqlBlockTerminator, start);
+  if (end == -1) {
+    return source.substring(start);
+  }
+
+  return source.substring(start, end + sqlBlockTerminator.length);
+}
+
 void main() {
   group('Supabase booking contracts', () {
-    late String bookingRpcMigration;
+    late String bookingRpcFunction;
     late String transitionMigration;
 
     setUpAll(() {
-      bookingRpcMigration = File(
-        'supabase/migrations/20260322123000_simplify_shipment_domain.sql',
+      final workflowLayer = File(
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
+      bookingRpcFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.create_booking_from_search_result(',
+      );
       transitionMigration = File(
-        'supabase/migrations/20260320120300_enforce_booking_status_transitions.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
     });
 
     test(
-      'creates booking confirmation rpc with notification and outbox side effects',
+      'creates booking confirmation rpc without premature confirmation side effects',
       () {
         expect(
-          bookingRpcMigration.contains(
+          bookingRpcFunction.contains(
             'create or replace function public.create_booking_from_search_result',
           ),
           isTrue,
         );
         expect(
-          bookingRpcMigration.contains('insert into public.notifications'),
+          bookingRpcFunction.contains('pickup_date'),
           isTrue,
         );
         expect(
-          bookingRpcMigration.contains('insert into public.email_outbox_jobs'),
-          isTrue,
-        );
-        expect(bookingRpcMigration.contains("'booking_confirmed'"), isTrue);
-        expect(
-          bookingRpcMigration.contains(
-            'grant execute on function public.create_booking_from_search_result',
+          bookingRpcFunction.contains(
+            "raise exception 'Selected departure is outside the shipment pickup date'",
           ),
           isTrue,
+        );
+        expect(
+          bookingRpcFunction.contains('insert into public.notifications'),
+          isFalse,
+        );
+        expect(
+          bookingRpcFunction.contains('insert into public.email_outbox_jobs'),
+          isFalse,
+        );
+        expect(
+          bookingRpcFunction.contains(
+            'grant execute on function public.create_booking_from_search_result',
+          ),
+          isFalse,
         );
       },
     );

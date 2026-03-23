@@ -223,7 +223,7 @@ Phase 6 progress notes:
 - shipment search is now server-driven through `search_exact_lane_capacity(...)`, using exact lane matching, recurring route expansion by requested date, one-off trip inclusion, server-side remaining-capacity checks, recommended ranking, nearest-date fallback, and redefine-search mode
 - shipper search UI now lets users search from a selected shipment draft, review exact/nearest matches inline, debounce and invalidate stale searches, switch sort/filter controls from a bottom sheet, and hand off a selected result into booking review without routed micro-success pages
 - shipment draft selection and the unique booking constraint now preserve the one-shipment -> one-booking model in both app flow and DB truth
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120000_add_shipment_domain_constraints.sql`, `supabase/migrations/20260320120100_create_exact_lane_search_rpc.sql`, and `test/contracts/supabase/shipment_search_contract_test.dart`
+- supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql` and `test/contracts/supabase/shipment_search_contract_test.dart`
 
 ## Phase 7 - Booking And Pricing Flow
 
@@ -234,7 +234,7 @@ Phase 6 progress notes:
 - [x] Generate tracking number and payment reference
 - [x] Enforce booking and payment status transition rules
 - [x] Implement transactional reservation/capacity protection for per-date bookable departures
-- [x] Ensure booking, audit, and outbox side effects commit atomically
+- [x] Ensure booking creation, audit logging, and required payment-stage side effects commit atomically where applicable
 
 ### Pricing Logic
 
@@ -252,12 +252,12 @@ Phase 6 progress notes:
 
 Phase 7 progress notes:
 
-- booking confirmation is now server-controlled through `create_booking_from_search_result(...)`, which resolves the selected route or one-off trip, enforces remaining capacity, snapshots commercial values, generates tracking/payment identifiers, updates route-day reservations, and writes notification/outbox/tracking side effects atomically
+- booking confirmation is now server-controlled through `create_booking_from_search_result(...)`, which resolves the selected route or one-off trip, enforces remaining capacity, snapshots commercial values, generates tracking/payment identifiers, updates route-day reservations, and records booking plus tracking state without premature confirmation notifications or email outbox writes
 - booking and payment status transitions are now guarded by DB transition helpers and a bookings trigger so later phases cannot silently jump between invalid states
 - the booking review screen now acts as the booking confirmation screen, showing carrier/trip context, insurance selection, and a reusable pricing breakdown sheet before the user continues to payment instructions
 - payment flow now shows booking summary, payment reference, total, breakdown, and platform payment account instructions instead of a placeholder screen
 - shared booking detail now resolves to a real booking summary view rather than a placeholder
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120200_create_booking_confirmation_rpc.sql`, `supabase/migrations/20260320120300_enforce_booking_status_transitions.sql`, and `test/booking_flow_contract_test.dart`
+- supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql` and `test/booking_flow_contract_test.dart`
 
 ## Phase 8 - Payment Proof, Escrow, And Ledger
 
@@ -293,7 +293,7 @@ Phase 8 progress notes:
 - admin payment operations now include a real payment proof review queue with approval/rejection decisions, exact amount enforcement, verified references, and decision notes
 - approval and rejection now create immutable ledger entries and generated document records while moving booking/payment states through the escrow flow
 - scheduled automation now expires rejected bookings after the configured resubmission deadline and releases reserved capacity
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql`, `test/contracts/supabase/payment_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
+- supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `test/contracts/supabase/payment_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
 
 ## Phase 9 - Tracking, Delivery, And Completion
 
@@ -325,7 +325,7 @@ Phase 9 progress notes:
 - tracking is now append-only through `append_tracking_event(...)`, and carrier milestone changes plus shipper delivery confirmation are server-controlled through dedicated RPCs
 - shared tracking detail now exposes timeline history plus carrier milestone actions and shipper delivery confirmation in-context instead of separate success routes
 - scheduled automation now auto-completes delivered bookings after the configured delivery-review grace window
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120500_create_tracking_and_delivery_rpc.sql`, `test/contracts/supabase/tracking_delivery_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
+- supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `test/contracts/supabase/tracking_delivery_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
 
 ## Phase 10 - Disputes, Refunds, And Payouts
 
@@ -357,7 +357,7 @@ Phase 10 progress notes:
 - refunds and payouts now use first-class records instead of relying on booking/payment status alone
 - payout release now snapshots the chosen payout account, blocks on open disputes, writes payout ledger entries, and generates a payout receipt record
 - the schema now enforces a single active payout account per carrier through a partial unique index
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `supabase/migrations/20260320120825_add_dispute_evidence_support.sql`, `test/contracts/supabase/dispute_payout_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
+- supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `test/contracts/supabase/dispute_payout_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
 
 ## Phase 11 - Ratings, Notifications, And Support
 
@@ -398,7 +398,7 @@ Phase 11 progress notes:
 - generated document shared routes now resolve to secure signed-URL viewers instead of placeholders
 - user-device registration and notification marking are now server-controlled RPCs, and notification inserts now feed a scheduled Firebase Cloud Messaging HTTP v1 worker so push and in-app delivery share one canonical event source
 - the transactional email inventory now covers booking confirmation, payment proof receipt, payment rejection, payment secured, delivered-pending-review, dispute opened, dispute resolved, payout released, generated document availability, support acknowledgement, and support forwarding
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120700_create_carrier_review_rpc.sql`, `supabase/migrations/20260320120710_create_notification_device_rpc.sql`, `supabase/migrations/20260320120720_create_transactional_email_enqueue_rpc.sql`, `supabase/migrations/20260320120800_harden_notification_device_rules.sql`, `supabase/migrations/20260320120810_harden_email_delivery_rules.sql`, `supabase/migrations/20260320120820_create_support_request_email_rpc.sql`, `supabase/migrations/20260320120830_create_push_notification_runtime.sql`, and `test/contracts/supabase/engagement_support_contract_test.dart`
+- supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql` and `test/contracts/supabase/engagement_support_contract_test.dart`
 
 ## Phase 12 - Admin Surface And Operations
 
@@ -424,7 +424,7 @@ Phase 12 progress notes:
 - admin queue coverage now includes searchable payment proof, verification, dispute, payout, booking, and email operations with dead-letter review, safe resend controls, and overdue automation fallback visibility
 - sensitive admin mutations now run through privileged RPC with typed client settings, constrained setting keys, recent step-up checks, resend feature-flag enforcement, and audit-log invalidation across related workflows
 - shipper/bootstrap settings consumption now uses the typed `get_client_settings()` contract instead of raw internal setting reads, keeping client runtime behavior aligned with the controlled platform settings model
-- supporting migration and contract coverage was added in `supabase/migrations/20260320120900_seed_runtime_and_feature_flag_settings.sql`, `supabase/migrations/20260320121000_create_typed_client_settings_rpc.sql`, `supabase/migrations/20260320121100_create_admin_operational_summary_rpc.sql`, `supabase/migrations/20260320121110_create_admin_platform_settings_rpc.sql`, `supabase/migrations/20260320121120_create_admin_profile_activation_rpc.sql`, `supabase/migrations/20260320121130_create_admin_email_retry_rpc.sql`, `test/contracts/supabase/admin_operations_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
+- supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `test/contracts/supabase/admin_operations_contract_test.dart`, and `supabase/tests/runtime_security_test.sql`
 
 ## Phase 13 - Generated Documents
 
@@ -437,7 +437,7 @@ Phase 12 progress notes:
 
 Phase 13 progress notes:
 
-- generated document records now carry processing state, availability metadata, worker locks, and failure reasons through `supabase/migrations/20260320121200_track_generated_document_processing.sql`, `supabase/migrations/20260320121210_update_generated_document_record_helper.sql`, `supabase/migrations/20260320121220_add_generated_document_processing_locks.sql`, and `supabase/migrations/20260320121230_create_generated_document_processing_rpc.sql`
+- generated document records now carry processing state, availability metadata, worker locks, and failure reasons through `supabase/migrations/20260317030000_create_operational_workflows_layer.sql`
 - scheduled automation now invokes a service-role generated document worker that renders invoice and receipt PDFs from canonical booking and payout data, uploads them to the private `generated-documents` bucket, and marks records ready or failed
 - generated document completion now emits in-app notifications and queues transactional email using secure app routes instead of exposing file URLs
 - shipper payment flows now show generated document readiness clearly, block pending and failed documents from opening, and keep secure access inside the product flow
@@ -518,7 +518,7 @@ Phase 14 progress notes:
 Phase 15 progress notes:
 
 - GitHub Actions workflow scaffolding now covers Flutter quality gates, Supabase validation, and a manual staging or release-candidate verification entry point
-- release operations are now documented in `docs/13-release-operations.md`, including branch/tag conventions, versioning rules, staging gates, release-candidate checks, monitoring, and rollback expectations
+- release operations are now documented in `docs/working/release-operations.md`, including branch/tag conventions, versioning rules, staging gates, release-candidate checks, monitoring, and rollback expectations
 - Android release configuration now prefers explicit release signing credentials while still falling back to debug signing for local-only release runs until secrets are supplied
 - README and environment example files now reflect the baseline production env shape more accurately, including required push/email worker secrets and optional FlutterFire override posture
 
@@ -533,7 +533,7 @@ Phase 15 progress notes:
 
 Phase 16 progress notes:
 
-- post-launch stabilization cadence is now documented in `docs/14-post-launch-stabilization.md`, covering daily health review, weekly trend review, support/copy updates, and backlog discipline
+- post-launch stabilization cadence is now documented in `docs/working/post-launch-stabilization.md`, covering daily health review, weekly trend review, support/copy updates, and backlog discipline
 - crash reporting hooks now emit structured logger output so post-launch investigations can inspect uncaught framework and platform failures even before a third-party sink is connected
 
 ## Cross-Phase Definition Of Done

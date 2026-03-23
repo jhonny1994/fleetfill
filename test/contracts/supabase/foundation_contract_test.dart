@@ -10,14 +10,14 @@ void main() {
     setUpAll(() {
       schemaMigration =
           File(
-            'supabase/migrations/20260317143200_create_marketplace_core_tables.sql',
+            'supabase/migrations/20260317010000_create_foundation_layer.sql',
           ).readAsStringSync() +
           File(
-            'supabase/migrations/20260317143400_create_communications_and_platform_tables.sql',
+            'supabase/migrations/20260317010000_create_foundation_layer.sql',
           ).readAsStringSync();
       securityMigration = [
-        'supabase/migrations/20260317150000_create_runtime_support_tables.sql',
-        'supabase/migrations/20260317150500_enable_rls_and_create_table_policies.sql',
+        'supabase/migrations/20260317010000_create_foundation_layer.sql',
+        'supabase/migrations/20260317010000_create_foundation_layer.sql',
       ].map((path) => File(path).readAsStringSync()).join('\n');
     });
 
