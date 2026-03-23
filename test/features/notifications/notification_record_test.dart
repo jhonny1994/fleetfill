@@ -30,7 +30,7 @@ void main() {
         'data': {
           'booking_id': 'booking-1',
           'document_id': 'document-1',
-          'document_type': 'booking_invoice',
+          'document_type': 'payment_receipt',
         },
         'is_read': false,
         'created_at': '2026-03-20T12:00:00Z',

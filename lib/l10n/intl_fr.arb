@@ -263,7 +263,6 @@
       "documentId": {}
     }
   },
-  "generatedDocumentTypeBookingInvoice": "Facture de réservation",
   "generatedDocumentTypePaymentReceipt": "Recu de paiement",
   "generatedDocumentTypePayoutReceipt": "Recu de versement",
   "generatedDocumentStatusPendingLabel": "En generation",

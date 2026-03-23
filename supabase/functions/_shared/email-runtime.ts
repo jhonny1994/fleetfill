@@ -158,8 +158,6 @@ function payloadNumber(payload: Record<string, JsonValue>, key: string) {
 
 function arabicDocumentType(documentType: string | null) {
   switch (documentType) {
-    case 'booking_invoice':
-      return 'فاتورة الحجز'
     case 'payment_receipt':
       return 'إيصال الدفع'
     case 'payout_receipt':
