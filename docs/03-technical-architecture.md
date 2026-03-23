@@ -539,7 +539,6 @@ System-generated PDFs should be produced from canonical booking and ledger data,
 
 Initial generated document scope:
 
-- booking invoice
 - payment receipt where applicable
 - payout receipt or payout statement where applicable
 

@@ -1577,16 +1577,6 @@ class S {
     );
   }
 
-  /// `Booking invoice`
-  String get generatedDocumentTypeBookingInvoice {
-    return Intl.message(
-      'Booking invoice',
-      name: 'generatedDocumentTypeBookingInvoice',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Payment receipt`
   String get generatedDocumentTypePaymentReceipt {
     return Intl.message(

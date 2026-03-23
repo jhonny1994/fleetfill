@@ -29,8 +29,8 @@ void main() {
       final document = GeneratedDocumentRecord.fromJson({
         'id': 'doc-2',
         'booking_id': 'booking-1',
-        'document_type': 'booking_invoice',
-        'storage_path': 'generated/invoice.pdf',
+        'document_type': 'payout_receipt',
+        'storage_path': 'generated/payout-receipt.pdf',
         'status': 'failed',
       });
 

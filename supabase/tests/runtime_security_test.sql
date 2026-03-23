@@ -817,8 +817,8 @@ select is(
     $$
       select public.create_generated_document_record(
         '50000000-0000-4000-8000-000000000002',
-        'booking_invoice',
-        'generated/50000000-0000-4000-8000-000000000002/booking-invoice-v1.pdf'
+        'payment_receipt',
+        'generated/50000000-0000-4000-8000-000000000002/payment-receipt-v1.pdf'
       )
     $$
   ),

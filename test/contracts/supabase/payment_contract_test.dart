@@ -84,6 +84,18 @@ void main() {
         ),
         isTrue,
       );
+      expect(
+        generatedDocumentHelperMigration.contains("'payment_receipt'"),
+        isTrue,
+      );
+      expect(
+        generatedDocumentHelperMigration.contains("'payout_receipt'"),
+        isTrue,
+      );
+      expect(
+        generatedDocumentHelperMigration.contains("'booking_invoice'"),
+        isFalse,
+      );
     });
   });
 }

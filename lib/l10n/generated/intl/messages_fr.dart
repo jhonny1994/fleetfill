@@ -810,9 +810,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "generatedDocumentStatusPendingLabel": MessageLookupByLibrary.simpleMessage(
       "En generation",
     ),
-    "generatedDocumentTypeBookingInvoice": MessageLookupByLibrary.simpleMessage(
-      "Facture de réservation",
-    ),
     "generatedDocumentTypePaymentReceipt": MessageLookupByLibrary.simpleMessage(
       "Recu de paiement",
     ),

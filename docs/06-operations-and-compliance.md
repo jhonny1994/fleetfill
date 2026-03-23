@@ -205,11 +205,10 @@ The following actions must always create admin audit records:
 
 ## 10. Generated Documents
 
-FleetFill should generate operational PDFs from canonical system data.
+FleetFill should generate official financial PDFs from canonical system data.
 
 Initial scope:
 
-- booking invoice
 - payment receipt where applicable
 - payout receipt or payout statement where applicable
 

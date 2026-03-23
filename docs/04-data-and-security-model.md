@@ -419,7 +419,6 @@ Recommended fields:
 
 Recommended `document_type` values include:
 
-- `booking_invoice`
 - `payment_receipt`
 - `payout_receipt`
 
