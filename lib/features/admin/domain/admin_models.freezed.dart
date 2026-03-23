@@ -1386,7 +1386,7 @@ as List<EmailDeliveryLogRecord>,
 /// @nodoc
 mixin _$EmailDeliveryLogRecord {
 
- String get id; String? get profileId; String? get bookingId; String get templateKey; String get locale; String get recipientEmail; String? get subjectPreview; String? get providerMessageId; String get status; String get provider; int get attemptCount; DateTime? get lastAttemptAt; DateTime? get nextRetryAt; DateTime? get lastErrorAt; String? get errorCode; String? get errorMessage; Map<String, dynamic> get payloadSnapshot; DateTime? get createdAt; DateTime? get updatedAt;
+ String get id; String? get profileId; String? get bookingId; String get templateKey; String? get templateLanguageCode; String get locale; String get recipientEmail; String? get subjectPreview; String? get providerMessageId; String get status; String get provider; int get attemptCount; DateTime? get lastAttemptAt; DateTime? get nextRetryAt; DateTime? get lastErrorAt; String? get errorCode; String? get errorMessage; Map<String, dynamic> get payloadSnapshot; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of EmailDeliveryLogRecord
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1397,16 +1397,16 @@ $EmailDeliveryLogRecordCopyWith<EmailDeliveryLogRecord> get copyWith => _$EmailD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmailDeliveryLogRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.profileId, profileId) || other.profileId == profileId)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.templateKey, templateKey) || other.templateKey == templateKey)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.recipientEmail, recipientEmail) || other.recipientEmail == recipientEmail)&&(identical(other.subjectPreview, subjectPreview) || other.subjectPreview == subjectPreview)&&(identical(other.providerMessageId, providerMessageId) || other.providerMessageId == providerMessageId)&&(identical(other.status, status) || other.status == status)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.attemptCount, attemptCount) || other.attemptCount == attemptCount)&&(identical(other.lastAttemptAt, lastAttemptAt) || other.lastAttemptAt == lastAttemptAt)&&(identical(other.nextRetryAt, nextRetryAt) || other.nextRetryAt == nextRetryAt)&&(identical(other.lastErrorAt, lastErrorAt) || other.lastErrorAt == lastErrorAt)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&const DeepCollectionEquality().equals(other.payloadSnapshot, payloadSnapshot)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmailDeliveryLogRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.profileId, profileId) || other.profileId == profileId)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.templateKey, templateKey) || other.templateKey == templateKey)&&(identical(other.templateLanguageCode, templateLanguageCode) || other.templateLanguageCode == templateLanguageCode)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.recipientEmail, recipientEmail) || other.recipientEmail == recipientEmail)&&(identical(other.subjectPreview, subjectPreview) || other.subjectPreview == subjectPreview)&&(identical(other.providerMessageId, providerMessageId) || other.providerMessageId == providerMessageId)&&(identical(other.status, status) || other.status == status)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.attemptCount, attemptCount) || other.attemptCount == attemptCount)&&(identical(other.lastAttemptAt, lastAttemptAt) || other.lastAttemptAt == lastAttemptAt)&&(identical(other.nextRetryAt, nextRetryAt) || other.nextRetryAt == nextRetryAt)&&(identical(other.lastErrorAt, lastErrorAt) || other.lastErrorAt == lastErrorAt)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&const DeepCollectionEquality().equals(other.payloadSnapshot, payloadSnapshot)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,profileId,bookingId,templateKey,locale,recipientEmail,subjectPreview,providerMessageId,status,provider,attemptCount,lastAttemptAt,nextRetryAt,lastErrorAt,errorCode,errorMessage,const DeepCollectionEquality().hash(payloadSnapshot),createdAt,updatedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,profileId,bookingId,templateKey,templateLanguageCode,locale,recipientEmail,subjectPreview,providerMessageId,status,provider,attemptCount,lastAttemptAt,nextRetryAt,lastErrorAt,errorCode,errorMessage,const DeepCollectionEquality().hash(payloadSnapshot),createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'EmailDeliveryLogRecord(id: $id, profileId: $profileId, bookingId: $bookingId, templateKey: $templateKey, locale: $locale, recipientEmail: $recipientEmail, subjectPreview: $subjectPreview, providerMessageId: $providerMessageId, status: $status, provider: $provider, attemptCount: $attemptCount, lastAttemptAt: $lastAttemptAt, nextRetryAt: $nextRetryAt, lastErrorAt: $lastErrorAt, errorCode: $errorCode, errorMessage: $errorMessage, payloadSnapshot: $payloadSnapshot, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'EmailDeliveryLogRecord(id: $id, profileId: $profileId, bookingId: $bookingId, templateKey: $templateKey, templateLanguageCode: $templateLanguageCode, locale: $locale, recipientEmail: $recipientEmail, subjectPreview: $subjectPreview, providerMessageId: $providerMessageId, status: $status, provider: $provider, attemptCount: $attemptCount, lastAttemptAt: $lastAttemptAt, nextRetryAt: $nextRetryAt, lastErrorAt: $lastErrorAt, errorCode: $errorCode, errorMessage: $errorMessage, payloadSnapshot: $payloadSnapshot, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -1417,7 +1417,7 @@ abstract mixin class $EmailDeliveryLogRecordCopyWith<$Res>  {
   factory $EmailDeliveryLogRecordCopyWith(EmailDeliveryLogRecord value, $Res Function(EmailDeliveryLogRecord) _then) = _$EmailDeliveryLogRecordCopyWithImpl;
 @useResult
 $Res call({
- String id, String? profileId, String? bookingId, String templateKey, String locale, String recipientEmail, String? subjectPreview, String? providerMessageId, String status, String provider, int attemptCount, DateTime? lastAttemptAt, DateTime? nextRetryAt, DateTime? lastErrorAt, String? errorCode, String? errorMessage, Map<String, dynamic> payloadSnapshot, DateTime? createdAt, DateTime? updatedAt
+ String id, String? profileId, String? bookingId, String templateKey, String? templateLanguageCode, String locale, String recipientEmail, String? subjectPreview, String? providerMessageId, String status, String provider, int attemptCount, DateTime? lastAttemptAt, DateTime? nextRetryAt, DateTime? lastErrorAt, String? errorCode, String? errorMessage, Map<String, dynamic> payloadSnapshot, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -1434,13 +1434,14 @@ class _$EmailDeliveryLogRecordCopyWithImpl<$Res>
 
 /// Create a copy of EmailDeliveryLogRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? profileId = freezed,Object? bookingId = freezed,Object? templateKey = null,Object? locale = null,Object? recipientEmail = null,Object? subjectPreview = freezed,Object? providerMessageId = freezed,Object? status = null,Object? provider = null,Object? attemptCount = null,Object? lastAttemptAt = freezed,Object? nextRetryAt = freezed,Object? lastErrorAt = freezed,Object? errorCode = freezed,Object? errorMessage = freezed,Object? payloadSnapshot = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? profileId = freezed,Object? bookingId = freezed,Object? templateKey = null,Object? templateLanguageCode = freezed,Object? locale = null,Object? recipientEmail = null,Object? subjectPreview = freezed,Object? providerMessageId = freezed,Object? status = null,Object? provider = null,Object? attemptCount = null,Object? lastAttemptAt = freezed,Object? nextRetryAt = freezed,Object? lastErrorAt = freezed,Object? errorCode = freezed,Object? errorMessage = freezed,Object? payloadSnapshot = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,profileId: freezed == profileId ? _self.profileId : profileId // ignore: cast_nullable_to_non_nullable
 as String?,bookingId: freezed == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as String?,templateKey: null == templateKey ? _self.templateKey : templateKey // ignore: cast_nullable_to_non_nullable
-as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,templateLanguageCode: freezed == templateLanguageCode ? _self.templateLanguageCode : templateLanguageCode // ignore: cast_nullable_to_non_nullable
+as String?,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as String,recipientEmail: null == recipientEmail ? _self.recipientEmail : recipientEmail // ignore: cast_nullable_to_non_nullable
 as String,subjectPreview: freezed == subjectPreview ? _self.subjectPreview : subjectPreview // ignore: cast_nullable_to_non_nullable
 as String?,providerMessageId: freezed == providerMessageId ? _self.providerMessageId : providerMessageId // ignore: cast_nullable_to_non_nullable
@@ -1540,10 +1541,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? profileId,  String? bookingId,  String templateKey,  String locale,  String recipientEmail,  String? subjectPreview,  String? providerMessageId,  String status,  String provider,  int attemptCount,  DateTime? lastAttemptAt,  DateTime? nextRetryAt,  DateTime? lastErrorAt,  String? errorCode,  String? errorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? profileId,  String? bookingId,  String templateKey,  String? templateLanguageCode,  String locale,  String recipientEmail,  String? subjectPreview,  String? providerMessageId,  String status,  String provider,  int attemptCount,  DateTime? lastAttemptAt,  DateTime? nextRetryAt,  DateTime? lastErrorAt,  String? errorCode,  String? errorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EmailDeliveryLogRecord() when $default != null:
-return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that.locale,_that.recipientEmail,_that.subjectPreview,_that.providerMessageId,_that.status,_that.provider,_that.attemptCount,_that.lastAttemptAt,_that.nextRetryAt,_that.lastErrorAt,_that.errorCode,_that.errorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that.templateLanguageCode,_that.locale,_that.recipientEmail,_that.subjectPreview,_that.providerMessageId,_that.status,_that.provider,_that.attemptCount,_that.lastAttemptAt,_that.nextRetryAt,_that.lastErrorAt,_that.errorCode,_that.errorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -1561,10 +1562,10 @@ return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? profileId,  String? bookingId,  String templateKey,  String locale,  String recipientEmail,  String? subjectPreview,  String? providerMessageId,  String status,  String provider,  int attemptCount,  DateTime? lastAttemptAt,  DateTime? nextRetryAt,  DateTime? lastErrorAt,  String? errorCode,  String? errorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? profileId,  String? bookingId,  String templateKey,  String? templateLanguageCode,  String locale,  String recipientEmail,  String? subjectPreview,  String? providerMessageId,  String status,  String provider,  int attemptCount,  DateTime? lastAttemptAt,  DateTime? nextRetryAt,  DateTime? lastErrorAt,  String? errorCode,  String? errorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _EmailDeliveryLogRecord():
-return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that.locale,_that.recipientEmail,_that.subjectPreview,_that.providerMessageId,_that.status,_that.provider,_that.attemptCount,_that.lastAttemptAt,_that.nextRetryAt,_that.lastErrorAt,_that.errorCode,_that.errorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that.templateLanguageCode,_that.locale,_that.recipientEmail,_that.subjectPreview,_that.providerMessageId,_that.status,_that.provider,_that.attemptCount,_that.lastAttemptAt,_that.nextRetryAt,_that.lastErrorAt,_that.errorCode,_that.errorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1581,10 +1582,10 @@ return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? profileId,  String? bookingId,  String templateKey,  String locale,  String recipientEmail,  String? subjectPreview,  String? providerMessageId,  String status,  String provider,  int attemptCount,  DateTime? lastAttemptAt,  DateTime? nextRetryAt,  DateTime? lastErrorAt,  String? errorCode,  String? errorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? profileId,  String? bookingId,  String templateKey,  String? templateLanguageCode,  String locale,  String recipientEmail,  String? subjectPreview,  String? providerMessageId,  String status,  String provider,  int attemptCount,  DateTime? lastAttemptAt,  DateTime? nextRetryAt,  DateTime? lastErrorAt,  String? errorCode,  String? errorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _EmailDeliveryLogRecord() when $default != null:
-return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that.locale,_that.recipientEmail,_that.subjectPreview,_that.providerMessageId,_that.status,_that.provider,_that.attemptCount,_that.lastAttemptAt,_that.nextRetryAt,_that.lastErrorAt,_that.errorCode,_that.errorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that.templateLanguageCode,_that.locale,_that.recipientEmail,_that.subjectPreview,_that.providerMessageId,_that.status,_that.provider,_that.attemptCount,_that.lastAttemptAt,_that.nextRetryAt,_that.lastErrorAt,_that.errorCode,_that.errorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -1596,13 +1597,14 @@ return $default(_that.id,_that.profileId,_that.bookingId,_that.templateKey,_that
 
 
 class _EmailDeliveryLogRecord extends EmailDeliveryLogRecord {
-  const _EmailDeliveryLogRecord({required this.id, required this.profileId, required this.bookingId, required this.templateKey, required this.locale, required this.recipientEmail, required this.subjectPreview, required this.providerMessageId, required this.status, required this.provider, required this.attemptCount, required this.lastAttemptAt, required this.nextRetryAt, required this.lastErrorAt, required this.errorCode, required this.errorMessage, required final  Map<String, dynamic> payloadSnapshot, required this.createdAt, required this.updatedAt}): _payloadSnapshot = payloadSnapshot,super._();
+  const _EmailDeliveryLogRecord({required this.id, required this.profileId, required this.bookingId, required this.templateKey, required this.templateLanguageCode, required this.locale, required this.recipientEmail, required this.subjectPreview, required this.providerMessageId, required this.status, required this.provider, required this.attemptCount, required this.lastAttemptAt, required this.nextRetryAt, required this.lastErrorAt, required this.errorCode, required this.errorMessage, required final  Map<String, dynamic> payloadSnapshot, required this.createdAt, required this.updatedAt}): _payloadSnapshot = payloadSnapshot,super._();
   
 
 @override final  String id;
 @override final  String? profileId;
 @override final  String? bookingId;
 @override final  String templateKey;
+@override final  String? templateLanguageCode;
 @override final  String locale;
 @override final  String recipientEmail;
 @override final  String? subjectPreview;
@@ -1635,16 +1637,16 @@ _$EmailDeliveryLogRecordCopyWith<_EmailDeliveryLogRecord> get copyWith => __$Ema
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmailDeliveryLogRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.profileId, profileId) || other.profileId == profileId)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.templateKey, templateKey) || other.templateKey == templateKey)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.recipientEmail, recipientEmail) || other.recipientEmail == recipientEmail)&&(identical(other.subjectPreview, subjectPreview) || other.subjectPreview == subjectPreview)&&(identical(other.providerMessageId, providerMessageId) || other.providerMessageId == providerMessageId)&&(identical(other.status, status) || other.status == status)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.attemptCount, attemptCount) || other.attemptCount == attemptCount)&&(identical(other.lastAttemptAt, lastAttemptAt) || other.lastAttemptAt == lastAttemptAt)&&(identical(other.nextRetryAt, nextRetryAt) || other.nextRetryAt == nextRetryAt)&&(identical(other.lastErrorAt, lastErrorAt) || other.lastErrorAt == lastErrorAt)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&const DeepCollectionEquality().equals(other._payloadSnapshot, _payloadSnapshot)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmailDeliveryLogRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.profileId, profileId) || other.profileId == profileId)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.templateKey, templateKey) || other.templateKey == templateKey)&&(identical(other.templateLanguageCode, templateLanguageCode) || other.templateLanguageCode == templateLanguageCode)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.recipientEmail, recipientEmail) || other.recipientEmail == recipientEmail)&&(identical(other.subjectPreview, subjectPreview) || other.subjectPreview == subjectPreview)&&(identical(other.providerMessageId, providerMessageId) || other.providerMessageId == providerMessageId)&&(identical(other.status, status) || other.status == status)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.attemptCount, attemptCount) || other.attemptCount == attemptCount)&&(identical(other.lastAttemptAt, lastAttemptAt) || other.lastAttemptAt == lastAttemptAt)&&(identical(other.nextRetryAt, nextRetryAt) || other.nextRetryAt == nextRetryAt)&&(identical(other.lastErrorAt, lastErrorAt) || other.lastErrorAt == lastErrorAt)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&const DeepCollectionEquality().equals(other._payloadSnapshot, _payloadSnapshot)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,profileId,bookingId,templateKey,locale,recipientEmail,subjectPreview,providerMessageId,status,provider,attemptCount,lastAttemptAt,nextRetryAt,lastErrorAt,errorCode,errorMessage,const DeepCollectionEquality().hash(_payloadSnapshot),createdAt,updatedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,profileId,bookingId,templateKey,templateLanguageCode,locale,recipientEmail,subjectPreview,providerMessageId,status,provider,attemptCount,lastAttemptAt,nextRetryAt,lastErrorAt,errorCode,errorMessage,const DeepCollectionEquality().hash(_payloadSnapshot),createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'EmailDeliveryLogRecord(id: $id, profileId: $profileId, bookingId: $bookingId, templateKey: $templateKey, locale: $locale, recipientEmail: $recipientEmail, subjectPreview: $subjectPreview, providerMessageId: $providerMessageId, status: $status, provider: $provider, attemptCount: $attemptCount, lastAttemptAt: $lastAttemptAt, nextRetryAt: $nextRetryAt, lastErrorAt: $lastErrorAt, errorCode: $errorCode, errorMessage: $errorMessage, payloadSnapshot: $payloadSnapshot, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'EmailDeliveryLogRecord(id: $id, profileId: $profileId, bookingId: $bookingId, templateKey: $templateKey, templateLanguageCode: $templateLanguageCode, locale: $locale, recipientEmail: $recipientEmail, subjectPreview: $subjectPreview, providerMessageId: $providerMessageId, status: $status, provider: $provider, attemptCount: $attemptCount, lastAttemptAt: $lastAttemptAt, nextRetryAt: $nextRetryAt, lastErrorAt: $lastErrorAt, errorCode: $errorCode, errorMessage: $errorMessage, payloadSnapshot: $payloadSnapshot, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -1655,7 +1657,7 @@ abstract mixin class _$EmailDeliveryLogRecordCopyWith<$Res> implements $EmailDel
   factory _$EmailDeliveryLogRecordCopyWith(_EmailDeliveryLogRecord value, $Res Function(_EmailDeliveryLogRecord) _then) = __$EmailDeliveryLogRecordCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? profileId, String? bookingId, String templateKey, String locale, String recipientEmail, String? subjectPreview, String? providerMessageId, String status, String provider, int attemptCount, DateTime? lastAttemptAt, DateTime? nextRetryAt, DateTime? lastErrorAt, String? errorCode, String? errorMessage, Map<String, dynamic> payloadSnapshot, DateTime? createdAt, DateTime? updatedAt
+ String id, String? profileId, String? bookingId, String templateKey, String? templateLanguageCode, String locale, String recipientEmail, String? subjectPreview, String? providerMessageId, String status, String provider, int attemptCount, DateTime? lastAttemptAt, DateTime? nextRetryAt, DateTime? lastErrorAt, String? errorCode, String? errorMessage, Map<String, dynamic> payloadSnapshot, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -1672,13 +1674,14 @@ class __$EmailDeliveryLogRecordCopyWithImpl<$Res>
 
 /// Create a copy of EmailDeliveryLogRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? profileId = freezed,Object? bookingId = freezed,Object? templateKey = null,Object? locale = null,Object? recipientEmail = null,Object? subjectPreview = freezed,Object? providerMessageId = freezed,Object? status = null,Object? provider = null,Object? attemptCount = null,Object? lastAttemptAt = freezed,Object? nextRetryAt = freezed,Object? lastErrorAt = freezed,Object? errorCode = freezed,Object? errorMessage = freezed,Object? payloadSnapshot = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? profileId = freezed,Object? bookingId = freezed,Object? templateKey = null,Object? templateLanguageCode = freezed,Object? locale = null,Object? recipientEmail = null,Object? subjectPreview = freezed,Object? providerMessageId = freezed,Object? status = null,Object? provider = null,Object? attemptCount = null,Object? lastAttemptAt = freezed,Object? nextRetryAt = freezed,Object? lastErrorAt = freezed,Object? errorCode = freezed,Object? errorMessage = freezed,Object? payloadSnapshot = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_EmailDeliveryLogRecord(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,profileId: freezed == profileId ? _self.profileId : profileId // ignore: cast_nullable_to_non_nullable
 as String?,bookingId: freezed == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as String?,templateKey: null == templateKey ? _self.templateKey : templateKey // ignore: cast_nullable_to_non_nullable
-as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,templateLanguageCode: freezed == templateLanguageCode ? _self.templateLanguageCode : templateLanguageCode // ignore: cast_nullable_to_non_nullable
+as String?,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as String,recipientEmail: null == recipientEmail ? _self.recipientEmail : recipientEmail // ignore: cast_nullable_to_non_nullable
 as String,subjectPreview: freezed == subjectPreview ? _self.subjectPreview : subjectPreview // ignore: cast_nullable_to_non_nullable
 as String?,providerMessageId: freezed == providerMessageId ? _self.providerMessageId : providerMessageId // ignore: cast_nullable_to_non_nullable
@@ -1703,7 +1706,7 @@ as DateTime?,
 /// @nodoc
 mixin _$EmailOutboxJobRecord {
 
- String get id; String get eventKey; String get dedupeKey; String? get profileId; String? get bookingId; String get templateKey; String get locale; String get recipientEmail; String get priority; String get status; int get attemptCount; int get maxAttempts; DateTime? get availableAt; DateTime? get lockedAt; String? get lockedBy; String? get lastErrorCode; String? get lastErrorMessage; Map<String, dynamic> get payloadSnapshot; DateTime? get createdAt; DateTime? get updatedAt;
+ String get id; String get eventKey; String get dedupeKey; String? get profileId; String? get bookingId; String get templateKey; String? get templateLanguageCode; String get locale; String get recipientEmail; String get priority; String get status; int get attemptCount; int get maxAttempts; DateTime? get availableAt; DateTime? get lockedAt; String? get lockedBy; String? get lastErrorCode; String? get lastErrorMessage; Map<String, dynamic> get payloadSnapshot; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of EmailOutboxJobRecord
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1714,16 +1717,16 @@ $EmailOutboxJobRecordCopyWith<EmailOutboxJobRecord> get copyWith => _$EmailOutbo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmailOutboxJobRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.eventKey, eventKey) || other.eventKey == eventKey)&&(identical(other.dedupeKey, dedupeKey) || other.dedupeKey == dedupeKey)&&(identical(other.profileId, profileId) || other.profileId == profileId)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.templateKey, templateKey) || other.templateKey == templateKey)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.recipientEmail, recipientEmail) || other.recipientEmail == recipientEmail)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.attemptCount, attemptCount) || other.attemptCount == attemptCount)&&(identical(other.maxAttempts, maxAttempts) || other.maxAttempts == maxAttempts)&&(identical(other.availableAt, availableAt) || other.availableAt == availableAt)&&(identical(other.lockedAt, lockedAt) || other.lockedAt == lockedAt)&&(identical(other.lockedBy, lockedBy) || other.lockedBy == lockedBy)&&(identical(other.lastErrorCode, lastErrorCode) || other.lastErrorCode == lastErrorCode)&&(identical(other.lastErrorMessage, lastErrorMessage) || other.lastErrorMessage == lastErrorMessage)&&const DeepCollectionEquality().equals(other.payloadSnapshot, payloadSnapshot)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmailOutboxJobRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.eventKey, eventKey) || other.eventKey == eventKey)&&(identical(other.dedupeKey, dedupeKey) || other.dedupeKey == dedupeKey)&&(identical(other.profileId, profileId) || other.profileId == profileId)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.templateKey, templateKey) || other.templateKey == templateKey)&&(identical(other.templateLanguageCode, templateLanguageCode) || other.templateLanguageCode == templateLanguageCode)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.recipientEmail, recipientEmail) || other.recipientEmail == recipientEmail)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.attemptCount, attemptCount) || other.attemptCount == attemptCount)&&(identical(other.maxAttempts, maxAttempts) || other.maxAttempts == maxAttempts)&&(identical(other.availableAt, availableAt) || other.availableAt == availableAt)&&(identical(other.lockedAt, lockedAt) || other.lockedAt == lockedAt)&&(identical(other.lockedBy, lockedBy) || other.lockedBy == lockedBy)&&(identical(other.lastErrorCode, lastErrorCode) || other.lastErrorCode == lastErrorCode)&&(identical(other.lastErrorMessage, lastErrorMessage) || other.lastErrorMessage == lastErrorMessage)&&const DeepCollectionEquality().equals(other.payloadSnapshot, payloadSnapshot)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,eventKey,dedupeKey,profileId,bookingId,templateKey,locale,recipientEmail,priority,status,attemptCount,maxAttempts,availableAt,lockedAt,lockedBy,lastErrorCode,lastErrorMessage,const DeepCollectionEquality().hash(payloadSnapshot),createdAt,updatedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,eventKey,dedupeKey,profileId,bookingId,templateKey,templateLanguageCode,locale,recipientEmail,priority,status,attemptCount,maxAttempts,availableAt,lockedAt,lockedBy,lastErrorCode,lastErrorMessage,const DeepCollectionEquality().hash(payloadSnapshot),createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'EmailOutboxJobRecord(id: $id, eventKey: $eventKey, dedupeKey: $dedupeKey, profileId: $profileId, bookingId: $bookingId, templateKey: $templateKey, locale: $locale, recipientEmail: $recipientEmail, priority: $priority, status: $status, attemptCount: $attemptCount, maxAttempts: $maxAttempts, availableAt: $availableAt, lockedAt: $lockedAt, lockedBy: $lockedBy, lastErrorCode: $lastErrorCode, lastErrorMessage: $lastErrorMessage, payloadSnapshot: $payloadSnapshot, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'EmailOutboxJobRecord(id: $id, eventKey: $eventKey, dedupeKey: $dedupeKey, profileId: $profileId, bookingId: $bookingId, templateKey: $templateKey, templateLanguageCode: $templateLanguageCode, locale: $locale, recipientEmail: $recipientEmail, priority: $priority, status: $status, attemptCount: $attemptCount, maxAttempts: $maxAttempts, availableAt: $availableAt, lockedAt: $lockedAt, lockedBy: $lockedBy, lastErrorCode: $lastErrorCode, lastErrorMessage: $lastErrorMessage, payloadSnapshot: $payloadSnapshot, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -1734,7 +1737,7 @@ abstract mixin class $EmailOutboxJobRecordCopyWith<$Res>  {
   factory $EmailOutboxJobRecordCopyWith(EmailOutboxJobRecord value, $Res Function(EmailOutboxJobRecord) _then) = _$EmailOutboxJobRecordCopyWithImpl;
 @useResult
 $Res call({
- String id, String eventKey, String dedupeKey, String? profileId, String? bookingId, String templateKey, String locale, String recipientEmail, String priority, String status, int attemptCount, int maxAttempts, DateTime? availableAt, DateTime? lockedAt, String? lockedBy, String? lastErrorCode, String? lastErrorMessage, Map<String, dynamic> payloadSnapshot, DateTime? createdAt, DateTime? updatedAt
+ String id, String eventKey, String dedupeKey, String? profileId, String? bookingId, String templateKey, String? templateLanguageCode, String locale, String recipientEmail, String priority, String status, int attemptCount, int maxAttempts, DateTime? availableAt, DateTime? lockedAt, String? lockedBy, String? lastErrorCode, String? lastErrorMessage, Map<String, dynamic> payloadSnapshot, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -1751,7 +1754,7 @@ class _$EmailOutboxJobRecordCopyWithImpl<$Res>
 
 /// Create a copy of EmailOutboxJobRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventKey = null,Object? dedupeKey = null,Object? profileId = freezed,Object? bookingId = freezed,Object? templateKey = null,Object? locale = null,Object? recipientEmail = null,Object? priority = null,Object? status = null,Object? attemptCount = null,Object? maxAttempts = null,Object? availableAt = freezed,Object? lockedAt = freezed,Object? lockedBy = freezed,Object? lastErrorCode = freezed,Object? lastErrorMessage = freezed,Object? payloadSnapshot = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventKey = null,Object? dedupeKey = null,Object? profileId = freezed,Object? bookingId = freezed,Object? templateKey = null,Object? templateLanguageCode = freezed,Object? locale = null,Object? recipientEmail = null,Object? priority = null,Object? status = null,Object? attemptCount = null,Object? maxAttempts = null,Object? availableAt = freezed,Object? lockedAt = freezed,Object? lockedBy = freezed,Object? lastErrorCode = freezed,Object? lastErrorMessage = freezed,Object? payloadSnapshot = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventKey: null == eventKey ? _self.eventKey : eventKey // ignore: cast_nullable_to_non_nullable
@@ -1759,7 +1762,8 @@ as String,dedupeKey: null == dedupeKey ? _self.dedupeKey : dedupeKey // ignore: 
 as String,profileId: freezed == profileId ? _self.profileId : profileId // ignore: cast_nullable_to_non_nullable
 as String?,bookingId: freezed == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as String?,templateKey: null == templateKey ? _self.templateKey : templateKey // ignore: cast_nullable_to_non_nullable
-as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,templateLanguageCode: freezed == templateLanguageCode ? _self.templateLanguageCode : templateLanguageCode // ignore: cast_nullable_to_non_nullable
+as String?,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as String,recipientEmail: null == recipientEmail ? _self.recipientEmail : recipientEmail // ignore: cast_nullable_to_non_nullable
 as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -1858,10 +1862,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String eventKey,  String dedupeKey,  String? profileId,  String? bookingId,  String templateKey,  String locale,  String recipientEmail,  String priority,  String status,  int attemptCount,  int maxAttempts,  DateTime? availableAt,  DateTime? lockedAt,  String? lockedBy,  String? lastErrorCode,  String? lastErrorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String eventKey,  String dedupeKey,  String? profileId,  String? bookingId,  String templateKey,  String? templateLanguageCode,  String locale,  String recipientEmail,  String priority,  String status,  int attemptCount,  int maxAttempts,  DateTime? availableAt,  DateTime? lockedAt,  String? lockedBy,  String? lastErrorCode,  String? lastErrorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EmailOutboxJobRecord() when $default != null:
-return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bookingId,_that.templateKey,_that.locale,_that.recipientEmail,_that.priority,_that.status,_that.attemptCount,_that.maxAttempts,_that.availableAt,_that.lockedAt,_that.lockedBy,_that.lastErrorCode,_that.lastErrorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bookingId,_that.templateKey,_that.templateLanguageCode,_that.locale,_that.recipientEmail,_that.priority,_that.status,_that.attemptCount,_that.maxAttempts,_that.availableAt,_that.lockedAt,_that.lockedBy,_that.lastErrorCode,_that.lastErrorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -1879,10 +1883,10 @@ return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String eventKey,  String dedupeKey,  String? profileId,  String? bookingId,  String templateKey,  String locale,  String recipientEmail,  String priority,  String status,  int attemptCount,  int maxAttempts,  DateTime? availableAt,  DateTime? lockedAt,  String? lockedBy,  String? lastErrorCode,  String? lastErrorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String eventKey,  String dedupeKey,  String? profileId,  String? bookingId,  String templateKey,  String? templateLanguageCode,  String locale,  String recipientEmail,  String priority,  String status,  int attemptCount,  int maxAttempts,  DateTime? availableAt,  DateTime? lockedAt,  String? lockedBy,  String? lastErrorCode,  String? lastErrorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _EmailOutboxJobRecord():
-return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bookingId,_that.templateKey,_that.locale,_that.recipientEmail,_that.priority,_that.status,_that.attemptCount,_that.maxAttempts,_that.availableAt,_that.lockedAt,_that.lockedBy,_that.lastErrorCode,_that.lastErrorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bookingId,_that.templateKey,_that.templateLanguageCode,_that.locale,_that.recipientEmail,_that.priority,_that.status,_that.attemptCount,_that.maxAttempts,_that.availableAt,_that.lockedAt,_that.lockedBy,_that.lastErrorCode,_that.lastErrorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1899,10 +1903,10 @@ return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String eventKey,  String dedupeKey,  String? profileId,  String? bookingId,  String templateKey,  String locale,  String recipientEmail,  String priority,  String status,  int attemptCount,  int maxAttempts,  DateTime? availableAt,  DateTime? lockedAt,  String? lockedBy,  String? lastErrorCode,  String? lastErrorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String eventKey,  String dedupeKey,  String? profileId,  String? bookingId,  String templateKey,  String? templateLanguageCode,  String locale,  String recipientEmail,  String priority,  String status,  int attemptCount,  int maxAttempts,  DateTime? availableAt,  DateTime? lockedAt,  String? lockedBy,  String? lastErrorCode,  String? lastErrorMessage,  Map<String, dynamic> payloadSnapshot,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _EmailOutboxJobRecord() when $default != null:
-return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bookingId,_that.templateKey,_that.locale,_that.recipientEmail,_that.priority,_that.status,_that.attemptCount,_that.maxAttempts,_that.availableAt,_that.lockedAt,_that.lockedBy,_that.lastErrorCode,_that.lastErrorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bookingId,_that.templateKey,_that.templateLanguageCode,_that.locale,_that.recipientEmail,_that.priority,_that.status,_that.attemptCount,_that.maxAttempts,_that.availableAt,_that.lockedAt,_that.lockedBy,_that.lastErrorCode,_that.lastErrorMessage,_that.payloadSnapshot,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -1914,7 +1918,7 @@ return $default(_that.id,_that.eventKey,_that.dedupeKey,_that.profileId,_that.bo
 
 
 class _EmailOutboxJobRecord extends EmailOutboxJobRecord {
-  const _EmailOutboxJobRecord({required this.id, required this.eventKey, required this.dedupeKey, required this.profileId, required this.bookingId, required this.templateKey, required this.locale, required this.recipientEmail, required this.priority, required this.status, required this.attemptCount, required this.maxAttempts, required this.availableAt, required this.lockedAt, required this.lockedBy, required this.lastErrorCode, required this.lastErrorMessage, required final  Map<String, dynamic> payloadSnapshot, required this.createdAt, required this.updatedAt}): _payloadSnapshot = payloadSnapshot,super._();
+  const _EmailOutboxJobRecord({required this.id, required this.eventKey, required this.dedupeKey, required this.profileId, required this.bookingId, required this.templateKey, required this.templateLanguageCode, required this.locale, required this.recipientEmail, required this.priority, required this.status, required this.attemptCount, required this.maxAttempts, required this.availableAt, required this.lockedAt, required this.lockedBy, required this.lastErrorCode, required this.lastErrorMessage, required final  Map<String, dynamic> payloadSnapshot, required this.createdAt, required this.updatedAt}): _payloadSnapshot = payloadSnapshot,super._();
   
 
 @override final  String id;
@@ -1923,6 +1927,7 @@ class _EmailOutboxJobRecord extends EmailOutboxJobRecord {
 @override final  String? profileId;
 @override final  String? bookingId;
 @override final  String templateKey;
+@override final  String? templateLanguageCode;
 @override final  String locale;
 @override final  String recipientEmail;
 @override final  String priority;
@@ -1954,16 +1959,16 @@ _$EmailOutboxJobRecordCopyWith<_EmailOutboxJobRecord> get copyWith => __$EmailOu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmailOutboxJobRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.eventKey, eventKey) || other.eventKey == eventKey)&&(identical(other.dedupeKey, dedupeKey) || other.dedupeKey == dedupeKey)&&(identical(other.profileId, profileId) || other.profileId == profileId)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.templateKey, templateKey) || other.templateKey == templateKey)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.recipientEmail, recipientEmail) || other.recipientEmail == recipientEmail)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.attemptCount, attemptCount) || other.attemptCount == attemptCount)&&(identical(other.maxAttempts, maxAttempts) || other.maxAttempts == maxAttempts)&&(identical(other.availableAt, availableAt) || other.availableAt == availableAt)&&(identical(other.lockedAt, lockedAt) || other.lockedAt == lockedAt)&&(identical(other.lockedBy, lockedBy) || other.lockedBy == lockedBy)&&(identical(other.lastErrorCode, lastErrorCode) || other.lastErrorCode == lastErrorCode)&&(identical(other.lastErrorMessage, lastErrorMessage) || other.lastErrorMessage == lastErrorMessage)&&const DeepCollectionEquality().equals(other._payloadSnapshot, _payloadSnapshot)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmailOutboxJobRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.eventKey, eventKey) || other.eventKey == eventKey)&&(identical(other.dedupeKey, dedupeKey) || other.dedupeKey == dedupeKey)&&(identical(other.profileId, profileId) || other.profileId == profileId)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.templateKey, templateKey) || other.templateKey == templateKey)&&(identical(other.templateLanguageCode, templateLanguageCode) || other.templateLanguageCode == templateLanguageCode)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.recipientEmail, recipientEmail) || other.recipientEmail == recipientEmail)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.attemptCount, attemptCount) || other.attemptCount == attemptCount)&&(identical(other.maxAttempts, maxAttempts) || other.maxAttempts == maxAttempts)&&(identical(other.availableAt, availableAt) || other.availableAt == availableAt)&&(identical(other.lockedAt, lockedAt) || other.lockedAt == lockedAt)&&(identical(other.lockedBy, lockedBy) || other.lockedBy == lockedBy)&&(identical(other.lastErrorCode, lastErrorCode) || other.lastErrorCode == lastErrorCode)&&(identical(other.lastErrorMessage, lastErrorMessage) || other.lastErrorMessage == lastErrorMessage)&&const DeepCollectionEquality().equals(other._payloadSnapshot, _payloadSnapshot)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,eventKey,dedupeKey,profileId,bookingId,templateKey,locale,recipientEmail,priority,status,attemptCount,maxAttempts,availableAt,lockedAt,lockedBy,lastErrorCode,lastErrorMessage,const DeepCollectionEquality().hash(_payloadSnapshot),createdAt,updatedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,eventKey,dedupeKey,profileId,bookingId,templateKey,templateLanguageCode,locale,recipientEmail,priority,status,attemptCount,maxAttempts,availableAt,lockedAt,lockedBy,lastErrorCode,lastErrorMessage,const DeepCollectionEquality().hash(_payloadSnapshot),createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'EmailOutboxJobRecord(id: $id, eventKey: $eventKey, dedupeKey: $dedupeKey, profileId: $profileId, bookingId: $bookingId, templateKey: $templateKey, locale: $locale, recipientEmail: $recipientEmail, priority: $priority, status: $status, attemptCount: $attemptCount, maxAttempts: $maxAttempts, availableAt: $availableAt, lockedAt: $lockedAt, lockedBy: $lockedBy, lastErrorCode: $lastErrorCode, lastErrorMessage: $lastErrorMessage, payloadSnapshot: $payloadSnapshot, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'EmailOutboxJobRecord(id: $id, eventKey: $eventKey, dedupeKey: $dedupeKey, profileId: $profileId, bookingId: $bookingId, templateKey: $templateKey, templateLanguageCode: $templateLanguageCode, locale: $locale, recipientEmail: $recipientEmail, priority: $priority, status: $status, attemptCount: $attemptCount, maxAttempts: $maxAttempts, availableAt: $availableAt, lockedAt: $lockedAt, lockedBy: $lockedBy, lastErrorCode: $lastErrorCode, lastErrorMessage: $lastErrorMessage, payloadSnapshot: $payloadSnapshot, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -1974,7 +1979,7 @@ abstract mixin class _$EmailOutboxJobRecordCopyWith<$Res> implements $EmailOutbo
   factory _$EmailOutboxJobRecordCopyWith(_EmailOutboxJobRecord value, $Res Function(_EmailOutboxJobRecord) _then) = __$EmailOutboxJobRecordCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String eventKey, String dedupeKey, String? profileId, String? bookingId, String templateKey, String locale, String recipientEmail, String priority, String status, int attemptCount, int maxAttempts, DateTime? availableAt, DateTime? lockedAt, String? lockedBy, String? lastErrorCode, String? lastErrorMessage, Map<String, dynamic> payloadSnapshot, DateTime? createdAt, DateTime? updatedAt
+ String id, String eventKey, String dedupeKey, String? profileId, String? bookingId, String templateKey, String? templateLanguageCode, String locale, String recipientEmail, String priority, String status, int attemptCount, int maxAttempts, DateTime? availableAt, DateTime? lockedAt, String? lockedBy, String? lastErrorCode, String? lastErrorMessage, Map<String, dynamic> payloadSnapshot, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -1991,7 +1996,7 @@ class __$EmailOutboxJobRecordCopyWithImpl<$Res>
 
 /// Create a copy of EmailOutboxJobRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventKey = null,Object? dedupeKey = null,Object? profileId = freezed,Object? bookingId = freezed,Object? templateKey = null,Object? locale = null,Object? recipientEmail = null,Object? priority = null,Object? status = null,Object? attemptCount = null,Object? maxAttempts = null,Object? availableAt = freezed,Object? lockedAt = freezed,Object? lockedBy = freezed,Object? lastErrorCode = freezed,Object? lastErrorMessage = freezed,Object? payloadSnapshot = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? eventKey = null,Object? dedupeKey = null,Object? profileId = freezed,Object? bookingId = freezed,Object? templateKey = null,Object? templateLanguageCode = freezed,Object? locale = null,Object? recipientEmail = null,Object? priority = null,Object? status = null,Object? attemptCount = null,Object? maxAttempts = null,Object? availableAt = freezed,Object? lockedAt = freezed,Object? lockedBy = freezed,Object? lastErrorCode = freezed,Object? lastErrorMessage = freezed,Object? payloadSnapshot = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_EmailOutboxJobRecord(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventKey: null == eventKey ? _self.eventKey : eventKey // ignore: cast_nullable_to_non_nullable
@@ -1999,7 +2004,8 @@ as String,dedupeKey: null == dedupeKey ? _self.dedupeKey : dedupeKey // ignore: 
 as String,profileId: freezed == profileId ? _self.profileId : profileId // ignore: cast_nullable_to_non_nullable
 as String?,bookingId: freezed == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as String?,templateKey: null == templateKey ? _self.templateKey : templateKey // ignore: cast_nullable_to_non_nullable
-as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
+as String,templateLanguageCode: freezed == templateLanguageCode ? _self.templateLanguageCode : templateLanguageCode // ignore: cast_nullable_to_non_nullable
+as String?,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as String,recipientEmail: null == recipientEmail ? _self.recipientEmail : recipientEmail // ignore: cast_nullable_to_non_nullable
 as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable

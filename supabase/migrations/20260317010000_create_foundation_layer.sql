@@ -102,6 +102,7 @@ do $$ begin
     'delivered',
     'opened',
     'clicked',
+    'render_failed',
     'soft_failed',
     'hard_failed',
     'bounced',
@@ -462,6 +463,7 @@ create table if not exists public.email_delivery_logs (
   profile_id uuid references public.profiles (id) on delete set null,
   booking_id uuid references public.bookings (id) on delete set null,
   template_key text not null,
+  template_language_code text,
   locale text not null,
   recipient_email text not null,
   subject_preview text,
@@ -486,6 +488,7 @@ create table if not exists public.email_outbox_jobs (
   profile_id uuid references public.profiles (id) on delete set null,
   booking_id uuid references public.bookings (id) on delete set null,
   template_key text not null,
+  template_language_code text,
   locale text not null,
   recipient_email text not null,
   priority text not null,
@@ -500,6 +503,25 @@ create table if not exists public.email_outbox_jobs (
   payload_snapshot jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
+);
+
+create table if not exists public.email_templates (
+  id uuid primary key default gen_random_uuid(),
+  template_key text not null,
+  language_code text not null,
+  subject_template text not null,
+  html_template text not null,
+  text_template text not null,
+  sample_payload jsonb not null default '{}'::jsonb,
+  description text,
+  is_enabled boolean not null default true,
+  updated_by uuid references public.profiles (id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint email_templates_language_code_check
+    check (language_code in ('ar', 'fr', 'en')),
+  constraint email_templates_key_language_unique
+    unique (template_key, language_code)
 );
 
 create table if not exists public.notifications (
@@ -659,6 +681,9 @@ on public.email_delivery_logs (recipient_email, template_key, status);
 create index if not exists email_outbox_jobs_status_available_at_idx
 on public.email_outbox_jobs (status, available_at);
 
+create index if not exists email_templates_lookup_idx
+on public.email_templates (template_key, language_code, is_enabled);
+
 create index if not exists notifications_profile_id_created_at_idx
 on public.notifications (profile_id, created_at desc);
 
@@ -729,6 +754,10 @@ for each row execute function public.set_updated_at();
 
 create or replace trigger email_outbox_jobs_set_updated_at
 before update on public.email_outbox_jobs
+for each row execute function public.set_updated_at();
+
+create or replace trigger email_templates_set_updated_at
+before update on public.email_templates
 for each row execute function public.set_updated_at();
 
 create or replace trigger user_devices_set_updated_at
@@ -1777,11 +1806,13 @@ begin
 
   update public.email_outbox_jobs
   set status = case
+        when lower(coalesce(p_error_code, '')) = 'render_failed' then 'dead_letter'::public.email_outbox_status
         when attempt_count + 1 >= max_attempts then 'dead_letter'::public.email_outbox_status
         else 'retry_scheduled'::public.email_outbox_status
       end,
       attempt_count = attempt_count + 1,
       available_at = case
+        when lower(coalesce(p_error_code, '')) = 'render_failed' then available_at
         when attempt_count + 1 >= max_attempts then available_at
         else now() + make_interval(secs => v_delay)
       end,
@@ -1805,7 +1836,8 @@ create or replace function public.complete_email_outbox_job(
   p_job_id uuid,
   p_provider text,
   p_provider_message_id text default null,
-  p_subject_preview text default null
+  p_subject_preview text default null,
+  p_template_language_code text default null
 )
 returns public.email_outbox_jobs
 language plpgsql
@@ -1822,6 +1854,7 @@ begin
   update public.email_outbox_jobs
   set status = 'sent_to_provider',
       attempt_count = attempt_count + 1,
+      template_language_code = coalesce(nullif(trim(p_template_language_code), ''), template_language_code),
       locked_at = null,
       locked_by = null,
       last_error_code = null,
@@ -1838,6 +1871,7 @@ begin
     profile_id,
     booking_id,
     template_key,
+    template_language_code,
     locale,
     recipient_email,
     subject_preview,
@@ -1852,6 +1886,7 @@ begin
     v_job.profile_id,
     v_job.booking_id,
     v_job.template_key,
+    coalesce(nullif(trim(p_template_language_code), ''), v_job.template_language_code),
     v_job.locale,
     v_job.recipient_email,
     p_subject_preview,
@@ -1866,6 +1901,84 @@ begin
   ;
 
   return v_job;
+end;
+$$;
+
+create or replace function public.record_email_dispatch_failure(
+  p_job_id uuid,
+  p_status public.email_delivery_status,
+  p_provider text,
+  p_subject_preview text default null,
+  p_error_code text default null,
+  p_error_message text default null,
+  p_template_language_code text default null
+)
+returns public.email_delivery_logs
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_job public.email_outbox_jobs;
+  v_result public.email_delivery_logs;
+begin
+  if not public.is_service_role() then
+    raise exception 'Email dispatch failure recording requires service role access';
+  end if;
+
+  if p_status not in ('render_failed', 'soft_failed', 'hard_failed', 'bounced', 'suppressed') then
+    raise exception 'Unsupported dispatch failure status';
+  end if;
+
+  select * into v_job
+  from public.email_outbox_jobs
+  where id = p_job_id;
+
+  if not found then
+    raise exception 'Email outbox job not found';
+  end if;
+
+  insert into public.email_delivery_logs (
+    profile_id,
+    booking_id,
+    template_key,
+    template_language_code,
+    locale,
+    recipient_email,
+    subject_preview,
+    provider_message_id,
+    status,
+    provider,
+    attempt_count,
+    last_attempt_at,
+    next_retry_at,
+    last_error_at,
+    error_code,
+    error_message,
+    payload_snapshot
+  )
+  values (
+    v_job.profile_id,
+    v_job.booking_id,
+    v_job.template_key,
+    coalesce(nullif(trim(p_template_language_code), ''), v_job.template_language_code),
+    v_job.locale,
+    v_job.recipient_email,
+    p_subject_preview,
+    null,
+    p_status,
+    left(coalesce(nullif(trim(p_provider), ''), 'runtime'), 120),
+    greatest(v_job.attempt_count + 1, 1),
+    now(),
+    case when p_status = 'soft_failed' then now() else null end,
+    now(),
+    left(coalesce(p_error_code, 'unknown_error'), 120),
+    left(coalesce(p_error_message, 'Unknown email dispatch failure'), 500),
+    v_job.payload_snapshot
+  )
+  returning * into v_result;
+
+  return v_result;
 end;
 $$;
 
@@ -1893,10 +2006,13 @@ begin
     when 'queued' then 0
     when 'sent' then 1
     when 'delivered' then 2
-    when 'soft_failed' then 3
-    when 'hard_failed' then 4
-    when 'bounced' then 5
-    when 'suppressed' then 6
+    when 'opened' then 3
+    when 'clicked' then 4
+    when 'soft_failed' then 5
+    when 'hard_failed' then 6
+    when 'bounced' then 7
+    when 'suppressed' then 8
+    when 'render_failed' then 9
     else 0
   end;
 
@@ -1904,10 +2020,13 @@ begin
     when 'queued' then 0
     when 'sent' then 1
     when 'delivered' then 2
-    when 'soft_failed' then 3
-    when 'hard_failed' then 4
-    when 'bounced' then 5
-    when 'suppressed' then 6
+    when 'opened' then 3
+    when 'clicked' then 4
+    when 'soft_failed' then 5
+    when 'hard_failed' then 6
+    when 'bounced' then 7
+    when 'suppressed' then 8
+    when 'render_failed' then 9
     else 0
   end
   into v_current_rank
@@ -1927,9 +2046,9 @@ begin
 
   update public.email_delivery_logs
   set status = p_status,
-      error_code = case when p_status in ('soft_failed', 'hard_failed', 'bounced', 'suppressed') then left(p_error_code, 120) else null end,
-      error_message = case when p_status in ('soft_failed', 'hard_failed', 'bounced', 'suppressed') then left(p_error_message, 500) else null end,
-      last_error_at = case when p_status in ('soft_failed', 'hard_failed', 'bounced', 'suppressed') then now() else last_error_at end,
+      error_code = case when p_status in ('render_failed', 'soft_failed', 'hard_failed', 'bounced', 'suppressed') then left(p_error_code, 120) else null end,
+      error_message = case when p_status in ('render_failed', 'soft_failed', 'hard_failed', 'bounced', 'suppressed') then left(p_error_message, 500) else null end,
+      last_error_at = case when p_status in ('render_failed', 'soft_failed', 'hard_failed', 'bounced', 'suppressed') then now() else last_error_at end,
       updated_at = now()
   where provider_message_id = p_provider_message_id
   returning * into v_result;
@@ -2008,6 +2127,7 @@ alter table public.payouts enable row level security;
 alter table public.generated_documents enable row level security;
 alter table public.email_delivery_logs enable row level security;
 alter table public.email_outbox_jobs enable row level security;
+alter table public.email_templates enable row level security;
 alter table public.notifications enable row level security;
 alter table public.user_devices enable row level security;
 alter table public.platform_settings enable row level security;
@@ -2310,6 +2430,11 @@ create policy email_outbox_jobs_admin_only
 on public.email_outbox_jobs for select to authenticated
 using (public.is_admin());
 
+drop policy if exists email_templates_admin_only on public.email_templates;
+create policy email_templates_admin_only
+on public.email_templates for select to authenticated
+using (public.is_admin());
+
 drop policy if exists notifications_select_owner on public.notifications;
 create policy notifications_select_owner
 on public.notifications for select to authenticated
@@ -2449,8 +2574,11 @@ grant execute on function public.claim_email_outbox_jobs(text, integer) to servi
 revoke all on function public.release_retryable_email_job(uuid, text, text, integer) from public, anon, authenticated;
 grant execute on function public.release_retryable_email_job(uuid, text, text, integer) to service_role;
 
-revoke all on function public.complete_email_outbox_job(uuid, text, text, text) from public, anon, authenticated;
-grant execute on function public.complete_email_outbox_job(uuid, text, text, text) to service_role;
+revoke all on function public.complete_email_outbox_job(uuid, text, text, text, text) from public, anon, authenticated;
+grant execute on function public.complete_email_outbox_job(uuid, text, text, text, text) to service_role;
+
+revoke all on function public.record_email_dispatch_failure(uuid, public.email_delivery_status, text, text, text, text, text) from public, anon, authenticated;
+grant execute on function public.record_email_dispatch_failure(uuid, public.email_delivery_status, text, text, text, text, text) to service_role;
 
 revoke all on function public.record_email_provider_event(text, public.email_delivery_status, text, text) from public, anon, authenticated;
 grant execute on function public.record_email_provider_event(text, public.email_delivery_status, text, text) to service_role;

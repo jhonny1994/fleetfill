@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/admin/admin.dart';
@@ -554,6 +555,9 @@ class AdminEmailLogDetailScreen extends ConsumerWidget {
               message: s.notFoundMessage,
             );
           }
+          final prettyPayload = const JsonEncoder.withIndent(
+            '  ',
+          ).convert(item.payloadSnapshot);
 
           return ListView(
             children: [
@@ -565,12 +569,62 @@ class AdminEmailLogDetailScreen extends ConsumerWidget {
                     value: _emailStatusLabel(s, item.status),
                   ),
                   ProfileSummaryRow(
-                    label: s.adminEmailSearchLabel,
+                    label: s.adminEmailTemplateKeyLabel,
                     value: item.templateKey,
+                  ),
+                  ProfileSummaryRow(
+                    label: s.adminEmailTemplateLanguageLabel,
+                    value: item.templateLanguageCode ?? '-',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.adminEmailLocaleLabel,
+                    value: item.locale,
                   ),
                   ProfileSummaryRow(
                     label: s.bookingTrackingNumberLabel,
                     value: item.bookingId ?? '-',
+                  ),
+                  ProfileSummaryRow(
+                    label: s.adminEmailProviderLabel,
+                    value: item.provider,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              if (item.subjectPreview != null && item.subjectPreview!.isNotEmpty)
+                ProfileSummaryCard(
+                  title: s.adminEmailSubjectPreviewLabel,
+                  rows: [
+                    ProfileSummaryRow(
+                      label: s.adminEmailSubjectPreviewLabel,
+                      value: item.subjectPreview!,
+                    ),
+                  ],
+                ),
+              if (item.subjectPreview != null && item.subjectPreview!.isNotEmpty)
+                const SizedBox(height: AppSpacing.md),
+              if (item.errorCode != null || item.errorMessage != null)
+                ProfileSummaryCard(
+                  title: s.adminEmailStatusDeadLetterLabel,
+                  rows: [
+                    ProfileSummaryRow(
+                      label: s.adminEmailErrorCodeLabel,
+                      value: item.errorCode ?? '-',
+                    ),
+                    ProfileSummaryRow(
+                      label: s.adminEmailErrorMessageLabel,
+                      value: item.errorMessage ?? '-',
+                    ),
+                  ],
+                ),
+              if (item.errorCode != null || item.errorMessage != null)
+                const SizedBox(height: AppSpacing.md),
+              ProfileSummaryCard(
+                title: s.adminEmailPayloadSnapshotLabel,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.adminEmailPayloadSnapshotLabel,
+                    value: prettyPayload,
                   ),
                 ],
               ),
@@ -1067,6 +1121,7 @@ class _AdminEmailQueueSectionState
               'queued',
               'sent',
               'delivered',
+              'render_failed',
               'soft_failed',
               'hard_failed',
               'bounced',
@@ -2367,6 +2422,7 @@ String _emailStatusLabel(S s, String status) {
     'queued' => s.adminEmailStatusQueuedLabel,
     'sent' => s.adminEmailStatusSentLabel,
     'delivered' => s.adminEmailStatusDeliveredLabel,
+    'render_failed' => s.adminEmailStatusRenderFailedLabel,
     'soft_failed' => s.adminEmailStatusSoftFailedLabel,
     'hard_failed' => s.adminEmailStatusHardFailedLabel,
     'bounced' => s.adminEmailStatusBouncedLabel,
@@ -2385,6 +2441,8 @@ bool _canResendDeadLetter(EmailOutboxJobRecord job) {
   return !errorCode.contains('bounce') &&
       !errorCode.contains('invalid') &&
       !errorCode.contains('suppress') &&
+      !errorCode.contains('render') &&
+      !errorCode.contains('template') &&
       !errorCode.contains('hard');
 }
 
@@ -2393,6 +2451,7 @@ AppStatusTone _emailStatusTone(String status) {
     'delivered' => AppStatusTone.success,
     'queued' || 'sent' => AppStatusTone.info,
     'soft_failed' => AppStatusTone.warning,
+    'render_failed' => AppStatusTone.danger,
     'hard_failed' ||
     'bounced' ||
     'suppressed' ||

@@ -224,14 +224,16 @@ Current baseline:
 - a transactional email provider adapter is the current provider path
 - FleetFill uses a durable outbox plus worker model, then maps provider send and webhook payloads into internal delivery states
 - provider integration stays behind a small adapter boundary so the queue, retry, dedupe, and admin monitoring model remain stable if the provider changes later
+- canonical email copy now lives in the DB-owned `email_templates` registry and is rendered inside the Edge worker, not hardcoded across workflows or delegated to provider-managed template dashboards
 
 Operational rules:
 
-- email templates are mapped by logical event key, not hardcoded scattered strings
+- email templates are mapped by logical event key and resolved from the DB registry
 - template variables come from canonical server-side data
 - the current launch-phase email surface is Arabic-only by design
 - retries must be idempotent for critical lifecycle emails
 - delivery failures should be logged for support visibility
+- render failures should dead-letter immediately and surface in admin as template/runtime issues rather than provider failures
 - invoice information should render in secure HTML email content where needed rather than being attached as PDFs by default
 - app locale does not currently change transactional email language; all outbound operational email uses the canonical Arabic copy set
 
@@ -241,6 +243,8 @@ High-volume delivery rules:
 - process queued jobs in bounded batches
 - prioritize critical lifecycle emails above low-priority informational emails
 - throttle sends when provider rate limits or transient failures increase
+- recover stale worker locks before each dispatch cycle so the same automation tick can reclaim newly unstuck work
+- use bounded exponential retry delay for transient provider failures
 - move repeatedly failing jobs to a dead-letter state for admin review instead of retrying forever
 
 Backend load-handling rules:
@@ -249,6 +253,7 @@ Backend load-handling rules:
 - commit the business transaction first, then let workers drain the outbox asynchronously
 - keep worker concurrency configurable so operations can scale up or scale down without code changes
 - define separate throughput budgets for critical and non-critical email classes
+- isolate scheduled maintenance tasks so one worker or expiry failure does not stop unrelated queue recovery or dispatch work
 - monitor backlog age, queue depth, send rate, error rate, and dead-letter count as the main health signals
 
 Current deployment posture:
@@ -307,7 +312,9 @@ Recommended admin capabilities:
 
 - filter email logs by booking, user, template key, locale, provider status, and date range
 - view latest delivery state and retry history
+- view resolved template language and subject preview
 - inspect safe payload snapshot data used for rendering
+- distinguish provider failures from render/template failures
 - identify bounced, suppressed, and repeatedly failing addresses
 - manually trigger a resend only where business-safe and idempotent
 - inspect dead-letter queue items and terminal failures

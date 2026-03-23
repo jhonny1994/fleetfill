@@ -1,6 +1,6 @@
 begin;
 
-select plan(17);
+select plan(23);
 
 create or replace function pg_temp.set_claims(
   p_user_id uuid,
@@ -99,6 +99,28 @@ values
     true,
     'verified'
   );
+
+select ok(
+  exists(
+    select 1
+    from public.email_templates
+    where template_key = 'booking_confirmed'
+      and language_code = 'ar'
+      and is_enabled = true
+  ),
+  'Arabic booking confirmation template exists in the canonical registry'
+);
+
+select ok(
+  exists(
+    select 1
+    from public.email_templates
+    where template_key = 'support_acknowledgement'
+      and language_code = 'ar'
+      and is_enabled = true
+  ),
+  'Arabic support acknowledgement template exists in the canonical registry'
+);
 
 insert into public.user_devices (
   profile_id,
@@ -232,6 +254,19 @@ values
     'dead_letter',
     now(),
     '{}'::jsonb
+  ),
+  (
+    'a1000000-0000-4000-8000-000000000009',
+    'render_failure_target',
+    'render-failure-target',
+    '12000000-0000-4000-8000-000000000001',
+    'booking_confirmed',
+    'en',
+    'mail-shipper@example.com',
+    'normal',
+    'processing',
+    now(),
+    '{"booking_reference":"FF-1001"}'::jsonb
   );
 
 update public.email_outbox_jobs
@@ -260,6 +295,13 @@ where id = 'a1000000-0000-4000-8000-000000000007';
 update public.email_outbox_jobs
 set last_error_code = 'timeout'
 where id = 'a1000000-0000-4000-8000-000000000008';
+
+update public.email_outbox_jobs
+set attempt_count = 1,
+    max_attempts = 5,
+    locked_at = now(),
+    locked_by = 'worker-render'
+where id = 'a1000000-0000-4000-8000-000000000009';
 
 insert into public.email_delivery_logs (
   id,
@@ -384,7 +426,8 @@ select is(
       'a1000000-0000-4000-8000-000000000001',
       'resend',
       'provider-msg-1',
-      'Runtime subject'
+      'Runtime subject',
+      'ar'
     )
   ),
   'sent_to_provider',
@@ -401,6 +444,18 @@ select is(
   ),
   'sent',
   'complete_email_outbox_job creates an email delivery log entry'
+);
+
+select is(
+  (
+    select template_language_code
+    from public.email_delivery_logs
+    where provider_message_id = 'provider-msg-1'
+    order by created_at desc, id desc
+    limit 1
+  ),
+  'ar',
+  'complete_email_outbox_job stores the resolved template language on the delivery log'
 );
 
 select is(
@@ -447,6 +502,50 @@ select is(
   ),
   'dead_letter',
   'retry scheduling dead-letters jobs that exhaust max attempts'
+);
+
+select is(
+  (
+    select status::text
+    from public.release_retryable_email_job(
+      'a1000000-0000-4000-8000-000000000009',
+      'render_failed',
+      'Missing placeholder value',
+      120
+    )
+  ),
+  'dead_letter',
+  'render failures move jobs directly to dead_letter'
+);
+
+select is(
+  (
+    select status::text
+    from public.record_email_dispatch_failure(
+      'a1000000-0000-4000-8000-000000000009',
+      'render_failed',
+      'runtime',
+      null,
+      'render_failed',
+      'Missing placeholder value',
+      'ar'
+    )
+  ),
+  'render_failed',
+  'record_email_dispatch_failure stores render failures separately from provider failures'
+);
+
+select is(
+  (
+    select template_language_code
+    from public.email_delivery_logs
+    where template_key = 'booking_confirmed'
+      and error_code = 'render_failed'
+    order by created_at desc, id desc
+    limit 1
+  ),
+  'ar',
+  'record_email_dispatch_failure preserves template language metadata'
 );
 
 select is(
