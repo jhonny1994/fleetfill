@@ -123,6 +123,7 @@ abstract class EmailDeliveryLogRecord with _$EmailDeliveryLogRecord {
     required String? profileId,
     required String? bookingId,
     required String templateKey,
+    required String? templateLanguageCode,
     required String locale,
     required String recipientEmail,
     required String? subjectPreview,
@@ -148,6 +149,8 @@ abstract class EmailDeliveryLogRecord with _$EmailDeliveryLogRecord {
       profileId: json['profile_id'] as String?,
       bookingId: json['booking_id'] as String?,
       templateKey: (json['template_key'] as String?)?.trim() ?? '',
+      templateLanguageCode:
+          (json['template_language_code'] as String?)?.trim(),
       locale: (json['locale'] as String?)?.trim() ?? 'en',
       recipientEmail: (json['recipient_email'] as String?)?.trim() ?? '',
       subjectPreview: (json['subject_preview'] as String?)?.trim(),
@@ -180,6 +183,7 @@ abstract class EmailOutboxJobRecord with _$EmailOutboxJobRecord {
     required String? profileId,
     required String? bookingId,
     required String templateKey,
+    required String? templateLanguageCode,
     required String locale,
     required String recipientEmail,
     required String priority,
@@ -206,6 +210,8 @@ abstract class EmailOutboxJobRecord with _$EmailOutboxJobRecord {
       profileId: json['profile_id'] as String?,
       bookingId: json['booking_id'] as String?,
       templateKey: (json['template_key'] as String?)?.trim() ?? '',
+      templateLanguageCode:
+          (json['template_language_code'] as String?)?.trim(),
       locale: (json['locale'] as String?)?.trim() ?? 'en',
       recipientEmail: (json['recipient_email'] as String?)?.trim() ?? '',
       priority: (json['priority'] as String?)?.trim() ?? 'normal',

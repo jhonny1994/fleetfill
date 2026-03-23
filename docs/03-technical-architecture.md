@@ -217,10 +217,10 @@ Recommended guard families:
 
 - FleetFill uses a server-controlled transactional email provider for outbound email
 - email sending is server-controlled only; the client never talks to the provider directly
-- template selection must be event-driven and locale-aware
+- template selection must be event-driven and resolved from the DB-owned `email_templates` registry
 - email content must be generated from canonical booking, profile, payout, and support data rather than ad hoc client payloads
 - authentication emails that belong to Supabase Auth may remain on Supabase-managed auth flows unless intentionally replaced later
-- sender identities and final provider template IDs can remain placeholder configuration until business email domains are finalized
+- sender identities and provider credentials remain runtime configuration, but canonical message copy lives in FleetFill data, not in provider-managed template dashboards
 - current production-grade provider path is a transactional email provider adapter through an Edge worker, not direct SMTP from the app or database
 
 ## 4. Server Control Strategy
@@ -436,9 +436,11 @@ Recommended email events:
 ### 10.2 Email Template Strategy
 
 - one logical template per event
+- one live DB template row per `template_key` and `language_code`
 - one canonical Arabic content variant per active event in the current phase
 - supported outbound transactional email language in the current phase: Arabic only
 - template variables must come from validated server-side payloads
+- the current worker resolves Arabic templates from the DB registry even when the app locale differs
 - keep email templates operational and text-first, not marketing-heavy
 - outbound transactional email currently renders Arabic regardless of app locale so operational messaging stays consistent during the current launch phase
 - invoice data should render inside the email body as structured HTML content when needed, not as an email attachment by default
@@ -454,10 +456,10 @@ Recommended send flow:
 
 1. canonical business event occurs
 2. server builds a normalized email job payload
-3. server chooses locale, template key, and recipient
-4. server calls the configured transactional email provider
-5. server stores delivery log state
-6. retry worker or scheduled job re-attempts eligible transient failures
+3. server enqueues an outbox job with recipient, locale, template key, and payload snapshot
+4. Edge worker resolves the active DB template and renders subject/text/html server-side
+5. Edge worker calls the configured transactional email provider through the provider adapter boundary
+6. server stores delivery log state and re-attempts eligible transient failures
 
 Recommended reliability rules:
 
@@ -465,6 +467,7 @@ Recommended reliability rules:
 - critical workflows should commit business state first, then enqueue or trigger email dispatch
 - email dispatch must be idempotent per event key and target recipient
 - retries should only happen for transient failures, not permanent invalid-address failures
+- render failures must be classified separately from provider failures so broken templates dead-letter immediately and remain visible to admin operations
 
 ### 10.4 High-Volume Email Strategy
 

@@ -122,6 +122,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
       "E-mails en échec",
     ),
+    "adminEmailErrorCodeLabel": MessageLookupByLibrary.simpleMessage(
+      "Code d\'erreur",
+    ),
+    "adminEmailErrorMessageLabel": MessageLookupByLibrary.simpleMessage(
+      "Message d\'erreur",
+    ),
+    "adminEmailLocaleLabel": MessageLookupByLibrary.simpleMessage(
+      "Langue demandee",
+    ),
+    "adminEmailPayloadSnapshotLabel": MessageLookupByLibrary.simpleMessage(
+      "Instantane de charge utile",
+    ),
+    "adminEmailProviderLabel": MessageLookupByLibrary.simpleMessage(
+      "Fournisseur",
+    ),
     "adminEmailQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "Aucun log e-mail ne correspond aux filtres actuels.",
     ),
@@ -156,12 +171,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminEmailStatusQueuedLabel": MessageLookupByLibrary.simpleMessage(
       "En file",
     ),
+    "adminEmailStatusRenderFailedLabel": MessageLookupByLibrary.simpleMessage(
+      "Echec de rendu",
+    ),
     "adminEmailStatusSentLabel": MessageLookupByLibrary.simpleMessage("Envoye"),
     "adminEmailStatusSoftFailedLabel": MessageLookupByLibrary.simpleMessage(
       "Échec temporaire",
     ),
     "adminEmailStatusSuppressedLabel": MessageLookupByLibrary.simpleMessage(
       "Supprime",
+    ),
+    "adminEmailSubjectPreviewLabel": MessageLookupByLibrary.simpleMessage(
+      "Apercu de l\'objet",
+    ),
+    "adminEmailTemplateKeyLabel": MessageLookupByLibrary.simpleMessage(
+      "Cle du modele",
+    ),
+    "adminEmailTemplateLanguageLabel": MessageLookupByLibrary.simpleMessage(
+      "Langue du modele",
     ),
     "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "Aucune preuve de paiement a revoir pour le moment.",

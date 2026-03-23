@@ -116,6 +116,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
       "Failed emails",
     ),
+    "adminEmailErrorCodeLabel": MessageLookupByLibrary.simpleMessage(
+      "Error code",
+    ),
+    "adminEmailErrorMessageLabel": MessageLookupByLibrary.simpleMessage(
+      "Error message",
+    ),
+    "adminEmailLocaleLabel": MessageLookupByLibrary.simpleMessage(
+      "Requested locale",
+    ),
+    "adminEmailPayloadSnapshotLabel": MessageLookupByLibrary.simpleMessage(
+      "Payload snapshot",
+    ),
+    "adminEmailProviderLabel": MessageLookupByLibrary.simpleMessage("Provider"),
     "adminEmailQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No email delivery logs match the current filters.",
     ),
@@ -150,12 +163,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminEmailStatusQueuedLabel": MessageLookupByLibrary.simpleMessage(
       "Queued",
     ),
+    "adminEmailStatusRenderFailedLabel": MessageLookupByLibrary.simpleMessage(
+      "Render failed",
+    ),
     "adminEmailStatusSentLabel": MessageLookupByLibrary.simpleMessage("Sent"),
     "adminEmailStatusSoftFailedLabel": MessageLookupByLibrary.simpleMessage(
       "Soft failed",
     ),
     "adminEmailStatusSuppressedLabel": MessageLookupByLibrary.simpleMessage(
       "Suppressed",
+    ),
+    "adminEmailSubjectPreviewLabel": MessageLookupByLibrary.simpleMessage(
+      "Subject preview",
+    ),
+    "adminEmailTemplateKeyLabel": MessageLookupByLibrary.simpleMessage(
+      "Template key",
+    ),
+    "adminEmailTemplateLanguageLabel": MessageLookupByLibrary.simpleMessage(
+      "Template language",
     ),
     "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "No payment proofs need review right now.",

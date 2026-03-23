@@ -5952,6 +5952,16 @@ class S {
     );
   }
 
+  /// `Render failed`
+  String get adminEmailStatusRenderFailedLabel {
+    return Intl.message(
+      'Render failed',
+      name: 'adminEmailStatusRenderFailedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Soft failed`
   String get adminEmailStatusSoftFailedLabel {
     return Intl.message(
@@ -5997,6 +6007,86 @@ class S {
     return Intl.message(
       'Failed',
       name: 'adminEmailStatusDeadLetterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Template key`
+  String get adminEmailTemplateKeyLabel {
+    return Intl.message(
+      'Template key',
+      name: 'adminEmailTemplateKeyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Template language`
+  String get adminEmailTemplateLanguageLabel {
+    return Intl.message(
+      'Template language',
+      name: 'adminEmailTemplateLanguageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Requested locale`
+  String get adminEmailLocaleLabel {
+    return Intl.message(
+      'Requested locale',
+      name: 'adminEmailLocaleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Provider`
+  String get adminEmailProviderLabel {
+    return Intl.message(
+      'Provider',
+      name: 'adminEmailProviderLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subject preview`
+  String get adminEmailSubjectPreviewLabel {
+    return Intl.message(
+      'Subject preview',
+      name: 'adminEmailSubjectPreviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error code`
+  String get adminEmailErrorCodeLabel {
+    return Intl.message(
+      'Error code',
+      name: 'adminEmailErrorCodeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error message`
+  String get adminEmailErrorMessageLabel {
+    return Intl.message(
+      'Error message',
+      name: 'adminEmailErrorMessageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payload snapshot`
+  String get adminEmailPayloadSnapshotLabel {
+    return Intl.message(
+      'Payload snapshot',
+      name: 'adminEmailPayloadSnapshotLabel',
       desc: '',
       args: [],
     );

@@ -1,5 +1,84 @@
 import { createServiceClient, jsonResponse, requiredEnv } from '../_shared/email-runtime.ts'
 
+type TaskResult = {
+  name: string
+  ok: boolean
+  status?: number
+  payload?: Record<string, unknown>
+  value?: number
+  error?: string
+}
+
+async function invokeWorker(
+  serviceRoleKey: string,
+  supabaseUrl: string,
+  name: string,
+  path: string,
+  body: Record<string, unknown>,
+): Promise<TaskResult> {
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/${path}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${serviceRoleKey}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+
+    let payload: Record<string, unknown> = {}
+    try {
+      payload = await response.json() as Record<string, unknown>
+    } catch (_) {
+      payload = {}
+    }
+
+    return {
+      name,
+      ok: response.ok,
+      status: response.status,
+      payload,
+      error: response.ok ? undefined : JSON.stringify(payload),
+    }
+  } catch (error) {
+    return {
+      name,
+      ok: false,
+      error: error instanceof Error ? error.message : 'Unknown worker error',
+    }
+  }
+}
+
+async function invokeRpc(
+  serviceClient: ReturnType<typeof createServiceClient>,
+  name: string,
+  rpcName: string,
+  params: Record<string, unknown>,
+): Promise<TaskResult> {
+  try {
+    const { data, error } = await serviceClient.rpc(rpcName, params)
+    if (error != null) {
+      return {
+        name,
+        ok: false,
+        error: error.message,
+      }
+    }
+
+    return {
+      name,
+      ok: true,
+      value: typeof data === 'number' ? data : Number(data ?? 0),
+    }
+  } catch (error) {
+    return {
+      name,
+      ok: false,
+      error: error instanceof Error ? error.message : 'Unknown RPC error',
+    }
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') {
     return jsonResponse({ error: 'Method not allowed' }, 405)
@@ -16,127 +95,82 @@ Deno.serve(async (req: Request) => {
 
     const serviceClient = createServiceClient()
 
-    const workerResponse = await fetch(
-      `${supabaseUrl}/functions/v1/transactional-email-dispatch-worker`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${serviceRoleKey}`,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ batch_size: 10 }),
-      },
-    )
-
-    const pushWorkerResponse = await fetch(
-      `${supabaseUrl}/functions/v1/push-dispatch-worker`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${serviceRoleKey}`,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ batch_size: 10 }),
-      },
-    )
-
-    const documentWorkerResponse = await fetch(
-      `${supabaseUrl}/functions/v1/generated-document-worker`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${serviceRoleKey}`,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ batch_size: 5 }),
-      },
-    )
-
-    let workerPayload: Record<string, unknown> = {}
-    try {
-      workerPayload = await workerResponse.json() as Record<string, unknown>
-    } catch (_) {
-      workerPayload = {}
-    }
-
-    let documentWorkerPayload: Record<string, unknown> = {}
-    try {
-      documentWorkerPayload = await documentWorkerResponse.json() as Record<
-        string,
-        unknown
-      >
-    } catch (_) {
-      documentWorkerPayload = {}
-    }
-
-    let pushWorkerPayload: Record<string, unknown> = {}
-    try {
-      pushWorkerPayload = await pushWorkerResponse.json() as Record<string, unknown>
-    } catch (_) {
-      pushWorkerPayload = {}
-    }
-
-    const { data: recoveredJobs, error: recoveryError } = await serviceClient
-      .rpc(
+    // Recover stale locks first so the same tick can reclaim newly unstuck work.
+    const taskResults = await Promise.all([
+      invokeRpc(
+        serviceClient,
+        'recover_stale_email_outbox_jobs',
         'recover_stale_email_outbox_jobs',
         { p_lock_age_seconds: 900 },
-      )
-    const {
-      data: recoveredDocumentJobs,
-      error: documentRecoveryError,
-    } = await serviceClient.rpc(
-      'recover_stale_generated_document_jobs',
-      { p_lock_age_seconds: 900 },
+      ),
+      invokeRpc(
+        serviceClient,
+        'recover_stale_generated_document_jobs',
+        'recover_stale_generated_document_jobs',
+        { p_lock_age_seconds: 900 },
+      ),
+      invokeRpc(
+        serviceClient,
+        'recover_stale_push_outbox_jobs',
+        'recover_stale_push_outbox_jobs',
+        { p_lock_age_seconds: 900 },
+      ),
+    ])
+
+    taskResults.push(
+      await invokeWorker(
+        serviceRoleKey,
+        supabaseUrl,
+        'transactional_email_dispatch_worker',
+        'transactional-email-dispatch-worker',
+        { batch_size: 10 },
+      ),
     )
-    const { data: recoveredPushJobs, error: pushRecoveryError } = await serviceClient.rpc(
-      'recover_stale_push_outbox_jobs',
-      { p_lock_age_seconds: 900 },
+    taskResults.push(
+      await invokeWorker(
+        serviceRoleKey,
+        supabaseUrl,
+        'push_dispatch_worker',
+        'push-dispatch-worker',
+        { batch_size: 10 },
+      ),
+    )
+    taskResults.push(
+      await invokeWorker(
+        serviceRoleKey,
+        supabaseUrl,
+        'generated_document_worker',
+        'generated-document-worker',
+        { batch_size: 5 },
+      ),
+    )
+    taskResults.push(
+      await invokeRpc(
+        serviceClient,
+        'expire_payment_resubmission_deadlines',
+        'expire_payment_resubmission_deadlines',
+        {},
+      ),
+    )
+    taskResults.push(
+      await invokeRpc(
+        serviceClient,
+        'auto_complete_delivered_bookings',
+        'auto_complete_delivered_bookings',
+        {},
+      ),
     )
 
-    const { data: expiredRejectedBookings, error: paymentExpiryError } = await serviceClient.rpc(
-      'expire_payment_resubmission_deadlines',
-    )
-    const { data: autoCompletedDeliveries, error: deliveryExpiryError } = await serviceClient.rpc(
-      'auto_complete_delivered_bookings',
-    )
+    const failures = taskResults.filter((task) => !task.ok)
+    const allSucceeded = failures.length === 0
 
-    if (
-      recoveryError != null || documentRecoveryError != null || pushRecoveryError != null ||
-      paymentExpiryError != null || deliveryExpiryError != null
-    ) {
-      console.error('recover_stale_email_outbox_jobs failed', recoveryError)
-      console.error(
-        'recover_stale_generated_document_jobs failed',
-        documentRecoveryError,
-      )
-      console.error(
-        'recover_stale_push_outbox_jobs failed',
-        pushRecoveryError,
-      )
-      console.error(
-        'expire_payment_resubmission_deadlines failed',
-        paymentExpiryError,
-      )
-      console.error(
-        'auto_complete_delivered_bookings failed',
-        deliveryExpiryError,
-      )
-      return jsonResponse(
-        { error: 'Failed to run scheduled maintenance' },
-        500,
-      )
-    }
-
-    return jsonResponse({
-      email_dispatch: workerPayload,
-      push_dispatch: pushWorkerPayload,
-      generated_documents: documentWorkerPayload,
-      recovered_stale_jobs: recoveredJobs ?? 0,
-      recovered_stale_generated_document_jobs: recoveredDocumentJobs ?? 0,
-      recovered_stale_push_jobs: recoveredPushJobs ?? 0,
-      delivery_grace_window_expiry: autoCompletedDeliveries ?? 0,
-      payment_resubmission_expiry: expiredRejectedBookings ?? 0,
-    })
+    return jsonResponse(
+      {
+        ok: allSucceeded,
+        tasks: taskResults,
+      },
+      allSucceeded ? 200 : 500,
+    )
   } catch (error) {
     console.error('scheduled-automation-tick failed', error)
     return jsonResponse({ error: 'Internal server error' }, 500)

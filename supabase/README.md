@@ -96,6 +96,7 @@ Database functions / RPC responsibilities:
 - `finalize_verification_document`
 - `finalize_dispute_evidence`
 - `enqueue_support_request_emails`
+- `email_templates` as the canonical transactional email content registry
 - `claim_push_outbox_jobs`
 - `complete_push_outbox_job`
 - `release_retryable_push_job`
@@ -119,8 +120,10 @@ Production-grade alignment notes:
 
 - Edge Functions should orchestrate only HTTP/integration work and call RPC for canonical mutations
 - support email queueing is server-controlled through `enqueue_support_request_emails(...)`, not direct table inserts from Edge code
+- transactional email content is DB-owned through `email_templates`; the Edge worker resolves and renders the active template before calling the provider adapter
 - generated document workers claim, complete, fail, and recover jobs through RPC instead of mutating queue state ad hoc
-- scheduled maintenance recovers email, push, and generated-document worker locks before running expiry automation
+- scheduled maintenance recovers email, push, and generated-document worker locks before dispatching workers so the same tick can reclaim newly unstuck work
+- scheduled maintenance executes recovery, dispatch, and expiry tasks independently and returns a per-task result payload for operations visibility
 
 ## Secrets Placement
 

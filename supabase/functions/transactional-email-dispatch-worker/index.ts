@@ -56,6 +56,7 @@ Deno.serve(async (req: Request) => {
             p_provider: delivery.provider,
             p_provider_message_id: delivery.providerMessageId,
             p_subject_preview: delivery.subjectPreview,
+            p_template_language_code: delivery.templateLanguageCode,
           },
         )
 
@@ -96,18 +97,23 @@ Deno.serve(async (req: Request) => {
         }
 
         const deliveryStatus = inferDeliveryStatus(errorCode)
-        if (job.attempt_count > 0 && job.payload_snapshot != null) {
-          const providerMessageId = typeof job.payload_snapshot.provider_message_id === 'string'
-            ? job.payload_snapshot.provider_message_id
-            : null
-          if (providerMessageId != null) {
-            await serviceClient.rpc('record_email_provider_event', {
-              p_provider_message_id: providerMessageId,
-              p_status: deliveryStatus,
-              p_error_code: errorCode,
-              p_error_message: errorMessage,
-            })
-          }
+        const { error: failureLogError } = await serviceClient.rpc(
+          'record_email_dispatch_failure',
+          {
+            p_job_id: job.id,
+            p_status: deliveryStatus,
+            p_provider: requiredEnv('TRANSACTIONAL_EMAIL_PROVIDER')
+              .trim()
+              .toLowerCase(),
+            p_subject_preview: null,
+            p_error_code: errorCode,
+            p_error_message: errorMessage,
+            p_template_language_code: 'ar',
+          },
+        )
+
+        if (failureLogError != null) {
+          console.error('record_email_dispatch_failure failed', failureLogError)
         }
 
         results.push({

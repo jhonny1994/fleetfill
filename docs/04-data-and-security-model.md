@@ -433,6 +433,7 @@ Recommended fields:
 - `profile_id uuid null fk -> profiles.id`
 - `booking_id uuid null fk -> bookings.id`
 - `template_key text`
+- `template_language_code text null`
 - `locale text`
 - `recipient_email text`
 - `subject_preview text null`
@@ -482,6 +483,7 @@ Recommended fields:
 - `profile_id uuid null fk -> profiles.id`
 - `booking_id uuid null fk -> bookings.id`
 - `template_key text`
+- `template_language_code text null`
 - `locale text`
 - `recipient_email text`
 - `priority text`
@@ -512,6 +514,33 @@ Rules:
 - `dedupe_key` prevents duplicate sends for the same logical email event
 - workers must claim jobs atomically
 - terminal failures move to `dead_letter` instead of infinite retry
+- render failures are terminal and should be visible separately from provider failures
+
+### 2.16b `email_templates`
+
+Purpose: DB-owned canonical transactional email content registry.
+
+Recommended fields:
+
+- `id uuid pk`
+- `template_key text`
+- `language_code text`
+- `subject_template text`
+- `html_template text`
+- `text_template text`
+- `sample_payload jsonb`
+- `description text null`
+- `is_enabled boolean default true`
+- `updated_by uuid null fk -> profiles.id`
+- `created_at timestamptz`
+- `updated_at timestamptz`
+
+Rules:
+
+- one live row per `(template_key, language_code)`
+- current active outbound language is Arabic, but the schema remains future-ready for other languages
+- templates stay provider-agnostic; no provider template IDs or vendor markup belong in this table
+- rendering happens server-side from safe payload snapshots; templates must not execute arbitrary expressions
 
 ### 2.17 `notifications`
 
