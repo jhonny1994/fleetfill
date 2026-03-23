@@ -80,7 +80,7 @@ Rules:
 - destination wilaya and commune
 - pickup date from the selected shipment
 - shipment weight
-- optional vehicle type preference
+- optional shipment volume from the selected shipment
 
 ### 4.2 Default Results Strategy
 

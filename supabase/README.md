@@ -4,69 +4,20 @@ This directory holds the FleetFill backend foundation for Supabase.
 
 ## Migrations
 
-- migration history is change-oriented, not phase-oriented
-- use `YYYYMMDDHHMMSS_<verb>_<subject>.sql`
-- keep one concern per migration where practical: schema, helpers, user RPC, privileged RPC, RLS, storage, grants, backfills
+During the current dev phase, FleetFill uses a rebaselined layer-migration posture instead of keeping a long stack of fixup migrations.
 
-Current local baseline is split into:
+Current local baseline:
 
-- `migrations/20260317143000_create_base_types_and_triggers.sql`
-- `migrations/20260317143100_create_reference_location_tables.sql`
-- `migrations/20260317143200_create_marketplace_core_tables.sql`
-- `migrations/20260317143300_create_finance_and_disputes_tables.sql`
-- `migrations/20260317143400_create_communications_and_platform_tables.sql`
-- `migrations/20260317150000_create_runtime_support_tables.sql`
-- `migrations/20260317150100_create_security_and_storage_helpers.sql`
-- `migrations/20260317150200_create_client_upload_and_finalize_rpc.sql`
-- `migrations/20260317150300_create_privileged_runtime_rpc.sql`
-- `migrations/20260317150400_create_storage_buckets.sql`
-- `migrations/20260317150500_enable_rls_and_create_table_policies.sql`
-- `migrations/20260317150600_create_storage_policies_and_security_triggers.sql`
-- `migrations/20260317150700_grant_runtime_function_access.sql`
-- `migrations/20260318130000_create_public_carrier_profile_rpc.sql`
-- `migrations/20260318170000_create_verification_effective_document_helpers.sql`
-- `migrations/20260318170100_create_verification_admin_review_actions.sql`
-- `migrations/20260318170200_create_verification_packet_approval.sql`
-- `migrations/20260319120000_add_capacity_publication_constraints.sql`
-- `migrations/20260319120100_backfill_route_revision_lane_history.sql`
-- `migrations/20260319120200_create_capacity_publication_access_helpers.sql`
-- `migrations/20260319120300_create_capacity_publication_integrity_guards.sql`
-- `migrations/20260319120400_create_capacity_publication_routes_rpc.sql`
-- `migrations/20260319120500_create_capacity_publication_oneoff_trip_rpc.sql`
-- `migrations/20260319120600_enable_capacity_publication_policies.sql`
-- `migrations/20260319120700_harden_verification_helper_access.sql`
-- `migrations/20260320120000_add_shipment_domain_constraints.sql`
-- `migrations/20260320120100_create_exact_lane_search_rpc.sql`
-- `migrations/20260320120200_create_booking_confirmation_rpc.sql`
-- `migrations/20260320120300_enforce_booking_status_transitions.sql`
-- `migrations/20260320120400_create_payment_proof_review_rpc.sql`
-- `migrations/20260320120500_create_tracking_and_delivery_rpc.sql`
-- `migrations/20260320120600_create_dispute_and_payout_rpc.sql`
-- `migrations/20260320120700_create_carrier_review_rpc.sql`
-- `migrations/20260320120710_create_notification_device_rpc.sql`
-- `migrations/20260320120720_create_transactional_email_enqueue_rpc.sql`
-- `migrations/20260320120800_harden_notification_device_rules.sql`
-- `migrations/20260320120810_harden_email_delivery_rules.sql`
-- `migrations/20260320120820_create_support_request_email_rpc.sql`
-- `migrations/20260320120825_add_dispute_evidence_support.sql`
-- `migrations/20260320120830_create_push_notification_runtime.sql`
-- `migrations/20260320120900_seed_runtime_and_feature_flag_settings.sql`
-- `migrations/20260320121000_create_typed_client_settings_rpc.sql`
-- `migrations/20260320121100_create_admin_operational_summary_rpc.sql`
-- `migrations/20260320121110_create_admin_platform_settings_rpc.sql`
-- `migrations/20260320121120_create_admin_profile_activation_rpc.sql`
-- `migrations/20260320121130_create_admin_email_retry_rpc.sql`
-- `migrations/20260320121200_track_generated_document_processing.sql`
-- `migrations/20260320121210_update_generated_document_record_helper.sql`
-- `migrations/20260320121220_add_generated_document_processing_locks.sql`
-- `migrations/20260320121230_create_generated_document_processing_rpc.sql`
+- `migrations/20260317010000_create_foundation_layer.sql`
+- `migrations/20260317020000_create_verification_and_capacity_layer.sql`
+- `migrations/20260317030000_create_operational_workflows_layer.sql`
 
 Rules:
 
-- do not rename or edit historical migrations once they become canonical outside local rebaseline work
-- avoid broad names like `phase_*`, `foundation`, or roadmap labels
-- keep backfills explicit and separate from unrelated schema changes when possible
-- keep user-callable and privileged/service-role functions separated
+- dev-only schema history should be consolidated into canonical layer migrations instead of adding fixup migrations on top of fixup migrations
+- if a concern is still in dev and not yet externally canonical, edit the owning layer migration directly
+- keep layer ordering stable: foundation first, then verification/capacity, then operational workflows
+- once the project leaves dev-phase rebaseline work, resume normal forward-only migrations for released environments
 
 ## Seed Data
 
@@ -115,6 +66,9 @@ Example root `.env` entries:
 - `TRANSACTIONAL_EMAIL_PROVIDER=...`
 - `TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT=https://api.provider.example/send`
 - `TRANSACTIONAL_EMAIL_PROVIDER_API_KEY=...`
+- `TRANSACTIONAL_EMAIL_FROM_EMAIL=no-reply@example.com`
+- `TRANSACTIONAL_EMAIL_FROM_NAME=FleetFill`
+- `TRANSACTIONAL_EMAIL_MOCK_MODE=false`
 - `TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET=...`
 - `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=your-google-web-client-id`
 - `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=your-google-client-secret`
@@ -125,6 +79,7 @@ Notes:
 - The mobile app uses `SUPABASE_PUBLISHABLE_KEY` first in `APP_ENV=staging` and `APP_ENV=production`, with `SUPABASE_ANON_KEY` only as a compatibility fallback.
 - Google auth is always treated as enabled in the client runtime. Control availability through Supabase provider setup, not app flags.
 - The app push path should normally use native Firebase client config files (`google-services.json` / `GoogleService-Info.plist`) supplied outside git, while the optional `FIREBASE_*` app vars remain available only as explicit runtime overrides.
+- Local Edge Function smoke runs also require the transactional email sender/webhook env vars above; otherwise functions may boot but return `500` on first use because required server secrets are missing.
 
 ## Runtime Boundaries
 

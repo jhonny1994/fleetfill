@@ -1,14 +1,21 @@
-class AppNotificationRecord {
-  const AppNotificationRecord({
-    required this.id,
-    required this.type,
-    required this.title,
-    required this.body,
-    required this.data,
-    required this.isRead,
-    required this.createdAt,
-    required this.readAt,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'notification_models.freezed.dart';
+
+@freezed
+abstract class AppNotificationRecord with _$AppNotificationRecord {
+  const factory AppNotificationRecord({
+    required String id,
+    required String type,
+    required String title,
+    required String body,
+    required Map<String, dynamic> data,
+    required bool isRead,
+    required DateTime createdAt,
+    required DateTime? readAt,
+  }) = _AppNotificationRecord;
+
+  const AppNotificationRecord._();
 
   factory AppNotificationRecord.fromJson(Map<String, dynamic> json) {
     return AppNotificationRecord(
@@ -24,27 +31,16 @@ class AppNotificationRecord {
       readAt: DateTime.tryParse(json['read_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String type;
-  final String title;
-  final String body;
-  final Map<String, dynamic> data;
-  final bool isRead;
-  final DateTime createdAt;
-  final DateTime? readAt;
 }
 
-class NotificationPage {
-  const NotificationPage({
-    required this.items,
-    required this.offset,
-    required this.limit,
-    required this.hasMore,
-  });
+@freezed
+abstract class NotificationPage with _$NotificationPage {
+  const factory NotificationPage({
+    required List<AppNotificationRecord> items,
+    required int offset,
+    required int limit,
+    required bool hasMore,
+  }) = _NotificationPage;
 
-  final List<AppNotificationRecord> items;
-  final int offset;
-  final int limit;
-  final bool hasMore;
+  const NotificationPage._();
 }

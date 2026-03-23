@@ -1,29 +1,38 @@
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/features/carrier/domain/vehicle_models.dart';
 import 'package:fleetfill/shared/models/models.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'admin_models.freezed.dart';
 
 enum AdminQueueSegment { payments, verification, disputes, payouts, email }
 
-class AdminQueueFilters {
-  const AdminQueueFilters({this.query, this.status});
+@freezed
+abstract class AdminQueueFilters with _$AdminQueueFilters {
+  const factory AdminQueueFilters({
+    String? query,
+    String? status,
+  }) = _AdminQueueFilters;
 
-  final String? query;
-  final String? status;
+  const AdminQueueFilters._();
 }
 
-class AdminOperationalSummary {
-  const AdminOperationalSummary({
-    required this.verificationPackets,
-    required this.pendingVerificationDocuments,
-    required this.paymentProofs,
-    required this.disputes,
-    required this.eligiblePayouts,
-    required this.emailBacklog,
-    required this.emailDeadLetter,
-    required this.auditEventsLast24h,
-    required this.overdueDeliveryReviews,
-    required this.overduePaymentResubmissions,
-  });
+@freezed
+abstract class AdminOperationalSummary with _$AdminOperationalSummary {
+  const factory AdminOperationalSummary({
+    required int verificationPackets,
+    required int pendingVerificationDocuments,
+    required int paymentProofs,
+    required int disputes,
+    required int eligiblePayouts,
+    required int emailBacklog,
+    required int emailDeadLetter,
+    required int auditEventsLast24h,
+    required int overdueDeliveryReviews,
+    required int overduePaymentResubmissions,
+  }) = _AdminOperationalSummary;
+
+  const AdminOperationalSummary._();
 
   factory AdminOperationalSummary.fromJson(Map<String, dynamic> json) {
     return AdminOperationalSummary(
@@ -42,28 +51,20 @@ class AdminOperationalSummary {
           (json['overdue_payment_resubmissions'] as num?)?.toInt() ?? 0,
     );
   }
-
-  final int verificationPackets;
-  final int pendingVerificationDocuments;
-  final int paymentProofs;
-  final int disputes;
-  final int eligiblePayouts;
-  final int emailBacklog;
-  final int emailDeadLetter;
-  final int auditEventsLast24h;
-  final int overdueDeliveryReviews;
-  final int overduePaymentResubmissions;
 }
 
-class PlatformSettingRecord {
-  const PlatformSettingRecord({
-    required this.key,
-    required this.value,
-    required this.isPublic,
-    required this.description,
-    required this.updatedBy,
-    required this.updatedAt,
-  });
+@freezed
+abstract class PlatformSettingRecord with _$PlatformSettingRecord {
+  const factory PlatformSettingRecord({
+    required String key,
+    required Map<String, dynamic> value,
+    required bool isPublic,
+    required String? description,
+    required String? updatedBy,
+    required DateTime? updatedAt,
+  }) = _PlatformSettingRecord;
+
+  const PlatformSettingRecord._();
 
   factory PlatformSettingRecord.fromJson(Map<String, dynamic> json) {
     return PlatformSettingRecord(
@@ -77,19 +78,15 @@ class PlatformSettingRecord {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String key;
-  final Map<String, dynamic> value;
-  final bool isPublic;
-  final String? description;
-  final String? updatedBy;
-  final DateTime? updatedAt;
 }
 
-class AdminUserListItem {
-  const AdminUserListItem({required this.profile});
+@freezed
+abstract class AdminUserListItem with _$AdminUserListItem {
+  const factory AdminUserListItem({
+    required AppProfile profile,
+  }) = _AdminUserListItem;
 
-  final AppProfile profile;
+  const AdminUserListItem._();
 
   String get displayName {
     final companyName = profile.companyName?.trim();
@@ -106,44 +103,44 @@ class AdminUserListItem {
   }
 }
 
-class AdminUserDetail {
-  const AdminUserDetail({
-    required this.profile,
-    required this.bookings,
-    required this.vehicles,
-    required this.verificationDocuments,
-    required this.emailLogs,
-  });
+@freezed
+abstract class AdminUserDetail with _$AdminUserDetail {
+  const factory AdminUserDetail({
+    required AppProfile profile,
+    required List<BookingRecord> bookings,
+    required List<CarrierVehicle> vehicles,
+    required List<VerificationDocumentRecord> verificationDocuments,
+    required List<EmailDeliveryLogRecord> emailLogs,
+  }) = _AdminUserDetail;
 
-  final AppProfile profile;
-  final List<BookingRecord> bookings;
-  final List<CarrierVehicle> vehicles;
-  final List<VerificationDocumentRecord> verificationDocuments;
-  final List<EmailDeliveryLogRecord> emailLogs;
+  const AdminUserDetail._();
 }
 
-class EmailDeliveryLogRecord {
-  const EmailDeliveryLogRecord({
-    required this.id,
-    required this.profileId,
-    required this.bookingId,
-    required this.templateKey,
-    required this.locale,
-    required this.recipientEmail,
-    required this.subjectPreview,
-    required this.providerMessageId,
-    required this.status,
-    required this.provider,
-    required this.attemptCount,
-    required this.lastAttemptAt,
-    required this.nextRetryAt,
-    required this.lastErrorAt,
-    required this.errorCode,
-    required this.errorMessage,
-    required this.payloadSnapshot,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+abstract class EmailDeliveryLogRecord with _$EmailDeliveryLogRecord {
+  const factory EmailDeliveryLogRecord({
+    required String id,
+    required String? profileId,
+    required String? bookingId,
+    required String templateKey,
+    required String locale,
+    required String recipientEmail,
+    required String? subjectPreview,
+    required String? providerMessageId,
+    required String status,
+    required String provider,
+    required int attemptCount,
+    required DateTime? lastAttemptAt,
+    required DateTime? nextRetryAt,
+    required DateTime? lastErrorAt,
+    required String? errorCode,
+    required String? errorMessage,
+    required Map<String, dynamic> payloadSnapshot,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+  }) = _EmailDeliveryLogRecord;
+
+  const EmailDeliveryLogRecord._();
 
   factory EmailDeliveryLogRecord.fromJson(Map<String, dynamic> json) {
     return EmailDeliveryLogRecord(
@@ -158,9 +155,7 @@ class EmailDeliveryLogRecord {
       status: (json['status'] as String?)?.trim() ?? 'queued',
       provider: (json['provider'] as String?)?.trim() ?? '',
       attemptCount: (json['attempt_count'] as num?)?.toInt() ?? 0,
-      lastAttemptAt: DateTime.tryParse(
-        json['last_attempt_at'] as String? ?? '',
-      ),
+      lastAttemptAt: DateTime.tryParse(json['last_attempt_at'] as String? ?? ''),
       nextRetryAt: DateTime.tryParse(json['next_retry_at'] as String? ?? ''),
       lastErrorAt: DateTime.tryParse(json['last_error_at'] as String? ?? ''),
       errorCode: (json['error_code'] as String?)?.trim(),
@@ -172,51 +167,34 @@ class EmailDeliveryLogRecord {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String? profileId;
-  final String? bookingId;
-  final String templateKey;
-  final String locale;
-  final String recipientEmail;
-  final String? subjectPreview;
-  final String? providerMessageId;
-  final String status;
-  final String provider;
-  final int attemptCount;
-  final DateTime? lastAttemptAt;
-  final DateTime? nextRetryAt;
-  final DateTime? lastErrorAt;
-  final String? errorCode;
-  final String? errorMessage;
-  final Map<String, dynamic> payloadSnapshot;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 }
 
-class EmailOutboxJobRecord {
-  const EmailOutboxJobRecord({
-    required this.id,
-    required this.eventKey,
-    required this.dedupeKey,
-    required this.profileId,
-    required this.bookingId,
-    required this.templateKey,
-    required this.locale,
-    required this.recipientEmail,
-    required this.priority,
-    required this.status,
-    required this.attemptCount,
-    required this.maxAttempts,
-    required this.availableAt,
-    required this.lockedAt,
-    required this.lockedBy,
-    required this.lastErrorCode,
-    required this.lastErrorMessage,
-    required this.payloadSnapshot,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+abstract class EmailOutboxJobRecord with _$EmailOutboxJobRecord {
+  const factory EmailOutboxJobRecord({
+    required String id,
+    required String eventKey,
+    required String dedupeKey,
+    required String? profileId,
+    required String? bookingId,
+    required String templateKey,
+    required String locale,
+    required String recipientEmail,
+    required String priority,
+    required String status,
+    required int attemptCount,
+    required int maxAttempts,
+    required DateTime? availableAt,
+    required DateTime? lockedAt,
+    required String? lockedBy,
+    required String? lastErrorCode,
+    required String? lastErrorMessage,
+    required Map<String, dynamic> payloadSnapshot,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+  }) = _EmailOutboxJobRecord;
+
+  const EmailOutboxJobRecord._();
 
   factory EmailOutboxJobRecord.fromJson(Map<String, dynamic> json) {
     return EmailOutboxJobRecord(
@@ -244,46 +222,26 @@ class EmailOutboxJobRecord {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String eventKey;
-  final String dedupeKey;
-  final String? profileId;
-  final String? bookingId;
-  final String templateKey;
-  final String locale;
-  final String recipientEmail;
-  final String priority;
-  final String status;
-  final int attemptCount;
-  final int maxAttempts;
-  final DateTime? availableAt;
-  final DateTime? lockedAt;
-  final String? lockedBy;
-  final String? lastErrorCode;
-  final String? lastErrorMessage;
-  final Map<String, dynamic> payloadSnapshot;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 }
 
-class EligiblePayoutQueueItem {
-  const EligiblePayoutQueueItem({required this.booking, required this.carrier});
+@freezed
+abstract class EligiblePayoutQueueItem with _$EligiblePayoutQueueItem {
+  const factory EligiblePayoutQueueItem({
+    required BookingRecord booking,
+    required AppProfile? carrier,
+  }) = _EligiblePayoutQueueItem;
 
-  final BookingRecord booking;
-  final AppProfile? carrier;
+  const EligiblePayoutQueueItem._();
 }
 
-class AdminAutomationAlertItem {
-  const AdminAutomationAlertItem({
-    required this.booking,
-    required this.kind,
-    required this.referenceAt,
-    required this.thresholdHours,
-  });
+@freezed
+abstract class AdminAutomationAlertItem with _$AdminAutomationAlertItem {
+  const factory AdminAutomationAlertItem({
+    required BookingRecord booking,
+    required String kind,
+    required DateTime referenceAt,
+    required int thresholdHours,
+  }) = _AdminAutomationAlertItem;
 
-  final BookingRecord booking;
-  final String kind;
-  final DateTime referenceAt;
-  final int thresholdHours;
+  const AdminAutomationAlertItem._();
 }

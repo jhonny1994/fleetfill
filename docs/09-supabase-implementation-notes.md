@@ -107,7 +107,7 @@ Recommended rule:
 
 ### 4.2 Data Ownership
 
-- shipper-owned data: shipments, shipment items, own bookings view, own proofs, own notifications
+- shipper-owned data: shipments, own bookings view, own proofs, own notifications
 - carrier-owned data: vehicles, payout accounts, routes, one-off trips, own bookings view
 - admin-controlled data: verification decisions, payment decisions, disputes, payouts, settings, audits
 

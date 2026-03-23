@@ -1,4 +1,4 @@
-# FleetFill Audit For Phases 0 To 14
+# FleetFill Production Readiness Audit
 
 This document is the active cross-phase audit and production-readiness tracker for phases 0 through 14.
 
@@ -29,19 +29,19 @@ These are the non-manual blockers that still prevent a clean "nothing missing or
 - [x] Close shipper and carrier role-guard gaps so authenticated users cannot enter the wrong role shell or role-specific operational routes (`lib/core/routing/app_route_guards.dart`)
 - [x] Remove post-auth role mutation from onboarding so one account remains bound to exactly one role after setup (`lib/features/onboarding/presentation/onboarding_screens.dart`, `lib/core/auth/auth_repository.dart`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
 - [x] Widen phone-completion enforcement so shipper operational actions cannot proceed before required business contact data exists (`lib/core/routing/app_route_guards.dart`, `docs/01-product-and-scope.md`, `docs/03-technical-architecture.md`)
-- [x] Fix booking lifecycle semantics where booking creation still emits `booking_confirmed` side effects before payment approval secures the booking (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/02-domain-and-state-model.md`, `docs/06-operations-and-compliance.md`)
-- [x] Ensure payment approval creates the required notifications and communications for both shipper and carrier, not only one side of the transaction (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/06-operations-and-compliance.md`)
-- [x] Remove nullable-role drift in the profile schema so the database matches the exact-one-role product rule (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
+- [x] Fix booking lifecycle semantics where booking creation still emits `booking_confirmed` side effects before payment approval secures the booking (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/02-domain-and-state-model.md`, `docs/06-operations-and-compliance.md`)
+- [x] Ensure payment approval creates the required notifications and communications for both shipper and carrier, not only one side of the transaction (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/06-operations-and-compliance.md`)
+- [x] Remove nullable-role drift in the profile schema so the database matches the exact-one-role product rule (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/01-product-and-scope.md`, `docs/02-domain-and-state-model.md`)
 - [x] Remove committed secret-material risk from the repository, including the checked-in Firebase admin SDK JSON (`assets/fleetfill-firebase-adminsdk-fbsvc-f224198ecd.json`, `docs/04-data-and-security-model.md`)
 
 ### High
 
-- [x] Allow balanced dispute evidence handling so carrier-side evidence is not structurally blocked when dispute review requires both parties' context (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/06-operations-and-compliance.md`)
+- [x] Allow balanced dispute evidence handling so carrier-side evidence is not structurally blocked when dispute review requires both parties' context (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/06-operations-and-compliance.md`)
 - [x] Complete Arabic and French operational localization so critical user-facing copy no longer falls back to English in shipped flows (`lib/l10n/intl_ar.arb`, `lib/l10n/intl_fr.arb`, `docs/05-ux-and-localization.md`)
 - [x] Finish the accessibility release pass for core shared widgets and trust-sensitive flows, especially semantics for money summaries, status chips, cards, and async status updates (`lib/shared/widgets/money_summary_card.dart`, `lib/shared/widgets/status_chip.dart`, `lib/shared/widgets/app_list_card.dart`, `docs/05-ux-and-localization.md`)
 - [x] Run executable Supabase runtime security and email tests in CI instead of relying only on local instructions and manual invocation (`.github/workflows/supabase_validation.yml`, `supabase/tests/runtime_security_test.sql`, `supabase/tests/runtime_email_test.sql`, `supabase/README.md`)
 - [x] Replace the old desktop-hosted smoke-only posture with mobile-agnostic automated critical-flow coverage in regular Flutter tests (`test/features/critical/critical_workflow_flows_test.dart`, `test/features/settings/settings_surface_test.dart`, `docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`)
-- [x] Add real release traceability artifacts so every release can map to a changelog entry and user-facing release notes as required by the release policy (`CHANGELOG.md`, `docs/13-release-operations.md`, `.github/RELEASE_TEMPLATE.md`, `.github/workflows/staging_release_candidate.yml`)
+- [x] Add real release traceability artifacts so every release can map to a changelog entry and user-facing release notes as required by the release policy (`CHANGELOG.md`, `docs/working/release-operations.md`, `.github/RELEASE_TEMPLATE.md`, `.github/workflows/staging_release_candidate.yml`)
 
 ### Medium
 
@@ -49,7 +49,7 @@ These are the non-manual blockers that still prevent a clean "nothing missing or
 - [x] Reconcile shared settings with the documented settings surface so language, theme, and preference management are discoverable from the shared route cluster (`lib/features/profile/presentation/profile_screens.dart`, `docs/08-screen-map-and-routing.md`)
 - [x] Reconcile admin queue navigation with the documented detail-route strategy where payment, dispute, payout, and email flows still rely mainly on sheets or inline actions (`lib/features/admin/presentation/admin_screens.dart`, `lib/core/routing/app_router.dart`, `docs/08-screen-map-and-routing.md`)
 - [x] Make scheduler wiring and timed-automation invocation more explicit in repo-managed infrastructure so durable automation does not depend on undocumented operator setup (`supabase/scripts/configure_scheduled_automation.sql`, `supabase/README.md`, `supabase/functions/scheduled-automation-tick/index.ts`, `docs/03-technical-architecture.md`)
-- [x] Reconcile email delivery log behavior with the append-oriented audit model described in the data and security docs (`supabase/migrations/20260321100000_close_release_gate_blockers.sql`, `docs/04-data-and-security-model.md`)
+- [x] Reconcile email delivery log behavior with the append-oriented audit model described in the data and security docs (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/04-data-and-security-model.md`)
 
 ## Validation Needed After Fixes
 
@@ -80,18 +80,18 @@ These are the non-manual blockers that still prevent a clean "nothing missing or
 
 ### Critical
 
-- [x] Restrict `public.create_generated_document_record(...)` so it cannot be called by arbitrary authenticated users without strict ownership and workflow checks (`supabase/migrations/20260320121210_update_generated_document_record_helper.sql`, `supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql`)
-- [x] Harden `public.append_tracking_event(...)` with participant authorization, event allowlisting, and actor integrity so timeline events cannot be forged (`supabase/migrations/20260320120500_create_tracking_and_delivery_rpc.sql`)
-- [x] Add required admin audit logging to payment approval and rejection workflows (`supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql`, `docs/06-operations-and-compliance.md`)
-- [x] Add required admin audit logging to dispute resolution and payout release workflows (`supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `docs/06-operations-and-compliance.md`)
-- [x] Apply recent admin step-up enforcement consistently to dispute resolution and payout release, not only to settings/profile/email retry actions (`supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `supabase/migrations/20260320121110_create_admin_platform_settings_rpc.sql`, `supabase/migrations/20260320121130_create_admin_email_retry_rpc.sql`)
+- [x] Restrict `public.create_generated_document_record(...)` so it cannot be called by arbitrary authenticated users without strict ownership and workflow checks (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `supabase/migrations/20260317030000_create_operational_workflows_layer.sql`)
+- [x] Harden `public.append_tracking_event(...)` with participant authorization, event allowlisting, and actor integrity so timeline events cannot be forged (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`)
+- [x] Add required admin audit logging to payment approval and rejection workflows (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/06-operations-and-compliance.md`)
+- [x] Add required admin audit logging to dispute resolution and payout release workflows (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/06-operations-and-compliance.md`)
+- [x] Apply recent admin step-up enforcement consistently to dispute resolution and payout release, not only to settings/profile/email retry actions (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `supabase/migrations/20260317030000_create_operational_workflows_layer.sql`)
 
 ### High
 
-- [x] Fix the dead-letter email resend safety bug so non-retryable failures stay blocked (`supabase/migrations/20260320121130_create_admin_email_retry_rpc.sql`)
-- [x] Add explicit rate limiting to dispute creation because the canonical docs classify it as high-risk (`supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql`, `docs/04-data-and-security-model.md`)
+- [x] Fix the dead-letter email resend safety bug so non-retryable failures stay blocked (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`)
+- [x] Add explicit rate limiting to dispute creation because the canonical docs classify it as high-risk (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/04-data-and-security-model.md`)
 - [x] Complete the transactional email event inventory so implementation matches the intended lifecycle events for booking, payment, delivery review, dispute, and payout (`supabase/functions/_shared/email-runtime.ts`, `docs/06-operations-and-compliance.md`)
-- [x] Align booking lifecycle event naming and behavior where implementation still drifts from canonical semantics such as `booking_confirmed` vs current alternatives (`supabase/migrations/20260320120200_create_booking_confirmation_rpc.sql`, `docs/03-technical-architecture.md`, `docs/06-operations-and-compliance.md`)
+- [x] Align booking lifecycle event naming and behavior where implementation still drifts from canonical semantics such as `booking_confirmed` vs current alternatives (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `docs/03-technical-architecture.md`, `docs/06-operations-and-compliance.md`)
 - [x] Replace source-text security evidence tests with executed runtime tests for RLS, signed URLs, upload restrictions, audit logging, rate limiting, and transaction boundaries (`supabase/tests/runtime_security_test.sql`, `supabase/tests/contracts.sql`)
 
 ### Medium
@@ -103,12 +103,12 @@ These are the non-manual blockers that still prevent a clean "nothing missing or
 - [x] Implement real notification pagination or cursoring instead of a shallow bounded list approach if the current provider/repository contract remains fixed-size (`lib/features/notifications/infrastructure/notification_repository.dart`, `lib/features/notifications/application/notification_feed_controller.dart`, `lib/features/notifications/presentation/notifications_screens.dart`)
 - [x] Reconcile and then implement Phase 11 push notifications through the configured Firebase Cloud Messaging HTTP v1 client plus worker path so the docs and checklist match real capability (`docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`, `lib/features/notifications/`, `supabase/functions/push-dispatch-worker/index.ts`, `pubspec.yaml`)
 - [x] Add broader CI-capable critical-flow coverage for startup restoration, shipper booking/payment state, carrier milestone progression, and admin queue refresh (`test/features/critical/critical_workflow_flows_test.dart`, `docs/07-implementation-plan.md`)
-- [x] Add dispute evidence attachment support with private storage, secure access, and admin review visibility (`supabase/migrations/20260320120825_add_dispute_evidence_support.sql`, `lib/features/shipper/infrastructure/dispute_repository.dart`, `lib/core/routing/shared_route_screens.dart`)
+- [x] Add dispute evidence attachment support with private storage, secure access, and admin review visibility (`supabase/migrations/20260317030000_create_operational_workflows_layer.sql`, `lib/features/shipper/infrastructure/dispute_repository.dart`, `lib/core/routing/shared_route_screens.dart`)
 
 ### Low
 
 - [x] Review test literals that depend on exact English copy and replace them with more durable assertions where practical (`test/core/localization/foundation_localization_accessibility_test.dart`, `test/features/settings/legal_policies_screen_test.dart`, `test/features/settings/settings_surface_test.dart`)
-- [ ] Keep documenting older broad historical migrations as grandfathered baseline history, while keeping all future migrations narrow and change-oriented (`supabase/README.md`, `docs/README.md`)
+- [x] Consolidate dev-phase migration history into canonical layer migrations and document the same no-parallel-truth rule for docs and backend ownership (`supabase/README.md`, `docs/README.md`)
 
 ## Manual Or User-Intervention Validation Still Required
 
@@ -227,7 +227,7 @@ And for the security/test-hardening items, closure should also include executed 
 ## Progress Notes
 
 - executable runtime DB coverage now exercises RLS, upload-session enforcement, signed URL limits, admin step-up enforcement, audit logging, rollback-sensitive workflows, and email outbox/provider-event handling through `supabase/tests/runtime_security_test.sql` and `supabase/tests/runtime_email_test.sql`
-- newer Supabase migrations are now more change-oriented and easier to review than the earlier broad phase bundles
+- dev-phase Supabase history is now consolidated into three canonical layer migrations instead of accumulating fixup-on-fixup history
 - support email enqueueing and generated-document worker orchestration are more aligned with the intended Edge Function vs RPC boundary
 - the highest-risk Supabase findings from the recent audit were remediated in migrations covering generated documents, tracking events, payment review, disputes, payouts, and admin step-up enforcement
 - the repo now has a central audit file for phases 0 through 14 so findings can be tracked without depending on chat history

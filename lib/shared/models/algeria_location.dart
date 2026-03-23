@@ -1,29 +1,26 @@
 import 'package:flutter/widgets.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AlgeriaCommune {
-  const AlgeriaCommune({
-    required this.id,
-    required this.wilayaId,
-    required this.nameFr,
-    required this.nameAr,
-  });
+part 'algeria_location.freezed.dart';
+part 'algeria_location.g.dart';
 
-  factory AlgeriaCommune.fromJson(Map<String, dynamic> json) {
-    return AlgeriaCommune(
-      id: json['id'] as int,
-      wilayaId: json['wilaya_id'] as int,
-      nameFr:
-          (json['name_fr'] as String?)?.trim() ??
-          (json['name'] as String?)?.trim() ??
-          '',
-      nameAr: (json['name_ar'] as String?)?.trim() ?? '',
-    );
-  }
+@freezed
+abstract class AlgeriaCommune with _$AlgeriaCommune {
+  const factory AlgeriaCommune({
+    required int id,
+    @JsonKey(name: 'wilaya_id') required int wilayaId,
+    @JsonKey(
+      name: 'name_fr',
+      readValue: _readCommuneLatinName,
+    )
+    required String nameFr,
+    @JsonKey(name: 'name_ar') required String nameAr,
+  }) = _AlgeriaCommune;
 
-  final int id;
-  final int wilayaId;
-  final String nameFr;
-  final String nameAr;
+  const AlgeriaCommune._();
+
+  factory AlgeriaCommune.fromJson(Map<String, dynamic> json) =>
+      _$AlgeriaCommuneFromJson(_normalizeCommuneJson(json));
 
   String displayName(Locale locale) {
     if (locale.languageCode == 'ar' && nameAr.isNotEmpty) {
@@ -44,24 +41,18 @@ class AlgeriaCommune {
   }
 }
 
-class AlgeriaWilaya {
-  const AlgeriaWilaya({
-    required this.id,
-    required this.nameFr,
-    required this.nameAr,
-  });
+@freezed
+abstract class AlgeriaWilaya with _$AlgeriaWilaya {
+  const factory AlgeriaWilaya({
+    required int id,
+    required String nameFr,
+    @JsonKey(name: 'name_ar') required String nameAr,
+  }) = _AlgeriaWilaya;
 
-  factory AlgeriaWilaya.fromJson(Map<String, dynamic> json) {
-    return AlgeriaWilaya(
-      id: json['id'] as int,
-      nameFr: (json['name'] as String?)?.trim() ?? '',
-      nameAr: (json['name_ar'] as String?)?.trim() ?? '',
-    );
-  }
+  const AlgeriaWilaya._();
 
-  final int id;
-  final String nameFr;
-  final String nameAr;
+  factory AlgeriaWilaya.fromJson(Map<String, dynamic> json) =>
+      _$AlgeriaWilayaFromJson(_normalizeWilayaJson(json));
 
   String displayName(Locale locale) {
     if (locale.languageCode == 'ar' && nameAr.isNotEmpty) {
@@ -71,12 +62,36 @@ class AlgeriaWilaya {
   }
 }
 
-class AlgeriaLocationDirectory {
-  const AlgeriaLocationDirectory({
-    required this.wilayas,
-    required this.communes,
-  });
+@freezed
+abstract class AlgeriaLocationDirectory with _$AlgeriaLocationDirectory {
+  const factory AlgeriaLocationDirectory({
+    required List<AlgeriaWilaya> wilayas,
+    required List<AlgeriaCommune> communes,
+  }) = _AlgeriaLocationDirectory;
 
-  final List<AlgeriaWilaya> wilayas;
-  final List<AlgeriaCommune> communes;
+  const AlgeriaLocationDirectory._();
+
+  factory AlgeriaLocationDirectory.fromJson(Map<String, dynamic> json) =>
+      _$AlgeriaLocationDirectoryFromJson(json);
+}
+
+Object? _readCommuneLatinName(Map<dynamic, dynamic> json, String key) {
+  return json[key] ?? json['name'];
+}
+
+Map<String, dynamic> _normalizeCommuneJson(Map<String, dynamic> json) {
+  return {
+    ...json,
+    'name_fr':
+        (json['name_fr'] as String?)?.trim() ?? (json['name'] as String?)?.trim() ?? '',
+    'name_ar': (json['name_ar'] as String?)?.trim() ?? '',
+  };
+}
+
+Map<String, dynamic> _normalizeWilayaJson(Map<String, dynamic> json) {
+  return {
+    ...json,
+    'nameFr': (json['name'] as String?)?.trim() ?? '',
+    'name_ar': (json['name_ar'] as String?)?.trim() ?? '',
+  };
 }

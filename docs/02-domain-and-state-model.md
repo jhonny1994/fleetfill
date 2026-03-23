@@ -54,29 +54,25 @@ Permanent rule:
 - one shipment maps to exactly one booking
 - one booking maps to exactly one truck/trip
 
-The shipment may contain multiple packages or items, but they travel together on the same trip.
+The shipment is described at the shipment level through one details field and travels together on the same trip.
 
-### 2.6 Shipment Item
-
-A package line within a shipment, used to describe multiple boxes, bundles, or item groups while keeping one operational shipment.
-
-### 2.7 Booking
+### 2.6 Booking
 
 The commercial and operational contract between shipper and carrier for one shipment on one route instance or one one-off trip.
 
-### 2.8 Payment Proof
+### 2.7 Payment Proof
 
 The uploaded evidence that a shipper submitted payment through an external rail.
 
-### 2.9 Financial Ledger Entry
+### 2.8 Financial Ledger Entry
 
 An immutable money movement record used for auditability and settlement.
 
-### 2.10 Verification Document
+### 2.9 Verification Document
 
 A required or optional document attached to a carrier or vehicle for verification.
 
-### 2.11 Payout Account
+### 2.10 Payout Account
 
 The destination account FleetFill uses when paying a carrier.
 
@@ -86,19 +82,19 @@ Supported payout rails:
 - Dahabia
 - bank
 
-### 2.12 Platform Payment Account
+### 2.11 Platform Payment Account
 
 The FleetFill-controlled destination account shown to shippers for inbound payment.
 
-### 2.13 Dispute
+### 2.12 Dispute
 
 The auditable case record created when a booking is challenged during the delivery review window.
 
-### 2.14 Refund
+### 2.13 Refund
 
 The auditable record of money returned to the shipper.
 
-### 2.15 Payout
+### 2.14 Payout
 
 The auditable record of money released to the carrier.
 
