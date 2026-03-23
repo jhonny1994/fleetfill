@@ -126,6 +126,7 @@ Current implementation notes:
 - [x] Build public carrier profile view with rating summary and comments
 - [x] Add account suspension / inactive-state handling
 - [x] Keep onboarding lean by using one role-aware `ProfileSetup` flow instead of fragmented setup screens
+- [ ] Consolidate authenticated first-run into one guided sequence that captures role, essentials including phone, notification consent education, and then lands in home
 
 Verification notes:
 
@@ -194,9 +195,10 @@ Phase 5 notes:
 ### Shipment Domain
 
 - [x] Build shipment CRUD for shipper drafts and active shipments
-- [x] Simplify shipments to one route/date request with one shipment details field
+- [x] Simplify shipments to one lane-and-cargo draft with one shipment details field
 - [x] Enforce one shipment -> one booking rule in code and DB
-- [x] Validate pickup date, weight, and required inputs
+- [x] Validate weight and required inputs
+- [x] Remove shipment-owned pickup date so drafts stay lane-and-cargo only and search owns requested date
 
 ### Search Engine And Results
 
@@ -216,10 +218,11 @@ Phase 5 notes:
 - [x] Build no-result and nearest-date fallback as inline page states, not separate routes
 - [x] Build alternative sort options: `Top Rated`, `Lowest Price`, `Nearest Departure`
 - [x] Build filters and sort controls as sheets instead of routed microflows
+- [x] Rework the search page so requested date is a search input and results remain visible above the fold with a compact shipment summary
 
 Phase 6 progress notes:
 
-- shipper shipment drafts now use a simplified single-request model with wilaya/commune selection, one pickup date, optional volume, and one shipment details field
+- shipper shipment drafts now use a simplified lane-and-cargo model with wilaya/commune selection, optional volume, and one shipment details field
 - shipment search is now server-driven through `search_exact_lane_capacity(...)`, using exact lane matching, recurring route expansion by requested date, one-off trip inclusion, server-side remaining-capacity checks, recommended ranking, nearest-date fallback, and redefine-search mode
 - shipper search UI now lets users search from a selected shipment draft, review exact/nearest matches inline, debounce and invalidate stale searches, switch sort/filter controls from a bottom sheet, and hand off a selected result into booking review without routed micro-success pages
 - shipment draft selection and the unique booking constraint now preserve the one-shipment -> one-booking model in both app flow and DB truth
@@ -376,6 +379,9 @@ Phase 10 progress notes:
 - [x] Deliver real push notifications for critical lifecycle events through the configured FCM worker path
 - [x] Build notifications center UI
 - [x] Open notifications from shared routes or home/profile entry points rather than dedicated shipper/carrier bottom tabs
+- [ ] Move notification permission prompting into guided onboarding and stop requesting it as a passive session-sync side effect
+- [ ] Add a shared authenticated app-bar bell with unread badge and make it the primary notifications entry point
+- [ ] Consolidate settings to one notifications entry and remove duplicated notifications IA
 
 ### Email And Support
 

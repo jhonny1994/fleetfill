@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fleetfill/core/core.dart';
+import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:fleetfill/features/onboarding/onboarding.dart';
 import 'package:fleetfill/features/profile/presentation/profile_components.dart';
 import 'package:flutter/material.dart';
@@ -548,7 +549,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
         return;
       }
       AppFeedback.showSnackBar(context, s.profileSetupSavedMessage);
-      context.go(nextLocation);
+      context.go(nextLocation.route);
     } on AuthException catch (error) {
       if (!mounted) {
         return;
@@ -651,7 +652,97 @@ class _PhoneCompletionScreenState extends ConsumerState<PhoneCompletionScreen> {
         return;
       }
       AppFeedback.showSnackBar(context, s.phoneCompletionSavedMessage);
-      context.go(nextLocation);
+      context.go(nextLocation.route);
+    } on AuthException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
+}
+
+class NotificationSetupScreen extends ConsumerStatefulWidget {
+  const NotificationSetupScreen({super.key});
+
+  @override
+  ConsumerState<NotificationSetupScreen> createState() =>
+      _NotificationSetupScreenState();
+}
+
+class _NotificationSetupScreenState
+    extends ConsumerState<NotificationSetupScreen> {
+  bool _isSubmitting = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+
+    return AppPageScaffold(
+      title: s.notificationsPermissionTitle,
+      child: ListView(
+        children: [
+          AppSectionHeader(
+            title: s.notificationsPermissionTitle,
+            subtitle: s.notificationsPermissionDescription,
+            showTitle: false,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          AuthCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AuthInfoBanner(
+                  icon: Icons.notifications_active_outlined,
+                  message: s.notificationsOnboardingValueMessage,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                AuthSubmitButton(
+                  label: s.notificationsOnboardingEnableAction,
+                  isLoading: _isSubmitting,
+                  onPressed: () => unawaited(_complete(enable: true)),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                OutlinedButton(
+                  onPressed: _isSubmitting
+                      ? null
+                      : () => unawaited(_complete(enable: false)),
+                  child: Text(s.notificationsOnboardingSkipAction),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _complete({required bool enable}) async {
+    setState(() => _isSubmitting = true);
+    final s = S.of(context);
+
+    try {
+      if (enable) {
+        final auth = ref.read(authSessionControllerProvider).asData?.value;
+        if (auth != null) {
+          final locale = Localizations.localeOf(context);
+          await ref
+              .read(pushNotificationServiceProvider)
+              .requestPermissionAndSync(auth: auth, locale: locale);
+        }
+      }
+
+      final nextStep = await ref
+          .read(onboardingWorkflowControllerProvider)
+          .completeNotificationSetup();
+      if (!mounted) {
+        return;
+      }
+      context.go(nextStep.route);
     } on AuthException catch (error) {
       if (!mounted) {
         return;

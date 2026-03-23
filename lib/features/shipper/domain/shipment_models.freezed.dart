@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShipmentDraftRecord {
 
- String get id; String get shipperId; int get originCommuneId; int get destinationCommuneId; DateTime get pickupDate; double get totalWeightKg; double? get totalVolumeM3; String? get details; ShipmentStatus get status; DateTime? get createdAt; DateTime? get updatedAt;
+ String get id; String get shipperId; int get originCommuneId; int get destinationCommuneId; double get totalWeightKg; double? get totalVolumeM3; String? get details; ShipmentStatus get status; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of ShipmentDraftRecord
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ShipmentDraftRecordCopyWith<ShipmentDraftRecord> get copyWith => _$ShipmentDraf
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShipmentDraftRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.shipperId, shipperId) || other.shipperId == shipperId)&&(identical(other.originCommuneId, originCommuneId) || other.originCommuneId == originCommuneId)&&(identical(other.destinationCommuneId, destinationCommuneId) || other.destinationCommuneId == destinationCommuneId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.totalWeightKg, totalWeightKg) || other.totalWeightKg == totalWeightKg)&&(identical(other.totalVolumeM3, totalVolumeM3) || other.totalVolumeM3 == totalVolumeM3)&&(identical(other.details, details) || other.details == details)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShipmentDraftRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.shipperId, shipperId) || other.shipperId == shipperId)&&(identical(other.originCommuneId, originCommuneId) || other.originCommuneId == originCommuneId)&&(identical(other.destinationCommuneId, destinationCommuneId) || other.destinationCommuneId == destinationCommuneId)&&(identical(other.totalWeightKg, totalWeightKg) || other.totalWeightKg == totalWeightKg)&&(identical(other.totalVolumeM3, totalVolumeM3) || other.totalVolumeM3 == totalVolumeM3)&&(identical(other.details, details) || other.details == details)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,shipperId,originCommuneId,destinationCommuneId,pickupDate,totalWeightKg,totalVolumeM3,details,status,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,shipperId,originCommuneId,destinationCommuneId,totalWeightKg,totalVolumeM3,details,status,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ShipmentDraftRecord(id: $id, shipperId: $shipperId, originCommuneId: $originCommuneId, destinationCommuneId: $destinationCommuneId, pickupDate: $pickupDate, totalWeightKg: $totalWeightKg, totalVolumeM3: $totalVolumeM3, details: $details, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ShipmentDraftRecord(id: $id, shipperId: $shipperId, originCommuneId: $originCommuneId, destinationCommuneId: $destinationCommuneId, totalWeightKg: $totalWeightKg, totalVolumeM3: $totalVolumeM3, details: $details, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ShipmentDraftRecordCopyWith<$Res>  {
   factory $ShipmentDraftRecordCopyWith(ShipmentDraftRecord value, $Res Function(ShipmentDraftRecord) _then) = _$ShipmentDraftRecordCopyWithImpl;
 @useResult
 $Res call({
- String id, String shipperId, int originCommuneId, int destinationCommuneId, DateTime pickupDate, double totalWeightKg, double? totalVolumeM3, String? details, ShipmentStatus status, DateTime? createdAt, DateTime? updatedAt
+ String id, String shipperId, int originCommuneId, int destinationCommuneId, double totalWeightKg, double? totalVolumeM3, String? details, ShipmentStatus status, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -62,14 +62,13 @@ class _$ShipmentDraftRecordCopyWithImpl<$Res>
 
 /// Create a copy of ShipmentDraftRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? shipperId = null,Object? originCommuneId = null,Object? destinationCommuneId = null,Object? pickupDate = null,Object? totalWeightKg = null,Object? totalVolumeM3 = freezed,Object? details = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? shipperId = null,Object? originCommuneId = null,Object? destinationCommuneId = null,Object? totalWeightKg = null,Object? totalVolumeM3 = freezed,Object? details = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,shipperId: null == shipperId ? _self.shipperId : shipperId // ignore: cast_nullable_to_non_nullable
 as String,originCommuneId: null == originCommuneId ? _self.originCommuneId : originCommuneId // ignore: cast_nullable_to_non_nullable
 as int,destinationCommuneId: null == destinationCommuneId ? _self.destinationCommuneId : destinationCommuneId // ignore: cast_nullable_to_non_nullable
-as int,pickupDate: null == pickupDate ? _self.pickupDate : pickupDate // ignore: cast_nullable_to_non_nullable
-as DateTime,totalWeightKg: null == totalWeightKg ? _self.totalWeightKg : totalWeightKg // ignore: cast_nullable_to_non_nullable
+as int,totalWeightKg: null == totalWeightKg ? _self.totalWeightKg : totalWeightKg // ignore: cast_nullable_to_non_nullable
 as double,totalVolumeM3: freezed == totalVolumeM3 ? _self.totalVolumeM3 : totalVolumeM3 // ignore: cast_nullable_to_non_nullable
 as double?,details: freezed == details ? _self.details : details // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -160,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String shipperId,  int originCommuneId,  int destinationCommuneId,  DateTime pickupDate,  double totalWeightKg,  double? totalVolumeM3,  String? details,  ShipmentStatus status,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String shipperId,  int originCommuneId,  int destinationCommuneId,  double totalWeightKg,  double? totalVolumeM3,  String? details,  ShipmentStatus status,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShipmentDraftRecord() when $default != null:
-return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destinationCommuneId,_that.pickupDate,_that.totalWeightKg,_that.totalVolumeM3,_that.details,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destinationCommuneId,_that.totalWeightKg,_that.totalVolumeM3,_that.details,_that.status,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -181,10 +180,10 @@ return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destination
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String shipperId,  int originCommuneId,  int destinationCommuneId,  DateTime pickupDate,  double totalWeightKg,  double? totalVolumeM3,  String? details,  ShipmentStatus status,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String shipperId,  int originCommuneId,  int destinationCommuneId,  double totalWeightKg,  double? totalVolumeM3,  String? details,  ShipmentStatus status,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ShipmentDraftRecord():
-return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destinationCommuneId,_that.pickupDate,_that.totalWeightKg,_that.totalVolumeM3,_that.details,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destinationCommuneId,_that.totalWeightKg,_that.totalVolumeM3,_that.details,_that.status,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +200,10 @@ return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destination
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String shipperId,  int originCommuneId,  int destinationCommuneId,  DateTime pickupDate,  double totalWeightKg,  double? totalVolumeM3,  String? details,  ShipmentStatus status,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String shipperId,  int originCommuneId,  int destinationCommuneId,  double totalWeightKg,  double? totalVolumeM3,  String? details,  ShipmentStatus status,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ShipmentDraftRecord() when $default != null:
-return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destinationCommuneId,_that.pickupDate,_that.totalWeightKg,_that.totalVolumeM3,_that.details,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destinationCommuneId,_that.totalWeightKg,_that.totalVolumeM3,_that.details,_that.status,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -216,14 +215,13 @@ return $default(_that.id,_that.shipperId,_that.originCommuneId,_that.destination
 
 
 class _ShipmentDraftRecord extends ShipmentDraftRecord {
-  const _ShipmentDraftRecord({required this.id, required this.shipperId, required this.originCommuneId, required this.destinationCommuneId, required this.pickupDate, required this.totalWeightKg, required this.totalVolumeM3, required this.details, required this.status, required this.createdAt, required this.updatedAt}): super._();
+  const _ShipmentDraftRecord({required this.id, required this.shipperId, required this.originCommuneId, required this.destinationCommuneId, required this.totalWeightKg, required this.totalVolumeM3, required this.details, required this.status, required this.createdAt, required this.updatedAt}): super._();
   
 
 @override final  String id;
 @override final  String shipperId;
 @override final  int originCommuneId;
 @override final  int destinationCommuneId;
-@override final  DateTime pickupDate;
 @override final  double totalWeightKg;
 @override final  double? totalVolumeM3;
 @override final  String? details;
@@ -241,16 +239,16 @@ _$ShipmentDraftRecordCopyWith<_ShipmentDraftRecord> get copyWith => __$ShipmentD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShipmentDraftRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.shipperId, shipperId) || other.shipperId == shipperId)&&(identical(other.originCommuneId, originCommuneId) || other.originCommuneId == originCommuneId)&&(identical(other.destinationCommuneId, destinationCommuneId) || other.destinationCommuneId == destinationCommuneId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.totalWeightKg, totalWeightKg) || other.totalWeightKg == totalWeightKg)&&(identical(other.totalVolumeM3, totalVolumeM3) || other.totalVolumeM3 == totalVolumeM3)&&(identical(other.details, details) || other.details == details)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShipmentDraftRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.shipperId, shipperId) || other.shipperId == shipperId)&&(identical(other.originCommuneId, originCommuneId) || other.originCommuneId == originCommuneId)&&(identical(other.destinationCommuneId, destinationCommuneId) || other.destinationCommuneId == destinationCommuneId)&&(identical(other.totalWeightKg, totalWeightKg) || other.totalWeightKg == totalWeightKg)&&(identical(other.totalVolumeM3, totalVolumeM3) || other.totalVolumeM3 == totalVolumeM3)&&(identical(other.details, details) || other.details == details)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,shipperId,originCommuneId,destinationCommuneId,pickupDate,totalWeightKg,totalVolumeM3,details,status,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,shipperId,originCommuneId,destinationCommuneId,totalWeightKg,totalVolumeM3,details,status,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ShipmentDraftRecord(id: $id, shipperId: $shipperId, originCommuneId: $originCommuneId, destinationCommuneId: $destinationCommuneId, pickupDate: $pickupDate, totalWeightKg: $totalWeightKg, totalVolumeM3: $totalVolumeM3, details: $details, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ShipmentDraftRecord(id: $id, shipperId: $shipperId, originCommuneId: $originCommuneId, destinationCommuneId: $destinationCommuneId, totalWeightKg: $totalWeightKg, totalVolumeM3: $totalVolumeM3, details: $details, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -261,7 +259,7 @@ abstract mixin class _$ShipmentDraftRecordCopyWith<$Res> implements $ShipmentDra
   factory _$ShipmentDraftRecordCopyWith(_ShipmentDraftRecord value, $Res Function(_ShipmentDraftRecord) _then) = __$ShipmentDraftRecordCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String shipperId, int originCommuneId, int destinationCommuneId, DateTime pickupDate, double totalWeightKg, double? totalVolumeM3, String? details, ShipmentStatus status, DateTime? createdAt, DateTime? updatedAt
+ String id, String shipperId, int originCommuneId, int destinationCommuneId, double totalWeightKg, double? totalVolumeM3, String? details, ShipmentStatus status, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -278,14 +276,13 @@ class __$ShipmentDraftRecordCopyWithImpl<$Res>
 
 /// Create a copy of ShipmentDraftRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? shipperId = null,Object? originCommuneId = null,Object? destinationCommuneId = null,Object? pickupDate = null,Object? totalWeightKg = null,Object? totalVolumeM3 = freezed,Object? details = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? shipperId = null,Object? originCommuneId = null,Object? destinationCommuneId = null,Object? totalWeightKg = null,Object? totalVolumeM3 = freezed,Object? details = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_ShipmentDraftRecord(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,shipperId: null == shipperId ? _self.shipperId : shipperId // ignore: cast_nullable_to_non_nullable
 as String,originCommuneId: null == originCommuneId ? _self.originCommuneId : originCommuneId // ignore: cast_nullable_to_non_nullable
 as int,destinationCommuneId: null == destinationCommuneId ? _self.destinationCommuneId : destinationCommuneId // ignore: cast_nullable_to_non_nullable
-as int,pickupDate: null == pickupDate ? _self.pickupDate : pickupDate // ignore: cast_nullable_to_non_nullable
-as DateTime,totalWeightKg: null == totalWeightKg ? _self.totalWeightKg : totalWeightKg // ignore: cast_nullable_to_non_nullable
+as int,totalWeightKg: null == totalWeightKg ? _self.totalWeightKg : totalWeightKg // ignore: cast_nullable_to_non_nullable
 as double,totalVolumeM3: freezed == totalVolumeM3 ? _self.totalVolumeM3 : totalVolumeM3 // ignore: cast_nullable_to_non_nullable
 as double?,details: freezed == details ? _self.details : details // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -302,7 +299,7 @@ as DateTime?,
 /// @nodoc
 mixin _$ShipmentDraftInput {
 
- int get originCommuneId; int get destinationCommuneId; DateTime get pickupDate; double get totalWeightKg; double? get totalVolumeM3; String? get details;
+ int get originCommuneId; int get destinationCommuneId; double get totalWeightKg; double? get totalVolumeM3; String? get details;
 /// Create a copy of ShipmentDraftInput
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -315,16 +312,16 @@ $ShipmentDraftInputCopyWith<ShipmentDraftInput> get copyWith => _$ShipmentDraftI
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShipmentDraftInput&&(identical(other.originCommuneId, originCommuneId) || other.originCommuneId == originCommuneId)&&(identical(other.destinationCommuneId, destinationCommuneId) || other.destinationCommuneId == destinationCommuneId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.totalWeightKg, totalWeightKg) || other.totalWeightKg == totalWeightKg)&&(identical(other.totalVolumeM3, totalVolumeM3) || other.totalVolumeM3 == totalVolumeM3)&&(identical(other.details, details) || other.details == details));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShipmentDraftInput&&(identical(other.originCommuneId, originCommuneId) || other.originCommuneId == originCommuneId)&&(identical(other.destinationCommuneId, destinationCommuneId) || other.destinationCommuneId == destinationCommuneId)&&(identical(other.totalWeightKg, totalWeightKg) || other.totalWeightKg == totalWeightKg)&&(identical(other.totalVolumeM3, totalVolumeM3) || other.totalVolumeM3 == totalVolumeM3)&&(identical(other.details, details) || other.details == details));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,originCommuneId,destinationCommuneId,pickupDate,totalWeightKg,totalVolumeM3,details);
+int get hashCode => Object.hash(runtimeType,originCommuneId,destinationCommuneId,totalWeightKg,totalVolumeM3,details);
 
 @override
 String toString() {
-  return 'ShipmentDraftInput(originCommuneId: $originCommuneId, destinationCommuneId: $destinationCommuneId, pickupDate: $pickupDate, totalWeightKg: $totalWeightKg, totalVolumeM3: $totalVolumeM3, details: $details)';
+  return 'ShipmentDraftInput(originCommuneId: $originCommuneId, destinationCommuneId: $destinationCommuneId, totalWeightKg: $totalWeightKg, totalVolumeM3: $totalVolumeM3, details: $details)';
 }
 
 
@@ -335,7 +332,7 @@ abstract mixin class $ShipmentDraftInputCopyWith<$Res>  {
   factory $ShipmentDraftInputCopyWith(ShipmentDraftInput value, $Res Function(ShipmentDraftInput) _then) = _$ShipmentDraftInputCopyWithImpl;
 @useResult
 $Res call({
- int originCommuneId, int destinationCommuneId, DateTime pickupDate, double totalWeightKg, double? totalVolumeM3, String? details
+ int originCommuneId, int destinationCommuneId, double totalWeightKg, double? totalVolumeM3, String? details
 });
 
 
@@ -352,12 +349,11 @@ class _$ShipmentDraftInputCopyWithImpl<$Res>
 
 /// Create a copy of ShipmentDraftInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? originCommuneId = null,Object? destinationCommuneId = null,Object? pickupDate = null,Object? totalWeightKg = null,Object? totalVolumeM3 = freezed,Object? details = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? originCommuneId = null,Object? destinationCommuneId = null,Object? totalWeightKg = null,Object? totalVolumeM3 = freezed,Object? details = freezed,}) {
   return _then(_self.copyWith(
 originCommuneId: null == originCommuneId ? _self.originCommuneId : originCommuneId // ignore: cast_nullable_to_non_nullable
 as int,destinationCommuneId: null == destinationCommuneId ? _self.destinationCommuneId : destinationCommuneId // ignore: cast_nullable_to_non_nullable
-as int,pickupDate: null == pickupDate ? _self.pickupDate : pickupDate // ignore: cast_nullable_to_non_nullable
-as DateTime,totalWeightKg: null == totalWeightKg ? _self.totalWeightKg : totalWeightKg // ignore: cast_nullable_to_non_nullable
+as int,totalWeightKg: null == totalWeightKg ? _self.totalWeightKg : totalWeightKg // ignore: cast_nullable_to_non_nullable
 as double,totalVolumeM3: freezed == totalVolumeM3 ? _self.totalVolumeM3 : totalVolumeM3 // ignore: cast_nullable_to_non_nullable
 as double?,details: freezed == details ? _self.details : details // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -445,10 +441,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int originCommuneId,  int destinationCommuneId,  DateTime pickupDate,  double totalWeightKg,  double? totalVolumeM3,  String? details)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int originCommuneId,  int destinationCommuneId,  double totalWeightKg,  double? totalVolumeM3,  String? details)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShipmentDraftInput() when $default != null:
-return $default(_that.originCommuneId,_that.destinationCommuneId,_that.pickupDate,_that.totalWeightKg,_that.totalVolumeM3,_that.details);case _:
+return $default(_that.originCommuneId,_that.destinationCommuneId,_that.totalWeightKg,_that.totalVolumeM3,_that.details);case _:
   return orElse();
 
 }
@@ -466,10 +462,10 @@ return $default(_that.originCommuneId,_that.destinationCommuneId,_that.pickupDat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int originCommuneId,  int destinationCommuneId,  DateTime pickupDate,  double totalWeightKg,  double? totalVolumeM3,  String? details)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int originCommuneId,  int destinationCommuneId,  double totalWeightKg,  double? totalVolumeM3,  String? details)  $default,) {final _that = this;
 switch (_that) {
 case _ShipmentDraftInput():
-return $default(_that.originCommuneId,_that.destinationCommuneId,_that.pickupDate,_that.totalWeightKg,_that.totalVolumeM3,_that.details);case _:
+return $default(_that.originCommuneId,_that.destinationCommuneId,_that.totalWeightKg,_that.totalVolumeM3,_that.details);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -486,10 +482,10 @@ return $default(_that.originCommuneId,_that.destinationCommuneId,_that.pickupDat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int originCommuneId,  int destinationCommuneId,  DateTime pickupDate,  double totalWeightKg,  double? totalVolumeM3,  String? details)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int originCommuneId,  int destinationCommuneId,  double totalWeightKg,  double? totalVolumeM3,  String? details)?  $default,) {final _that = this;
 switch (_that) {
 case _ShipmentDraftInput() when $default != null:
-return $default(_that.originCommuneId,_that.destinationCommuneId,_that.pickupDate,_that.totalWeightKg,_that.totalVolumeM3,_that.details);case _:
+return $default(_that.originCommuneId,_that.destinationCommuneId,_that.totalWeightKg,_that.totalVolumeM3,_that.details);case _:
   return null;
 
 }
@@ -501,12 +497,11 @@ return $default(_that.originCommuneId,_that.destinationCommuneId,_that.pickupDat
 @JsonSerializable()
 
 class _ShipmentDraftInput extends ShipmentDraftInput {
-  const _ShipmentDraftInput({required this.originCommuneId, required this.destinationCommuneId, required this.pickupDate, required this.totalWeightKg, required this.totalVolumeM3, required this.details}): super._();
+  const _ShipmentDraftInput({required this.originCommuneId, required this.destinationCommuneId, required this.totalWeightKg, required this.totalVolumeM3, required this.details}): super._();
   factory _ShipmentDraftInput.fromJson(Map<String, dynamic> json) => _$ShipmentDraftInputFromJson(json);
 
 @override final  int originCommuneId;
 @override final  int destinationCommuneId;
-@override final  DateTime pickupDate;
 @override final  double totalWeightKg;
 @override final  double? totalVolumeM3;
 @override final  String? details;
@@ -524,16 +519,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShipmentDraftInput&&(identical(other.originCommuneId, originCommuneId) || other.originCommuneId == originCommuneId)&&(identical(other.destinationCommuneId, destinationCommuneId) || other.destinationCommuneId == destinationCommuneId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.totalWeightKg, totalWeightKg) || other.totalWeightKg == totalWeightKg)&&(identical(other.totalVolumeM3, totalVolumeM3) || other.totalVolumeM3 == totalVolumeM3)&&(identical(other.details, details) || other.details == details));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShipmentDraftInput&&(identical(other.originCommuneId, originCommuneId) || other.originCommuneId == originCommuneId)&&(identical(other.destinationCommuneId, destinationCommuneId) || other.destinationCommuneId == destinationCommuneId)&&(identical(other.totalWeightKg, totalWeightKg) || other.totalWeightKg == totalWeightKg)&&(identical(other.totalVolumeM3, totalVolumeM3) || other.totalVolumeM3 == totalVolumeM3)&&(identical(other.details, details) || other.details == details));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,originCommuneId,destinationCommuneId,pickupDate,totalWeightKg,totalVolumeM3,details);
+int get hashCode => Object.hash(runtimeType,originCommuneId,destinationCommuneId,totalWeightKg,totalVolumeM3,details);
 
 @override
 String toString() {
-  return 'ShipmentDraftInput(originCommuneId: $originCommuneId, destinationCommuneId: $destinationCommuneId, pickupDate: $pickupDate, totalWeightKg: $totalWeightKg, totalVolumeM3: $totalVolumeM3, details: $details)';
+  return 'ShipmentDraftInput(originCommuneId: $originCommuneId, destinationCommuneId: $destinationCommuneId, totalWeightKg: $totalWeightKg, totalVolumeM3: $totalVolumeM3, details: $details)';
 }
 
 
@@ -544,7 +539,7 @@ abstract mixin class _$ShipmentDraftInputCopyWith<$Res> implements $ShipmentDraf
   factory _$ShipmentDraftInputCopyWith(_ShipmentDraftInput value, $Res Function(_ShipmentDraftInput) _then) = __$ShipmentDraftInputCopyWithImpl;
 @override @useResult
 $Res call({
- int originCommuneId, int destinationCommuneId, DateTime pickupDate, double totalWeightKg, double? totalVolumeM3, String? details
+ int originCommuneId, int destinationCommuneId, double totalWeightKg, double? totalVolumeM3, String? details
 });
 
 
@@ -561,12 +556,11 @@ class __$ShipmentDraftInputCopyWithImpl<$Res>
 
 /// Create a copy of ShipmentDraftInput
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? originCommuneId = null,Object? destinationCommuneId = null,Object? pickupDate = null,Object? totalWeightKg = null,Object? totalVolumeM3 = freezed,Object? details = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? originCommuneId = null,Object? destinationCommuneId = null,Object? totalWeightKg = null,Object? totalVolumeM3 = freezed,Object? details = freezed,}) {
   return _then(_ShipmentDraftInput(
 originCommuneId: null == originCommuneId ? _self.originCommuneId : originCommuneId // ignore: cast_nullable_to_non_nullable
 as int,destinationCommuneId: null == destinationCommuneId ? _self.destinationCommuneId : destinationCommuneId // ignore: cast_nullable_to_non_nullable
-as int,pickupDate: null == pickupDate ? _self.pickupDate : pickupDate // ignore: cast_nullable_to_non_nullable
-as DateTime,totalWeightKg: null == totalWeightKg ? _self.totalWeightKg : totalWeightKg // ignore: cast_nullable_to_non_nullable
+as int,totalWeightKg: null == totalWeightKg ? _self.totalWeightKg : totalWeightKg // ignore: cast_nullable_to_non_nullable
 as double,totalVolumeM3: freezed == totalVolumeM3 ? _self.totalVolumeM3 : totalVolumeM3 // ignore: cast_nullable_to_non_nullable
 as double?,details: freezed == details ? _self.details : details // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -1452,7 +1446,7 @@ as int,
 /// @nodoc
 mixin _$BookingReviewSelection {
 
- ShipmentDraftRecord get shipment; ShipmentSearchResult get result;
+ ShipmentDraftRecord get shipment; ShipmentSearchResult get result; DateTime get requestedDate;
 /// Create a copy of BookingReviewSelection
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1463,16 +1457,16 @@ $BookingReviewSelectionCopyWith<BookingReviewSelection> get copyWith => _$Bookin
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingReviewSelection&&(identical(other.shipment, shipment) || other.shipment == shipment)&&(identical(other.result, result) || other.result == result));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingReviewSelection&&(identical(other.shipment, shipment) || other.shipment == shipment)&&(identical(other.result, result) || other.result == result)&&(identical(other.requestedDate, requestedDate) || other.requestedDate == requestedDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,shipment,result);
+int get hashCode => Object.hash(runtimeType,shipment,result,requestedDate);
 
 @override
 String toString() {
-  return 'BookingReviewSelection(shipment: $shipment, result: $result)';
+  return 'BookingReviewSelection(shipment: $shipment, result: $result, requestedDate: $requestedDate)';
 }
 
 
@@ -1483,7 +1477,7 @@ abstract mixin class $BookingReviewSelectionCopyWith<$Res>  {
   factory $BookingReviewSelectionCopyWith(BookingReviewSelection value, $Res Function(BookingReviewSelection) _then) = _$BookingReviewSelectionCopyWithImpl;
 @useResult
 $Res call({
- ShipmentDraftRecord shipment, ShipmentSearchResult result
+ ShipmentDraftRecord shipment, ShipmentSearchResult result, DateTime requestedDate
 });
 
 
@@ -1500,11 +1494,12 @@ class _$BookingReviewSelectionCopyWithImpl<$Res>
 
 /// Create a copy of BookingReviewSelection
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? shipment = null,Object? result = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? shipment = null,Object? result = null,Object? requestedDate = null,}) {
   return _then(_self.copyWith(
 shipment: null == shipment ? _self.shipment : shipment // ignore: cast_nullable_to_non_nullable
 as ShipmentDraftRecord,result: null == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
-as ShipmentSearchResult,
+as ShipmentSearchResult,requestedDate: null == requestedDate ? _self.requestedDate : requestedDate // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 /// Create a copy of BookingReviewSelection
@@ -1607,10 +1602,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ShipmentDraftRecord shipment,  ShipmentSearchResult result)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ShipmentDraftRecord shipment,  ShipmentSearchResult result,  DateTime requestedDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingReviewSelection() when $default != null:
-return $default(_that.shipment,_that.result);case _:
+return $default(_that.shipment,_that.result,_that.requestedDate);case _:
   return orElse();
 
 }
@@ -1628,10 +1623,10 @@ return $default(_that.shipment,_that.result);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ShipmentDraftRecord shipment,  ShipmentSearchResult result)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ShipmentDraftRecord shipment,  ShipmentSearchResult result,  DateTime requestedDate)  $default,) {final _that = this;
 switch (_that) {
 case _BookingReviewSelection():
-return $default(_that.shipment,_that.result);case _:
+return $default(_that.shipment,_that.result,_that.requestedDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1648,10 +1643,10 @@ return $default(_that.shipment,_that.result);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ShipmentDraftRecord shipment,  ShipmentSearchResult result)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ShipmentDraftRecord shipment,  ShipmentSearchResult result,  DateTime requestedDate)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingReviewSelection() when $default != null:
-return $default(_that.shipment,_that.result);case _:
+return $default(_that.shipment,_that.result,_that.requestedDate);case _:
   return null;
 
 }
@@ -1663,11 +1658,12 @@ return $default(_that.shipment,_that.result);case _:
 
 
 class _BookingReviewSelection extends BookingReviewSelection {
-  const _BookingReviewSelection({required this.shipment, required this.result}): super._();
+  const _BookingReviewSelection({required this.shipment, required this.result, required this.requestedDate}): super._();
   
 
 @override final  ShipmentDraftRecord shipment;
 @override final  ShipmentSearchResult result;
+@override final  DateTime requestedDate;
 
 /// Create a copy of BookingReviewSelection
 /// with the given fields replaced by the non-null parameter values.
@@ -1679,16 +1675,16 @@ _$BookingReviewSelectionCopyWith<_BookingReviewSelection> get copyWith => __$Boo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingReviewSelection&&(identical(other.shipment, shipment) || other.shipment == shipment)&&(identical(other.result, result) || other.result == result));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingReviewSelection&&(identical(other.shipment, shipment) || other.shipment == shipment)&&(identical(other.result, result) || other.result == result)&&(identical(other.requestedDate, requestedDate) || other.requestedDate == requestedDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,shipment,result);
+int get hashCode => Object.hash(runtimeType,shipment,result,requestedDate);
 
 @override
 String toString() {
-  return 'BookingReviewSelection(shipment: $shipment, result: $result)';
+  return 'BookingReviewSelection(shipment: $shipment, result: $result, requestedDate: $requestedDate)';
 }
 
 
@@ -1699,7 +1695,7 @@ abstract mixin class _$BookingReviewSelectionCopyWith<$Res> implements $BookingR
   factory _$BookingReviewSelectionCopyWith(_BookingReviewSelection value, $Res Function(_BookingReviewSelection) _then) = __$BookingReviewSelectionCopyWithImpl;
 @override @useResult
 $Res call({
- ShipmentDraftRecord shipment, ShipmentSearchResult result
+ ShipmentDraftRecord shipment, ShipmentSearchResult result, DateTime requestedDate
 });
 
 
@@ -1716,11 +1712,12 @@ class __$BookingReviewSelectionCopyWithImpl<$Res>
 
 /// Create a copy of BookingReviewSelection
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? shipment = null,Object? result = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? shipment = null,Object? result = null,Object? requestedDate = null,}) {
   return _then(_BookingReviewSelection(
 shipment: null == shipment ? _self.shipment : shipment // ignore: cast_nullable_to_non_nullable
 as ShipmentDraftRecord,result: null == result ? _self.result : result // ignore: cast_nullable_to_non_nullable
-as ShipmentSearchResult,
+as ShipmentSearchResult,requestedDate: null == requestedDate ? _self.requestedDate : requestedDate // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

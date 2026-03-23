@@ -29,38 +29,6 @@ begin
   end if;
 
   if not exists (
-    select 1 from pg_constraint where conname = 'shipments_pickup_window_order_check'
-  ) then
-    alter table public.shipments
-    add constraint shipments_pickup_window_order_check
-    check (pickup_window_end > pickup_window_start);
-  end if;
-
-  if not exists (
-    select 1 from pg_constraint where conname = 'shipment_items_positive_quantity_check'
-  ) then
-    alter table public.shipment_items
-    add constraint shipment_items_positive_quantity_check
-    check (quantity > 0);
-  end if;
-
-  if not exists (
-    select 1 from pg_constraint where conname = 'shipment_items_non_negative_weight_check'
-  ) then
-    alter table public.shipment_items
-    add constraint shipment_items_non_negative_weight_check
-    check (weight_kg is null or weight_kg >= 0);
-  end if;
-
-  if not exists (
-    select 1 from pg_constraint where conname = 'shipment_items_non_negative_volume_check'
-  ) then
-    alter table public.shipment_items
-    add constraint shipment_items_non_negative_volume_check
-    check (volume_m3 is null or volume_m3 >= 0);
-  end if;
-
-  if not exists (
     select 1 from pg_constraint where conname = 'bookings_route_date_required_check'
   ) then
     alter table public.bookings
@@ -107,8 +75,8 @@ $$;
 create unique index if not exists route_departure_instances_route_date_unique_idx
 on public.route_departure_instances (route_id, departure_date);
 
-create index if not exists shipments_lane_pickup_idx
-on public.shipments (origin_commune_id, destination_commune_id, pickup_window_start, pickup_window_end);
+create index if not exists shipments_lane_lookup_idx
+on public.shipments (origin_commune_id, destination_commune_id);
 
 create index if not exists bookings_route_active_lookup_idx
 on public.bookings (route_id, route_departure_date)
@@ -500,7 +468,6 @@ declare
   v_trip public.oneoff_trips;
   v_vehicle_id uuid;
   v_carrier_id uuid;
-  v_departure_at timestamptz;
   v_price_per_kg_dzd numeric;
   v_total_capacity_kg numeric;
   v_total_capacity_volume_m3 numeric;
@@ -606,7 +573,6 @@ begin
 
     v_vehicle_id := v_route_revision.vehicle_id;
     v_carrier_id := v_route.carrier_id;
-    v_departure_at := (p_departure_date::timestamp + v_route_revision.default_departure_time)::timestamptz;
     v_price_per_kg_dzd := v_route_revision.price_per_kg_dzd;
     v_total_capacity_kg := v_route_revision.total_capacity_kg;
     v_total_capacity_volume_m3 := v_route_revision.total_capacity_volume_m3;
@@ -669,7 +635,6 @@ begin
 
     v_vehicle_id := v_trip.vehicle_id;
     v_carrier_id := v_trip.carrier_id;
-    v_departure_at := v_trip.departure_at;
     v_price_per_kg_dzd := v_trip.price_per_kg_dzd;
     v_total_capacity_kg := v_trip.total_capacity_kg;
     v_total_capacity_volume_m3 := v_trip.total_capacity_volume_m3;
@@ -691,11 +656,6 @@ begin
       and b.booking_status <> 'cancelled';
   else
     raise exception 'Unsupported booking source type';
-  end if;
-
-  if v_departure_at < v_shipment.pickup_window_start
-     or v_departure_at > v_shipment.pickup_window_end then
-    raise exception 'Selected departure is outside the shipment pickup window';
   end if;
 
   if v_remaining_capacity_kg < v_shipment.total_weight_kg then
@@ -4710,7 +4670,6 @@ declare
   v_trip public.oneoff_trips;
   v_vehicle_id uuid;
   v_carrier_id uuid;
-  v_departure_at timestamptz;
   v_price_per_kg_dzd numeric;
   v_total_capacity_kg numeric;
   v_total_capacity_volume_m3 numeric;
@@ -4821,7 +4780,6 @@ begin
 
     v_vehicle_id := v_route_revision.vehicle_id;
     v_carrier_id := v_route.carrier_id;
-    v_departure_at := (p_departure_date::timestamp + v_route_revision.default_departure_time)::timestamptz;
     v_price_per_kg_dzd := v_route_revision.price_per_kg_dzd;
     v_total_capacity_kg := v_route_revision.total_capacity_kg;
     v_total_capacity_volume_m3 := v_route_revision.total_capacity_volume_m3;
@@ -4884,7 +4842,6 @@ begin
 
     v_vehicle_id := v_trip.vehicle_id;
     v_carrier_id := v_trip.carrier_id;
-    v_departure_at := v_trip.departure_at;
     v_price_per_kg_dzd := v_trip.price_per_kg_dzd;
     v_total_capacity_kg := v_trip.total_capacity_kg;
     v_total_capacity_volume_m3 := v_trip.total_capacity_volume_m3;
@@ -4906,11 +4863,6 @@ begin
       and b.booking_status <> 'cancelled';
   else
     raise exception 'Unsupported booking source type';
-  end if;
-
-  if v_departure_at < v_shipment.pickup_window_start
-     or v_departure_at > v_shipment.pickup_window_end then
-    raise exception 'Selected departure is outside the shipment pickup window';
   end if;
 
   if v_remaining_capacity_kg < v_shipment.total_weight_kg then
@@ -5444,379 +5396,3 @@ begin
 end;
 $$;
 -- <<< END 20260321100000_close_release_gate_blockers.sql
-
--- >>> BEGIN 20260322123000_simplify_shipment_domain.sql
-alter table public.shipments
-add column if not exists pickup_date date;
-
-update public.shipments
-set pickup_date = pickup_window_start::date
-where pickup_date is null;
-
-alter table public.shipments
-alter column pickup_date set not null;
-
-alter table public.shipments
-drop constraint if exists shipments_pickup_window_order_check;
-
-drop index if exists shipments_lane_pickup_idx;
-
-create index if not exists shipments_lane_pickup_date_idx
-on public.shipments (origin_commune_id, destination_commune_id, pickup_date);
-
-alter table public.shipments
-drop column if exists pickup_window_end,
-drop column if exists pickup_window_start,
-drop column if exists category;
-
-drop table if exists public.shipment_items cascade;
-
-create or replace function public.create_booking_from_search_result(
-  p_shipment_id uuid,
-  p_source_type text,
-  p_source_id uuid,
-  p_departure_date date default null,
-  p_include_insurance boolean default false,
-  p_idempotency_key text default null
-)
-returns public.bookings
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-  v_actor_id uuid := (select auth.uid());
-  v_shipment public.shipments;
-  v_existing_booking public.bookings;
-  v_source_type text := lower(trim(coalesce(p_source_type, '')));
-  v_route public.routes;
-  v_route_revision public.route_revisions;
-  v_route_instance public.route_departure_instances;
-  v_trip public.oneoff_trips;
-  v_vehicle_id uuid;
-  v_carrier_id uuid;
-  v_departure_at timestamptz;
-  v_price_per_kg_dzd numeric;
-  v_total_capacity_volume_m3 numeric;
-  v_remaining_capacity_kg numeric;
-  v_remaining_volume_m3 numeric;
-  v_settings jsonb;
-  v_platform_fee_rate numeric;
-  v_carrier_fee_rate numeric;
-  v_insurance_rate numeric;
-  v_insurance_min_fee_dzd numeric;
-  v_tax_rate numeric;
-  v_base_price_dzd numeric;
-  v_platform_fee_dzd numeric;
-  v_carrier_fee_dzd numeric;
-  v_insurance_fee_dzd numeric := 0;
-  v_tax_fee_dzd numeric;
-  v_shipper_total_dzd numeric;
-  v_carrier_payout_dzd numeric;
-  v_tracking_number text;
-  v_payment_reference text;
-  v_booking public.bookings;
-  v_request_key text := nullif(trim(coalesce(p_idempotency_key, '')), '');
-begin
-  if v_actor_id is null then
-    raise exception 'authentication_required';
-  end if;
-
-  if not exists (
-    select 1
-    from public.profiles
-    where id = v_actor_id
-      and role = 'shipper'::public.app_role
-      and is_active = true
-  ) then
-    raise exception 'Only active shippers may create bookings';
-  end if;
-
-  perform public.assert_rate_limit('create_booking', 12, 300);
-
-  if v_request_key is not null and char_length(v_request_key) > 120 then
-    raise exception 'Idempotency key is too long';
-  end if;
-
-  select * into v_shipment
-  from public.shipments
-  where id = p_shipment_id
-    and shipper_id = v_actor_id
-  for update;
-
-  if not found then
-    raise exception 'Shipment not found';
-  end if;
-
-  if v_shipment.status <> 'draft' then
-    select * into v_existing_booking
-    from public.bookings
-    where shipment_id = p_shipment_id;
-    if found then
-      return v_existing_booking;
-    end if;
-    raise exception 'Only draft shipments can be booked';
-  end if;
-
-  select * into v_existing_booking
-  from public.bookings
-  where shipment_id = p_shipment_id;
-  if found then
-    return v_existing_booking;
-  end if;
-
-  select coalesce(value, '{}'::jsonb)
-  into v_settings
-  from public.platform_settings
-  where key = 'booking_pricing'
-    and is_public = true;
-
-  v_platform_fee_rate := coalesce((v_settings->>'platform_fee_rate')::numeric, 0.05);
-  v_carrier_fee_rate := coalesce((v_settings->>'carrier_fee_rate')::numeric, 0);
-  v_insurance_rate := coalesce((v_settings->>'insurance_rate')::numeric, 0.01);
-  v_insurance_min_fee_dzd := coalesce((v_settings->>'insurance_min_fee_dzd')::numeric, 100);
-  v_tax_rate := coalesce((v_settings->>'tax_rate')::numeric, 0);
-
-  if v_source_type = 'route' then
-    if p_departure_date is null then
-      raise exception 'Route bookings require a departure date';
-    end if;
-
-    select * into v_route
-    from public.routes
-    where id = p_source_id
-      and is_active = true;
-
-    if not found then
-      raise exception 'Route not found';
-    end if;
-
-    if v_shipment.origin_commune_id <> v_route.origin_commune_id
-       or v_shipment.destination_commune_id <> v_route.destination_commune_id then
-      raise exception 'Shipment lane does not match selected route';
-    end if;
-
-    select rv.*
-    into v_route_revision
-    from public.route_revisions as rv
-    where rv.route_id = v_route.id
-      and rv.effective_from::date <= p_departure_date
-    order by rv.effective_from desc, rv.created_at desc
-    limit 1;
-
-    if not found then
-      raise exception 'No active route revision is available for the selected date';
-    end if;
-
-    if extract(dow from p_departure_date)::int <> all(v_route_revision.recurring_days_of_week) then
-      raise exception 'Selected date is not available for this recurring route';
-    end if;
-
-    select * into v_route_instance
-    from public.route_departure_instances
-    where route_id = v_route.id
-      and departure_date = p_departure_date
-    for update;
-
-    v_vehicle_id := coalesce(v_route_instance.vehicle_id, v_route_revision.vehicle_id);
-    v_carrier_id := v_route.carrier_id;
-    v_departure_at := (p_departure_date::timestamp + v_route_revision.default_departure_time)::timestamptz;
-    v_price_per_kg_dzd := v_route_revision.price_per_kg_dzd;
-    v_total_capacity_volume_m3 := coalesce(v_route_instance.total_capacity_volume_m3, v_route_revision.total_capacity_volume_m3);
-
-    select
-      coalesce(v_route_instance.remaining_capacity_kg, v_route_revision.total_capacity_kg - coalesce(sum(b.weight_kg), 0)),
-      case
-        when coalesce(v_route_instance.total_capacity_volume_m3, v_route_revision.total_capacity_volume_m3) is null then null
-        else coalesce(v_route_instance.remaining_volume_m3, coalesce(v_route_revision.total_capacity_volume_m3, 0) - coalesce(sum(coalesce(b.volume_m3, 0)), 0))
-      end
-    into v_remaining_capacity_kg, v_remaining_volume_m3
-    from public.bookings as b
-    where b.route_id = v_route.id
-      and b.route_departure_date = p_departure_date
-      and b.booking_status <> 'cancelled';
-  elsif v_source_type = 'oneoff_trip' then
-    select * into v_trip
-    from public.oneoff_trips
-    where id = p_source_id
-      and is_active = true
-    for update;
-
-    if not found then
-      raise exception 'One-off trip not found';
-    end if;
-
-    if p_departure_date is not null and v_trip.departure_at::date <> p_departure_date then
-      raise exception 'One-off trip does not match the selected departure date';
-    end if;
-
-    v_vehicle_id := v_trip.vehicle_id;
-    v_carrier_id := v_trip.carrier_id;
-    v_departure_at := v_trip.departure_at;
-    v_price_per_kg_dzd := v_trip.price_per_kg_dzd;
-    v_total_capacity_volume_m3 := v_trip.total_capacity_volume_m3;
-
-    if v_shipment.origin_commune_id <> v_trip.origin_commune_id
-       or v_shipment.destination_commune_id <> v_trip.destination_commune_id then
-      raise exception 'Shipment lane does not match selected one-off trip';
-    end if;
-
-    select
-      v_trip.total_capacity_kg - coalesce(sum(b.weight_kg), 0),
-      case
-        when v_trip.total_capacity_volume_m3 is null then null
-        else v_trip.total_capacity_volume_m3 - coalesce(sum(coalesce(b.volume_m3, 0)), 0)
-      end
-    into v_remaining_capacity_kg, v_remaining_volume_m3
-    from public.bookings as b
-    where b.oneoff_trip_id = v_trip.id
-      and b.booking_status <> 'cancelled';
-  else
-    raise exception 'Unsupported booking source type';
-  end if;
-
-  if v_departure_at::date <> v_shipment.pickup_date then
-    raise exception 'Selected departure is outside the shipment pickup date';
-  end if;
-
-  if v_remaining_capacity_kg < v_shipment.total_weight_kg then
-    raise exception 'Selected capacity is no longer available';
-  end if;
-
-  if v_shipment.total_volume_m3 is not null
-     and v_total_capacity_volume_m3 is not null
-     and coalesce(v_remaining_volume_m3, 0) < v_shipment.total_volume_m3 then
-    raise exception 'Selected volume capacity is no longer available';
-  end if;
-
-  v_base_price_dzd := round(v_shipment.total_weight_kg * v_price_per_kg_dzd, 2);
-  v_platform_fee_dzd := round(v_base_price_dzd * v_platform_fee_rate, 2);
-  v_carrier_fee_dzd := round(v_base_price_dzd * v_carrier_fee_rate, 2);
-  if p_include_insurance then
-    v_insurance_fee_dzd := greatest(round(v_base_price_dzd * v_insurance_rate, 2), v_insurance_min_fee_dzd);
-  end if;
-  v_tax_fee_dzd := round((v_base_price_dzd + v_platform_fee_dzd + v_carrier_fee_dzd + v_insurance_fee_dzd) * v_tax_rate, 2);
-  v_shipper_total_dzd := v_base_price_dzd + v_platform_fee_dzd + v_carrier_fee_dzd + v_insurance_fee_dzd + v_tax_fee_dzd;
-  v_carrier_payout_dzd := v_base_price_dzd + v_carrier_fee_dzd;
-  v_tracking_number := 'FF-' || to_char(now(), 'YYMMDD') || '-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 8));
-  v_payment_reference := 'PAY-' || to_char(now(), 'YYMMDD') || '-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 10));
-
-  insert into public.bookings (
-    shipment_id,
-    route_id,
-    route_departure_date,
-    oneoff_trip_id,
-    shipper_id,
-    carrier_id,
-    vehicle_id,
-    weight_kg,
-    volume_m3,
-    price_per_kg_dzd,
-    base_price_dzd,
-    platform_fee_dzd,
-    carrier_fee_dzd,
-    insurance_rate,
-    insurance_fee_dzd,
-    tax_fee_dzd,
-    shipper_total_dzd,
-    carrier_payout_dzd,
-    booking_status,
-    payment_status,
-    tracking_number,
-    payment_reference
-  )
-  values (
-    v_shipment.id,
-    case when v_source_type = 'route' then p_source_id else null end,
-    case when v_source_type = 'route' then p_departure_date else null end,
-    case when v_source_type = 'oneoff_trip' then p_source_id else null end,
-    v_actor_id,
-    v_carrier_id,
-    v_vehicle_id,
-    v_shipment.total_weight_kg,
-    v_shipment.total_volume_m3,
-    v_price_per_kg_dzd,
-    v_base_price_dzd,
-    v_platform_fee_dzd,
-    v_carrier_fee_dzd,
-    case when p_include_insurance then v_insurance_rate else null end,
-    v_insurance_fee_dzd,
-    v_tax_fee_dzd,
-    v_shipper_total_dzd,
-    v_carrier_payout_dzd,
-    'pending_payment'::public.booking_status,
-    'unpaid'::public.payment_status,
-    v_tracking_number,
-    v_payment_reference
-  )
-  returning * into v_booking;
-
-  update public.shipments
-  set status = 'booked', updated_at = timezone('utc', now())
-  where id = v_shipment.id;
-
-  if v_source_type = 'route' and v_route_instance.id is not null then
-    update public.route_departure_instances
-    set
-      reserved_capacity_kg = reserved_capacity_kg + v_shipment.total_weight_kg,
-      remaining_capacity_kg = remaining_capacity_kg - v_shipment.total_weight_kg,
-      reserved_volume_m3 = case
-        when reserved_volume_m3 is null and v_shipment.total_volume_m3 is null then null
-        else coalesce(reserved_volume_m3, 0) + coalesce(v_shipment.total_volume_m3, 0)
-      end,
-      remaining_volume_m3 = case
-        when remaining_volume_m3 is null and v_shipment.total_volume_m3 is null then null
-        else coalesce(remaining_volume_m3, 0) - coalesce(v_shipment.total_volume_m3, 0)
-      end,
-      updated_at = timezone('utc', now())
-    where id = v_route_instance.id;
-  end if;
-
-  insert into public.admin_audit_logs (
-    actor_id,
-    actor_role,
-    action,
-    target_type,
-    target_id,
-    outcome,
-    metadata
-  )
-  values (
-    v_actor_id,
-    'shipper'::public.app_role,
-    'booking_created_from_search_result',
-    'booking',
-    v_booking.id,
-    'success',
-    jsonb_build_object(
-      'shipment_id', v_shipment.id,
-      'source_type', v_source_type,
-      'source_id', p_source_id,
-      'departure_date', p_departure_date,
-      'idempotency_key', v_request_key
-    )
-  );
-
-  insert into public.tracking_events (
-    booking_id,
-    event_type,
-    visibility,
-    note,
-    created_by,
-    recorded_at
-  ) values (
-    v_booking.id,
-    'payment_pending',
-    'user_visible',
-    'Booking created and waiting for payment proof.',
-    v_actor_id,
-    now()
-  );
-
-  return v_booking;
-end;
-$$;
-
-revoke all on function public.create_booking_from_search_result(uuid, text, uuid, date, boolean, text) from public, anon;
-grant execute on function public.create_booking_from_search_result(uuid, text, uuid, date, boolean, text) to authenticated, service_role;
--- <<< END 20260322123000_simplify_shipment_domain.sql

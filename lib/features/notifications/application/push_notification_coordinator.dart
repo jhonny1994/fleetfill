@@ -73,7 +73,10 @@ class _PushNotificationCoordinatorState
 
       if (environment.hasSupabaseConfig && auth != null) {
         unawaited(
-          pushService.syncAuthenticatedSession(auth: auth, locale: locale),
+          pushService.syncAuthenticatedSessionIfAuthorized(
+            auth: auth,
+            locale: locale,
+          ),
         );
       }
     }

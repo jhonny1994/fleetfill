@@ -270,6 +270,45 @@ void main() {
       );
     });
 
+    test('routes completed non-admin onboarding through notification setup', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.shipper,
+        hasCompletedOnboarding: true,
+        hasPhoneNumber: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.shipperHome,
+        hasSeenNotificationOnboarding: false,
+      );
+
+      expect(decision.target, AppRedirectTarget.notificationSetup);
+      expect(
+        AppRouteGuards.redirectLocation(decision, auth: auth),
+        AppRoutePath.notificationSetup,
+      );
+    });
+
+    test('allows admin users to skip notification onboarding gate', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.admin,
+        hasCompletedOnboarding: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.adminDashboard,
+        hasSeenNotificationOnboarding: false,
+      );
+
+      expect(decision.target, AppRedirectTarget.none);
+    });
+
     test('redirects carriers away from shipper-only surfaces', () {
       final auth = authSnapshot(
         status: AuthStatus.authenticated,

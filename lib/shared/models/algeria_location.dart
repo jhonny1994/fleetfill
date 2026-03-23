@@ -83,7 +83,9 @@ Map<String, dynamic> _normalizeCommuneJson(Map<String, dynamic> json) {
   return {
     ...json,
     'name_fr':
-        (json['name_fr'] as String?)?.trim() ?? (json['name'] as String?)?.trim() ?? '',
+        (json['name_fr'] as String?)?.trim() ??
+        (json['name'] as String?)?.trim() ??
+        '',
     'name_ar': (json['name_ar'] as String?)?.trim() ?? '',
   };
 }

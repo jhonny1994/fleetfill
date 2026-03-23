@@ -155,7 +155,9 @@ abstract class EmailDeliveryLogRecord with _$EmailDeliveryLogRecord {
       status: (json['status'] as String?)?.trim() ?? 'queued',
       provider: (json['provider'] as String?)?.trim() ?? '',
       attemptCount: (json['attempt_count'] as num?)?.toInt() ?? 0,
-      lastAttemptAt: DateTime.tryParse(json['last_attempt_at'] as String? ?? ''),
+      lastAttemptAt: DateTime.tryParse(
+        json['last_attempt_at'] as String? ?? '',
+      ),
       nextRetryAt: DateTime.tryParse(json['next_retry_at'] as String? ?? ''),
       lastErrorAt: DateTime.tryParse(json['last_error_at'] as String? ?? ''),
       errorCode: (json['error_code'] as String?)?.trim(),

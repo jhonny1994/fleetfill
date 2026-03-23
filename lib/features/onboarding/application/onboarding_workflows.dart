@@ -1,4 +1,5 @@
 import 'package:fleetfill/core/core.dart';
+import 'package:fleetfill/features/onboarding/application/onboarding_persistence.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final onboardingWorkflowControllerProvider =
@@ -6,12 +7,31 @@ final onboardingWorkflowControllerProvider =
       OnboardingWorkflowController.new,
     );
 
+enum OnboardingNextStep {
+  phoneCompletion,
+  notificationSetup,
+  shipperHome,
+  carrierHome,
+  adminDashboard
+  ;
+
+  String get route {
+    return switch (this) {
+      OnboardingNextStep.phoneCompletion => AppRoutePath.phoneCompletion,
+      OnboardingNextStep.notificationSetup => AppRoutePath.notificationSetup,
+      OnboardingNextStep.shipperHome => AppRoutePath.shipperHome,
+      OnboardingNextStep.carrierHome => AppRoutePath.carrierHome,
+      OnboardingNextStep.adminDashboard => AppRoutePath.adminDashboard,
+    };
+  }
+}
+
 class OnboardingWorkflowController {
   const OnboardingWorkflowController(this.ref);
 
   final Ref ref;
 
-  Future<String> submitProfileSetup({
+  Future<OnboardingNextStep> submitProfileSetup({
     required AppUserRole role,
     required String fullName,
     required String phoneNumber,
@@ -28,25 +48,39 @@ class OnboardingWorkflowController {
         );
     await ref.read(authSessionControllerProvider.notifier).refresh();
     if (role != AppUserRole.admin && trimmedPhone.isEmpty) {
-      return AppRoutePath.phoneCompletion;
+      return OnboardingNextStep.phoneCompletion;
     }
 
-    final nextRoute = switch (role) {
-      AppUserRole.carrier => AppRoutePath.carrierHome,
-      AppUserRole.admin => AppRoutePath.adminDashboard,
-      AppUserRole.shipper => AppRoutePath.shipperHome,
+    return switch (role) {
+      AppUserRole.admin => OnboardingNextStep.adminDashboard,
+      _ => OnboardingNextStep.notificationSetup,
     };
-    return nextRoute;
   }
 
-  Future<String> submitPhoneCompletion(String phoneNumber) async {
+  Future<OnboardingNextStep> submitPhoneCompletion(String phoneNumber) async {
     await ref.read(authRepositoryProvider).updatePhoneNumber(phoneNumber);
     await ref.read(authSessionControllerProvider.notifier).refresh();
     final auth = ref.read(authSessionControllerProvider).asData?.value;
     if (auth == null) {
-      return AppRoutePath.signIn;
+      return OnboardingNextStep.notificationSetup;
     }
 
-    return AppRouteGuards.homeLocation(auth);
+    if (auth.role == AppUserRole.admin) {
+      return OnboardingNextStep.adminDashboard;
+    }
+
+    return OnboardingNextStep.notificationSetup;
+  }
+
+  Future<OnboardingNextStep> completeNotificationSetup() async {
+    await ref
+        .read(notificationOnboardingControllerProvider.notifier)
+        .markSeen();
+    final auth = ref.read(authSessionControllerProvider).asData?.value;
+    return switch (auth?.role) {
+      AppUserRole.carrier => OnboardingNextStep.carrierHome,
+      AppUserRole.admin => OnboardingNextStep.adminDashboard,
+      _ => OnboardingNextStep.shipperHome,
+    };
   }
 }

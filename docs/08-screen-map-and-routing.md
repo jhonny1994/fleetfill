@@ -94,7 +94,7 @@ Do not use snackbars for critical decisions or critical failure explanation.
     role-selection
     language-selection
     profile-setup
-    phone-completion
+    notification-setup
 
   permissions/
     notifications-help
@@ -163,7 +163,7 @@ Do not use snackbars for critical decisions or critical failure explanation.
 
 Permissions are usually contextual, not global route guards.
 
-- notification permission should be requested after the user understands the value
+- notification permission should be requested in the guided authenticated onboarding sequence after the user understands the value
 - media access should be requested only when the user starts uploading proof or documents
 - permanently denied permissions should open the relevant help/recovery route
 
@@ -249,11 +249,11 @@ First-run welcome is a separate pre-auth entry screen, not part of the authentic
 - `RoleSelectionScreen`
 - `LanguageSelectionScreen`
 - `ProfileSetupScreen`
-- `PhoneCompletionScreen`
+- `NotificationSetupScreen`
 
 Implementation note:
 
-- `ProfileSetupScreen` should render role-specific content for shipper vs carrier instead of duplicating many onboarding routes
+- `ProfileSetupScreen` should render role-specific content for shipper vs carrier and capture phone during the same guided sequence instead of deferring to a separate setup page
 - theme preference should live in Settings, not in onboarding
 - carrier verification intro and review should be sections inside the carrier profile setup flow, not extra routes
 - onboarding completion should usually resolve with inline confirmation and forward navigation rather than a permanent standalone destination unless product needs change later
@@ -278,7 +278,6 @@ Full pages:
 Inline sections:
 
 - active bookings summary
-- recent notifications summary
 - quick actions
 - support shortcut
 
@@ -315,6 +314,13 @@ Full pages:
 - `BookingReviewScreen`
 - `PaymentFlowScreen`
 
+Search page structure:
+
+- shipment selector
+- requested date picker
+- compact shipment summary
+- inline exact or nearest-date result list visible without discoverability scrolling
+
 Recommended detail strategy:
 
 - use the shared `RouteDetailScreen` / trip detail presentation above the shell when a result is opened deeply or from a notification
@@ -346,7 +352,6 @@ Full pages:
 Nested sections or sheets:
 
 - phone edit
-- notification preferences
 - email preferences
 - support shortcut
 
@@ -575,7 +580,7 @@ Root
 |  |- RoleSelection
 |  |- LanguageSelection
 |  |- ProfileSetup
-|  |- PhoneCompletion
+|  |- NotificationSetup
 |- PermissionHelpRoutes
 |  |- NotificationsHelp
 |  |- MediaUploadHelp

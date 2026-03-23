@@ -56,6 +56,18 @@ Permanent rule:
 
 The shipment is described at the shipment level through one details field and travels together on the same trip.
 
+Shipment draft fields:
+
+- origin wilaya and commune
+- destination wilaya and commune
+- total weight
+- optional volume
+- shipment details
+
+Shipment drafts do not own the requested pickup or departure date.
+
+The requested date is selected in search and is part of the search session and later booking snapshot, not part of the reusable draft itself.
+
 ### 2.6 Booking
 
 The commercial and operational contract between shipper and carrier for one shipment on one route instance or one one-off trip.
@@ -234,12 +246,19 @@ Default ordering uses the `Recommended` ranking defined in `docs/01-product-and-
 
 If there is no exact match on the requested date:
 
-- show exact route results on nearest allowed dates
+- show exact route results on nearest allowed future dates from the selected search date onward
 
 If there is no exact route at all:
 
 - do not widen geography silently
 - ask the user to redefine search
+
+### 7.4 Date Ownership
+
+- shipment drafts stay reusable and lane-focused
+- search owns the requested date
+- booking snapshots the chosen departure date from the selected result
+- shipment detail must not be treated as the source of truth for booking departure timing
 
 ## 8. Pricing And Settlement Rules
 

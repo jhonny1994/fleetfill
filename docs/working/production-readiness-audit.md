@@ -141,6 +141,7 @@ These are real Phase 14 items, but they require representative devices, staging 
 - Exact-lane search exists and is server-driven
 - Search contract behavior is stronger than some later flows
 - Performance and pagination still need real validation beyond local confidence
+- The next consolidation pass should move requested date ownership fully into search so shipment drafts remain reusable and the UI no longer carries a tall shipment summary as the primary search surface
 
 ### Phase 7 - Booking And Pricing
 
@@ -167,6 +168,7 @@ These are real Phase 14 items, but they require representative devices, staging 
 - In-app notifications and support surfaces exist
 - Push delivery now has a concrete Firebase Cloud Messaging HTTP v1 path with client registration, queueing, and worker dispatch
 - Support email queueing and email lifecycle are materially aligned; remaining work is real-environment secret/provider verification
+- The next consolidation pass should move notification prompting into onboarding, shift entry to a shared app-bar bell, and collapse duplicated settings/help surfaces into one coherent notifications configuration path
 
 ### Phase 12 - Admin Surface And Operations
 

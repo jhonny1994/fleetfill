@@ -61,7 +61,6 @@ class ShipmentRepository {
           'shipper_id': userId,
           'origin_commune_id': input.originCommuneId,
           'destination_commune_id': input.destinationCommuneId,
-          'pickup_date': _dateOnly(input.pickupDate),
           'total_weight_kg': input.totalWeightKg,
           'total_volume_m3': input.totalVolumeM3,
           'description': _nullable(input.details),
@@ -82,7 +81,6 @@ class ShipmentRepository {
         .update({
           'origin_commune_id': input.originCommuneId,
           'destination_commune_id': input.destinationCommuneId,
-          'pickup_date': _dateOnly(input.pickupDate),
           'total_weight_kg': input.totalWeightKg,
           'total_volume_m3': input.totalVolumeM3,
           'description': _nullable(input.details),
@@ -109,7 +107,7 @@ class ShipmentRepository {
       params: {
         'p_origin_commune_id': query.originCommuneId,
         'p_destination_commune_id': query.destinationCommuneId,
-        'p_requested_date': _dateOnly(query.requestedDate),
+        'p_requested_date': dateOnly(query.requestedDate),
         'p_total_weight_kg': query.totalWeightKg,
         'p_total_volume_m3': query.totalVolumeM3,
         'p_sort': switch (query.sort) {
@@ -141,7 +139,7 @@ class ShipmentRepository {
     return trimmed;
   }
 
-  String _dateOnly(DateTime value) {
+  String dateOnly(DateTime value) {
     final date = DateTime(value.year, value.month, value.day);
     return date.toIso8601String().split('T').first;
   }

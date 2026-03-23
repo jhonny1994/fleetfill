@@ -266,42 +266,45 @@ void main() {
       );
     });
 
-    test('keeps payment proof access restricted and validates uploaded objects', () {
-      final securityMigration =
-          File(
-            'supabase/migrations/20260317010000_create_foundation_layer.sql',
-          ).readAsStringSync() +
-          File(
-            'supabase/migrations/20260317010000_create_foundation_layer.sql',
-          ).readAsStringSync() +
-          File(
-            'supabase/migrations/20260317010000_create_foundation_layer.sql',
-          ).readAsStringSync();
+    test(
+      'keeps payment proof access restricted and validates uploaded objects',
+      () {
+        final securityMigration =
+            File(
+              'supabase/migrations/20260317010000_create_foundation_layer.sql',
+            ).readAsStringSync() +
+            File(
+              'supabase/migrations/20260317010000_create_foundation_layer.sql',
+            ).readAsStringSync() +
+            File(
+              'supabase/migrations/20260317010000_create_foundation_layer.sql',
+            ).readAsStringSync();
 
-      expect(
-        securityMigration.contains('payment_proofs_select_shipper_or_admin'),
-        isTrue,
-      );
-      expect(
-        securityMigration.contains('b.shipper_id = (select auth.uid())'),
-        isTrue,
-      );
-      expect(
-        securityMigration.contains('storage.objects as so'),
-        isTrue,
-      );
-      expect(
-        securityMigration.contains(
-          'Uploaded verification file is missing or metadata does not match the authorized session',
-        ),
-        isTrue,
-      );
-      expect(
-        securityMigration.contains(
-          'Uploaded proof file is missing or metadata does not match the authorized session',
-        ),
-        isTrue,
-      );
-    });
+        expect(
+          securityMigration.contains('payment_proofs_select_shipper_or_admin'),
+          isTrue,
+        );
+        expect(
+          securityMigration.contains('b.shipper_id = (select auth.uid())'),
+          isTrue,
+        );
+        expect(
+          securityMigration.contains('storage.objects as so'),
+          isTrue,
+        );
+        expect(
+          securityMigration.contains(
+            'Uploaded verification file is missing or metadata does not match the authorized session',
+          ),
+          isTrue,
+        );
+        expect(
+          securityMigration.contains(
+            'Uploaded proof file is missing or metadata does not match the authorized session',
+          ),
+          isTrue,
+        );
+      },
+    );
   });
 }

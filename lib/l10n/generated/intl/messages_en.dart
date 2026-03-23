@@ -599,6 +599,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "carrierBookingsTitle": MessageLookupByLibrary.simpleMessage(
       "Carrier bookings",
     ),
+    "carrierGatePayoutMessage": MessageLookupByLibrary.simpleMessage(
+      "Add a payout account before opening carrier bookings so completed jobs can be settled correctly.",
+    ),
+    "carrierGatePayoutTitle": MessageLookupByLibrary.simpleMessage(
+      "Payout account required",
+    ),
+    "carrierGatePhoneMessage": MessageLookupByLibrary.simpleMessage(
+      "Add your phone number before opening this carrier workspace so booking and operational updates can reach you.",
+    ),
+    "carrierGatePhoneTitle": MessageLookupByLibrary.simpleMessage(
+      "Phone number required",
+    ),
+    "carrierGateVerificationMessage": MessageLookupByLibrary.simpleMessage(
+      "Finish carrier verification before opening this workspace for publishing routes or handling bookings.",
+    ),
+    "carrierGateVerificationTitle": MessageLookupByLibrary.simpleMessage(
+      "Verification required",
+    ),
     "carrierHomeDescription": MessageLookupByLibrary.simpleMessage(
       "Check your verification status, fleet readiness, and next tasks.",
     ),
@@ -962,12 +980,31 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationsCenterTitle": MessageLookupByLibrary.simpleMessage(
       "Notifications",
     ),
+    "notificationsOnboardingEnableAction": MessageLookupByLibrary.simpleMessage(
+      "Enable notifications",
+    ),
+    "notificationsOnboardingSkipAction": MessageLookupByLibrary.simpleMessage(
+      "Skip for now",
+    ),
+    "notificationsOnboardingValueMessage": MessageLookupByLibrary.simpleMessage(
+      "Turn on notifications to follow booking confirmations, payment reviews, delivery milestones, and account alerts without guessing what changed.",
+    ),
     "notificationsPermissionDescription": MessageLookupByLibrary.simpleMessage(
       "Turn on notifications to get booking updates, delivery milestones, and payment alerts.",
     ),
     "notificationsPermissionTitle": MessageLookupByLibrary.simpleMessage(
       "Turn on notifications",
     ),
+    "notificationsSettingsDisabledMessage": MessageLookupByLibrary.simpleMessage(
+      "Notifications stay off for now. You can enable them later from settings.",
+    ),
+    "notificationsSettingsEnabledMessage": MessageLookupByLibrary.simpleMessage(
+      "Notifications are enabled for this device.",
+    ),
+    "notificationsSettingsEntryDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "Manage permission status and open your notification inbox.",
+        ),
     "offlineMessage": MessageLookupByLibrary.simpleMessage(
       "You are offline. Some actions are temporarily unavailable.",
     ),
@@ -1472,14 +1509,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Shipment details",
     ),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Review the route, pickup date, weight, volume, and shipment details.",
+      "Review the route, weight, volume, and shipment details.",
     ),
     "shipmentDetailTitle": m16,
     "shipmentEditAction": MessageLookupByLibrary.simpleMessage("Edit shipment"),
     "shipmentEditTitle": MessageLookupByLibrary.simpleMessage("Edit shipment"),
-    "shipmentPickupDateLabel": MessageLookupByLibrary.simpleMessage(
-      "Pickup date",
-    ),
     "shipmentSaveAction": MessageLookupByLibrary.simpleMessage("Save shipment"),
     "shipmentSavedMessage": MessageLookupByLibrary.simpleMessage(
       "Shipment saved.",
@@ -1505,9 +1539,6 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "shipperHomeQuickActionsTitle": MessageLookupByLibrary.simpleMessage(
       "Quick actions",
-    ),
-    "shipperHomeRecentNotificationTitle": MessageLookupByLibrary.simpleMessage(
-      "Recent notification",
     ),
     "shipperHomeTitle": MessageLookupByLibrary.simpleMessage("Shipper home"),
     "shipperHomeUnreadNotificationsLabel": MessageLookupByLibrary.simpleMessage(

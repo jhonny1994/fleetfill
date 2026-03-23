@@ -593,6 +593,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "carrierBookingsTitle": MessageLookupByLibrary.simpleMessage(
       "حجوزات الناقل",
     ),
+    "carrierGatePayoutMessage": MessageLookupByLibrary.simpleMessage(
+      "أضف حساب دفع قبل فتح حجوزات الناقل حتى تتم تسوية الأعمال المكتملة بشكل صحيح.",
+    ),
+    "carrierGatePayoutTitle": MessageLookupByLibrary.simpleMessage(
+      "حساب الدفع مطلوب",
+    ),
+    "carrierGatePhoneMessage": MessageLookupByLibrary.simpleMessage(
+      "أضف رقم هاتفك قبل فتح هذه المساحة الخاصة بالناقل حتى تصلك تحديثات الحجز والتشغيل.",
+    ),
+    "carrierGatePhoneTitle": MessageLookupByLibrary.simpleMessage(
+      "رقم الهاتف مطلوب",
+    ),
+    "carrierGateVerificationMessage": MessageLookupByLibrary.simpleMessage(
+      "أكمل تحقق الناقل قبل فتح هذه المساحة لنشر المسارات أو إدارة الحجوزات.",
+    ),
+    "carrierGateVerificationTitle": MessageLookupByLibrary.simpleMessage(
+      "التحقق مطلوب",
+    ),
     "carrierHomeDescription": MessageLookupByLibrary.simpleMessage(
       "راجع حالة التحقق وجهوزية أسطولك والمهام التالية.",
     ),
@@ -951,12 +969,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationsCenterTitle": MessageLookupByLibrary.simpleMessage(
       "الإشعارات",
     ),
+    "notificationsOnboardingEnableAction": MessageLookupByLibrary.simpleMessage(
+      "تفعيل الإشعارات",
+    ),
+    "notificationsOnboardingSkipAction": MessageLookupByLibrary.simpleMessage(
+      "تخطي الآن",
+    ),
+    "notificationsOnboardingValueMessage": MessageLookupByLibrary.simpleMessage(
+      "فعّل الإشعارات لمتابعة تأكيدات الحجز ومراجعات الدفع ومراحل التسليم وتنبيهات الحساب بوضوح وبدون تخمين.",
+    ),
     "notificationsPermissionDescription": MessageLookupByLibrary.simpleMessage(
       "فعّل الإشعارات لتصلك تحديثات الحجز ومراحل التسليم وتنبيهات الدفع.",
     ),
     "notificationsPermissionTitle": MessageLookupByLibrary.simpleMessage(
       "تفعيل الإشعارات",
     ),
+    "notificationsSettingsDisabledMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "ستبقى الإشعارات متوقفة الآن. يمكنك تفعيلها لاحقا من الإعدادات.",
+        ),
+    "notificationsSettingsEnabledMessage": MessageLookupByLibrary.simpleMessage(
+      "تم تفعيل الإشعارات على هذا الجهاز.",
+    ),
+    "notificationsSettingsEntryDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "أدر حالة الإذن وافتح مركز الإشعارات.",
+        ),
     "offlineMessage": MessageLookupByLibrary.simpleMessage(
       "أنت غير متصل حاليا. بعض الإجراءات غير متاحة مؤقتا.",
     ),
@@ -1439,14 +1477,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "تفاصيل الشحنة",
     ),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "راجع المسار وتاريخ الاستلام والوزن والحجم وتفاصيل الشحنة.",
+      "راجع المسار والوزن والحجم وتفاصيل الشحنة.",
     ),
     "shipmentDetailTitle": m16,
     "shipmentEditAction": MessageLookupByLibrary.simpleMessage("تعديل الشحنة"),
     "shipmentEditTitle": MessageLookupByLibrary.simpleMessage("تعديل الشحنة"),
-    "shipmentPickupDateLabel": MessageLookupByLibrary.simpleMessage(
-      "تاريخ الاستلام",
-    ),
     "shipmentSaveAction": MessageLookupByLibrary.simpleMessage("حفظ الشحنة"),
     "shipmentSavedMessage": MessageLookupByLibrary.simpleMessage(
       "تم حفظ الشحنة.",
@@ -1470,9 +1505,6 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage("ستظهر آخر التحديثات هنا."),
     "shipperHomeQuickActionsTitle": MessageLookupByLibrary.simpleMessage(
       "إجراءات سريعة",
-    ),
-    "shipperHomeRecentNotificationTitle": MessageLookupByLibrary.simpleMessage(
-      "أحدث إشعار",
     ),
     "shipperHomeTitle": MessageLookupByLibrary.simpleMessage("الرئيسية للشاحن"),
     "shipperHomeUnreadNotificationsLabel": MessageLookupByLibrary.simpleMessage(

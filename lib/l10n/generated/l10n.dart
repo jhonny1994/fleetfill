@@ -1922,6 +1922,66 @@ class S {
     );
   }
 
+  /// `Manage permission status and open your notification inbox.`
+  String get notificationsSettingsEntryDescription {
+    return Intl.message(
+      'Manage permission status and open your notification inbox.',
+      name: 'notificationsSettingsEntryDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications are enabled for this device.`
+  String get notificationsSettingsEnabledMessage {
+    return Intl.message(
+      'Notifications are enabled for this device.',
+      name: 'notificationsSettingsEnabledMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications stay off for now. You can enable them later from settings.`
+  String get notificationsSettingsDisabledMessage {
+    return Intl.message(
+      'Notifications stay off for now. You can enable them later from settings.',
+      name: 'notificationsSettingsDisabledMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn on notifications to follow booking confirmations, payment reviews, delivery milestones, and account alerts without guessing what changed.`
+  String get notificationsOnboardingValueMessage {
+    return Intl.message(
+      'Turn on notifications to follow booking confirmations, payment reviews, delivery milestones, and account alerts without guessing what changed.',
+      name: 'notificationsOnboardingValueMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable notifications`
+  String get notificationsOnboardingEnableAction {
+    return Intl.message(
+      'Enable notifications',
+      name: 'notificationsOnboardingEnableAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Skip for now`
+  String get notificationsOnboardingSkipAction {
+    return Intl.message(
+      'Skip for now',
+      name: 'notificationsOnboardingSkipAction',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Booking confirmed`
   String get notificationBookingConfirmedTitle {
     return Intl.message(
@@ -2437,6 +2497,66 @@ class S {
     );
   }
 
+  /// `Phone number required`
+  String get carrierGatePhoneTitle {
+    return Intl.message(
+      'Phone number required',
+      name: 'carrierGatePhoneTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add your phone number before opening this carrier workspace so booking and operational updates can reach you.`
+  String get carrierGatePhoneMessage {
+    return Intl.message(
+      'Add your phone number before opening this carrier workspace so booking and operational updates can reach you.',
+      name: 'carrierGatePhoneMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification required`
+  String get carrierGateVerificationTitle {
+    return Intl.message(
+      'Verification required',
+      name: 'carrierGateVerificationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finish carrier verification before opening this workspace for publishing routes or handling bookings.`
+  String get carrierGateVerificationMessage {
+    return Intl.message(
+      'Finish carrier verification before opening this workspace for publishing routes or handling bookings.',
+      name: 'carrierGateVerificationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payout account required`
+  String get carrierGatePayoutTitle {
+    return Intl.message(
+      'Payout account required',
+      name: 'carrierGatePayoutTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a payout account before opening carrier bookings so completed jobs can be settled correctly.`
+  String get carrierGatePayoutMessage {
+    return Intl.message(
+      'Add a payout account before opening carrier bookings so completed jobs can be settled correctly.',
+      name: 'carrierGatePayoutMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Add your carrier details now, then upload the required verification documents from your profile.`
   String get profileCarrierVerificationHint {
     return Intl.message(
@@ -2832,10 +2952,10 @@ class S {
     );
   }
 
-  /// `Review the route, pickup date, weight, volume, and shipment details.`
+  /// `Review the route, weight, volume, and shipment details.`
   String get shipmentDetailDescription {
     return Intl.message(
-      'Review the route, pickup date, weight, volume, and shipment details.',
+      'Review the route, weight, volume, and shipment details.',
       name: 'shipmentDetailDescription',
       desc: '',
       args: [],
@@ -2877,16 +2997,6 @@ class S {
     return Intl.message(
       'Unread notifications',
       name: 'shipperHomeUnreadNotificationsLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recent notification`
-  String get shipperHomeRecentNotificationTitle {
-    return Intl.message(
-      'Recent notification',
-      name: 'shipperHomeRecentNotificationTitle',
       desc: '',
       args: [],
     );
@@ -6362,16 +6472,6 @@ class S {
     return Intl.message(
       'Destination wilaya',
       name: 'routeDestinationWilayaLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Pickup date`
-  String get shipmentPickupDateLabel {
-    return Intl.message(
-      'Pickup date',
-      name: 'shipmentPickupDateLabel',
       desc: '',
       args: [],
     );
