@@ -2,6 +2,7 @@ import 'package:fleetfill/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   testWidgets('maps known auth backend errors to localized messages', (
@@ -60,6 +61,37 @@ void main() {
     expect(
       mapAuthErrorMessage(s, 'generated_document_failed'),
       s.generatedDocumentFailedMessage,
+    );
+    expect(
+      mapAuthErrorMessage(
+        s,
+        'Request rate limit reached',
+        code: 'over_request_rate_limit',
+        statusCode: '429',
+      ),
+      s.authRateLimitedMessage,
+    );
+    expect(
+      mapAuthExceptionMessage(
+        s,
+        AuthApiException(
+          'Error sending confirmation email',
+          statusCode: '500',
+          code: 'email_rate_limit_exceeded',
+        ),
+      ),
+      s.authEmailDeliveryIssueMessage,
+    );
+    expect(
+      mapAuthExceptionMessage(
+        s,
+        AuthApiException(
+          'Signups are disabled',
+          statusCode: '400',
+          code: 'signup_disabled',
+        ),
+      ),
+      s.authSignUpUnavailableMessage,
     );
     expect(
       mapAuthErrorMessage(s, 'unknown failure code'),

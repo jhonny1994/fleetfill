@@ -73,10 +73,10 @@ export function requiredEnv(name: string) {
 
 export function normalizeSupportedLocale(locale: string | null | undefined) {
   const normalized = locale?.trim().toLowerCase()
-  if (normalized === 'ar' || normalized === 'fr' || normalized === 'en') {
+  if (normalized != null && normalized.length > 0) {
     return normalized
   }
-  return 'en'
+  return 'ar'
 }
 
 export function createServiceClient() {
@@ -156,25 +156,73 @@ function payloadNumber(payload: Record<string, JsonValue>, key: string) {
   return typeof value === 'number' ? value : null
 }
 
-function arabicDocumentType(documentType: string | null) {
+function localizedDocumentType(
+  documentType: string | null,
+  locale: string,
+) {
   switch (documentType) {
     case 'payment_receipt':
-      return 'إيصال الدفع'
+      switch (locale) {
+        case 'fr':
+          return 'recu de paiement'
+        case 'en':
+          return 'payment receipt'
+        default:
+          return 'إيصال الدفع'
+      }
     case 'payout_receipt':
-      return 'إيصال التحويل'
+      switch (locale) {
+        case 'fr':
+          return 'recu de versement'
+        case 'en':
+          return 'payout receipt'
+        default:
+          return 'إيصال التحويل'
+      }
     default:
-      return 'المستند'
+      switch (locale) {
+        case 'fr':
+          return 'document'
+        case 'en':
+          return 'document'
+        default:
+          return 'المستند'
+      }
   }
 }
 
-function arabicResolution(resolution: string | null) {
+function localizedResolution(
+  resolution: string | null,
+  locale: string,
+) {
   switch (resolution) {
     case 'completed':
-      return 'تم اعتماد الحجز كمكتمل'
+      switch (locale) {
+        case 'fr':
+          return 'La reservation a ete validee comme terminee.'
+        case 'en':
+          return 'The booking was resolved as completed.'
+        default:
+          return 'تم اعتماد الحجز كمكتمل'
+      }
     case 'refunded':
-      return 'تم اعتماد رد المبلغ'
+      switch (locale) {
+        case 'fr':
+          return 'Le remboursement a ete approuve.'
+        case 'en':
+          return 'The refund was approved.'
+        default:
+          return 'تم اعتماد رد المبلغ'
+      }
     default:
-      return 'تمت معالجة النزاع'
+      switch (locale) {
+        case 'fr':
+          return 'Le litige a ete traite.'
+        case 'en':
+          return 'The dispute was processed.'
+        default:
+          return 'تمت معالجة النزاع'
+      }
   }
 }
 
@@ -182,15 +230,15 @@ function formatAmount(amount: number | null) {
   if (amount == null) {
     return null
   }
-  return `${amount.toFixed(2)} دج`
+  return `${amount.toFixed(2)} DZD`
 }
 
-function normalizeTemplateLanguageCode(job: OutboxJob) {
+function normalizeRequestedLanguageCode(job: OutboxJob) {
   const explicitLanguage = job.template_language_code?.trim().toLowerCase()
-  if (explicitLanguage === 'ar') {
-    return 'ar'
+  if (explicitLanguage != null && explicitLanguage.length > 0) {
+    return explicitLanguage
   }
-  return 'ar'
+  return normalizeSupportedLocale(job.locale)
 }
 
 function buildMergedPayload(
@@ -249,19 +297,34 @@ function buildTemplatePlaceholders(
   placeholders.recipient_email = job.recipient_email
   placeholders.requested_locale = normalizeSupportedLocale(job.locale)
   placeholders.template_language_code = templateLanguageCode
-  placeholders.reason_summary = payloadText(payload, 'reason') ?? 'غير محدد'
-  placeholders.resolution_summary = arabicResolution(
+  placeholders.reason_summary = payloadText(payload, 'reason') ??
+    (templateLanguageCode === 'fr'
+      ? 'non precise'
+      : templateLanguageCode === 'en'
+      ? 'not specified'
+      : 'غير محدد')
+  placeholders.resolution_summary = localizedResolution(
     payloadText(payload, 'resolution'),
+    templateLanguageCode,
   )
-  placeholders.document_type_label = arabicDocumentType(
+  placeholders.document_type_label = localizedDocumentType(
     payloadText(payload, 'document_type'),
+    templateLanguageCode,
   )
   placeholders.payout_amount_label = formatAmount(
     payloadNumber(payload, 'payout_amount_dzd'),
-  ) ?? 'غير متوفر'
+  ) ?? (templateLanguageCode === 'fr'
+    ? 'non disponible'
+    : templateLanguageCode === 'en'
+    ? 'not available'
+    : 'غير متوفر')
   placeholders.refund_amount_label = formatAmount(
     payloadNumber(payload, 'refund_amount_dzd'),
-  ) ?? 'غير مطبق'
+  ) ?? (templateLanguageCode === 'fr'
+    ? 'sans objet'
+    : templateLanguageCode === 'en'
+    ? 'not applicable'
+    : 'غير مطبق')
 
   return placeholders
 }
@@ -304,43 +367,60 @@ export async function loadEmailTemplate(
   languageCode: string,
   serviceClient = createServiceClient(),
 ) {
-  const { data, error } = await serviceClient
-    .from('email_templates')
-    .select(
-      'template_key,language_code,subject_template,html_template,text_template,sample_payload,description,is_enabled',
-    )
-    .eq('template_key', templateKey)
-    .eq('language_code', languageCode)
-    .eq('is_enabled', true)
-    .maybeSingle()
+  const selectClause =
+    'template_key,language_code,subject_template,html_template,text_template,sample_payload,description,is_enabled'
 
-  if (error != null) {
-    throw new Error(`render_failed:${error.message}`)
+  const tryLoad = async (candidateLanguageCode: string) => {
+    const { data, error } = await serviceClient
+      .from('email_templates')
+      .select(selectClause)
+      .eq('template_key', templateKey)
+      .eq('language_code', candidateLanguageCode)
+      .eq('is_enabled', true)
+      .maybeSingle()
+
+    if (error != null) {
+      throw new Error(`render_failed:${error.message}`)
+    }
+
+    if (data == null) {
+      return null
+    }
+
+    return {
+      template_key: data.template_key as string,
+      language_code: data.language_code as string,
+      subject_template: data.subject_template as string,
+      html_template: data.html_template as string,
+      text_template: data.text_template as string,
+      sample_payload: ((data.sample_payload as Record<string, JsonValue> | null) ?? {}),
+      description: (data.description as string | null) ?? null,
+      is_enabled: data.is_enabled as boolean,
+    } satisfies EmailTemplateRecord
   }
 
-  if (data == null) {
-    throw new Error(
-      `render_failed:Enabled email template not found for ${templateKey} (${languageCode})`,
-    )
+  const preferredTemplate = await tryLoad(languageCode)
+  if (preferredTemplate != null) {
+    return preferredTemplate
   }
 
-  return {
-    template_key: data.template_key as string,
-    language_code: data.language_code as string,
-    subject_template: data.subject_template as string,
-    html_template: data.html_template as string,
-    text_template: data.text_template as string,
-    sample_payload: ((data.sample_payload as Record<string, JsonValue> | null) ?? {}),
-    description: (data.description as string | null) ?? null,
-    is_enabled: data.is_enabled as boolean,
-  } satisfies EmailTemplateRecord
+  if (languageCode !== 'ar') {
+    const fallbackTemplate = await tryLoad('ar')
+    if (fallbackTemplate != null) {
+      return fallbackTemplate
+    }
+  }
+
+  throw new Error(
+    `render_failed:Enabled email template not found for ${templateKey} (${languageCode})`,
+  )
 }
 
 export async function resolveAndRenderEmailContent(
   job: OutboxJob,
   serviceClient = createServiceClient(),
 ): Promise<RenderedEmailContent> {
-  const templateLanguageCode = normalizeTemplateLanguageCode(job)
+  const templateLanguageCode = normalizeRequestedLanguageCode(job)
   const template = await loadEmailTemplate(
     job.template_key,
     templateLanguageCode,

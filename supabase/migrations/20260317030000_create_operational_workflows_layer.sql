@@ -778,7 +778,7 @@ begin
     p.id,
     v_booking.id,
     'booking_confirmed',
-    'en',
+    public.get_profile_preferred_locale(p.id),
     p.email,
     'high',
     'queued',
@@ -2629,7 +2629,7 @@ create or replace function public.enqueue_transactional_email(
   p_recipient_email text,
   p_booking_id uuid default null,
   p_template_key text default null,
-  p_locale text default 'en',
+  p_locale text default 'ar',
   p_payload_snapshot jsonb default '{}'::jsonb,
   p_dedupe_key text default null,
   p_priority text default 'normal'
@@ -2665,7 +2665,7 @@ begin
     p_profile_id,
     p_booking_id,
     coalesce(p_template_key, p_event_key),
-    coalesce(nullif(trim(p_locale), ''), 'en'),
+    public.normalize_supported_locale(coalesce(nullif(trim(p_locale), ''), 'ar')),
     trim(p_recipient_email),
     coalesce(nullif(trim(p_priority), ''), 'normal'),
     'queued',
@@ -2687,15 +2687,53 @@ create or replace function public.normalize_supported_locale(
 )
 returns text
 language sql
-immutable
+stable
 set search_path = public
 as $$
-  select case lower(trim(coalesce(p_locale, '')))
-    when 'ar' then 'ar'
-    when 'fr' then 'fr'
-    when 'en' then 'en'
-    else 'en'
-  end;
+  with localization as (
+    select coalesce(
+      (
+        select ps.value
+        from public.platform_settings as ps
+        where ps.key = 'localization'
+          and ps.is_public = true
+      ),
+      jsonb_build_object(
+        'fallback_locale', 'ar',
+        'enabled_locales', jsonb_build_array('ar')
+      )
+    ) as value
+  ),
+  fallback_locale as (
+    select lower(trim(coalesce(localization.value->>'fallback_locale', 'ar'))) as value
+    from localization
+  ),
+  enabled_locales as (
+    select coalesce(
+      array_agg(lower(trim(locale_code))),
+      array[]::text[]
+    ) as values
+    from localization,
+      lateral jsonb_array_elements_text(
+        coalesce(localization.value->'enabled_locales', '[]'::jsonb)
+      ) as locale_code
+    where nullif(trim(locale_code), '') is not null
+  ),
+  normalized_locale as (
+    select lower(trim(coalesce(p_locale, ''))) as value
+  )
+  select case
+    when normalized_locale.value <> ''
+      and normalized_locale.value = any(enabled_locales.values)
+      then normalized_locale.value
+    when array_length(enabled_locales.values, 1) is not null
+      and fallback_locale.value = any(enabled_locales.values)
+      then fallback_locale.value
+    when array_length(enabled_locales.values, 1) is not null
+      then enabled_locales.values[1]
+    else fallback_locale.value
+  end
+  from normalized_locale, enabled_locales, fallback_locale;
 $$;
 
 create or replace function public.get_profile_preferred_locale(
@@ -2708,6 +2746,13 @@ set search_path = public
 as $$
   select coalesce(
     (
+      select public.normalize_supported_locale(preferred_locale)
+      from public.profiles
+      where id = p_profile_id
+        and nullif(trim(preferred_locale), '') is not null
+      limit 1
+    ),
+    (
       select public.normalize_supported_locale(locale)
       from public.user_devices
       where profile_id = p_profile_id
@@ -2715,7 +2760,7 @@ as $$
       order by last_seen_at desc nulls last, updated_at desc, created_at desc
       limit 1
     ),
-    'en'
+    public.normalize_supported_locale(null)
   );
 $$;
 
@@ -2795,7 +2840,7 @@ create or replace function public.enqueue_transactional_email(
   p_recipient_email text,
   p_booking_id uuid default null,
   p_template_key text default null,
-  p_locale text default 'en',
+  p_locale text default 'ar',
   p_payload_snapshot jsonb default '{}'::jsonb,
   p_dedupe_key text default null,
   p_priority text default 'normal'
@@ -2812,7 +2857,7 @@ declare
     coalesce(
       nullif(trim(p_locale), ''),
       public.get_profile_preferred_locale(p_profile_id),
-      'en'
+      'ar'
     )
   );
 begin
@@ -3160,14 +3205,254 @@ $$;
       'Arabic generated document availability notice.',
       true
     )
-  on conflict (template_key, language_code) do update
-  set subject_template = excluded.subject_template,
-      html_template = excluded.html_template,
-      text_template = excluded.text_template,
-      sample_payload = excluded.sample_payload,
-      description = excluded.description,
-      is_enabled = excluded.is_enabled,
-      updated_at = now();
+on conflict (template_key, language_code) do update
+set subject_template = excluded.subject_template,
+    html_template = excluded.html_template,
+    text_template = excluded.text_template,
+    sample_payload = excluded.sample_payload,
+    description = excluded.description,
+    is_enabled = excluded.is_enabled,
+    updated_at = now();
+
+insert into public.email_templates (
+  template_key,
+  language_code,
+  subject_template,
+  html_template,
+  text_template,
+  sample_payload,
+  description,
+  is_enabled
+)
+values
+  (
+    'support_acknowledgement',
+    'fr',
+    'Demande de support recue - {{subject}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Demande de support recue</h1><p style="margin:0 0 12px;line-height:1.8;">Nous avons bien recu votre demande ayant pour objet {{subject}}.</p><p style="margin:0;color:#666;line-height:1.8;">Notre equipe vous repondra des que possible.</p></div></body></html>',
+    'Demande de support recue\n\nNous avons bien recu votre demande ayant pour objet {{subject}}.\nNotre equipe vous repondra des que possible.',
+    '{"subject":"Question sur la reservation FF-1001"}'::jsonb,
+    'French acknowledgement sent to the support requester.',
+    true
+  ),
+  (
+    'support_request_forwarded',
+    'fr',
+    'Nouveau message support - {{subject}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Nouveau message support</h1><p style="margin:0 0 12px;line-height:1.8;"><strong>Expediteur :</strong> {{sender_email}}</p><p style="margin:0 0 12px;line-height:1.8;"><strong>Objet :</strong> {{subject}}</p><p style="margin:0;line-height:1.8;"><strong>Message :</strong><br>{{message}}</p></div></body></html>',
+    'Nouveau message support\n\nExpediteur : {{sender_email}}\nObjet : {{subject}}\nMessage : {{message}}',
+    '{"sender_email":"shipper@example.com","subject":"Question sur la reservation FF-1001","message":"Pouvez-vous verifier mon paiement ?"}'::jsonb,
+    'French support message forwarded to operations.',
+    true
+  ),
+  (
+    'booking_confirmed',
+    'fr',
+    'Reservation confirmee - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Reservation confirmee</h1><p style="margin:0 0 12px;line-height:1.8;">Votre reservation {{booking_reference}} est confirmee.</p><p style="margin:0 0 12px;line-height:1.8;"><strong>Numero de suivi :</strong> {{tracking_number}}</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Reference de paiement :</strong> {{payment_reference}}</p></div></body></html>',
+    'Reservation confirmee\n\nVotre reservation {{booking_reference}} est confirmee.\nNumero de suivi : {{tracking_number}}\nReference de paiement : {{payment_reference}}',
+    '{"booking_reference":"FF-1001","tracking_number":"BK-1001","payment_reference":"PAY-1001"}'::jsonb,
+    'French booking confirmation notice.',
+    true
+  ),
+  (
+    'payment_proof_received',
+    'fr',
+    'Preuve de paiement recue - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Preuve de paiement recue</h1><p style="margin:0;line-height:1.8;">La preuve de paiement pour la reservation {{booking_reference}} a ete recue et sera verifiee.</p></div></body></html>',
+    'Preuve de paiement recue\n\nLa preuve de paiement pour la reservation {{booking_reference}} a ete recue et sera verifiee.',
+    '{"booking_reference":"FF-1001","payment_proof_id":"proof-1001"}'::jsonb,
+    'French payment proof received notice.',
+    true
+  ),
+  (
+    'payment_rejected',
+    'fr',
+    'Paiement rejete - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Paiement rejete</h1><p style="margin:0 0 12px;line-height:1.8;">La preuve de paiement pour {{booking_reference}} a ete rejetee.</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Raison :</strong> {{rejection_reason}}</p></div></body></html>',
+    'Paiement rejete\n\nLa preuve de paiement pour {{booking_reference}} a ete rejetee.\nRaison : {{rejection_reason}}',
+    '{"booking_reference":"FF-1001","rejection_reason":"Montant incorrect"}'::jsonb,
+    'French payment rejection notice.',
+    true
+  ),
+  (
+    'payment_secured',
+    'fr',
+    'Paiement securise - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Paiement securise</h1><p style="margin:0;line-height:1.8;">Le paiement de la reservation {{booking_reference}} a ete securise avec succes.</p></div></body></html>',
+    'Paiement securise\n\nLe paiement de la reservation {{booking_reference}} a ete securise avec succes.',
+    '{"booking_reference":"FF-1001","payment_proof_id":"proof-1001"}'::jsonb,
+    'French payment secured notice.',
+    true
+  ),
+  (
+    'delivered_pending_review',
+    'fr',
+    'Livraison signalee - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Livraison signalee</h1><p style="margin:0;line-height:1.8;">La livraison de {{booking_reference}} a ete signalee. Vous pouvez confirmer la reception ou ouvrir un litige pendant le delai de revision.</p></div></body></html>',
+    'Livraison signalee\n\nLa livraison de {{booking_reference}} a ete signalee. Vous pouvez confirmer la reception ou ouvrir un litige pendant le delai de revision.',
+    '{"booking_reference":"FF-1001"}'::jsonb,
+    'French delivered pending review notice.',
+    true
+  ),
+  (
+    'dispute_opened',
+    'fr',
+    'Litige ouvert - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Litige ouvert</h1><p style="margin:0 0 12px;line-height:1.8;">Un litige a ete ouvert pour la reservation {{booking_reference}}.</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Raison :</strong> {{reason_summary}}</p></div></body></html>',
+    'Litige ouvert\n\nUn litige a ete ouvert pour la reservation {{booking_reference}}.\nRaison : {{reason_summary}}',
+    '{"booking_reference":"FF-1001","reason":"Colis endommage"}'::jsonb,
+    'French dispute opened notice.',
+    true
+  ),
+  (
+    'dispute_resolved',
+    'fr',
+    'Litige resolu - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Litige resolu</h1><p style="margin:0 0 12px;line-height:1.8;">Le litige de la reservation {{booking_reference}} a ete resolu.</p><p style="margin:0 0 12px;line-height:1.8;"><strong>Decision :</strong> {{resolution_summary}}</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Montant du remboursement :</strong> {{refund_amount_label}}</p></div></body></html>',
+    'Litige resolu\n\nLe litige de la reservation {{booking_reference}} a ete resolu.\nDecision : {{resolution_summary}}\nMontant du remboursement : {{refund_amount_label}}',
+    '{"booking_reference":"FF-1001","resolution":"refunded","refund_amount_dzd":12000}'::jsonb,
+    'French dispute resolution notice.',
+    true
+  ),
+  (
+    'payout_released',
+    'fr',
+    'Versement effectue - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Versement effectue</h1><p style="margin:0 0 12px;line-height:1.8;">Le versement pour la reservation {{booking_reference}} a ete effectue.</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Montant :</strong> {{payout_amount_label}}</p></div></body></html>',
+    'Versement effectue\n\nLe versement pour la reservation {{booking_reference}} a ete effectue.\nMontant : {{payout_amount_label}}',
+    '{"booking_reference":"FF-1001","payout_amount_dzd":9200}'::jsonb,
+    'French payout released notice.',
+    true
+  ),
+  (
+    'generated_document_available',
+    'fr',
+    'Document disponible - {{booking_reference}}',
+    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Document disponible</h1><p style="margin:0 0 12px;line-height:1.8;">Le {{document_type_label}} pour la reservation {{booking_reference}} est pret.</p><p style="margin:0;color:#666;line-height:1.8;">Acces dans l''application : {{document_route}}</p></div></body></html>',
+    'Document disponible\n\nLe {{document_type_label}} pour la reservation {{booking_reference}} est pret.\nAcces dans l''application : {{document_route}}',
+    '{"booking_reference":"FF-1001","document_type":"payment_receipt","document_route":"/shared/generated-document/doc-1001"}'::jsonb,
+    'French generated document availability notice.',
+    true
+  ),
+  (
+    'support_acknowledgement',
+    'en',
+    'Support request received - {{subject}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Support request received</h1><p style="margin:0 0 12px;line-height:1.8;">We received your request with the subject {{subject}}.</p><p style="margin:0;color:#666;line-height:1.8;">Our team will reply as soon as possible.</p></div></body></html>',
+    'Support request received\n\nWe received your request with the subject {{subject}}.\nOur team will reply as soon as possible.',
+    '{"subject":"Question about booking FF-1001"}'::jsonb,
+    'English acknowledgement sent to the support requester.',
+    true
+  ),
+  (
+    'support_request_forwarded',
+    'en',
+    'New support request - {{subject}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">New support request</h1><p style="margin:0 0 12px;line-height:1.8;"><strong>Sender:</strong> {{sender_email}}</p><p style="margin:0 0 12px;line-height:1.8;"><strong>Subject:</strong> {{subject}}</p><p style="margin:0;line-height:1.8;"><strong>Message:</strong><br>{{message}}</p></div></body></html>',
+    'New support request\n\nSender: {{sender_email}}\nSubject: {{subject}}\nMessage: {{message}}',
+    '{"sender_email":"shipper@example.com","subject":"Question about booking FF-1001","message":"Can you verify my payment?"}'::jsonb,
+    'English support message forwarded to operations.',
+    true
+  ),
+  (
+    'booking_confirmed',
+    'en',
+    'Booking confirmed - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Booking confirmed</h1><p style="margin:0 0 12px;line-height:1.8;">Your booking {{booking_reference}} is confirmed.</p><p style="margin:0 0 12px;line-height:1.8;"><strong>Tracking number:</strong> {{tracking_number}}</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Payment reference:</strong> {{payment_reference}}</p></div></body></html>',
+    'Booking confirmed\n\nYour booking {{booking_reference}} is confirmed.\nTracking number: {{tracking_number}}\nPayment reference: {{payment_reference}}',
+    '{"booking_reference":"FF-1001","tracking_number":"BK-1001","payment_reference":"PAY-1001"}'::jsonb,
+    'English booking confirmation notice.',
+    true
+  ),
+  (
+    'payment_proof_received',
+    'en',
+    'Payment proof received - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Payment proof received</h1><p style="margin:0;line-height:1.8;">The payment proof for booking {{booking_reference}} was received and will be reviewed.</p></div></body></html>',
+    'Payment proof received\n\nThe payment proof for booking {{booking_reference}} was received and will be reviewed.',
+    '{"booking_reference":"FF-1001","payment_proof_id":"proof-1001"}'::jsonb,
+    'English payment proof received notice.',
+    true
+  ),
+  (
+    'payment_rejected',
+    'en',
+    'Payment rejected - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Payment rejected</h1><p style="margin:0 0 12px;line-height:1.8;">The payment proof for booking {{booking_reference}} was rejected.</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Reason:</strong> {{rejection_reason}}</p></div></body></html>',
+    'Payment rejected\n\nThe payment proof for booking {{booking_reference}} was rejected.\nReason: {{rejection_reason}}',
+    '{"booking_reference":"FF-1001","rejection_reason":"Incorrect amount"}'::jsonb,
+    'English payment rejection notice.',
+    true
+  ),
+  (
+    'payment_secured',
+    'en',
+    'Payment secured - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Payment secured</h1><p style="margin:0;line-height:1.8;">The payment for booking {{booking_reference}} has been secured successfully.</p></div></body></html>',
+    'Payment secured\n\nThe payment for booking {{booking_reference}} has been secured successfully.',
+    '{"booking_reference":"FF-1001","payment_proof_id":"proof-1001"}'::jsonb,
+    'English payment secured notice.',
+    true
+  ),
+  (
+    'delivered_pending_review',
+    'en',
+    'Delivery reported - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Delivery reported</h1><p style="margin:0;line-height:1.8;">Delivery for booking {{booking_reference}} was reported. You can confirm receipt or open a dispute during the review window.</p></div></body></html>',
+    'Delivery reported\n\nDelivery for booking {{booking_reference}} was reported. You can confirm receipt or open a dispute during the review window.',
+    '{"booking_reference":"FF-1001"}'::jsonb,
+    'English delivered pending review notice.',
+    true
+  ),
+  (
+    'dispute_opened',
+    'en',
+    'Dispute opened - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Dispute opened</h1><p style="margin:0 0 12px;line-height:1.8;">A dispute was opened for booking {{booking_reference}}.</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Reason:</strong> {{reason_summary}}</p></div></body></html>',
+    'Dispute opened\n\nA dispute was opened for booking {{booking_reference}}.\nReason: {{reason_summary}}',
+    '{"booking_reference":"FF-1001","reason":"Damaged shipment"}'::jsonb,
+    'English dispute opened notice.',
+    true
+  ),
+  (
+    'dispute_resolved',
+    'en',
+    'Dispute resolved - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Dispute resolved</h1><p style="margin:0 0 12px;line-height:1.8;">The dispute for booking {{booking_reference}} has been resolved.</p><p style="margin:0 0 12px;line-height:1.8;"><strong>Decision:</strong> {{resolution_summary}}</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Refund amount:</strong> {{refund_amount_label}}</p></div></body></html>',
+    'Dispute resolved\n\nThe dispute for booking {{booking_reference}} has been resolved.\nDecision: {{resolution_summary}}\nRefund amount: {{refund_amount_label}}',
+    '{"booking_reference":"FF-1001","resolution":"refunded","refund_amount_dzd":12000}'::jsonb,
+    'English dispute resolution notice.',
+    true
+  ),
+  (
+    'payout_released',
+    'en',
+    'Payout released - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Payout released</h1><p style="margin:0 0 12px;line-height:1.8;">The payout for booking {{booking_reference}} has been released.</p><p style="margin:0;color:#666;line-height:1.8;"><strong>Amount:</strong> {{payout_amount_label}}</p></div></body></html>',
+    'Payout released\n\nThe payout for booking {{booking_reference}} has been released.\nAmount: {{payout_amount_label}}',
+    '{"booking_reference":"FF-1001","payout_amount_dzd":9200}'::jsonb,
+    'English payout released notice.',
+    true
+  ),
+  (
+    'generated_document_available',
+    'en',
+    'Document available - {{booking_reference}}',
+    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Document available</h1><p style="margin:0 0 12px;line-height:1.8;">The {{document_type_label}} for booking {{booking_reference}} is ready.</p><p style="margin:0;color:#666;line-height:1.8;">Open it in the app: {{document_route}}</p></div></body></html>',
+    'Document available\n\nThe {{document_type_label}} for booking {{booking_reference}} is ready.\nOpen it in the app: {{document_route}}',
+    '{"booking_reference":"FF-1001","document_type":"payment_receipt","document_route":"/shared/generated-document/doc-1001"}'::jsonb,
+    'English generated document availability notice.',
+    true
+  )
+on conflict (template_key, language_code) do update
+set subject_template = excluded.subject_template,
+    html_template = excluded.html_template,
+    text_template = excluded.text_template,
+    sample_payload = excluded.sample_payload,
+    description = excluded.description,
+    is_enabled = excluded.is_enabled,
+    updated_at = now();
   -- <<< END 20260323110000_seed_transactional_email_templates.sql
 
   -- >>> BEGIN 20260320120825_add_dispute_evidence_support.sql
@@ -3850,6 +4135,15 @@ values
     ),
     false,
     'Admin-controlled feature flags'
+  ),
+  (
+    'localization',
+    jsonb_build_object(
+      'fallback_locale', 'ar',
+      'enabled_locales', jsonb_build_array('ar', 'fr', 'en')
+    ),
+    true,
+    'Public localization policy for enabled locales and fallback locale'
   )
 on conflict (key) do nothing;
 -- <<< END 20260320120900_seed_runtime_and_feature_flag_settings.sql
@@ -3907,6 +4201,20 @@ as $$
       )
     ) as value
   ),
+  localization as (
+    select coalesce(
+      (
+        select ps.value
+        from public.platform_settings as ps
+        where ps.key = 'localization'
+          and ps.is_public = true
+      ),
+      jsonb_build_object(
+        'fallback_locale', 'ar',
+        'enabled_locales', jsonb_build_array('ar')
+      )
+    ) as value
+  ),
   payment_accounts as (
     with current_environment as (
       select coalesce(
@@ -3937,9 +4245,10 @@ as $$
     'booking_pricing', booking_pricing.value,
     'delivery_review', delivery_review.value,
     'app_runtime', app_runtime.value,
+    'localization', localization.value,
     'platform_payment_accounts', payment_accounts.value
   )
-  from booking_pricing, delivery_review, app_runtime, payment_accounts;
+  from booking_pricing, delivery_review, app_runtime, localization, payment_accounts;
 $$;
 
 revoke all on function public.get_client_settings() from public;
@@ -4084,6 +4393,8 @@ declare
   v_payment_deadline_hours integer;
   v_delivery_grace_hours integer;
   v_admin_email_resend_enabled boolean;
+  v_fallback_locale text;
+  v_enabled_locale_codes text[];
 begin
   if not public.is_admin() and not public.is_service_role() then
     raise exception 'Platform setting updates require privileged execution';
@@ -4146,6 +4457,36 @@ begin
       p_value := jsonb_build_object(
         'admin_email_resend_enabled',
         v_admin_email_resend_enabled
+      );
+    when 'localization' then
+      v_fallback_locale := lower(trim(coalesce(p_value->>'fallback_locale', 'ar')));
+      if v_fallback_locale = '' then
+        v_fallback_locale := 'ar';
+      end if;
+
+      if jsonb_typeof(coalesce(p_value->'enabled_locales', '[]'::jsonb)) <> 'array' then
+        raise exception 'Localization enabled locales must be an array';
+      end if;
+
+      select coalesce(
+        array_agg(distinct lower(trim(locale_code))),
+        array[]::text[]
+      )
+      into v_enabled_locale_codes
+      from jsonb_array_elements_text(
+        coalesce(p_value->'enabled_locales', '[]'::jsonb)
+      ) as locale_code
+      where nullif(trim(locale_code), '') is not null;
+
+      if array_length(v_enabled_locale_codes, 1) is null then
+        v_enabled_locale_codes := array[v_fallback_locale];
+      elsif not (v_fallback_locale = any(v_enabled_locale_codes)) then
+        v_enabled_locale_codes := array_prepend(v_fallback_locale, v_enabled_locale_codes);
+      end if;
+
+      p_value := jsonb_build_object(
+        'fallback_locale', v_fallback_locale,
+        'enabled_locales', to_jsonb(v_enabled_locale_codes)
       );
     else
       raise exception 'Unsupported platform setting key';

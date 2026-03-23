@@ -227,6 +227,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "adminSettingsEmailResendEnabledLabel":
         MessageLookupByLibrary.simpleMessage("Enable admin email resend"),
+    "adminSettingsEnabledLocalesLabel": MessageLookupByLibrary.simpleMessage(
+      "Enabled languages",
+    ),
+    "adminSettingsFallbackLocaleLabel": MessageLookupByLibrary.simpleMessage(
+      "Fallback language",
+    ),
     "adminSettingsFeatureFlagsSectionTitle":
         MessageLookupByLibrary.simpleMessage("Optional features"),
     "adminSettingsForceUpdateLabel": MessageLookupByLibrary.simpleMessage(
@@ -238,6 +244,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminSettingsInsuranceRateLabel": MessageLookupByLibrary.simpleMessage(
       "Insurance rate",
     ),
+    "adminSettingsLocalizationSectionTitle":
+        MessageLookupByLibrary.simpleMessage("Localization policy"),
     "adminSettingsMaintenanceModeLabel": MessageLookupByLibrary.simpleMessage(
       "Maintenance mode",
     ),
@@ -424,6 +432,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "authCreatePasswordHint": MessageLookupByLibrary.simpleMessage(
       "Create a strong password",
     ),
+    "authEmailDeliveryIssueMessage": MessageLookupByLibrary.simpleMessage(
+      "FleetFill could not send the confirmation email right now. Check the redirect and email provider setup, then try again.",
+    ),
     "authEmailHint": MessageLookupByLibrary.simpleMessage("you@example.com"),
     "authEmailLabel": MessageLookupByLibrary.simpleMessage("Email address"),
     "authEmailNotConfirmedMessage": MessageLookupByLibrary.simpleMessage(
@@ -484,6 +495,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "authPasswordUpdatedMessage": MessageLookupByLibrary.simpleMessage(
       "Your password was updated.",
     ),
+    "authRateLimitedMessage": MessageLookupByLibrary.simpleMessage(
+      "Too many auth attempts. Wait a moment, then try again.",
+    ),
     "authRequiredFieldMessage": MessageLookupByLibrary.simpleMessage(
       "This field is required.",
     ),
@@ -529,6 +543,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Create your FleetFill account to start shipping or publishing capacity.",
     ),
     "authSignUpTitle": MessageLookupByLibrary.simpleMessage("Create account"),
+    "authSignUpUnavailableMessage": MessageLookupByLibrary.simpleMessage(
+      "Email account creation is not available right now.",
+    ),
     "authUpdatePasswordAction": MessageLookupByLibrary.simpleMessage(
       "Update password",
     ),
@@ -537,6 +554,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authVerificationEmailSentMessage": MessageLookupByLibrary.simpleMessage(
       "Check your email to confirm the account before signing in.",
+    ),
+    "authWeakPasswordMessage": MessageLookupByLibrary.simpleMessage(
+      "Use a stronger password and try again.",
     ),
     "bookingBasePriceLabel": MessageLookupByLibrary.simpleMessage("Base price"),
     "bookingCarrierFeeLabel": MessageLookupByLibrary.simpleMessage(
@@ -1250,6 +1270,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Company name",
     ),
     "profileFullNameLabel": MessageLookupByLibrary.simpleMessage("Full name"),
+    "profileInvalidAlgerianPhoneMessage": MessageLookupByLibrary.simpleMessage(
+      "Enter a valid Algerian phone number.",
+    ),
+    "profileInvalidCompanyNameMessage": MessageLookupByLibrary.simpleMessage(
+      "Enter a valid company name.",
+    ),
+    "profileInvalidNameMessage": MessageLookupByLibrary.simpleMessage(
+      "Enter a valid full name using Arabic or Latin letters.",
+    ),
     "profilePhoneLabel": MessageLookupByLibrary.simpleMessage("Phone number"),
     "profileSetupDescription": MessageLookupByLibrary.simpleMessage(
       "Add your details so customers, carriers, and support can reach you.",
@@ -1600,6 +1629,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "supportMessageSentMessage": MessageLookupByLibrary.simpleMessage(
       "Support message sent.",
     ),
+    "supportRateLimitMessage": MessageLookupByLibrary.simpleMessage(
+      "You\'ve sent too many support messages recently. Please try again later.",
+    ),
     "supportReferenceHintMessage": MessageLookupByLibrary.simpleMessage(
       "Include any booking ID, tracking number, or payment reference that can help support investigate faster.",
     ),
@@ -1608,6 +1640,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Support subject",
     ),
     "supportTitle": MessageLookupByLibrary.simpleMessage("Support"),
+    "supportUnavailableMessage": MessageLookupByLibrary.simpleMessage(
+      "Support could not be queued right now. Please try again shortly.",
+    ),
     "suspendedMessage": MessageLookupByLibrary.simpleMessage(
       "Your account is currently suspended. Contact FleetFill support by email.",
     ),

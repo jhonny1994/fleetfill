@@ -8,6 +8,7 @@ abstract class ClientSettings with _$ClientSettings {
     required BookingPricingSettings bookingPricing,
     required DeliveryReviewSettings deliveryReview,
     required AppRuntimeSettings appRuntime,
+    required LocalizationSettings localization,
     required List<PlatformPaymentAccountSettings> paymentAccounts,
   }) = _ClientSettings;
 
@@ -22,9 +23,34 @@ abstract class ClientSettings with _$ClientSettings {
         _asMap(json['delivery_review']),
       ),
       appRuntime: AppRuntimeSettings.fromJson(_asMap(json['app_runtime'])),
+      localization: LocalizationSettings.fromJson(_asMap(json['localization'])),
       paymentAccounts: _asList(
         json['platform_payment_accounts'],
       ).map(PlatformPaymentAccountSettings.fromJson).toList(growable: false),
+    );
+  }
+}
+
+@freezed
+abstract class LocalizationSettings with _$LocalizationSettings {
+  const factory LocalizationSettings({
+    required String fallbackLocale,
+    required List<String> enabledLocaleCodes,
+  }) = _LocalizationSettings;
+
+  const LocalizationSettings._();
+
+  factory LocalizationSettings.fromJson(Map<String, dynamic> json) {
+    final enabledLocaleCodes = <String>{
+      for (final item in json['enabled_locales'] as List<dynamic>? ?? const [])
+        if ((item as String?)?.trim().isNotEmpty ?? false)
+          (item!).trim().toLowerCase(),
+    }.toList(growable: false);
+
+    return LocalizationSettings(
+      fallbackLocale:
+          (json['fallback_locale'] as String?)?.trim().toLowerCase() ?? 'ar',
+      enabledLocaleCodes: enabledLocaleCodes,
     );
   }
 }

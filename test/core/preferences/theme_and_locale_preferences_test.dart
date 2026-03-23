@@ -1,3 +1,4 @@
+import 'package:fleetfill/core/localization/locale_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,9 +18,9 @@ void main() {
       SharedPreferences.setMockInitialValues(const <String, Object>{});
       final preferences = await SharedPreferences.getInstance();
 
-      await preferences.setString('locale_code', 'fr');
+      await preferences.setString(localeStorageKey, 'fr');
 
-      expect(preferences.getString('locale_code'), 'fr');
+      expect(preferences.getString(localeStorageKey), 'fr');
     });
   });
 }

@@ -1315,7 +1315,14 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final locationDirectoryAsync = ref.watch(locationDirectoryProvider);
+    final wilayasAsync = ref.watch(wilayasProvider);
+    final originSeedAsync = _originWilayaId == null && _originCommuneId != null
+        ? ref.watch(communeByIdProvider(_originCommuneId!))
+        : null;
+    final destinationSeedAsync =
+        _destinationWilayaId == null && _destinationCommuneId != null
+        ? ref.watch(communeByIdProvider(_destinationCommuneId!))
+        : null;
 
     if (!_initialized) {
       final shipment = widget.shipment;
@@ -1337,20 +1344,86 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
       ),
       child: AppFocusTraversal.sheet(
-        child: AppAsyncStateView<AlgeriaLocationDirectory>(
-          value: locationDirectoryAsync,
-          onRetry: () => ref.invalidate(locationDirectoryProvider),
-          data: (directory) {
-            final wilayas = directory.wilayas;
-            final communes = directory.communes;
-            _originWilayaId ??= communes
-                .where((item) => item.id == _originCommuneId)
-                .firstOrNull
-                ?.wilayaId;
-            _destinationWilayaId ??= communes
-                .where((item) => item.id == _destinationCommuneId)
-                .firstOrNull
-                ?.wilayaId;
+        child: Builder(
+          builder: (context) {
+            final initialLocationError =
+                wilayasAsync.error ??
+                originSeedAsync?.error ??
+                destinationSeedAsync?.error;
+
+            if (initialLocationError != null) {
+              return AppErrorState(
+                error: AppError(
+                  code: 'shipment_locations_load_failed',
+                  message: mapAppErrorMessage(s, initialLocationError),
+                ),
+                onRetry: () {
+                  ref.invalidate(wilayasProvider);
+                  if (_originCommuneId != null) {
+                    ref.invalidate(communeByIdProvider(_originCommuneId!));
+                  }
+                  if (_destinationCommuneId != null) {
+                    ref.invalidate(
+                      communeByIdProvider(_destinationCommuneId!),
+                    );
+                  }
+                },
+              );
+            }
+
+            if (wilayasAsync.isLoading ||
+                originSeedAsync?.isLoading == true ||
+                destinationSeedAsync?.isLoading == true) {
+              return const AppLoadingState();
+            }
+
+            final resolvedOriginWilayaId =
+                _originWilayaId ?? originSeedAsync?.asData?.value?.wilayaId;
+            final resolvedDestinationWilayaId =
+                _destinationWilayaId ??
+                destinationSeedAsync?.asData?.value?.wilayaId;
+
+            _originWilayaId = resolvedOriginWilayaId;
+            _destinationWilayaId = resolvedDestinationWilayaId;
+
+            final originCommunesAsync = resolvedOriginWilayaId == null
+                ? null
+                : ref.watch(communesForWilayaProvider(resolvedOriginWilayaId));
+            final destinationCommunesAsync = resolvedDestinationWilayaId == null
+                ? null
+                : ref.watch(
+                    communesForWilayaProvider(resolvedDestinationWilayaId),
+                  );
+            final communeOptionsError =
+                originCommunesAsync?.error ?? destinationCommunesAsync?.error;
+
+            if (communeOptionsError != null) {
+              return AppErrorState(
+                error: AppError(
+                  code: 'shipment_communes_by_wilaya_failed',
+                  message: mapAppErrorMessage(s, communeOptionsError),
+                ),
+                onRetry: () {
+                  if (resolvedOriginWilayaId != null) {
+                    ref.invalidate(
+                      communesForWilayaProvider(resolvedOriginWilayaId),
+                    );
+                  }
+                  if (resolvedDestinationWilayaId != null) {
+                    ref.invalidate(
+                      communesForWilayaProvider(resolvedDestinationWilayaId),
+                    );
+                  }
+                },
+              );
+            }
+
+            final wilayas = wilayasAsync.requireValue;
+            final originCommunes =
+                originCommunesAsync?.asData?.value ?? const <AlgeriaCommune>[];
+            final destinationCommunes =
+                destinationCommunesAsync?.asData?.value ??
+                const <AlgeriaCommune>[];
 
             return Form(
               key: _formKey,
@@ -1377,10 +1450,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                   _CommuneDropdownField(
                     label: s.routeOriginLabel,
                     value: _originCommuneId,
-                    enabled: _originWilayaId != null,
-                    communeOptions: communes
-                        .where((item) => item.wilayaId == _originWilayaId)
-                        .toList(growable: false),
+                    enabled: resolvedOriginWilayaId != null,
+                    isLoading: originCommunesAsync?.isLoading == true,
+                    communeOptions: originCommunes,
                     onChanged: (value) =>
                         setState(() => _originCommuneId = value),
                   ),
@@ -1398,10 +1470,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                   _CommuneDropdownField(
                     label: s.routeDestinationLabel,
                     value: _destinationCommuneId,
-                    enabled: _destinationWilayaId != null,
-                    communeOptions: communes
-                        .where((item) => item.wilayaId == _destinationWilayaId)
-                        .toList(growable: false),
+                    enabled: resolvedDestinationWilayaId != null,
+                    isLoading: destinationCommunesAsync?.isLoading == true,
+                    communeOptions: destinationCommunes,
                     onChanged: (value) =>
                         setState(() => _destinationCommuneId = value),
                   ),
@@ -1946,6 +2017,7 @@ class _CommuneDropdownField extends StatelessWidget {
     required this.value,
     required this.communeOptions,
     required this.enabled,
+    required this.isLoading,
     required this.onChanged,
   });
 
@@ -1953,6 +2025,7 @@ class _CommuneDropdownField extends StatelessWidget {
   final int? value;
   final List<AlgeriaCommune> communeOptions;
   final bool enabled;
+  final bool isLoading;
   final ValueChanged<int?> onChanged;
 
   @override
@@ -1963,6 +2036,13 @@ class _CommuneDropdownField extends StatelessWidget {
       key: ValueKey<String>('commune-$label-$value-$enabled'),
       initialValue: value,
       decoration: InputDecoration(labelText: label),
+      disabledHint: isLoading
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : null,
       items: communeOptions
           .map(
             (commune) => DropdownMenuItem<int>(
@@ -1971,9 +2051,9 @@ class _CommuneDropdownField extends StatelessWidget {
             ),
           )
           .toList(growable: false),
-      onChanged: enabled ? onChanged : null,
+      onChanged: enabled && !isLoading ? onChanged : null,
       validator: (selected) {
-        if (!enabled || selected != null) {
+        if (!enabled || isLoading || selected != null) {
           return null;
         }
         return S.of(context).authRequiredFieldMessage;

@@ -514,7 +514,7 @@ class _VehicleEditorScreenState extends ConsumerState<VehicleEditorScreen> {
       if (mounted) {
         AppFeedback.showSnackBar(
           context,
-          mapAuthErrorMessage(s, error.message),
+          mapAuthExceptionMessage(s, error),
         );
       }
     } on PostgrestException catch (error) {

@@ -161,6 +161,7 @@ create table if not exists public.profiles (
   email text not null,
   company_name text,
   avatar_url text,
+  preferred_locale text not null default 'ar',
   is_active boolean not null default true,
   verification_status public.verification_status not null default 'pending',
   verification_rejection_reason text,
@@ -519,7 +520,7 @@ create table if not exists public.email_templates (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint email_templates_language_code_check
-    check (language_code in ('ar', 'fr', 'en')),
+    check (char_length(trim(language_code)) > 0),
   constraint email_templates_key_language_unique
     unique (template_key, language_code)
 );

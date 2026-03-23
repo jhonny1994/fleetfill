@@ -21,6 +21,10 @@ void main() {
           minimumSupportedAndroidVersion: 1,
           minimumSupportedIosVersion: 1,
         ),
+        localization: LocalizationSettings(
+          fallbackLocale: 'ar',
+          enabledLocaleCodes: ['ar', 'fr', 'en'],
+        ),
         paymentAccounts: <PlatformPaymentAccountSettings>[],
       );
 
