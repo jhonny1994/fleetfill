@@ -7,8 +7,6 @@ void main() {
     late String constraintsMigration;
     late String searchMigration;
     late String bookingSchemaMigration;
-    late String simplificationMigration;
-
     setUpAll(() {
       constraintsMigration = File(
         'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
@@ -19,9 +17,6 @@ void main() {
       bookingSchemaMigration = File(
         'supabase/migrations/20260317010000_create_foundation_layer.sql',
       ).readAsStringSync();
-      simplificationMigration = File(
-        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
-      ).readAsStringSync();
     });
 
     test('keeps shipment and departure constraints in schema', () {
@@ -29,20 +24,11 @@ void main() {
         constraintsMigration.contains('shipments_positive_weight_check'),
         isTrue,
       );
+      expect(bookingSchemaMigration.contains('pickup_window_start'), isFalse);
+      expect(bookingSchemaMigration.contains('pickup_window_end'), isFalse);
+      expect(bookingSchemaMigration.contains('shipment_items'), isFalse);
       expect(
-        simplificationMigration.contains(
-          'drop column if exists pickup_window_end',
-        ),
-        isTrue,
-      );
-      expect(
-        simplificationMigration.contains(
-          'drop table if exists public.shipment_items cascade',
-        ),
-        isTrue,
-      );
-      expect(
-        simplificationMigration.contains('shipments_lane_pickup_date_idx'),
+        constraintsMigration.contains('shipments_lane_lookup_idx'),
         isTrue,
       );
       expect(

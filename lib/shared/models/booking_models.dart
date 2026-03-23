@@ -11,7 +11,8 @@ enum BookingStatus {
   deliveredPendingReview,
   completed,
   cancelled,
-  disputed;
+  disputed
+  ;
 
   static BookingStatus fromDatabase(Object? value) {
     return switch (value) {
@@ -35,7 +36,8 @@ enum PaymentStatus {
   secured,
   rejected,
   refunded,
-  releasedToCarrier;
+  releasedToCarrier
+  ;
 
   static PaymentStatus fromDatabase(Object? value) {
     return switch (value) {
@@ -53,7 +55,8 @@ enum PaymentStatus {
 enum GeneratedDocumentStatus {
   pending,
   ready,
-  failed;
+  failed
+  ;
 
   static GeneratedDocumentStatus fromDatabase(Object? value) {
     return switch (value) {

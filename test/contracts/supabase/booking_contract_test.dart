@@ -45,13 +45,7 @@ void main() {
           isTrue,
         );
         expect(
-          bookingRpcFunction.contains('pickup_date'),
-          isTrue,
-        );
-        expect(
-          bookingRpcFunction.contains(
-            "raise exception 'Selected departure is outside the shipment pickup date'",
-          ),
+          bookingRpcFunction.contains('p_departure_date date default null'),
           isTrue,
         );
         expect(
@@ -66,6 +60,14 @@ void main() {
           bookingRpcFunction.contains(
             'grant execute on function public.create_booking_from_search_result',
           ),
+          isFalse,
+        );
+        expect(
+          bookingRpcFunction.contains('pickup_window_start'),
+          isFalse,
+        );
+        expect(
+          bookingRpcFunction.contains('pickup_window_end'),
           isFalse,
         );
       },

@@ -6,7 +6,8 @@ part 'shipment_models.g.dart';
 enum ShipmentStatus {
   draft,
   booked,
-  cancelled;
+  cancelled
+  ;
 
   static ShipmentStatus fromDatabase(Object? value) {
     return switch (value) {
@@ -26,7 +27,6 @@ abstract class ShipmentDraftRecord with _$ShipmentDraftRecord {
     required String shipperId,
     required int originCommuneId,
     required int destinationCommuneId,
-    required DateTime pickupDate,
     required double totalWeightKg,
     required double? totalVolumeM3,
     required String? details,
@@ -43,7 +43,6 @@ abstract class ShipmentDraftRecord with _$ShipmentDraftRecord {
       shipperId: json['shipper_id'] as String,
       originCommuneId: (json['origin_commune_id'] as num).toInt(),
       destinationCommuneId: (json['destination_commune_id'] as num).toInt(),
-      pickupDate: DateTime.parse(json['pickup_date'] as String),
       totalWeightKg: (json['total_weight_kg'] as num).toDouble(),
       totalVolumeM3: (json['total_volume_m3'] as num?)?.toDouble(),
       details: (json['description'] as String?)?.trim(),
@@ -59,7 +58,6 @@ abstract class ShipmentDraftInput with _$ShipmentDraftInput {
   const factory ShipmentDraftInput({
     required int originCommuneId,
     required int destinationCommuneId,
-    required DateTime pickupDate,
     required double totalWeightKg,
     required double? totalVolumeM3,
     required String? details,
@@ -74,7 +72,8 @@ abstract class ShipmentDraftInput with _$ShipmentDraftInput {
 enum SearchResultMode {
   exact,
   nearestDate,
-  redefineSearch;
+  redefineSearch
+  ;
 
   static SearchResultMode fromDatabase(String value) {
     return switch (value) {
@@ -143,8 +142,8 @@ abstract class ShipmentSearchResult with _$ShipmentSearchResult {
       departureAt: DateTime.parse(json['departure_at'] as String),
       departureDate: DateTime.parse(json['departure_date'] as String),
       totalCapacityKg: (json['total_capacity_kg'] as num).toDouble(),
-      totalCapacityVolumeM3:
-          (json['total_capacity_volume_m3'] as num?)?.toDouble(),
+      totalCapacityVolumeM3: (json['total_capacity_volume_m3'] as num?)
+          ?.toDouble(),
       remainingCapacityKg: (json['remaining_capacity_kg'] as num).toDouble(),
       remainingVolumeM3: (json['remaining_volume_m3'] as num?)?.toDouble(),
       pricePerKgDzd: (json['price_per_kg_dzd'] as num).toDouble(),
@@ -190,6 +189,7 @@ abstract class BookingReviewSelection with _$BookingReviewSelection {
   const factory BookingReviewSelection({
     required ShipmentDraftRecord shipment,
     required ShipmentSearchResult result,
+    required DateTime requestedDate,
   }) = _BookingReviewSelection;
 
   const BookingReviewSelection._();

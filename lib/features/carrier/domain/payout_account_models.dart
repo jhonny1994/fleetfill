@@ -5,7 +5,8 @@ part 'payout_account_models.freezed.dart';
 enum PayoutAccountType {
   ccp,
   dahabia,
-  bank;
+  bank
+  ;
 
   static PayoutAccountType fromDatabase(Object? value) {
     return switch (value) {
@@ -41,10 +42,8 @@ abstract class CarrierPayoutAccount with _$CarrierPayoutAccount {
       id: json['id'] as String,
       carrierId: json['carrier_id'] as String,
       accountType: PayoutAccountType.fromDatabase(json['account_type']),
-      accountHolderName:
-          (json['account_holder_name'] as String?)?.trim() ?? '',
-      accountIdentifier:
-          (json['account_identifier'] as String?)?.trim() ?? '',
+      accountHolderName: (json['account_holder_name'] as String?)?.trim() ?? '',
+      accountIdentifier: (json['account_identifier'] as String?)?.trim() ?? '',
       bankOrCcpName: (json['bank_or_ccp_name'] as String?)?.trim(),
       isActive: json['is_active'] as bool? ?? false,
       isVerified: json['is_verified'] as bool? ?? false,

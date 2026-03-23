@@ -3,6 +3,7 @@ import 'package:fleetfill/core/config/app_bootstrap.dart';
 import 'package:fleetfill/core/routing/app_routes.dart';
 import 'package:fleetfill/features/onboarding/onboarding.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 
 enum AppRedirectTarget {
   none,
@@ -16,6 +17,7 @@ enum AppRedirectTarget {
   roleSelection,
   profileSetup,
   phoneCompletion,
+  notificationSetup,
   verificationGate,
   payoutAccountGate,
   forbidden,
@@ -86,6 +88,7 @@ class AppRouteGuards {
     required AuthSnapshot auth,
     required String location,
     bool hasSeenPreAuthOnboarding = false,
+    bool hasSeenNotificationOnboarding = true,
   }) {
     if (bootstrap.environment.maintenanceMode &&
         location != AppRoutePath.maintenance) {
@@ -160,6 +163,16 @@ class AppRouteGuards {
 
     if (!auth.hasCompletedOnboarding && !inOnboarding) {
       return const RouteGuardDecision(target: AppRedirectTarget.profileSetup);
+    }
+
+    if (auth.role != AppUserRole.admin &&
+        auth.hasCompletedOnboarding &&
+        auth.hasPhoneNumber &&
+        !hasSeenNotificationOnboarding &&
+        location != AppRoutePath.notificationSetup) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.notificationSetup,
+      );
     }
 
     final needsPhoneForOperationalAction =
@@ -238,6 +251,8 @@ class AppRouteGuards {
         return AppRoutePath.profileSetup;
       case AppRedirectTarget.phoneCompletion:
         return AppRoutePath.phoneCompletion;
+      case AppRedirectTarget.notificationSetup:
+        return AppRoutePath.notificationSetup;
       case AppRedirectTarget.verificationGate:
       case AppRedirectTarget.payoutAccountGate:
         return AppRoutePath.carrierProfile;
@@ -275,41 +290,48 @@ class AppRouteGuards {
   }
 }
 
-final routeGuardDecisionProvider = Provider.family<RouteGuardDecision, String>(
-  (ref, location) {
-    final bootstrapState = ref.watch(appBootstrapControllerProvider);
-    final authState = ref.watch(authSessionControllerProvider);
-    final bootstrap = bootstrapState.hasValue
-        ? bootstrapState.requireValue
-        : null;
-    final auth = authState.hasValue ? authState.requireValue : bootstrap?.auth;
-    final hasSeenPreAuthOnboarding = ref.watch(
-      preAuthOnboardingControllerProvider,
-    );
-    if (bootstrap == null || auth == null) {
-      return const RouteGuardDecision.none();
-    }
+final ProviderFamily<RouteGuardDecision, String> routeGuardDecisionProvider =
+    Provider.family<RouteGuardDecision, String>(
+      (ref, location) {
+        final bootstrapState = ref.watch(appBootstrapControllerProvider);
+        final authState = ref.watch(authSessionControllerProvider);
+        final bootstrap = bootstrapState.hasValue
+            ? bootstrapState.requireValue
+            : null;
+        final auth = authState.hasValue
+            ? authState.requireValue
+            : bootstrap?.auth;
+        final hasSeenPreAuthOnboarding = ref.watch(
+          preAuthOnboardingControllerProvider,
+        );
+        final hasSeenNotificationOnboarding = ref.watch(
+          notificationOnboardingControllerProvider,
+        );
+        if (bootstrap == null || auth == null) {
+          return const RouteGuardDecision.none();
+        }
 
-    final decision = AppRouteGuards.evaluate(
-      bootstrap: bootstrap,
-      auth: auth,
-      location: location,
-      hasSeenPreAuthOnboarding: hasSeenPreAuthOnboarding,
-    );
-    if (decision.hasRedirect) {
-      return decision;
-    }
+        final decision = AppRouteGuards.evaluate(
+          bootstrap: bootstrap,
+          auth: auth,
+          location: location,
+          hasSeenPreAuthOnboarding: hasSeenPreAuthOnboarding,
+          hasSeenNotificationOnboarding: hasSeenNotificationOnboarding,
+        );
+        if (decision.hasRedirect) {
+          return decision;
+        }
 
-    final needsRecentAdminStepUp = location.startsWith(
-      AppRoutePath.adminAuditLog,
-    );
-    if (needsRecentAdminStepUp && !auth.hasRecentAdminStepUp) {
-      return const RouteGuardDecision(
-        target: AppRedirectTarget.forbidden,
-        reason: 'admin_step_up_required',
-      );
-    }
+        final needsRecentAdminStepUp = location.startsWith(
+          AppRoutePath.adminAuditLog,
+        );
+        if (needsRecentAdminStepUp && !auth.hasRecentAdminStepUp) {
+          return const RouteGuardDecision(
+            target: AppRedirectTarget.forbidden,
+            reason: 'admin_step_up_required',
+          );
+        }
 
-    return const RouteGuardDecision.none();
-  },
-);
+        return const RouteGuardDecision.none();
+      },
+    );

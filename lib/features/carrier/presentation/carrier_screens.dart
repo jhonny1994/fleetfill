@@ -8,20 +8,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CarrierShellScreen extends StatelessWidget {
+class CarrierShellScreen extends ConsumerWidget {
   const CarrierShellScreen({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
 
     return AppShellScaffold(
       selectedIndex: navigationShell.currentIndex,
-      onDestinationSelected: (index) => navigationShell.goBranch(
+      onDestinationSelected: (index) => _handleDestinationSelected(
+        context,
+        ref,
+        auth,
         index,
-        initialLocation: index == navigationShell.currentIndex,
       ),
       body: navigationShell,
       destinations: [
@@ -44,6 +47,119 @@ class CarrierShellScreen extends StatelessWidget {
       ],
     );
   }
+
+  void _handleDestinationSelected(
+    BuildContext context,
+    WidgetRef ref,
+    AuthSnapshot? auth,
+    int index,
+  ) {
+    final blocker = _blockerForIndex(auth, index);
+    if (blocker != null) {
+      unawaited(_showCarrierGateDialog(context, blocker));
+      return;
+    }
+
+    navigationShell.goBranch(
+      index,
+      initialLocation: index == navigationShell.currentIndex,
+    );
+  }
+
+  _CarrierNavBlocker? _blockerForIndex(AuthSnapshot? auth, int index) {
+    if (auth == null) {
+      return null;
+    }
+    final needsPhone = !auth.hasPhoneNumber;
+    final needsVerification = !auth.isCarrierVerified;
+    final needsPayout = !auth.hasPayoutAccount;
+
+    return switch (index) {
+      1 when needsPhone => _CarrierNavBlocker.phone(),
+      1 when needsVerification => _CarrierNavBlocker.verification(),
+      2 when needsPhone => _CarrierNavBlocker.phone(),
+      2 when needsVerification => _CarrierNavBlocker.verification(),
+      2 when needsPayout => _CarrierNavBlocker.payout(),
+      _ => null,
+    };
+  }
+
+  Future<void> _showCarrierGateDialog(
+    BuildContext context,
+    _CarrierNavBlocker blocker,
+  ) async {
+    final s = S.of(context);
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AppFocusTraversal.dialog(
+        child: AlertDialog(
+          title: Text(blocker.title(s)),
+          content: Text(blocker.message(s)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(s.cancelLabel),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.go(blocker.nextRoute);
+              },
+              child: Text(blocker.actionLabel(s)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CarrierNavBlocker {
+  const _CarrierNavBlocker._({
+    required this.nextRoute,
+    required this.title,
+    required this.message,
+    required this.actionLabel,
+  });
+
+  _CarrierNavBlocker.phone()
+    : this._(
+        nextRoute: AppRoutePath.phoneCompletion,
+        title: _phoneTitle,
+        message: _phoneMessage,
+        actionLabel: _phoneAction,
+      );
+
+  _CarrierNavBlocker.verification()
+    : this._(
+        nextRoute: AppRoutePath.carrierVerification,
+        title: _verificationTitle,
+        message: _verificationMessage,
+        actionLabel: _verificationAction,
+      );
+
+  _CarrierNavBlocker.payout()
+    : this._(
+        nextRoute: AppRoutePath.carrierPayoutAccounts(),
+        title: _payoutTitle,
+        message: _payoutMessage,
+        actionLabel: _payoutAction,
+      );
+
+  final String nextRoute;
+  final String Function(S) title;
+  final String Function(S) message;
+  final String Function(S) actionLabel;
+
+  static String _phoneTitle(S s) => s.carrierGatePhoneTitle;
+  static String _phoneMessage(S s) => s.carrierGatePhoneMessage;
+  static String _phoneAction(S s) => s.phoneCompletionTitle;
+  static String _verificationTitle(S s) => s.carrierGateVerificationTitle;
+  static String _verificationMessage(S s) => s.carrierGateVerificationMessage;
+  static String _verificationAction(S s) => s.carrierVerificationCenterTitle;
+  static String _payoutTitle(S s) => s.carrierGatePayoutTitle;
+  static String _payoutMessage(S s) => s.carrierGatePayoutMessage;
+  static String _payoutAction(S s) => s.payoutAccountsTitle;
 }
 
 class CarrierHomeScreen extends ConsumerWidget {

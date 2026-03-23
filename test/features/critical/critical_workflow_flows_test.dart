@@ -298,7 +298,7 @@ class _ShipperJourneyHarnessState
                           ShipmentSearchQuery(
                             originCommuneId: shipment.originCommuneId,
                             destinationCommuneId: shipment.destinationCommuneId,
-                            requestedDate: shipment.pickupDate,
+                            requestedDate: DateTime.utc(2026, 3, 21),
                             totalWeightKg: shipment.totalWeightKg,
                             totalVolumeM3: shipment.totalVolumeM3,
                           ),
@@ -585,7 +585,6 @@ class _FakeFlowStore {
         shipperId: 'shipper-1',
         originCommuneId: 1601,
         destinationCommuneId: 3101,
-        pickupDate: DateTime.utc(2026, 3, 21),
         totalWeightKg: 50,
         totalVolumeM3: 1,
         details: 'Fragile boxes',
@@ -673,7 +672,6 @@ class _FakeShipmentRepository extends ShipmentRepository {
       shipperId: 'shipper-1',
       originCommuneId: input.originCommuneId,
       destinationCommuneId: input.destinationCommuneId,
-      pickupDate: input.pickupDate,
       totalWeightKg: input.totalWeightKg,
       totalVolumeM3: input.totalVolumeM3,
       details: input.details,
@@ -1069,10 +1067,9 @@ class _FakeNotificationRepository extends NotificationRepository {
 }
 
 ShipmentDraftInput _shipmentInput() {
-  return ShipmentDraftInput(
+  return const ShipmentDraftInput(
     originCommuneId: 1601,
     destinationCommuneId: 3101,
-    pickupDate: DateTime.utc(2026, 3, 21),
     totalWeightKg: 50,
     totalVolumeM3: 1,
     details: 'Fragile boxes',

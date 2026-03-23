@@ -225,10 +225,6 @@ class ShipmentDetailScreen extends ConsumerWidget {
                 title: s.searchShipmentSummaryTitle,
                 rows: [
                   ProfileSummaryRow(
-                    label: s.shipmentPickupDateLabel,
-                    value: _sharedFormatDate(shipment.pickupDate),
-                  ),
-                  ProfileSummaryRow(
                     label: s.vehicleCapacityWeightLabel,
                     value:
                         '${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg',

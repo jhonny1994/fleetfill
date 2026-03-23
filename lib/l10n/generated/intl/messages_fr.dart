@@ -611,6 +611,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "carrierBookingsTitle": MessageLookupByLibrary.simpleMessage(
       "Réservations transporteur",
     ),
+    "carrierGatePayoutMessage": MessageLookupByLibrary.simpleMessage(
+      "Ajoutez un compte de paiement avant d\'ouvrir les réservations transporteur afin que les courses terminées puissent être réglées correctement.",
+    ),
+    "carrierGatePayoutTitle": MessageLookupByLibrary.simpleMessage(
+      "Compte de paiement requis",
+    ),
+    "carrierGatePhoneMessage": MessageLookupByLibrary.simpleMessage(
+      "Ajoutez votre numéro de telephone avant d\'ouvrir cet espace transporteur afin de recevoir les mises a jour opérationnelles et de réservation.",
+    ),
+    "carrierGatePhoneTitle": MessageLookupByLibrary.simpleMessage(
+      "Numéro de telephone requis",
+    ),
+    "carrierGateVerificationMessage": MessageLookupByLibrary.simpleMessage(
+      "Terminez la vérification transporteur avant d\'ouvrir cet espace pour publier des trajets ou gérer des réservations.",
+    ),
+    "carrierGateVerificationTitle": MessageLookupByLibrary.simpleMessage(
+      "Vérification requise",
+    ),
     "carrierHomeDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez votre statut de vérification, l\'etat de votre flotte et vos prochaines tâches.",
     ),
@@ -982,12 +1000,31 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationsCenterTitle": MessageLookupByLibrary.simpleMessage(
       "Notifications",
     ),
+    "notificationsOnboardingEnableAction": MessageLookupByLibrary.simpleMessage(
+      "Activer les notifications",
+    ),
+    "notificationsOnboardingSkipAction": MessageLookupByLibrary.simpleMessage(
+      "Passer pour le moment",
+    ),
+    "notificationsOnboardingValueMessage": MessageLookupByLibrary.simpleMessage(
+      "Activez les notifications pour suivre les confirmations de réservation, les vérifications de paiement, les étapes de livraison et les alertes du compte sans ambiguite.",
+    ),
     "notificationsPermissionDescription": MessageLookupByLibrary.simpleMessage(
       "Activez les notifications pour recevoir les mises a jour de réservation, de livraison et de paiement.",
     ),
     "notificationsPermissionTitle": MessageLookupByLibrary.simpleMessage(
       "Activer les notifications",
     ),
+    "notificationsSettingsDisabledMessage": MessageLookupByLibrary.simpleMessage(
+      "Les notifications restent désactivées pour le moment. Vous pourrez les activer plus tard depuis les paramètres.",
+    ),
+    "notificationsSettingsEnabledMessage": MessageLookupByLibrary.simpleMessage(
+      "Les notifications sont activées sur cet appareil.",
+    ),
+    "notificationsSettingsEntryDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "Gerez l\'autorisation et ouvrez votre centre de notifications.",
+        ),
     "offlineMessage": MessageLookupByLibrary.simpleMessage(
       "Vous êtes hors ligne. Certaines actions sont temporairement indisponibles.",
     ),
@@ -1506,7 +1543,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Details de l\'expedition",
     ),
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
-      "Consultez le trajet, la date de collecte, le poids, le volume et les details de l\'expedition.",
+      "Consultez le trajet, le poids, le volume et les details de l\'expedition.",
     ),
     "shipmentDetailTitle": m16,
     "shipmentEditAction": MessageLookupByLibrary.simpleMessage(
@@ -1514,9 +1551,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "shipmentEditTitle": MessageLookupByLibrary.simpleMessage(
       "Modifier l\'expedition",
-    ),
-    "shipmentPickupDateLabel": MessageLookupByLibrary.simpleMessage(
-      "Date de collecte",
     ),
     "shipmentSaveAction": MessageLookupByLibrary.simpleMessage(
       "Enregistrer l\'expedition",
@@ -1549,9 +1583,6 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "shipperHomeQuickActionsTitle": MessageLookupByLibrary.simpleMessage(
       "Actions rapides",
-    ),
-    "shipperHomeRecentNotificationTitle": MessageLookupByLibrary.simpleMessage(
-      "Notification recente",
     ),
     "shipperHomeTitle": MessageLookupByLibrary.simpleMessage(
       "Accueil expéditeur",

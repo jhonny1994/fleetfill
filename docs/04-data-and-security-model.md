@@ -194,7 +194,6 @@ Recommended fields:
 - `shipper_id uuid fk -> profiles.id`
 - `origin_commune_id integer`
 - `destination_commune_id integer`
-- `pickup_date date`
 - `total_weight_kg numeric`
 - `total_volume_m3 numeric null`
 - `description text null` -- shipment details
@@ -205,6 +204,8 @@ Recommended fields:
 ### 2.8 `bookings`
 
 Purpose: one shipment bound to one route-date or one-off trip.
+
+Note: the selected departure date belongs to the booking/search selection context, not to the shipment draft itself.
 
 Recommended fields:
 

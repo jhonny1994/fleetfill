@@ -83,7 +83,7 @@ class PushNotificationService {
     };
   }
 
-  Future<void> syncAuthenticatedSession({
+  Future<void> syncAuthenticatedSessionIfAuthorized({
     required AuthSnapshot auth,
     required Locale locale,
   }) async {
@@ -126,12 +126,8 @@ class PushNotificationService {
     await _ensureForegroundPresentation();
     await _ensureTokenRefreshRegistration(auth.userId!, locale.languageCode);
 
-    final permissionSettings = await FirebaseMessaging.instance
-        .requestPermission();
-
-    if (permissionSettings.authorizationStatus == AuthorizationStatus.denied ||
-        permissionSettings.authorizationStatus ==
-            AuthorizationStatus.notDetermined) {
+    final status = await notificationPermissionStatus();
+    if (!_isPermissionGranted(status)) {
       return;
     }
 
@@ -155,6 +151,47 @@ class PushNotificationService {
     _lastRegisteredUserId = auth.userId;
     _lastRegisteredToken = token;
     _lastRegisteredLocale = locale.languageCode;
+  }
+
+  Future<AuthorizationStatus> notificationPermissionStatus() async {
+    if (!isSupportedOnCurrentPlatform || !isConfiguredForCurrentPlatform) {
+      return AuthorizationStatus.denied;
+    }
+
+    final firebaseReady = await _ensureFirebaseInitialized();
+    if (!firebaseReady) {
+      return AuthorizationStatus.denied;
+    }
+
+    final settings = await FirebaseMessaging.instance.getNotificationSettings();
+    return settings.authorizationStatus;
+  }
+
+  Future<AuthorizationStatus> requestPermissionAndSync({
+    required AuthSnapshot auth,
+    required Locale locale,
+  }) async {
+    if (!auth.isAuthenticated || auth.userId == null) {
+      return AuthorizationStatus.denied;
+    }
+    if (!isSupportedOnCurrentPlatform || !isConfiguredForCurrentPlatform) {
+      return AuthorizationStatus.denied;
+    }
+
+    final firebaseReady = await _ensureFirebaseInitialized();
+    if (!firebaseReady) {
+      return AuthorizationStatus.denied;
+    }
+
+    await _ensureForegroundPresentation();
+    await _ensureTokenRefreshRegistration(auth.userId!, locale.languageCode);
+
+    final settings = await FirebaseMessaging.instance.requestPermission();
+    if (_isPermissionGranted(settings.authorizationStatus)) {
+      await _syncAuthenticatedSessionInternal(auth: auth, locale: locale);
+    }
+
+    return settings.authorizationStatus;
   }
 
   Future<void> ensureTapHandling(GoRouter router) async {
@@ -262,6 +299,11 @@ class PushNotificationService {
   Future<void> dispose() async {
     await _tokenRefreshSubscription?.cancel();
     await _messageOpenedSubscription?.cancel();
+  }
+
+  bool _isPermissionGranted(AuthorizationStatus status) {
+    return status == AuthorizationStatus.authorized ||
+        status == AuthorizationStatus.provisional;
   }
 }
 

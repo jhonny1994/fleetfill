@@ -10,7 +10,6 @@ _ShipmentDraftInput _$ShipmentDraftInputFromJson(Map<String, dynamic> json) =>
     _ShipmentDraftInput(
       originCommuneId: (json['originCommuneId'] as num).toInt(),
       destinationCommuneId: (json['destinationCommuneId'] as num).toInt(),
-      pickupDate: DateTime.parse(json['pickupDate'] as String),
       totalWeightKg: (json['totalWeightKg'] as num).toDouble(),
       totalVolumeM3: (json['totalVolumeM3'] as num?)?.toDouble(),
       details: json['details'] as String?,
@@ -20,7 +19,6 @@ Map<String, dynamic> _$ShipmentDraftInputToJson(_ShipmentDraftInput instance) =>
     <String, dynamic>{
       'originCommuneId': instance.originCommuneId,
       'destinationCommuneId': instance.destinationCommuneId,
-      'pickupDate': instance.pickupDate.toIso8601String(),
       'totalWeightKg': instance.totalWeightKg,
       'totalVolumeM3': instance.totalVolumeM3,
       'details': instance.details,

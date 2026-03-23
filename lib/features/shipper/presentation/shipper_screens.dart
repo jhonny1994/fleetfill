@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:file_picker/file_picker.dart';
 import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
-import 'package:fleetfill/features/notifications/notifications.dart';
-import 'package:fleetfill/features/profile/presentation/profile_components.dart';
+import 'package:fleetfill/features/profile/profile.dart';
 import 'package:fleetfill/features/shipper/shipper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +57,6 @@ class ShipperHomeScreen extends ConsumerWidget {
     final s = S.of(context);
     final shipmentsAsync = ref.watch(myShipperShipmentsProvider);
     final bookingsAsync = ref.watch(myShipperBookingsProvider);
-    final notificationsAsync = ref.watch(myNotificationsProvider);
-    final notificationItems =
-        notificationsAsync.asData?.value.items ?? const [];
     final activeBookings =
         bookingsAsync.asData?.value
             .where(
@@ -70,7 +66,6 @@ class ShipperHomeScreen extends ConsumerWidget {
             )
             .length ??
         0;
-    final latestNotification = notificationItems.firstOrNull;
 
     return AppPageScaffold(
       title: s.shipperHomeTitle,
@@ -98,41 +93,8 @@ class ShipperHomeScreen extends ConsumerWidget {
                   (shipmentsAsync.asData?.value.length ?? 0).toString(),
                 ),
               ),
-              ProfileSummaryRow(
-                label: s.shipperHomeUnreadNotificationsLabel,
-                value: BidiFormatters.latinIdentifier(
-                  notificationItems
-                      .where((notification) => !notification.isRead)
-                      .length
-                      .toString(),
-                ),
-              ),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            s.shipperHomeRecentNotificationTitle,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          if (latestNotification == null)
-            AppStateMessage(
-              icon: Icons.notifications_none_rounded,
-              title: s.notificationsCenterTitle,
-              message: s.shipperHomeNoRecentNotificationMessage,
-            )
-          else
-            AppListCard(
-              title: _notificationPreviewTitle(context, latestNotification),
-              subtitle: _notificationPreviewBody(context, latestNotification),
-              trailing: const Icon(Icons.chevron_right_rounded),
-              onTap: () => context.push(
-                AppRoutePath.sharedNotificationDetail.replaceFirst(
-                  ':id',
-                  latestNotification.id,
-                ),
-              ),
-            ),
           const SizedBox(height: AppSpacing.md),
           Text(
             s.shipperHomeQuickActionsTitle,
@@ -144,13 +106,6 @@ class ShipperHomeScreen extends ConsumerWidget {
             subtitle: s.searchTripsDescription,
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => context.go(AppRoutePath.shipperSearch),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppListCard(
-            title: s.notificationsCenterTitle,
-            subtitle: s.notificationsCenterDescription,
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.push(AppRoutePath.sharedNotifications),
           ),
           const SizedBox(height: AppSpacing.sm),
           AppListCard(
@@ -272,6 +227,7 @@ class SearchTripsScreen extends ConsumerStatefulWidget {
 
 class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
   String? _selectedShipmentId;
+  DateTime? _requestedDate;
   SearchSortOption _sort = SearchSortOption.recommended;
   bool _includeRecurring = true;
   bool _includeOneOff = true;
@@ -327,6 +283,11 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
             (shipment) => shipment.id == _selectedShipmentId,
             orElse: () => draftShipments.first,
           );
+          _requestedDate ??= DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          );
 
           return ListView(
             key: const PageStorageKey<String>('shipper-search-screen'),
@@ -375,45 +336,17 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
                       },
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    ProfileSummaryCard(
-                      title: s.searchShipmentSummaryTitle,
-                      rows: [
-                        ProfileSummaryRow(
-                          label: s.routeOriginLabel,
-                          value: _communeName(
-                            context,
-                            locationDirectoryAsync.asData?.value.communes,
-                            selectedShipment.originCommuneId,
-                          ),
-                        ),
-                        ProfileSummaryRow(
-                          label: s.routeDestinationLabel,
-                          value: _communeName(
-                            context,
-                            locationDirectoryAsync.asData?.value.communes,
-                            selectedShipment.destinationCommuneId,
-                          ),
-                        ),
-                        ProfileSummaryRow(
-                          label: s.vehicleCapacityWeightLabel,
-                          value:
-                              '${BidiFormatters.latinIdentifier(selectedShipment.totalWeightKg.toStringAsFixed(0))} kg',
-                        ),
-                        ProfileSummaryRow(
-                          label: s.vehicleCapacityVolumeLabel,
-                          value: selectedShipment.totalVolumeM3 == null
-                              ? '-'
-                              : BidiFormatters.latinIdentifier(
-                                  selectedShipment.totalVolumeM3!
-                                      .toStringAsFixed(1),
-                                ),
-                        ),
-                        if ((selectedShipment.details ?? '').trim().isNotEmpty)
-                          ProfileSummaryRow(
-                            label: s.shipmentDescriptionLabel,
-                            value: selectedShipment.details!,
-                          ),
-                      ],
+                    _DateButtonField(
+                      label: s.searchRequestedDateLabel,
+                      value: _requestedDate == null
+                          ? null
+                          : _formatDate(_requestedDate!),
+                      onPressed: () => unawaited(_pickRequestedDate(context)),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    _CompactShipmentSummaryCard(
+                      shipment: selectedShipment,
+                      communes: locationDirectoryAsync.asData!.value.communes,
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AuthSubmitButton(
@@ -577,6 +510,10 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
     ShipmentDraftRecord shipment, {
     required bool reset,
   }) async {
+    final requestedDate = _requestedDate;
+    if (requestedDate == null) {
+      return;
+    }
     final token = ++_searchToken;
     setState(() => _isSearching = true);
     try {
@@ -586,7 +523,7 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
             ShipmentSearchQuery(
               originCommuneId: shipment.originCommuneId,
               destinationCommuneId: shipment.destinationCommuneId,
-              requestedDate: shipment.pickupDate,
+              requestedDate: requestedDate,
               totalWeightKg: shipment.totalWeightKg,
               totalVolumeM3: shipment.totalVolumeM3,
               sort: _sort,
@@ -619,6 +556,23 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
         setState(() => _isSearching = false);
       }
     }
+  }
+
+  Future<void> _pickRequestedDate(BuildContext context) async {
+    final initial = _requestedDate ?? DateTime.now();
+    final date = await showDatePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 90)),
+      initialDate: initial,
+    );
+    if (date == null || !mounted) {
+      return;
+    }
+    setState(() {
+      _requestedDate = DateTime(date.year, date.month, date.day);
+      _response = null;
+    });
   }
 }
 
@@ -1347,7 +1301,6 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   int? _originCommuneId;
   int? _destinationWilayaId;
   int? _destinationCommuneId;
-  DateTime? _pickupDate;
   bool _isSaving = false;
   bool _initialized = false;
 
@@ -1370,7 +1323,6 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
       _originWilayaId = null;
       _destinationCommuneId = shipment?.destinationCommuneId;
       _destinationWilayaId = null;
-      _pickupDate = shipment?.pickupDate;
       _weightController.text = shipment?.totalWeightKg.toStringAsFixed(0) ?? '';
       _volumeController.text = shipment?.totalVolumeM3?.toString() ?? '';
       _detailsController.text = shipment?.details ?? '';
@@ -1454,14 +1406,6 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                         setState(() => _destinationCommuneId = value),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _DateButtonField(
-                    label: s.shipmentPickupDateLabel,
-                    value: _pickupDate == null
-                        ? null
-                        : _formatDate(_pickupDate!),
-                    onPressed: () => unawaited(_pickDate(context)),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
                   AuthTextField(
                     controller: _weightController,
                     label: s.vehicleCapacityWeightLabel,
@@ -1510,24 +1454,10 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
     );
   }
 
-  Future<void> _pickDate(BuildContext context) async {
-    final initial = _pickupDate ?? DateTime.now();
-    final date = await showDatePicker(
-      context: context,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 90)),
-      initialDate: initial,
-    );
-    if (date == null || !mounted) return;
-    setState(() => _pickupDate = DateTime(date.year, date.month, date.day));
-  }
-
   Future<void> _save() async {
     final s = S.of(context);
     if (!_formKey.currentState!.validate()) return;
-    if (_originCommuneId == null ||
-        _destinationCommuneId == null ||
-        _pickupDate == null) {
+    if (_originCommuneId == null || _destinationCommuneId == null) {
       AppFeedback.showSnackBar(context, s.authRequiredFieldMessage);
       return;
     }
@@ -1540,7 +1470,6 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
       final input = ShipmentDraftInput(
         originCommuneId: _originCommuneId!,
         destinationCommuneId: _destinationCommuneId!,
-        pickupDate: _pickupDate!,
         totalWeightKg: double.parse(_weightController.text.trim()),
         totalVolumeM3: _parseOptional(_volumeController.text),
         details: _detailsController.text,
@@ -1734,6 +1663,7 @@ class _SearchResultsSection extends StatelessWidget {
                 extra: BookingReviewSelection(
                   shipment: shipment,
                   result: result,
+                  requestedDate: result.departureDate,
                 ),
               ),
             );
@@ -1744,6 +1674,85 @@ class _SearchResultsSection extends StatelessWidget {
           OutlinedButton(onPressed: onLoadMore, child: Text(s.loadMoreLabel)),
         ],
       ],
+    );
+  }
+}
+
+class _CompactShipmentSummaryCard extends StatelessWidget {
+  const _CompactShipmentSummaryCard({
+    required this.shipment,
+    required this.communes,
+  });
+
+  final ShipmentDraftRecord shipment;
+  final List<AlgeriaCommune> communes;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final communeMap = {for (final commune in communes) commune.id: commune};
+    final detail = (shipment.details ?? '').trim();
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _shipmentLaneLabel(context, shipment, communeMap),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                _SummaryChip(
+                  label:
+                      '${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg',
+                ),
+                if (shipment.totalVolumeM3 != null)
+                  _SummaryChip(
+                    label:
+                        '${BidiFormatters.latinIdentifier(shipment.totalVolumeM3!.toStringAsFixed(1))} m3',
+                  ),
+              ],
+            ),
+            if (detail.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                '${s.shipmentDescriptionLabel}: $detail',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SummaryChip extends StatelessWidget {
+  const _SummaryChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        child: Text(label),
+      ),
     );
   }
 }
@@ -1763,69 +1772,9 @@ String _shipmentLaneLabel(
   return '$origin -> $destination';
 }
 
-String _notificationPreviewTitle(
-  BuildContext context,
-  AppNotificationRecord notification,
-) {
-  final s = S.of(context);
-  return switch (notification.type) {
-    'booking_confirmed' => s.notificationBookingConfirmedTitle,
-    'payment_proof_submitted' => s.notificationPaymentProofSubmittedTitle,
-    'payment_secured' => s.notificationPaymentSecuredTitle,
-    'payment_rejected' => s.notificationPaymentRejectedTitle,
-    'booking_milestone_updated' => s.notificationBookingMilestoneUpdatedTitle,
-    'carrier_review_submitted' => s.notificationCarrierReviewSubmittedTitle,
-    'dispute_opened' => s.notificationDisputeOpenedTitle,
-    'dispute_resolved' => s.notificationDisputeResolvedTitle,
-    'payout_released' => s.notificationPayoutReleasedTitle,
-    'generated_document_ready' => s.notificationGeneratedDocumentReadyTitle,
-    _ => notification.title,
-  };
-}
-
-String _notificationPreviewBody(
-  BuildContext context,
-  AppNotificationRecord notification,
-) {
-  final s = S.of(context);
-  return switch (notification.type) {
-    'booking_confirmed' => s.notificationBookingConfirmedBody,
-    'payment_proof_submitted' => s.notificationPaymentProofSubmittedBody,
-    'payment_secured' => s.notificationPaymentSecuredBody,
-    'payment_rejected' => s.notificationPaymentRejectedBody,
-    'booking_milestone_updated' => s.notificationBookingMilestoneUpdatedBody(
-      switch (notification.data['milestone'] as String?) {
-        'payment_under_review' => s.trackingEventPaymentUnderReviewLabel,
-        'confirmed' => s.trackingEventConfirmedLabel,
-        'picked_up' => s.trackingEventPickedUpLabel,
-        'in_transit' => s.trackingEventInTransitLabel,
-        'delivered_pending_review' =>
-          s.trackingEventDeliveredPendingReviewLabel,
-        'completed' => s.trackingEventCompletedLabel,
-        'cancelled' => s.trackingEventCancelledLabel,
-        'disputed' => s.trackingEventDisputedLabel,
-        _ => notification.data['milestone'] as String? ?? '',
-      },
-    ),
-    'carrier_review_submitted' => s.notificationCarrierReviewSubmittedBody,
-    'dispute_opened' => s.notificationDisputeOpenedBody,
-    'dispute_resolved' => s.notificationDisputeResolvedBody,
-    'payout_released' => s.notificationPayoutReleasedBody,
-    'generated_document_ready' => s.notificationGeneratedDocumentReadyBody(
-      _generatedDocumentTypeLabel(
-        s,
-        notification.data['document_type'] as String?,
-      ),
-    ),
-    _ => notification.body,
-  };
-}
-
 String _shipmentSubtitle(BuildContext context, ShipmentDraftRecord shipment) {
-  final s = S.of(context);
   final parts = <String>[
     '${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg',
-    '${s.shipmentPickupDateLabel}: ${_formatDate(shipment.pickupDate)}',
   ];
   if (shipment.totalVolumeM3 != null) {
     parts.add(
@@ -1846,7 +1795,7 @@ String _shipmentSelectorLabel(
 ) {
   final communeMap = {for (final commune in communes) commune.id: commune};
   final lane = _shipmentLaneLabel(context, shipment, communeMap);
-  return '$lane • ${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg • ${_formatDate(shipment.pickupDate)}';
+  return '$lane • ${BidiFormatters.latinIdentifier(shipment.totalWeightKg.toStringAsFixed(0))} kg';
 }
 
 String _shipmentStatusLabel(S s, ShipmentStatus status) {
@@ -1855,16 +1804,6 @@ String _shipmentStatusLabel(S s, ShipmentStatus status) {
     ShipmentStatus.cancelled => s.shipmentStatusCancelledLabel,
     ShipmentStatus.draft => s.shipmentStatusDraftLabel,
   };
-}
-
-String _communeName(
-  BuildContext context,
-  List<AlgeriaCommune>? communes,
-  int communeId,
-) {
-  final locale = Localizations.localeOf(context);
-  final commune = communes?.where((item) => item.id == communeId).firstOrNull;
-  return commune?.displayName(locale) ?? S.of(context).locationUnavailableLabel;
 }
 
 String _formatDate(DateTime value) {
