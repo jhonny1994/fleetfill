@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
+import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:fleetfill/features/profile/presentation/profile_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +20,15 @@ class SettingsScreen extends ConsumerWidget {
     final locale = ref.watch(effectiveLocaleProvider);
     final localizedLanguage = localizedLanguageName(context, locale, s);
     final themeMode = ref.watch(themeControllerProvider);
+    final notificationPermissionAsync = ref.watch(
+      notificationPermissionStatusProvider,
+    );
+    final notificationPermissionStatus =
+        notificationPermissionAsync.asData?.value;
+    final notificationsSubtitle = notificationSettingsSubtitle(
+      s,
+      notificationPermissionStatus,
+    );
 
     return AppPageScaffold(
       title: s.settingsTitle,
@@ -69,9 +80,11 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.sm),
           AppListCard(
             title: s.notificationsCenterTitle,
-            subtitle: s.notificationsSettingsEntryDescription,
+            subtitle: notificationsSubtitle,
             trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.push(AppRoutePath.notificationsHelp),
+            onTap: () => context.push(
+              notificationSettingsRouteForStatus(notificationPermissionStatus),
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           AppListCard(
@@ -93,6 +106,23 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+String notificationSettingsRouteForStatus(AuthorizationStatus? status) {
+  return switch (status) {
+    AuthorizationStatus.authorized => AppRoutePath.sharedNotifications,
+    AuthorizationStatus.provisional => AppRoutePath.sharedNotifications,
+    _ => AppRoutePath.notificationsHelp,
+  };
+}
+
+String notificationSettingsSubtitle(S s, AuthorizationStatus? status) {
+  return switch (status) {
+    AuthorizationStatus.authorized => s.notificationsSettingsEnabledMessage,
+    AuthorizationStatus.provisional => s.notificationsSettingsEnabledMessage,
+    AuthorizationStatus.denied => s.notificationsSettingsDisabledMessage,
+    _ => s.notificationsSettingsEntryDescription,
+  };
 }
 
 class ShipperProfileScreen extends ConsumerWidget {

@@ -242,7 +242,6 @@ FleetFill should automatically generate PDF documents from the system for operat
 
 Initial document scope:
 
-- booking invoice PDF
 - payment receipt PDF when applicable
 - payout receipt or payout statement PDF when applicable
 

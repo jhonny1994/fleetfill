@@ -187,7 +187,6 @@
       "documentId": {}
     }
   },
-  "generatedDocumentTypeBookingInvoice": "Booking invoice",
   "generatedDocumentTypePaymentReceipt": "Payment receipt",
   "generatedDocumentTypePayoutReceipt": "Payout receipt",
   "generatedDocumentStatusPendingLabel": "Generating",

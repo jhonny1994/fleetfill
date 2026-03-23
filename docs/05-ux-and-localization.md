@@ -320,7 +320,6 @@ Users should be able to access system-generated PDFs where relevant.
 
 Initial scope:
 
-- booking invoice
 - payment receipt where applicable
 - payout receipt for carrier settlement where applicable
 

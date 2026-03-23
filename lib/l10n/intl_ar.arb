@@ -263,7 +263,6 @@
       "documentId": {}
     }
   },
-  "generatedDocumentTypeBookingInvoice": "فاتورة الحجز",
   "generatedDocumentTypePaymentReceipt": "إيصال الدفع",
   "generatedDocumentTypePayoutReceipt": "إيصال التحويل",
   "generatedDocumentStatusPendingLabel": "قيد الإنشاء",

@@ -23,6 +23,11 @@ final pushNotificationServiceProvider = Provider<PushNotificationService>((
   );
 });
 
+final notificationPermissionStatusProvider =
+    FutureProvider<AuthorizationStatus>((ref) async {
+      return ref.read(pushNotificationServiceProvider).notificationPermissionStatus();
+    });
+
 class PushNotificationService {
   PushNotificationService({
     required this.environment,

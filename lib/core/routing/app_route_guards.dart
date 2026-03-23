@@ -83,6 +83,12 @@ class AppRouteGuards {
         location == AppRoutePath.sharedPolicies;
   }
 
+  static bool _needsRecentAdminStepUp(String location) {
+    return location.startsWith(AppRoutePath.adminQueues) ||
+        location.startsWith(AppRoutePath.adminUsers) ||
+        location.startsWith(AppRoutePath.adminAuditLog);
+  }
+
   static RouteGuardDecision evaluate({
     required AppBootstrapState bootstrap,
     required AuthSnapshot auth,
@@ -220,6 +226,13 @@ class AppRouteGuards {
       );
     }
 
+    if (_needsRecentAdminStepUp(location) && !auth.hasRecentAdminStepUp) {
+      return const RouteGuardDecision(
+        target: AppRedirectTarget.forbidden,
+        reason: 'admin_step_up_required',
+      );
+    }
+
     return const RouteGuardDecision.none();
   }
 
@@ -320,16 +333,6 @@ final ProviderFamily<RouteGuardDecision, String> routeGuardDecisionProvider =
         );
         if (decision.hasRedirect) {
           return decision;
-        }
-
-        final needsRecentAdminStepUp = location.startsWith(
-          AppRoutePath.adminAuditLog,
-        );
-        if (needsRecentAdminStepUp && !auth.hasRecentAdminStepUp) {
-          return const RouteGuardDecision(
-            target: AppRedirectTarget.forbidden,
-            reason: 'admin_step_up_required',
-          );
         }
 
         return const RouteGuardDecision.none();

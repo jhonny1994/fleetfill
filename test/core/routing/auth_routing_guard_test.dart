@@ -218,6 +218,58 @@ void main() {
       );
     });
 
+    test('requires recent admin step-up for admin queue routes', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.admin,
+        hasCompletedOnboarding: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.adminQueues,
+      );
+
+      expect(decision.target, AppRedirectTarget.forbidden);
+      expect(decision.reason, 'admin_step_up_required');
+    });
+
+    test('requires recent admin step-up for admin user detail routes', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.admin,
+        hasCompletedOnboarding: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.adminUserDetail('user-42'),
+      );
+
+      expect(decision.target, AppRedirectTarget.forbidden);
+      expect(decision.reason, 'admin_step_up_required');
+    });
+
+    test('allows recent-step-up admins onto sensitive queue routes', () {
+      final auth = authSnapshot(
+        status: AuthStatus.authenticated,
+        role: AppUserRole.admin,
+        hasCompletedOnboarding: true,
+        hasRecentAdminStepUp: true,
+      );
+
+      final decision = AppRouteGuards.evaluate(
+        bootstrap: bootstrap(auth),
+        auth: auth,
+        location: AppRoutePath.adminQueuesPaymentProof('proof-1'),
+      );
+
+      expect(decision.target, AppRedirectTarget.none);
+      expect(AppRouteGuards.redirectLocation(decision, auth: auth), isNull);
+    });
+
     test('keeps non-operational profile access open without phone number', () {
       final auth = authSnapshot(
         status: AuthStatus.authenticated,

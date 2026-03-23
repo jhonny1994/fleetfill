@@ -45,14 +45,14 @@ function displayName(profile: ProfileRow | null) {
 
 function documentTitle(documentType: string) {
   switch (documentType) {
-    case 'booking_invoice':
-      return 'Booking Invoice'
     case 'payment_receipt':
       return 'Payment Receipt'
     case 'payout_receipt':
       return 'Payout Receipt'
     default:
-      return 'Generated Document'
+      throw new Error(
+        `unsupported_document_type:Unsupported generated document type ${documentType}`,
+      )
   }
 }
 

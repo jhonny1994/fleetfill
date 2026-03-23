@@ -784,9 +784,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "generatedDocumentStatusPendingLabel": MessageLookupByLibrary.simpleMessage(
       "قيد الإنشاء",
     ),
-    "generatedDocumentTypeBookingInvoice": MessageLookupByLibrary.simpleMessage(
-      "فاتورة الحجز",
-    ),
     "generatedDocumentTypePaymentReceipt": MessageLookupByLibrary.simpleMessage(
       "إيصال الدفع",
     ),

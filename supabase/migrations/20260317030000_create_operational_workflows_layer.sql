@@ -922,7 +922,7 @@ begin
     raise exception 'Booking id is required';
   end if;
 
-  if v_document_type not in ('booking_invoice', 'payment_receipt', 'payout_receipt') then
+  if v_document_type not in ('payment_receipt', 'payout_receipt') then
     raise exception 'Unsupported generated document type';
   end if;
 
@@ -943,7 +943,7 @@ begin
     raise exception 'Booking not found';
   end if;
 
-  if v_document_type in ('booking_invoice', 'payment_receipt')
+  if v_document_type = 'payment_receipt'
      and v_booking.payment_status not in ('secured', 'released_to_carrier') then
     raise exception 'Booking financial documents require secured payment';
   end if;
@@ -1282,11 +1282,6 @@ begin
     (v_booking.id, 'platform_fee_recorded', 'credit', v_booking.platform_fee_dzd, 'platform', v_booking.payment_reference, 'Platform fee recorded', (select auth.uid()), now()),
     (v_booking.id, 'insurance_fee_recorded', 'credit', v_booking.insurance_fee_dzd, 'platform', v_booking.payment_reference, 'Insurance fee recorded', (select auth.uid()), now());
 
-  perform public.create_generated_document_record(
-    v_booking.id,
-    'booking_invoice',
-    format('generated/%s/booking-invoice-v1.pdf', v_booking.id)
-  );
   perform public.create_generated_document_record(
     v_booking.id,
     'payment_receipt',
@@ -3161,7 +3156,7 @@ $$;
       'المستند جاهز - {{booking_reference}}',
       '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">المستند جاهز</h1><p style="margin:0 0 12px;line-height:1.9;">أصبح {{document_type_label}} الخاص بالحجز {{booking_reference}} جاهزاً.</p><p style="margin:0 0 12px;line-height:1.9;"><strong>المسار:</strong> {{document_route}}</p><p style="margin:0;color:#666;line-height:1.8;">يمكنك فتح التطبيق للوصول إلى المستند بشكل آمن.</p></div></body></html>',
       'المستند جاهز\n\nأصبح {{document_type_label}} الخاص بالحجز {{booking_reference}} جاهزاً.\nالمسار: {{document_route}}\nيمكنك فتح التطبيق للوصول إلى المستند بشكل آمن.',
-      '{"booking_reference":"FF-1001","document_type":"booking_invoice","document_route":"/shared/generated-document/doc-1001"}'::jsonb,
+      '{"booking_reference":"FF-1001","document_type":"payment_receipt","document_route":"/shared/generated-document/doc-1001"}'::jsonb,
       'Arabic generated document availability notice.',
       true
     )
@@ -4475,7 +4470,7 @@ begin
     raise exception 'Booking id is required';
   end if;
 
-  if v_document_type not in ('booking_invoice', 'payment_receipt', 'payout_receipt') then
+  if v_document_type not in ('payment_receipt', 'payout_receipt') then
     raise exception 'Unsupported generated document type';
   end if;
 
@@ -4496,7 +4491,7 @@ begin
     raise exception 'Booking not found';
   end if;
 
-  if v_document_type in ('booking_invoice', 'payment_receipt')
+  if v_document_type = 'payment_receipt'
      and v_booking.payment_status not in ('secured', 'released_to_carrier') then
     raise exception 'Booking financial documents require secured payment';
   end if;
@@ -5180,11 +5175,6 @@ begin
     (v_booking.id, 'platform_fee_recorded', 'credit', v_booking.platform_fee_dzd, 'platform', v_booking.payment_reference, 'Platform fee recorded', (select auth.uid()), now()),
     (v_booking.id, 'insurance_fee_recorded', 'credit', v_booking.insurance_fee_dzd, 'platform', v_booking.payment_reference, 'Insurance fee recorded', (select auth.uid()), now());
 
-  perform public.create_generated_document_record(
-    v_booking.id,
-    'booking_invoice',
-    format('generated/%s/booking-invoice-v1.pdf', v_booking.id)
-  );
   perform public.create_generated_document_record(
     v_booking.id,
     'payment_receipt',

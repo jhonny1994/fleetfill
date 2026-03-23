@@ -282,7 +282,6 @@ _NotificationContent _notificationContent(
 
 String _generatedDocumentTypeLabel(S s, String? documentType) {
   return switch (documentType) {
-    'booking_invoice' => s.generatedDocumentTypeBookingInvoice,
     'payment_receipt' => s.generatedDocumentTypePaymentReceipt,
     'payout_receipt' => s.generatedDocumentTypePayoutReceipt,
     _ => s.generatedDocumentsTitle,

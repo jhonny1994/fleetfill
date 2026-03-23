@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/features.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,31 @@ void main() {
         hasLength(1),
       );
       expect(cardTitles, isNot(contains(s.notificationsPermissionTitle)));
+    },
+  );
+
+  test('notification settings route opens center when enabled', () {
+    expect(
+      notificationSettingsRouteForStatus(AuthorizationStatus.authorized),
+      AppRoutePath.sharedNotifications,
+    );
+    expect(
+      notificationSettingsRouteForStatus(AuthorizationStatus.provisional),
+      AppRoutePath.sharedNotifications,
+    );
+  });
+
+  test(
+    'notification settings route opens recovery when disabled or unknown',
+    () {
+      expect(
+        notificationSettingsRouteForStatus(AuthorizationStatus.denied),
+        AppRoutePath.notificationsHelp,
+      );
+      expect(
+        notificationSettingsRouteForStatus(null),
+        AppRoutePath.notificationsHelp,
+      );
     },
   );
 }
