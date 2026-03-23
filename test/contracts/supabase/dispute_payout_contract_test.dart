@@ -8,7 +8,7 @@ void main() {
 
     setUpAll(() {
       disputePayoutMigration = File(
-        'supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
     });
 

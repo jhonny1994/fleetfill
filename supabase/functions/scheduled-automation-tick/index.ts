@@ -7,7 +7,9 @@ Deno.serve(async (req: Request) => {
 
   try {
     const authorization = req.headers.get('Authorization')
-    const expectedAuthorization = `Bearer ${requiredEnv('SUPABASE_SERVICE_ROLE_KEY')}`
+    const serviceRoleKey = requiredEnv('SUPABASE_SERVICE_ROLE_KEY')
+    const supabaseUrl = requiredEnv('SUPABASE_URL')
+    const expectedAuthorization = `Bearer ${serviceRoleKey}`
     if (authorization !== expectedAuthorization) {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
@@ -15,11 +17,11 @@ Deno.serve(async (req: Request) => {
     const serviceClient = createServiceClient()
 
     const workerResponse = await fetch(
-      `${Deno.env.get('SUPABASE_URL')}/functions/v1/transactional-email-dispatch-worker`,
+      `${supabaseUrl}/functions/v1/transactional-email-dispatch-worker`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+          Authorization: `Bearer ${serviceRoleKey}`,
           'content-type': 'application/json',
         },
         body: JSON.stringify({ batch_size: 10 }),
@@ -27,11 +29,11 @@ Deno.serve(async (req: Request) => {
     )
 
     const pushWorkerResponse = await fetch(
-      `${Deno.env.get('SUPABASE_URL')}/functions/v1/push-dispatch-worker`,
+      `${supabaseUrl}/functions/v1/push-dispatch-worker`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+          Authorization: `Bearer ${serviceRoleKey}`,
           'content-type': 'application/json',
         },
         body: JSON.stringify({ batch_size: 10 }),
@@ -39,11 +41,11 @@ Deno.serve(async (req: Request) => {
     )
 
     const documentWorkerResponse = await fetch(
-      `${Deno.env.get('SUPABASE_URL')}/functions/v1/generated-document-worker`,
+      `${supabaseUrl}/functions/v1/generated-document-worker`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+          Authorization: `Bearer ${serviceRoleKey}`,
           'content-type': 'application/json',
         },
         body: JSON.stringify({ batch_size: 5 }),

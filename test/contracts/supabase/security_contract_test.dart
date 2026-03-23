@@ -2,41 +2,84 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
+String _extractLastSqlBlock(String source, String marker) {
+  final start = source.lastIndexOf(marker);
+  if (start == -1) {
+    return '';
+  }
+
+  const sqlBlockTerminator = '\n\$\$;';
+  final end = source.indexOf(sqlBlockTerminator, start);
+  if (end == -1) {
+    return source.substring(start);
+  }
+
+  return source.substring(start, end + sqlBlockTerminator.length);
+}
+
 void main() {
   group('Supabase security contracts', () {
     late String securityHelpersMigration;
     late String uploadMigration;
     late String grantsMigration;
-    late String trackingMigration;
-    late String paymentMigration;
-    late String disputeMigration;
-    late String adminRetryMigration;
+    late String trackingFunction;
+    late String generatedDocumentFunction;
+    late String paymentApprovalFunction;
+    late String paymentRejectionFunction;
+    late String disputeCompleteFunction;
+    late String disputeRefundFunction;
+    late String payoutReleaseFunction;
+    late String adminRetryDeadLetterFunction;
+    late String workflowLayer;
     late String auditTracker;
 
     setUpAll(() {
       securityHelpersMigration = File(
-        'supabase/migrations/20260317150100_create_security_and_storage_helpers.sql',
+        'supabase/migrations/20260317010000_create_foundation_layer.sql',
       ).readAsStringSync();
       uploadMigration = File(
-        'supabase/migrations/20260317150200_create_client_upload_and_finalize_rpc.sql',
+        'supabase/migrations/20260317010000_create_foundation_layer.sql',
       ).readAsStringSync();
       grantsMigration = File(
-        'supabase/migrations/20260317150700_grant_runtime_function_access.sql',
+        'supabase/migrations/20260317010000_create_foundation_layer.sql',
       ).readAsStringSync();
-      trackingMigration = File(
-        'supabase/migrations/20260320120500_create_tracking_and_delivery_rpc.sql',
+      workflowLayer = File(
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
-      paymentMigration = File(
-        'supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql',
-      ).readAsStringSync();
-      disputeMigration = File(
-        'supabase/migrations/20260320120600_create_dispute_and_payout_rpc.sql',
-      ).readAsStringSync();
-      adminRetryMigration = File(
-        'supabase/migrations/20260320121130_create_admin_email_retry_rpc.sql',
-      ).readAsStringSync();
+      trackingFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.append_tracking_event(',
+      );
+      generatedDocumentFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.create_generated_document_record(',
+      );
+      paymentApprovalFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.admin_approve_payment_proof(',
+      );
+      paymentRejectionFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.admin_reject_payment_proof(',
+      );
+      disputeCompleteFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.admin_resolve_dispute_complete(',
+      );
+      disputeRefundFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.admin_resolve_dispute_refund(',
+      );
+      payoutReleaseFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.admin_release_payout(',
+      );
+      adminRetryDeadLetterFunction = _extractLastSqlBlock(
+        workflowLayer,
+        'create or replace function public.admin_retry_dead_letter_email_job(',
+      );
       auditTracker = File(
-        'docs/15-audit-phases-0-to-14.md',
+        'docs/working/production-readiness-audit.md',
       ).readAsStringSync();
     });
 
@@ -78,19 +121,19 @@ void main() {
 
     test('locks down generated document creation to privileged callers', () {
       expect(
-        paymentMigration.contains(
+        generatedDocumentFunction.contains(
           'Generated document creation requires privileged access',
         ),
         isTrue,
       );
       expect(
-        paymentMigration.contains(
+        generatedDocumentFunction.contains(
           'Generated document path does not match canonical format',
         ),
         isTrue,
       );
       expect(
-        paymentMigration.contains(
+        workflowLayer.contains(
           'grant execute on function public.create_generated_document_record(uuid, text, text) to service_role;',
         ),
         isTrue,
@@ -101,15 +144,15 @@ void main() {
       'enforces tracking event authorization and allowlisted event types',
       () {
         expect(
-          trackingMigration.contains('Unsupported tracking event type'),
+          trackingFunction.contains('Unsupported tracking event type'),
           isTrue,
         );
         expect(
-          trackingMigration.contains('Tracking events require booking access'),
+          trackingFunction.contains('Tracking events require booking access'),
           isTrue,
         );
         expect(
-          trackingMigration.contains(
+          trackingFunction.contains(
             'Internal tracking events require privileged access',
           ),
           isTrue,
@@ -121,17 +164,17 @@ void main() {
       'requires audit logging and step-up for money-moving admin actions',
       () {
         expect(
-          disputeMigration.contains(
+          paymentApprovalFunction.contains(
             'perform public.require_recent_admin_step_up();',
           ),
           isTrue,
         );
-        expect(disputeMigration.contains('payment_proof_approved'), isFalse);
-        expect(paymentMigration.contains('payment_proof_approved'), isTrue);
-        expect(paymentMigration.contains('payment_proof_rejected'), isTrue);
-        expect(disputeMigration.contains('dispute_resolved_complete'), isTrue);
-        expect(disputeMigration.contains('dispute_resolved_refund'), isTrue);
-        expect(disputeMigration.contains("'payout_released'"), isTrue);
+        expect(disputeCompleteFunction.contains('payment_proof_approved'), isFalse);
+        expect(paymentApprovalFunction.contains('payment_proof_approved'), isTrue);
+        expect(paymentRejectionFunction.contains('payment_proof_rejected'), isTrue);
+        expect(disputeCompleteFunction.contains('dispute_resolved_complete'), isTrue);
+        expect(disputeRefundFunction.contains('dispute_resolved_refund'), isTrue);
+        expect(payoutReleaseFunction.contains("'payout_released'"), isTrue);
       },
     );
 
@@ -139,17 +182,17 @@ void main() {
       'keeps dispute abuse controls and dead-letter resend safety in place',
       () {
         expect(
-          disputeMigration.contains("'dispute_creation:' || v_actor_id::text"),
+          workflowLayer.contains("'dispute_creation:' || v_actor_id::text"),
           isTrue,
         );
         expect(
-          adminRetryMigration.contains(
+          adminRetryDeadLetterFunction.contains(
             "v_error_code := lower(coalesce(v_job.last_error_code, ''));",
           ),
           isTrue,
         );
         expect(
-          adminRetryMigration.contains(
+          adminRetryDeadLetterFunction.contains(
             'Email resend is blocked for non-retryable delivery failures',
           ),
           isTrue,

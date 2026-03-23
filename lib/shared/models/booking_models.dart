@@ -1,3 +1,7 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'booking_models.freezed.dart';
+
 enum BookingStatus {
   pendingPayment,
   paymentUnderReview,
@@ -7,8 +11,7 @@ enum BookingStatus {
   deliveredPendingReview,
   completed,
   cancelled,
-  disputed
-  ;
+  disputed;
 
   static BookingStatus fromDatabase(Object? value) {
     return switch (value) {
@@ -32,8 +35,7 @@ enum PaymentStatus {
   secured,
   rejected,
   refunded,
-  releasedToCarrier
-  ;
+  releasedToCarrier;
 
   static PaymentStatus fromDatabase(Object? value) {
     return switch (value) {
@@ -51,8 +53,7 @@ enum PaymentStatus {
 enum GeneratedDocumentStatus {
   pending,
   ready,
-  failed
-  ;
+  failed;
 
   static GeneratedDocumentStatus fromDatabase(Object? value) {
     return switch (value) {
@@ -63,34 +64,37 @@ enum GeneratedDocumentStatus {
   }
 }
 
-class BookingRecord {
-  const BookingRecord({
-    required this.id,
-    required this.shipmentId,
-    required this.routeId,
-    required this.routeDepartureDate,
-    required this.oneoffTripId,
-    required this.shipperId,
-    required this.carrierId,
-    required this.vehicleId,
-    required this.weightKg,
-    required this.volumeM3,
-    required this.pricePerKgDzd,
-    required this.basePriceDzd,
-    required this.platformFeeDzd,
-    required this.carrierFeeDzd,
-    required this.insuranceRate,
-    required this.insuranceFeeDzd,
-    required this.taxFeeDzd,
-    required this.shipperTotalDzd,
-    required this.carrierPayoutDzd,
-    required this.bookingStatus,
-    required this.paymentStatus,
-    required this.trackingNumber,
-    required this.paymentReference,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+abstract class BookingRecord with _$BookingRecord {
+  const factory BookingRecord({
+    required String id,
+    required String shipmentId,
+    required String? routeId,
+    required DateTime? routeDepartureDate,
+    required String? oneoffTripId,
+    required String shipperId,
+    required String carrierId,
+    required String vehicleId,
+    required double weightKg,
+    required double? volumeM3,
+    required double pricePerKgDzd,
+    required double basePriceDzd,
+    required double platformFeeDzd,
+    required double carrierFeeDzd,
+    required double? insuranceRate,
+    required double insuranceFeeDzd,
+    required double taxFeeDzd,
+    required double shipperTotalDzd,
+    required double carrierPayoutDzd,
+    required BookingStatus bookingStatus,
+    required PaymentStatus paymentStatus,
+    required String trackingNumber,
+    required String paymentReference,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+  }) = _BookingRecord;
+
+  const BookingRecord._();
 
   factory BookingRecord.fromJson(Map<String, dynamic> json) {
     return BookingRecord(
@@ -123,76 +127,46 @@ class BookingRecord {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String shipmentId;
-  final String? routeId;
-  final DateTime? routeDepartureDate;
-  final String? oneoffTripId;
-  final String shipperId;
-  final String carrierId;
-  final String vehicleId;
-  final double weightKg;
-  final double? volumeM3;
-  final double pricePerKgDzd;
-  final double basePriceDzd;
-  final double platformFeeDzd;
-  final double carrierFeeDzd;
-  final double? insuranceRate;
-  final double insuranceFeeDzd;
-  final double taxFeeDzd;
-  final double shipperTotalDzd;
-  final double carrierPayoutDzd;
-  final BookingStatus bookingStatus;
-  final PaymentStatus paymentStatus;
-  final String trackingNumber;
-  final String paymentReference;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 }
 
-class BookingPricingQuote {
-  const BookingPricingQuote({
-    required this.pricePerKgDzd,
-    required this.basePriceDzd,
-    required this.platformFeeDzd,
-    required this.carrierFeeDzd,
-    required this.insuranceRate,
-    required this.insuranceFeeDzd,
-    required this.taxFeeDzd,
-    required this.shipperTotalDzd,
-    required this.carrierPayoutDzd,
-  });
+@freezed
+abstract class BookingPricingQuote with _$BookingPricingQuote {
+  const factory BookingPricingQuote({
+    required double pricePerKgDzd,
+    required double basePriceDzd,
+    required double platformFeeDzd,
+    required double carrierFeeDzd,
+    required double? insuranceRate,
+    required double insuranceFeeDzd,
+    required double taxFeeDzd,
+    required double shipperTotalDzd,
+    required double carrierPayoutDzd,
+  }) = _BookingPricingQuote;
 
-  final double pricePerKgDzd;
-  final double basePriceDzd;
-  final double platformFeeDzd;
-  final double carrierFeeDzd;
-  final double? insuranceRate;
-  final double insuranceFeeDzd;
-  final double taxFeeDzd;
-  final double shipperTotalDzd;
-  final double carrierPayoutDzd;
+  const BookingPricingQuote._();
 }
 
-class PaymentProofRecord {
-  const PaymentProofRecord({
-    required this.id,
-    required this.bookingId,
-    required this.storagePath,
-    required this.paymentRail,
-    required this.submittedReference,
-    required this.submittedAmountDzd,
-    required this.verifiedAmountDzd,
-    required this.verifiedReference,
-    required this.status,
-    required this.rejectionReason,
-    required this.reviewedBy,
-    required this.submittedAt,
-    required this.reviewedAt,
-    required this.decisionNote,
-    required this.version,
-  });
+@freezed
+abstract class PaymentProofRecord with _$PaymentProofRecord {
+  const factory PaymentProofRecord({
+    required String id,
+    required String bookingId,
+    required String storagePath,
+    required String paymentRail,
+    required String? submittedReference,
+    required double submittedAmountDzd,
+    required double? verifiedAmountDzd,
+    required String? verifiedReference,
+    required String status,
+    required String? rejectionReason,
+    required String? reviewedBy,
+    required DateTime submittedAt,
+    required DateTime? reviewedAt,
+    required String? decisionNote,
+    required int version,
+  }) = _PaymentProofRecord;
+
+  const PaymentProofRecord._();
 
   factory PaymentProofRecord.fromJson(Map<String, dynamic> json) {
     return PaymentProofRecord(
@@ -213,39 +187,26 @@ class PaymentProofRecord {
       version: (json['version'] as num?)?.toInt() ?? 1,
     );
   }
-
-  final String id;
-  final String bookingId;
-  final String storagePath;
-  final String paymentRail;
-  final String? submittedReference;
-  final double submittedAmountDzd;
-  final double? verifiedAmountDzd;
-  final String? verifiedReference;
-  final String status;
-  final String? rejectionReason;
-  final String? reviewedBy;
-  final DateTime submittedAt;
-  final DateTime? reviewedAt;
-  final String? decisionNote;
-  final int version;
 }
 
-class GeneratedDocumentRecord {
-  const GeneratedDocumentRecord({
-    required this.id,
-    required this.bookingId,
-    required this.documentType,
-    required this.storagePath,
-    required this.version,
-    required this.generatedBy,
-    required this.status,
-    required this.contentType,
-    required this.byteSize,
-    required this.availableAt,
-    required this.failureReason,
-    required this.createdAt,
-  });
+@freezed
+abstract class GeneratedDocumentRecord with _$GeneratedDocumentRecord {
+  const factory GeneratedDocumentRecord({
+    required String id,
+    required String? bookingId,
+    required String documentType,
+    required String storagePath,
+    required int version,
+    required String? generatedBy,
+    required GeneratedDocumentStatus status,
+    required String? contentType,
+    required int? byteSize,
+    required DateTime? availableAt,
+    required String? failureReason,
+    required DateTime? createdAt,
+  }) = _GeneratedDocumentRecord;
+
+  const GeneratedDocumentRecord._();
 
   factory GeneratedDocumentRecord.fromJson(Map<String, dynamic> json) {
     return GeneratedDocumentRecord(
@@ -264,19 +225,6 @@ class GeneratedDocumentRecord {
     );
   }
 
-  final String id;
-  final String? bookingId;
-  final String documentType;
-  final String storagePath;
-  final int version;
-  final String? generatedBy;
-  final GeneratedDocumentStatus status;
-  final String? contentType;
-  final int? byteSize;
-  final DateTime? availableAt;
-  final String? failureReason;
-  final DateTime? createdAt;
-
   bool get isReady => status == GeneratedDocumentStatus.ready;
 
   bool get isPending => status == GeneratedDocumentStatus.pending;
@@ -284,17 +232,20 @@ class GeneratedDocumentRecord {
   bool get isFailed => status == GeneratedDocumentStatus.failed;
 }
 
-class TrackingEventRecord {
-  const TrackingEventRecord({
-    required this.id,
-    required this.bookingId,
-    required this.eventType,
-    required this.visibility,
-    required this.note,
-    required this.createdBy,
-    required this.recordedAt,
-    required this.createdAt,
-  });
+@freezed
+abstract class TrackingEventRecord with _$TrackingEventRecord {
+  const factory TrackingEventRecord({
+    required String id,
+    required String bookingId,
+    required String eventType,
+    required String visibility,
+    required String? note,
+    required String? createdBy,
+    required DateTime recordedAt,
+    required DateTime? createdAt,
+  }) = _TrackingEventRecord;
+
+  const TrackingEventRecord._();
 
   factory TrackingEventRecord.fromJson(Map<String, dynamic> json) {
     return TrackingEventRecord(
@@ -308,33 +259,27 @@ class TrackingEventRecord {
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String bookingId;
-  final String eventType;
-  final String visibility;
-  final String? note;
-  final String? createdBy;
-  final DateTime recordedAt;
-  final DateTime? createdAt;
 }
 
-class DisputeRecord {
-  const DisputeRecord({
-    required this.id,
-    required this.bookingId,
-    required this.openedBy,
-    required this.reason,
-    required this.description,
-    required this.status,
-    required this.resolution,
-    required this.resolutionNote,
-    required this.resolvedBy,
-    required this.resolvedAt,
-    required this.evidenceCount,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+abstract class DisputeRecord with _$DisputeRecord {
+  const factory DisputeRecord({
+    required String id,
+    required String bookingId,
+    required String openedBy,
+    required String reason,
+    required String? description,
+    required String status,
+    required String? resolution,
+    required String? resolutionNote,
+    required String? resolvedBy,
+    required DateTime? resolvedAt,
+    required int evidenceCount,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+  }) = _DisputeRecord;
+
+  const DisputeRecord._();
 
   factory DisputeRecord.fromJson(Map<String, dynamic> json) {
     return DisputeRecord(
@@ -353,33 +298,22 @@ class DisputeRecord {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String bookingId;
-  final String openedBy;
-  final String reason;
-  final String? description;
-  final String status;
-  final String? resolution;
-  final String? resolutionNote;
-  final String? resolvedBy;
-  final DateTime? resolvedAt;
-  final int evidenceCount;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 }
 
-class DisputeEvidenceRecord {
-  const DisputeEvidenceRecord({
-    required this.id,
-    required this.disputeId,
-    required this.storagePath,
-    required this.note,
-    required this.contentType,
-    required this.byteSize,
-    required this.uploadedBy,
-    required this.createdAt,
-  });
+@freezed
+abstract class DisputeEvidenceRecord with _$DisputeEvidenceRecord {
+  const factory DisputeEvidenceRecord({
+    required String id,
+    required String disputeId,
+    required String storagePath,
+    required String? note,
+    required String? contentType,
+    required int? byteSize,
+    required String? uploadedBy,
+    required DateTime? createdAt,
+  }) = _DisputeEvidenceRecord;
+
+  const DisputeEvidenceRecord._();
 
   factory DisputeEvidenceRecord.fromJson(Map<String, dynamic> json) {
     return DisputeEvidenceRecord(
@@ -394,32 +328,26 @@ class DisputeEvidenceRecord {
     );
   }
 
-  final String id;
-  final String disputeId;
-  final String storagePath;
-  final String? note;
-  final String? contentType;
-  final int? byteSize;
-  final String? uploadedBy;
-  final DateTime? createdAt;
-
   bool get isPdf => (contentType ?? '').toLowerCase() == 'application/pdf';
 }
 
-class RefundRecord {
-  const RefundRecord({
-    required this.id,
-    required this.bookingId,
-    required this.disputeId,
-    required this.amountDzd,
-    required this.status,
-    required this.reason,
-    required this.externalReference,
-    required this.processedBy,
-    required this.processedAt,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+abstract class RefundRecord with _$RefundRecord {
+  const factory RefundRecord({
+    required String id,
+    required String bookingId,
+    required String? disputeId,
+    required double amountDzd,
+    required String status,
+    required String reason,
+    required String? externalReference,
+    required String? processedBy,
+    required DateTime? processedAt,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+  }) = _RefundRecord;
+
+  const RefundRecord._();
 
   factory RefundRecord.fromJson(Map<String, dynamic> json) {
     return RefundRecord(
@@ -436,36 +364,27 @@ class RefundRecord {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String bookingId;
-  final String? disputeId;
-  final double amountDzd;
-  final String status;
-  final String reason;
-  final String? externalReference;
-  final String? processedBy;
-  final DateTime? processedAt;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 }
 
-class PayoutRecord {
-  const PayoutRecord({
-    required this.id,
-    required this.bookingId,
-    required this.carrierId,
-    required this.payoutAccountId,
-    required this.payoutAccountSnapshot,
-    required this.amountDzd,
-    required this.status,
-    required this.externalReference,
-    required this.processedBy,
-    required this.processedAt,
-    required this.failureReason,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+abstract class PayoutRecord with _$PayoutRecord {
+  const factory PayoutRecord({
+    required String id,
+    required String bookingId,
+    required String carrierId,
+    required String payoutAccountId,
+    required Map<String, dynamic> payoutAccountSnapshot,
+    required double amountDzd,
+    required String status,
+    required String? externalReference,
+    required String? processedBy,
+    required DateTime? processedAt,
+    required String? failureReason,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+  }) = _PayoutRecord;
+
+  const PayoutRecord._();
 
   factory PayoutRecord.fromJson(Map<String, dynamic> json) {
     return PayoutRecord(
@@ -486,18 +405,4 @@ class PayoutRecord {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String bookingId;
-  final String carrierId;
-  final String payoutAccountId;
-  final Map<String, dynamic> payoutAccountSnapshot;
-  final double amountDzd;
-  final String status;
-  final String? externalReference;
-  final String? processedBy;
-  final DateTime? processedAt;
-  final String? failureReason;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 }

@@ -1,4 +1,7 @@
 import 'package:fleetfill/core/auth/auth_state.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'vehicle_models.freezed.dart';
 
 enum VerificationEntityType { profile, vehicle }
 
@@ -38,19 +41,22 @@ extension VerificationDocumentTypeX on VerificationDocumentType {
   }
 }
 
-class CarrierVehicle {
-  const CarrierVehicle({
-    required this.id,
-    required this.carrierId,
-    required this.plateNumber,
-    required this.vehicleType,
-    required this.capacityWeightKg,
-    required this.capacityVolumeM3,
-    required this.verificationStatus,
-    required this.verificationRejectionReason,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+abstract class CarrierVehicle with _$CarrierVehicle {
+  const factory CarrierVehicle({
+    required String id,
+    required String carrierId,
+    required String plateNumber,
+    required String vehicleType,
+    required double capacityWeightKg,
+    required double? capacityVolumeM3,
+    required AppVerificationState verificationStatus,
+    required String? verificationRejectionReason,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+  }) = _CarrierVehicle;
+
+  const CarrierVehicle._();
 
   factory CarrierVehicle.fromJson(Map<String, dynamic> json) {
     return CarrierVehicle(
@@ -69,41 +75,33 @@ class CarrierVehicle {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String carrierId;
-  final String plateNumber;
-  final String vehicleType;
-  final double capacityWeightKg;
-  final double? capacityVolumeM3;
-  final AppVerificationState verificationStatus;
-  final String? verificationRejectionReason;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 }
 
-class VerificationDocumentRecord {
-  const VerificationDocumentRecord({
-    required this.id,
-    required this.ownerProfileId,
-    required this.entityType,
-    required this.entityId,
-    required this.documentType,
-    required this.storagePath,
-    required this.status,
-    required this.rejectionReason,
-    required this.reviewedBy,
-    required this.reviewedAt,
-    required this.expiresAt,
-    required this.version,
-    required this.contentType,
-    required this.byteSize,
-    required this.checksumSha256,
-    required this.uploadedBy,
-    required this.uploadSessionId,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+abstract class VerificationDocumentRecord with _$VerificationDocumentRecord {
+  const factory VerificationDocumentRecord({
+    required String id,
+    required String ownerProfileId,
+    required VerificationEntityType entityType,
+    required String entityId,
+    required VerificationDocumentType documentType,
+    required String storagePath,
+    required AppVerificationState status,
+    required String? rejectionReason,
+    required String? reviewedBy,
+    required DateTime? reviewedAt,
+    required DateTime? expiresAt,
+    required int version,
+    required String? contentType,
+    required int? byteSize,
+    required String? checksumSha256,
+    required String? uploadedBy,
+    required String? uploadSessionId,
+    required DateTime? createdAt,
+    required DateTime? updatedAt,
+  }) = _VerificationDocumentRecord;
+
+  const VerificationDocumentRecord._();
 
   factory VerificationDocumentRecord.fromJson(Map<String, dynamic> json) {
     return VerificationDocumentRecord(
@@ -123,9 +121,9 @@ class VerificationDocumentRecord {
       reviewedBy: json['reviewed_by'] as String?,
       reviewedAt: DateTime.tryParse(json['reviewed_at'] as String? ?? ''),
       expiresAt: DateTime.tryParse(json['expires_at'] as String? ?? ''),
-      version: json['version'] as int? ?? 1,
+      version: (json['version'] as num?)?.toInt() ?? 1,
       contentType: (json['content_type'] as String?)?.trim(),
-      byteSize: json['byte_size'] as int?,
+      byteSize: (json['byte_size'] as num?)?.toInt(),
       checksumSha256: (json['checksum_sha256'] as String?)?.trim(),
       uploadedBy: json['uploaded_by'] as String?,
       uploadSessionId: json['upload_session_id'] as String?,
@@ -133,26 +131,6 @@ class VerificationDocumentRecord {
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String ownerProfileId;
-  final VerificationEntityType entityType;
-  final String entityId;
-  final VerificationDocumentType documentType;
-  final String storagePath;
-  final AppVerificationState status;
-  final String? rejectionReason;
-  final String? reviewedBy;
-  final DateTime? reviewedAt;
-  final DateTime? expiresAt;
-  final int version;
-  final String? contentType;
-  final int? byteSize;
-  final String? checksumSha256;
-  final String? uploadedBy;
-  final String? uploadSessionId;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 
   bool isNewerThan(VerificationDocumentRecord other) {
     if (version != other.version) {
@@ -185,52 +163,43 @@ List<VerificationDocumentRecord> latestVerificationDocumentsByType(
     ..sort((a, b) => a.documentType.index.compareTo(b.documentType.index));
 }
 
-class VehicleVerificationOverview {
-  const VehicleVerificationOverview({
-    required this.vehicle,
-    required this.documents,
-  });
+@freezed
+abstract class VehicleVerificationOverview with _$VehicleVerificationOverview {
+  const factory VehicleVerificationOverview({
+    required CarrierVehicle vehicle,
+    required List<VerificationDocumentRecord> documents,
+  }) = _VehicleVerificationOverview;
 
-  final CarrierVehicle vehicle;
-  final List<VerificationDocumentRecord> documents;
+  const VehicleVerificationOverview._();
 }
 
-class VerificationUploadDraft {
-  const VerificationUploadDraft({
-    required this.path,
-    required this.filename,
-    required this.extension,
-    required this.contentType,
-    required this.byteSize,
-    this.bytes,
-  });
+@freezed
+abstract class VerificationUploadDraft with _$VerificationUploadDraft {
+  const factory VerificationUploadDraft({
+    required String path,
+    required String filename,
+    required String extension,
+    required String contentType,
+    required int byteSize,
+    List<int>? bytes,
+  }) = _VerificationUploadDraft;
 
-  final String path;
-  final String filename;
-  final String extension;
-  final String contentType;
-  final int byteSize;
-  final List<int>? bytes;
+  const VerificationUploadDraft._();
 }
 
-class VerificationReviewPacket {
-  const VerificationReviewPacket({
-    required this.carrierId,
-    required this.displayName,
-    required this.companyName,
-    required this.profileStatus,
-    required this.profileRejectionReason,
-    required this.profileDocuments,
-    required this.vehicles,
-  });
+@freezed
+abstract class VerificationReviewPacket with _$VerificationReviewPacket {
+  const factory VerificationReviewPacket({
+    required String carrierId,
+    required String displayName,
+    required String? companyName,
+    required AppVerificationState profileStatus,
+    required String? profileRejectionReason,
+    required List<VerificationDocumentRecord> profileDocuments,
+    required List<VehicleVerificationOverview> vehicles,
+  }) = _VerificationReviewPacket;
 
-  final String carrierId;
-  final String displayName;
-  final String? companyName;
-  final AppVerificationState profileStatus;
-  final String? profileRejectionReason;
-  final List<VerificationDocumentRecord> profileDocuments;
-  final List<VehicleVerificationOverview> vehicles;
+  const VerificationReviewPacket._();
 
   int get vehicleCount => vehicles.length;
 
@@ -259,17 +228,20 @@ class VerificationReviewPacket {
   }
 }
 
-class AdminAuditLogRecord {
-  const AdminAuditLogRecord({
-    required this.id,
-    required this.action,
-    required this.targetType,
-    required this.targetId,
-    required this.outcome,
-    required this.reason,
-    required this.metadata,
-    required this.createdAt,
-  });
+@freezed
+abstract class AdminAuditLogRecord with _$AdminAuditLogRecord {
+  const factory AdminAuditLogRecord({
+    required String id,
+    required String action,
+    required String targetType,
+    required String? targetId,
+    required String outcome,
+    required String? reason,
+    required Map<String, dynamic> metadata,
+    required DateTime? createdAt,
+  }) = _AdminAuditLogRecord;
+
+  const AdminAuditLogRecord._();
 
   factory AdminAuditLogRecord.fromJson(Map<String, dynamic> json) {
     return AdminAuditLogRecord(
@@ -279,17 +251,10 @@ class AdminAuditLogRecord {
       targetId: json['target_id'] as String?,
       outcome: (json['outcome'] as String?)?.trim() ?? '',
       reason: (json['reason'] as String?)?.trim(),
-      metadata: json['metadata'] as Map<String, dynamic>? ?? const {},
+      metadata: Map<String, dynamic>.from(
+        (json['metadata'] as Map?) ?? const <String, dynamic>{},
+      ),
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
     );
   }
-
-  final String id;
-  final String action;
-  final String targetType;
-  final String? targetId;
-  final String outcome;
-  final String? reason;
-  final Map<String, dynamic> metadata;
-  final DateTime? createdAt;
 }

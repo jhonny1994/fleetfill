@@ -12,19 +12,19 @@ void main() {
 
     setUpAll(() {
       paymentProofMigration = File(
-        'supabase/migrations/20260320120400_create_payment_proof_review_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       generatedDocumentSchemaMigration = File(
-        'supabase/migrations/20260320121200_track_generated_document_processing.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       generatedDocumentHelperMigration = File(
-        'supabase/migrations/20260320121210_update_generated_document_record_helper.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       generatedDocumentLockMigration = File(
-        'supabase/migrations/20260320121220_add_generated_document_processing_locks.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       generatedDocumentWorkerMigration = File(
-        'supabase/migrations/20260320121230_create_generated_document_processing_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
     });
 

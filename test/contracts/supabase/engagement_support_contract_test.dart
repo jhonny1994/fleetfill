@@ -13,22 +13,22 @@ void main() {
 
     setUpAll(() {
       carrierReviewMigration = File(
-        'supabase/migrations/20260320120700_create_carrier_review_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       notificationDeviceMigration = File(
-        'supabase/migrations/20260320120710_create_notification_device_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       emailEnqueueMigration = File(
-        'supabase/migrations/20260320120720_create_transactional_email_enqueue_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       notificationDeviceHardeningMigration = File(
-        'supabase/migrations/20260320120800_harden_notification_device_rules.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       emailHardeningMigration = File(
-        'supabase/migrations/20260320120810_harden_email_delivery_rules.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       supportRequestMigration = File(
-        'supabase/migrations/20260320120820_create_support_request_email_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
     });
 

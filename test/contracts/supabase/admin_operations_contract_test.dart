@@ -13,22 +13,22 @@ void main() {
 
     setUpAll(() {
       settingsSeedMigration = File(
-        'supabase/migrations/20260320120900_seed_runtime_and_feature_flag_settings.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       clientSettingsMigration = File(
-        'supabase/migrations/20260320121000_create_typed_client_settings_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       adminSummaryMigration = File(
-        'supabase/migrations/20260320121100_create_admin_operational_summary_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       adminSettingsMigration = File(
-        'supabase/migrations/20260320121110_create_admin_platform_settings_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       adminProfileActivationMigration = File(
-        'supabase/migrations/20260320121120_create_admin_profile_activation_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       adminEmailRetryMigration = File(
-        'supabase/migrations/20260320121130_create_admin_email_retry_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
     });
 

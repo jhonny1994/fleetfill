@@ -1,10 +1,17 @@
-class ClientSettings {
-  const ClientSettings({
-    required this.bookingPricing,
-    required this.deliveryReview,
-    required this.appRuntime,
-    required this.paymentAccounts,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'settings_models.freezed.dart';
+
+@freezed
+abstract class ClientSettings with _$ClientSettings {
+  const factory ClientSettings({
+    required BookingPricingSettings bookingPricing,
+    required DeliveryReviewSettings deliveryReview,
+    required AppRuntimeSettings appRuntime,
+    required List<PlatformPaymentAccountSettings> paymentAccounts,
+  }) = _ClientSettings;
+
+  const ClientSettings._();
 
   factory ClientSettings.fromJson(Map<String, dynamic> json) {
     return ClientSettings(
@@ -20,22 +27,20 @@ class ClientSettings {
       ).map(PlatformPaymentAccountSettings.fromJson).toList(growable: false),
     );
   }
-
-  final BookingPricingSettings bookingPricing;
-  final DeliveryReviewSettings deliveryReview;
-  final AppRuntimeSettings appRuntime;
-  final List<PlatformPaymentAccountSettings> paymentAccounts;
 }
 
-class BookingPricingSettings {
-  const BookingPricingSettings({
-    required this.platformFeeRate,
-    required this.carrierFeeRate,
-    required this.insuranceRate,
-    required this.insuranceMinFeeDzd,
-    required this.taxRate,
-    required this.paymentResubmissionDeadlineHours,
-  });
+@freezed
+abstract class BookingPricingSettings with _$BookingPricingSettings {
+  const factory BookingPricingSettings({
+    required double platformFeeRate,
+    required double carrierFeeRate,
+    required double insuranceRate,
+    required double insuranceMinFeeDzd,
+    required double taxRate,
+    required int paymentResubmissionDeadlineHours,
+  }) = _BookingPricingSettings;
+
+  const BookingPricingSettings._();
 
   factory BookingPricingSettings.fromJson(Map<String, dynamic> json) {
     return BookingPricingSettings(
@@ -49,34 +54,33 @@ class BookingPricingSettings {
           (json['payment_resubmission_deadline_hours'] as num?)?.toInt() ?? 24,
     );
   }
-
-  final double platformFeeRate;
-  final double carrierFeeRate;
-  final double insuranceRate;
-  final double insuranceMinFeeDzd;
-  final double taxRate;
-  final int paymentResubmissionDeadlineHours;
 }
 
-class DeliveryReviewSettings {
-  const DeliveryReviewSettings({required this.graceWindowHours});
+@freezed
+abstract class DeliveryReviewSettings with _$DeliveryReviewSettings {
+  const factory DeliveryReviewSettings({
+    required int graceWindowHours,
+  }) = _DeliveryReviewSettings;
+
+  const DeliveryReviewSettings._();
 
   factory DeliveryReviewSettings.fromJson(Map<String, dynamic> json) {
     return DeliveryReviewSettings(
       graceWindowHours: (json['grace_window_hours'] as num?)?.toInt() ?? 24,
     );
   }
-
-  final int graceWindowHours;
 }
 
-class AppRuntimeSettings {
-  const AppRuntimeSettings({
-    required this.maintenanceMode,
-    required this.forceUpdateRequired,
-    required this.minimumSupportedAndroidVersion,
-    required this.minimumSupportedIosVersion,
-  });
+@freezed
+abstract class AppRuntimeSettings with _$AppRuntimeSettings {
+  const factory AppRuntimeSettings({
+    required bool maintenanceMode,
+    required bool forceUpdateRequired,
+    required int minimumSupportedAndroidVersion,
+    required int minimumSupportedIosVersion,
+  }) = _AppRuntimeSettings;
+
+  const AppRuntimeSettings._();
 
   factory AppRuntimeSettings.fromJson(Map<String, dynamic> json) {
     return AppRuntimeSettings(
@@ -88,22 +92,21 @@ class AppRuntimeSettings {
           (json['minimum_supported_ios_version'] as num?)?.toInt() ?? 1,
     );
   }
-
-  final bool maintenanceMode;
-  final bool forceUpdateRequired;
-  final int minimumSupportedAndroidVersion;
-  final int minimumSupportedIosVersion;
 }
 
-class PlatformPaymentAccountSettings {
-  const PlatformPaymentAccountSettings({
-    required this.id,
-    required this.paymentRail,
-    required this.displayName,
-    required this.accountIdentifier,
-    required this.accountHolderName,
-    required this.instructionsText,
-  });
+@freezed
+abstract class PlatformPaymentAccountSettings
+    with _$PlatformPaymentAccountSettings {
+  const factory PlatformPaymentAccountSettings({
+    required String id,
+    required String paymentRail,
+    required String displayName,
+    required String accountIdentifier,
+    required String accountHolderName,
+    required String? instructionsText,
+  }) = _PlatformPaymentAccountSettings;
+
+  const PlatformPaymentAccountSettings._();
 
   factory PlatformPaymentAccountSettings.fromJson(Map<String, dynamic> json) {
     return PlatformPaymentAccountSettings(
@@ -115,13 +118,6 @@ class PlatformPaymentAccountSettings {
       instructionsText: (json['instructions_text'] as String?)?.trim(),
     );
   }
-
-  final String id;
-  final String paymentRail;
-  final String displayName;
-  final String accountIdentifier;
-  final String accountHolderName;
-  final String? instructionsText;
 }
 
 Map<String, dynamic> _asMap(Object? value) {

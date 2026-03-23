@@ -8,7 +8,7 @@ void main() {
 
     setUpAll(() {
       trackingMigration = File(
-        'supabase/migrations/20260320120500_create_tracking_and_delivery_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
     });
 

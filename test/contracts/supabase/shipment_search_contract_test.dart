@@ -11,16 +11,16 @@ void main() {
 
     setUpAll(() {
       constraintsMigration = File(
-        'supabase/migrations/20260320120000_add_shipment_domain_constraints.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       searchMigration = File(
-        'supabase/migrations/20260320120100_create_exact_lane_search_rpc.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
       bookingSchemaMigration = File(
-        'supabase/migrations/20260317143200_create_marketplace_core_tables.sql',
+        'supabase/migrations/20260317010000_create_foundation_layer.sql',
       ).readAsStringSync();
       simplificationMigration = File(
-        'supabase/migrations/20260322123000_simplify_shipment_domain.sql',
+        'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
     });
 

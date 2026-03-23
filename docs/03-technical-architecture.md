@@ -418,7 +418,6 @@ Future channels can be added later without replacing the event model.
 Recommended email events:
 
 - support request acknowledgement
-- booking confirmed
 - payment proof received
 - payment rejected
 - payment secured

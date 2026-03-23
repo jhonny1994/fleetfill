@@ -25,14 +25,14 @@ Only these files should define product truth.
 
 These files are important, but they are not parallel sources of product truth:
 
-- `docs/12-polish-backlog.md` - deferred polish backlog
-- `docs/13-release-operations.md` - staging, release-candidate, versioning, and rollback procedures
-- `docs/14-post-launch-stabilization.md` - post-launch operating cadence
-- `docs/15-audit-phases-0-to-14.md` - current cross-phase audit and production-readiness tracker
+- `docs/working/polish-backlog.md` - deferred polish backlog
+- `docs/working/release-operations.md` - staging, release-candidate, versioning, and rollback procedures
+- `docs/working/post-launch-stabilization.md` - post-launch operating cadence
+- `docs/working/production-readiness-audit.md` - current cross-phase audit and production-readiness tracker
 
 Consolidation note:
 
-- the old phase 0-4 audit and delivery playbook were folded into `docs/15-audit-phases-0-to-14.md` and this index to remove stale parallel guidance
+- the old phase 0-4 audit and delivery playbook were folded into `docs/working/production-readiness-audit.md` and this index to remove stale parallel guidance
 
 ## Reference Assets
 
@@ -46,8 +46,9 @@ These are supporting assets, not narrative docs:
 
 - Do not create parallel truth sources for product rules, states, pricing, schema, or security behavior.
 - Update the canonical file instead of adding overlapping notes elsewhere.
-- Use `docs/12-polish-backlog.md` only for deferred polish work, not for domain or security truth.
-- Use `docs/15-audit-phases-0-to-14.md` to track findings, remediation, validation status, and historical audit carry-forward notes.
+- Apply the same consolidation rule used for dev-phase migrations: rewrite the owning canonical doc or tracker layer instead of stacking patch notes on top of older notes.
+- Use `docs/working/polish-backlog.md` only for deferred polish work, not for domain or security truth.
+- Use `docs/working/production-readiness-audit.md` to track findings, remediation, validation status, and historical audit carry-forward notes.
 - If a decision changes the domain, update `docs/02-domain-and-state-model.md` first.
 - If a decision changes data ownership, RLS, or storage, update `docs/04-data-and-security-model.md`.
 - If a decision changes user flows or UI behavior, update `docs/05-ux-and-localization.md`.

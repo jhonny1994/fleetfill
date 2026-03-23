@@ -8,14 +8,14 @@ void main() {
 
     setUpAll(() {
       migrationBundle = [
-        'supabase/migrations/20260319120000_add_capacity_publication_constraints.sql',
-        'supabase/migrations/20260319120100_backfill_route_revision_lane_history.sql',
-        'supabase/migrations/20260319120200_create_capacity_publication_access_helpers.sql',
-        'supabase/migrations/20260319120300_create_capacity_publication_integrity_guards.sql',
-        'supabase/migrations/20260319120400_create_capacity_publication_routes_rpc.sql',
-        'supabase/migrations/20260319120500_create_capacity_publication_oneoff_trip_rpc.sql',
-        'supabase/migrations/20260319120600_enable_capacity_publication_policies.sql',
-        'supabase/migrations/20260319120700_harden_verification_helper_access.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
+        'supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql',
       ].map((path) => File(path).readAsStringSync()).join('\n');
     });
 
