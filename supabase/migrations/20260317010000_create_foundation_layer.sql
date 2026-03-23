@@ -292,25 +292,10 @@ create table if not exists public.shipments (
   shipper_id uuid not null references public.profiles (id) on delete cascade,
   origin_commune_id integer not null references public.communes (id),
   destination_commune_id integer not null references public.communes (id),
-  pickup_window_start timestamptz not null,
-  pickup_window_end timestamptz not null,
   total_weight_kg numeric not null,
   total_volume_m3 numeric,
-  category text not null,
   description text,
   status public.shipment_status not null default 'draft',
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
-create table if not exists public.shipment_items (
-  id uuid primary key default gen_random_uuid(),
-  shipment_id uuid not null references public.shipments (id) on delete cascade,
-  label text not null,
-  quantity integer not null,
-  weight_kg numeric,
-  volume_m3 numeric,
-  notes text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -624,9 +609,6 @@ on public.shipments (shipper_id);
 create index if not exists shipments_status_idx
 on public.shipments (status);
 
-create index if not exists shipment_items_shipment_id_idx
-on public.shipment_items (shipment_id);
-
 create index if not exists bookings_shipper_id_idx
 on public.bookings (shipper_id);
 
@@ -723,10 +705,6 @@ for each row execute function public.set_updated_at();
 
 create or replace trigger shipments_set_updated_at
 before update on public.shipments
-for each row execute function public.set_updated_at();
-
-create or replace trigger shipment_items_set_updated_at
-before update on public.shipment_items
 for each row execute function public.set_updated_at();
 
 create or replace trigger bookings_set_updated_at
@@ -2019,7 +1997,6 @@ alter table public.route_departure_instances enable row level security;
 alter table public.oneoff_trips enable row level security;
 alter table public.route_revisions enable row level security;
 alter table public.shipments enable row level security;
-alter table public.shipment_items enable row level security;
 alter table public.bookings enable row level security;
 alter table public.payment_proofs enable row level security;
 alter table public.tracking_events enable row level security;
@@ -2253,56 +2230,6 @@ drop policy if exists shipments_delete_draft_owner_or_admin on public.shipments;
 create policy shipments_delete_draft_owner_or_admin
 on public.shipments for delete to authenticated
 using ((shipper_id = (select auth.uid()) and status = 'draft') or public.is_admin());
-
-drop policy if exists shipment_items_select_owner_or_admin on public.shipment_items;
-create policy shipment_items_select_owner_or_admin
-on public.shipment_items for select to authenticated
-using (public.shipment_is_visible_to_current_user(shipment_id));
-
-drop policy if exists shipment_items_modify_owner_or_admin on public.shipment_items;
-drop policy if exists shipment_items_insert_owner_or_admin on public.shipment_items;
-create policy shipment_items_insert_owner_or_admin
-on public.shipment_items for insert to authenticated
-with check (
-  exists (
-    select 1
-    from public.shipments as s
-    where s.id = shipment_items.shipment_id
-      and ((s.shipper_id = (select auth.uid()) and s.status = 'draft') or public.is_admin())
-  )
-);
-
-drop policy if exists shipment_items_update_owner_or_admin on public.shipment_items;
-create policy shipment_items_update_owner_or_admin
-on public.shipment_items for update to authenticated
-using (
-  exists (
-    select 1
-    from public.shipments as s
-    where s.id = shipment_items.shipment_id
-      and ((s.shipper_id = (select auth.uid()) and s.status = 'draft') or public.is_admin())
-  )
-)
-with check (
-  exists (
-    select 1
-    from public.shipments as s
-    where s.id = shipment_items.shipment_id
-      and ((s.shipper_id = (select auth.uid()) and s.status = 'draft') or public.is_admin())
-  )
-);
-
-drop policy if exists shipment_items_delete_owner_or_admin on public.shipment_items;
-create policy shipment_items_delete_owner_or_admin
-on public.shipment_items for delete to authenticated
-using (
-  exists (
-    select 1
-    from public.shipments as s
-    where s.id = shipment_items.shipment_id
-      and ((s.shipper_id = (select auth.uid()) and s.status = 'draft') or public.is_admin())
-  )
-);
 
 drop policy if exists bookings_select_participant_or_admin on public.bookings;
 create policy bookings_select_participant_or_admin

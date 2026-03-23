@@ -66,13 +66,18 @@ void main() {
       for (final label in [
         s.languageSelectionTitle,
         s.settingsThemeModeTitle,
-        s.notificationsPermissionTitle,
         s.notificationsCenterTitle,
         s.supportTitle,
         s.legalPoliciesTitle,
       ]) {
         expect(cardTitles, contains(label));
       }
+
+      expect(
+        cardTitles.where((title) => title == s.notificationsCenterTitle),
+        hasLength(1),
+      );
+      expect(cardTitles, isNot(contains(s.notificationsPermissionTitle)));
     },
   );
 }

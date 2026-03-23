@@ -31,13 +31,14 @@ abstract class CarrierRoute with _$CarrierRoute {
       originCommuneId: (json['origin_commune_id'] as num).toInt(),
       destinationCommuneId: (json['destination_commune_id'] as num).toInt(),
       totalCapacityKg: (json['total_capacity_kg'] as num).toDouble(),
-      totalCapacityVolumeM3:
-          (json['total_capacity_volume_m3'] as num?)?.toDouble(),
+      totalCapacityVolumeM3: (json['total_capacity_volume_m3'] as num?)
+          ?.toDouble(),
       pricePerKgDzd: (json['price_per_kg_dzd'] as num).toDouble(),
       defaultDepartureTime:
           (json['default_departure_time'] as String?)?.trim() ?? '',
       recurringDaysOfWeek:
-          (json['recurring_days_of_week'] as List<dynamic>? ?? const <dynamic>[])
+          (json['recurring_days_of_week'] as List<dynamic>? ??
+                  const <dynamic>[])
               .cast<num>()
               .map((value) => value.toInt())
               .toList(growable: false),
@@ -77,8 +78,8 @@ abstract class CarrierOneOffTrip with _$CarrierOneOffTrip {
       destinationCommuneId: (json['destination_commune_id'] as num).toInt(),
       departureAt: DateTime.parse(json['departure_at'] as String),
       totalCapacityKg: (json['total_capacity_kg'] as num).toDouble(),
-      totalCapacityVolumeM3:
-          (json['total_capacity_volume_m3'] as num?)?.toDouble(),
+      totalCapacityVolumeM3: (json['total_capacity_volume_m3'] as num?)
+          ?.toDouble(),
       pricePerKgDzd: (json['price_per_kg_dzd'] as num).toDouble(),
       isActive: json['is_active'] as bool? ?? false,
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
@@ -111,13 +112,14 @@ abstract class RouteRevisionRecord with _$RouteRevisionRecord {
       routeId: json['route_id'] as String,
       vehicleId: json['vehicle_id'] as String,
       totalCapacityKg: (json['total_capacity_kg'] as num).toDouble(),
-      totalCapacityVolumeM3:
-          (json['total_capacity_volume_m3'] as num?)?.toDouble(),
+      totalCapacityVolumeM3: (json['total_capacity_volume_m3'] as num?)
+          ?.toDouble(),
       pricePerKgDzd: (json['price_per_kg_dzd'] as num).toDouble(),
       defaultDepartureTime:
           (json['default_departure_time'] as String?)?.trim() ?? '',
       recurringDaysOfWeek:
-          (json['recurring_days_of_week'] as List<dynamic>? ?? const <dynamic>[])
+          (json['recurring_days_of_week'] as List<dynamic>? ??
+                  const <dynamic>[])
               .cast<num>()
               .map((value) => value.toInt())
               .toList(growable: false),

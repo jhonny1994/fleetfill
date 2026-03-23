@@ -12,6 +12,7 @@ enum AppRouteName {
   languageSelection,
   profileSetup,
   phoneCompletion,
+  notificationSetup,
   notificationsHelp,
   mediaUploadHelp,
   sharedNotifications,
@@ -78,6 +79,7 @@ abstract final class AppRoutePath {
   static const languageSelection = '/onboarding/language-selection';
   static const profileSetup = '/onboarding/profile-setup';
   static const phoneCompletion = '/onboarding/phone-completion';
+  static const notificationSetup = '/onboarding/notification-setup';
 
   static const notificationsHelp = '/permissions/notifications-help';
   static const mediaUploadHelp = '/permissions/media-upload-help';

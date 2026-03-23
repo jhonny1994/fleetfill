@@ -169,11 +169,26 @@ void main() {
           ),
           isTrue,
         );
-        expect(disputeCompleteFunction.contains('payment_proof_approved'), isFalse);
-        expect(paymentApprovalFunction.contains('payment_proof_approved'), isTrue);
-        expect(paymentRejectionFunction.contains('payment_proof_rejected'), isTrue);
-        expect(disputeCompleteFunction.contains('dispute_resolved_complete'), isTrue);
-        expect(disputeRefundFunction.contains('dispute_resolved_refund'), isTrue);
+        expect(
+          disputeCompleteFunction.contains('payment_proof_approved'),
+          isFalse,
+        );
+        expect(
+          paymentApprovalFunction.contains('payment_proof_approved'),
+          isTrue,
+        );
+        expect(
+          paymentRejectionFunction.contains('payment_proof_rejected'),
+          isTrue,
+        );
+        expect(
+          disputeCompleteFunction.contains('dispute_resolved_complete'),
+          isTrue,
+        );
+        expect(
+          disputeRefundFunction.contains('dispute_resolved_refund'),
+          isTrue,
+        );
         expect(payoutReleaseFunction.contains("'payout_released'"), isTrue);
       },
     );

@@ -68,17 +68,10 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           AppListCard(
-            title: s.notificationsPermissionTitle,
-            subtitle: s.notificationsPermissionDescription,
+            title: s.notificationsCenterTitle,
+            subtitle: s.notificationsSettingsEntryDescription,
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => context.push(AppRoutePath.notificationsHelp),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppListCard(
-            title: s.notificationsCenterTitle,
-            subtitle: s.notificationsCenterDescription,
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.push(AppRoutePath.sharedNotifications),
           ),
           const SizedBox(height: AppSpacing.sm),
           AppListCard(

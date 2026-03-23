@@ -169,6 +169,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const PhoneCompletionScreen(),
       ),
       GoRoute(
+        path: AppRoutePath.notificationSetup,
+        name: AppRouteName.notificationSetup.name,
+        builder: (context, state) => const NotificationSetupScreen(),
+      ),
+      GoRoute(
         path: AppRoutePath.notificationsHelp,
         name: AppRouteName.notificationsHelp.name,
         builder: (context, state) => const NotificationsPermissionHelpScreen(),

@@ -56,7 +56,8 @@ Avoid vague labels such as:
 - first launch should open a lightweight welcome/onboarding entry before auth
 - sign in and sign up are separate identity screens, not the first product explanation screen
 - once the user continues past welcome, persist that choice and avoid repeating the intro on every signed-out launch
-- authenticated onboarding should then continue with role selection, profile setup, and phone completion in that order when required
+- authenticated onboarding should then continue as one guided completion sequence:
+  role selection, role-aware essentials including phone capture, notification education/request, then home
 - language selection is an app-wide preference, not a separate language mode per role
 
 ### 3.3 Material 3 And Theme Contract
@@ -78,9 +79,11 @@ Rules:
 - shipment draft
 - origin wilaya and commune
 - destination wilaya and commune
-- pickup date from the selected shipment
+- requested date selected in search
 - shipment weight
 - optional shipment volume from the selected shipment
+
+The shipment draft itself should stay reusable and should not force the user to recreate it just to search a different day.
 
 ### 4.2 Default Results Strategy
 
@@ -103,7 +106,7 @@ Only exact route results appear in the main success state.
 
 If same-day exact result is missing:
 
-- show nearest exact-lane dates
+- show nearest exact-lane dates from the selected date onward
 
 If exact route does not exist:
 
@@ -115,7 +118,14 @@ Do not silently mix approximate routes into the exact result list.
 
 Long result lists must use lazy rendering, clear loading states, empty states, and error recovery states.
 
-### 4.5 Loading UX
+### 4.5 Search Layout
+
+- search results should be visible immediately on common phone heights
+- the shipment summary should be compact and condensed by default
+- use a compact header, chips, or expandable summary instead of a tall dominant card above results
+- do not require the user to discover scrolling before they realize results were fetched
+
+### 4.6 Loading UX
 
 - use skeleton loading for result cards, shipment summaries, carrier summaries, and other structured content where layout is already known
 - prefer skeleton or shimmer placeholders over generic spinners when loading replaces a content list, summary card, or detail page body
@@ -142,12 +152,13 @@ The shipment form should capture:
 - origin commune
 - destination wilaya
 - destination commune
-- pickup date
 - weight
 - optional volume
 - shipment details
 
 The shipment form should not ask for category, item rows, or separate notes fields.
+
+The requested date belongs to search, not to the shipment draft form.
 
 ## 6. Adaptive Layout Rules
 
@@ -294,6 +305,15 @@ Rules:
 - clear next action when user action is required
 - no vague marketing-style copy for payment, dispute, or delivery events
 
+## 10.1 Notification UX
+
+- notification permission should be explained and requested during authenticated onboarding for every role
+- denial should not block account completion
+- the primary notifications entry should be a shared app-bar bell with unread badge
+- home should not dedicate a full structural section to notifications
+- settings should expose one notifications entry only, with current permission state and recovery actions when needed
+- permission recovery should stay clear and explicit when the user has denied notifications permanently
+
 ## 11. Generated Documents UX
 
 Users should be able to access system-generated PDFs where relevant.
@@ -376,6 +396,12 @@ Additional requirements:
 - TalkBack and VoiceOver checks on critical flows before release candidates
 - honor reduced-motion preferences where the platform exposes them and avoid unnecessary motion in operational flows
 - define keyboard traversal and focus behavior for larger-device dialogs, forms, and admin workflows
+
+## 14.1 Gating Feedback
+
+- blocked destinations must never appear tappable and then silently fail
+- if a destination is unavailable because verification, payout account, or setup is incomplete, the UI must explain exactly what is missing
+- route guards remain safety rails, but ordinary user guidance should come from visible gate states or explanatory screens
 
 ## 15. Theme And Visual System
 

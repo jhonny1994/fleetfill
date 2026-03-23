@@ -31,7 +31,6 @@ void main() {
             shipperId: 'shipper-1',
             originCommuneId: 1,
             destinationCommuneId: 2,
-            pickupDate: DateTime.utc(2026, 3, 20),
             totalWeightKg: 100,
             totalVolumeM3: 4,
             details: 'Fragile cargo',
@@ -39,6 +38,7 @@ void main() {
             createdAt: DateTime.utc(2026, 3, 19),
             updatedAt: DateTime.utc(2026, 3, 19),
           ),
+          requestedDate: DateTime.utc(2026, 3, 21),
           result: ShipmentSearchResult(
             sourceId: 'route-1',
             sourceType: 'route',
@@ -76,12 +76,11 @@ void main() {
     test('omits insurance when not requested', () {
       final quote = calculateBookingQuote(
         bookingSelection: BookingReviewSelection(
-          shipment: ShipmentDraftRecord(
+          shipment: const ShipmentDraftRecord(
             id: 'shipment-2',
             shipperId: 'shipper-1',
             originCommuneId: 1,
             destinationCommuneId: 2,
-            pickupDate: DateTime.utc(2026, 3, 20),
             totalWeightKg: 10,
             totalVolumeM3: null,
             details: null,
@@ -89,6 +88,7 @@ void main() {
             createdAt: null,
             updatedAt: null,
           ),
+          requestedDate: DateTime.utc(2026, 3, 21),
           result: ShipmentSearchResult(
             sourceId: 'route-2',
             sourceType: 'route',
