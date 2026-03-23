@@ -8,6 +8,28 @@ void main() {
     return AppBootstrapState(
       status: BootstrapStateStatus.ready,
       environment: environment,
+      clientSettings: const ClientSettings(
+        bookingPricing: BookingPricingSettings(
+          platformFeeRate: 0.05,
+          carrierFeeRate: 0,
+          insuranceRate: 0.01,
+          insuranceMinFeeDzd: 100,
+          taxRate: 0,
+          paymentResubmissionDeadlineHours: 24,
+        ),
+        deliveryReview: DeliveryReviewSettings(graceWindowHours: 24),
+        appRuntime: AppRuntimeSettings(
+          maintenanceMode: false,
+          forceUpdateRequired: false,
+          minimumSupportedAndroidVersion: 1,
+          minimumSupportedIosVersion: 1,
+        ),
+        localization: LocalizationSettings(
+          fallbackLocale: 'ar',
+          enabledLocaleCodes: ['ar', 'fr', 'en'],
+        ),
+        paymentAccounts: <PlatformPaymentAccountSettings>[],
+      ),
       auth: auth,
     );
   }
@@ -322,27 +344,30 @@ void main() {
       );
     });
 
-    test('routes completed non-admin onboarding through notification setup', () {
-      final auth = authSnapshot(
-        status: AuthStatus.authenticated,
-        role: AppUserRole.shipper,
-        hasCompletedOnboarding: true,
-        hasPhoneNumber: true,
-      );
+    test(
+      'routes completed non-admin onboarding through notification setup',
+      () {
+        final auth = authSnapshot(
+          status: AuthStatus.authenticated,
+          role: AppUserRole.shipper,
+          hasCompletedOnboarding: true,
+          hasPhoneNumber: true,
+        );
 
-      final decision = AppRouteGuards.evaluate(
-        bootstrap: bootstrap(auth),
-        auth: auth,
-        location: AppRoutePath.shipperHome,
-        hasSeenNotificationOnboarding: false,
-      );
+        final decision = AppRouteGuards.evaluate(
+          bootstrap: bootstrap(auth),
+          auth: auth,
+          location: AppRoutePath.shipperHome,
+          hasSeenNotificationOnboarding: false,
+        );
 
-      expect(decision.target, AppRedirectTarget.notificationSetup);
-      expect(
-        AppRouteGuards.redirectLocation(decision, auth: auth),
-        AppRoutePath.notificationSetup,
-      );
-    });
+        expect(decision.target, AppRedirectTarget.notificationSetup);
+        expect(
+          AppRouteGuards.redirectLocation(decision, auth: auth),
+          AppRoutePath.notificationSetup,
+        );
+      },
+    );
 
     test('allows admin users to skip notification onboarding gate', () {
       final auth = authSnapshot(

@@ -465,6 +465,28 @@ class _ReadyBootstrapController extends AppBootstrapController {
     return const AppBootstrapState(
       status: BootstrapStateStatus.ready,
       environment: AppEnvironmentConfig(environment: AppEnvironment.local),
+      clientSettings: ClientSettings(
+        bookingPricing: BookingPricingSettings(
+          platformFeeRate: 0.05,
+          carrierFeeRate: 0.02,
+          insuranceRate: 0.01,
+          insuranceMinFeeDzd: 100,
+          taxRate: 0,
+          paymentResubmissionDeadlineHours: 24,
+        ),
+        deliveryReview: DeliveryReviewSettings(graceWindowHours: 24),
+        appRuntime: AppRuntimeSettings(
+          maintenanceMode: false,
+          forceUpdateRequired: false,
+          minimumSupportedAndroidVersion: 1,
+          minimumSupportedIosVersion: 1,
+        ),
+        localization: LocalizationSettings(
+          fallbackLocale: 'ar',
+          enabledLocaleCodes: ['ar', 'fr', 'en'],
+        ),
+        paymentAccounts: <PlatformPaymentAccountSettings>[],
+      ),
       auth: AuthSnapshot(
         status: AuthStatus.authenticated,
         userId: 'user-1',
@@ -543,6 +565,10 @@ class _FakeFlowStore {
       forceUpdateRequired: false,
       minimumSupportedAndroidVersion: 1,
       minimumSupportedIosVersion: 1,
+    ),
+    localization: LocalizationSettings(
+      fallbackLocale: 'ar',
+      enabledLocaleCodes: ['ar', 'fr', 'en'],
     ),
     paymentAccounts: <PlatformPaymentAccountSettings>[],
   );

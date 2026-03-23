@@ -90,8 +90,34 @@ class ProfileDetailsFormFields extends StatelessWidget {
     final s = S.of(context);
     final isCarrier = role == AppUserRole.carrier;
 
-    String? requiredValidator(String? value) {
-      return (value ?? '').trim().isEmpty ? s.authRequiredFieldMessage : null;
+    String? nameValidator(String? value) {
+      final normalized = InputSanitizers.normalizePersonName(value);
+      if (normalized == null) {
+        return s.authRequiredFieldMessage;
+      }
+      if (!InputSanitizers.isValidPersonName(normalized)) {
+        return s.profileInvalidNameMessage;
+      }
+      return null;
+    }
+
+    String? companyValidator(String? value) {
+      final normalized = InputSanitizers.normalizeCompanyName(value);
+      if (normalized == null) {
+        return s.authRequiredFieldMessage;
+      }
+      if (!InputSanitizers.isValidCompanyName(normalized)) {
+        return s.profileInvalidCompanyNameMessage;
+      }
+      return null;
+    }
+
+    String? algerianPhoneValidator(String? value) {
+      final normalized = InputSanitizers.normalizeAlgerianPhoneNumber(value);
+      if (normalized == null) {
+        return s.profileInvalidAlgerianPhoneMessage;
+      }
+      return null;
     }
 
     return Column(
@@ -103,7 +129,7 @@ class ProfileDetailsFormFields extends StatelessWidget {
           textInputAction: isCarrier
               ? TextInputAction.next
               : TextInputAction.done,
-          validator: requiredValidator,
+          validator: nameValidator,
         ),
         if (isCarrier) ...[
           const SizedBox(height: AppSpacing.md),
@@ -111,7 +137,7 @@ class ProfileDetailsFormFields extends StatelessWidget {
             controller: companyController,
             label: s.profileCompanyNameLabel,
             textInputAction: TextInputAction.next,
-            validator: requiredValidator,
+            validator: companyValidator,
           ),
         ],
         const SizedBox(height: AppSpacing.md),
@@ -120,7 +146,8 @@ class ProfileDetailsFormFields extends StatelessWidget {
           label: s.profilePhoneLabel,
           keyboardType: TextInputType.phone,
           textInputAction: TextInputAction.done,
-          validator: requiredValidator,
+          hintText: '0550123456',
+          validator: algerianPhoneValidator,
           onFieldSubmitted: (_) => onSubmit?.call(),
         ),
         const SizedBox(height: AppSpacing.lg),
@@ -222,6 +249,7 @@ class _ProfileEditFormState extends ConsumerState<ProfileEditForm> {
 
     setState(() => _isSaving = true);
     final s = S.of(context);
+    final preferredLocale = ref.read(effectiveLocaleProvider).languageCode;
 
     try {
       await ref
@@ -233,6 +261,7 @@ class _ProfileEditFormState extends ConsumerState<ProfileEditForm> {
                 ? _companyController.text
                 : null,
             phoneNumber: _phoneController.text,
+            preferredLocale: preferredLocale,
           );
       await ref.read(authSessionControllerProvider.notifier).refresh();
       if (!mounted) {
@@ -244,7 +273,7 @@ class _ProfileEditFormState extends ConsumerState<ProfileEditForm> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);

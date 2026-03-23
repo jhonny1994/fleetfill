@@ -149,8 +149,7 @@ abstract class EmailDeliveryLogRecord with _$EmailDeliveryLogRecord {
       profileId: json['profile_id'] as String?,
       bookingId: json['booking_id'] as String?,
       templateKey: (json['template_key'] as String?)?.trim() ?? '',
-      templateLanguageCode:
-          (json['template_language_code'] as String?)?.trim(),
+      templateLanguageCode: (json['template_language_code'] as String?)?.trim(),
       locale: (json['locale'] as String?)?.trim() ?? 'en',
       recipientEmail: (json['recipient_email'] as String?)?.trim() ?? '',
       subjectPreview: (json['subject_preview'] as String?)?.trim(),
@@ -210,8 +209,7 @@ abstract class EmailOutboxJobRecord with _$EmailOutboxJobRecord {
       profileId: json['profile_id'] as String?,
       bookingId: json['booking_id'] as String?,
       templateKey: (json['template_key'] as String?)?.trim() ?? '',
-      templateLanguageCode:
-          (json['template_language_code'] as String?)?.trim(),
+      templateLanguageCode: (json['template_language_code'] as String?)?.trim(),
       locale: (json['locale'] as String?)?.trim() ?? 'en',
       recipientEmail: (json['recipient_email'] as String?)?.trim() ?? '',
       priority: (json['priority'] as String?)?.trim() ?? 'normal',

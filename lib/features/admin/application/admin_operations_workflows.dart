@@ -1,5 +1,5 @@
+import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/admin/admin.dart';
-import 'package:fleetfill/shared/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final adminOperationsWorkflowControllerProvider =
@@ -28,6 +28,7 @@ class AdminOperationsWorkflowController {
         );
 
     ref
+      ..invalidate(appBootstrapControllerProvider)
       ..invalidate(clientSettingsProvider)
       ..invalidate(adminPlatformSettingsProvider)
       ..invalidate(adminOperationalSummaryProvider)
