@@ -38,6 +38,7 @@ class OnboardingWorkflowController {
     String? companyName,
   }) async {
     final trimmedPhone = phoneNumber.trim();
+    final preferredLocale = ref.read(effectiveLocaleProvider).languageCode;
     await ref
         .read(authRepositoryProvider)
         .upsertProfile(
@@ -45,6 +46,7 @@ class OnboardingWorkflowController {
           fullName: fullName,
           companyName: companyName,
           phoneNumber: phoneNumber,
+          preferredLocale: preferredLocale,
         );
     await ref.read(authSessionControllerProvider.notifier).refresh();
     if (role != AppUserRole.admin && trimmedPhone.isEmpty) {

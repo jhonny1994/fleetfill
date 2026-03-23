@@ -12,7 +12,7 @@ class LocationRepository {
   SupabaseClient get _client => Supabase.instance.client;
 
   Future<List<AlgeriaWilaya>> fetchWilayas() async {
-    final response = await _client.from('wilayas').select().order('name');
+    final response = await _client.from('wilayas').select().order('id');
 
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
@@ -20,17 +20,37 @@ class LocationRepository {
         .toList(growable: false);
   }
 
-  Future<List<AlgeriaCommune>> fetchCommunes() async {
-    final response = await _client
-        .from('communes')
-        .select()
-        .order('wilaya_id', ascending: true)
-        .order('name', ascending: true);
+  Future<List<AlgeriaCommune>> fetchCommunes({int? wilayaId}) async {
+    final response = wilayaId == null
+        ? await _client
+              .from('communes')
+              .select()
+              .order('wilaya_id', ascending: true)
+              .order('name', ascending: true)
+        : await _client
+              .from('communes')
+              .select()
+              .eq('wilaya_id', wilayaId)
+              .order('name', ascending: true);
 
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
         .map(AlgeriaCommune.fromJson)
         .toList(growable: false);
+  }
+
+  Future<AlgeriaCommune?> fetchCommuneById(int communeId) async {
+    final response = await _client
+        .from('communes')
+        .select()
+        .eq('id', communeId)
+        .maybeSingle();
+
+    if (response == null) {
+      return null;
+    }
+
+    return AlgeriaCommune.fromJson(response);
   }
 
   Future<AlgeriaLocationDirectory> fetchLocationDirectory() async {

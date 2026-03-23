@@ -41,6 +41,7 @@ class AppProfile {
   const AppProfile({
     required this.id,
     required this.email,
+    required this.preferredLocale,
     required this.role,
     required this.fullName,
     required this.phoneNumber,
@@ -57,6 +58,7 @@ class AppProfile {
     return AppProfile(
       id: json['id'] as String,
       email: (json['email'] as String?)?.trim() ?? '',
+      preferredLocale: (json['preferred_locale'] as String?)?.trim() ?? 'ar',
       role: AppUserRole.fromDatabase(json['role']),
       fullName: (json['full_name'] as String?)?.trim(),
       phoneNumber: (json['phone_number'] as String?)?.trim(),
@@ -75,6 +77,7 @@ class AppProfile {
 
   final String id;
   final String email;
+  final String preferredLocale;
   final AppUserRole? role;
   final String? fullName;
   final String? phoneNumber;

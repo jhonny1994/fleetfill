@@ -1,4 +1,5 @@
 import 'package:fleetfill/core/auth/auth.dart';
+import 'package:fleetfill/core/config/config.dart';
 import 'package:fleetfill/features/admin/admin.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
 import 'package:fleetfill/features/notifications/notifications.dart';
@@ -11,6 +12,22 @@ import 'package:flutter_riverpod/misc.dart';
 final communesProvider = FutureProvider<List<AlgeriaCommune>>((ref) {
   return ref.read(locationRepositoryProvider).fetchCommunes();
 });
+
+final FutureProviderFamily<List<AlgeriaCommune>, int>
+communesForWilayaProvider = FutureProvider.autoDispose
+    .family<List<AlgeriaCommune>, int>((
+      ref,
+      wilayaId,
+    ) {
+      return ref
+          .read(locationRepositoryProvider)
+          .fetchCommunes(wilayaId: wilayaId);
+    });
+
+final FutureProviderFamily<AlgeriaCommune?, int> communeByIdProvider =
+    FutureProvider.autoDispose.family<AlgeriaCommune?, int>((ref, communeId) {
+      return ref.read(locationRepositoryProvider).fetchCommuneById(communeId);
+    });
 
 final wilayasProvider = FutureProvider<List<AlgeriaWilaya>>((ref) {
   return ref.read(locationRepositoryProvider).fetchWilayas();
@@ -284,6 +301,15 @@ final adminAutomationAlertsProvider =
     });
 
 final clientSettingsProvider = FutureProvider<ClientSettings>((ref) {
+  final bootstrapSettings = ref
+      .watch(appBootstrapControllerProvider)
+      .asData
+      ?.value
+      .clientSettings;
+  if (bootstrapSettings != null) {
+    return Future.value(bootstrapSettings);
+  }
+
   return ref.read(bookingRepositoryProvider).fetchClientSettings();
 });
 

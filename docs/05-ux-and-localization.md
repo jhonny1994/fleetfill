@@ -329,9 +329,9 @@ FleetFill emails are transactional product communications, not marketing campaig
 
 Requirements:
 
-- templates should exist for Arabic, French, and English
-- locale selection should follow the user's effective app/account locale where available
-- fallback locale should always be English when the requested locale is unsupported
+- DB template storage should actively provide Arabic, French, and English variants for every active transactional event
+- outbound transactional email should follow the resolved app or account locale, with Arabic fallback when a requested variant is unavailable
+- locale fallback for app and backend channels should resolve to Arabic when the requested locale is unsupported or disabled
 - transactional emails should mirror in-app wording for statuses and actions
 - invoices should appear in the email body as structured HTML when needed, not as file attachments by default
 
@@ -363,6 +363,10 @@ Rules:
 - route names must support Arabic and Latin display
 - mixed-script strings must be laid out carefully
 - flutter-intl generated ARB files should own UI copy, labels, errors, action text, and empty-state content
+- installed app locales come from the ARB set plus generated Flutter localization code, not ad hoc runtime additions
+- enabled app locales should come from the runtime localization settings contract rather than scattered hardcoded lists
+- account-level locale preference should live on the user profile, with device locale as a secondary signal only
+- fallback locale is Arabic
 - location names come from data tables, not ARB files
 - locale fallback should be deterministic and documented in app code
 - plurals, counts, and formatted dates/currency must use locale-aware formatting

@@ -22,13 +22,62 @@ class SupportRepository {
     required String subject,
     required String message,
   }) async {
-    await _client.functions.invoke(
-      'support-email-dispatch',
-      body: {
+    final normalizedSubject = subject.trim();
+    final normalizedMessage = message.trim();
+    logger.info(
+      'Sending support message',
+      context: {
         'locale': locale,
-        'subject': subject,
-        'message': message,
+        'subjectLength': normalizedSubject.length,
+        'messageLength': normalizedMessage.length,
+        'supabaseUrl': environment.supabaseUrl,
       },
     );
+
+    try {
+      final response = await _client.functions.invoke(
+        'support-email-dispatch',
+        body: {
+          'locale': locale,
+          'subject': normalizedSubject,
+          'message': normalizedMessage,
+        },
+      );
+
+      logger.info(
+        'Support message queued',
+        context: {
+          'status': response.status,
+          'response': response.data,
+        },
+      );
+    } on FunctionException catch (error, stackTrace) {
+      logger.warning(
+        'Support message failed',
+        error: error,
+        stackTrace: stackTrace,
+        context: {
+          'status': error.status,
+          'reasonPhrase': error.reasonPhrase,
+          'details': error.details,
+          'locale': locale,
+          'subjectLength': normalizedSubject.length,
+          'messageLength': normalizedMessage.length,
+        },
+      );
+      rethrow;
+    } on Exception catch (error, stackTrace) {
+      logger.warning(
+        'Support message failed',
+        error: error,
+        stackTrace: stackTrace,
+        context: {
+          'locale': locale,
+          'subjectLength': normalizedSubject.length,
+          'messageLength': normalizedMessage.length,
+        },
+      );
+      rethrow;
+    }
   }
 }

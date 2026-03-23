@@ -92,6 +92,28 @@ void main() {
       return AppBootstrapState(
         status: BootstrapStateStatus.ready,
         environment: environment,
+        clientSettings: const ClientSettings(
+          bookingPricing: BookingPricingSettings(
+            platformFeeRate: 0.05,
+            carrierFeeRate: 0,
+            insuranceRate: 0.01,
+            insuranceMinFeeDzd: 100,
+            taxRate: 0,
+            paymentResubmissionDeadlineHours: 24,
+          ),
+          deliveryReview: DeliveryReviewSettings(graceWindowHours: 24),
+          appRuntime: AppRuntimeSettings(
+            maintenanceMode: false,
+            forceUpdateRequired: false,
+            minimumSupportedAndroidVersion: 1,
+            minimumSupportedIosVersion: 1,
+          ),
+          localization: LocalizationSettings(
+            fallbackLocale: 'ar',
+            enabledLocaleCodes: ['ar', 'fr', 'en'],
+          ),
+          paymentAccounts: <PlatformPaymentAccountSettings>[],
+        ),
         auth: auth,
       );
     }

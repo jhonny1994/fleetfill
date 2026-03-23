@@ -591,7 +591,8 @@ class AdminEmailLogDetailScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
-              if (item.subjectPreview != null && item.subjectPreview!.isNotEmpty)
+              if (item.subjectPreview != null &&
+                  item.subjectPreview!.isNotEmpty)
                 ProfileSummaryCard(
                   title: s.adminEmailSubjectPreviewLabel,
                   rows: [
@@ -601,7 +602,8 @@ class AdminEmailLogDetailScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-              if (item.subjectPreview != null && item.subjectPreview!.isNotEmpty)
+              if (item.subjectPreview != null &&
+                  item.subjectPreview!.isNotEmpty)
                 const SizedBox(height: AppSpacing.md),
               if (item.errorCode != null || item.errorMessage != null)
                 ProfileSummaryCard(
@@ -1880,6 +1882,9 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
   bool _initialized = false;
   bool _maintenanceMode = false;
   bool _forceUpdateRequired = false;
+  String _fallbackLocaleCode =
+      AppLocaleResolver.defaultFallbackLocale.languageCode;
+  Set<String> _enabledLocaleCodes = <String>{};
   final TextEditingController _androidVersionController =
       TextEditingController();
   final TextEditingController _iosVersionController = TextEditingController();
@@ -2077,6 +2082,91 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
               ),
               const SizedBox(height: AppSpacing.xl),
               _SettingsSection(
+                title: s.adminSettingsLocalizationSectionTitle,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      initialValue: _fallbackLocaleCode,
+                      decoration: InputDecoration(
+                        labelText: s.adminSettingsFallbackLocaleLabel,
+                      ),
+                      items: AppLocaleResolver.installedLocales
+                          .map(
+                            (locale) => DropdownMenuItem<String>(
+                              value: locale.languageCode,
+                              child: Text(
+                                localizedLanguageName(context, locale, s),
+                              ),
+                            ),
+                          )
+                          .toList(growable: false),
+                      onChanged: (value) {
+                        if (value == null) {
+                          return;
+                        }
+                        setState(() {
+                          _fallbackLocaleCode = value;
+                          _enabledLocaleCodes = {
+                            ..._enabledLocaleCodes,
+                            value,
+                          };
+                        });
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Text(
+                        s.adminSettingsEnabledLocalesLabel,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    ...AppLocaleResolver.installedLocales.map((locale) {
+                      final localeCode = locale.languageCode;
+                      final isEnabled = _enabledLocaleCodes.contains(
+                        localeCode,
+                      );
+                      final isFallback = localeCode == _fallbackLocaleCode;
+
+                      return SwitchListTile.adaptive(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(localizedLanguageName(context, locale, s)),
+                        subtitle: Text(nativeLanguageName(locale)),
+                        value: isEnabled || isFallback,
+                        onChanged: isFallback
+                            ? null
+                            : (value) {
+                                setState(() {
+                                  if (value) {
+                                    _enabledLocaleCodes = {
+                                      ..._enabledLocaleCodes,
+                                      localeCode,
+                                    };
+                                  } else {
+                                    _enabledLocaleCodes = _enabledLocaleCodes
+                                        .where((code) => code != localeCode)
+                                        .toSet();
+                                  }
+                                });
+                              },
+                      );
+                    }),
+                    const SizedBox(height: AppSpacing.md),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: FilledButton(
+                        onPressed: () =>
+                            unawaited(_saveLocalizationSettings(context)),
+                        child: Text(s.adminSettingsSaveAction),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+              _SettingsSection(
                 title: s.adminSettingsFeatureFlagsSectionTitle,
                 child: Column(
                   children: [
@@ -2116,6 +2206,8 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
         byKey['booking_pricing']?.value ?? const <String, dynamic>{};
     final deliveryReview =
         byKey['delivery_review']?.value ?? const <String, dynamic>{};
+    final localization =
+        byKey['localization']?.value ?? const <String, dynamic>{};
     final featureFlags =
         byKey['feature_flags']?.value ?? const <String, dynamic>{};
 
@@ -2136,6 +2228,21 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
         '${(bookingPricing['payment_resubmission_deadline_hours'] as num?)?.toInt() ?? 24}';
     _deliveryGraceController.text =
         '${(deliveryReview['grace_window_hours'] as num?)?.toInt() ?? 24}';
+    _fallbackLocaleCode =
+        (localization['fallback_locale'] as String?)?.trim().toLowerCase() ??
+        AppLocaleResolver.defaultFallbackLocale.languageCode;
+    _enabledLocaleCodes = {
+      for (final item
+          in localization['enabled_locales'] as List<dynamic>? ?? [])
+        if (item is String && item.trim().isNotEmpty) item.trim().toLowerCase(),
+      _fallbackLocaleCode,
+    };
+    if (_enabledLocaleCodes.isEmpty) {
+      _enabledLocaleCodes = {
+        for (final locale in AppLocaleResolver.installedLocales)
+          locale.languageCode,
+      };
+    }
     _adminEmailResendEnabled =
         featureFlags['admin_email_resend_enabled'] as bool? ?? true;
     _initialized = true;
@@ -2219,6 +2326,25 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
       isPublic: false,
       description: s.adminSettingsFeatureFlagsSectionTitle,
       value: {'admin_email_resend_enabled': _adminEmailResendEnabled},
+    );
+  }
+
+  Future<void> _saveLocalizationSettings(BuildContext context) async {
+    final s = S.of(context);
+    await _saveSetting(
+      context,
+      key: 'localization',
+      isPublic: true,
+      description: s.adminSettingsLocalizationSectionTitle,
+      value: {
+        'fallback_locale': _fallbackLocaleCode,
+        'enabled_locales': [
+          for (final locale in AppLocaleResolver.installedLocales)
+            if (_enabledLocaleCodes.contains(locale.languageCode) ||
+                locale.languageCode == _fallbackLocaleCode)
+              locale.languageCode,
+        ],
+      },
     );
   }
 

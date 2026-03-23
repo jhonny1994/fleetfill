@@ -1,6 +1,6 @@
 begin;
 
-select plan(23);
+select plan(28);
 
 create or replace function pg_temp.set_claims(
   p_user_id uuid,
@@ -79,7 +79,7 @@ values
 select set_config('request.jwt.claim.role', 'service_role', true);
 select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 
-insert into public.profiles (id, role, full_name, phone_number, email, is_active, verification_status)
+insert into public.profiles (id, role, full_name, phone_number, email, preferred_locale, is_active, verification_status)
 values
   (
     '12000000-0000-4000-8000-000000000001',
@@ -87,6 +87,7 @@ values
     'Mail Shipper',
     '0551000001',
     'mail-shipper@example.com',
+    'fr',
     true,
     'verified'
   ),
@@ -96,6 +97,7 @@ values
     'Mail Admin',
     '0771000002',
     'mail-admin@example.com',
+    'ar',
     true,
     'verified'
   );
@@ -115,11 +117,44 @@ select ok(
   exists(
     select 1
     from public.email_templates
+    where template_key = 'booking_confirmed'
+      and language_code = 'fr'
+      and is_enabled = true
+  ),
+  'French booking confirmation template exists in the canonical registry'
+);
+
+select ok(
+  exists(
+    select 1
+    from public.email_templates
+    where template_key = 'booking_confirmed'
+      and language_code = 'en'
+      and is_enabled = true
+  ),
+  'English booking confirmation template exists in the canonical registry'
+);
+
+select ok(
+  exists(
+    select 1
+    from public.email_templates
     where template_key = 'support_acknowledgement'
       and language_code = 'ar'
       and is_enabled = true
   ),
   'Arabic support acknowledgement template exists in the canonical registry'
+);
+
+select is(
+  (
+    select count(*)::int
+    from public.email_templates
+    where is_enabled = true
+      and language_code in ('ar', 'fr', 'en')
+  ),
+  33,
+  'transactional email template registry contains all active templates for Arabic, French, and English'
 );
 
 insert into public.user_devices (
@@ -133,7 +168,7 @@ values (
   '12000000-0000-4000-8000-000000000001',
   'device-token-runtime-email',
   'android',
-  'FR',
+  'EN',
   now()
 );
 
@@ -365,7 +400,45 @@ select is(
     )
   ),
   'fr',
-  'transactional email enqueue uses normalized preferred locale fallback'
+  'transactional email enqueue prefers profile locale over device locale'
+);
+
+select is(
+  (
+    select locale
+    from public.enqueue_transactional_email(
+      'runtime_locale_explicit_en',
+      '12000000-0000-4000-8000-000000000001',
+      'mail-shipper@example.com',
+      null,
+      'runtime_locale_explicit_en',
+      'en',
+      '{}'::jsonb,
+      'runtime-locale-explicit-en',
+      'high'
+    )
+  ),
+  'en',
+  'transactional email enqueue preserves an explicit supported locale'
+);
+
+select is(
+  (
+    select locale
+    from public.enqueue_transactional_email(
+      'runtime_locale_fallback_ar',
+      '12000000-0000-4000-8000-000000000001',
+      'mail-shipper@example.com',
+      null,
+      'runtime_locale_fallback_ar',
+      'es',
+      '{}'::jsonb,
+      'runtime-locale-fallback-ar',
+      'high'
+    )
+  ),
+  'ar',
+  'transactional email enqueue falls back to Arabic when an unsupported locale is requested'
 );
 
 select matches(

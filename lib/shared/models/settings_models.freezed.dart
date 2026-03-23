@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ClientSettings {
 
- BookingPricingSettings get bookingPricing; DeliveryReviewSettings get deliveryReview; AppRuntimeSettings get appRuntime; List<PlatformPaymentAccountSettings> get paymentAccounts;
+ BookingPricingSettings get bookingPricing; DeliveryReviewSettings get deliveryReview; AppRuntimeSettings get appRuntime; LocalizationSettings get localization; List<PlatformPaymentAccountSettings> get paymentAccounts;
 /// Create a copy of ClientSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ClientSettingsCopyWith<ClientSettings> get copyWith => _$ClientSettingsCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientSettings&&(identical(other.bookingPricing, bookingPricing) || other.bookingPricing == bookingPricing)&&(identical(other.deliveryReview, deliveryReview) || other.deliveryReview == deliveryReview)&&(identical(other.appRuntime, appRuntime) || other.appRuntime == appRuntime)&&const DeepCollectionEquality().equals(other.paymentAccounts, paymentAccounts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientSettings&&(identical(other.bookingPricing, bookingPricing) || other.bookingPricing == bookingPricing)&&(identical(other.deliveryReview, deliveryReview) || other.deliveryReview == deliveryReview)&&(identical(other.appRuntime, appRuntime) || other.appRuntime == appRuntime)&&(identical(other.localization, localization) || other.localization == localization)&&const DeepCollectionEquality().equals(other.paymentAccounts, paymentAccounts));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingPricing,deliveryReview,appRuntime,const DeepCollectionEquality().hash(paymentAccounts));
+int get hashCode => Object.hash(runtimeType,bookingPricing,deliveryReview,appRuntime,localization,const DeepCollectionEquality().hash(paymentAccounts));
 
 @override
 String toString() {
-  return 'ClientSettings(bookingPricing: $bookingPricing, deliveryReview: $deliveryReview, appRuntime: $appRuntime, paymentAccounts: $paymentAccounts)';
+  return 'ClientSettings(bookingPricing: $bookingPricing, deliveryReview: $deliveryReview, appRuntime: $appRuntime, localization: $localization, paymentAccounts: $paymentAccounts)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $ClientSettingsCopyWith<$Res>  {
   factory $ClientSettingsCopyWith(ClientSettings value, $Res Function(ClientSettings) _then) = _$ClientSettingsCopyWithImpl;
 @useResult
 $Res call({
- BookingPricingSettings bookingPricing, DeliveryReviewSettings deliveryReview, AppRuntimeSettings appRuntime, List<PlatformPaymentAccountSettings> paymentAccounts
+ BookingPricingSettings bookingPricing, DeliveryReviewSettings deliveryReview, AppRuntimeSettings appRuntime, LocalizationSettings localization, List<PlatformPaymentAccountSettings> paymentAccounts
 });
 
 
-$BookingPricingSettingsCopyWith<$Res> get bookingPricing;$DeliveryReviewSettingsCopyWith<$Res> get deliveryReview;$AppRuntimeSettingsCopyWith<$Res> get appRuntime;
+$BookingPricingSettingsCopyWith<$Res> get bookingPricing;$DeliveryReviewSettingsCopyWith<$Res> get deliveryReview;$AppRuntimeSettingsCopyWith<$Res> get appRuntime;$LocalizationSettingsCopyWith<$Res> get localization;
 
 }
 /// @nodoc
@@ -62,12 +62,13 @@ class _$ClientSettingsCopyWithImpl<$Res>
 
 /// Create a copy of ClientSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? bookingPricing = null,Object? deliveryReview = null,Object? appRuntime = null,Object? paymentAccounts = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? bookingPricing = null,Object? deliveryReview = null,Object? appRuntime = null,Object? localization = null,Object? paymentAccounts = null,}) {
   return _then(_self.copyWith(
 bookingPricing: null == bookingPricing ? _self.bookingPricing : bookingPricing // ignore: cast_nullable_to_non_nullable
 as BookingPricingSettings,deliveryReview: null == deliveryReview ? _self.deliveryReview : deliveryReview // ignore: cast_nullable_to_non_nullable
 as DeliveryReviewSettings,appRuntime: null == appRuntime ? _self.appRuntime : appRuntime // ignore: cast_nullable_to_non_nullable
-as AppRuntimeSettings,paymentAccounts: null == paymentAccounts ? _self.paymentAccounts : paymentAccounts // ignore: cast_nullable_to_non_nullable
+as AppRuntimeSettings,localization: null == localization ? _self.localization : localization // ignore: cast_nullable_to_non_nullable
+as LocalizationSettings,paymentAccounts: null == paymentAccounts ? _self.paymentAccounts : paymentAccounts // ignore: cast_nullable_to_non_nullable
 as List<PlatformPaymentAccountSettings>,
   ));
 }
@@ -97,6 +98,15 @@ $AppRuntimeSettingsCopyWith<$Res> get appRuntime {
   
   return $AppRuntimeSettingsCopyWith<$Res>(_self.appRuntime, (value) {
     return _then(_self.copyWith(appRuntime: value));
+  });
+}/// Create a copy of ClientSettings
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LocalizationSettingsCopyWith<$Res> get localization {
+  
+  return $LocalizationSettingsCopyWith<$Res>(_self.localization, (value) {
+    return _then(_self.copyWith(localization: value));
   });
 }
 }
@@ -180,10 +190,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BookingPricingSettings bookingPricing,  DeliveryReviewSettings deliveryReview,  AppRuntimeSettings appRuntime,  List<PlatformPaymentAccountSettings> paymentAccounts)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BookingPricingSettings bookingPricing,  DeliveryReviewSettings deliveryReview,  AppRuntimeSettings appRuntime,  LocalizationSettings localization,  List<PlatformPaymentAccountSettings> paymentAccounts)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ClientSettings() when $default != null:
-return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that.paymentAccounts);case _:
+return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that.localization,_that.paymentAccounts);case _:
   return orElse();
 
 }
@@ -201,10 +211,10 @@ return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BookingPricingSettings bookingPricing,  DeliveryReviewSettings deliveryReview,  AppRuntimeSettings appRuntime,  List<PlatformPaymentAccountSettings> paymentAccounts)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BookingPricingSettings bookingPricing,  DeliveryReviewSettings deliveryReview,  AppRuntimeSettings appRuntime,  LocalizationSettings localization,  List<PlatformPaymentAccountSettings> paymentAccounts)  $default,) {final _that = this;
 switch (_that) {
 case _ClientSettings():
-return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that.paymentAccounts);case _:
+return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that.localization,_that.paymentAccounts);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -221,10 +231,10 @@ return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BookingPricingSettings bookingPricing,  DeliveryReviewSettings deliveryReview,  AppRuntimeSettings appRuntime,  List<PlatformPaymentAccountSettings> paymentAccounts)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BookingPricingSettings bookingPricing,  DeliveryReviewSettings deliveryReview,  AppRuntimeSettings appRuntime,  LocalizationSettings localization,  List<PlatformPaymentAccountSettings> paymentAccounts)?  $default,) {final _that = this;
 switch (_that) {
 case _ClientSettings() when $default != null:
-return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that.paymentAccounts);case _:
+return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that.localization,_that.paymentAccounts);case _:
   return null;
 
 }
@@ -236,12 +246,13 @@ return $default(_that.bookingPricing,_that.deliveryReview,_that.appRuntime,_that
 
 
 class _ClientSettings extends ClientSettings {
-  const _ClientSettings({required this.bookingPricing, required this.deliveryReview, required this.appRuntime, required final  List<PlatformPaymentAccountSettings> paymentAccounts}): _paymentAccounts = paymentAccounts,super._();
+  const _ClientSettings({required this.bookingPricing, required this.deliveryReview, required this.appRuntime, required this.localization, required final  List<PlatformPaymentAccountSettings> paymentAccounts}): _paymentAccounts = paymentAccounts,super._();
   
 
 @override final  BookingPricingSettings bookingPricing;
 @override final  DeliveryReviewSettings deliveryReview;
 @override final  AppRuntimeSettings appRuntime;
+@override final  LocalizationSettings localization;
  final  List<PlatformPaymentAccountSettings> _paymentAccounts;
 @override List<PlatformPaymentAccountSettings> get paymentAccounts {
   if (_paymentAccounts is EqualUnmodifiableListView) return _paymentAccounts;
@@ -260,16 +271,16 @@ _$ClientSettingsCopyWith<_ClientSettings> get copyWith => __$ClientSettingsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientSettings&&(identical(other.bookingPricing, bookingPricing) || other.bookingPricing == bookingPricing)&&(identical(other.deliveryReview, deliveryReview) || other.deliveryReview == deliveryReview)&&(identical(other.appRuntime, appRuntime) || other.appRuntime == appRuntime)&&const DeepCollectionEquality().equals(other._paymentAccounts, _paymentAccounts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientSettings&&(identical(other.bookingPricing, bookingPricing) || other.bookingPricing == bookingPricing)&&(identical(other.deliveryReview, deliveryReview) || other.deliveryReview == deliveryReview)&&(identical(other.appRuntime, appRuntime) || other.appRuntime == appRuntime)&&(identical(other.localization, localization) || other.localization == localization)&&const DeepCollectionEquality().equals(other._paymentAccounts, _paymentAccounts));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingPricing,deliveryReview,appRuntime,const DeepCollectionEquality().hash(_paymentAccounts));
+int get hashCode => Object.hash(runtimeType,bookingPricing,deliveryReview,appRuntime,localization,const DeepCollectionEquality().hash(_paymentAccounts));
 
 @override
 String toString() {
-  return 'ClientSettings(bookingPricing: $bookingPricing, deliveryReview: $deliveryReview, appRuntime: $appRuntime, paymentAccounts: $paymentAccounts)';
+  return 'ClientSettings(bookingPricing: $bookingPricing, deliveryReview: $deliveryReview, appRuntime: $appRuntime, localization: $localization, paymentAccounts: $paymentAccounts)';
 }
 
 
@@ -280,11 +291,11 @@ abstract mixin class _$ClientSettingsCopyWith<$Res> implements $ClientSettingsCo
   factory _$ClientSettingsCopyWith(_ClientSettings value, $Res Function(_ClientSettings) _then) = __$ClientSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- BookingPricingSettings bookingPricing, DeliveryReviewSettings deliveryReview, AppRuntimeSettings appRuntime, List<PlatformPaymentAccountSettings> paymentAccounts
+ BookingPricingSettings bookingPricing, DeliveryReviewSettings deliveryReview, AppRuntimeSettings appRuntime, LocalizationSettings localization, List<PlatformPaymentAccountSettings> paymentAccounts
 });
 
 
-@override $BookingPricingSettingsCopyWith<$Res> get bookingPricing;@override $DeliveryReviewSettingsCopyWith<$Res> get deliveryReview;@override $AppRuntimeSettingsCopyWith<$Res> get appRuntime;
+@override $BookingPricingSettingsCopyWith<$Res> get bookingPricing;@override $DeliveryReviewSettingsCopyWith<$Res> get deliveryReview;@override $AppRuntimeSettingsCopyWith<$Res> get appRuntime;@override $LocalizationSettingsCopyWith<$Res> get localization;
 
 }
 /// @nodoc
@@ -297,12 +308,13 @@ class __$ClientSettingsCopyWithImpl<$Res>
 
 /// Create a copy of ClientSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bookingPricing = null,Object? deliveryReview = null,Object? appRuntime = null,Object? paymentAccounts = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingPricing = null,Object? deliveryReview = null,Object? appRuntime = null,Object? localization = null,Object? paymentAccounts = null,}) {
   return _then(_ClientSettings(
 bookingPricing: null == bookingPricing ? _self.bookingPricing : bookingPricing // ignore: cast_nullable_to_non_nullable
 as BookingPricingSettings,deliveryReview: null == deliveryReview ? _self.deliveryReview : deliveryReview // ignore: cast_nullable_to_non_nullable
 as DeliveryReviewSettings,appRuntime: null == appRuntime ? _self.appRuntime : appRuntime // ignore: cast_nullable_to_non_nullable
-as AppRuntimeSettings,paymentAccounts: null == paymentAccounts ? _self._paymentAccounts : paymentAccounts // ignore: cast_nullable_to_non_nullable
+as AppRuntimeSettings,localization: null == localization ? _self.localization : localization // ignore: cast_nullable_to_non_nullable
+as LocalizationSettings,paymentAccounts: null == paymentAccounts ? _self._paymentAccounts : paymentAccounts // ignore: cast_nullable_to_non_nullable
 as List<PlatformPaymentAccountSettings>,
   ));
 }
@@ -334,7 +346,282 @@ $AppRuntimeSettingsCopyWith<$Res> get appRuntime {
   return $AppRuntimeSettingsCopyWith<$Res>(_self.appRuntime, (value) {
     return _then(_self.copyWith(appRuntime: value));
   });
+}/// Create a copy of ClientSettings
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LocalizationSettingsCopyWith<$Res> get localization {
+  
+  return $LocalizationSettingsCopyWith<$Res>(_self.localization, (value) {
+    return _then(_self.copyWith(localization: value));
+  });
 }
+}
+
+/// @nodoc
+mixin _$LocalizationSettings {
+
+ String get fallbackLocale; List<String> get enabledLocaleCodes;
+/// Create a copy of LocalizationSettings
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LocalizationSettingsCopyWith<LocalizationSettings> get copyWith => _$LocalizationSettingsCopyWithImpl<LocalizationSettings>(this as LocalizationSettings, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalizationSettings&&(identical(other.fallbackLocale, fallbackLocale) || other.fallbackLocale == fallbackLocale)&&const DeepCollectionEquality().equals(other.enabledLocaleCodes, enabledLocaleCodes));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,fallbackLocale,const DeepCollectionEquality().hash(enabledLocaleCodes));
+
+@override
+String toString() {
+  return 'LocalizationSettings(fallbackLocale: $fallbackLocale, enabledLocaleCodes: $enabledLocaleCodes)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LocalizationSettingsCopyWith<$Res>  {
+  factory $LocalizationSettingsCopyWith(LocalizationSettings value, $Res Function(LocalizationSettings) _then) = _$LocalizationSettingsCopyWithImpl;
+@useResult
+$Res call({
+ String fallbackLocale, List<String> enabledLocaleCodes
+});
+
+
+
+
+}
+/// @nodoc
+class _$LocalizationSettingsCopyWithImpl<$Res>
+    implements $LocalizationSettingsCopyWith<$Res> {
+  _$LocalizationSettingsCopyWithImpl(this._self, this._then);
+
+  final LocalizationSettings _self;
+  final $Res Function(LocalizationSettings) _then;
+
+/// Create a copy of LocalizationSettings
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? fallbackLocale = null,Object? enabledLocaleCodes = null,}) {
+  return _then(_self.copyWith(
+fallbackLocale: null == fallbackLocale ? _self.fallbackLocale : fallbackLocale // ignore: cast_nullable_to_non_nullable
+as String,enabledLocaleCodes: null == enabledLocaleCodes ? _self.enabledLocaleCodes : enabledLocaleCodes // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LocalizationSettings].
+extension LocalizationSettingsPatterns on LocalizationSettings {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LocalizationSettings value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LocalizationSettings() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LocalizationSettings value)  $default,){
+final _that = this;
+switch (_that) {
+case _LocalizationSettings():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LocalizationSettings value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LocalizationSettings() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String fallbackLocale,  List<String> enabledLocaleCodes)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LocalizationSettings() when $default != null:
+return $default(_that.fallbackLocale,_that.enabledLocaleCodes);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String fallbackLocale,  List<String> enabledLocaleCodes)  $default,) {final _that = this;
+switch (_that) {
+case _LocalizationSettings():
+return $default(_that.fallbackLocale,_that.enabledLocaleCodes);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String fallbackLocale,  List<String> enabledLocaleCodes)?  $default,) {final _that = this;
+switch (_that) {
+case _LocalizationSettings() when $default != null:
+return $default(_that.fallbackLocale,_that.enabledLocaleCodes);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _LocalizationSettings extends LocalizationSettings {
+  const _LocalizationSettings({required this.fallbackLocale, required final  List<String> enabledLocaleCodes}): _enabledLocaleCodes = enabledLocaleCodes,super._();
+  
+
+@override final  String fallbackLocale;
+ final  List<String> _enabledLocaleCodes;
+@override List<String> get enabledLocaleCodes {
+  if (_enabledLocaleCodes is EqualUnmodifiableListView) return _enabledLocaleCodes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_enabledLocaleCodes);
+}
+
+
+/// Create a copy of LocalizationSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LocalizationSettingsCopyWith<_LocalizationSettings> get copyWith => __$LocalizationSettingsCopyWithImpl<_LocalizationSettings>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LocalizationSettings&&(identical(other.fallbackLocale, fallbackLocale) || other.fallbackLocale == fallbackLocale)&&const DeepCollectionEquality().equals(other._enabledLocaleCodes, _enabledLocaleCodes));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,fallbackLocale,const DeepCollectionEquality().hash(_enabledLocaleCodes));
+
+@override
+String toString() {
+  return 'LocalizationSettings(fallbackLocale: $fallbackLocale, enabledLocaleCodes: $enabledLocaleCodes)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LocalizationSettingsCopyWith<$Res> implements $LocalizationSettingsCopyWith<$Res> {
+  factory _$LocalizationSettingsCopyWith(_LocalizationSettings value, $Res Function(_LocalizationSettings) _then) = __$LocalizationSettingsCopyWithImpl;
+@override @useResult
+$Res call({
+ String fallbackLocale, List<String> enabledLocaleCodes
+});
+
+
+
+
+}
+/// @nodoc
+class __$LocalizationSettingsCopyWithImpl<$Res>
+    implements _$LocalizationSettingsCopyWith<$Res> {
+  __$LocalizationSettingsCopyWithImpl(this._self, this._then);
+
+  final _LocalizationSettings _self;
+  final $Res Function(_LocalizationSettings) _then;
+
+/// Create a copy of LocalizationSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? fallbackLocale = null,Object? enabledLocaleCodes = null,}) {
+  return _then(_LocalizationSettings(
+fallbackLocale: null == fallbackLocale ? _self.fallbackLocale : fallbackLocale // ignore: cast_nullable_to_non_nullable
+as String,enabledLocaleCodes: null == enabledLocaleCodes ? _self._enabledLocaleCodes : enabledLocaleCodes // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+
 }
 
 /// @nodoc

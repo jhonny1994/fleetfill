@@ -36,114 +36,116 @@ class AuthScaffold extends StatelessWidget {
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
+                final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
                 return SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(
                     AppSpacing.md,
                     AppSpacing.md,
                     AppSpacing.md,
                     math.max(
-                      AppSpacing.lg,
-                      MediaQuery.paddingOf(context).bottom,
-                    ),
+                          AppSpacing.lg,
+                          MediaQuery.paddingOf(context).bottom,
+                        ) +
+                        bottomInset,
                   ),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: constraints.maxHeight,
                     ),
-                    child: Center(
+                    child: Align(
+                      alignment: Alignment.topCenter,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 1080),
-                        child: IntrinsicHeight(
-                          child: layout == AppLayoutSize.compact
-                              ? ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 460,
+                        child: layout == AppLayoutSize.compact
+                            ? ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 460,
+                                ),
+                                child: _AuthPanel(
+                                  title: title,
+                                  subtitle: subtitle,
+                                  heroIcon: heroIcon,
+                                  canPop: canPop,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      child,
+                                      if (footer != null) ...[
+                                        const SizedBox(height: AppSpacing.xl),
+                                        DefaultTextStyle.merge(
+                                          style:
+                                              Theme.of(
+                                                context,
+                                              ).textTheme.bodyMedium?.copyWith(
+                                                color: colorScheme
+                                                    .onSurfaceVariant,
+                                              ) ??
+                                              TextStyle(
+                                                color: colorScheme
+                                                    .onSurfaceVariant,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                          child: footer!,
+                                        ),
+                                      ],
+                                    ],
                                   ),
-                                  child: _AuthPanel(
-                                    title: title,
-                                    subtitle: subtitle,
-                                    heroIcon: heroIcon,
-                                    canPop: canPop,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        child,
-                                        if (footer != null) ...[
-                                          const SizedBox(height: AppSpacing.xl),
-                                          DefaultTextStyle.merge(
-                                            style:
-                                                Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith(
+                                ),
+                              )
+                            : Row(
+                                children: [
+                                  Expanded(
+                                    flex: 11,
+                                    child: ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 460,
+                                      ),
+                                      child: _AuthPanel(
+                                        title: title,
+                                        subtitle: subtitle,
+                                        heroIcon: heroIcon,
+                                        canPop: canPop,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            child,
+                                            if (footer != null) ...[
+                                              const SizedBox(
+                                                height: AppSpacing.xl,
+                                              ),
+                                              DefaultTextStyle.merge(
+                                                style:
+                                                    Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                          color: colorScheme
+                                                              .onSurfaceVariant,
+                                                        ) ??
+                                                    TextStyle(
                                                       color: colorScheme
                                                           .onSurfaceVariant,
-                                                    ) ??
-                                                TextStyle(
-                                                  color: colorScheme
-                                                      .onSurfaceVariant,
-                                                ),
-                                            textAlign: TextAlign.center,
-                                            child: footer!,
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 11,
-                                      child: ConstrainedBox(
-                                        constraints: const BoxConstraints(
-                                          maxWidth: 460,
-                                        ),
-                                        child: _AuthPanel(
-                                          title: title,
-                                          subtitle: subtitle,
-                                          heroIcon: heroIcon,
-                                          canPop: canPop,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              child,
-                                              if (footer != null) ...[
-                                                const SizedBox(
-                                                  height: AppSpacing.xl,
-                                                ),
-                                                DefaultTextStyle.merge(
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                            color: colorScheme
-                                                                .onSurfaceVariant,
-                                                          ) ??
-                                                      TextStyle(
-                                                        color: colorScheme
-                                                            .onSurfaceVariant,
-                                                      ),
-                                                  textAlign: TextAlign.center,
-                                                  child: footer!,
-                                                ),
-                                              ],
+                                                    ),
+                                                textAlign: TextAlign.center,
+                                                child: footer!,
+                                              ),
                                             ],
-                                          ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: AppSpacing.xl),
-                                    const Expanded(
-                                      flex: 10,
-                                      child: _AuthPreviewDeck(),
-                                    ),
-                                  ],
-                                ),
-                        ),
+                                  ),
+                                  const SizedBox(width: AppSpacing.xl),
+                                  const Expanded(
+                                    flex: 10,
+                                    child: _AuthPreviewDeck(),
+                                  ),
+                                ],
+                              ),
                       ),
                     ),
                   ),
@@ -427,9 +429,10 @@ class _AuthPanel extends StatelessWidget {
           AppSpacing.lg,
           AppSpacing.md,
           AppSpacing.lg,
-          AppSpacing.xl,
+          AppSpacing.lg,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Align(

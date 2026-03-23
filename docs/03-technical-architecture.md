@@ -11,7 +11,7 @@ Primary stack:
 - Freezed and json_serializable for domain models and immutable states
 - GoRouter for navigation and route guards
 - flutter-intl for UI localization workflow and ARB generation
-- SharedPreferences for persisted local app preferences such as theme mode
+- SharedPreferences for persisted local app preferences such as theme mode and pre-auth locale restoration
 - Supabase Auth for identity
 - Postgres for data and policies
 - Supabase Storage for private files
@@ -131,7 +131,7 @@ Redirect and error-handling rules:
 
 ### 2.5 Local Persistence And Cache Rules
 
-- `SharedPreferences` is only for small user preferences such as theme mode, locale override, and lightweight onboarding flags
+- `SharedPreferences` is only for small user preferences such as theme mode, pre-auth locale restoration, and lightweight onboarding flags
 - secure token/session material must use OS-backed secure storage rather than plain preferences
 - local relational cache is allowed only when there is a clear offline or performance need and explicit ownership/invalidation rules exist
 - local cache must never become the source of truth for payment, payout, dispute, or booking-authority decisions
@@ -326,6 +326,16 @@ Examples:
 
 The client settings response should be an explicit typed contract served by secure backend logic rather than raw table reads.
 
+Localization settings should be part of that same typed contract.
+
+Rules:
+
+- installed app locales come from the committed `flutter-intl` ARB set and generated localization delegate
+- enabled locales are a runtime policy exposed through client settings rather than hardcoded in feature widgets
+- fallback locale is controlled centrally and currently defaults to Arabic
+- account-level locale preference belongs to `profiles.preferred_locale`
+- device locale remains a secondary signal for bootstrap and per-device context, not the primary account truth
+
 ## 8. Time And Timezone Rules
 
 - database timestamps use `timestamptz`
@@ -437,12 +447,12 @@ Recommended email events:
 
 - one logical template per event
 - one live DB template row per `template_key` and `language_code`
-- one canonical Arabic content variant per active event in the current phase
-- supported outbound transactional email language in the current phase: Arabic only
+- one live DB content variant per active event and enabled language
+- supported outbound transactional email languages in the current phase: Arabic, French, and English
 - template variables must come from validated server-side payloads
-- the current worker resolves Arabic templates from the DB registry even when the app locale differs
+- the current worker resolves the requested locale first and falls back to Arabic only when a localized template is unavailable
 - keep email templates operational and text-first, not marketing-heavy
-- outbound transactional email currently renders Arabic regardless of app locale so operational messaging stays consistent during the current launch phase
+- outbound transactional email follows the resolved account or event locale, with Arabic as the canonical fallback
 - invoice data should render inside the email body as structured HTML content when needed, not as an email attachment by default
 
 ### 10.3 Email Delivery And Events

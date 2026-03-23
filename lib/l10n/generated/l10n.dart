@@ -59,378 +59,383 @@ class S {
     return Intl.message('FleetFill', name: 'appTitle', desc: '', args: []);
   }
 
-  /// `FleetFill could not complete this action right now.`
-  String get appGenericErrorMessage {
-    return Intl.message(
-      'FleetFill could not complete this action right now.',
-      name: 'appGenericErrorMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Review the latest sensitive admin actions and their outcomes.`
+  /// `استعرض آخر الإجراءات الإدارية الحساسة ونتائجها.`
   String get adminAuditLogDescription {
     return Intl.message(
-      'Review the latest sensitive admin actions and their outcomes.',
+      'استعرض آخر الإجراءات الإدارية الحساسة ونتائجها.',
       name: 'adminAuditLogDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Admin audit log`
+  /// `سجل تدقيق الإدارة`
   String get adminAuditLogTitle {
     return Intl.message(
-      'Admin audit log',
+      'سجل تدقيق الإدارة',
       name: 'adminAuditLogTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Monitor pending work, alerts, and service health.`
+  /// `راقب العمل المعلّق والتنبيهات وحالة الخدمة.`
   String get adminDashboardDescription {
     return Intl.message(
-      'Monitor pending work, alerts, and service health.',
+      'راقب العمل المعلّق والتنبيهات وحالة الخدمة.',
       name: 'adminDashboardDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dashboard`
+  /// `الرئيسية`
   String get adminDashboardNavLabel {
     return Intl.message(
-      'Dashboard',
+      'الرئيسية',
       name: 'adminDashboardNavLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Admin dashboard`
+  /// `لوحة التحكم`
   String get adminDashboardTitle {
     return Intl.message(
-      'Admin dashboard',
+      'لوحة التحكم',
       name: 'adminDashboardTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review payments, verification, disputes, payouts, and email issues in one place.`
+  /// `راجع المدفوعات والتحقق والنزاعات والتحويلات والبريد الإلكتروني في مكان واحد.`
   String get adminQueuesDescription {
     return Intl.message(
-      'Review payments, verification, disputes, payouts, and email issues in one place.',
+      'راجع المدفوعات والتحقق والنزاعات والتحويلات والبريد الإلكتروني في مكان واحد.',
       name: 'adminQueuesDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Operations`
+  /// `العمليات`
   String get adminQueuesNavLabel {
     return Intl.message(
-      'Operations',
+      'العمليات',
       name: 'adminQueuesNavLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Operations`
+  /// `العمليات`
   String get adminQueuesTitle {
     return Intl.message(
-      'Operations',
+      'العمليات',
       name: 'adminQueuesTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Approve`
+  /// `اعتماد`
   String get adminVerificationApproveAction {
     return Intl.message(
-      'Approve',
+      'اعتماد',
       name: 'adminVerificationApproveAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Approve all`
+  /// `اعتماد الكل`
   String get adminVerificationApproveAllAction {
     return Intl.message(
-      'Approve all',
+      'اعتماد الكل',
       name: 'adminVerificationApproveAllAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification approved.`
+  /// `تم اعتماد ملف التحقق.`
   String get adminVerificationApproveAllSuccess {
     return Intl.message(
-      'Verification approved.',
+      'تم اعتماد ملف التحقق.',
       name: 'adminVerificationApproveAllSuccess',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification document approved.`
+  /// `تم اعتماد وثيقة التحقق.`
   String get adminVerificationApprovedMessage {
     return Intl.message(
-      'Verification document approved.',
+      'تم اعتماد وثيقة التحقق.',
       name: 'adminVerificationApprovedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `No recent verification audit items yet.`
+  /// `لا توجد عناصر تدقيق تحقق حديثة.`
   String get adminVerificationAuditEmptyMessage {
     return Intl.message(
-      'No recent verification audit items yet.',
+      'لا توجد عناصر تدقيق تحقق حديثة.',
       name: 'adminVerificationAuditEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification audit`
+  /// `سجل تدقيق التحقق`
   String get adminVerificationAuditTitle {
     return Intl.message(
-      'Verification audit',
+      'سجل تدقيق التحقق',
       name: 'adminVerificationAuditTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `No submitted verification documents yet.`
+  /// `لم يتم إرسال أي وثائق تحقق بعد.`
   String get adminVerificationMissingDocumentsMessage {
     return Intl.message(
-      'No submitted verification documents yet.',
+      'لم يتم إرسال أي وثائق تحقق بعد.',
       name: 'adminVerificationMissingDocumentsMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review profile and vehicle documents before approving the carrier.`
+  /// `راجع وثائق الملف الشخصي والمركبة قبل اعتماد الناقل.`
   String get adminVerificationPacketDescription {
     return Intl.message(
-      'Review profile and vehicle documents before approving the carrier.',
+      'راجع وثائق الملف الشخصي والمركبة قبل اعتماد الناقل.',
       name: 'adminVerificationPacketDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification details`
+  /// `ملف التحقق`
   String get adminVerificationPacketTitle {
     return Intl.message(
-      'Verification details',
+      'ملف التحقق',
       name: 'adminVerificationPacketTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Pending documents`
+  /// `وثائق بانتظار المراجعة`
   String get adminVerificationPendingDocumentsLabel {
     return Intl.message(
-      'Pending documents',
+      'وثائق بانتظار المراجعة',
       name: 'adminVerificationPendingDocumentsLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `No carrier verifications need review right now.`
+  /// `لا توجد طلبات تحقق تحتاج مراجعة حاليا.`
   String get adminVerificationQueueEmptyMessage {
     return Intl.message(
-      'No carrier verifications need review right now.',
+      'لا توجد طلبات تحقق تحتاج مراجعة حاليا.',
       name: 'adminVerificationQueueEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification summary`
+  /// `ملخص التحقق`
   String get adminVerificationQueueSummaryTitle {
     return Intl.message(
-      'Verification summary',
+      'ملخص التحقق',
       name: 'adminVerificationQueueSummaryTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier verifications`
+  /// `تحقق الناقلين`
   String get adminVerificationQueueTitle {
     return Intl.message(
-      'Carrier verifications',
+      'تحقق الناقلين',
       name: 'adminVerificationQueueTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Reject`
+  /// `رفض`
   String get adminVerificationRejectAction {
     return Intl.message(
-      'Reject',
+      'رفض',
       name: 'adminVerificationRejectAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification document rejected.`
+  /// `تم رفض وثيقة التحقق.`
   String get adminVerificationRejectedMessage {
     return Intl.message(
-      'Verification document rejected.',
+      'تم رفض وثيقة التحقق.',
       name: 'adminVerificationRejectedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Add the reason the carrier should see.`
+  /// `أضف السبب الذي يجب أن يراه الناقل.`
   String get adminVerificationRejectReasonHint {
     return Intl.message(
-      'Add the reason the carrier should see.',
+      'أضف السبب الذي يجب أن يراه الناقل.',
       name: 'adminVerificationRejectReasonHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Rejection reason`
+  /// `سبب الرفض`
   String get adminVerificationRejectReasonTitle {
     return Intl.message(
-      'Rejection reason',
+      'سبب الرفض',
       name: 'adminVerificationRejectReasonTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `{documentCount} pending documents across {vehicleCount} vehicles`
+  /// `{documentCount} وثائق معلقة عبر {vehicleCount} مركبات`
   String adminVerificationQueueItemSubtitle(
     Object documentCount,
     Object vehicleCount,
   ) {
     return Intl.message(
-      '$documentCount pending documents across $vehicleCount vehicles',
+      '$documentCount وثائق معلقة عبر $vehicleCount مركبات',
       name: 'adminVerificationQueueItemSubtitle',
       desc: '',
       args: [documentCount, vehicleCount],
     );
   }
 
-  /// `Manage app access, pricing rules, maintenance mode, and email tools.`
+  /// `أدر الوصول إلى التطبيق وقواعد التسعير ووضع الصيانة وأدوات البريد الإلكتروني.`
   String get adminSettingsDescription {
     return Intl.message(
-      'Manage app access, pricing rules, maintenance mode, and email tools.',
+      'أدر الوصول إلى التطبيق وقواعد التسعير ووضع الصيانة وأدوات البريد الإلكتروني.',
       name: 'adminSettingsDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Settings`
+  /// `الإعدادات`
   String get adminSettingsNavLabel {
     return Intl.message(
-      'Settings',
+      'الإعدادات',
       name: 'adminSettingsNavLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Admin settings`
+  /// `إعدادات الإدارة`
   String get adminSettingsTitle {
     return Intl.message(
-      'Admin settings',
+      'إعدادات الإدارة',
       name: 'adminSettingsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search for users and review account details, bookings, and documents.`
+  /// `ابحث عن المستخدمين وراجع الحسابات والحجوزات والوثائق.`
   String get adminUsersDescription {
     return Intl.message(
-      'Search for users and review account details, bookings, and documents.',
+      'ابحث عن المستخدمين وراجع الحسابات والحجوزات والوثائق.',
       name: 'adminUsersDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Users`
+  /// `المستخدمون`
   String get adminUsersNavLabel {
     return Intl.message(
-      'Users',
+      'المستخدمون',
       name: 'adminUsersNavLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Users`
+  /// `المستخدمون`
   String get adminUsersTitle {
-    return Intl.message('Users', name: 'adminUsersTitle', desc: '', args: []);
-  }
-
-  /// `Your account was created. Continue by signing in.`
-  String get authAccountCreatedMessage {
     return Intl.message(
-      'Your account was created. Continue by signing in.',
-      name: 'authAccountCreatedMessage',
+      'المستخدمون',
+      name: 'adminUsersTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Confirm password`
-  String get authConfirmPasswordLabel {
+  /// `اطلب رابط إعادة تعيين كلمة المرور لحسابك على FleetFill.`
+  String get authForgotPasswordDescription {
     return Intl.message(
-      'Confirm password',
-      name: 'authConfirmPasswordLabel',
+      'اطلب رابط إعادة تعيين كلمة المرور لحسابك على FleetFill.',
+      name: 'authForgotPasswordDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create account`
+  /// `هل نسيت كلمة المرور؟`
+  String get authForgotPasswordCta {
+    return Intl.message(
+      'هل نسيت كلمة المرور؟',
+      name: 'authForgotPasswordCta',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نسيت كلمة المرور`
+  String get authForgotPasswordTitle {
+    return Intl.message(
+      'نسيت كلمة المرور',
+      name: 'authForgotPasswordTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إنشاء حساب`
   String get authCreateAccountAction {
     return Intl.message(
-      'Create account',
+      'إنشاء حساب',
       name: 'authCreateAccountAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create a new account`
+  /// `إنشاء حساب جديد`
   String get authCreateAccountCta {
     return Intl.message(
-      'Create a new account',
+      'إنشاء حساب جديد',
       name: 'authCreateAccountCta',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sign in to continue this action.`
+  /// `سجّل دخولك أولًا لتتمكن من المتابعة.`
   String get authAuthenticationRequiredMessage {
     return Intl.message(
-      'Sign in to continue this action.',
+      'سجّل دخولك أولًا لتتمكن من المتابعة.',
       name: 'authAuthenticationRequiredMessage',
       desc: '',
       args: [],
@@ -447,1980 +452,4670 @@ class S {
     );
   }
 
-  /// `Email address`
+  /// `تم إنشاء حسابك بنجاح. سجّل دخولك للبدء.`
+  String get authAccountCreatedMessage {
+    return Intl.message(
+      'تم إنشاء حسابك بنجاح. سجّل دخولك للبدء.',
+      name: 'authAccountCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تأكيد كلمة المرور`
+  String get authConfirmPasswordLabel {
+    return Intl.message(
+      'تأكيد كلمة المرور',
+      name: 'authConfirmPasswordLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `البريد الإلكتروني`
   String get authEmailLabel {
     return Intl.message(
-      'Email address',
+      'البريد الإلكتروني',
       name: 'authEmailLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Confirm your email before signing in.`
+  /// `فعّل بريدك الإلكتروني أولا ثم سجّل دخولك.`
   String get authEmailNotConfirmedMessage {
     return Intl.message(
-      'Confirm your email before signing in.',
+      'فعّل بريدك الإلكتروني أولا ثم سجّل دخولك.',
       name: 'authEmailNotConfirmedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Forgot your password?`
-  String get authForgotPasswordCta {
-    return Intl.message(
-      'Forgot your password?',
-      name: 'authForgotPasswordCta',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Request a password reset link for your FleetFill account.`
-  String get authForgotPasswordDescription {
-    return Intl.message(
-      'Request a password reset link for your FleetFill account.',
-      name: 'authForgotPasswordDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Forgot password`
-  String get authForgotPasswordTitle {
-    return Intl.message(
-      'Forgot password',
-      name: 'authForgotPasswordTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `FleetFill could not complete this auth request.`
+  /// `تعذّر إتمام هذا الطلب حاليا. حاول مرة أخرى.`
   String get authGenericErrorMessage {
     return Intl.message(
-      'FleetFill could not complete this auth request.',
+      'تعذّر إتمام هذا الطلب حاليا. حاول مرة أخرى.',
       name: 'authGenericErrorMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `This account role is already set and cannot be changed here.`
+  /// `دور هذا الحساب محدّد مسبقا ولا يمكن تغييره من هنا.`
   String get authRoleAlreadyAssignedMessage {
     return Intl.message(
-      'This account role is already set and cannot be changed here.',
+      'دور هذا الحساب محدّد مسبقا ولا يمكن تغييره من هنا.',
       name: 'authRoleAlreadyAssignedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Continue with Google`
+  /// `المتابعة عبر Google`
   String get authGoogleAction {
     return Intl.message(
-      'Continue with Google',
+      'المتابعة عبر Google',
       name: 'authGoogleAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sign-in cancelled.`
+  /// `تم إلغاء تسجيل الدخول.`
   String get authCancelledMessage {
     return Intl.message(
-      'Sign-in cancelled.',
+      'تم إلغاء تسجيل الدخول.',
       name: 'authCancelledMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Google sign-in is not available in this environment.`
+  /// `تسجيل الدخول عبر Google غير متاح في هذه البيئة.`
   String get authGoogleUnavailableMessage {
     return Intl.message(
-      'Google sign-in is not available in this environment.',
+      'تسجيل الدخول عبر Google غير متاح في هذه البيئة.',
       name: 'authGoogleUnavailableMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Keep me signed in`
+  /// `ابقني مسجّل الدخول`
   String get authKeepSignedInLabel {
     return Intl.message(
-      'Keep me signed in',
+      'ابقني مسجّل الدخول',
       name: 'authKeepSignedInLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Already have an account? Sign in`
+  /// `لديك حساب؟ سجّل دخولك`
   String get authHaveAccountCta {
     return Intl.message(
-      'Already have an account? Sign in',
+      'لديك حساب؟ سجّل دخولك',
       name: 'authHaveAccountCta',
       desc: '',
       args: [],
     );
   }
 
-  /// `Check your email and password, then try again.`
+  /// `البريد أو كلمة المرور غير صحيح. راجعهما وأعد المحاولة.`
   String get authInvalidCredentialsMessage {
     return Intl.message(
-      'Check your email and password, then try again.',
+      'البريد أو كلمة المرور غير صحيح. راجعهما وأعد المحاولة.',
       name: 'authInvalidCredentialsMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter a valid email address.`
+  /// `البريد الإلكتروني غير صحيح.`
   String get authInvalidEmailMessage {
     return Intl.message(
-      'Enter a valid email address.',
+      'البريد الإلكتروني غير صحيح.',
       name: 'authInvalidEmailMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Network issue detected. Try again in a moment.`
+  /// `توجد مشكلة في الاتصال. أعد المحاولة بعد لحظات.`
   String get authNetworkErrorMessage {
     return Intl.message(
-      'Network issue detected. Try again in a moment.',
+      'توجد مشكلة في الاتصال. أعد المحاولة بعد لحظات.',
       name: 'authNetworkErrorMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `New password`
+  /// `كلمة المرور الجديدة`
   String get authNewPasswordLabel {
     return Intl.message(
-      'New password',
+      'كلمة المرور الجديدة',
       name: 'authNewPasswordLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password`
+  /// `كلمة المرور`
   String get authPasswordLabel {
     return Intl.message(
-      'Password',
+      'كلمة المرور',
       name: 'authPasswordLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter your password`
+  /// `أدخل كلمة المرور`
   String get authPasswordHint {
     return Intl.message(
-      'Enter your password',
+      'أدخل كلمة المرور',
       name: 'authPasswordHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create a strong password`
+  /// `أنشئ كلمة مرور قوية`
   String get authCreatePasswordHint {
     return Intl.message(
-      'Create a strong password',
+      'أنشئ كلمة مرور قوية',
       name: 'authCreatePasswordHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Repeat your password`
+  /// `أعد إدخال كلمة المرور`
   String get authConfirmPasswordHint {
     return Intl.message(
-      'Repeat your password',
+      'أعد إدخال كلمة المرور',
       name: 'authConfirmPasswordHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Use at least 8 characters.`
+  /// `استخدم 8 أحرف على الأقل.`
   String get authPasswordMinLengthMessage {
     return Intl.message(
-      'Use at least 8 characters.',
+      'استخدم 8 أحرف على الأقل.',
       name: 'authPasswordMinLengthMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `The passwords do not match.`
+  /// `كلمتا المرور مختلفتان.`
   String get authPasswordMismatchMessage {
     return Intl.message(
-      'The passwords do not match.',
+      'كلمتا المرور مختلفتان.',
       name: 'authPasswordMismatchMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `FleetFill will send a reset link to the email address on file.`
+  /// `اختر كلمة مرور أقوى وحاول مرة أخرى.`
+  String get authWeakPasswordMessage {
+    return Intl.message(
+      'اختر كلمة مرور أقوى وحاول مرة أخرى.',
+      name: 'authWeakPasswordMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سنرسل لك رابط إعادة التعيين إلى بريدك المسجّل.`
   String get authPasswordResetInfoMessage {
     return Intl.message(
-      'FleetFill will send a reset link to the email address on file.',
+      'سنرسل لك رابط إعادة التعيين إلى بريدك المسجّل.',
       name: 'authPasswordResetInfoMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your password was updated.`
+  /// `تم تغيير كلمة المرور بنجاح.`
   String get authPasswordUpdatedMessage {
     return Intl.message(
-      'Your password was updated.',
+      'تم تغيير كلمة المرور بنجاح.',
       name: 'authPasswordUpdatedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `This field is required.`
+  /// `هذا الحقل مطلوب.`
   String get authRequiredFieldMessage {
     return Intl.message(
-      'This field is required.',
+      'هذا الحقل مطلوب.',
       name: 'authRequiredFieldMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password reset instructions were sent.`
-  String get authResetEmailSentMessage {
+  /// `محاولات كثيرة. انتظر قليلًا وأعد المحاولة.`
+  String get authRateLimitedMessage {
     return Intl.message(
-      'Password reset instructions were sent.',
-      name: 'authResetEmailSentMessage',
+      'محاولات كثيرة. انتظر قليلًا وأعد المحاولة.',
+      name: 'authRateLimitedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Set a new password after opening your secure recovery link.`
+  /// `تعذّر إرسال رسالة التأكيد حاليا. تأكد من إعدادات البريد وحاول مرة أخرى.`
+  String get authEmailDeliveryIssueMessage {
+    return Intl.message(
+      'تعذّر إرسال رسالة التأكيد حاليا. تأكد من إعدادات البريد وحاول مرة أخرى.',
+      name: 'authEmailDeliveryIssueMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر كلمة مرور جديدة بعد فتح رابط الاسترداد.`
   String get authResetPasswordDescription {
     return Intl.message(
-      'Set a new password after opening your secure recovery link.',
+      'اختر كلمة مرور جديدة بعد فتح رابط الاسترداد.',
       name: 'authResetPasswordDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Reset password`
-  String get authResetPasswordTitle {
-    return Intl.message(
-      'Reset password',
-      name: 'authResetPasswordTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Open this screen from the password recovery link to set a new password.`
+  /// `افتح هذه الصفحة من رابط استعادة كلمة المرور الذي وصلك على البريد.`
   String get authResetPasswordUnavailableMessage {
     return Intl.message(
-      'Open this screen from the password recovery link to set a new password.',
+      'افتح هذه الصفحة من رابط استعادة كلمة المرور الذي وصلك على البريد.',
       name: 'authResetPasswordUnavailableMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Send reset link`
+  /// `تم إرسال تعليمات إعادة تعيين كلمة المرور.`
+  String get authResetEmailSentMessage {
+    return Intl.message(
+      'تم إرسال تعليمات إعادة تعيين كلمة المرور.',
+      name: 'authResetEmailSentMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعادة تعيين كلمة المرور`
+  String get authResetPasswordTitle {
+    return Intl.message(
+      'إعادة تعيين كلمة المرور',
+      name: 'authResetPasswordTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إرسال رابط إعادة التعيين`
   String get authSendResetAction {
     return Intl.message(
-      'Send reset link',
+      'إرسال رابط إعادة التعيين',
       name: 'authSendResetAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `or continue with`
+  /// `إنشاء الحسابات غير متاح حاليا. حاول لاحقا.`
+  String get authSignUpUnavailableMessage {
+    return Intl.message(
+      'إنشاء الحسابات غير متاح حاليا. حاول لاحقا.',
+      name: 'authSignUpUnavailableMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أو المتابعة عبر`
   String get authContinueWithLabel {
     return Intl.message(
-      'or continue with',
+      'أو المتابعة عبر',
       name: 'authContinueWithLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sign in again`
+  /// `تسجيل الدخول مرة أخرى`
   String get authSessionExpiredAction {
     return Intl.message(
-      'Sign in again',
+      'تسجيل الدخول مرة أخرى',
       name: 'authSessionExpiredAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your session ended. Sign in again to continue safely.`
+  /// `انتهت جلستك. سجّل دخولك من جديد للمتابعة.`
   String get authSessionExpiredMessage {
     return Intl.message(
-      'Your session ended. Sign in again to continue safely.',
+      'انتهت جلستك. سجّل دخولك من جديد للمتابعة.',
       name: 'authSessionExpiredMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Session expired`
+  /// `انتهت الجلسة`
   String get authSessionExpiredTitle {
     return Intl.message(
-      'Session expired',
+      'انتهت الجلسة',
       name: 'authSessionExpiredTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Show password`
-  String get authShowPasswordAction {
-    return Intl.message(
-      'Show password',
-      name: 'authShowPasswordAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hide password`
-  String get authHidePasswordAction {
-    return Intl.message(
-      'Hide password',
-      name: 'authHidePasswordAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Sign in`
-  String get authSignInAction {
-    return Intl.message(
-      'Sign in',
-      name: 'authSignInAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Sign in with your email and password, or continue with Google when available.`
+  /// `استخدم بريدك وكلمة المرور، أو تابع مباشرة عبر Google.`
   String get authSignInDescription {
     return Intl.message(
-      'Sign in with your email and password, or continue with Google when available.',
+      'استخدم بريدك وكلمة المرور، أو تابع مباشرة عبر Google.',
       name: 'authSignInDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Signed in successfully.`
+  /// `تسجيل الدخول`
+  String get authSignInAction {
+    return Intl.message(
+      'تسجيل الدخول',
+      name: 'authSignInAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تسجيل الدخول بنجاح.`
   String get authSignInSuccess {
     return Intl.message(
-      'Signed in successfully.',
+      'تم تسجيل الدخول بنجاح.',
       name: 'authSignInSuccess',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sign in`
+  /// `تسجيل الدخول`
   String get authSignInTitle {
-    return Intl.message('Sign in', name: 'authSignInTitle', desc: '', args: []);
+    return Intl.message(
+      'تسجيل الدخول',
+      name: 'authSignInTitle',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Create your FleetFill account to start shipping or publishing capacity.`
+  /// `أنشئ حسابك على FleetFill وابدأ بشحن بضاعتك أو عرض شاحنتك.`
   String get authSignUpDescription {
     return Intl.message(
-      'Create your FleetFill account to start shipping or publishing capacity.',
+      'أنشئ حسابك على FleetFill وابدأ بشحن بضاعتك أو عرض شاحنتك.',
       name: 'authSignUpDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create account`
+  /// `إنشاء حساب`
   String get authSignUpTitle {
     return Intl.message(
-      'Create account',
+      'إنشاء حساب',
       name: 'authSignUpTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Update password`
+  /// `تغيير كلمة المرور`
   String get authUpdatePasswordAction {
     return Intl.message(
-      'Update password',
+      'تغيير كلمة المرور',
       name: 'authUpdatePasswordAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `An account already exists for this email.`
+  /// `هذا البريد مسجّل مسبقا. سجّل دخولك أو استعد كلمة المرور.`
   String get authUserAlreadyRegisteredMessage {
     return Intl.message(
-      'An account already exists for this email.',
+      'هذا البريد مسجّل مسبقا. سجّل دخولك أو استعد كلمة المرور.',
       name: 'authUserAlreadyRegisteredMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Check your email to confirm the account before signing in.`
+  /// `راجع بريدك الإلكتروني وفعّل حسابك قبل تسجيل الدخول.`
   String get authVerificationEmailSentMessage {
     return Intl.message(
-      'Check your email to confirm the account before signing in.',
+      'راجع بريدك الإلكتروني وفعّل حسابك قبل تسجيل الدخول.',
       name: 'authVerificationEmailSentMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Move goods or offer transport`
+  /// `اشحن بضاعتك أو املأ شاحنتك`
   String get welcomeTitle {
     return Intl.message(
-      'Move goods or offer transport',
+      'اشحن بضاعتك أو املأ شاحنتك',
       name: 'welcomeTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `FleetFill connects shipments with available transport.`
+  /// `FleetFill يوصل بين الشحنات والشاحنات المتاحة في الوقت المناسب.`
   String get welcomeDescription {
     return Intl.message(
-      'FleetFill connects shipments with available transport.',
+      'FleetFill يوصل بين الشحنات والشاحنات المتاحة في الوقت المناسب.',
       name: 'welcomeDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Choose language`
+  /// `اختر اللغة`
   String get welcomeLanguageAction {
     return Intl.message(
-      'Choose language',
+      'اختر اللغة',
       name: 'welcomeLanguageAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Match shipments, confirm payment proof, and follow delivery updates in one place.`
+  /// `ابحث عن شاحنة، ادفع بأمان، وتابع شحنتك خطوة بخطوة — كل ذلك من مكان واحد.`
   String get welcomeHighlightsMessage {
     return Intl.message(
-      'Match shipments, confirm payment proof, and follow delivery updates in one place.',
+      'ابحث عن شاحنة، ادفع بأمان، وتابع شحنتك خطوة بخطوة — كل ذلك من مكان واحد.',
       name: 'welcomeHighlightsMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Need to move goods`
+  /// `لديك بضاعة تريد نقلها`
   String get welcomeShipperTitle {
     return Intl.message(
-      'Need to move goods',
+      'لديك بضاعة تريد نقلها',
       name: 'welcomeShipperTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create a shipment and review matching transport options.`
+  /// `سجّل شحنتك واعثر على الشاحنة المناسبة بسرعة.`
   String get welcomeShipperDescription {
     return Intl.message(
-      'Create a shipment and review matching transport options.',
+      'سجّل شحنتك واعثر على الشاحنة المناسبة بسرعة.',
       name: 'welcomeShipperDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Have transport capacity`
+  /// `لديك شاحنة وأماكن فارغة`
   String get welcomeCarrierTitle {
     return Intl.message(
-      'Have transport capacity',
+      'لديك شاحنة وأماكن فارغة',
       name: 'welcomeCarrierTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Publish availability and review matching shipments.`
+  /// `اعرض رحلاتك واستقبل حجوزات من شاحنين يبحثون عن نقل.`
   String get welcomeCarrierDescription {
     return Intl.message(
-      'Publish availability and review matching shipments.',
+      'اعرض رحلاتك واستقبل حجوزات من شاحنين يبحثون عن نقل.',
       name: 'welcomeCarrierDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Skip`
+  /// `تخطّي`
   String get welcomeSkipAction {
-    return Intl.message('Skip', name: 'welcomeSkipAction', desc: '', args: []);
+    return Intl.message('تخطّي', name: 'welcomeSkipAction', desc: '', args: []);
   }
 
-  /// `Back`
+  /// `السابق`
   String get welcomeBackAction {
-    return Intl.message('Back', name: 'welcomeBackAction', desc: '', args: []);
+    return Intl.message(
+      'السابق',
+      name: 'welcomeBackAction',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Next`
+  /// `التالي`
   String get welcomeNextAction {
-    return Intl.message('Next', name: 'welcomeNextAction', desc: '', args: []);
+    return Intl.message(
+      'التالي',
+      name: 'welcomeNextAction',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `How it works`
+  /// `كيف يعمل FleetFill؟`
   String get welcomeTrustTitle {
     return Intl.message(
-      'How it works',
+      'كيف يعمل FleetFill؟',
       name: 'welcomeTrustTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `FleetFill keeps matching and booking updates clear for both sides.`
+  /// `كل شيء واضح بين الشاحن والناقل — من الحجز إلى التسليم.`
   String get welcomeTrustDescription {
     return Intl.message(
-      'FleetFill keeps matching and booking updates clear for both sides.',
+      'كل شيء واضح بين الشاحن والناقل — من الحجز إلى التسليم.',
       name: 'welcomeTrustDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Match shipments and transport`
+  /// `اربط الشحنة بالشاحنة المناسبة`
   String get welcomeExactMatchTitle {
     return Intl.message(
-      'Match shipments and transport',
+      'اربط الشحنة بالشاحنة المناسبة',
       name: 'welcomeExactMatchTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search and posting tools connect the right route and date.`
+  /// `ابحث بالمسار والتاريخ واحصل على نتائج مطابقة فعلًا.`
   String get welcomeExactMatchDescription {
     return Intl.message(
-      'Search and posting tools connect the right route and date.',
+      'ابحث بالمسار والتاريخ واحصل على نتائج مطابقة فعلًا.',
       name: 'welcomeExactMatchDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Keep every booking clear`
+  /// `دفع مضمون وشفاف`
   String get welcomePaymentTitle {
     return Intl.message(
-      'Keep every booking clear',
+      'دفع مضمون وشفاف',
       name: 'welcomePaymentTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment proof and booking updates stay visible from start to delivery.`
+  /// `ارفع إثبات الدفع وتابع حالته — كل خطوة محسوبة من البداية للتسليم.`
   String get welcomePaymentDescription {
     return Intl.message(
-      'Payment proof and booking updates stay visible from start to delivery.',
+      'ارفع إثبات الدفع وتابع حالته — كل خطوة محسوبة من البداية للتسليم.',
       name: 'welcomePaymentDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Simple milestone tracking`
+  /// `تتبّع واقعي مرحلة بمرحلة`
   String get welcomeTrackingTitle {
     return Intl.message(
-      'Simple milestone tracking',
+      'تتبّع واقعي مرحلة بمرحلة',
       name: 'welcomeTrackingTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Follow clear status updates from booking to delivery without fake live maps.`
+  /// `تابع حالة شحنتك الحقيقية بدون خرائط وهمية — من الاستلام حتى التسليم.`
   String get welcomeTrackingDescription {
     return Intl.message(
-      'Follow clear status updates from booking to delivery without fake live maps.',
+      'تابع حالة شحنتك الحقيقية بدون خرائط وهمية — من الاستلام حتى التسليم.',
       name: 'welcomeTrackingDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Choose your language`
+  /// `اختر لغة التطبيق`
   String get welcomeLanguageTitle {
     return Intl.message(
-      'Choose your language',
+      'اختر لغة التطبيق',
       name: 'welcomeLanguageTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Choose the app language for your account. You can change it later in Settings.`
+  /// `اختر اللغة التي تناسبك. يمكنك تغييرها لاحقًا من الإعدادات.`
   String get welcomeLanguageDescription {
     return Intl.message(
-      'Choose the app language for your account. You can change it later in Settings.',
+      'اختر اللغة التي تناسبك. يمكنك تغييرها لاحقًا من الإعدادات.',
       name: 'welcomeLanguageDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review the booking status, payment details, and price breakdown.`
+  /// `العمل المعلّق`
+  String get adminDashboardBacklogHealthTitle {
+    return Intl.message(
+      'العمل المعلّق',
+      name: 'adminDashboardBacklogHealthTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المهام الحساسة للوقت`
+  String get adminDashboardAutomationTitle {
+    return Intl.message(
+      'المهام الحساسة للوقت',
+      name: 'adminDashboardAutomationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مراجعات التسليم المتأخرة`
+  String get adminDashboardOverdueDeliveryReviewsLabel {
+    return Intl.message(
+      'مراجعات التسليم المتأخرة',
+      name: 'adminDashboardOverdueDeliveryReviewsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعادات إرسال الدفع المتأخرة`
+  String get adminDashboardOverduePaymentResubmissionsLabel {
+    return Intl.message(
+      'إعادات إرسال الدفع المتأخرة',
+      name: 'adminDashboardOverduePaymentResubmissionsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تسليم البريد الإلكتروني`
+  String get adminDashboardEmailHealthTitle {
+    return Intl.message(
+      'تسليم البريد الإلكتروني',
+      name: 'adminDashboardEmailHealthTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رسائل بانتظار الإرسال`
+  String get adminDashboardEmailBacklogLabel {
+    return Intl.message(
+      'رسائل بانتظار الإرسال',
+      name: 'adminDashboardEmailBacklogLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرسائل الفاشلة`
+  String get adminDashboardDeadLetterLabel {
+    return Intl.message(
+      'الرسائل الفاشلة',
+      name: 'adminDashboardDeadLetterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المدفوعات`
+  String get adminQueuePaymentsTabLabel {
+    return Intl.message(
+      'المدفوعات',
+      name: 'adminQueuePaymentsTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `التحقق`
+  String get adminQueueVerificationTabLabel {
+    return Intl.message(
+      'التحقق',
+      name: 'adminQueueVerificationTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `النزاعات`
+  String get adminQueueDisputesTabLabel {
+    return Intl.message(
+      'النزاعات',
+      name: 'adminQueueDisputesTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الدفعات`
+  String get adminQueuePayoutsTabLabel {
+    return Intl.message(
+      'الدفعات',
+      name: 'adminQueuePayoutsTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `البريد الإلكتروني`
+  String get adminQueueEmailTabLabel {
+    return Intl.message(
+      'البريد الإلكتروني',
+      name: 'adminQueueEmailTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد تحويلات جاهزة للإطلاق حاليا.`
+  String get adminEligiblePayoutsEmptyMessage {
+    return Intl.message(
+      'لا توجد تحويلات جاهزة للإطلاق حاليا.',
+      name: 'adminEligiblePayoutsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الدفعات المؤهلة`
+  String get adminPayoutEligibleTitle {
+    return Intl.message(
+      'الدفعات المؤهلة',
+      name: 'adminPayoutEligibleTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إطلاق الدفعة`
+  String get adminPayoutReleaseAction {
+    return Intl.message(
+      'إطلاق الدفعة',
+      name: 'adminPayoutReleaseAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تسليم البريد الإلكتروني`
+  String get adminEmailQueueTitle {
+    return Intl.message(
+      'تسليم البريد الإلكتروني',
+      name: 'adminEmailQueueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ابحث في سجلات البريد الإلكتروني`
+  String get adminEmailSearchLabel {
+    return Intl.message(
+      'ابحث في سجلات البريد الإلكتروني',
+      name: 'adminEmailSearchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حالة البريد الإلكتروني`
+  String get adminEmailStatusFilterLabel {
+    return Intl.message(
+      'حالة البريد الإلكتروني',
+      name: 'adminEmailStatusFilterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `كل الحالات`
+  String get adminEmailStatusAllLabel {
+    return Intl.message(
+      'كل الحالات',
+      name: 'adminEmailStatusAllLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `في الانتظار`
+  String get adminEmailStatusQueuedLabel {
+    return Intl.message(
+      'في الانتظار',
+      name: 'adminEmailStatusQueuedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم الإرسال`
+  String get adminEmailStatusSentLabel {
+    return Intl.message(
+      'تم الإرسال',
+      name: 'adminEmailStatusSentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم التسليم`
+  String get adminEmailStatusDeliveredLabel {
+    return Intl.message(
+      'تم التسليم',
+      name: 'adminEmailStatusDeliveredLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فشل توليد القالب`
+  String get adminEmailStatusRenderFailedLabel {
+    return Intl.message(
+      'فشل توليد القالب',
+      name: 'adminEmailStatusRenderFailedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فشل مؤقت`
+  String get adminEmailStatusSoftFailedLabel {
+    return Intl.message(
+      'فشل مؤقت',
+      name: 'adminEmailStatusSoftFailedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فشل نهائي`
+  String get adminEmailStatusHardFailedLabel {
+    return Intl.message(
+      'فشل نهائي',
+      name: 'adminEmailStatusHardFailedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مرتد`
+  String get adminEmailStatusBouncedLabel {
+    return Intl.message(
+      'مرتد',
+      name: 'adminEmailStatusBouncedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مقيد`
+  String get adminEmailStatusSuppressedLabel {
+    return Intl.message(
+      'مقيد',
+      name: 'adminEmailStatusSuppressedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `معطلة`
+  String get adminEmailStatusDeadLetterLabel {
+    return Intl.message(
+      'معطلة',
+      name: 'adminEmailStatusDeadLetterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مفتاح القالب`
+  String get adminEmailTemplateKeyLabel {
+    return Intl.message(
+      'مفتاح القالب',
+      name: 'adminEmailTemplateKeyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لغة القالب`
+  String get adminEmailTemplateLanguageLabel {
+    return Intl.message(
+      'لغة القالب',
+      name: 'adminEmailTemplateLanguageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اللغة المطلوبة`
+  String get adminEmailLocaleLabel {
+    return Intl.message(
+      'اللغة المطلوبة',
+      name: 'adminEmailLocaleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المزوّد`
+  String get adminEmailProviderLabel {
+    return Intl.message(
+      'المزوّد',
+      name: 'adminEmailProviderLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `معاينة العنوان`
+  String get adminEmailSubjectPreviewLabel {
+    return Intl.message(
+      'معاينة العنوان',
+      name: 'adminEmailSubjectPreviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رمز الخطأ`
+  String get adminEmailErrorCodeLabel {
+    return Intl.message(
+      'رمز الخطأ',
+      name: 'adminEmailErrorCodeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رسالة الخطأ`
+  String get adminEmailErrorMessageLabel {
+    return Intl.message(
+      'رسالة الخطأ',
+      name: 'adminEmailErrorMessageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لقطة الحمولة`
+  String get adminEmailPayloadSnapshotLabel {
+    return Intl.message(
+      'لقطة الحمولة',
+      name: 'adminEmailPayloadSnapshotLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعادة الإرسال`
+  String get adminEmailResendAction {
+    return Intl.message(
+      'إعادة الإرسال',
+      name: 'adminEmailResendAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت جدولة إعادة إرسال البريد الإلكتروني.`
+  String get adminEmailResendSuccess {
+    return Intl.message(
+      'تمت جدولة إعادة إرسال البريد الإلكتروني.',
+      name: 'adminEmailResendSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرسائل الفاشلة`
+  String get adminEmailDeadLetterTitle {
+    return Intl.message(
+      'الرسائل الفاشلة',
+      name: 'adminEmailDeadLetterTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد رسائل فاشلة تحتاج إلى متابعة الآن.`
+  String get adminEmailDeadLetterEmptyMessage {
+    return Intl.message(
+      'لا توجد رسائل فاشلة تحتاج إلى متابعة الآن.',
+      name: 'adminEmailDeadLetterEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد سجلات بريد إلكتروني تطابق عوامل التصفية الحالية.`
+  String get adminEmailQueueEmptyMessage {
+    return Intl.message(
+      'لا توجد سجلات بريد إلكتروني تطابق عوامل التصفية الحالية.',
+      name: 'adminEmailQueueEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ابحث عن المستخدمين`
+  String get adminUsersSearchLabel {
+    return Intl.message(
+      'ابحث عن المستخدمين',
+      name: 'adminUsersSearchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا يوجد مستخدمون يطابقون هذا البحث.`
+  String get adminUsersEmptyMessage {
+    return Intl.message(
+      'لا يوجد مستخدمون يطابقون هذا البحث.',
+      name: 'adminUsersEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملخص الحساب`
+  String get adminUserAccountSectionTitle {
+    return Intl.message(
+      'ملخص الحساب',
+      name: 'adminUserAccountSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الدور`
+  String get adminUserRoleLabel {
+    return Intl.message(
+      'الدور',
+      name: 'adminUserRoleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حالة الحساب`
+  String get adminUserStatusLabel {
+    return Intl.message(
+      'حالة الحساب',
+      name: 'adminUserStatusLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نشط`
+  String get adminUserStatusActiveLabel {
+    return Intl.message(
+      'نشط',
+      name: 'adminUserStatusActiveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `معلّق`
+  String get adminUserStatusSuspendedLabel {
+    return Intl.message(
+      'معلّق',
+      name: 'adminUserStatusSuspendedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعليق المستخدم`
+  String get adminUserSuspendAction {
+    return Intl.message(
+      'تعليق المستخدم',
+      name: 'adminUserSuspendAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعادة تفعيل المستخدم`
+  String get adminUserReactivateAction {
+    return Intl.message(
+      'إعادة تفعيل المستخدم',
+      name: 'adminUserReactivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أضف سببا تشغيليا لهذا التغيير.`
+  String get adminUserReasonHint {
+    return Intl.message(
+      'أضف سببا تشغيليا لهذا التغيير.',
+      name: 'adminUserReasonHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت إعادة تفعيل المستخدم.`
+  String get adminUserReactivateSuccess {
+    return Intl.message(
+      'تمت إعادة تفعيل المستخدم.',
+      name: 'adminUserReactivateSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تعليق المستخدم.`
+  String get adminUserSuspendSuccess {
+    return Intl.message(
+      'تم تعليق المستخدم.',
+      name: 'adminUserSuspendSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحجوزات المرتبطة`
+  String get adminUserBookingsSectionTitle {
+    return Intl.message(
+      'الحجوزات المرتبطة',
+      name: 'adminUserBookingsSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد حجوزات مرتبطة بهذا المستخدم بعد.`
+  String get adminUserBookingsEmptyMessage {
+    return Intl.message(
+      'لا توجد حجوزات مرتبطة بهذا المستخدم بعد.',
+      name: 'adminUserBookingsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المركبات`
+  String get adminUserVehiclesSectionTitle {
+    return Intl.message(
+      'المركبات',
+      name: 'adminUserVehiclesSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد مركبات مرتبطة بهذا المستخدم.`
+  String get adminUserVehiclesEmptyMessage {
+    return Intl.message(
+      'لا توجد مركبات مرتبطة بهذا المستخدم.',
+      name: 'adminUserVehiclesEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `وثائق التحقق`
+  String get adminUserDocumentsSectionTitle {
+    return Intl.message(
+      'وثائق التحقق',
+      name: 'adminUserDocumentsSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد وثائق تحقق متاحة لهذا المستخدم.`
+  String get adminUserDocumentsEmptyMessage {
+    return Intl.message(
+      'لا توجد وثائق تحقق متاحة لهذا المستخدم.',
+      name: 'adminUserDocumentsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرسائل الأخيرة`
+  String get adminUserEmailSectionTitle {
+    return Intl.message(
+      'الرسائل الأخيرة',
+      name: 'adminUserEmailSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد سجلات بريد إلكتروني حديثة لهذا المستخدم.`
+  String get adminUserEmailEmptyMessage {
+    return Intl.message(
+      'لا توجد سجلات بريد إلكتروني حديثة لهذا المستخدم.',
+      name: 'adminUserEmailEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الشاحن`
+  String get adminUserRoleShipperLabel {
+    return Intl.message(
+      'الشاحن',
+      name: 'adminUserRoleShipperLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الناقل`
+  String get adminUserRoleCarrierLabel {
+    return Intl.message(
+      'الناقل',
+      name: 'adminUserRoleCarrierLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإدارة`
+  String get adminUserRoleAdminLabel {
+    return Intl.message(
+      'الإدارة',
+      name: 'adminUserRoleAdminLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملخص الخدمة`
+  String get adminSettingsMonitoringSummaryTitle {
+    return Intl.message(
+      'ملخص الخدمة',
+      name: 'adminSettingsMonitoringSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الوصول إلى التطبيق`
+  String get adminSettingsRuntimeSectionTitle {
+    return Intl.message(
+      'الوصول إلى التطبيق',
+      name: 'adminSettingsRuntimeSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `وضع الصيانة`
+  String get adminSettingsMaintenanceModeLabel {
+    return Intl.message(
+      'وضع الصيانة',
+      name: 'adminSettingsMaintenanceModeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فرض التحديث`
+  String get adminSettingsForceUpdateLabel {
+    return Intl.message(
+      'فرض التحديث',
+      name: 'adminSettingsForceUpdateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحد الأدنى لإصدار Android`
+  String get adminSettingsMinimumAndroidVersionLabel {
+    return Intl.message(
+      'الحد الأدنى لإصدار Android',
+      name: 'adminSettingsMinimumAndroidVersionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحد الأدنى لإصدار iOS`
+  String get adminSettingsMinimumIosVersionLabel {
+    return Intl.message(
+      'الحد الأدنى لإصدار iOS',
+      name: 'adminSettingsMinimumIosVersionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حفظ الإعدادات`
+  String get adminSettingsSaveAction {
+    return Intl.message(
+      'حفظ الإعدادات',
+      name: 'adminSettingsSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تحديث إعدادات الإدارة.`
+  String get adminSettingsSavedMessage {
+    return Intl.message(
+      'تم تحديث إعدادات الإدارة.',
+      name: 'adminSettingsSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سياسة التسعير`
+  String get adminSettingsPricingSectionTitle {
+    return Intl.message(
+      'سياسة التسعير',
+      name: 'adminSettingsPricingSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نسبة رسوم المنصة`
+  String get adminSettingsPlatformFeeRateLabel {
+    return Intl.message(
+      'نسبة رسوم المنصة',
+      name: 'adminSettingsPlatformFeeRateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نسبة التأمين`
+  String get adminSettingsInsuranceRateLabel {
+    return Intl.message(
+      'نسبة التأمين',
+      name: 'adminSettingsInsuranceRateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحد الأدنى لرسوم التأمين`
+  String get adminSettingsInsuranceMinimumLabel {
+    return Intl.message(
+      'الحد الأدنى لرسوم التأمين',
+      name: 'adminSettingsInsuranceMinimumLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مهلة إعادة إرسال الدفع (بالساعات)`
+  String get adminSettingsPaymentDeadlineLabel {
+    return Intl.message(
+      'مهلة إعادة إرسال الدفع (بالساعات)',
+      name: 'adminSettingsPaymentDeadlineLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سياسة مراجعة التسليم`
+  String get adminSettingsDeliverySectionTitle {
+    return Intl.message(
+      'سياسة مراجعة التسليم',
+      name: 'adminSettingsDeliverySectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نافذة السماح للتسليم (بالساعات)`
+  String get adminSettingsDeliveryGraceLabel {
+    return Intl.message(
+      'نافذة السماح للتسليم (بالساعات)',
+      name: 'adminSettingsDeliveryGraceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سياسة اللغات`
+  String get adminSettingsLocalizationSectionTitle {
+    return Intl.message(
+      'سياسة اللغات',
+      name: 'adminSettingsLocalizationSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لغة الرجوع`
+  String get adminSettingsFallbackLocaleLabel {
+    return Intl.message(
+      'لغة الرجوع',
+      name: 'adminSettingsFallbackLocaleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اللغات المفعلة`
+  String get adminSettingsEnabledLocalesLabel {
+    return Intl.message(
+      'اللغات المفعلة',
+      name: 'adminSettingsEnabledLocalesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الميزات الاختيارية`
+  String get adminSettingsFeatureFlagsSectionTitle {
+    return Intl.message(
+      'الميزات الاختيارية',
+      name: 'adminSettingsFeatureFlagsSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تفعيل إعادة إرسال البريد الإلكتروني من الإدارة`
+  String get adminSettingsEmailResendEnabledLabel {
+    return Intl.message(
+      'تفعيل إعادة إرسال البريد الإلكتروني من الإدارة',
+      name: 'adminSettingsEmailResendEnabledLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لم يتم تسجيل أي أحداث تدقيق إدارية بعد.`
+  String get adminAuditLogEmptyMessage {
+    return Intl.message(
+      'لم يتم تسجيل أي أحداث تدقيق إدارية بعد.',
+      name: 'adminAuditLogEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `راجع حالة الحجز وتفاصيل الدفع وملخص السعر.`
   String get bookingDetailDescription {
     return Intl.message(
-      'Review the booking status, payment details, and price breakdown.',
+      'راجع حالة الحجز وتفاصيل الدفع وملخص السعر.',
       name: 'bookingDetailDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Booking {bookingId}`
+  /// `الحجز {bookingId}`
   String bookingDetailTitle(Object bookingId) {
     return Intl.message(
-      'Booking $bookingId',
+      'الحجز $bookingId',
       name: 'bookingDetailTitle',
       desc: '',
       args: [bookingId],
     );
   }
 
-  /// `Carrier reputation, trip detail, and pricing review live here before payment.`
+  /// `راجع سمعة الناقل وتفاصيل الرحلة والسعر قبل الدفع.`
   String get bookingReviewDescription {
     return Intl.message(
-      'Carrier reputation, trip detail, and pricing review live here before payment.',
+      'راجع سمعة الناقل وتفاصيل الرحلة والسعر قبل الدفع.',
       name: 'bookingReviewDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Booking review`
+  /// `مراجعة الحجز`
   String get bookingReviewTitle {
     return Intl.message(
-      'Booking review',
+      'مراجعة الحجز',
       name: 'bookingReviewTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cancel`
+  /// `إلغاء`
   String get cancelLabel {
-    return Intl.message('Cancel', name: 'cancelLabel', desc: '', args: []);
+    return Intl.message('إلغاء', name: 'cancelLabel', desc: '', args: []);
   }
 
-  /// `Track current bookings, delivery progress, and completed jobs.`
+  /// `تابع حجوزاتك الحالية وسير التسليم والرحلات المكتملة.`
   String get carrierBookingsDescription {
     return Intl.message(
-      'Track current bookings, delivery progress, and completed jobs.',
+      'تابع حجوزاتك الحالية وسير التسليم والرحلات المكتملة.',
       name: 'carrierBookingsDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bookings`
+  /// `الحجوزات`
   String get carrierBookingsNavLabel {
     return Intl.message(
-      'Bookings',
+      'الحجوزات',
       name: 'carrierBookingsNavLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier bookings`
+  /// `حجوزاتي`
   String get carrierBookingsTitle {
     return Intl.message(
-      'Carrier bookings',
+      'حجوزاتي',
       name: 'carrierBookingsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Check your verification status, fleet readiness, and next tasks.`
+  /// `تابع حالة التحقق وجاهزية أسطولك والمهام التي تنتظرك.`
   String get carrierHomeDescription {
     return Intl.message(
-      'Check your verification status, fleet readiness, and next tasks.',
+      'تابع حالة التحقق وجاهزية أسطولك والمهام التي تنتظرك.',
       name: 'carrierHomeDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Home`
+  /// `الرئيسية`
   String get carrierHomeNavLabel {
     return Intl.message(
-      'Home',
+      'الرئيسية',
       name: 'carrierHomeNavLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier home`
+  /// `الرئيسية للناقل`
   String get carrierHomeTitle {
     return Intl.message(
-      'Carrier home',
+      'الرئيسية للناقل',
       name: 'carrierHomeTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Manage your business details, verification, payout accounts, and vehicles.`
+  /// `أدر بيانات نشاطك، وثائق التحقق، حسابات التحويل، والمركبات.`
   String get carrierProfileDescription {
     return Intl.message(
-      'Manage your business details, verification, payout accounts, and vehicles.',
+      'أدر بيانات نشاطك، وثائق التحقق، حسابات التحويل، والمركبات.',
       name: 'carrierProfileDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Profile`
+  /// `الملف الشخصي`
   String get carrierProfileNavLabel {
     return Intl.message(
-      'Profile',
+      'الملف الشخصي',
       name: 'carrierProfileNavLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier details`
+  /// `بيانات الناقل`
   String get carrierProfileSectionTitle {
     return Intl.message(
-      'Carrier details',
+      'بيانات الناقل',
       name: 'carrierProfileSectionTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification`
+  /// `التحقق`
   String get carrierProfileVerificationLabel {
     return Intl.message(
-      'Verification',
+      'التحقق',
       name: 'carrierProfileVerificationLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Pending`
+  /// `قيد المراجعة`
   String get carrierProfileVerificationPending {
     return Intl.message(
-      'Pending',
+      'قيد المراجعة',
       name: 'carrierProfileVerificationPending',
       desc: '',
       args: [],
     );
   }
 
-  /// `Rejected`
+  /// `مرفوض`
   String get carrierProfileVerificationRejected {
     return Intl.message(
-      'Rejected',
+      'مرفوض',
       name: 'carrierProfileVerificationRejected',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verified`
+  /// `موثّق`
   String get carrierProfileVerificationVerified {
     return Intl.message(
-      'Verified',
+      'موثّق',
       name: 'carrierProfileVerificationVerified',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier profile`
+  /// `ملف الناقل`
   String get carrierProfileTitle {
     return Intl.message(
-      'Carrier profile',
+      'ملف الناقل',
       name: 'carrierProfileTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Upload and replace profile or vehicle verification documents.`
+  /// `ارفع واستبدل وثائق التحقق الخاصة بالملف الشخصي أو المركبة من مكان واحد.`
   String get carrierVerificationCenterDescription {
     return Intl.message(
-      'Upload and replace profile or vehicle verification documents.',
+      'ارفع واستبدل وثائق التحقق الخاصة بالملف الشخصي أو المركبة من مكان واحد.',
       name: 'carrierVerificationCenterDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification center`
+  /// `مركز التحقق`
   String get carrierVerificationCenterTitle {
     return Intl.message(
-      'Verification center',
+      'مركز التحقق',
       name: 'carrierVerificationCenterTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your verification is under review. Upload any missing documents to keep it moving.`
+  /// `ملفك قيد المراجعة. ارفع أي وثائق ناقصة لتسريع الاعتماد.`
   String get carrierVerificationPendingBanner {
     return Intl.message(
-      'Your verification is under review. Upload any missing documents to keep it moving.',
+      'ملفك قيد المراجعة. ارفع أي وثائق ناقصة لتسريع الاعتماد.',
       name: 'carrierVerificationPendingBanner',
       desc: '',
       args: [],
     );
   }
 
-  /// `Finish the remaining verification steps from your profile.`
+  /// `أكمل خطوات التحقق المتبقية من ملفك الشخصي.`
   String get carrierVerificationQueueHint {
     return Intl.message(
-      'Finish the remaining verification steps from your profile.',
+      'أكمل خطوات التحقق المتبقية من ملفك الشخصي.',
       name: 'carrierVerificationQueueHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verification needs attention: {reason}`
+  /// `التحقق يحتاج تصحيح: {reason}`
   String carrierVerificationRejectedBanner(Object reason) {
     return Intl.message(
-      'Verification needs attention: $reason',
+      'التحقق يحتاج تصحيح: $reason',
       name: 'carrierVerificationRejectedBanner',
       desc: '',
       args: [reason],
     );
   }
 
-  /// `Verification summary`
+  /// `ملخص التحقق`
   String get carrierVerificationSummaryTitle {
     return Intl.message(
-      'Verification summary',
+      'ملخص التحقق',
       name: 'carrierVerificationSummaryTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Manage trucks, upload missing documents, and resolve verification blockers.`
+  /// `أدر الشاحنات وارفع الوثائق الناقصة وعالج عوائق التحقق.`
   String get carrierVehiclesShortcutDescription {
     return Intl.message(
-      'Manage trucks, upload missing documents, and resolve verification blockers.',
+      'أدر الشاحنات وارفع الوثائق الناقصة وعالج عوائق التحقق.',
       name: 'carrierVehiclesShortcutDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Recent comments`
+  /// `التعليقات الأخيرة`
   String get carrierPublicProfileCommentsTitle {
     return Intl.message(
-      'Recent comments',
+      'التعليقات الأخيرة',
       name: 'carrierPublicProfileCommentsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review this carrier's public reputation, comments, and verification status.`
+  /// `استعرض سمعة هذا الناقل وتقييماته وحالة تحققه.`
   String get carrierPublicProfileDescription {
     return Intl.message(
-      'Review this carrier\'s public reputation, comments, and verification status.',
+      'استعرض سمعة هذا الناقل وتقييماته وحالة تحققه.',
       name: 'carrierPublicProfileDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `No review comments are visible yet.`
+  /// `لا توجد تقييمات بعد.`
   String get carrierPublicProfileNoCommentsMessage {
     return Intl.message(
-      'No review comments are visible yet.',
+      'لا توجد تقييمات بعد.',
       name: 'carrierPublicProfileNoCommentsMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Average rating`
+  /// `متوسط التقييم`
   String get carrierPublicProfileRatingLabel {
     return Intl.message(
-      'Average rating',
+      'متوسط التقييم',
       name: 'carrierPublicProfileRatingLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review count`
+  /// `عدد التقييمات`
   String get carrierPublicProfileReviewCountLabel {
     return Intl.message(
-      'Review count',
+      'عدد التقييمات',
       name: 'carrierPublicProfileReviewCountLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier summary`
+  /// `ملخص الناقل`
   String get carrierPublicProfileSummaryTitle {
     return Intl.message(
-      'Carrier summary',
+      'ملخص الناقل',
       name: 'carrierPublicProfileSummaryTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier {carrierId}`
+  /// `الناقل {carrierId}`
   String carrierPublicProfileTitle(Object carrierId) {
     return Intl.message(
-      'Carrier $carrierId',
+      'الناقل $carrierId',
       name: 'carrierPublicProfileTitle',
       desc: '',
       args: [carrierId],
     );
   }
 
-  /// `Confirm`
+  /// `تأكيد`
   String get confirmLabel {
-    return Intl.message('Confirm', name: 'confirmLabel', desc: '', args: []);
+    return Intl.message('تأكيد', name: 'confirmLabel', desc: '', args: []);
   }
 
-  /// `View this document here or open it in another app.`
+  /// `اعرض هذا المستند هنا أو افتحه في تطبيق آخر.`
   String get documentViewerDescription {
     return Intl.message(
-      'View this document here or open it in another app.',
+      'اعرض هذا المستند هنا أو افتحه في تطبيق آخر.',
       name: 'documentViewerDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Open document`
+  /// `افتح المستند`
   String get documentViewerOpenAction {
     return Intl.message(
-      'Open document',
+      'افتح المستند',
       name: 'documentViewerOpenAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Document {documentId}`
+  /// `المستند {documentId}`
   String documentViewerTitle(Object documentId) {
     return Intl.message(
-      'Document $documentId',
+      'المستند $documentId',
       name: 'documentViewerTitle',
       desc: '',
       args: [documentId],
     );
   }
 
-  /// `Secure document access is temporarily unavailable.`
+  /// `الوصول الآمن إلى المستند غير متاح مؤقتا.`
   String get documentViewerUnavailableMessage {
     return Intl.message(
-      'Secure document access is temporarily unavailable.',
+      'الوصول الآمن إلى المستند غير متاح مؤقتا.',
       name: 'documentViewerUnavailableMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Update your carrier contact and company details.`
+  /// `حدّث بيانات الاتصال ومعلومات الناقل الخاصة بك.`
   String get editCarrierProfileDescription {
     return Intl.message(
-      'Update your carrier contact and company details.',
+      'حدّث بيانات الاتصال ومعلومات الناقل الخاصة بك.',
       name: 'editCarrierProfileDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier profile updated.`
+  /// `تم تحديث ملف الناقل.`
   String get editCarrierProfileSavedMessage {
     return Intl.message(
-      'Carrier profile updated.',
+      'تم تحديث ملف الناقل.',
       name: 'editCarrierProfileSavedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Edit carrier profile`
+  /// `تعديل ملف الناقل`
   String get editCarrierProfileTitle {
     return Intl.message(
-      'Edit carrier profile',
+      'تعديل ملف الناقل',
       name: 'editCarrierProfileTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Update your shipper contact details.`
+  /// `حدّث بيانات الاتصال الخاصة بالشاحن.`
   String get editShipperProfileDescription {
     return Intl.message(
-      'Update your shipper contact details.',
+      'حدّث بيانات الاتصال الخاصة بالشاحن.',
       name: 'editShipperProfileDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Shipper profile updated.`
+  /// `تم تحديث ملف الشاحن.`
   String get editShipperProfileSavedMessage {
     return Intl.message(
-      'Shipper profile updated.',
+      'تم تحديث ملف الشاحن.',
       name: 'editShipperProfileSavedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Edit shipper profile`
+  /// `تعديل ملف الشاحن`
   String get editShipperProfileTitle {
     return Intl.message(
-      'Edit shipper profile',
+      'تعديل ملف الشاحن',
       name: 'editShipperProfileTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Something went wrong`
+  /// `حصل خطأ`
   String get errorTitle {
-    return Intl.message(
-      'Something went wrong',
-      name: 'errorTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('حصل خطأ', name: 'errorTitle', desc: '', args: []);
   }
 
-  /// `This area is not available for your account.`
-  String get forbiddenMessage {
-    return Intl.message(
-      'This area is not available for your account.',
-      name: 'forbiddenMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Access restricted`
-  String get forbiddenTitle {
-    return Intl.message(
-      'Access restricted',
-      name: 'forbiddenTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Re-authenticate recently before opening this sensitive admin surface.`
-  String get forbiddenAdminStepUpMessage {
-    return Intl.message(
-      'Re-authenticate recently before opening this sensitive admin surface.',
-      name: 'forbiddenAdminStepUpMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `View or download your invoice or receipt.`
+  /// `اعرض فاتورتك أو إيصالك أو نزله.`
   String get generatedDocumentViewerDescription {
     return Intl.message(
-      'View or download your invoice or receipt.',
+      'اعرض فاتورتك أو إيصالك أو نزله.',
       name: 'generatedDocumentViewerDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Generated document {documentId}`
+  /// `المستند المُولَّد {documentId}`
   String generatedDocumentViewerTitle(Object documentId) {
     return Intl.message(
-      'Generated document $documentId',
+      'المستند المُولَّد $documentId',
       name: 'generatedDocumentViewerTitle',
       desc: '',
       args: [documentId],
     );
   }
 
-  /// `Payment receipt`
+  /// `إيصال الدفع`
   String get generatedDocumentTypePaymentReceipt {
     return Intl.message(
-      'Payment receipt',
+      'إيصال الدفع',
       name: 'generatedDocumentTypePaymentReceipt',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payout receipt`
+  /// `إيصال التحويل`
   String get generatedDocumentTypePayoutReceipt {
     return Intl.message(
-      'Payout receipt',
+      'إيصال التحويل',
       name: 'generatedDocumentTypePayoutReceipt',
       desc: '',
       args: [],
     );
   }
 
-  /// `Generating`
+  /// `قيد الإنشاء`
   String get generatedDocumentStatusPendingLabel {
     return Intl.message(
-      'Generating',
+      'قيد الإنشاء',
       name: 'generatedDocumentStatusPendingLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Needs regeneration`
+  /// `يحتاج إلى إعادة إنشاء`
   String get generatedDocumentStatusFailedLabel {
     return Intl.message(
-      'Needs regeneration',
+      'يحتاج إلى إعادة إنشاء',
       name: 'generatedDocumentStatusFailedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `This document is still being generated. Check back in a moment.`
+  /// `لا يزال هذا المستند قيد الإنشاء. عد بعد قليل.`
   String get generatedDocumentPendingMessage {
     return Intl.message(
-      'This document is still being generated. Check back in a moment.',
+      'لا يزال هذا المستند قيد الإنشاء. عد بعد قليل.',
       name: 'generatedDocumentPendingMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `This document could not be generated yet. Try again later or contact support if the issue persists.`
+  /// `تعذر إنشاء هذا المستند حتى الآن. حاول لاحقا أو تواصل مع الدعم إذا استمرت المشكلة.`
   String get generatedDocumentFailedMessage {
     return Intl.message(
-      'This document could not be generated yet. Try again later or contact support if the issue persists.',
+      'تعذر إنشاء هذا المستند حتى الآن. حاول لاحقا أو تواصل مع الدعم إذا استمرت المشكلة.',
       name: 'generatedDocumentFailedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Available at`
+  /// `متاح في`
   String get generatedDocumentAvailableAtLabel {
     return Intl.message(
-      'Available at',
+      'متاح في',
       name: 'generatedDocumentAvailableAtLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Issue`
+  /// `المشكلة`
   String get generatedDocumentFailureReasonLabel {
     return Intl.message(
-      'Issue',
+      'المشكلة',
       name: 'generatedDocumentFailureReasonLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Open in browser`
+  /// `فتح في المتصفح`
   String get generatedDocumentOpenInBrowserAction {
     return Intl.message(
-      'Open in browser',
+      'فتح في المتصفح',
       name: 'generatedDocumentOpenInBrowserAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Download PDF`
+  /// `تنزيل PDF`
   String get generatedDocumentDownloadAction {
     return Intl.message(
-      'Download PDF',
+      'تنزيل PDF',
       name: 'generatedDocumentDownloadAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Document ready`
+  /// `المستند جاهز`
   String get notificationGeneratedDocumentReadyTitle {
     return Intl.message(
-      'Document ready',
+      'المستند جاهز',
       name: 'notificationGeneratedDocumentReadyTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your {documentType} is ready to view or download.`
+  /// `أصبح {documentType} جاهزا للعرض الآمن.`
   String notificationGeneratedDocumentReadyBody(Object documentType) {
     return Intl.message(
-      'Your $documentType is ready to view or download.',
+      'أصبح $documentType جاهزا للعرض الآمن.',
       name: 'notificationGeneratedDocumentReadyBody',
       desc: '',
       args: [documentType],
     );
   }
 
-  /// `Arabic`
-  String get languageOptionArabic {
-    return Intl.message(
-      'Arabic',
-      name: 'languageOptionArabic',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `English`
-  String get languageOptionEnglish {
-    return Intl.message(
-      'English',
-      name: 'languageOptionEnglish',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `French`
-  String get languageOptionFrench {
-    return Intl.message(
-      'French',
-      name: 'languageOptionFrench',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Current app language: {languageCode}`
-  String languageSelectionCurrentMessage(Object languageCode) {
-    return Intl.message(
-      'Current app language: $languageCode',
-      name: 'languageSelectionCurrentMessage',
-      desc: '',
-      args: [languageCode],
-    );
-  }
-
-  /// `Getting things ready for you.`
-  String get loadingMessage {
-    return Intl.message(
-      'Getting things ready for you.',
-      name: 'loadingMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Loading`
-  String get loadingTitle {
-    return Intl.message('Loading', name: 'loadingTitle', desc: '', args: []);
-  }
-
-  /// `FleetFill is temporarily unavailable while we make improvements. Please try again soon.`
-  String get maintenanceDescription {
-    return Intl.message(
-      'FleetFill is temporarily unavailable while we make improvements. Please try again soon.',
-      name: 'maintenanceDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `We'll be back soon`
-  String get maintenanceTitle {
-    return Intl.message(
-      'We\'ll be back soon',
-      name: 'maintenanceTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Allow photo and file access so you can upload payment proof and documents.`
-  String get mediaUploadPermissionDescription {
-    return Intl.message(
-      'Allow photo and file access so you can upload payment proof and documents.',
-      name: 'mediaUploadPermissionDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Allow photo and file access`
-  String get mediaUploadPermissionTitle {
-    return Intl.message(
-      'Allow photo and file access',
-      name: 'mediaUploadPermissionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Pricing summary`
-  String get moneySummaryTitle {
-    return Intl.message(
-      'Pricing summary',
-      name: 'moneySummaryTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Manage your recurring routes and one-off trips.`
-  String get myRoutesDescription {
-    return Intl.message(
-      'Manage your recurring routes and one-off trips.',
-      name: 'myRoutesDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Routes`
-  String get myRoutesNavLabel {
-    return Intl.message('Routes', name: 'myRoutesNavLabel', desc: '', args: []);
-  }
-
-  /// `My routes`
-  String get myRoutesTitle {
-    return Intl.message('My routes', name: 'myRoutesTitle', desc: '', args: []);
-  }
-
-  /// `Create shipments, review drafts, and track booked loads.`
-  String get myShipmentsDescription {
-    return Intl.message(
-      'Create shipments, review drafts, and track booked loads.',
-      name: 'myShipmentsDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shipments`
-  String get myShipmentsNavLabel {
-    return Intl.message(
-      'Shipments',
-      name: 'myShipmentsNavLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `My shipments`
-  String get myShipmentsTitle {
-    return Intl.message(
-      'My shipments',
-      name: 'myShipmentsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No exact route is available for this search yet.`
-  String get noExactResultsMessage {
-    return Intl.message(
-      'No exact route is available for this search yet.',
-      name: 'noExactResultsMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No exact route found`
-  String get noExactResultsTitle {
-    return Intl.message(
-      'No exact route found',
-      name: 'noExactResultsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Review the full details for this notification.`
-  String get notificationDetailDescription {
-    return Intl.message(
-      'Review the full details for this notification.',
-      name: 'notificationDetailDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Notification {notificationId}`
-  String notificationDetailTitle(Object notificationId) {
-    return Intl.message(
-      'Notification $notificationId',
-      name: 'notificationDetailTitle',
-      desc: '',
-      args: [notificationId],
-    );
-  }
-
-  /// `Stay up to date with bookings, payments, delivery progress, and account alerts.`
-  String get notificationsCenterDescription {
-    return Intl.message(
-      'Stay up to date with bookings, payments, delivery progress, and account alerts.',
-      name: 'notificationsCenterDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Notifications`
-  String get notificationsCenterTitle {
-    return Intl.message(
-      'Notifications',
-      name: 'notificationsCenterTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Manage permission status and open your notification inbox.`
-  String get notificationsSettingsEntryDescription {
-    return Intl.message(
-      'Manage permission status and open your notification inbox.',
-      name: 'notificationsSettingsEntryDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Notifications are enabled for this device.`
-  String get notificationsSettingsEnabledMessage {
-    return Intl.message(
-      'Notifications are enabled for this device.',
-      name: 'notificationsSettingsEnabledMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Notifications stay off for now. You can enable them later from settings.`
-  String get notificationsSettingsDisabledMessage {
-    return Intl.message(
-      'Notifications stay off for now. You can enable them later from settings.',
-      name: 'notificationsSettingsDisabledMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Turn on notifications to follow booking confirmations, payment reviews, delivery milestones, and account alerts without guessing what changed.`
-  String get notificationsOnboardingValueMessage {
-    return Intl.message(
-      'Turn on notifications to follow booking confirmations, payment reviews, delivery milestones, and account alerts without guessing what changed.',
-      name: 'notificationsOnboardingValueMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Enable notifications`
-  String get notificationsOnboardingEnableAction {
-    return Intl.message(
-      'Enable notifications',
-      name: 'notificationsOnboardingEnableAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Skip for now`
-  String get notificationsOnboardingSkipAction {
-    return Intl.message(
-      'Skip for now',
-      name: 'notificationsOnboardingSkipAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Booking confirmed`
-  String get notificationBookingConfirmedTitle {
-    return Intl.message(
-      'Booking confirmed',
-      name: 'notificationBookingConfirmedTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your booking is confirmed. Follow the payment steps to keep it on track.`
-  String get notificationBookingConfirmedBody {
-    return Intl.message(
-      'Your booking is confirmed. Follow the payment steps to keep it on track.',
-      name: 'notificationBookingConfirmedBody',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Payment proof submitted`
-  String get notificationPaymentProofSubmittedTitle {
-    return Intl.message(
-      'Payment proof submitted',
-      name: 'notificationPaymentProofSubmittedTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `We received your payment proof. We will review it shortly.`
-  String get notificationPaymentProofSubmittedBody {
-    return Intl.message(
-      'We received your payment proof. We will review it shortly.',
-      name: 'notificationPaymentProofSubmittedBody',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Payment secured`
-  String get notificationPaymentSecuredTitle {
-    return Intl.message(
-      'Payment secured',
-      name: 'notificationPaymentSecuredTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your payment has been secured and the booking is confirmed.`
-  String get notificationPaymentSecuredBody {
-    return Intl.message(
-      'Your payment has been secured and the booking is confirmed.',
-      name: 'notificationPaymentSecuredBody',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Payment proof rejected`
-  String get notificationPaymentRejectedTitle {
-    return Intl.message(
-      'Payment proof rejected',
-      name: 'notificationPaymentRejectedTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your payment proof was rejected. Check the reason and send a new one before the deadline.`
-  String get notificationPaymentRejectedBody {
-    return Intl.message(
-      'Your payment proof was rejected. Check the reason and send a new one before the deadline.',
-      name: 'notificationPaymentRejectedBody',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Dispute opened`
-  String get notificationDisputeOpenedTitle {
-    return Intl.message(
-      'Dispute opened',
-      name: 'notificationDisputeOpenedTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your dispute has been opened and is waiting for review.`
-  String get notificationDisputeOpenedBody {
-    return Intl.message(
-      'Your dispute has been opened and is waiting for review.',
-      name: 'notificationDisputeOpenedBody',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Dispute resolved`
-  String get notificationDisputeResolvedTitle {
-    return Intl.message(
-      'Dispute resolved',
-      name: 'notificationDisputeResolvedTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your dispute has been resolved. Check the latest booking and payment update.`
-  String get notificationDisputeResolvedBody {
-    return Intl.message(
-      'Your dispute has been resolved. Check the latest booking and payment update.',
-      name: 'notificationDisputeResolvedBody',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Dispute evidence`
+  /// `أدلة النزاع`
   String get disputeEvidenceTitle {
     return Intl.message(
-      'Dispute evidence',
+      'أدلة النزاع',
       name: 'disputeEvidenceTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Add evidence files`
+  /// `إضافة ملفات دليل`
   String get disputeEvidenceAddAction {
     return Intl.message(
-      'Add evidence files',
+      'إضافة ملفات دليل',
       name: 'disputeEvidenceAddAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `No evidence files have been attached to this dispute yet.`
+  /// `لم يتم إرفاق أي ملفات دليل بهذا النزاع بعد.`
   String get disputeEvidenceEmptyMessage {
     return Intl.message(
-      'No evidence files have been attached to this dispute yet.',
+      'لم يتم إرفاق أي ملفات دليل بهذا النزاع بعد.',
       name: 'disputeEvidenceEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Selected files: {count}`
+  /// `الملفات المحددة: {count}`
   String disputeEvidenceSelectedCount(Object count) {
     return Intl.message(
-      'Selected files: $count',
+      'الملفات المحددة: $count',
       name: 'disputeEvidenceSelectedCount',
       desc: '',
       args: [count],
     );
   }
 
-  /// `Payout released`
+  /// `هذا القسم غير متاح لحسابك.`
+  String get forbiddenMessage {
+    return Intl.message(
+      'هذا القسم غير متاح لحسابك.',
+      name: 'forbiddenMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ممنوع الوصول`
+  String get forbiddenTitle {
+    return Intl.message(
+      'ممنوع الوصول',
+      name: 'forbiddenTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أعد تسجيل الدخول قبل فتح هذا القسم الحساس.`
+  String get forbiddenAdminStepUpMessage {
+    return Intl.message(
+      'أعد تسجيل الدخول قبل فتح هذا القسم الحساس.',
+      name: 'forbiddenAdminStepUpMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر اللغة التي تريد استخدامها داخل FleetFill.`
+  String get languageSelectionDescription {
+    return Intl.message(
+      'اختر اللغة التي تريد استخدامها داخل FleetFill.',
+      name: 'languageSelectionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لغة التطبيق الحالية: {languageCode}`
+  String languageSelectionCurrentMessage(Object languageCode) {
+    return Intl.message(
+      'لغة التطبيق الحالية: $languageCode',
+      name: 'languageSelectionCurrentMessage',
+      desc: '',
+      args: [languageCode],
+    );
+  }
+
+  /// `العربية`
+  String get languageOptionArabic {
+    return Intl.message(
+      'العربية',
+      name: 'languageOptionArabic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإنجليزية`
+  String get languageOptionEnglish {
+    return Intl.message(
+      'الإنجليزية',
+      name: 'languageOptionEnglish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الفرنسية`
+  String get languageOptionFrench {
+    return Intl.message(
+      'الفرنسية',
+      name: 'languageOptionFrench',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختيار اللغة`
+  String get languageSelectionTitle {
+    return Intl.message(
+      'اختيار اللغة',
+      name: 'languageSelectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لحظة، نجهّز كل شيء لك.`
+  String get loadingMessage {
+    return Intl.message(
+      'لحظة، نجهّز كل شيء لك.',
+      name: 'loadingMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جاري التحميل`
+  String get loadingTitle {
+    return Intl.message(
+      'جاري التحميل',
+      name: 'loadingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill متوقف مؤقتا للتحسين. حاول مرة أخرى قريبا.`
+  String get maintenanceDescription {
+    return Intl.message(
+      'FleetFill متوقف مؤقتا للتحسين. حاول مرة أخرى قريبا.',
+      name: 'maintenanceDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سنعود قريبًا`
+  String get maintenanceTitle {
+    return Intl.message(
+      'سنعود قريبًا',
+      name: 'maintenanceTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اسمح بالوصول إلى الصور والملفات لتتمكن من رفع إثبات الدفع والوثائق.`
+  String get mediaUploadPermissionDescription {
+    return Intl.message(
+      'اسمح بالوصول إلى الصور والملفات لتتمكن من رفع إثبات الدفع والوثائق.',
+      name: 'mediaUploadPermissionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السماح بالصور والملفات`
+  String get mediaUploadPermissionTitle {
+    return Intl.message(
+      'السماح بالصور والملفات',
+      name: 'mediaUploadPermissionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملخص التسعير`
+  String get moneySummaryTitle {
+    return Intl.message(
+      'ملخص التسعير',
+      name: 'moneySummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدر مساراتك المتكررة ورحلاتك الفردية.`
+  String get myRoutesDescription {
+    return Intl.message(
+      'أدر مساراتك المتكررة ورحلاتك الفردية.',
+      name: 'myRoutesDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المسارات`
+  String get myRoutesNavLabel {
+    return Intl.message(
+      'المسارات',
+      name: 'myRoutesNavLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مساراتي`
+  String get myRoutesTitle {
+    return Intl.message('مساراتي', name: 'myRoutesTitle', desc: '', args: []);
+  }
+
+  /// `أنشئ الشحنات وراجع المسودات وتابع الأحمال المحجوزة.`
+  String get myShipmentsDescription {
+    return Intl.message(
+      'أنشئ الشحنات وراجع المسودات وتابع الأحمال المحجوزة.',
+      name: 'myShipmentsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الشحنات`
+  String get myShipmentsNavLabel {
+    return Intl.message(
+      'الشحنات',
+      name: 'myShipmentsNavLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `شحناتي`
+  String get myShipmentsTitle {
+    return Intl.message('شحناتي', name: 'myShipmentsTitle', desc: '', args: []);
+  }
+
+  /// `لا يوجد مسار مطابق تماما لهذا البحث حاليا.`
+  String get noExactResultsMessage {
+    return Intl.message(
+      'لا يوجد مسار مطابق تماما لهذا البحث حاليا.',
+      name: 'noExactResultsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لم يتم العثور على مسار مطابق`
+  String get noExactResultsTitle {
+    return Intl.message(
+      'لم يتم العثور على مسار مطابق',
+      name: 'noExactResultsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `راجع التفاصيل الكاملة لهذا الإشعار.`
+  String get notificationDetailDescription {
+    return Intl.message(
+      'راجع التفاصيل الكاملة لهذا الإشعار.',
+      name: 'notificationDetailDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإشعار {notificationId}`
+  String notificationDetailTitle(Object notificationId) {
+    return Intl.message(
+      'الإشعار $notificationId',
+      name: 'notificationDetailTitle',
+      desc: '',
+      args: [notificationId],
+    );
+  }
+
+  /// `ابق على اطلاع على الحجوزات والمدفوعات ومراحل التسليم وتنبيهات الحساب.`
+  String get notificationsCenterDescription {
+    return Intl.message(
+      'ابق على اطلاع على الحجوزات والمدفوعات ومراحل التسليم وتنبيهات الحساب.',
+      name: 'notificationsCenterDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإشعارات`
+  String get notificationsCenterTitle {
+    return Intl.message(
+      'الإشعارات',
+      name: 'notificationsCenterTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدر حالة الإذن وافتح مركز الإشعارات.`
+  String get notificationsSettingsEntryDescription {
+    return Intl.message(
+      'أدر حالة الإذن وافتح مركز الإشعارات.',
+      name: 'notificationsSettingsEntryDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تفعيل الإشعارات على هذا الجهاز.`
+  String get notificationsSettingsEnabledMessage {
+    return Intl.message(
+      'تم تفعيل الإشعارات على هذا الجهاز.',
+      name: 'notificationsSettingsEnabledMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ستبقى الإشعارات متوقفة الآن. يمكنك تفعيلها لاحقا من الإعدادات.`
+  String get notificationsSettingsDisabledMessage {
+    return Intl.message(
+      'ستبقى الإشعارات متوقفة الآن. يمكنك تفعيلها لاحقا من الإعدادات.',
+      name: 'notificationsSettingsDisabledMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فعّل الإشعارات حتى توصلك تأكيدات الحجز وتحديثات الدفع ومراحل التسليم أول بأول.`
+  String get notificationsOnboardingValueMessage {
+    return Intl.message(
+      'فعّل الإشعارات حتى توصلك تأكيدات الحجز وتحديثات الدفع ومراحل التسليم أول بأول.',
+      name: 'notificationsOnboardingValueMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تفعيل الإشعارات`
+  String get notificationsOnboardingEnableAction {
+    return Intl.message(
+      'تفعيل الإشعارات',
+      name: 'notificationsOnboardingEnableAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تخطي الآن`
+  String get notificationsOnboardingSkipAction {
+    return Intl.message(
+      'تخطي الآن',
+      name: 'notificationsOnboardingSkipAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تأكيد الحجز`
+  String get notificationBookingConfirmedTitle {
+    return Intl.message(
+      'تم تأكيد الحجز',
+      name: 'notificationBookingConfirmedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تأكيد الحجز. اتبع خطوات الدفع للحفاظ على سيره.`
+  String get notificationBookingConfirmedBody {
+    return Intl.message(
+      'تم تأكيد الحجز. اتبع خطوات الدفع للحفاظ على سيره.',
+      name: 'notificationBookingConfirmedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم إرسال إثبات الدفع`
+  String get notificationPaymentProofSubmittedTitle {
+    return Intl.message(
+      'تم إرسال إثبات الدفع',
+      name: 'notificationPaymentProofSubmittedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `استلمنا إثبات الدفع. سنراجعه قريبا.`
+  String get notificationPaymentProofSubmittedBody {
+    return Intl.message(
+      'استلمنا إثبات الدفع. سنراجعه قريبا.',
+      name: 'notificationPaymentProofSubmittedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تأمين الدفع`
+  String get notificationPaymentSecuredTitle {
+    return Intl.message(
+      'تم تأمين الدفع',
+      name: 'notificationPaymentSecuredTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تأمين الدفع وأصبح الحجز مؤكدا.`
+  String get notificationPaymentSecuredBody {
+    return Intl.message(
+      'تم تأمين الدفع وأصبح الحجز مؤكدا.',
+      name: 'notificationPaymentSecuredBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفض إثبات الدفع`
+  String get notificationPaymentRejectedTitle {
+    return Intl.message(
+      'تم رفض إثبات الدفع',
+      name: 'notificationPaymentRejectedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفض إثبات الدفع. تحقق من السبب وأرسل إثباتا جديدا قبل انتهاء المهلة.`
+  String get notificationPaymentRejectedBody {
+    return Intl.message(
+      'تم رفض إثبات الدفع. تحقق من السبب وأرسل إثباتا جديدا قبل انتهاء المهلة.',
+      name: 'notificationPaymentRejectedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم فتح النزاع`
+  String get notificationDisputeOpenedTitle {
+    return Intl.message(
+      'تم فتح النزاع',
+      name: 'notificationDisputeOpenedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم فتح النزاع وهو بانتظار المراجعة.`
+  String get notificationDisputeOpenedBody {
+    return Intl.message(
+      'تم فتح النزاع وهو بانتظار المراجعة.',
+      name: 'notificationDisputeOpenedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حل النزاع`
+  String get notificationDisputeResolvedTitle {
+    return Intl.message(
+      'تم حل النزاع',
+      name: 'notificationDisputeResolvedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حل النزاع. راجع آخر تحديث للحجز والدفع.`
+  String get notificationDisputeResolvedBody {
+    return Intl.message(
+      'تم حل النزاع. راجع آخر تحديث للحجز والدفع.',
+      name: 'notificationDisputeResolvedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم صرف مستحق الناقل`
   String get notificationPayoutReleasedTitle {
     return Intl.message(
-      'Payout released',
+      'تم صرف مستحق الناقل',
       name: 'notificationPayoutReleasedTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `The carrier payout has been released for this booking.`
+  /// `تم صرف مستحق الناقل لهذا الحجز.`
   String get notificationPayoutReleasedBody {
     return Intl.message(
-      'The carrier payout has been released for this booking.',
+      'تم صرف مستحق الناقل لهذا الحجز.',
       name: 'notificationPayoutReleasedBody',
       desc: '',
       args: [],
     );
   }
 
-  /// `Booking milestone updated`
+  /// `تم تحديث مرحلة الحجز`
   String get notificationBookingMilestoneUpdatedTitle {
     return Intl.message(
-      'Booking milestone updated',
+      'تم تحديث مرحلة الحجز',
       name: 'notificationBookingMilestoneUpdatedTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Current status: {milestoneLabel}`
+  /// `الحالة الحالية: {milestoneLabel}`
   String notificationBookingMilestoneUpdatedBody(Object milestoneLabel) {
     return Intl.message(
-      'Current status: $milestoneLabel',
+      'الحالة الحالية: $milestoneLabel',
       name: 'notificationBookingMilestoneUpdatedBody',
       desc: '',
       args: [milestoneLabel],
     );
   }
 
-  /// `Carrier review received`
+  /// `تم استلام تقييم الناقل`
   String get notificationCarrierReviewSubmittedTitle {
     return Intl.message(
-      'Carrier review received',
+      'تم استلام تقييم الناقل',
       name: 'notificationCarrierReviewSubmittedTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `A new review has been added to your profile.`
+  /// `تمت إضافة تقييم جديد إلى ملفك الشخصي.`
   String get notificationCarrierReviewSubmittedBody {
     return Intl.message(
-      'A new review has been added to your profile.',
+      'تمت إضافة تقييم جديد إلى ملفك الشخصي.',
       name: 'notificationCarrierReviewSubmittedBody',
       desc: '',
       args: [],
     );
   }
 
-  /// `Turn on notifications to get booking updates, delivery milestones, and payment alerts.`
+  /// `فعّل الإشعارات لتصلك تحديثات الحجز ومراحل التسليم وتنبيهات الدفع.`
   String get notificationsPermissionDescription {
     return Intl.message(
-      'Turn on notifications to get booking updates, delivery milestones, and payment alerts.',
+      'فعّل الإشعارات لتصلك تحديثات الحجز ومراحل التسليم وتنبيهات الدفع.',
       name: 'notificationsPermissionDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Turn on notifications`
+  /// `تفعيل الإشعارات`
   String get notificationsPermissionTitle {
     return Intl.message(
-      'Turn on notifications',
+      'تفعيل الإشعارات',
       name: 'notificationsPermissionTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `The requested page or entity could not be found.`
+  /// `تعذر العثور على الصفحة أو العنصر المطلوب.`
   String get notFoundMessage {
     return Intl.message(
-      'The requested page or entity could not be found.',
+      'تعذر العثور على الصفحة أو العنصر المطلوب.',
       name: 'notFoundMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Not found`
+  /// `غير موجود`
   String get notFoundTitle {
-    return Intl.message('Not found', name: 'notFoundTitle', desc: '', args: []);
+    return Intl.message('غير موجود', name: 'notFoundTitle', desc: '', args: []);
   }
 
-  /// `You are offline. Some actions are temporarily unavailable.`
+  /// `لا يوجد اتصال حاليًا. بعض الإجراءات غير متاحة مؤقتًا.`
   String get offlineMessage {
     return Intl.message(
-      'You are offline. Some actions are temporarily unavailable.',
+      'لا يوجد اتصال حاليًا. بعض الإجراءات غير متاحة مؤقتًا.',
       name: 'offlineMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review this trip before booking.`
+  /// `راجع هذه الرحلة قبل الحجز.`
   String get oneOffTripDetailDescription {
     return Intl.message(
-      'Review this trip before booking.',
+      'راجع هذه الرحلة قبل الحجز.',
       name: 'oneOffTripDetailDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `One-off trip {tripId}`
+  /// `الرحلة الفردية {tripId}`
   String oneOffTripDetailTitle(Object tripId) {
     return Intl.message(
-      'One-off trip $tripId',
+      'الرحلة الفردية $tripId',
       name: 'oneOffTripDetailTitle',
       desc: '',
       args: [tripId],
     );
   }
 
-  /// `Follow the payment steps, upload proof, and track the review status.`
+  /// `اتبع خطوات الدفع وارفع الإثبات وتابع حالة المراجعة.`
   String get paymentFlowDescription {
     return Intl.message(
-      'Follow the payment steps, upload proof, and track the review status.',
+      'اتبع خطوات الدفع وارفع الإثبات وتابع حالة المراجعة.',
       name: 'paymentFlowDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment`
+  /// `الدفع`
   String get paymentFlowTitle {
-    return Intl.message(
-      'Payment',
-      name: 'paymentFlowTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('الدفع', name: 'paymentFlowTitle', desc: '', args: []);
   }
 
-  /// `Add and manage the accounts where you receive payouts.`
+  /// `أضف الحسابات التي تستقبل عليها التحويلات وأدرها.`
   String get payoutAccountsDescription {
     return Intl.message(
-      'Add and manage the accounts where you receive payouts.',
+      'أضف الحسابات التي تستقبل عليها التحويلات وأدرها.',
       name: 'payoutAccountsDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payout accounts`
+  /// `حسابات التحويل`
   String get payoutAccountsTitle {
     return Intl.message(
-      'Payout accounts',
+      'حسابات التحويل',
       name: 'payoutAccountsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Add payout account`
+  /// `أضف رقم هاتف لمواصلة استخدام FleetFill.`
+  String get phoneCompletionDescription {
+    return Intl.message(
+      'أضف رقم هاتف لمواصلة استخدام FleetFill.',
+      name: 'phoneCompletionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حفظ رقم الهاتف`
+  String get phoneCompletionSaveAction {
+    return Intl.message(
+      'حفظ رقم الهاتف',
+      name: 'phoneCompletionSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حفظ رقم الهاتف.`
+  String get phoneCompletionSavedMessage {
+    return Intl.message(
+      'تم حفظ رقم الهاتف.',
+      name: 'phoneCompletionSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إكمال رقم الهاتف`
+  String get phoneCompletionTitle {
+    return Intl.message(
+      'إكمال رقم الهاتف',
+      name: 'phoneCompletionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رقم الهاتف مطلوب`
+  String get carrierGatePhoneTitle {
+    return Intl.message(
+      'رقم الهاتف مطلوب',
+      name: 'carrierGatePhoneTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أضف رقم هاتفك قبل فتح هذه المساحة الخاصة بالناقل حتى تصلك تحديثات الحجز والتشغيل.`
+  String get carrierGatePhoneMessage {
+    return Intl.message(
+      'أضف رقم هاتفك قبل فتح هذه المساحة الخاصة بالناقل حتى تصلك تحديثات الحجز والتشغيل.',
+      name: 'carrierGatePhoneMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `التحقق مطلوب`
+  String get carrierGateVerificationTitle {
+    return Intl.message(
+      'التحقق مطلوب',
+      name: 'carrierGateVerificationTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أكمل تحقق الناقل قبل فتح هذه المساحة لنشر المسارات أو إدارة الحجوزات.`
+  String get carrierGateVerificationMessage {
+    return Intl.message(
+      'أكمل تحقق الناقل قبل فتح هذه المساحة لنشر المسارات أو إدارة الحجوزات.',
+      name: 'carrierGateVerificationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حساب الدفع مطلوب`
+  String get carrierGatePayoutTitle {
+    return Intl.message(
+      'حساب الدفع مطلوب',
+      name: 'carrierGatePayoutTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أضف حساب دفع قبل فتح حجوزات الناقل حتى تتم تسوية الأعمال المكتملة بشكل صحيح.`
+  String get carrierGatePayoutMessage {
+    return Intl.message(
+      'أضف حساب دفع قبل فتح حجوزات الناقل حتى تتم تسوية الأعمال المكتملة بشكل صحيح.',
+      name: 'carrierGatePayoutMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `وثائق تحقق الملف الشخصي`
+  String get profileVerificationDocumentsTitle {
+    return Intl.message(
+      'وثائق تحقق الملف الشخصي',
+      name: 'profileVerificationDocumentsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أضف بياناتك حتى يتمكن العملاء والناقلون والدعم من التواصل معك.`
+  String get profileSetupDescription {
+    return Intl.message(
+      'أضف بياناتك حتى يتمكن العملاء والناقلون والدعم من التواصل معك.',
+      name: 'profileSetupDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أكمل بيانات الناقل أولًا، ثم ارفع وثائق التحقق من ملفك الشخصي.`
+  String get profileCarrierVerificationHint {
+    return Intl.message(
+      'أكمل بيانات الناقل أولًا، ثم ارفع وثائق التحقق من ملفك الشخصي.',
+      name: 'profileCarrierVerificationHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اسم الشركة`
+  String get profileCompanyNameLabel {
+    return Intl.message(
+      'اسم الشركة',
+      name: 'profileCompanyNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الاسم الكامل`
+  String get profileFullNameLabel {
+    return Intl.message(
+      'الاسم الكامل',
+      name: 'profileFullNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدخل اسم شركة صالحا.`
+  String get profileInvalidCompanyNameMessage {
+    return Intl.message(
+      'أدخل اسم شركة صالحا.',
+      name: 'profileInvalidCompanyNameMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدخل اسما كاملا صالحا بأحرف عربية أو لاتينية.`
+  String get profileInvalidNameMessage {
+    return Intl.message(
+      'أدخل اسما كاملا صالحا بأحرف عربية أو لاتينية.',
+      name: 'profileInvalidNameMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدخل رقم هاتف جزائري صالحا.`
+  String get profileInvalidAlgerianPhoneMessage {
+    return Intl.message(
+      'أدخل رقم هاتف جزائري صالحا.',
+      name: 'profileInvalidAlgerianPhoneMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رقم الهاتف`
+  String get profilePhoneLabel {
+    return Intl.message(
+      'رقم الهاتف',
+      name: 'profilePhoneLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حفظ الملف الشخصي`
+  String get profileSetupSaveAction {
+    return Intl.message(
+      'حفظ الملف الشخصي',
+      name: 'profileSetupSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حفظ بيانات الملف الشخصي.`
+  String get profileSetupSavedMessage {
+    return Intl.message(
+      'تم حفظ بيانات الملف الشخصي.',
+      name: 'profileSetupSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعداد الملف الشخصي`
+  String get profileSetupTitle {
+    return Intl.message(
+      'إعداد الملف الشخصي',
+      name: 'profileSetupTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اعرض إثبات الدفع لهذا الحجز هنا أو افتحه في تطبيق آخر.`
+  String get proofViewerDescription {
+    return Intl.message(
+      'اعرض إثبات الدفع لهذا الحجز هنا أو افتحه في تطبيق آخر.',
+      name: 'proofViewerDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإثبات {proofId}`
+  String proofViewerTitle(Object proofId) {
+    return Intl.message(
+      'الإثبات $proofId',
+      name: 'proofViewerTitle',
+      desc: '',
+      args: [proofId],
+    );
+  }
+
+  /// `إعادة المحاولة`
+  String get retryLabel {
+    return Intl.message(
+      'إعادة المحاولة',
+      name: 'retryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر كيف تريد استخدام FleetFill حتى نجهز الأدوات المناسبة لحسابك.`
+  String get roleSelectionDescription {
+    return Intl.message(
+      'اختر كيف تريد استخدام FleetFill حتى نجهز الأدوات المناسبة لحسابك.',
+      name: 'roleSelectionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انشر رحلاتك، أدر الحجوزات، وأكمل التحقق.`
+  String get roleSelectionCarrierDescription {
+    return Intl.message(
+      'انشر رحلاتك، أدر الحجوزات، وأكمل التحقق.',
+      name: 'roleSelectionCarrierDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أنا ناقل`
+  String get roleSelectionCarrierTitle {
+    return Intl.message(
+      'أنا ناقل',
+      name: 'roleSelectionCarrierTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سجّل شحناتك، قارن بين العروض، وتابع التسليم.`
+  String get roleSelectionShipperDescription {
+    return Intl.message(
+      'سجّل شحناتك، قارن بين العروض، وتابع التسليم.',
+      name: 'roleSelectionShipperDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أنا شاحن`
+  String get roleSelectionShipperTitle {
+    return Intl.message(
+      'أنا شاحن',
+      name: 'roleSelectionShipperTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `كيف تريد استخدام FleetFill؟`
+  String get roleSelectionTitle {
+    return Intl.message(
+      'كيف تريد استخدام FleetFill؟',
+      name: 'roleSelectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `راجع هذا المسار قبل الحجز.`
+  String get routeDetailDescription {
+    return Intl.message(
+      'راجع هذا المسار قبل الحجز.',
+      name: 'routeDetailDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المسار {routeId}`
+  String routeDetailTitle(Object routeId) {
+    return Intl.message(
+      'المسار $routeId',
+      name: 'routeDetailTitle',
+      desc: '',
+      args: [routeId],
+    );
+  }
+
+  /// `تعذر على FleetFill فتح هذا المسار.`
+  String get routeErrorMessage {
+    return Intl.message(
+      'تعذر على FleetFill فتح هذا المسار.',
+      name: 'routeErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر شحنة وتاريخا للعثور على الرحلات المناسبة.`
+  String get searchTripsDescription {
+    return Intl.message(
+      'اختر شحنة وتاريخا للعثور على الرحلات المناسبة.',
+      name: 'searchTripsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `البحث`
+  String get searchTripsNavLabel {
+    return Intl.message(
+      'البحث',
+      name: 'searchTripsNavLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `البحث عن رحلة`
+  String get searchTripsTitle {
+    return Intl.message(
+      'البحث عن رحلة',
+      name: 'searchTripsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السعر الأساسي`
+  String get sampleBasePriceLabel {
+    return Intl.message(
+      'السعر الأساسي',
+      name: 'sampleBasePriceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رسوم المنصة`
+  String get samplePlatformFeeLabel {
+    return Intl.message(
+      'رسوم المنصة',
+      name: 'samplePlatformFeeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإجمالي`
+  String get sampleTotalLabel {
+    return Intl.message(
+      'الإجمالي',
+      name: 'sampleTotalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحساب`
+  String get settingsAccountSectionTitle {
+    return Intl.message(
+      'الحساب',
+      name: 'settingsAccountSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدر اللغة والمظهر والإشعارات وخيارات الدعم.`
+  String get settingsDescription {
+    return Intl.message(
+      'أدر اللغة والمظهر والإشعارات وخيارات الدعم.',
+      name: 'settingsDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السمة`
+  String get settingsThemeModeTitle {
+    return Intl.message(
+      'السمة',
+      name: 'settingsThemeModeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `النظام`
+  String get settingsThemeModeSystemLabel {
+    return Intl.message(
+      'النظام',
+      name: 'settingsThemeModeSystemLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فاتحة`
+  String get settingsThemeModeLightLabel {
+    return Intl.message(
+      'فاتحة',
+      name: 'settingsThemeModeLightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `داكنة`
+  String get settingsThemeModeDarkLabel {
+    return Intl.message(
+      'داكنة',
+      name: 'settingsThemeModeDarkLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تسجيل خروجك.`
+  String get settingsSignedOutMessage {
+    return Intl.message(
+      'تم تسجيل خروجك.',
+      name: 'settingsSignedOutMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تسجيل الخروج`
+  String get settingsSignOutAction {
+    return Intl.message(
+      'تسجيل الخروج',
+      name: 'settingsSignOutAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإعدادات`
+  String get settingsTitle {
+    return Intl.message('الإعدادات', name: 'settingsTitle', desc: '', args: []);
+  }
+
+  /// `هذه الميزة ستتوفر قريبا.`
+  String get sharedScaffoldPreviewMessage {
+    return Intl.message(
+      'هذه الميزة ستتوفر قريبا.',
+      name: 'sharedScaffoldPreviewMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `قريبا`
+  String get sharedScaffoldPreviewTitle {
+    return Intl.message(
+      'قريبا',
+      name: 'sharedScaffoldPreviewTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `12,500 دج`
+  String get sampleBasePriceAmount {
+    return Intl.message(
+      '12,500 دج',
+      name: 'sampleBasePriceAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1,200 دج`
+  String get samplePlatformFeeAmount {
+    return Intl.message(
+      '1,200 دج',
+      name: 'samplePlatformFeeAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `13,700 دج`
+  String get sampleTotalAmount {
+    return Intl.message(
+      '13,700 دج',
+      name: 'sampleTotalAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `راجع المسار والوزن والحجم وتفاصيل الشحنة.`
+  String get shipmentDetailDescription {
+    return Intl.message(
+      'راجع المسار والوزن والحجم وتفاصيل الشحنة.',
+      name: 'shipmentDetailDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الشحنة {shipmentId}`
+  String shipmentDetailTitle(Object shipmentId) {
+    return Intl.message(
+      'الشحنة $shipmentId',
+      name: 'shipmentDetailTitle',
+      desc: '',
+      args: [shipmentId],
+    );
+  }
+
+  /// `تابع حجوزاتك وآخر التحديثات وانتقل بسرعة لأهم الإجراءات.`
+  String get shipperHomeDescription {
+    return Intl.message(
+      'تابع حجوزاتك وآخر التحديثات وانتقل بسرعة لأهم الإجراءات.',
+      name: 'shipperHomeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحجوزات النشطة`
+  String get shipperHomeActiveBookingsLabel {
+    return Intl.message(
+      'الحجوزات النشطة',
+      name: 'shipperHomeActiveBookingsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإشعارات غير المقروءة`
+  String get shipperHomeUnreadNotificationsLabel {
+    return Intl.message(
+      'الإشعارات غير المقروءة',
+      name: 'shipperHomeUnreadNotificationsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ستظهر آخر التحديثات هنا.`
+  String get shipperHomeNoRecentNotificationMessage {
+    return Intl.message(
+      'ستظهر آخر التحديثات هنا.',
+      name: 'shipperHomeNoRecentNotificationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إجراءات سريعة`
+  String get shipperHomeQuickActionsTitle {
+    return Intl.message(
+      'إجراءات سريعة',
+      name: 'shipperHomeQuickActionsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرئيسية`
+  String get shipperHomeNavLabel {
+    return Intl.message(
+      'الرئيسية',
+      name: 'shipperHomeNavLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرئيسية للشاحن`
+  String get shipperHomeTitle {
+    return Intl.message(
+      'الرئيسية للشاحن',
+      name: 'shipperHomeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدر بيانات التواصل والإعدادات وخيارات الدعم.`
+  String get shipperProfileDescription {
+    return Intl.message(
+      'أدر بيانات التواصل والإعدادات وخيارات الدعم.',
+      name: 'shipperProfileDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الملف`
+  String get shipperProfileNavLabel {
+    return Intl.message(
+      'الملف',
+      name: 'shipperProfileNavLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بيانات الشاحن`
+  String get shipperProfileSectionTitle {
+    return Intl.message(
+      'بيانات الشاحن',
+      name: 'shipperProfileSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملف الشاحن`
+  String get shipperProfileTitle {
+    return Intl.message(
+      'ملف الشاحن',
+      name: 'shipperProfileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لحظة، نجهّز FleetFill لك.`
+  String get splashDescription {
+    return Intl.message(
+      'لحظة، نجهّز FleetFill لك.',
+      name: 'splashDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جاري التجهيز`
+  String get splashTitle {
+    return Intl.message(
+      'جاري التجهيز',
+      name: 'splashTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill غير متاح`
+  String get startupConfigurationRequiredTitle {
+    return Intl.message(
+      'FleetFill غير متاح',
+      name: 'startupConfigurationRequiredTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FleetFill غير متاح حاليا. يرجى المحاولة لاحقا.`
+  String get startupConfigurationRequiredMessage {
+    return Intl.message(
+      'FleetFill غير متاح حاليا. يرجى المحاولة لاحقا.',
+      name: 'startupConfigurationRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يحتاج مراجعة`
+  String get statusNeedsReviewLabel {
+    return Intl.message(
+      'يحتاج مراجعة',
+      name: 'statusNeedsReviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جاهز`
+  String get statusReadyLabel {
+    return Intl.message('جاهز', name: 'statusReadyLabel', desc: '', args: []);
+  }
+
+  /// `اطرح سؤالا أو أبلغ عن مشكلة أو اطلب المساعدة بشأن حجز أو دفعة.`
+  String get supportDescription {
+    return Intl.message(
+      'اطرح سؤالا أو أبلغ عن مشكلة أو اطلب المساعدة بشأن حجز أو دفعة.',
+      name: 'supportDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الدعم`
+  String get supportTitle {
+    return Intl.message('الدعم', name: 'supportTitle', desc: '', args: []);
+  }
+
+  /// `حسابك موقوف. تواصل مع دعم FleetFill للمساعدة.`
+  String get suspendedMessage {
+    return Intl.message(
+      'حسابك موقوف. تواصل مع دعم FleetFill للمساعدة.',
+      name: 'suspendedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحساب موقوف`
+  String get suspendedTitle {
+    return Intl.message(
+      'الحساب موقوف',
+      name: 'suspendedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تابع تقدم التسليم وأكد الاستلام وافتح نزاعا أو اترك تقييما.`
+  String get trackingDetailDescription {
+    return Intl.message(
+      'تابع تقدم التسليم وأكد الاستلام وافتح نزاعا أو اترك تقييما.',
+      name: 'trackingDetailDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `التتبع {bookingId}`
+  String trackingDetailTitle(Object bookingId) {
+    return Intl.message(
+      'التتبع $bookingId',
+      name: 'trackingDetailTitle',
+      desc: '',
+      args: [bookingId],
+    );
+  }
+
+  /// `حدّث FleetFill لمتابعة الاستخدام بأحدث إصدار مدعوم.`
+  String get updateRequiredDescription {
+    return Intl.message(
+      'حدّث FleetFill لمتابعة الاستخدام بأحدث إصدار مدعوم.',
+      name: 'updateRequiredDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تحديث مطلوب`
+  String get updateRequiredTitle {
+    return Intl.message(
+      'تحديث مطلوب',
+      name: 'updateRequiredTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `راجع بيانات الحساب والحجوزات والمركبات والوثائق.`
+  String get userDetailDescription {
+    return Intl.message(
+      'راجع بيانات الحساب والحجوزات والمركبات والوثائق.',
+      name: 'userDetailDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تفاصيل المستخدم`
+  String get userDetailTitle {
+    return Intl.message(
+      'تفاصيل المستخدم',
+      name: 'userDetailTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حجم السعة (م3)`
+  String get vehicleCapacityVolumeLabel {
+    return Intl.message(
+      'حجم السعة (م3)',
+      name: 'vehicleCapacityVolumeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سعة الوزن (كغ)`
+  String get vehicleCapacityWeightLabel {
+    return Intl.message(
+      'سعة الوزن (كغ)',
+      name: 'vehicleCapacityWeightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إضافة مركبة`
+  String get vehicleCreateAction {
+    return Intl.message(
+      'إضافة مركبة',
+      name: 'vehicleCreateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إضافة مركبة`
+  String get vehicleCreateTitle {
+    return Intl.message(
+      'إضافة مركبة',
+      name: 'vehicleCreateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت إضافة المركبة.`
+  String get vehicleCreatedMessage {
+    return Intl.message(
+      'تمت إضافة المركبة.',
+      name: 'vehicleCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حذف المركبة`
+  String get vehicleDeleteAction {
+    return Intl.message(
+      'حذف المركبة',
+      name: 'vehicleDeleteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `هل تريد حذف هذه المركبة من FleetFill؟`
+  String get vehicleDeleteConfirmationMessage {
+    return Intl.message(
+      'هل تريد حذف هذه المركبة من FleetFill؟',
+      name: 'vehicleDeleteConfirmationMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حذف المركبة.`
+  String get vehicleDeletedMessage {
+    return Intl.message(
+      'تم حذف المركبة.',
+      name: 'vehicleDeletedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تظهر هنا تفاصيل المركبة ووثائقها وحالة التحقق.`
+  String get vehicleDetailDescription {
+    return Intl.message(
+      'تظهر هنا تفاصيل المركبة ووثائقها وحالة التحقق.',
+      name: 'vehicleDetailDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تفاصيل المركبة`
+  String get vehicleDetailTitle {
+    return Intl.message(
+      'تفاصيل المركبة',
+      name: 'vehicleDetailTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعديل المركبة`
+  String get vehicleEditTitle {
+    return Intl.message(
+      'تعديل المركبة',
+      name: 'vehicleEditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أبق بيانات المركبة محدثة قبل نشر الرحلات.`
+  String get vehicleEditorDescription {
+    return Intl.message(
+      'أبق بيانات المركبة محدثة قبل نشر الرحلات.',
+      name: 'vehicleEditorDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رقم اللوحة`
+  String get vehiclePlateLabel {
+    return Intl.message(
+      'رقم اللوحة',
+      name: 'vehiclePlateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدخل رقما أكبر من الصفر.`
+  String get vehiclePositiveNumberMessage {
+    return Intl.message(
+      'أدخل رقما أكبر من الصفر.',
+      name: 'vehiclePositiveNumberMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تحقق المركبة يحتاج تصحيح: {reason}`
+  String vehicleVerificationRejectedBanner(Object reason) {
+    return Intl.message(
+      'تحقق المركبة يحتاج تصحيح: $reason',
+      name: 'vehicleVerificationRejectedBanner',
+      desc: '',
+      args: [reason],
+    );
+  }
+
+  /// `حفظ المركبة`
+  String get vehicleSaveAction {
+    return Intl.message(
+      'حفظ المركبة',
+      name: 'vehicleSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تحديث المركبة.`
+  String get vehicleSavedMessage {
+    return Intl.message(
+      'تم تحديث المركبة.',
+      name: 'vehicleSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملخص المركبة`
+  String get vehicleSummaryTitle {
+    return Intl.message(
+      'ملخص المركبة',
+      name: 'vehicleSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نوع المركبة`
+  String get vehicleTypeLabel {
+    return Intl.message(
+      'نوع المركبة',
+      name: 'vehicleTypeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أضف المركبات التي تستخدمها للنقل وأدرها.`
+  String get vehiclesDescription {
+    return Intl.message(
+      'أضف المركبات التي تستخدمها للنقل وأدرها.',
+      name: 'vehiclesDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أضف مركبة قبل نشر السعة أو إكمال التحقق الكامل.`
+  String get vehiclesEmptyMessage {
+    return Intl.message(
+      'أضف مركبة قبل نشر السعة أو إكمال التحقق الكامل.',
+      name: 'vehiclesEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المركبات`
+  String get vehiclesTitle {
+    return Intl.message('المركبات', name: 'vehiclesTitle', desc: '', args: []);
+  }
+
+  /// `وثائق تحقق المركبة`
+  String get vehicleVerificationDocumentsTitle {
+    return Intl.message(
+      'وثائق تحقق المركبة',
+      name: 'vehicleVerificationDocumentsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `هوية السائق أو الرخصة`
+  String get verificationDocumentDriverIdentityLabel {
+    return Intl.message(
+      'هوية السائق أو الرخصة',
+      name: 'verificationDocumentDriverIdentityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لم يتم رفع أي ملف بعد.`
+  String get verificationDocumentMissingMessage {
+    return Intl.message(
+      'لم يتم رفع أي ملف بعد.',
+      name: 'verificationDocumentMissingMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `راجع سبب الرفض ثم ارفع بديلا.`
+  String get verificationDocumentNeedsAttentionMessage {
+    return Intl.message(
+      'راجع سبب الرفض ثم ارفع بديلا.',
+      name: 'verificationDocumentNeedsAttentionMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `وثيقتك جاهزة للفتح.`
+  String get verificationDocumentOpenPreparedMessage {
+    return Intl.message(
+      'وثيقتك جاهزة للفتح.',
+      name: 'verificationDocumentOpenPreparedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم الرفع وينتظر مراجعة الإدارة.`
+  String get verificationDocumentPendingMessage {
+    return Intl.message(
+      'تم الرفع وينتظر مراجعة الإدارة.',
+      name: 'verificationDocumentPendingMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مرفوض: {reason}`
+  String verificationDocumentRejectedMessage(Object reason) {
+    return Intl.message(
+      'مرفوض: $reason',
+      name: 'verificationDocumentRejectedMessage',
+      desc: '',
+      args: [reason],
+    );
+  }
+
+  /// `تم استبدال وثيقة التحقق.`
+  String get verificationDocumentReplacedMessage {
+    return Intl.message(
+      'تم استبدال وثيقة التحقق.',
+      name: 'verificationDocumentReplacedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رخصة النقل`
+  String get verificationDocumentTransportLicenseLabel {
+    return Intl.message(
+      'رخصة النقل',
+      name: 'verificationDocumentTransportLicenseLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الفحص التقني للشاحنة`
+  String get verificationDocumentTruckInspectionLabel {
+    return Intl.message(
+      'الفحص التقني للشاحنة',
+      name: 'verificationDocumentTruckInspectionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تأمين الشاحنة`
+  String get verificationDocumentTruckInsuranceLabel {
+    return Intl.message(
+      'تأمين الشاحنة',
+      name: 'verificationDocumentTruckInsuranceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تسجيل الشاحنة`
+  String get verificationDocumentTruckRegistrationLabel {
+    return Intl.message(
+      'تسجيل الشاحنة',
+      name: 'verificationDocumentTruckRegistrationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفع وثيقة التحقق.`
+  String get verificationDocumentUploadedMessage {
+    return Intl.message(
+      'تم رفع وثيقة التحقق.',
+      name: 'verificationDocumentUploadedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم التحقق منها واعتمادها.`
+  String get verificationDocumentVerifiedMessage {
+    return Intl.message(
+      'تم التحقق منها واعتمادها.',
+      name: 'verificationDocumentVerifiedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `استبدال`
+  String get verificationReplaceAction {
+    return Intl.message(
+      'استبدال',
+      name: 'verificationReplaceAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رفع`
+  String get verificationUploadAction {
+    return Intl.message(
+      'رفع',
+      name: 'verificationUploadAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أكمل خطوات التحقق المطلوبة قبل المتابعة.`
+  String get verificationRequiredMessage {
+    return Intl.message(
+      'أكمل خطوات التحقق المطلوبة قبل المتابعة.',
+      name: 'verificationRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `التحقق مطلوب`
+  String get verificationRequiredTitle {
+    return Intl.message(
+      'التحقق مطلوب',
+      name: 'verificationRequiredTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إضافة سعة`
+  String get myRoutesAddAction {
+    return Intl.message(
+      'إضافة سعة',
+      name: 'myRoutesAddAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المسارات المتكررة النشطة`
+  String get myRoutesActiveRoutesLabel {
+    return Intl.message(
+      'المسارات المتكررة النشطة',
+      name: 'myRoutesActiveRoutesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرحلات الفردية النشطة`
+  String get myRoutesActiveTripsLabel {
+    return Intl.message(
+      'الرحلات الفردية النشطة',
+      name: 'myRoutesActiveTripsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إضافة مسار متكرر`
+  String get myRoutesCreateRouteAction {
+    return Intl.message(
+      'إضافة مسار متكرر',
+      name: 'myRoutesCreateRouteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إضافة رحلة فردية`
+  String get myRoutesCreateTripAction {
+    return Intl.message(
+      'إضافة رحلة فردية',
+      name: 'myRoutesCreateTripAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انشر مسارا متكررا أو رحلة فردية لبدء عرض السعة.`
+  String get myRoutesEmptyMessage {
+    return Intl.message(
+      'انشر مسارا متكررا أو رحلة فردية لبدء عرض السعة.',
+      name: 'myRoutesEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرحلات الفردية`
+  String get myRoutesOneOffTab {
+    return Intl.message(
+      'الرحلات الفردية',
+      name: 'myRoutesOneOffTab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السعة المنشورة`
+  String get myRoutesPublishedCapacityLabel {
+    return Intl.message(
+      'السعة المنشورة',
+      name: 'myRoutesPublishedCapacityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المسارات المتكررة`
+  String get myRoutesRecurringTab {
+    return Intl.message(
+      'المسارات المتكررة',
+      name: 'myRoutesRecurringTab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السعة المحجوزة`
+  String get myRoutesReservedCapacityLabel {
+    return Intl.message(
+      'السعة المحجوزة',
+      name: 'myRoutesReservedCapacityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المسارات المتكررة`
+  String get myRoutesRouteListTitle {
+    return Intl.message(
+      'المسارات المتكررة',
+      name: 'myRoutesRouteListTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملخص نشر السعة`
+  String get myRoutesSummaryTitle {
+    return Intl.message(
+      'ملخص نشر السعة',
+      name: 'myRoutesSummaryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرحلات الفردية`
+  String get myRoutesTripListTitle {
+    return Intl.message(
+      'الرحلات الفردية',
+      name: 'myRoutesTripListTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الانطلاقات القادمة`
+  String get myRoutesUpcomingDeparturesLabel {
+    return Intl.message(
+      'الانطلاقات القادمة',
+      name: 'myRoutesUpcomingDeparturesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `معدل الاستخدام`
+  String get myRoutesUtilizationLabel {
+    return Intl.message(
+      'معدل الاستخدام',
+      name: 'myRoutesUtilizationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تفعيل الرحلة`
+  String get oneOffTripActivateAction {
+    return Intl.message(
+      'تفعيل الرحلة',
+      name: 'oneOffTripActivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تفعيل الرحلة الفردية.`
+  String get oneOffTripActivatedMessage {
+    return Intl.message(
+      'تم تفعيل الرحلة الفردية.',
+      name: 'oneOffTripActivatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إضافة رحلة فردية`
+  String get oneOffTripCreateTitle {
+    return Intl.message(
+      'إضافة رحلة فردية',
+      name: 'oneOffTripCreateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت إضافة الرحلة الفردية.`
+  String get oneOffTripCreatedMessage {
+    return Intl.message(
+      'تمت إضافة الرحلة الفردية.',
+      name: 'oneOffTripCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إلغاء تفعيل الرحلة`
+  String get oneOffTripDeactivateAction {
+    return Intl.message(
+      'إلغاء تفعيل الرحلة',
+      name: 'oneOffTripDeactivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم إلغاء تفعيل الرحلة الفردية.`
+  String get oneOffTripDeactivatedMessage {
+    return Intl.message(
+      'تم إلغاء تفعيل الرحلة الفردية.',
+      name: 'oneOffTripDeactivatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حذف الرحلة`
+  String get oneOffTripDeleteAction {
+    return Intl.message(
+      'حذف الرحلة',
+      name: 'oneOffTripDeleteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حذف الرحلة الفردية.`
+  String get oneOffTripDeletedMessage {
+    return Intl.message(
+      'تم حذف الرحلة الفردية.',
+      name: 'oneOffTripDeletedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الانطلاق`
+  String get oneOffTripDepartureLabel {
+    return Intl.message(
+      'الانطلاق',
+      name: 'oneOffTripDepartureLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انشر رحلة بتاريخ محدد مع المركبة والمسار والانطلاق وتفاصيل السعة.`
+  String get oneOffTripEditorDescription {
+    return Intl.message(
+      'انشر رحلة بتاريخ محدد مع المركبة والمسار والانطلاق وتفاصيل السعة.',
+      name: 'oneOffTripEditorDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعديل الرحلة الفردية`
+  String get oneOffTripEditTitle {
+    return Intl.message(
+      'تعديل الرحلة الفردية',
+      name: 'oneOffTripEditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حفظ الرحلة`
+  String get oneOffTripSaveAction {
+    return Intl.message(
+      'حفظ الرحلة',
+      name: 'oneOffTripSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تحديث الرحلة الفردية.`
+  String get oneOffTripSavedMessage {
+    return Intl.message(
+      'تم تحديث الرحلة الفردية.',
+      name: 'oneOffTripSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نشط`
+  String get publicationActiveLabel {
+    return Intl.message(
+      'نشط',
+      name: 'publicationActiveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `غير نشط`
+  String get publicationInactiveLabel {
+    return Intl.message(
+      'غير نشط',
+      name: 'publicationInactiveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد مراجعات للمسار حتى الآن.`
+  String get publicationNoRevisionsMessage {
+    return Intl.message(
+      'لا توجد مراجعات للمسار حتى الآن.',
+      name: 'publicationNoRevisionsMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سجل المراجعات`
+  String get publicationRevisionHistoryTitle {
+    return Intl.message(
+      'سجل المراجعات',
+      name: 'publicationRevisionHistoryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يجب أن تكون بلديتا الانطلاق والوصول مختلفتين.`
+  String get publicationSameLaneErrorMessage {
+    return Intl.message(
+      'يجب أن تكون بلديتا الانطلاق والوصول مختلفتين.',
+      name: 'publicationSameLaneErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ابحث عن بلدية`
+  String get publicationSearchCommunesHint {
+    return Intl.message(
+      'ابحث عن بلدية',
+      name: 'publicationSearchCommunesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر`
+  String get publicationSelectValueAction {
+    return Intl.message(
+      'اختر',
+      name: 'publicationSelectValueAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر يوما واحدا على الأقل للانطلاق.`
+  String get publicationWeekdaysRequiredMessage {
+    return Intl.message(
+      'اختر يوما واحدا على الأقل للانطلاق.',
+      name: 'publicationWeekdaysRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تفعيل المسار`
+  String get routeActivateAction {
+    return Intl.message(
+      'تفعيل المسار',
+      name: 'routeActivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تفعيل المسار.`
+  String get routeActivatedMessage {
+    return Intl.message(
+      'تم تفعيل المسار.',
+      name: 'routeActivatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إضافة مسار متكرر`
+  String get routeCreateTitle {
+    return Intl.message(
+      'إضافة مسار متكرر',
+      name: 'routeCreateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت إضافة المسار المتكرر.`
+  String get routeCreatedMessage {
+    return Intl.message(
+      'تمت إضافة المسار المتكرر.',
+      name: 'routeCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إلغاء تفعيل المسار`
+  String get routeDeactivateAction {
+    return Intl.message(
+      'إلغاء تفعيل المسار',
+      name: 'routeDeactivateAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم إلغاء تفعيل المسار.`
+  String get routeDeactivatedMessage {
+    return Intl.message(
+      'تم إلغاء تفعيل المسار.',
+      name: 'routeDeactivatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حذف المسار`
+  String get routeDeleteAction {
+    return Intl.message(
+      'حذف المسار',
+      name: 'routeDeleteAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حذف المسار المتكرر.`
+  String get routeDeletedMessage {
+    return Intl.message(
+      'تم حذف المسار المتكرر.',
+      name: 'routeDeletedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `وقت الانطلاق الافتراضي`
+  String get routeDepartureTimeLabel {
+    return Intl.message(
+      'وقت الانطلاق الافتراضي',
+      name: 'routeDepartureTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بلدية الوصول`
+  String get routeDestinationLabel {
+    return Intl.message(
+      'بلدية الوصول',
+      name: 'routeDestinationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انشر مسارا متكررا مع المركبة والجدول وتفاصيل السعة.`
+  String get routeEditorDescription {
+    return Intl.message(
+      'انشر مسارا متكررا مع المركبة والجدول وتفاصيل السعة.',
+      name: 'routeEditorDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعديل المسار المتكرر`
+  String get routeEditTitle {
+    return Intl.message(
+      'تعديل المسار المتكرر',
+      name: 'routeEditTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يسري من`
+  String get routeEffectiveFromLabel {
+    return Intl.message(
+      'يسري من',
+      name: 'routeEffectiveFromLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بلدية الانطلاق`
+  String get routeOriginLabel {
+    return Intl.message(
+      'بلدية الانطلاق',
+      name: 'routeOriginLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السعر لكل كلغ (دج)`
+  String get routePricePerKgLabel {
+    return Intl.message(
+      'السعر لكل كلغ (دج)',
+      name: 'routePricePerKgLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أيام التكرار`
+  String get routeRecurringDaysLabel {
+    return Intl.message(
+      'أيام التكرار',
+      name: 'routeRecurringDaysLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حفظ المسار`
+  String get routeSaveAction {
+    return Intl.message(
+      'حفظ المسار',
+      name: 'routeSaveAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تحديث المسار المتكرر.`
+  String get routeSavedMessage {
+    return Intl.message(
+      'تم تحديث المسار المتكرر.',
+      name: 'routeSavedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حالة النشر`
+  String get routeStatusLabel {
+    return Intl.message(
+      'حالة النشر',
+      name: 'routeStatusLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المركبة المخصصة`
+  String get routeVehicleLabel {
+    return Intl.message(
+      'المركبة المخصصة',
+      name: 'routeVehicleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعذّر إكمال هذا الإجراء حاليا. حاول مرة أخرى.`
+  String get appGenericErrorMessage {
+    return Intl.message(
+      'تعذّر إكمال هذا الإجراء حاليا. حاول مرة أخرى.',
+      name: 'appGenericErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إظهار كلمة المرور`
+  String get authShowPasswordAction {
+    return Intl.message(
+      'إظهار كلمة المرور',
+      name: 'authShowPasswordAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إخفاء كلمة المرور`
+  String get authHidePasswordAction {
+    return Intl.message(
+      'إخفاء كلمة المرور',
+      name: 'authHidePasswordAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إضافة حساب تحويل`
   String get payoutAccountAddAction {
     return Intl.message(
-      'Add payout account',
+      'إضافة حساب تحويل',
       name: 'payoutAccountAddAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delete payout account`
+  /// `حذف الحساب`
   String get payoutAccountDeleteAction {
     return Intl.message(
-      'Delete payout account',
+      'حذف الحساب',
       name: 'payoutAccountDeleteAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `This payout account cannot be removed right now.`
+  /// `لا يمكن حذف هذا الحساب حاليا.`
   String get payoutAccountDeleteBlockedMessage {
     return Intl.message(
-      'This payout account cannot be removed right now.',
+      'لا يمكن حذف هذا الحساب حاليا.',
       name: 'payoutAccountDeleteBlockedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Remove this payout account from FleetFill?`
+  /// `هل تريد حذف حساب التحويل هذا من FleetFill؟`
   String get payoutAccountDeleteConfirmationMessage {
     return Intl.message(
-      'Remove this payout account from FleetFill?',
+      'هل تريد حذف حساب التحويل هذا من FleetFill؟',
       name: 'payoutAccountDeleteConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payout account removed.`
+  /// `تم حذف حساب التحويل.`
   String get payoutAccountDeletedMessage {
     return Intl.message(
-      'Payout account removed.',
+      'تم حذف حساب التحويل.',
       name: 'payoutAccountDeletedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Edit payout account`
+  /// `تعديل الحساب`
   String get payoutAccountEditAction {
     return Intl.message(
-      'Edit payout account',
+      'تعديل الحساب',
       name: 'payoutAccountEditAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Account holder name`
+  /// `اسم صاحب الحساب`
   String get payoutAccountHolderLabel {
     return Intl.message(
-      'Account holder name',
+      'اسم صاحب الحساب',
       name: 'payoutAccountHolderLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Account number or identifier`
+  /// `رقم الحساب أو المعرّف`
   String get payoutAccountIdentifierLabel {
     return Intl.message(
-      'Account number or identifier',
+      'رقم الحساب أو المعرّف',
       name: 'payoutAccountIdentifierLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bank or CCP name`
+  /// `اسم البنك أو CCP`
   String get payoutAccountInstitutionLabel {
     return Intl.message(
-      'Bank or CCP name',
+      'اسم البنك أو CCP',
       name: 'payoutAccountInstitutionLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Save payout account`
+  /// `حفظ الحساب`
   String get payoutAccountSaveAction {
     return Intl.message(
-      'Save payout account',
+      'حفظ الحساب',
       name: 'payoutAccountSaveAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payout account saved.`
+  /// `تم حفظ حساب التحويل.`
   String get payoutAccountSavedMessage {
     return Intl.message(
-      'Payout account saved.',
+      'تم حفظ حساب التحويل.',
       name: 'payoutAccountSavedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payout rail`
+  /// `وسيلة التحويل`
   String get payoutAccountTypeLabel {
     return Intl.message(
-      'Payout rail',
+      'وسيلة التحويل',
       name: 'payoutAccountTypeLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bank transfer`
+  /// `تحويل بنكي`
   String get payoutAccountTypeBankLabel {
     return Intl.message(
-      'Bank transfer',
+      'تحويل بنكي',
       name: 'payoutAccountTypeBankLabel',
       desc: '',
       args: [],
@@ -2437,4130 +5132,1590 @@ class S {
     );
   }
 
-  /// `Dahabia`
+  /// `الذهبية`
   String get payoutAccountTypeDahabiaLabel {
     return Intl.message(
-      'Dahabia',
+      'الذهبية',
       name: 'payoutAccountTypeDahabiaLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Add a phone number to keep using FleetFill.`
-  String get phoneCompletionDescription {
-    return Intl.message(
-      'Add a phone number to keep using FleetFill.',
-      name: 'phoneCompletionDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Save phone number`
-  String get phoneCompletionSaveAction {
-    return Intl.message(
-      'Save phone number',
-      name: 'phoneCompletionSaveAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Phone number saved.`
-  String get phoneCompletionSavedMessage {
-    return Intl.message(
-      'Phone number saved.',
-      name: 'phoneCompletionSavedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add phone number`
-  String get phoneCompletionTitle {
-    return Intl.message(
-      'Add phone number',
-      name: 'phoneCompletionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Phone number required`
-  String get carrierGatePhoneTitle {
-    return Intl.message(
-      'Phone number required',
-      name: 'carrierGatePhoneTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add your phone number before opening this carrier workspace so booking and operational updates can reach you.`
-  String get carrierGatePhoneMessage {
-    return Intl.message(
-      'Add your phone number before opening this carrier workspace so booking and operational updates can reach you.',
-      name: 'carrierGatePhoneMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Verification required`
-  String get carrierGateVerificationTitle {
-    return Intl.message(
-      'Verification required',
-      name: 'carrierGateVerificationTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Finish carrier verification before opening this workspace for publishing routes or handling bookings.`
-  String get carrierGateVerificationMessage {
-    return Intl.message(
-      'Finish carrier verification before opening this workspace for publishing routes or handling bookings.',
-      name: 'carrierGateVerificationMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Payout account required`
-  String get carrierGatePayoutTitle {
-    return Intl.message(
-      'Payout account required',
-      name: 'carrierGatePayoutTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add a payout account before opening carrier bookings so completed jobs can be settled correctly.`
-  String get carrierGatePayoutMessage {
-    return Intl.message(
-      'Add a payout account before opening carrier bookings so completed jobs can be settled correctly.',
-      name: 'carrierGatePayoutMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add your carrier details now, then upload the required verification documents from your profile.`
-  String get profileCarrierVerificationHint {
-    return Intl.message(
-      'Add your carrier details now, then upload the required verification documents from your profile.',
-      name: 'profileCarrierVerificationHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Profile verification documents`
-  String get profileVerificationDocumentsTitle {
-    return Intl.message(
-      'Profile verification documents',
-      name: 'profileVerificationDocumentsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Company name`
-  String get profileCompanyNameLabel {
-    return Intl.message(
-      'Company name',
-      name: 'profileCompanyNameLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Full name`
-  String get profileFullNameLabel {
-    return Intl.message(
-      'Full name',
-      name: 'profileFullNameLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Phone number`
-  String get profilePhoneLabel {
-    return Intl.message(
-      'Phone number',
-      name: 'profilePhoneLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add your details so customers, carriers, and support can reach you.`
-  String get profileSetupDescription {
-    return Intl.message(
-      'Add your details so customers, carriers, and support can reach you.',
-      name: 'profileSetupDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Save profile`
-  String get profileSetupSaveAction {
-    return Intl.message(
-      'Save profile',
-      name: 'profileSetupSaveAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Profile details saved.`
-  String get profileSetupSavedMessage {
-    return Intl.message(
-      'Profile details saved.',
-      name: 'profileSetupSavedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Profile setup`
-  String get profileSetupTitle {
-    return Intl.message(
-      'Profile setup',
-      name: 'profileSetupTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `View the payment proof for this booking here or open it in another app.`
-  String get proofViewerDescription {
-    return Intl.message(
-      'View the payment proof for this booking here or open it in another app.',
-      name: 'proofViewerDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Proof {proofId}`
-  String proofViewerTitle(Object proofId) {
-    return Intl.message(
-      'Proof $proofId',
-      name: 'proofViewerTitle',
-      desc: '',
-      args: [proofId],
-    );
-  }
-
-  /// `Retry`
-  String get retryLabel {
-    return Intl.message('Retry', name: 'retryLabel', desc: '', args: []);
-  }
-
-  /// `Publish trips, manage bookings, and keep verification moving.`
-  String get roleSelectionCarrierDescription {
-    return Intl.message(
-      'Publish trips, manage bookings, and keep verification moving.',
-      name: 'roleSelectionCarrierDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Continue as a carrier`
-  String get roleSelectionCarrierTitle {
-    return Intl.message(
-      'Continue as a carrier',
-      name: 'roleSelectionCarrierTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose how you want to use FleetFill. This sets up the right tools for your account.`
-  String get roleSelectionDescription {
-    return Intl.message(
-      'Choose how you want to use FleetFill. This sets up the right tools for your account.',
-      name: 'roleSelectionDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Create shipments, compare exact trips, and follow delivery progress.`
-  String get roleSelectionShipperDescription {
-    return Intl.message(
-      'Create shipments, compare exact trips, and follow delivery progress.',
-      name: 'roleSelectionShipperDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Continue as a shipper`
-  String get roleSelectionShipperTitle {
-    return Intl.message(
-      'Continue as a shipper',
-      name: 'roleSelectionShipperTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Role selection`
-  String get roleSelectionTitle {
-    return Intl.message(
-      'Role selection',
-      name: 'roleSelectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Review this route before booking.`
-  String get routeDetailDescription {
-    return Intl.message(
-      'Review this route before booking.',
-      name: 'routeDetailDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Route {routeId}`
-  String routeDetailTitle(Object routeId) {
-    return Intl.message(
-      'Route $routeId',
-      name: 'routeDetailTitle',
-      desc: '',
-      args: [routeId],
-    );
-  }
-
-  /// `FleetFill could not open this route.`
-  String get routeErrorMessage {
-    return Intl.message(
-      'FleetFill could not open this route.',
-      name: 'routeErrorMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose a shipment and date to find matching trips.`
-  String get searchTripsDescription {
-    return Intl.message(
-      'Choose a shipment and date to find matching trips.',
-      name: 'searchTripsDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Search`
-  String get searchTripsNavLabel {
-    return Intl.message(
-      'Search',
-      name: 'searchTripsNavLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Search trips`
-  String get searchTripsTitle {
-    return Intl.message(
-      'Search trips',
-      name: 'searchTripsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Base price`
-  String get sampleBasePriceLabel {
-    return Intl.message(
-      'Base price',
-      name: 'sampleBasePriceLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Platform fee`
-  String get samplePlatformFeeLabel {
-    return Intl.message(
-      'Platform fee',
-      name: 'samplePlatformFeeLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Total`
-  String get sampleTotalLabel {
-    return Intl.message('Total', name: 'sampleTotalLabel', desc: '', args: []);
-  }
-
-  /// `Account`
-  String get settingsAccountSectionTitle {
-    return Intl.message(
-      'Account',
-      name: 'settingsAccountSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Manage your language, appearance, notifications, and support options.`
-  String get settingsDescription {
-    return Intl.message(
-      'Manage your language, appearance, notifications, and support options.',
-      name: 'settingsDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Theme`
-  String get settingsThemeModeTitle {
-    return Intl.message(
-      'Theme',
-      name: 'settingsThemeModeTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `System`
-  String get settingsThemeModeSystemLabel {
-    return Intl.message(
-      'System',
-      name: 'settingsThemeModeSystemLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Light`
-  String get settingsThemeModeLightLabel {
-    return Intl.message(
-      'Light',
-      name: 'settingsThemeModeLightLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Dark`
-  String get settingsThemeModeDarkLabel {
-    return Intl.message(
-      'Dark',
-      name: 'settingsThemeModeDarkLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You have been signed out.`
-  String get settingsSignedOutMessage {
-    return Intl.message(
-      'You have been signed out.',
-      name: 'settingsSignedOutMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Sign out`
-  String get settingsSignOutAction {
-    return Intl.message(
-      'Sign out',
-      name: 'settingsSignOutAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Settings`
-  String get settingsTitle {
-    return Intl.message('Settings', name: 'settingsTitle', desc: '', args: []);
-  }
-
-  /// `This feature is on the way.`
-  String get sharedScaffoldPreviewMessage {
-    return Intl.message(
-      'This feature is on the way.',
-      name: 'sharedScaffoldPreviewMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Coming soon`
-  String get sharedScaffoldPreviewTitle {
-    return Intl.message(
-      'Coming soon',
-      name: 'sharedScaffoldPreviewTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `DZD 12,500`
-  String get sampleBasePriceAmount {
-    return Intl.message(
-      'DZD 12,500',
-      name: 'sampleBasePriceAmount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `DZD 1,200`
-  String get samplePlatformFeeAmount {
-    return Intl.message(
-      'DZD 1,200',
-      name: 'samplePlatformFeeAmount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `DZD 13,700`
-  String get sampleTotalAmount {
-    return Intl.message(
-      'DZD 13,700',
-      name: 'sampleTotalAmount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Review the route, weight, volume, and shipment details.`
-  String get shipmentDetailDescription {
-    return Intl.message(
-      'Review the route, weight, volume, and shipment details.',
-      name: 'shipmentDetailDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shipment {shipmentId}`
-  String shipmentDetailTitle(Object shipmentId) {
-    return Intl.message(
-      'Shipment $shipmentId',
-      name: 'shipmentDetailTitle',
-      desc: '',
-      args: [shipmentId],
-    );
-  }
-
-  /// `Track active bookings, check updates, and jump to your most-used actions.`
-  String get shipperHomeDescription {
-    return Intl.message(
-      'Track active bookings, check updates, and jump to your most-used actions.',
-      name: 'shipperHomeDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Active bookings`
-  String get shipperHomeActiveBookingsLabel {
-    return Intl.message(
-      'Active bookings',
-      name: 'shipperHomeActiveBookingsLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Unread notifications`
-  String get shipperHomeUnreadNotificationsLabel {
-    return Intl.message(
-      'Unread notifications',
-      name: 'shipperHomeUnreadNotificationsLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your latest updates will appear here.`
-  String get shipperHomeNoRecentNotificationMessage {
-    return Intl.message(
-      'Your latest updates will appear here.',
-      name: 'shipperHomeNoRecentNotificationMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Quick actions`
-  String get shipperHomeQuickActionsTitle {
-    return Intl.message(
-      'Quick actions',
-      name: 'shipperHomeQuickActionsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Home`
-  String get shipperHomeNavLabel {
-    return Intl.message(
-      'Home',
-      name: 'shipperHomeNavLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shipper home`
-  String get shipperHomeTitle {
-    return Intl.message(
-      'Shipper home',
-      name: 'shipperHomeTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Manage your contact details, settings, and support options.`
-  String get shipperProfileDescription {
-    return Intl.message(
-      'Manage your contact details, settings, and support options.',
-      name: 'shipperProfileDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Profile`
-  String get shipperProfileNavLabel {
-    return Intl.message(
-      'Profile',
-      name: 'shipperProfileNavLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shipper details`
-  String get shipperProfileSectionTitle {
-    return Intl.message(
-      'Shipper details',
-      name: 'shipperProfileSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shipper profile`
-  String get shipperProfileTitle {
-    return Intl.message(
-      'Shipper profile',
-      name: 'shipperProfileTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Getting FleetFill ready for you.`
-  String get splashDescription {
-    return Intl.message(
-      'Getting FleetFill ready for you.',
-      name: 'splashDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Getting ready`
-  String get splashTitle {
-    return Intl.message(
-      'Getting ready',
-      name: 'splashTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `FleetFill is unavailable`
-  String get startupConfigurationRequiredTitle {
-    return Intl.message(
-      'FleetFill is unavailable',
-      name: 'startupConfigurationRequiredTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `FleetFill is not available right now. Please try again later.`
-  String get startupConfigurationRequiredMessage {
-    return Intl.message(
-      'FleetFill is not available right now. Please try again later.',
-      name: 'startupConfigurationRequiredMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Needs review`
-  String get statusNeedsReviewLabel {
-    return Intl.message(
-      'Needs review',
-      name: 'statusNeedsReviewLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Ready`
-  String get statusReadyLabel {
-    return Intl.message('Ready', name: 'statusReadyLabel', desc: '', args: []);
-  }
-
-  /// `Send a question, report a problem, or ask for help with a booking or payment.`
-  String get supportDescription {
-    return Intl.message(
-      'Send a question, report a problem, or ask for help with a booking or payment.',
-      name: 'supportDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Support`
-  String get supportTitle {
-    return Intl.message('Support', name: 'supportTitle', desc: '', args: []);
-  }
-
-  /// `Your account is currently suspended. Contact FleetFill support by email.`
-  String get suspendedMessage {
-    return Intl.message(
-      'Your account is currently suspended. Contact FleetFill support by email.',
-      name: 'suspendedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Account suspended`
-  String get suspendedTitle {
-    return Intl.message(
-      'Account suspended',
-      name: 'suspendedTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Follow delivery progress, confirm delivery, open a dispute, or leave a review.`
-  String get trackingDetailDescription {
-    return Intl.message(
-      'Follow delivery progress, confirm delivery, open a dispute, or leave a review.',
-      name: 'trackingDetailDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Tracking {bookingId}`
-  String trackingDetailTitle(Object bookingId) {
-    return Intl.message(
-      'Tracking $bookingId',
-      name: 'trackingDetailTitle',
-      desc: '',
-      args: [bookingId],
-    );
-  }
-
-  /// `Update FleetFill to keep using the latest supported version.`
-  String get updateRequiredDescription {
-    return Intl.message(
-      'Update FleetFill to keep using the latest supported version.',
-      name: 'updateRequiredDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Update required`
-  String get updateRequiredTitle {
-    return Intl.message(
-      'Update required',
-      name: 'updateRequiredTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Review account details, bookings, vehicles, and documents.`
-  String get userDetailDescription {
-    return Intl.message(
-      'Review account details, bookings, vehicles, and documents.',
-      name: 'userDetailDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `User detail`
-  String get userDetailTitle {
-    return Intl.message(
-      'User detail',
-      name: 'userDetailTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Capacity volume (m3)`
-  String get vehicleCapacityVolumeLabel {
-    return Intl.message(
-      'Capacity volume (m3)',
-      name: 'vehicleCapacityVolumeLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Capacity weight (kg)`
-  String get vehicleCapacityWeightLabel {
-    return Intl.message(
-      'Capacity weight (kg)',
-      name: 'vehicleCapacityWeightLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add vehicle`
-  String get vehicleCreateAction {
-    return Intl.message(
-      'Add vehicle',
-      name: 'vehicleCreateAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add vehicle`
-  String get vehicleCreateTitle {
-    return Intl.message(
-      'Add vehicle',
-      name: 'vehicleCreateTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicle added.`
-  String get vehicleCreatedMessage {
-    return Intl.message(
-      'Vehicle added.',
-      name: 'vehicleCreatedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete vehicle`
-  String get vehicleDeleteAction {
-    return Intl.message(
-      'Delete vehicle',
-      name: 'vehicleDeleteAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete this vehicle from FleetFill?`
-  String get vehicleDeleteConfirmationMessage {
-    return Intl.message(
-      'Delete this vehicle from FleetFill?',
-      name: 'vehicleDeleteConfirmationMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicle removed.`
-  String get vehicleDeletedMessage {
-    return Intl.message(
-      'Vehicle removed.',
-      name: 'vehicleDeletedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicle details, documents, and verification status appear here.`
-  String get vehicleDetailDescription {
-    return Intl.message(
-      'Vehicle details, documents, and verification status appear here.',
-      name: 'vehicleDetailDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicle detail`
-  String get vehicleDetailTitle {
-    return Intl.message(
-      'Vehicle detail',
-      name: 'vehicleDetailTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Edit vehicle`
-  String get vehicleEditTitle {
-    return Intl.message(
-      'Edit vehicle',
-      name: 'vehicleEditTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Keep vehicle details up to date before publishing trips.`
-  String get vehicleEditorDescription {
-    return Intl.message(
-      'Keep vehicle details up to date before publishing trips.',
-      name: 'vehicleEditorDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Plate number`
-  String get vehiclePlateLabel {
-    return Intl.message(
-      'Plate number',
-      name: 'vehiclePlateLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Enter a number greater than zero.`
-  String get vehiclePositiveNumberMessage {
-    return Intl.message(
-      'Enter a number greater than zero.',
-      name: 'vehiclePositiveNumberMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicle verification needs attention: {reason}`
-  String vehicleVerificationRejectedBanner(Object reason) {
-    return Intl.message(
-      'Vehicle verification needs attention: $reason',
-      name: 'vehicleVerificationRejectedBanner',
-      desc: '',
-      args: [reason],
-    );
-  }
-
-  /// `Save vehicle`
-  String get vehicleSaveAction {
-    return Intl.message(
-      'Save vehicle',
-      name: 'vehicleSaveAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicle updated.`
-  String get vehicleSavedMessage {
-    return Intl.message(
-      'Vehicle updated.',
-      name: 'vehicleSavedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicle summary`
-  String get vehicleSummaryTitle {
-    return Intl.message(
-      'Vehicle summary',
-      name: 'vehicleSummaryTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicle type`
-  String get vehicleTypeLabel {
-    return Intl.message(
-      'Vehicle type',
-      name: 'vehicleTypeLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add and manage the vehicles you use for transport.`
-  String get vehiclesDescription {
-    return Intl.message(
-      'Add and manage the vehicles you use for transport.',
-      name: 'vehiclesDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add a vehicle before you publish capacity or complete full verification.`
-  String get vehiclesEmptyMessage {
-    return Intl.message(
-      'Add a vehicle before you publish capacity or complete full verification.',
-      name: 'vehiclesEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicles`
-  String get vehiclesTitle {
-    return Intl.message('Vehicles', name: 'vehiclesTitle', desc: '', args: []);
-  }
-
-  /// `Vehicle verification documents`
-  String get vehicleVerificationDocumentsTitle {
-    return Intl.message(
-      'Vehicle verification documents',
-      name: 'vehicleVerificationDocumentsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Driver identity or license`
-  String get verificationDocumentDriverIdentityLabel {
-    return Intl.message(
-      'Driver identity or license',
-      name: 'verificationDocumentDriverIdentityLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No file uploaded yet.`
-  String get verificationDocumentMissingMessage {
-    return Intl.message(
-      'No file uploaded yet.',
-      name: 'verificationDocumentMissingMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Review the rejection reason and upload a replacement.`
-  String get verificationDocumentNeedsAttentionMessage {
-    return Intl.message(
-      'Review the rejection reason and upload a replacement.',
-      name: 'verificationDocumentNeedsAttentionMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your document is ready to open.`
-  String get verificationDocumentOpenPreparedMessage {
-    return Intl.message(
-      'Your document is ready to open.',
-      name: 'verificationDocumentOpenPreparedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Uploaded and waiting for admin review.`
-  String get verificationDocumentPendingMessage {
-    return Intl.message(
-      'Uploaded and waiting for admin review.',
-      name: 'verificationDocumentPendingMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Rejected: {reason}`
-  String verificationDocumentRejectedMessage(Object reason) {
-    return Intl.message(
-      'Rejected: $reason',
-      name: 'verificationDocumentRejectedMessage',
-      desc: '',
-      args: [reason],
-    );
-  }
-
-  /// `Verification document replaced.`
-  String get verificationDocumentReplacedMessage {
-    return Intl.message(
-      'Verification document replaced.',
-      name: 'verificationDocumentReplacedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Transport license`
-  String get verificationDocumentTransportLicenseLabel {
-    return Intl.message(
-      'Transport license',
-      name: 'verificationDocumentTransportLicenseLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Truck technical inspection`
-  String get verificationDocumentTruckInspectionLabel {
-    return Intl.message(
-      'Truck technical inspection',
-      name: 'verificationDocumentTruckInspectionLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Truck insurance`
-  String get verificationDocumentTruckInsuranceLabel {
-    return Intl.message(
-      'Truck insurance',
-      name: 'verificationDocumentTruckInsuranceLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Truck registration`
-  String get verificationDocumentTruckRegistrationLabel {
-    return Intl.message(
-      'Truck registration',
-      name: 'verificationDocumentTruckRegistrationLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Verification document uploaded.`
-  String get verificationDocumentUploadedMessage {
-    return Intl.message(
-      'Verification document uploaded.',
-      name: 'verificationDocumentUploadedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Verified and accepted.`
-  String get verificationDocumentVerifiedMessage {
-    return Intl.message(
-      'Verified and accepted.',
-      name: 'verificationDocumentVerifiedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Replace`
-  String get verificationReplaceAction {
-    return Intl.message(
-      'Replace',
-      name: 'verificationReplaceAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Upload`
-  String get verificationUploadAction {
-    return Intl.message(
-      'Upload',
-      name: 'verificationUploadAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Complete the required verification steps before continuing.`
-  String get verificationRequiredMessage {
-    return Intl.message(
-      'Complete the required verification steps before continuing.',
-      name: 'verificationRequiredMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Verification required`
-  String get verificationRequiredTitle {
-    return Intl.message(
-      'Verification required',
-      name: 'verificationRequiredTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose the language you want FleetFill to use.`
-  String get languageSelectionDescription {
-    return Intl.message(
-      'Choose the language you want FleetFill to use.',
-      name: 'languageSelectionDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Language selection`
-  String get languageSelectionTitle {
-    return Intl.message(
-      'Language selection',
-      name: 'languageSelectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add capacity`
-  String get myRoutesAddAction {
-    return Intl.message(
-      'Add capacity',
-      name: 'myRoutesAddAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Active recurring routes`
-  String get myRoutesActiveRoutesLabel {
-    return Intl.message(
-      'Active recurring routes',
-      name: 'myRoutesActiveRoutesLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Active one-off trips`
-  String get myRoutesActiveTripsLabel {
-    return Intl.message(
-      'Active one-off trips',
-      name: 'myRoutesActiveTripsLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add recurring route`
-  String get myRoutesCreateRouteAction {
-    return Intl.message(
-      'Add recurring route',
-      name: 'myRoutesCreateRouteAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add one-off trip`
-  String get myRoutesCreateTripAction {
-    return Intl.message(
-      'Add one-off trip',
-      name: 'myRoutesCreateTripAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Publish a recurring route or one-off trip to start offering capacity.`
-  String get myRoutesEmptyMessage {
-    return Intl.message(
-      'Publish a recurring route or one-off trip to start offering capacity.',
-      name: 'myRoutesEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One-off trips`
-  String get myRoutesOneOffTab {
-    return Intl.message(
-      'One-off trips',
-      name: 'myRoutesOneOffTab',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Published capacity`
-  String get myRoutesPublishedCapacityLabel {
-    return Intl.message(
-      'Published capacity',
-      name: 'myRoutesPublishedCapacityLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recurring routes`
-  String get myRoutesRecurringTab {
-    return Intl.message(
-      'Recurring routes',
-      name: 'myRoutesRecurringTab',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Reserved capacity`
-  String get myRoutesReservedCapacityLabel {
-    return Intl.message(
-      'Reserved capacity',
-      name: 'myRoutesReservedCapacityLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recurring routes`
-  String get myRoutesRouteListTitle {
-    return Intl.message(
-      'Recurring routes',
-      name: 'myRoutesRouteListTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Capacity publication summary`
-  String get myRoutesSummaryTitle {
-    return Intl.message(
-      'Capacity publication summary',
-      name: 'myRoutesSummaryTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One-off trips`
-  String get myRoutesTripListTitle {
-    return Intl.message(
-      'One-off trips',
-      name: 'myRoutesTripListTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Upcoming departures`
-  String get myRoutesUpcomingDeparturesLabel {
-    return Intl.message(
-      'Upcoming departures',
-      name: 'myRoutesUpcomingDeparturesLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Utilization`
-  String get myRoutesUtilizationLabel {
-    return Intl.message(
-      'Utilization',
-      name: 'myRoutesUtilizationLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Activate trip`
-  String get oneOffTripActivateAction {
-    return Intl.message(
-      'Activate trip',
-      name: 'oneOffTripActivateAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One-off trip activated.`
-  String get oneOffTripActivatedMessage {
-    return Intl.message(
-      'One-off trip activated.',
-      name: 'oneOffTripActivatedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add one-off trip`
-  String get oneOffTripCreateTitle {
-    return Intl.message(
-      'Add one-off trip',
-      name: 'oneOffTripCreateTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One-off trip added.`
-  String get oneOffTripCreatedMessage {
-    return Intl.message(
-      'One-off trip added.',
-      name: 'oneOffTripCreatedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Deactivate trip`
-  String get oneOffTripDeactivateAction {
-    return Intl.message(
-      'Deactivate trip',
-      name: 'oneOffTripDeactivateAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One-off trip deactivated.`
-  String get oneOffTripDeactivatedMessage {
-    return Intl.message(
-      'One-off trip deactivated.',
-      name: 'oneOffTripDeactivatedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete trip`
-  String get oneOffTripDeleteAction {
-    return Intl.message(
-      'Delete trip',
-      name: 'oneOffTripDeleteAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `This trip cannot be deleted because it already has bookings.`
-  String get oneOffTripDeleteBlockedMessage {
-    return Intl.message(
-      'This trip cannot be deleted because it already has bookings.',
-      name: 'oneOffTripDeleteBlockedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One-off trip removed.`
-  String get oneOffTripDeletedMessage {
-    return Intl.message(
-      'One-off trip removed.',
-      name: 'oneOffTripDeletedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Departure`
-  String get oneOffTripDepartureLabel {
-    return Intl.message(
-      'Departure',
-      name: 'oneOffTripDepartureLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Publish one dated trip with vehicle, lane, departure, and capacity details.`
-  String get oneOffTripEditorDescription {
-    return Intl.message(
-      'Publish one dated trip with vehicle, lane, departure, and capacity details.',
-      name: 'oneOffTripEditorDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Edit one-off trip`
-  String get oneOffTripEditTitle {
-    return Intl.message(
-      'Edit one-off trip',
-      name: 'oneOffTripEditTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Save trip`
-  String get oneOffTripSaveAction {
-    return Intl.message(
-      'Save trip',
-      name: 'oneOffTripSaveAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One-off trip updated.`
-  String get oneOffTripSavedMessage {
-    return Intl.message(
-      'One-off trip updated.',
-      name: 'oneOffTripSavedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Active`
-  String get publicationActiveLabel {
-    return Intl.message(
-      'Active',
-      name: 'publicationActiveLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose an effective date and time that is now or later.`
+  /// `اختر تاريخا ووقتا للسريان يساوي الآن أو بعده.`
   String get publicationEffectiveDateFutureMessage {
     return Intl.message(
-      'Choose an effective date and time that is now or later.',
+      'اختر تاريخا ووقتا للسريان يساوي الآن أو بعده.',
       name: 'publicationEffectiveDateFutureMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Inactive`
-  String get publicationInactiveLabel {
-    return Intl.message(
-      'Inactive',
-      name: 'publicationInactiveLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No route revisions recorded yet.`
-  String get publicationNoRevisionsMessage {
-    return Intl.message(
-      'No route revisions recorded yet.',
-      name: 'publicationNoRevisionsMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Revision history`
-  String get publicationRevisionHistoryTitle {
-    return Intl.message(
-      'Revision history',
-      name: 'publicationRevisionHistoryTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Origin and destination must be different communes.`
-  String get publicationSameLaneErrorMessage {
-    return Intl.message(
-      'Origin and destination must be different communes.',
-      name: 'publicationSameLaneErrorMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Search communes`
-  String get publicationSearchCommunesHint {
-    return Intl.message(
-      'Search communes',
-      name: 'publicationSearchCommunesHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Select`
-  String get publicationSelectValueAction {
-    return Intl.message(
-      'Select',
-      name: 'publicationSelectValueAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Choose one of your available vehicles for this publication.`
+  /// `اختر إحدى مركباتك المتاحة لهذا النشر.`
   String get publicationVehicleUnavailableMessage {
     return Intl.message(
-      'Choose one of your available vehicles for this publication.',
+      'اختر إحدى مركباتك المتاحة لهذا النشر.',
       name: 'publicationVehicleUnavailableMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Complete carrier verification before publishing capacity.`
+  /// `أكمل تحقق الناقل قبل نشر السعة.`
   String get publicationVerifiedCarrierRequiredMessage {
     return Intl.message(
-      'Complete carrier verification before publishing capacity.',
+      'أكمل تحقق الناقل قبل نشر السعة.',
       name: 'publicationVerifiedCarrierRequiredMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Choose a verified vehicle before publishing capacity.`
+  /// `اختر مركبة موثقة قبل نشر السعة.`
   String get publicationVerifiedVehicleRequiredMessage {
     return Intl.message(
-      'Choose a verified vehicle before publishing capacity.',
+      'اختر مركبة موثقة قبل نشر السعة.',
       name: 'publicationVerifiedVehicleRequiredMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Select at least one departure day.`
-  String get publicationWeekdaysRequiredMessage {
-    return Intl.message(
-      'Select at least one departure day.',
-      name: 'publicationWeekdaysRequiredMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Activate route`
-  String get routeActivateAction {
-    return Intl.message(
-      'Activate route',
-      name: 'routeActivateAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Route activated.`
-  String get routeActivatedMessage {
-    return Intl.message(
-      'Route activated.',
-      name: 'routeActivatedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add recurring route`
-  String get routeCreateTitle {
-    return Intl.message(
-      'Add recurring route',
-      name: 'routeCreateTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recurring route added.`
-  String get routeCreatedMessage {
-    return Intl.message(
-      'Recurring route added.',
-      name: 'routeCreatedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Deactivate route`
-  String get routeDeactivateAction {
-    return Intl.message(
-      'Deactivate route',
-      name: 'routeDeactivateAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Route deactivated.`
-  String get routeDeactivatedMessage {
-    return Intl.message(
-      'Route deactivated.',
-      name: 'routeDeactivatedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delete route`
-  String get routeDeleteAction {
-    return Intl.message(
-      'Delete route',
-      name: 'routeDeleteAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `This route cannot be deleted because it already has bookings.`
+  /// `لا يمكن حذف هذا المسار لأنه يحتوي بالفعل على حجوزات.`
   String get routeDeleteBlockedMessage {
     return Intl.message(
-      'This route cannot be deleted because it already has bookings.',
+      'لا يمكن حذف هذا المسار لأنه يحتوي بالفعل على حجوزات.',
       name: 'routeDeleteBlockedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Recurring route removed.`
-  String get routeDeletedMessage {
+  /// `لا يمكن حذف هذه الرحلة لأنها تحتوي بالفعل على حجوزات.`
+  String get oneOffTripDeleteBlockedMessage {
     return Intl.message(
-      'Recurring route removed.',
-      name: 'routeDeletedMessage',
+      'لا يمكن حذف هذه الرحلة لأنها تحتوي بالفعل على حجوزات.',
+      name: 'oneOffTripDeleteBlockedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Default departure time`
-  String get routeDepartureTimeLabel {
-    return Intl.message(
-      'Default departure time',
-      name: 'routeDepartureTimeLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Activate this route for new bookings?`
+  /// `هل تريد تفعيل هذا المسار للحجوزات الجديدة؟`
   String get routeActivateConfirmationMessage {
     return Intl.message(
-      'Activate this route for new bookings?',
+      'هل تريد تفعيل هذا المسار للحجوزات الجديدة؟',
       name: 'routeActivateConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Deactivate this route for new bookings? Existing bookings will stay unchanged.`
+  /// `هل تريد إلغاء تفعيل هذا المسار للحجوزات الجديدة؟ ستبقى الحجوزات الحالية كما هي.`
   String get routeDeactivateConfirmationMessage {
     return Intl.message(
-      'Deactivate this route for new bookings? Existing bookings will stay unchanged.',
+      'هل تريد إلغاء تفعيل هذا المسار للحجوزات الجديدة؟ ستبقى الحجوزات الحالية كما هي.',
       name: 'routeDeactivateConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delete this recurring route from FleetFill?`
+  /// `هل تريد حذف هذا المسار المتكرر من FleetFill؟`
   String get routeDeleteConfirmationMessage {
     return Intl.message(
-      'Delete this recurring route from FleetFill?',
+      'هل تريد حذف هذا المسار المتكرر من FleetFill؟',
       name: 'routeDeleteConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Destination commune`
-  String get routeDestinationLabel {
-    return Intl.message(
-      'Destination commune',
-      name: 'routeDestinationLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Publish a recurring lane with vehicle, schedule, and capacity details.`
-  String get routeEditorDescription {
-    return Intl.message(
-      'Publish a recurring lane with vehicle, schedule, and capacity details.',
-      name: 'routeEditorDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Edit recurring route`
-  String get routeEditTitle {
-    return Intl.message(
-      'Edit recurring route',
-      name: 'routeEditTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Effective from`
-  String get routeEffectiveFromLabel {
-    return Intl.message(
-      'Effective from',
-      name: 'routeEffectiveFromLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Origin commune`
-  String get routeOriginLabel {
-    return Intl.message(
-      'Origin commune',
-      name: 'routeOriginLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Price per kg (DZD)`
-  String get routePricePerKgLabel {
-    return Intl.message(
-      'Price per kg (DZD)',
-      name: 'routePricePerKgLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recurring days`
-  String get routeRecurringDaysLabel {
-    return Intl.message(
-      'Recurring days',
-      name: 'routeRecurringDaysLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Save route`
-  String get routeSaveAction {
-    return Intl.message(
-      'Save route',
-      name: 'routeSaveAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recurring route updated.`
-  String get routeSavedMessage {
-    return Intl.message(
-      'Recurring route updated.',
-      name: 'routeSavedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Publication status`
-  String get routeStatusLabel {
-    return Intl.message(
-      'Publication status',
-      name: 'routeStatusLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Assigned vehicle`
-  String get routeVehicleLabel {
-    return Intl.message(
-      'Assigned vehicle',
-      name: 'routeVehicleLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Load more`
+  /// `تحميل المزيد`
   String get loadMoreLabel {
-    return Intl.message('Load more', name: 'loadMoreLabel', desc: '', args: []);
+    return Intl.message(
+      'تحميل المزيد',
+      name: 'loadMoreLabel',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `DZD/kg`
+  /// `دج/كلغ`
   String get pricePerKgUnitLabel {
     return Intl.message(
-      'DZD/kg',
+      'دج/كلغ',
       name: 'pricePerKgUnitLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Activate this trip for new bookings?`
+  /// `هل تريد تفعيل هذه الرحلة للحجوزات الجديدة؟`
   String get oneOffTripActivateConfirmationMessage {
     return Intl.message(
-      'Activate this trip for new bookings?',
+      'هل تريد تفعيل هذه الرحلة للحجوزات الجديدة؟',
       name: 'oneOffTripActivateConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Deactivate this trip for new bookings? Existing bookings will stay unchanged.`
+  /// `هل تريد إلغاء تفعيل هذه الرحلة للحجوزات الجديدة؟ ستبقى الحجوزات الحالية كما هي.`
   String get oneOffTripDeactivateConfirmationMessage {
     return Intl.message(
-      'Deactivate this trip for new bookings? Existing bookings will stay unchanged.',
+      'هل تريد إلغاء تفعيل هذه الرحلة للحجوزات الجديدة؟ ستبقى الحجوزات الحالية كما هي.',
       name: 'oneOffTripDeactivateConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delete this one-off trip from FleetFill?`
+  /// `هل تريد حذف هذه الرحلة الفردية من FleetFill؟`
   String get oneOffTripDeleteConfirmationMessage {
     return Intl.message(
-      'Delete this one-off trip from FleetFill?',
+      'هل تريد حذف هذه الرحلة الفردية من FleetFill؟',
       name: 'oneOffTripDeleteConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `DZD`
+  /// `دج`
   String get priceCurrencyLabel {
-    return Intl.message('DZD', name: 'priceCurrencyLabel', desc: '', args: []);
+    return Intl.message('دج', name: 'priceCurrencyLabel', desc: '', args: []);
   }
 
-  /// `Create shipment`
+  /// `إنشاء شحنة`
   String get shipmentCreateAction {
     return Intl.message(
-      'Create shipment',
+      'إنشاء شحنة',
       name: 'shipmentCreateAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create shipment`
+  /// `إنشاء شحنة`
   String get shipmentCreateTitle {
     return Intl.message(
-      'Create shipment',
+      'إنشاء شحنة',
       name: 'shipmentCreateTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Edit shipment`
+  /// `تعديل الشحنة`
   String get shipmentEditAction {
     return Intl.message(
-      'Edit shipment',
+      'تعديل الشحنة',
       name: 'shipmentEditAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Edit shipment`
+  /// `تعديل الشحنة`
   String get shipmentEditTitle {
     return Intl.message(
-      'Edit shipment',
+      'تعديل الشحنة',
       name: 'shipmentEditTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Save shipment`
+  /// `حفظ الشحنة`
   String get shipmentSaveAction {
     return Intl.message(
-      'Save shipment',
+      'حفظ الشحنة',
       name: 'shipmentSaveAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Shipment saved.`
+  /// `تم حفظ الشحنة.`
   String get shipmentSavedMessage {
     return Intl.message(
-      'Shipment saved.',
+      'تم حفظ الشحنة.',
       name: 'shipmentSavedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delete shipment`
+  /// `حذف الشحنة`
   String get shipmentDeleteAction {
     return Intl.message(
-      'Delete shipment',
+      'حذف الشحنة',
       name: 'shipmentDeleteAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delete this shipment?`
+  /// `هل تريد حذف هذه الشحنة؟`
   String get shipmentDeleteConfirmationMessage {
     return Intl.message(
-      'Delete this shipment?',
+      'هل تريد حذف هذه الشحنة؟',
       name: 'shipmentDeleteConfirmationMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Shipment removed.`
+  /// `تم حذف الشحنة.`
   String get shipmentDeletedMessage {
     return Intl.message(
-      'Shipment removed.',
+      'تم حذف الشحنة.',
       name: 'shipmentDeletedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create a shipment draft before searching exact capacity.`
+  /// `أنشئ مسودة شحنة قبل البحث عن سعة مطابقة.`
   String get shipmentsEmptyMessage {
     return Intl.message(
-      'Create a shipment draft before searching exact capacity.',
+      'أنشئ مسودة شحنة قبل البحث عن سعة مطابقة.',
       name: 'shipmentsEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Shipment details`
+  /// `تفاصيل الشحنة`
   String get shipmentDescriptionLabel {
     return Intl.message(
-      'Shipment details',
+      'تفاصيل الشحنة',
       name: 'shipmentDescriptionLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Draft`
+  /// `مسودة`
   String get shipmentStatusDraftLabel {
     return Intl.message(
-      'Draft',
+      'مسودة',
       name: 'shipmentStatusDraftLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Booked`
+  /// `محجوزة`
   String get shipmentStatusBookedLabel {
     return Intl.message(
-      'Booked',
+      'محجوزة',
       name: 'shipmentStatusBookedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cancelled`
+  /// `ملغاة`
   String get shipmentStatusCancelledLabel {
     return Intl.message(
-      'Cancelled',
+      'ملغاة',
       name: 'shipmentStatusCancelledLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create a shipment before searching for matching trips.`
+  /// `أنشئ شحنة قبل البحث عن الرحلات المناسبة.`
   String get searchTripsRequiresDraftMessage {
     return Intl.message(
-      'Create a shipment before searching for matching trips.',
+      'أنشئ شحنة قبل البحث عن الرحلات المناسبة.',
       name: 'searchTripsRequiresDraftMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Contact support`
-  String get contactSupportAction {
-    return Intl.message(
-      'Contact support',
-      name: 'contactSupportAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Go back`
-  String get goBackAction {
-    return Intl.message('Go back', name: 'goBackAction', desc: '', args: []);
-  }
-
-  /// `Open notifications`
-  String get openNotificationsAction {
-    return Intl.message(
-      'Open notifications',
-      name: 'openNotificationsAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Preview is not available for this file. Open it in another app.`
-  String get documentPreviewUnavailableMessage {
-    return Intl.message(
-      'Preview is not available for this file. Open it in another app.',
-      name: 'documentPreviewUnavailableMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shipment draft`
+  /// `مسودة الشحنة`
   String get searchShipmentSelectorLabel {
     return Intl.message(
-      'Shipment draft',
+      'مسودة الشحنة',
       name: 'searchShipmentSelectorLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Requested departure date`
+  /// `تاريخ الانطلاق المطلوب`
   String get searchRequestedDateLabel {
     return Intl.message(
-      'Requested departure date',
+      'تاريخ الانطلاق المطلوب',
       name: 'searchRequestedDateLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Shipment summary`
+  /// `ملخص الشحنة`
   String get searchShipmentSummaryTitle {
     return Intl.message(
-      'Shipment summary',
+      'ملخص الشحنة',
       name: 'searchShipmentSummaryTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search exact capacity`
+  /// `ابحث عن سعة مطابقة`
   String get searchTripsAction {
     return Intl.message(
-      'Search exact capacity',
+      'ابحث عن سعة مطابقة',
       name: 'searchTripsAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sort and filters`
+  /// `الترتيب والفلاتر`
   String get searchTripsControlsAction {
     return Intl.message(
-      'Sort and filters',
+      'الترتيب والفلاتر',
       name: 'searchTripsControlsAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Recommended`
+  /// `موصى به`
   String get searchSortRecommendedLabel {
     return Intl.message(
-      'Recommended',
+      'موصى به',
       name: 'searchSortRecommendedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Top rated`
+  /// `الأعلى تقييما`
   String get searchSortTopRatedLabel {
     return Intl.message(
-      'Top rated',
+      'الأعلى تقييما',
       name: 'searchSortTopRatedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Lowest price`
+  /// `الأقل سعرا`
   String get searchSortLowestPriceLabel {
     return Intl.message(
-      'Lowest price',
+      'الأقل سعرا',
       name: 'searchSortLowestPriceLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nearest departure`
+  /// `أقرب انطلاق`
   String get searchSortNearestDepartureLabel {
     return Intl.message(
-      'Nearest departure',
+      'أقرب انطلاق',
       name: 'searchSortNearestDepartureLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier`
+  /// `الناقل`
   String get searchCarrierLabel {
     return Intl.message(
-      'Carrier',
+      'الناقل',
       name: 'searchCarrierLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Estimated total`
+  /// `الإجمالي التقديري`
   String get searchEstimatedPriceLabel {
     return Intl.message(
-      'Estimated total',
+      'الإجمالي التقديري',
       name: 'searchEstimatedPriceLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Departure`
+  /// `الانطلاق`
   String get searchDepartureLabel {
     return Intl.message(
-      'Departure',
+      'الانطلاق',
       name: 'searchDepartureLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Nearest exact dates found`
+  /// `تم العثور على أقرب التواريخ المطابقة`
   String get searchTripsNearestDateTitle {
     return Intl.message(
-      'Nearest exact dates found',
+      'تم العثور على أقرب التواريخ المطابقة',
       name: 'searchTripsNearestDateTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `No same-day exact result is available. Showing nearest exact dates: {dates}`
+  /// `لا توجد نتيجة مطابقة في اليوم نفسه. أقرب التواريخ المطابقة: {dates}`
   String searchTripsNearestDateMessage(Object dates) {
     return Intl.message(
-      'No same-day exact result is available. Showing nearest exact dates: $dates',
+      'لا توجد نتيجة مطابقة في اليوم نفسه. أقرب التواريخ المطابقة: $dates',
       name: 'searchTripsNearestDateMessage',
       desc: '',
       args: [dates],
     );
   }
 
-  /// `Redefine your search`
+  /// `أعد تعريف بحثك`
   String get searchTripsNoRouteTitle {
     return Intl.message(
-      'Redefine your search',
+      'أعد تعريف بحثك',
       name: 'searchTripsNoRouteTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `No exact route exists for this lane in the nearby search window.`
+  /// `لا يوجد مسار مطابق لهذا الخط ضمن نافذة البحث القريبة.`
   String get searchTripsNoRouteMessage {
     return Intl.message(
-      'No exact route exists for this lane in the nearby search window.',
+      'لا يوجد مسار مطابق لهذا الخط ضمن نافذة البحث القريبة.',
       name: 'searchTripsNoRouteMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `No result matches the current sort and filter selection.`
+  /// `لا توجد نتائج تطابق الترتيب والفلاتر الحالية.`
   String get searchTripsFilterEmptyMessage {
     return Intl.message(
-      'No result matches the current sort and filter selection.',
+      'لا توجد نتائج تطابق الترتيب والفلاتر الحالية.',
       name: 'searchTripsFilterEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search results ({count})`
+  /// `نتائج البحث ({count})`
   String searchTripsResultsTitle(Object count) {
     return Intl.message(
-      'Search results ($count)',
+      'نتائج البحث ($count)',
       name: 'searchTripsResultsTitle',
       desc: '',
       args: [count],
     );
   }
 
-  /// `Recurring route`
+  /// `مسار متكرر`
   String get searchTripsRecurringLabel {
     return Intl.message(
-      'Recurring route',
+      'مسار متكرر',
       name: 'searchTripsRecurringLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `One-off trip`
+  /// `رحلة فردية`
   String get searchTripsOneOffLabel {
     return Intl.message(
-      'One-off trip',
+      'رحلة فردية',
       name: 'searchTripsOneOffLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Confirm booking`
+  /// `تأكيد الحجز`
   String get bookingConfirmAction {
     return Intl.message(
-      'Confirm booking',
+      'تأكيد الحجز',
       name: 'bookingConfirmAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Booking created. Continue to payment.`
+  /// `تم إنشاء الحجز. تابع إلى الدفع.`
   String get bookingCreatedMessage {
     return Intl.message(
-      'Booking created. Continue to payment.',
+      'تم إنشاء الحجز. تابع إلى الدفع.',
       name: 'bookingCreatedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Insurance option`
+  /// `خيار التأمين`
   String get bookingInsuranceAction {
     return Intl.message(
-      'Insurance option',
+      'خيار التأمين',
       name: 'bookingInsuranceAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Insurance`
+  /// `التأمين`
   String get bookingInsuranceLabel {
     return Intl.message(
-      'Insurance',
+      'التأمين',
       name: 'bookingInsuranceLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Insurance is optional and calculated as a percentage with a minimum fee floor.`
+  /// `التأمين اختياري ويُحسب كنسبة مئوية مع حد أدنى للرسوم.`
   String get bookingInsuranceDescription {
     return Intl.message(
-      'Insurance is optional and calculated as a percentage with a minimum fee floor.',
+      'التأمين اختياري ويُحسب كنسبة مئوية مع حد أدنى للرسوم.',
       name: 'bookingInsuranceDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `Included`
+  /// `مضاف`
   String get bookingInsuranceIncludedLabel {
     return Intl.message(
-      'Included',
+      'مضاف',
       name: 'bookingInsuranceIncludedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Not included`
+  /// `غير مضاف`
   String get bookingInsuranceNotIncludedLabel {
     return Intl.message(
-      'Not included',
+      'غير مضاف',
       name: 'bookingInsuranceNotIncludedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Pricing breakdown`
+  /// `تفصيل السعر`
   String get bookingPricingBreakdownAction {
     return Intl.message(
-      'Pricing breakdown',
+      'تفصيل السعر',
       name: 'bookingPricingBreakdownAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Base price`
+  /// `السعر الأساسي`
   String get bookingBasePriceLabel {
     return Intl.message(
-      'Base price',
+      'السعر الأساسي',
       name: 'bookingBasePriceLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Platform fee`
+  /// `رسوم المنصة`
   String get bookingPlatformFeeLabel {
     return Intl.message(
-      'Platform fee',
+      'رسوم المنصة',
       name: 'bookingPlatformFeeLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier fee`
+  /// `رسوم الناقل`
   String get bookingCarrierFeeLabel {
     return Intl.message(
-      'Carrier fee',
+      'رسوم الناقل',
       name: 'bookingCarrierFeeLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Insurance fee`
+  /// `رسوم التأمين`
   String get bookingInsuranceFeeLabel {
     return Intl.message(
-      'Insurance fee',
+      'رسوم التأمين',
       name: 'bookingInsuranceFeeLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tax fee`
+  /// `الضريبة`
   String get bookingTaxFeeLabel {
     return Intl.message(
-      'Tax fee',
+      'الضريبة',
       name: 'bookingTaxFeeLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier payout`
+  /// `مستحق الناقل`
   String get bookingCarrierPayoutLabel {
     return Intl.message(
-      'Carrier payout',
+      'مستحق الناقل',
       name: 'bookingCarrierPayoutLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Final total`
+  /// `الإجمالي النهائي`
   String get bookingTotalLabel {
     return Intl.message(
-      'Final total',
+      'الإجمالي النهائي',
       name: 'bookingTotalLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment reference`
+  /// `مرجع الدفع`
   String get bookingPaymentReferenceLabel {
     return Intl.message(
-      'Payment reference',
+      'مرجع الدفع',
       name: 'bookingPaymentReferenceLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tracking number`
+  /// `رقم التتبع`
   String get bookingTrackingNumberLabel {
     return Intl.message(
-      'Tracking number',
+      'رقم التتبع',
       name: 'bookingTrackingNumberLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment instructions`
+  /// `تعليمات الدفع`
   String get paymentInstructionsTitle {
     return Intl.message(
-      'Payment instructions',
+      'تعليمات الدفع',
       name: 'paymentInstructionsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment proof review`
+  /// `مراجعة إثباتات الدفع`
   String get adminPaymentProofQueueTitle {
     return Intl.message(
-      'Payment proof review',
+      'مراجعة إثباتات الدفع',
       name: 'adminPaymentProofQueueTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `No payment proofs need review right now.`
+  /// `لا توجد إثباتات دفع تحتاج إلى مراجعة الآن.`
   String get adminPaymentProofQueueEmptyMessage {
     return Intl.message(
-      'No payment proofs need review right now.',
+      'لا توجد إثباتات دفع تحتاج إلى مراجعة الآن.',
       name: 'adminPaymentProofQueueEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment proof`
+  /// `إثبات الدفع`
   String get paymentProofSectionTitle {
     return Intl.message(
-      'Payment proof',
+      'إثبات الدفع',
       name: 'paymentProofSectionTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Latest submitted proof`
+  /// `آخر إثبات تم إرساله`
   String get paymentProofLatestTitle {
     return Intl.message(
-      'Latest submitted proof',
+      'آخر إثبات تم إرساله',
       name: 'paymentProofLatestTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Upload a payment proof after completing your external payment.`
+  /// `ارفع إثبات الدفع بعد إتمام الدفع الخارجي.`
   String get paymentProofEmptyMessage {
     return Intl.message(
-      'Upload a payment proof after completing your external payment.',
+      'ارفع إثبات الدفع بعد إتمام الدفع الخارجي.',
       name: 'paymentProofEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Upload payment proof`
+  /// `رفع إثبات الدفع`
   String get paymentProofUploadAction {
     return Intl.message(
-      'Upload payment proof',
+      'رفع إثبات الدفع',
       name: 'paymentProofUploadAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Resubmit payment proof`
+  /// `إعادة إرسال الإثبات`
   String get paymentProofResubmitAction {
     return Intl.message(
-      'Resubmit payment proof',
+      'إعادة إرسال الإثبات',
       name: 'paymentProofResubmitAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment proof received.`
+  /// `تم استلام إثبات الدفع.`
   String get paymentProofUploadedMessage {
     return Intl.message(
-      'Payment proof received.',
+      'تم استلام إثبات الدفع.',
       name: 'paymentProofUploadedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Submitted amount`
+  /// `المبلغ المرسل`
   String get paymentProofAmountLabel {
     return Intl.message(
-      'Submitted amount',
+      'المبلغ المرسل',
       name: 'paymentProofAmountLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Submitted reference`
+  /// `المرجع المرسل`
   String get paymentProofReferenceLabel {
     return Intl.message(
-      'Submitted reference',
+      'المرجع المرسل',
       name: 'paymentProofReferenceLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Proof status`
+  /// `حالة الإثبات`
   String get paymentProofStatusLabel {
     return Intl.message(
-      'Proof status',
+      'حالة الإثبات',
       name: 'paymentProofStatusLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Pending review`
+  /// `بانتظار المراجعة`
   String get paymentProofStatusPendingLabel {
     return Intl.message(
-      'Pending review',
+      'بانتظار المراجعة',
       name: 'paymentProofStatusPendingLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verified`
+  /// `تم التحقق منه`
   String get paymentProofStatusVerifiedLabel {
     return Intl.message(
-      'Verified',
+      'تم التحقق منه',
       name: 'paymentProofStatusVerifiedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Rejected`
+  /// `مرفوض`
   String get paymentProofStatusRejectedLabel {
     return Intl.message(
-      'Rejected',
+      'مرفوض',
       name: 'paymentProofStatusRejectedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verified amount`
+  /// `المبلغ المتحقق منه`
   String get paymentProofVerifiedAmountLabel {
     return Intl.message(
-      'Verified amount',
+      'المبلغ المتحقق منه',
       name: 'paymentProofVerifiedAmountLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verified reference`
+  /// `المرجع المتحقق منه`
   String get paymentProofVerifiedReferenceLabel {
     return Intl.message(
-      'Verified reference',
+      'المرجع المتحقق منه',
       name: 'paymentProofVerifiedReferenceLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Decision note`
+  /// `ملاحظة القرار`
   String get paymentProofDecisionNoteLabel {
     return Intl.message(
-      'Decision note',
+      'ملاحظة القرار',
       name: 'paymentProofDecisionNoteLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Rejection reason`
+  /// `سبب الرفض`
   String get paymentProofRejectionReasonLabel {
     return Intl.message(
-      'Rejection reason',
+      'سبب الرفض',
       name: 'paymentProofRejectionReasonLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `A rejection reason is required.`
+  /// `سبب الرفض مطلوب.`
   String get paymentProofRejectionReasonRequiredMessage {
     return Intl.message(
-      'A rejection reason is required.',
+      'سبب الرفض مطلوب.',
       name: 'paymentProofRejectionReasonRequiredMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment confirmed.`
+  /// `تم تأكيد الدفع.`
   String get paymentProofApprovedMessage {
     return Intl.message(
-      'Payment confirmed.',
+      'تم تأكيد الدفع.',
       name: 'paymentProofApprovedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment proof rejected.`
+  /// `تم رفض إثبات الدفع.`
   String get paymentProofRejectedMessage {
     return Intl.message(
-      'Payment proof rejected.',
+      'تم رفض إثبات الدفع.',
       name: 'paymentProofRejectedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Generated documents`
+  /// `المستندات المولدة`
   String get generatedDocumentsTitle {
     return Intl.message(
-      'Generated documents',
+      'المستندات المولدة',
       name: 'generatedDocumentsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Generated invoice and receipt documents will appear here when available.`
+  /// `ستظهر الفاتورة والإيصال المولدان هنا عند توفرهما.`
   String get generatedDocumentsEmptyMessage {
     return Intl.message(
-      'Generated invoice and receipt documents will appear here when available.',
+      'ستظهر الفاتورة والإيصال المولدان هنا عند توفرهما.',
       name: 'generatedDocumentsEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tap any ready document to open it securely.`
+  /// `اضغط على أي مستند جاهز لفتحه بشكل آمن.`
   String get generatedDocumentsTapReadyHint {
     return Intl.message(
-      'Tap any ready document to open it securely.',
+      'اضغط على أي مستند جاهز لفتحه بشكل آمن.',
       name: 'generatedDocumentsTapReadyHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment proof can only be submitted while payment is still pending.`
+  /// `لا يمكن إرسال إثبات الدفع إلا ما دام الدفع ما يزال معلقا.`
   String get paymentProofPendingWindowMessage {
     return Intl.message(
-      'Payment proof can only be submitted while payment is still pending.',
+      'لا يمكن إرسال إثبات الدفع إلا ما دام الدفع ما يزال معلقا.',
       name: 'paymentProofPendingWindowMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `The verified payment amount must match the booking total exactly.`
+  /// `يجب أن يطابق المبلغ المتحقق منه إجمالي الحجز تماما.`
   String get paymentProofExactAmountRequiredMessage {
     return Intl.message(
-      'The verified payment amount must match the booking total exactly.',
+      'يجب أن يطابق المبلغ المتحقق منه إجمالي الحجز تماما.',
       name: 'paymentProofExactAmountRequiredMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `This payment proof has already been reviewed.`
+  /// `تمت مراجعة إثبات الدفع هذا بالفعل.`
   String get paymentProofAlreadyReviewedMessage {
     return Intl.message(
-      'This payment proof has already been reviewed.',
+      'تمت مراجعة إثبات الدفع هذا بالفعل.',
       name: 'paymentProofAlreadyReviewedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tracking timeline`
+  /// `الخط الزمني للتتبع`
   String get trackingTimelineTitle {
     return Intl.message(
-      'Tracking timeline',
+      'الخط الزمني للتتبع',
       name: 'trackingTimelineTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `No tracking events are available yet.`
+  /// `لا توجد أحداث تتبع متاحة بعد.`
   String get trackingTimelineEmptyMessage {
     return Intl.message(
-      'No tracking events are available yet.',
+      'لا توجد أحداث تتبع متاحة بعد.',
       name: 'trackingTimelineEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Confirm delivery`
+  /// `تأكيد التسليم`
   String get deliveryConfirmAction {
     return Intl.message(
-      'Confirm delivery',
+      'تأكيد التسليم',
       name: 'deliveryConfirmAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delivery confirmed.`
+  /// `تم تأكيد التسليم.`
   String get deliveryConfirmedMessage {
     return Intl.message(
-      'Delivery confirmed.',
+      'تم تأكيد التسليم.',
       name: 'deliveryConfirmedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Booking milestone updated.`
+  /// `تم تحديث مرحلة الحجز.`
   String get carrierMilestoneUpdatedMessage {
     return Intl.message(
-      'Booking milestone updated.',
+      'تم تحديث مرحلة الحجز.',
       name: 'carrierMilestoneUpdatedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment under review`
+  /// `الدفع قيد المراجعة`
   String get trackingEventPaymentUnderReviewLabel {
     return Intl.message(
-      'Payment under review',
+      'الدفع قيد المراجعة',
       name: 'trackingEventPaymentUnderReviewLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Confirmed`
+  /// `مؤكد`
   String get trackingEventConfirmedLabel {
     return Intl.message(
-      'Confirmed',
+      'مؤكد',
       name: 'trackingEventConfirmedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Picked up`
+  /// `تم الاستلام`
   String get trackingEventPickedUpLabel {
     return Intl.message(
-      'Picked up',
+      'تم الاستلام',
       name: 'trackingEventPickedUpLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `In transit`
+  /// `في الطريق`
   String get trackingEventInTransitLabel {
     return Intl.message(
-      'In transit',
+      'في الطريق',
       name: 'trackingEventInTransitLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delivered pending review`
+  /// `تم التسليم وبانتظار المراجعة`
   String get trackingEventDeliveredPendingReviewLabel {
     return Intl.message(
-      'Delivered pending review',
+      'تم التسليم وبانتظار المراجعة',
       name: 'trackingEventDeliveredPendingReviewLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Completed`
+  /// `مكتمل`
   String get trackingEventCompletedLabel {
     return Intl.message(
-      'Completed',
+      'مكتمل',
       name: 'trackingEventCompletedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cancelled`
+  /// `ملغى`
   String get trackingEventCancelledLabel {
     return Intl.message(
-      'Cancelled',
+      'ملغى',
       name: 'trackingEventCancelledLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Disputed`
+  /// `متنازع عليه`
   String get trackingEventDisputedLabel {
     return Intl.message(
-      'Disputed',
+      'متنازع عليه',
       name: 'trackingEventDisputedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Disputes`
+  /// `النزاعات`
   String get adminDisputesQueueTitle {
     return Intl.message(
-      'Disputes',
+      'النزاعات',
       name: 'adminDisputesQueueTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `No disputes are waiting for review right now.`
+  /// `لا توجد نزاعات بانتظار المراجعة الآن.`
   String get adminDisputesQueueEmptyMessage {
     return Intl.message(
-      'No disputes are waiting for review right now.',
+      'لا توجد نزاعات بانتظار المراجعة الآن.',
       name: 'adminDisputesQueueEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payouts`
+  /// `التحويلات`
   String get adminPayoutQueueTitle {
     return Intl.message(
-      'Payouts',
+      'التحويلات',
       name: 'adminPayoutQueueTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `No payouts have been released yet.`
+  /// `لم يتم تحرير أي تحويلات بعد.`
   String get adminPayoutQueueEmptyMessage {
     return Intl.message(
-      'No payouts have been released yet.',
+      'لم يتم تحرير أي تحويلات بعد.',
       name: 'adminPayoutQueueEmptyMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Support subject`
+  /// `موضوع الدعم`
   String get supportSubjectLabel {
     return Intl.message(
-      'Support subject',
+      'موضوع الدعم',
       name: 'supportSubjectLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Support message`
+  /// `رسالة الدعم`
   String get supportMessageLabel {
     return Intl.message(
-      'Support message',
+      'رسالة الدعم',
       name: 'supportMessageLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Support email: {supportEmail}`
+  /// `بريد الدعم: {supportEmail}`
   String supportConfiguredEmailMessage(Object supportEmail) {
     return Intl.message(
-      'Support email: $supportEmail',
+      'بريد الدعم: $supportEmail',
       name: 'supportConfiguredEmailMessage',
       desc: '',
       args: [supportEmail],
     );
   }
 
-  /// `Include any booking ID, tracking number, or payment reference that can help support investigate faster.`
+  /// `أضف أي معرّف حجز أو رقم تتبع أو مرجع دفع يساعد فريق الدعم على التحقيق بسرعة أكبر.`
   String get supportReferenceHintMessage {
     return Intl.message(
-      'Include any booking ID, tracking number, or payment reference that can help support investigate faster.',
+      'أضف أي معرّف حجز أو رقم تتبع أو مرجع دفع يساعد فريق الدعم على التحقيق بسرعة أكبر.',
       name: 'supportReferenceHintMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Send message`
+  /// `إرسال الرسالة`
   String get supportSendAction {
     return Intl.message(
-      'Send message',
+      'إرسال الرسالة',
       name: 'supportSendAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Support message sent.`
+  /// `تم إرسال رسالة الدعم.`
   String get supportMessageSentMessage {
     return Intl.message(
-      'Support message sent.',
+      'تم إرسال رسالة الدعم.',
       name: 'supportMessageSentMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Policies and disclosures`
+  /// `تعذّر وضع رسالة الدعم في الطابور الآن. يرجى المحاولة بعد قليل.`
+  String get supportUnavailableMessage {
+    return Intl.message(
+      'تعذّر وضع رسالة الدعم في الطابور الآن. يرجى المحاولة بعد قليل.',
+      name: 'supportUnavailableMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أرسلت رسائل دعم كثيرة مؤخرا. يرجى المحاولة لاحقا.`
+  String get supportRateLimitMessage {
+    return Intl.message(
+      'أرسلت رسائل دعم كثيرة مؤخرا. يرجى المحاولة لاحقا.',
+      name: 'supportRateLimitMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السياسات والإفصاحات`
   String get legalPoliciesTitle {
     return Intl.message(
-      'Policies and disclosures',
+      'السياسات والإفصاحات',
       name: 'legalPoliciesTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review the terms, privacy, payment, and dispute rules that apply when you use FleetFill.`
+  /// `راجع شروط الخدمة والخصوصية والدفع والنزاعات قبل استخدام FleetFill.`
   String get legalPoliciesDescription {
     return Intl.message(
-      'Review the terms, privacy, payment, and dispute rules that apply when you use FleetFill.',
+      'راجع شروط الخدمة والخصوصية والدفع والنزاعات قبل استخدام FleetFill.',
       name: 'legalPoliciesDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action.`
+  /// `إذا احتجت إلى توضيح حول هذه السياسات، فتواصل مع دعم FleetFill قبل متابعة الحجز أو الدفع أو النزاع.`
   String get legalPoliciesSupportHint {
     return Intl.message(
-      'If you need clarification on these policies, contact FleetFill support before continuing with a booking, payment, or dispute action.',
+      'إذا احتجت إلى توضيح حول هذه السياسات، فتواصل مع دعم FleetFill قبل متابعة الحجز أو الدفع أو النزاع.',
       name: 'legalPoliciesSupportHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Terms of service`
+  /// `شروط الخدمة`
   String get legalTermsTitle {
     return Intl.message(
-      'Terms of service',
+      'شروط الخدمة',
       name: 'legalTermsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `FleetFill accepts shipper payment before any carrier payout. Each booking covers one shipment on one confirmed route or trip. Shippers are responsible for accurate shipment details, and carriers are responsible for valid operating documents and lawful transport compliance.`
+  /// `تستلم FleetFill دفعة الشاحن قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى الشاحن مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.`
   String get legalTermsBody {
     return Intl.message(
-      'FleetFill accepts shipper payment before any carrier payout. Each booking covers one shipment on one confirmed route or trip. Shippers are responsible for accurate shipment details, and carriers are responsible for valid operating documents and lawful transport compliance.',
+      'تستلم FleetFill دفعة الشاحن قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى الشاحن مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.',
       name: 'legalTermsBody',
       desc: '',
       args: [],
     );
   }
 
-  /// `Privacy and retention`
+  /// `الخصوصية والاحتفاظ بالبيانات`
   String get legalPrivacyTitle {
     return Intl.message(
-      'Privacy and retention',
+      'الخصوصية والاحتفاظ بالبيانات',
       name: 'legalPrivacyTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `FleetFill stores payment, shipment, support, and audit records only when needed to run the service, investigate disputes, and meet legal or financial obligations. Access is limited to the account owner and authorized staff.`
+  /// `تحتفظ FleetFill ببيانات الدفع والشحن والدعم والتدقيق فقط عند الحاجة لتشغيل الخدمة والتحقيق في النزاعات والوفاء بالالتزامات القانونية أو المالية. ويظل الوصول محصورا بصاحب الحساب والموظفين المصرح لهم.`
   String get legalPrivacyBody {
     return Intl.message(
-      'FleetFill stores payment, shipment, support, and audit records only when needed to run the service, investigate disputes, and meet legal or financial obligations. Access is limited to the account owner and authorized staff.',
+      'تحتفظ FleetFill ببيانات الدفع والشحن والدعم والتدقيق فقط عند الحاجة لتشغيل الخدمة والتحقيق في النزاعات والوفاء بالالتزامات القانونية أو المالية. ويظل الوصول محصورا بصاحب الحساب والموظفين المصرح لهم.',
       name: 'legalPrivacyBody',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment and escrow disclosure`
+  /// `إفصاح الدفع والضمان`
   String get legalPaymentDisclosureTitle {
     return Intl.message(
-      'Payment and escrow disclosure',
+      'إفصاح الدفع والضمان',
       name: 'legalPaymentDisclosureTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Pricing breakdown, platform fees, taxes, and optional insurance are shown before proof submission. FleetFill verifies payment proof against the booking total, secures funds before delivery completion, and releases carrier payout only after the booking becomes payout-eligible.`
+  /// `يظهر تفصيل السعر ورسوم المنصة والضرائب وخيار التأمين قبل إرسال إثبات الدفع. تتحقق FleetFill من إثبات الدفع مقابل إجمالي الحجز، وتؤمن الأموال قبل اكتمال التسليم، ولا تطلق مستحق الناقل إلا بعد أن يصبح الحجز مؤهلا للتحويل.`
   String get legalPaymentDisclosureBody {
     return Intl.message(
-      'Pricing breakdown, platform fees, taxes, and optional insurance are shown before proof submission. FleetFill verifies payment proof against the booking total, secures funds before delivery completion, and releases carrier payout only after the booking becomes payout-eligible.',
+      'يظهر تفصيل السعر ورسوم المنصة والضرائب وخيار التأمين قبل إرسال إثبات الدفع. تتحقق FleetFill من إثبات الدفع مقابل إجمالي الحجز، وتؤمن الأموال قبل اكتمال التسليم، ولا تطلق مستحق الناقل إلا بعد أن يصبح الحجز مؤهلا للتحويل.',
       name: 'legalPaymentDisclosureBody',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dispute policy`
+  /// `سياسة النزاعات`
   String get legalDisputePolicyTitle {
     return Intl.message(
-      'Dispute policy',
+      'سياسة النزاعات',
       name: 'legalDisputePolicyTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Disputes must be opened during the delivery review window. FleetFill reviews shipment, payment proof, tracking, and related records before resolving the case. A dispute may end with a completed booking, a cancellation, or a refund.`
+  /// `يجب فتح النزاعات خلال نافذة مراجعة التسليم. تراجع FleetFill الشحنة وإثبات الدفع والتتبع والمستندات المرتبطة قبل حسم الحالة. وقد ينتهي النزاع بإكمال الحجز أو إلغائه أو رد المبلغ.`
   String get legalDisputePolicyBody {
     return Intl.message(
-      'Disputes must be opened during the delivery review window. FleetFill reviews shipment, payment proof, tracking, and related records before resolving the case. A dispute may end with a completed booking, a cancellation, or a refund.',
+      'يجب فتح النزاعات خلال نافذة مراجعة التسليم. تراجع FleetFill الشحنة وإثبات الدفع والتتبع والمستندات المرتبطة قبل حسم الحالة. وقد ينتهي النزاع بإكمال الحجز أو إلغائه أو رد المبلغ.',
       name: 'legalDisputePolicyBody',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier rating`
+  /// `تقييم الناقل`
   String get searchCarrierRatingLabel {
     return Intl.message(
-      'Carrier rating',
+      'تقييم الناقل',
       name: 'searchCarrierRatingLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Capacity type`
+  /// `نوع السعة`
   String get searchResultTypeLabel {
     return Intl.message(
-      'Capacity type',
+      'نوع السعة',
       name: 'searchResultTypeLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Submit review`
+  /// `إرسال التقييم`
   String get ratingSubmitAction {
     return Intl.message(
-      'Submit review',
+      'إرسال التقييم',
       name: 'ratingSubmitAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Review comment`
+  /// `تعليق التقييم`
   String get ratingCommentLabel {
     return Intl.message(
-      'Review comment',
+      'تعليق التقييم',
       name: 'ratingCommentLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Carrier review submitted.`
+  /// `تم إرسال تقييم الناقل.`
   String get ratingSubmittedMessage {
     return Intl.message(
-      'Carrier review submitted.',
+      'تم إرسال تقييم الناقل.',
       name: 'ratingSubmittedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Waiting for payment`
+  /// `بانتظار الدفع`
   String get bookingStatusPendingPaymentLabel {
     return Intl.message(
-      'Waiting for payment',
+      'بانتظار الدفع',
       name: 'bookingStatusPendingPaymentLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Payment under review`
+  /// `الدفع قيد المراجعة`
   String get bookingStatusPaymentUnderReviewLabel {
     return Intl.message(
-      'Payment under review',
+      'الدفع قيد المراجعة',
       name: 'bookingStatusPaymentUnderReviewLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Confirmed`
+  /// `مؤكد`
   String get bookingStatusConfirmedLabel {
     return Intl.message(
-      'Confirmed',
+      'مؤكد',
       name: 'bookingStatusConfirmedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Picked up`
+  /// `تم الاستلام`
   String get bookingStatusPickedUpLabel {
     return Intl.message(
-      'Picked up',
+      'تم الاستلام',
       name: 'bookingStatusPickedUpLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `In transit`
+  /// `في الطريق`
   String get bookingStatusInTransitLabel {
     return Intl.message(
-      'In transit',
+      'في الطريق',
       name: 'bookingStatusInTransitLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Delivered pending review`
+  /// `تم التسليم وبانتظار المراجعة`
   String get bookingStatusDeliveredPendingReviewLabel {
     return Intl.message(
-      'Delivered pending review',
+      'تم التسليم وبانتظار المراجعة',
       name: 'bookingStatusDeliveredPendingReviewLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Completed`
+  /// `مكتمل`
   String get bookingStatusCompletedLabel {
     return Intl.message(
-      'Completed',
+      'مكتمل',
       name: 'bookingStatusCompletedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cancelled`
+  /// `ملغى`
   String get bookingStatusCancelledLabel {
     return Intl.message(
-      'Cancelled',
+      'ملغى',
       name: 'bookingStatusCancelledLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Disputed`
+  /// `متنازع عليه`
   String get bookingStatusDisputedLabel {
     return Intl.message(
-      'Disputed',
+      'متنازع عليه',
       name: 'bookingStatusDisputedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unpaid`
+  /// `غير مدفوع`
   String get paymentStatusUnpaidLabel {
     return Intl.message(
-      'Unpaid',
+      'غير مدفوع',
       name: 'paymentStatusUnpaidLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Proof submitted`
+  /// `تم إرسال الإثبات`
   String get paymentStatusProofSubmittedLabel {
     return Intl.message(
-      'Proof submitted',
+      'تم إرسال الإثبات',
       name: 'paymentStatusProofSubmittedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Under verification`
+  /// `قيد التحقق`
   String get paymentStatusUnderVerificationLabel {
     return Intl.message(
-      'Under verification',
+      'قيد التحقق',
       name: 'paymentStatusUnderVerificationLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Secured`
+  /// `مؤمّن`
   String get paymentStatusSecuredLabel {
     return Intl.message(
-      'Secured',
+      'مؤمّن',
       name: 'paymentStatusSecuredLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Rejected`
+  /// `مرفوض`
   String get paymentStatusRejectedLabel {
     return Intl.message(
-      'Rejected',
+      'مرفوض',
       name: 'paymentStatusRejectedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Refunded`
+  /// `تم رد المبلغ`
   String get paymentStatusRefundedLabel {
     return Intl.message(
-      'Refunded',
+      'تم رد المبلغ',
       name: 'paymentStatusRefundedLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Released to carrier`
+  /// `تم تحويله إلى الناقل`
   String get paymentStatusReleasedToCarrierLabel {
     return Intl.message(
-      'Released to carrier',
+      'تم تحويله إلى الناقل',
       name: 'paymentStatusReleasedToCarrierLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Pending work`
-  String get adminDashboardBacklogHealthTitle {
+  /// `التواصل مع الدعم`
+  String get contactSupportAction {
     return Intl.message(
-      'Pending work',
-      name: 'adminDashboardBacklogHealthTitle',
+      'التواصل مع الدعم',
+      name: 'contactSupportAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `Time-sensitive tasks`
-  String get adminDashboardAutomationTitle {
-    return Intl.message(
-      'Time-sensitive tasks',
-      name: 'adminDashboardAutomationTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Overdue delivery reviews`
-  String get adminDashboardOverdueDeliveryReviewsLabel {
-    return Intl.message(
-      'Overdue delivery reviews',
-      name: 'adminDashboardOverdueDeliveryReviewsLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Overdue payment resubmissions`
-  String get adminDashboardOverduePaymentResubmissionsLabel {
-    return Intl.message(
-      'Overdue payment resubmissions',
-      name: 'adminDashboardOverduePaymentResubmissionsLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email delivery`
-  String get adminDashboardEmailHealthTitle {
-    return Intl.message(
-      'Email delivery',
-      name: 'adminDashboardEmailHealthTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Emails waiting`
-  String get adminDashboardEmailBacklogLabel {
-    return Intl.message(
-      'Emails waiting',
-      name: 'adminDashboardEmailBacklogLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Failed emails`
-  String get adminDashboardDeadLetterLabel {
-    return Intl.message(
-      'Failed emails',
-      name: 'adminDashboardDeadLetterLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Payments`
-  String get adminQueuePaymentsTabLabel {
-    return Intl.message(
-      'Payments',
-      name: 'adminQueuePaymentsTabLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Verification`
-  String get adminQueueVerificationTabLabel {
-    return Intl.message(
-      'Verification',
-      name: 'adminQueueVerificationTabLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Disputes`
-  String get adminQueueDisputesTabLabel {
-    return Intl.message(
-      'Disputes',
-      name: 'adminQueueDisputesTabLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Payouts`
-  String get adminQueuePayoutsTabLabel {
-    return Intl.message(
-      'Payouts',
-      name: 'adminQueuePayoutsTabLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email`
-  String get adminQueueEmailTabLabel {
-    return Intl.message(
-      'Email',
-      name: 'adminQueueEmailTabLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No payouts are ready to release right now.`
-  String get adminEligiblePayoutsEmptyMessage {
-    return Intl.message(
-      'No payouts are ready to release right now.',
-      name: 'adminEligiblePayoutsEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Eligible payouts`
-  String get adminPayoutEligibleTitle {
-    return Intl.message(
-      'Eligible payouts',
-      name: 'adminPayoutEligibleTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Release payout`
-  String get adminPayoutReleaseAction {
-    return Intl.message(
-      'Release payout',
-      name: 'adminPayoutReleaseAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email delivery`
-  String get adminEmailQueueTitle {
-    return Intl.message(
-      'Email delivery',
-      name: 'adminEmailQueueTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Search email logs`
-  String get adminEmailSearchLabel {
-    return Intl.message(
-      'Search email logs',
-      name: 'adminEmailSearchLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email status`
-  String get adminEmailStatusFilterLabel {
-    return Intl.message(
-      'Email status',
-      name: 'adminEmailStatusFilterLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `All statuses`
-  String get adminEmailStatusAllLabel {
-    return Intl.message(
-      'All statuses',
-      name: 'adminEmailStatusAllLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Queued`
-  String get adminEmailStatusQueuedLabel {
-    return Intl.message(
-      'Queued',
-      name: 'adminEmailStatusQueuedLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Sent`
-  String get adminEmailStatusSentLabel {
-    return Intl.message(
-      'Sent',
-      name: 'adminEmailStatusSentLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delivered`
-  String get adminEmailStatusDeliveredLabel {
-    return Intl.message(
-      'Delivered',
-      name: 'adminEmailStatusDeliveredLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Render failed`
-  String get adminEmailStatusRenderFailedLabel {
-    return Intl.message(
-      'Render failed',
-      name: 'adminEmailStatusRenderFailedLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Soft failed`
-  String get adminEmailStatusSoftFailedLabel {
-    return Intl.message(
-      'Soft failed',
-      name: 'adminEmailStatusSoftFailedLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hard failed`
-  String get adminEmailStatusHardFailedLabel {
-    return Intl.message(
-      'Hard failed',
-      name: 'adminEmailStatusHardFailedLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Bounced`
-  String get adminEmailStatusBouncedLabel {
-    return Intl.message(
-      'Bounced',
-      name: 'adminEmailStatusBouncedLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Suppressed`
-  String get adminEmailStatusSuppressedLabel {
-    return Intl.message(
-      'Suppressed',
-      name: 'adminEmailStatusSuppressedLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Failed`
-  String get adminEmailStatusDeadLetterLabel {
-    return Intl.message(
-      'Failed',
-      name: 'adminEmailStatusDeadLetterLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Template key`
-  String get adminEmailTemplateKeyLabel {
-    return Intl.message(
-      'Template key',
-      name: 'adminEmailTemplateKeyLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Template language`
-  String get adminEmailTemplateLanguageLabel {
-    return Intl.message(
-      'Template language',
-      name: 'adminEmailTemplateLanguageLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Requested locale`
-  String get adminEmailLocaleLabel {
-    return Intl.message(
-      'Requested locale',
-      name: 'adminEmailLocaleLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Provider`
-  String get adminEmailProviderLabel {
-    return Intl.message(
-      'Provider',
-      name: 'adminEmailProviderLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Subject preview`
-  String get adminEmailSubjectPreviewLabel {
-    return Intl.message(
-      'Subject preview',
-      name: 'adminEmailSubjectPreviewLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error code`
-  String get adminEmailErrorCodeLabel {
-    return Intl.message(
-      'Error code',
-      name: 'adminEmailErrorCodeLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error message`
-  String get adminEmailErrorMessageLabel {
-    return Intl.message(
-      'Error message',
-      name: 'adminEmailErrorMessageLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Payload snapshot`
-  String get adminEmailPayloadSnapshotLabel {
-    return Intl.message(
-      'Payload snapshot',
-      name: 'adminEmailPayloadSnapshotLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Resend`
-  String get adminEmailResendAction {
-    return Intl.message(
-      'Resend',
-      name: 'adminEmailResendAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Email resend requested.`
-  String get adminEmailResendSuccess {
-    return Intl.message(
-      'Email resend requested.',
-      name: 'adminEmailResendSuccess',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Failed emails`
-  String get adminEmailDeadLetterTitle {
-    return Intl.message(
-      'Failed emails',
-      name: 'adminEmailDeadLetterTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No failed emails need attention right now.`
-  String get adminEmailDeadLetterEmptyMessage {
-    return Intl.message(
-      'No failed emails need attention right now.',
-      name: 'adminEmailDeadLetterEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No email delivery logs match the current filters.`
-  String get adminEmailQueueEmptyMessage {
-    return Intl.message(
-      'No email delivery logs match the current filters.',
-      name: 'adminEmailQueueEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Search users`
-  String get adminUsersSearchLabel {
-    return Intl.message(
-      'Search users',
-      name: 'adminUsersSearchLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No users match the current search.`
-  String get adminUsersEmptyMessage {
-    return Intl.message(
-      'No users match the current search.',
-      name: 'adminUsersEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Account overview`
-  String get adminUserAccountSectionTitle {
-    return Intl.message(
-      'Account overview',
-      name: 'adminUserAccountSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Role`
-  String get adminUserRoleLabel {
-    return Intl.message('Role', name: 'adminUserRoleLabel', desc: '', args: []);
-  }
-
-  /// `Account status`
-  String get adminUserStatusLabel {
-    return Intl.message(
-      'Account status',
-      name: 'adminUserStatusLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Active`
-  String get adminUserStatusActiveLabel {
-    return Intl.message(
-      'Active',
-      name: 'adminUserStatusActiveLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Suspended`
-  String get adminUserStatusSuspendedLabel {
-    return Intl.message(
-      'Suspended',
-      name: 'adminUserStatusSuspendedLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Suspend user`
-  String get adminUserSuspendAction {
-    return Intl.message(
-      'Suspend user',
-      name: 'adminUserSuspendAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Reactivate user`
-  String get adminUserReactivateAction {
-    return Intl.message(
-      'Reactivate user',
-      name: 'adminUserReactivateAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add a reason for this change.`
-  String get adminUserReasonHint {
-    return Intl.message(
-      'Add a reason for this change.',
-      name: 'adminUserReasonHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `User reactivated.`
-  String get adminUserReactivateSuccess {
-    return Intl.message(
-      'User reactivated.',
-      name: 'adminUserReactivateSuccess',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `User suspended.`
-  String get adminUserSuspendSuccess {
-    return Intl.message(
-      'User suspended.',
-      name: 'adminUserSuspendSuccess',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Related bookings`
-  String get adminUserBookingsSectionTitle {
-    return Intl.message(
-      'Related bookings',
-      name: 'adminUserBookingsSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No bookings are linked to this user yet.`
-  String get adminUserBookingsEmptyMessage {
-    return Intl.message(
-      'No bookings are linked to this user yet.',
-      name: 'adminUserBookingsEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Vehicles`
-  String get adminUserVehiclesSectionTitle {
-    return Intl.message(
-      'Vehicles',
-      name: 'adminUserVehiclesSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No vehicles are linked to this user.`
-  String get adminUserVehiclesEmptyMessage {
-    return Intl.message(
-      'No vehicles are linked to this user.',
-      name: 'adminUserVehiclesEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Verification documents`
-  String get adminUserDocumentsSectionTitle {
-    return Intl.message(
-      'Verification documents',
-      name: 'adminUserDocumentsSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No verification documents are available for this user.`
-  String get adminUserDocumentsEmptyMessage {
-    return Intl.message(
-      'No verification documents are available for this user.',
-      name: 'adminUserDocumentsEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recent emails`
-  String get adminUserEmailSectionTitle {
-    return Intl.message(
-      'Recent emails',
-      name: 'adminUserEmailSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No recent email logs are available for this user.`
-  String get adminUserEmailEmptyMessage {
-    return Intl.message(
-      'No recent email logs are available for this user.',
-      name: 'adminUserEmailEmptyMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Shipper`
-  String get adminUserRoleShipperLabel {
-    return Intl.message(
-      'Shipper',
-      name: 'adminUserRoleShipperLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Carrier`
-  String get adminUserRoleCarrierLabel {
-    return Intl.message(
-      'Carrier',
-      name: 'adminUserRoleCarrierLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Admin`
-  String get adminUserRoleAdminLabel {
-    return Intl.message(
-      'Admin',
-      name: 'adminUserRoleAdminLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Service summary`
-  String get adminSettingsMonitoringSummaryTitle {
-    return Intl.message(
-      'Service summary',
-      name: 'adminSettingsMonitoringSummaryTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `App access`
-  String get adminSettingsRuntimeSectionTitle {
-    return Intl.message(
-      'App access',
-      name: 'adminSettingsRuntimeSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Maintenance mode`
-  String get adminSettingsMaintenanceModeLabel {
-    return Intl.message(
-      'Maintenance mode',
-      name: 'adminSettingsMaintenanceModeLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Force update required`
-  String get adminSettingsForceUpdateLabel {
-    return Intl.message(
-      'Force update required',
-      name: 'adminSettingsForceUpdateLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Minimum Android version`
-  String get adminSettingsMinimumAndroidVersionLabel {
-    return Intl.message(
-      'Minimum Android version',
-      name: 'adminSettingsMinimumAndroidVersionLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Minimum iOS version`
-  String get adminSettingsMinimumIosVersionLabel {
-    return Intl.message(
-      'Minimum iOS version',
-      name: 'adminSettingsMinimumIosVersionLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Save settings`
-  String get adminSettingsSaveAction {
-    return Intl.message(
-      'Save settings',
-      name: 'adminSettingsSaveAction',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Admin settings updated.`
-  String get adminSettingsSavedMessage {
-    return Intl.message(
-      'Admin settings updated.',
-      name: 'adminSettingsSavedMessage',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Booking pricing policy`
-  String get adminSettingsPricingSectionTitle {
-    return Intl.message(
-      'Booking pricing policy',
-      name: 'adminSettingsPricingSectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Platform fee rate`
-  String get adminSettingsPlatformFeeRateLabel {
-    return Intl.message(
-      'Platform fee rate',
-      name: 'adminSettingsPlatformFeeRateLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Insurance rate`
-  String get adminSettingsInsuranceRateLabel {
-    return Intl.message(
-      'Insurance rate',
-      name: 'adminSettingsInsuranceRateLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Insurance minimum fee`
-  String get adminSettingsInsuranceMinimumLabel {
-    return Intl.message(
-      'Insurance minimum fee',
-      name: 'adminSettingsInsuranceMinimumLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Payment resubmission deadline (hours)`
-  String get adminSettingsPaymentDeadlineLabel {
-    return Intl.message(
-      'Payment resubmission deadline (hours)',
-      name: 'adminSettingsPaymentDeadlineLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delivery review policy`
-  String get adminSettingsDeliverySectionTitle {
-    return Intl.message(
-      'Delivery review policy',
-      name: 'adminSettingsDeliverySectionTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Delivery grace window (hours)`
-  String get adminSettingsDeliveryGraceLabel {
-    return Intl.message(
-      'Delivery grace window (hours)',
-      name: 'adminSettingsDeliveryGraceLabel',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Optional features`
-  String get adminSettingsFeatureFlagsSectionTitle {
-    return Intl.message(
-      'Optional features',
-      name: 'adminSettingsFeatureFlagsSectionTitle',
-      desc: '',
-      args: [],
-    );
+  /// `رجوع`
+  String get goBackAction {
+    return Intl.message('رجوع', name: 'goBackAction', desc: '', args: []);
   }
 
-  /// `Enable admin email resend`
-  String get adminSettingsEmailResendEnabledLabel {
+  /// `فتح الإشعارات`
+  String get openNotificationsAction {
     return Intl.message(
-      'Enable admin email resend',
-      name: 'adminSettingsEmailResendEnabledLabel',
+      'فتح الإشعارات',
+      name: 'openNotificationsAction',
       desc: '',
       args: [],
     );
   }
 
-  /// `No admin audit events have been recorded yet.`
-  String get adminAuditLogEmptyMessage {
+  /// `المعاينة غير متاحة لهذا الملف. افتحه في تطبيق آخر.`
+  String get documentPreviewUnavailableMessage {
     return Intl.message(
-      'No admin audit events have been recorded yet.',
-      name: 'adminAuditLogEmptyMessage',
+      'المعاينة غير متاحة لهذا الملف. افتحه في تطبيق آخر.',
+      name: 'documentPreviewUnavailableMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Origin wilaya`
+  /// `ولاية الانطلاق`
   String get routeOriginWilayaLabel {
     return Intl.message(
-      'Origin wilaya',
+      'ولاية الانطلاق',
       name: 'routeOriginWilayaLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Destination wilaya`
+  /// `ولاية الوصول`
   String get routeDestinationWilayaLabel {
     return Intl.message(
-      'Destination wilaya',
+      'ولاية الوصول',
       name: 'routeDestinationWilayaLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Location unavailable`
+  /// `الموقع غير متاح`
   String get locationUnavailableLabel {
     return Intl.message(
-      'Location unavailable',
+      'الموقع غير متاح',
       name: 'locationUnavailableLabel',
       desc: '',
       args: [],
@@ -6573,8 +6728,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'ar'),
+      Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'fr'),
     ];
   }

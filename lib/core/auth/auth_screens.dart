@@ -142,7 +142,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
@@ -165,7 +165,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
@@ -312,7 +312,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
@@ -335,7 +335,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
@@ -425,7 +425,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
@@ -548,7 +548,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);

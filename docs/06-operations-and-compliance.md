@@ -178,7 +178,7 @@ Before a production release candidate is accepted:
 
 Email quality gates:
 
-- all transactional templates reviewed in Arabic, French, and English
+- all active transactional templates reviewed in Arabic, French, and English
 - variables verified against real payload examples
 - broken links, wrong locale fallbacks, and unsafe data exposure checked before release
 
@@ -229,12 +229,12 @@ Operational rules:
 
 - email templates are mapped by logical event key and resolved from the DB registry
 - template variables come from canonical server-side data
-- the current launch-phase email surface is Arabic-only by design
+- the current production baseline serves Arabic, French, and English transactional email from the DB template registry
 - retries must be idempotent for critical lifecycle emails
 - delivery failures should be logged for support visibility
 - render failures should dead-letter immediately and surface in admin as template/runtime issues rather than provider failures
 - invoice information should render in secure HTML email content where needed rather than being attached as PDFs by default
-- app locale does not currently change transactional email language; all outbound operational email uses the canonical Arabic copy set
+- app and account locale now influence transactional email language through the resolved locale and template registry, with Arabic fallback when needed
 
 High-volume delivery rules:
 
@@ -279,8 +279,8 @@ Initial transactional email scope:
 
 Current content policy:
 
-- transactional email copy is Arabic-only in the current launch phase
-- all active lifecycle events must use event-specific Arabic templates rather than generic fallback paragraphs
+- transactional email copy must exist for Arabic, French, and English across the active lifecycle event set
+- all active lifecycle events must use event-specific templates rather than generic fallback paragraphs
 
 ## 12. Template Governance
 
@@ -311,7 +311,7 @@ Recommended admin capabilities:
 
 - filter email logs by booking, user, template key, locale, provider status, and date range
 - view latest delivery state and retry history
-- view resolved template language and subject preview
+- view requested locale, resolved locale, resolved template language, and subject preview
 - inspect safe payload snapshot data used for rendering
 - distinguish provider failures from render/template failures
 - identify bounced, suppressed, and repeatedly failing addresses

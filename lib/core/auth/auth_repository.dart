@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fleetfill/core/auth/auth_state.dart';
 import 'package:fleetfill/core/config/app_bootstrap.dart';
 import 'package:fleetfill/core/config/app_environment.dart';
+import 'package:fleetfill/core/utils/input_sanitizers.dart';
 import 'package:fleetfill/firebase_options.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -86,6 +87,7 @@ class AuthRepository {
     final response = await _client.auth.signUp(
       email: email,
       password: password,
+      emailRedirectTo: authRedirectUri,
     );
     return response.session == null;
   }
@@ -174,6 +176,7 @@ class AuthRepository {
     String? fullName,
     String? companyName,
     String? phoneNumber,
+    String? preferredLocale,
   }) async {
     final user = _client.auth.currentUser;
     if (user == null) {
@@ -190,15 +193,33 @@ class AuthRepository {
       'id': user.id,
       'email': user.email?.trim() ?? '',
       'role': (existingRole ?? role).databaseValue,
-      'full_name': _nullable(fullName) ?? existingProfile?.fullName,
+      'preferred_locale':
+          _nullable(preferredLocale) ??
+          existingProfile?.preferredLocale ??
+          'ar',
+      'full_name': _sanitizePersonName(fullName) ?? existingProfile?.fullName,
       'company_name':
           existingRole == AppUserRole.carrier || role == AppUserRole.carrier
-          ? _nullable(companyName) ?? existingProfile?.companyName
+          ? _sanitizeCompanyName(companyName) ?? existingProfile?.companyName
           : null,
-      'phone_number': _nullable(phoneNumber) ?? existingProfile?.phoneNumber,
+      'phone_number':
+          _sanitizeAlgerianPhoneNumber(phoneNumber) ??
+          existingProfile?.phoneNumber,
     };
 
     await _client.from('profiles').upsert(payload, onConflict: 'id');
+  }
+
+  Future<void> updatePreferredLocale(String localeCode) async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw const AuthException('authentication_required');
+    }
+
+    await _client
+        .from('profiles')
+        .update({'preferred_locale': localeCode.trim().toLowerCase()})
+        .eq('id', user.id);
   }
 
   Future<void> updatePhoneNumber(String phoneNumber) async {
@@ -209,7 +230,10 @@ class AuthRepository {
 
     await _client
         .from('profiles')
-        .update({'phone_number': phoneNumber.trim()})
+        .update({
+          'phone_number':
+              _sanitizeAlgerianPhoneNumber(phoneNumber) ?? phoneNumber.trim(),
+        })
         .eq('id', user.id);
   }
 
@@ -274,6 +298,18 @@ class AuthRepository {
       return null;
     }
     return trimmed;
+  }
+
+  String? _sanitizePersonName(String? value) {
+    return InputSanitizers.normalizePersonName(value);
+  }
+
+  String? _sanitizeCompanyName(String? value) {
+    return InputSanitizers.normalizeCompanyName(value);
+  }
+
+  String? _sanitizeAlgerianPhoneNumber(String? value) {
+    return InputSanitizers.normalizeAlgerianPhoneNumber(value);
   }
 }
 

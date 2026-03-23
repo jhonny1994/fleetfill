@@ -27,14 +27,14 @@ void main() {
     testWidgets('uses generated supported locales', (tester) async {
       expect(
         S.delegate.supportedLocales.map((locale) => locale.languageCode),
-        <String>['en', 'ar', 'fr'],
+        <String>['ar', 'en', 'fr'],
       );
     });
 
-    test('falls back to English when locale is unsupported', () {
+    test('falls back to Arabic when locale is unsupported', () {
       expect(
         AppLocaleResolver.resolve(const Locale('es')),
-        const Locale('en'),
+        const Locale('ar'),
       );
     });
 

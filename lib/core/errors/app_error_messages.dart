@@ -66,6 +66,16 @@ String mapAppErrorMessage(S s, Object error) {
   if (message.contains('rejection requires a reason')) {
     return s.adminVerificationRejectReasonHint;
   }
+  if (message.contains('support acknowledgement rate limit exceeded') ||
+      message.contains('rate limit')) {
+    return s.supportRateLimitMessage;
+  }
+  if (message.contains('failed to enqueue support request') ||
+      message.contains('support inbox is required') ||
+      message.contains('missing authorization header') ||
+      message.contains('internal server error')) {
+    return s.supportUnavailableMessage;
+  }
 
   final authMapped = mapAuthErrorMessage(s, rawMessage);
   if (authMapped != s.authGenericErrorMessage) {

@@ -63,8 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '610728338505',
     projectId: 'fleetfill',
     storageBucket: 'fleetfill.firebasestorage.app',
-    androidClientId: '610728338505-rnsflqc18hjt9kpf916b05ckqr07oldu.apps.googleusercontent.com',
-    iosClientId: '610728338505-sngnkeu9b5jlbvdop7fk14j80gaba3to.apps.googleusercontent.com',
+    androidClientId:
+        '610728338505-rnsflqc18hjt9kpf916b05ckqr07oldu.apps.googleusercontent.com',
+    iosClientId:
+        '610728338505-sngnkeu9b5jlbvdop7fk14j80gaba3to.apps.googleusercontent.com',
     iosBundleId: 'com.carbodex.fleetfill',
   );
 }

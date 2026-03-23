@@ -266,6 +266,7 @@ class _WelcomeLanguageStep extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final currentLocale = ref.watch(effectiveLocaleProvider);
+    final availableLocales = ref.watch(availableLocalesProvider);
     final currentLanguageName = localizedLanguageName(
       context,
       currentLocale,
@@ -277,7 +278,7 @@ class _WelcomeLanguageStep extends ConsumerWidget {
       children: [
         AppSectionHeader(title: title, subtitle: description),
         const SizedBox(height: AppSpacing.md),
-        ...const [Locale('en'), Locale('fr'), Locale('ar')].map(
+        ...availableLocales.map(
           (locale) => Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.sm),
             child: _LanguageChoiceTile(locale: locale),
@@ -385,6 +386,7 @@ class RoleSelectionScreen extends ConsumerWidget {
   }) async {
     final repository = ref.read(authRepositoryProvider);
     final s = S.of(context);
+    final preferredLocale = ref.read(effectiveLocaleProvider).languageCode;
 
     try {
       await repository.upsertProfile(
@@ -394,6 +396,7 @@ class RoleSelectionScreen extends ConsumerWidget {
             ? existingProfile?.companyName
             : null,
         phoneNumber: existingProfile?.phoneNumber,
+        preferredLocale: preferredLocale,
       );
       await ref.read(authSessionControllerProvider.notifier).refresh();
       if (!context.mounted) {
@@ -404,7 +407,7 @@ class RoleSelectionScreen extends ConsumerWidget {
       if (!context.mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     }
   }
 }
@@ -416,6 +419,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
     final currentLocale = ref.watch(effectiveLocaleProvider);
+    final availableLocales = ref.watch(availableLocalesProvider);
 
     return AppPageScaffold(
       title: s.languageSelectionTitle,
@@ -427,11 +431,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
             showTitle: false,
           ),
           const SizedBox(height: AppSpacing.lg),
-          ...const [
-            Locale('en'),
-            Locale('fr'),
-            Locale('ar'),
-          ].map(
+          ...availableLocales.map(
             (locale) => Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.sm),
               child: _LanguageChoiceTile(locale: locale),
@@ -554,7 +554,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
@@ -615,9 +615,11 @@ class _PhoneCompletionScreenState extends ConsumerState<PhoneCompletionScreen> {
                       label: s.profilePhoneLabel,
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.done,
-                      validator: (value) => (value ?? '').trim().isEmpty
-                          ? s.authRequiredFieldMessage
-                          : null,
+                      hintText: '0550123456',
+                      validator: (value) =>
+                          InputSanitizers.isValidAlgerianPhoneNumber(value)
+                          ? null
+                          : s.profileInvalidAlgerianPhoneMessage,
                       onFieldSubmitted: (_) => unawaited(_submit()),
                     ),
                     const SizedBox(height: AppSpacing.lg),
@@ -657,7 +659,7 @@ class _PhoneCompletionScreenState extends ConsumerState<PhoneCompletionScreen> {
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
@@ -747,7 +749,7 @@ class _NotificationSetupScreenState
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, mapAuthErrorMessage(s, error.message));
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);

@@ -4,6 +4,7 @@ import 'package:fleetfill/core/localization/locale_controller.dart';
 import 'package:fleetfill/core/theme/theme_controller.dart';
 import 'package:fleetfill/core/utils/app_logger.dart';
 import 'package:fleetfill/core/utils/crash_reporter.dart';
+import 'package:fleetfill/shared/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -92,32 +93,41 @@ Future<bool> _initializeSupabase(AppEnvironmentConfig environment) async {
   return true;
 }
 
-Future<AppEnvironmentConfig> _resolveRuntimeEnvironment(
+Future<ClientSettings> _fetchClientSettings() async {
+  final response = await Supabase.instance.client.rpc<Map<String, dynamic>>(
+    'get_client_settings',
+  );
+  return ClientSettings.fromJson(response);
+}
+
+Future<({AppEnvironmentConfig environment, ClientSettings clientSettings})>
+_resolveRuntimeEnvironment(
   AppEnvironmentConfig environment,
 ) async {
   if (!environment.hasSupabaseConfig ||
       !AppBootstrapController.supabaseInitialized) {
-    return environment;
+    return (
+      environment: environment,
+      clientSettings: ClientSettings.fromJson(const <String, dynamic>{}),
+    );
   }
 
   try {
-    final response = await Supabase.instance.client.rpc<Map<String, dynamic>>(
-      'get_client_settings',
-    );
-    final appRuntime = Map<String, dynamic>.from(
-      (response['app_runtime'] as Map?) ?? const <String, dynamic>{},
-    );
+    final clientSettings = await _fetchClientSettings();
+    final appRuntime = clientSettings.appRuntime;
 
-    return environment.copyWith(
-      maintenanceMode:
-          appRuntime['maintenance_mode'] as bool? ??
-          environment.maintenanceMode,
-      forceUpdateRequired:
-          appRuntime['force_update_required'] as bool? ??
-          environment.forceUpdateRequired,
+    return (
+      environment: environment.copyWith(
+        maintenanceMode: appRuntime.maintenanceMode,
+        forceUpdateRequired: appRuntime.forceUpdateRequired,
+      ),
+      clientSettings: clientSettings,
     );
   } on Object {
-    return environment;
+    return (
+      environment: environment,
+      clientSettings: ClientSettings.fromJson(const <String, dynamic>{}),
+    );
   }
 }
 
@@ -130,6 +140,7 @@ class AppBootstrapState {
   const AppBootstrapState({
     required this.status,
     required this.environment,
+    required this.clientSettings,
     required this.auth,
     this.error,
     this.stackTrace,
@@ -137,6 +148,7 @@ class AppBootstrapState {
 
   final BootstrapStateStatus status;
   final AppEnvironmentConfig environment;
+  final ClientSettings clientSettings;
   final AuthSnapshot auth;
   final Object? error;
   final StackTrace? stackTrace;
@@ -152,7 +164,7 @@ class AppBootstrapController extends _$AppBootstrapController {
     final logger = ref.watch(appLoggerProvider);
 
     try {
-      final environment = await _resolveRuntimeEnvironment(
+      final runtime = await _resolveRuntimeEnvironment(
         configuredEnvironment,
       );
       final auth = await ref
@@ -163,12 +175,15 @@ class AppBootstrapController extends _$AppBootstrapController {
           );
 
       if (supabaseInitialized) {
-        logger.info('Supabase initialized for ${environment.environment.name}');
+        logger.info(
+          'Supabase initialized for ${runtime.environment.environment.name}',
+        );
       }
 
       return AppBootstrapState(
         status: BootstrapStateStatus.ready,
-        environment: environment,
+        environment: runtime.environment,
+        clientSettings: runtime.clientSettings,
         auth: auth,
       );
     } on Object catch (error, stackTrace) {
@@ -181,6 +196,7 @@ class AppBootstrapController extends _$AppBootstrapController {
       return AppBootstrapState(
         status: BootstrapStateStatus.failed,
         environment: configuredEnvironment,
+        clientSettings: ClientSettings.fromJson(const <String, dynamic>{}),
         auth: const AuthSnapshot(status: AuthStatus.unauthenticated),
         error: error,
         stackTrace: stackTrace,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart' as intl;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,7 @@ class FleetFillApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeControllerProvider);
     final locale = ref.watch(effectiveLocaleProvider);
+    final localeRegistry = ref.watch(localeRegistryProvider);
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
@@ -54,11 +56,12 @@ class FleetFillApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       themeMode: themeMode,
       locale: locale,
-      supportedLocales: S.delegate.supportedLocales,
+      supportedLocales: localeRegistry.enabledLocales,
       localeResolutionCallback: (deviceLocale, supportedLocales) {
         return AppLocaleResolver.resolveFromList(
           deviceLocale == null ? null : <Locale>[deviceLocale],
           supportedLocales,
+          fallbackLocale: localeRegistry.fallbackLocale,
         );
       },
       localizationsDelegates: const [
@@ -71,7 +74,8 @@ class FleetFillApp extends ConsumerWidget {
       builder: (context, child) {
         final bootstrap = ref.watch(appBootstrapControllerProvider);
         final currentLocale = Localizations.localeOf(context);
-        final textDirection = currentLocale.languageCode == 'ar'
+        final textDirection =
+            intl.Bidi.isRtlLanguage(currentLocale.languageCode)
             ? TextDirection.rtl
             : TextDirection.ltr;
 

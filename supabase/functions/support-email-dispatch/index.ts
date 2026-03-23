@@ -17,6 +17,12 @@ Deno.serve(async (req: Request) => {
       message?: string
     }
 
+    console.info('support-email-dispatch request received', {
+      locale: payload.locale ?? null,
+      subjectLength: payload.subject?.trim().length ?? 0,
+      messageLength: payload.message?.trim().length ?? 0,
+    })
+
     if (!payload.subject || !payload.message) {
       return jsonResponse({ error: 'subject and message are required' }, 400)
     }
@@ -54,6 +60,12 @@ Deno.serve(async (req: Request) => {
     const locale = normalizeSupportedLocale(payload.locale)
     const recipientEmail = user.email.trim().toLowerCase()
     const supportInbox = requiredEnv('SUPPORT_EMAIL_TO').trim().toLowerCase()
+    console.info('support-email-dispatch authenticated request', {
+      userId: profileId,
+      recipientEmail,
+      supportInbox,
+      locale,
+    })
     const { data, error } = await userClient.rpc(
       'enqueue_support_request_emails',
       {
@@ -67,12 +79,23 @@ Deno.serve(async (req: Request) => {
     if (error != null) {
       const message = error.message.toLowerCase()
       if (message.includes('rate limit')) {
+        console.warn('support email rate limited', {
+          userId: profileId,
+          recipientEmail,
+          locale,
+        })
         return jsonResponse({
           error: 'Support acknowledgement rate limit exceeded',
         }, 429)
       }
 
-      console.error('support email enqueue failed', error)
+      console.error('support email enqueue failed', {
+        error,
+        userId: profileId,
+        recipientEmail,
+        supportInbox,
+        locale,
+      })
       return jsonResponse({ error: 'Failed to enqueue support request' }, 500)
     }
 

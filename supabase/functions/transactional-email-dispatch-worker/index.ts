@@ -4,6 +4,7 @@ import {
   dispatchEmail,
   inferDeliveryStatus,
   jsonResponse,
+  normalizeSupportedLocale,
   type OutboxJob,
   requiredEnv,
 } from '../_shared/email-runtime.ts'
@@ -108,7 +109,9 @@ Deno.serve(async (req: Request) => {
             p_subject_preview: null,
             p_error_code: errorCode,
             p_error_message: errorMessage,
-            p_template_language_code: 'ar',
+            p_template_language_code: normalizeSupportedLocale(
+              job.template_language_code ?? job.locale,
+            ),
           },
         )
 

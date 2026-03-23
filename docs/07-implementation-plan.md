@@ -47,12 +47,13 @@ Rules:
 ### Localization And Accessibility Foundation
 
 - [x] Configure `flutter-intl` / ARB-based localization for Arabic, French, and English
-- [x] Implement deterministic locale fallback to English when locale is unsupported
+- [x] Implement deterministic locale fallback to Arabic when locale is unsupported
 - [x] Define bidi-safe formatting helpers for phone numbers, tracking IDs, payment references, prices, and plates
 - [x] Define global accessibility checklist for semantics, 48dp targets, focus order, and large-text resilience
 - [x] Add baseline widget tests for localization and accessibility guidelines
 - [x] Create shared page-state widgets for loading, error, empty, retry, offline, forbidden, not-found, and verification-gate states
 - [x] Define reduced-motion policy and keyboard/focus traversal rules for forms, dialogs, sheets, and larger-device layouts
+- [x] Centralize locale policy around installed Flutter locales, runtime-enabled locales, profile-level preferred locale, and Arabic fallback
 - [ ] Add a final cross-phase UX polish pass after most operational phases are complete, covering skeleton loading, progressive loading transitions, image optimization, accessibility release checks, and localization polish
 
 Cross-phase UX note:
@@ -390,14 +391,14 @@ Phase 10 progress notes:
 - [x] Integrate transactional email sending from secure server code with a provider-agnostic boundary
 - [x] Build `email_outbox_jobs` processing worker
 - [x] Build `email_delivery_logs` recording and update flow
-- [x] Move transactional email content into a DB-owned template registry with Arabic as the active outbound language
+- [x] Move transactional email content into a DB-owned template registry with Arabic, French, and English variants
 - [x] Build provider webhook/status handling for delivered, bounced, suppressed, and failed states where supported
 - [x] Build support acknowledgement email flow
 - [x] Expose support email entry points in app
 - [x] Implement webhook authenticity verification, idempotency, and out-of-order event handling
 - [x] Define and implement the full transactional email event set from the canonical docs, not support acknowledgement only
 - [x] Add a first-class transactional email provider adapter for real local and hosted delivery testing
-- [x] Replace hardcoded email bodies with canonical Arabic event templates loaded from the DB registry
+- [x] Replace hardcoded email bodies with canonical multilingual event templates loaded from the DB registry
 
 Phase 11 progress notes:
 
@@ -410,7 +411,7 @@ Phase 11 progress notes:
 - the transactional email inventory now covers booking confirmation, payment proof receipt, payment rejection, payment secured, delivered-pending-review, dispute opened, dispute resolved, payout released, generated document availability, support acknowledgement, and support forwarding
 - local runtime configuration now supports real provider-backed email delivery and native Google sign-in without relying on browser Google auth for mobile flows
 - supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql` and `test/contracts/supabase/engagement_support_contract_test.dart`
-- transactional email rendering is now DB-backed through `email_templates`, with render failures classified separately from provider failures and exposed in admin operations
+- transactional email rendering is now DB-backed through `email_templates`, with Arabic, French, and English variants, locale-aware resolution plus Arabic fallback, and render failures classified separately from provider failures and exposed in admin operations
 
 ## Phase 12 - Admin Surface And Operations
 
