@@ -156,10 +156,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     try {
       await ref.read(authRepositoryProvider).signInWithGoogle();
+      await ref.read(authSessionControllerProvider.notifier).refresh();
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, s.authGoogleStartedMessage);
+      AppFeedback.showSnackBar(context, s.authSignInSuccess);
     } on AuthException catch (error) {
       if (!mounted) {
         return;
@@ -325,10 +326,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     try {
       await ref.read(authRepositoryProvider).signInWithGoogle();
+      await ref.read(authSessionControllerProvider.notifier).refresh();
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, s.authGoogleStartedMessage);
+      AppFeedback.showSnackBar(context, s.authSignInSuccess);
     } on AuthException catch (error) {
       if (!mounted) {
         return;

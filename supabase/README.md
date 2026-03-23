@@ -63,8 +63,8 @@ Example root `.env` entries:
 - `PUSH_NOTIFICATIONS_ENABLED=true`
 - `PUSH_NOTIFICATIONS_PROVIDER=fcm_v1`
 - `FIREBASE_SERVICE_ACCOUNT_JSON={...}`
-- `TRANSACTIONAL_EMAIL_PROVIDER=...`
-- `TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT=https://api.provider.example/send`
+- `TRANSACTIONAL_EMAIL_PROVIDER=your-provider-key`
+  - `TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT=https://api.your-provider.example/send`
 - `TRANSACTIONAL_EMAIL_PROVIDER_API_KEY=...`
 - `TRANSACTIONAL_EMAIL_FROM_EMAIL=no-reply@example.com`
 - `TRANSACTIONAL_EMAIL_FROM_NAME=FleetFill`
@@ -77,9 +77,14 @@ Notes:
 
 - The mobile app uses `SUPABASE_ANON_KEY` first in `APP_ENV=local`, because local CLI/self-hosted Supabase does not manage hosted publishable keys.
 - The mobile app uses `SUPABASE_PUBLISHABLE_KEY` first in `APP_ENV=staging` and `APP_ENV=production`, with `SUPABASE_ANON_KEY` only as a compatibility fallback.
+- Recommended ownership split:
+  - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`
+  - Flutter `--dart-define` or editor launch config: app runtime values such as `APP_ENV`, `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, and `GOOGLE_WEB_CLIENT_ID`
+  - GitHub Actions: repository variables for non-secret client IDs and repository secrets for secrets such as `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET`
 - Google auth is always treated as enabled in the client runtime. Control availability through Supabase provider setup, not app flags.
 - The app push path should normally use native Firebase client config files (`google-services.json` / `GoogleService-Info.plist`) supplied outside git, while the optional `FIREBASE_*` app vars remain available only as explicit runtime overrides.
 - Local Edge Function smoke runs also require the transactional email sender/webhook env vars above; otherwise functions may boot but return `500` on first use because required server secrets are missing.
+- The current production-grade email integration path is a transactional email provider adapter behind the shared outbox/retry model. Provider-specific request formatting and webhook normalization should stay inside the Edge layer.
 
 ## Runtime Boundaries
 

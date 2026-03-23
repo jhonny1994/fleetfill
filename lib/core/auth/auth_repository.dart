@@ -3,20 +3,29 @@ import 'dart:async';
 import 'package:fleetfill/core/auth/auth_state.dart';
 import 'package:fleetfill/core/config/app_bootstrap.dart';
 import 'package:fleetfill/core/config/app_environment.dart';
+import 'package:fleetfill/firebase_options.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const authRedirectUri = 'fleetfill://auth-callback';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final environment = ref.watch(appEnvironmentConfigProvider);
-  return AuthRepository(environment: environment);
+  return AuthRepository(
+    environment: environment,
+    googleAuthClient: const NativeGoogleAuthClient(),
+  );
 });
 
 class AuthRepository {
-  const AuthRepository({required this.environment});
+  const AuthRepository({
+    required this.environment,
+    required this.googleAuthClient,
+  });
 
   final AppEnvironmentConfig environment;
+  final NativeGoogleAuthClient googleAuthClient;
 
   SupabaseClient get _client => Supabase.instance.client;
 
@@ -82,10 +91,67 @@ class AuthRepository {
   }
 
   Future<void> signInWithGoogle() {
-    return _client.auth.signInWithOAuth(
-      OAuthProvider.google,
-      redirectTo: authRedirectUri,
+    final nativeConfig = _resolveGoogleSignInConfig();
+    if (nativeConfig == null) {
+      throw const AuthException('google_auth_disabled');
+    }
+
+    return _signInWithNativeGoogle(nativeConfig);
+  }
+
+  Future<void> _signInWithNativeGoogle(_GoogleSignInConfig config) async {
+    try {
+      final tokens = await googleAuthClient.authenticate(
+        clientId: config.clientId,
+        serverClientId: config.serverClientId,
+      );
+
+      await _client.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: tokens.idToken,
+        accessToken: tokens.accessToken,
+      );
+    } on AuthException {
+      rethrow;
+    } on GoogleSignInException catch (error) {
+      if (error.code == GoogleSignInExceptionCode.canceled) {
+        throw const AuthException('user_cancelled');
+      }
+      throw AuthException('google_sign_in_failed: ${error.description}');
+    } on Object catch (error) {
+      final message = error.toString().toLowerCase();
+      if (message.contains('cancel')) {
+        throw const AuthException('user_cancelled');
+      }
+
+      throw AuthException('google_sign_in_failed: $error');
+    }
+  }
+
+  _GoogleSignInConfig? _resolveGoogleSignInConfig() {
+    final serverClientId = environment.googleWebClientId.trim();
+    if (serverClientId.isEmpty) {
+      return null;
+    }
+
+    return _GoogleSignInConfig(
+      serverClientId: serverClientId,
+      clientId: _resolveIosGoogleClientId(),
     );
+  }
+
+  String? _resolveIosGoogleClientId() {
+    final configuredValue = environment.googleIosClientId.trim();
+    if (configuredValue.isNotEmpty) {
+      return configuredValue;
+    }
+
+    final firebaseValue = DefaultFirebaseOptions.ios.iosClientId?.trim();
+    if (firebaseValue == null || firebaseValue.isEmpty) {
+      return null;
+    }
+
+    return firebaseValue;
   }
 
   Future<void> sendPasswordResetEmail(String email) {
@@ -209,6 +275,98 @@ class AuthRepository {
     }
     return trimmed;
   }
+}
+
+class _GoogleSignInConfig {
+  const _GoogleSignInConfig({
+    required this.serverClientId,
+    required this.clientId,
+  });
+
+  final String serverClientId;
+  final String? clientId;
+}
+
+class NativeGoogleAuthClient {
+  const NativeGoogleAuthClient();
+
+  static const List<String> _defaultScopes = <String>[
+    'openid',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+  ];
+
+  static bool _initialized = false;
+  static ({String? clientId, String? serverClientId})? _configuredIds;
+
+  Future<NativeGoogleAuthTokens> authenticate({
+    String? clientId,
+    String? serverClientId,
+  }) async {
+    await _initializeIfNeeded(
+      clientId: clientId,
+      serverClientId: serverClientId,
+    );
+
+    final googleSignIn = GoogleSignIn.instance;
+    if (!googleSignIn.supportsAuthenticate()) {
+      throw const AuthException('google_auth_disabled');
+    }
+
+    final account = await googleSignIn.authenticate(scopeHint: _defaultScopes);
+    final idToken = account.authentication.idToken;
+    if (idToken == null || idToken.isEmpty) {
+      throw const AuthException('google_id_token_missing');
+    }
+
+    final authorization =
+        await account.authorizationClient.authorizationForScopes(
+          _defaultScopes,
+        ) ??
+        await account.authorizationClient.authorizeScopes(_defaultScopes);
+    final accessToken = authorization.accessToken;
+    if (accessToken.isEmpty) {
+      throw const AuthException('google_access_token_missing');
+    }
+
+    return NativeGoogleAuthTokens(
+      idToken: idToken,
+      accessToken: accessToken,
+    );
+  }
+
+  Future<void> _initializeIfNeeded({
+    String? clientId,
+    String? serverClientId,
+  }) async {
+    final requestedConfig = (
+      clientId: clientId?.trim(),
+      serverClientId: serverClientId?.trim(),
+    );
+    if (_initialized) {
+      if (_configuredIds != requestedConfig) {
+        throw const AuthException('google_auth_configuration_changed');
+      }
+      return;
+    }
+
+    await GoogleSignIn.instance.initialize(
+      clientId: requestedConfig.clientId,
+      serverClientId: requestedConfig.serverClientId,
+    );
+    _configuredIds = requestedConfig;
+    _initialized = true;
+  }
+}
+
+class NativeGoogleAuthTokens {
+  const NativeGoogleAuthTokens({
+    required this.idToken,
+    required this.accessToken,
+  });
+
+  final String idToken;
+  final String accessToken;
 }
 
 class CarrierPublicProfileView {

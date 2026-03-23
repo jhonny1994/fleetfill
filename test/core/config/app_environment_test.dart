@@ -48,6 +48,28 @@ void main() {
     });
   });
 
+  group('AppEnvironmentConfig Google client ID resolution', () {
+    test('serializes optional Google client IDs from JSON payloads', () {
+      final config = AppEnvironmentConfig.fromJson(<String, dynamic>{
+        'environment': 'production',
+        'googleWebClientId': 'web-client-id',
+        'googleIosClientId': 'ios-client-id',
+      });
+
+      expect(config.googleWebClientId, 'web-client-id');
+      expect(config.googleIosClientId, 'ios-client-id');
+    });
+
+    test('defaults Google client IDs to empty strings when absent', () {
+      final config = AppEnvironmentConfig.fromJson(<String, dynamic>{
+        'environment': 'local',
+      });
+
+      expect(config.googleWebClientId, isEmpty);
+      expect(config.googleIosClientId, isEmpty);
+    });
+  });
+
   group('AppEnvironmentConfig local Supabase URL normalization', () {
     test('maps localhost to 10.0.2.2 on Android local builds', () {
       final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(

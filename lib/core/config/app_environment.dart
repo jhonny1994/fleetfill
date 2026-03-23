@@ -18,6 +18,8 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     @Default('') String firebaseStorageBucket,
     @Default('') String firebaseAndroidAppId,
     @Default('') String firebaseIosAppId,
+    @Default('') String googleWebClientId,
+    @Default('') String googleIosClientId,
     @Default(false) bool maintenanceMode,
     @Default(false) bool forceUpdateRequired,
     @Default(false) bool crashReportingEnabled,
@@ -77,6 +79,15 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
       firebaseIosAppId: _firstNonEmpty([
         const String.fromEnvironment('FIREBASE_IOS_APP_ID'),
         const String.fromEnvironment('APP_FIREBASE_IOS_APP_ID'),
+      ]),
+      googleWebClientId: _firstNonEmpty([
+        const String.fromEnvironment('GOOGLE_WEB_CLIENT_ID'),
+        const String.fromEnvironment('APP_GOOGLE_WEB_CLIENT_ID'),
+        const String.fromEnvironment('SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID'),
+      ]),
+      googleIosClientId: _firstNonEmpty([
+        const String.fromEnvironment('GOOGLE_IOS_CLIENT_ID'),
+        const String.fromEnvironment('APP_GOOGLE_IOS_CLIENT_ID'),
       ]),
       maintenanceMode: _parseBool(
         const String.fromEnvironment('MAINTENANCE_MODE'),
