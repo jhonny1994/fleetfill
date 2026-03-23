@@ -44,6 +44,7 @@ void main() {
       mapAuthErrorMessage(s, 'User already registered'),
       s.authUserAlreadyRegisteredMessage,
     );
+    expect(mapAuthErrorMessage(s, 'user_cancelled'), s.authCancelledMessage);
     expect(
       mapAuthErrorMessage(s, 'network timeout'),
       s.authNetworkErrorMessage,

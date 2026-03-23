@@ -219,15 +219,21 @@ Generated documents should be reproducible, retained when needed, and referenced
 
 FleetFill uses a server-controlled transactional email provider for outbound email.
 
+Current baseline:
+
+- a transactional email provider adapter is the current provider path
+- FleetFill uses a durable outbox plus worker model, then maps provider send and webhook payloads into internal delivery states
+- provider integration stays behind a small adapter boundary so the queue, retry, dedupe, and admin monitoring model remain stable if the provider changes later
+
 Operational rules:
 
 - email templates are mapped by logical event key, not hardcoded scattered strings
 - template variables come from canonical server-side data
-- locale-aware template selection is required
+- the current launch-phase email surface is Arabic-only by design
 - retries must be idempotent for critical lifecycle emails
 - delivery failures should be logged for support visibility
 - invoice information should render in secure HTML email content where needed rather than being attached as PDFs by default
-- unsupported locales always fall back to English
+- app locale does not currently change transactional email language; all outbound operational email uses the canonical Arabic copy set
 
 High-volume delivery rules:
 
@@ -267,6 +273,11 @@ Initial transactional email scope:
 - payout released
 - generated invoice or receipt available
 
+Current content policy:
+
+- transactional email copy is Arabic-only in the current launch phase
+- all active lifecycle events must use event-specific Arabic templates rather than generic fallback paragraphs
+
 ## 12. Template Governance
 
 - keep templates operational, concise, and consistent with in-app copy
@@ -283,6 +294,10 @@ Edge-case rules:
 - if an address bounces or is suppressed, automatic retries stop and support/admin visibility is required
 - if many bookings trigger emails at once, low-priority emails may be delayed rather than risking critical-email delivery health
 - webhook authenticity and idempotency checks are required before provider delivery events update internal state
+
+Readiness note:
+
+- email is not considered fully production-validated until hosted provider sending and hosted webhook delivery are exercised against the real Supabase environment with real secrets and signature configuration
 
 ## 13. Email Delivery Monitoring And Admin View
 

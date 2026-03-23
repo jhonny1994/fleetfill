@@ -22,20 +22,26 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const signature = req.headers.get('x-transactional-email-signature')
-    const expectedSignature = requiredEnv(
-      'TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET',
-    )
+    const provider = Deno.env.get('TRANSACTIONAL_EMAIL_PROVIDER')?.trim().toLowerCase() || ''
+    const expectedSignature = requiredEnv('TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET')
+    const signature = req.headers.get('x-transactional-email-signature') ??
+      req.headers.get('x-brevo-signature') ??
+      req.headers.get('x-brevo-event-signature')
     if (signature == null || !timingSafeEqual(signature, expectedSignature)) {
       return jsonResponse({ error: 'Invalid webhook signature' }, 401)
     }
 
-    const payload = await req.json() as {
+    const rawPayload = await req.json() as {
       provider_message_id?: string
       status?: string
       error_code?: string | null
       error_message?: string | null
+      event?: string
+      ['message-id']?: string
+      reason?: string | null
     }
+
+    const payload = normalizeProviderWebhookPayload(provider, rawPayload)
 
     if (!payload.provider_message_id || !payload.status) {
       return jsonResponse({
@@ -80,3 +86,68 @@ Deno.serve(async (req: Request) => {
     return jsonResponse({ error: 'Internal server error' }, 500)
   }
 })
+
+function normalizeGenericPayload(payload: {
+  provider_message_id?: string
+  status?: string
+  error_code?: string | null
+  error_message?: string | null
+}) {
+  return payload
+}
+
+const providerWebhookNormalizers: Record<string, (payload: {
+  event?: string
+  ['message-id']?: string
+  reason?: string | null
+}) => {
+  provider_message_id?: string
+  status?: string
+  error_code?: string | null
+  error_message?: string | null
+}> = {
+  brevo: (payload) => {
+    const normalizedEvent = payload.event?.trim()
+    const statusByEvent: Record<string, string> = {
+      request: 'sent',
+      sent: 'sent',
+      delivered: 'delivered',
+      opened: 'opened',
+      uniqueOpened: 'opened',
+      click: 'clicked',
+      hardBounce: 'hard_failed',
+      softBounce: 'soft_failed',
+      blocked: 'suppressed',
+      invalid: 'bounced',
+      deferred: 'soft_failed',
+      spam: 'suppressed',
+      unsubscribed: 'suppressed',
+    }
+
+    return {
+      provider_message_id: payload['message-id'],
+      status: normalizedEvent == null ? undefined : statusByEvent[normalizedEvent],
+      error_code: normalizedEvent ?? null,
+      error_message: payload.reason ?? null,
+    }
+  },
+}
+
+function normalizeProviderWebhookPayload(
+  provider: string,
+  payload: {
+    provider_message_id?: string
+    status?: string
+    error_code?: string | null
+    error_message?: string | null
+    event?: string
+    ['message-id']?: string
+    reason?: string | null
+  },
+) {
+  const normalizer = providerWebhookNormalizers[provider]
+  if (normalizer == null) {
+    return normalizeGenericPayload(payload)
+  }
+  return normalizer(payload)
+}

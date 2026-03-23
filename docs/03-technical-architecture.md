@@ -176,6 +176,11 @@ Recommended shared widgets:
 - email and password
 - Google sign-in
 
+Current implementation note:
+
+- mobile Google sign-in is native-first through `google_sign_in`, then FleetFill exchanges the Google identity token and access token with Supabase Auth using `signInWithIdToken(...)`
+- browser-based OAuth redirects remain relevant for provider configuration and password-recovery/deep-link flows, but Google sign-in itself should feel native on Android and iOS
+
 ### 3.2 Operational Gate
 
 Before a user can perform operational actions, the app must confirm:
@@ -216,6 +221,7 @@ Recommended guard families:
 - email content must be generated from canonical booking, profile, payout, and support data rather than ad hoc client payloads
 - authentication emails that belong to Supabase Auth may remain on Supabase-managed auth flows unless intentionally replaced later
 - sender identities and final provider template IDs can remain placeholder configuration until business email domains are finalized
+- current production-grade provider path is a transactional email provider adapter through an Edge worker, not direct SMTP from the app or database
 
 ## 4. Server Control Strategy
 
@@ -430,11 +436,11 @@ Recommended email events:
 ### 10.2 Email Template Strategy
 
 - one logical template per event
-- one localized content variant per supported locale where needed
-- supported locales: Arabic, French, English
+- one canonical Arabic content variant per active event in the current phase
+- supported outbound transactional email language in the current phase: Arabic only
 - template variables must come from validated server-side payloads
 - keep email templates operational and text-first, not marketing-heavy
-- locale fallback is deterministic: Arabic -> Arabic template, French -> French template, English -> English template, otherwise fallback to English
+- outbound transactional email currently renders Arabic regardless of app locale so operational messaging stays consistent during the current launch phase
 - invoice data should render inside the email body as structured HTML content when needed, not as an email attachment by default
 
 ### 10.3 Email Delivery And Events
@@ -442,6 +448,7 @@ Recommended email events:
 - provider API calls should happen from secure server-controlled code
 - delivery failures, bounces, and suppression signals should be capturable for later operational handling
 - retries should be controlled and idempotent for critical events
+- provider-specific request formatting and webhook normalization should live behind a small adapter boundary so queue/retry logic stays provider-agnostic
 
 Recommended send flow:
 
@@ -499,6 +506,7 @@ Webhook rules:
 - verify provider webhook authenticity before ingesting status updates where applicable
 - treat webhook events as idempotent and possibly out of order
 - keep provider event references so duplicate deliveries do not corrupt final state
+- if the provider exposes a different payload shape than FleetFill's internal delivery states, normalize it at the webhook boundary before touching internal logs
 
 Supabase-compatible implementation path:
 

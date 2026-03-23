@@ -87,6 +87,8 @@ Client-safe values may be exposed to the app through controlled configuration su
 
 - Supabase project URL
 - Supabase publishable key for hosted staging/production, or legacy anon key for local CLI/self-hosted development
+- Google web client ID used as the native mobile `serverClientId`
+- optional Google iOS client ID override when the bundled native Firebase config should not be the source of truth
 - public support and release URLs
 - non-secret environment labels
 
@@ -98,6 +100,7 @@ Use Supabase project secrets / Edge Function secrets for:
 
 - transactional email provider API key
 - transactional email provider webhook verification secret where supported
+- Supabase Google provider web client secret
 - any third-party integration secret used by Edge Functions
 
 ### 5.3 Database-Side Secrets
@@ -109,6 +112,17 @@ Use Supabase Vault only when a secret must be read safely from SQL-side schedule
 - local secret files must stay untracked
 - production secrets must never be copied into committed files
 - secret ownership must be explicit before enabling a production integration
+- root `.env` is the canonical local secret source for Supabase CLI and Edge worker secrets
+- Flutter runtime values still need `--dart-define` or editor launch configuration because the mobile app does not read root `.env` directly
+
+### 5.5 Current Auth And Email Baseline
+
+- FleetFill mobile Google sign-in uses the native `google_sign_in` flow and exchanges Google tokens with Supabase through `signInWithIdToken(...)`
+- Supabase Auth still owns the FleetFill session after Google identity is verified
+- local and hosted Supabase Google provider setup must use the Google web OAuth client ID and secret
+- local Google redirect URI is `http://127.0.0.1:54321/auth/v1/callback`
+- hosted Google redirect URI is `https://<project-ref>.supabase.co/auth/v1/callback`
+- transactional email is currently standardized on a provider adapter path over secure server-side HTTP, not direct SMTP, while preserving the generic outbox/retry model
 
 ## 6. Release Responsibilities
 

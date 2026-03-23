@@ -378,6 +378,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "authAuthenticationRequiredMessage": MessageLookupByLibrary.simpleMessage(
       "Sign in to continue this action.",
     ),
+    "authCancelledMessage": MessageLookupByLibrary.simpleMessage(
+      "Sign-in cancelled.",
+    ),
     "authConfirmPasswordHint": MessageLookupByLibrary.simpleMessage(
       "Repeat your password",
     ),
@@ -415,9 +418,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authGoogleAction": MessageLookupByLibrary.simpleMessage(
       "Continue with Google",
-    ),
-    "authGoogleStartedMessage": MessageLookupByLibrary.simpleMessage(
-      "Google sign-in started. Return here after approval.",
     ),
     "authGoogleUnavailableMessage": MessageLookupByLibrary.simpleMessage(
       "Google sign-in is not available in this environment.",

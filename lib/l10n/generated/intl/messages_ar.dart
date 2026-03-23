@@ -376,6 +376,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "authAuthenticationRequiredMessage": MessageLookupByLibrary.simpleMessage(
       "سجّل الدخول لمتابعة هذا الإجراء.",
     ),
+    "authCancelledMessage": MessageLookupByLibrary.simpleMessage(
+      "تم إلغاء تسجيل الدخول.",
+    ),
     "authConfirmPasswordHint": MessageLookupByLibrary.simpleMessage(
       "أعد إدخال كلمة المرور",
     ),
@@ -413,9 +416,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authGoogleAction": MessageLookupByLibrary.simpleMessage(
       "المتابعة عبر Google",
-    ),
-    "authGoogleStartedMessage": MessageLookupByLibrary.simpleMessage(
-      "بدأ تسجيل الدخول عبر Google. عد إلى هنا بعد الموافقة.",
     ),
     "authGoogleUnavailableMessage": MessageLookupByLibrary.simpleMessage(
       "تسجيل الدخول عبر Google غير متاح في هذه البيئة.",

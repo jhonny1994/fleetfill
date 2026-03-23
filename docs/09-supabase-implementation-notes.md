@@ -100,6 +100,12 @@ Use Edge Functions for:
 - `public.profiles` owns app role and business profile
 - authorization must come from DB-backed role/profile logic, not user-editable auth metadata
 
+Current Google posture:
+
+- mobile clients use native Google sign-in first, then exchange Google tokens with Supabase Auth through `signInWithIdToken(...)`
+- Supabase Google provider configuration still uses the Google web OAuth client ID and secret
+- native mobile client IDs remain a platform concern, while the resulting FleetFill session remains a normal Supabase Auth session
+
 Recommended rule:
 
 - use auth only for identity
@@ -404,6 +410,8 @@ Best rule:
 - outbox rows created in DB transaction
 - scheduled worker invokes the chosen transactional email provider from an Edge Function
 - Edge Function updates delivery records or calls RPC to do so
+- current provider adapter baseline is a transactional provider HTTP API adapter
+- provider-specific request headers, payload shape, and response parsing should remain inside the Edge adapter, not leak into DB queue contracts
 
 ### 13.2 Webhook Strategy
 
@@ -415,6 +423,7 @@ Requirements:
 - treat events as idempotent
 - handle out-of-order events safely
 - record provider event IDs or references
+- normalize provider-native event names and message identifiers into FleetFill delivery states before updating logs
 
 ## 14. Recommended FleetFill Function Inventory
 

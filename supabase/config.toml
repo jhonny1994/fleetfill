@@ -20,6 +20,9 @@ sql_paths = ["./seed.sql", "./seeds/locations.sql"]
 enabled = true
 port = 54323
 
+[analytics]
+enabled = false
+
 [inbucket]
 enabled = true
 port = 54324

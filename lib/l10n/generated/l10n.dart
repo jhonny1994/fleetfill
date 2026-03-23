@@ -527,21 +527,21 @@ class S {
     );
   }
 
-  /// `Google sign-in is not available in this environment.`
-  String get authGoogleUnavailableMessage {
+  /// `Sign-in cancelled.`
+  String get authCancelledMessage {
     return Intl.message(
-      'Google sign-in is not available in this environment.',
-      name: 'authGoogleUnavailableMessage',
+      'Sign-in cancelled.',
+      name: 'authCancelledMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `Google sign-in started. Return here after approval.`
-  String get authGoogleStartedMessage {
+  /// `Google sign-in is not available in this environment.`
+  String get authGoogleUnavailableMessage {
     return Intl.message(
-      'Google sign-in started. Return here after approval.',
-      name: 'authGoogleStartedMessage',
+      'Google sign-in is not available in this environment.',
+      name: 'authGoogleUnavailableMessage',
       desc: '',
       args: [],
     );

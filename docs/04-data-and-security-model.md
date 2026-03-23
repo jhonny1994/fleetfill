@@ -707,6 +707,9 @@ Signed URL rules:
 - delivery logs must not store secrets or signed URLs
 - bounced or failed addresses should be observable so support can react appropriately
 - queue workers must treat the outbox as trusted internal data only and must not accept arbitrary client-supplied template instructions
+- provider-specific webhook verification secrets must remain server-side only
+- Google provider client secrets also remain server-side only even when the mobile app uses native Google sign-in
+- local root `.env` may be used for ignored developer secrets, but staging/production secrets must move to managed provider/project secret storage
 
 ## 5. Why Settings Should Not Be Raw Client Reads
 
