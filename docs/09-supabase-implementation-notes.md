@@ -408,10 +408,12 @@ Best rule:
 ### 13.1 Sending Strategy
 
 - outbox rows created in DB transaction
+- DB owns canonical transactional email copy in `email_templates`
 - scheduled worker invokes the chosen transactional email provider from an Edge Function
-- Edge Function updates delivery records or calls RPC to do so
+- Edge Function resolves the active template row, renders subject/text/html server-side, then updates delivery records through RPC
 - current provider adapter baseline is a transactional provider HTTP API adapter
 - provider-specific request headers, payload shape, and response parsing should remain inside the Edge adapter, not leak into DB queue contracts
+- render failures should be recorded separately from provider failures so broken templates dead-letter immediately and remain operationally visible
 
 ### 13.2 Webhook Strategy
 

@@ -3039,12 +3039,144 @@ begin
 end;
 $$;
 
-revoke all on function public.enqueue_support_request_emails(text, text, text, text) from public, anon;
-grant execute on function public.enqueue_support_request_emails(text, text, text, text) to authenticated, service_role;
--- <<< END 20260320120820_create_support_request_email_rpc.sql
+  revoke all on function public.enqueue_support_request_emails(text, text, text, text) from public, anon;
+  grant execute on function public.enqueue_support_request_emails(text, text, text, text) to authenticated, service_role;
+  -- <<< END 20260320120820_create_support_request_email_rpc.sql
 
--- >>> BEGIN 20260320120825_add_dispute_evidence_support.sql
-insert into storage.buckets (id, name, public)
+  -- >>> BEGIN 20260323110000_seed_transactional_email_templates.sql
+  insert into public.email_templates (
+    template_key,
+    language_code,
+    subject_template,
+    html_template,
+    text_template,
+    sample_payload,
+    description,
+    is_enabled
+  )
+  values
+    (
+      'support_acknowledgement',
+      'ar',
+      'تم استلام طلب الدعم - {{subject}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم استلام طلب الدعم</h1><p style="margin:0 0 12px;line-height:1.9;">تم استلام طلب الدعم الخاص بك بعنوان {{subject}} بنجاح.</p><p style="margin:0 0 12px;line-height:1.9;">فريق FleetFill سيقوم بمراجعته والرد عليك في أقرب وقت ممكن.</p><p style="margin:0;color:#666;line-height:1.8;">مع تحيات فريق FleetFill</p></div></body></html>',
+      'تم استلام طلب الدعم\n\nتم استلام طلب الدعم الخاص بك بعنوان {{subject}} بنجاح.\nفريق FleetFill سيقوم بمراجعته والرد عليك في أقرب وقت ممكن.\n\nمع تحيات فريق FleetFill',
+      '{"subject":"طلب مساعدة بخصوص الحجز FF-1001"}'::jsonb,
+      'Arabic acknowledgement sent to the support requester.',
+      true
+    ),
+    (
+      'support_request_forwarded',
+      'ar',
+      'طلب دعم جديد - {{subject}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">طلب دعم جديد</h1><p style="margin:0 0 12px;line-height:1.9;"><strong>الموضوع:</strong> {{subject}}</p><p style="margin:0 0 12px;line-height:1.9;"><strong>بريد المرسل:</strong> {{sender_email}}</p><p style="margin:0;line-height:1.9;"><strong>الرسالة:</strong><br>{{message}}</p></div></body></html>',
+      'طلب دعم جديد\n\nالموضوع: {{subject}}\nبريد المرسل: {{sender_email}}\nالرسالة:\n{{message}}',
+      '{"subject":"طلب مساعدة بخصوص الحجز FF-1001","sender_email":"shipper@example.com","message":"أحتاج مراجعة حالة الحجز والمدفوعات."}'::jsonb,
+      'Arabic support inbox forward copy.',
+      true
+    ),
+    (
+      'booking_confirmed',
+      'ar',
+      'تم تأكيد الحجز - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم تأكيد الحجز</h1><p style="margin:0 0 12px;line-height:1.9;">تم تأكيد الحجز رقم {{booking_reference}} بنجاح.</p><p style="margin:0;color:#666;line-height:1.8;">يمكنك متابعة التفاصيل من داخل تطبيق FleetFill.</p></div></body></html>',
+      'تم تأكيد الحجز\n\nتم تأكيد الحجز رقم {{booking_reference}} بنجاح.\nيمكنك متابعة التفاصيل من داخل تطبيق FleetFill.',
+      '{"booking_reference":"FF-1001"}'::jsonb,
+      'Arabic booking confirmation.',
+      true
+    ),
+    (
+      'payment_proof_received',
+      'ar',
+      'تم استلام إثبات الدفع - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم استلام إثبات الدفع</h1><p style="margin:0 0 12px;line-height:1.9;">تم استلام إثبات الدفع للحجز {{booking_reference}} وهو الآن بانتظار المراجعة.</p><p style="margin:0;color:#666;line-height:1.8;">لا حاجة لإعادة الإرسال ما لم يطلب منك ذلك داخل التطبيق.</p></div></body></html>',
+      'تم استلام إثبات الدفع\n\nتم استلام إثبات الدفع للحجز {{booking_reference}} وهو الآن بانتظار المراجعة.\nلا حاجة لإعادة الإرسال ما لم يطلب منك ذلك داخل التطبيق.',
+      '{"booking_reference":"FF-1001"}'::jsonb,
+      'Arabic payment proof received notice.',
+      true
+    ),
+    (
+      'payment_rejected',
+      'ar',
+      'تم رفض إثبات الدفع - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم رفض إثبات الدفع</h1><p style="margin:0 0 12px;line-height:1.9;">تمت مراجعة إثبات الدفع للحجز {{booking_reference}} ولا يمكن قبوله بصيغته الحالية.</p><p style="margin:0 0 12px;line-height:1.9;"><strong>سبب الرفض:</strong> {{rejection_reason}}</p><p style="margin:0;color:#666;line-height:1.8;">يرجى إعادة الإرسال من داخل التطبيق قبل انتهاء المهلة.</p></div></body></html>',
+      'تم رفض إثبات الدفع\n\nتمت مراجعة إثبات الدفع للحجز {{booking_reference}} ولا يمكن قبوله بصيغته الحالية.\nسبب الرفض: {{rejection_reason}}\nيرجى إعادة الإرسال من داخل التطبيق قبل انتهاء المهلة.',
+      '{"booking_reference":"FF-1001","rejection_reason":"الصورة غير واضحة ولا يظهر فيها المبلغ بشكل كامل."}'::jsonb,
+      'Arabic payment rejection notice.',
+      true
+    ),
+    (
+      'payment_secured',
+      'ar',
+      'تم تأمين الدفع - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم تأمين الدفع</h1><p style="margin:0 0 12px;line-height:1.9;">تم تأمين الدفع للحجز {{booking_reference}} بنجاح.</p><p style="margin:0;color:#666;line-height:1.8;">يمكنك متابعة التقدم التشغيلي للحجز من داخل التطبيق.</p></div></body></html>',
+      'تم تأمين الدفع\n\nتم تأمين الدفع للحجز {{booking_reference}} بنجاح.\nيمكنك متابعة التقدم التشغيلي للحجز من داخل التطبيق.',
+      '{"booking_reference":"FF-1001"}'::jsonb,
+      'Arabic payment secured notice.',
+      true
+    ),
+    (
+      'delivered_pending_review',
+      'ar',
+      'تم التسليم وبانتظار المراجعة - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم التسليم وبانتظار المراجعة</h1><p style="margin:0 0 12px;line-height:1.9;">تم تعليم الحجز {{booking_reference}} على أنه مُسلَّم.</p><p style="margin:0;color:#666;line-height:1.8;">يمكنك مراجعة التسليم أو فتح نزاع من داخل التطبيق خلال نافذة المراجعة.</p></div></body></html>',
+      'تم التسليم وبانتظار المراجعة\n\nتم تعليم الحجز {{booking_reference}} على أنه مُسلَّم.\nيمكنك مراجعة التسليم أو فتح نزاع من داخل التطبيق خلال نافذة المراجعة.',
+      '{"booking_reference":"FF-1001"}'::jsonb,
+      'Arabic delivery review notice.',
+      true
+    ),
+    (
+      'dispute_opened',
+      'ar',
+      'تم فتح نزاع - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم فتح نزاع</h1><p style="margin:0 0 12px;line-height:1.9;">تم فتح نزاع للحجز {{booking_reference}}.</p><p style="margin:0 0 12px;line-height:1.9;"><strong>سبب النزاع:</strong> {{reason_summary}}</p><p style="margin:0;color:#666;line-height:1.8;">يرجى متابعة التحديثات داخل التطبيق وتجهيز أي معلومات إضافية إذا لزم الأمر.</p></div></body></html>',
+      'تم فتح نزاع\n\nتم فتح نزاع للحجز {{booking_reference}}.\nسبب النزاع: {{reason_summary}}\nيرجى متابعة التحديثات داخل التطبيق وتجهيز أي معلومات إضافية إذا لزم الأمر.',
+      '{"booking_reference":"FF-1001","reason":"وصول الشحنة بحالة مختلفة عن الاتفاق."}'::jsonb,
+      'Arabic dispute opened notice.',
+      true
+    ),
+    (
+      'dispute_resolved',
+      'ar',
+      'تم حل النزاع - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم حل النزاع</h1><p style="margin:0 0 12px;line-height:1.9;">تم حل النزاع المرتبط بالحجز {{booking_reference}}.</p><p style="margin:0 0 12px;line-height:1.9;"><strong>النتيجة:</strong> {{resolution_summary}}</p><p style="margin:0;color:#666;line-height:1.8;"><strong>المبلغ المعاد:</strong> {{refund_amount_label}}</p></div></body></html>',
+      'تم حل النزاع\n\nتم حل النزاع المرتبط بالحجز {{booking_reference}}.\nالنتيجة: {{resolution_summary}}\nالمبلغ المعاد: {{refund_amount_label}}',
+      '{"booking_reference":"FF-1001","resolution":"refunded","refund_amount_dzd":12500}'::jsonb,
+      'Arabic dispute resolved notice.',
+      true
+    ),
+    (
+      'payout_released',
+      'ar',
+      'تم صرف مستحق الناقل - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم صرف مستحق الناقل</h1><p style="margin:0 0 12px;line-height:1.9;">تم صرف مستحق الحجز {{booking_reference}} بنجاح.</p><p style="margin:0;color:#666;line-height:1.8;"><strong>قيمة التحويل:</strong> {{payout_amount_label}}</p></div></body></html>',
+      'تم صرف مستحق الناقل\n\nتم صرف مستحق الحجز {{booking_reference}} بنجاح.\nقيمة التحويل: {{payout_amount_label}}',
+      '{"booking_reference":"FF-1001","payout_amount_dzd":9200}'::jsonb,
+      'Arabic payout released notice.',
+      true
+    ),
+    (
+      'generated_document_available',
+      'ar',
+      'المستند جاهز - {{booking_reference}}',
+      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">المستند جاهز</h1><p style="margin:0 0 12px;line-height:1.9;">أصبح {{document_type_label}} الخاص بالحجز {{booking_reference}} جاهزاً.</p><p style="margin:0 0 12px;line-height:1.9;"><strong>المسار:</strong> {{document_route}}</p><p style="margin:0;color:#666;line-height:1.8;">يمكنك فتح التطبيق للوصول إلى المستند بشكل آمن.</p></div></body></html>',
+      'المستند جاهز\n\nأصبح {{document_type_label}} الخاص بالحجز {{booking_reference}} جاهزاً.\nالمسار: {{document_route}}\nيمكنك فتح التطبيق للوصول إلى المستند بشكل آمن.',
+      '{"booking_reference":"FF-1001","document_type":"booking_invoice","document_route":"/shared/generated-document/doc-1001"}'::jsonb,
+      'Arabic generated document availability notice.',
+      true
+    )
+  on conflict (template_key, language_code) do update
+  set subject_template = excluded.subject_template,
+      html_template = excluded.html_template,
+      text_template = excluded.text_template,
+      sample_payload = excluded.sample_payload,
+      description = excluded.description,
+      is_enabled = excluded.is_enabled,
+      updated_at = now();
+  -- <<< END 20260323110000_seed_transactional_email_templates.sql
+
+  -- >>> BEGIN 20260320120825_add_dispute_evidence_support.sql
+  insert into storage.buckets (id, name, public)
 values ('dispute-evidence', 'dispute-evidence', false)
 on conflict (id) do nothing;
 

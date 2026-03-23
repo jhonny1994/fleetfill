@@ -116,6 +116,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
       "الرسائل الفاشلة",
     ),
+    "adminEmailErrorCodeLabel": MessageLookupByLibrary.simpleMessage(
+      "رمز الخطأ",
+    ),
+    "adminEmailErrorMessageLabel": MessageLookupByLibrary.simpleMessage(
+      "رسالة الخطأ",
+    ),
+    "adminEmailLocaleLabel": MessageLookupByLibrary.simpleMessage(
+      "اللغة المطلوبة",
+    ),
+    "adminEmailPayloadSnapshotLabel": MessageLookupByLibrary.simpleMessage(
+      "لقطة الحمولة",
+    ),
+    "adminEmailProviderLabel": MessageLookupByLibrary.simpleMessage("المزوّد"),
     "adminEmailQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لا توجد سجلات بريد إلكتروني تطابق عوامل التصفية الحالية.",
     ),
@@ -152,6 +165,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminEmailStatusQueuedLabel": MessageLookupByLibrary.simpleMessage(
       "في الانتظار",
     ),
+    "adminEmailStatusRenderFailedLabel": MessageLookupByLibrary.simpleMessage(
+      "فشل توليد القالب",
+    ),
     "adminEmailStatusSentLabel": MessageLookupByLibrary.simpleMessage(
       "تم الإرسال",
     ),
@@ -160,6 +176,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "adminEmailStatusSuppressedLabel": MessageLookupByLibrary.simpleMessage(
       "مقيد",
+    ),
+    "adminEmailSubjectPreviewLabel": MessageLookupByLibrary.simpleMessage(
+      "معاينة العنوان",
+    ),
+    "adminEmailTemplateKeyLabel": MessageLookupByLibrary.simpleMessage(
+      "مفتاح القالب",
+    ),
+    "adminEmailTemplateLanguageLabel": MessageLookupByLibrary.simpleMessage(
+      "لغة القالب",
     ),
     "adminPaymentProofQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "لا توجد إثباتات دفع تحتاج إلى مراجعة الآن.",
