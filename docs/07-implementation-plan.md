@@ -103,6 +103,7 @@ Cross-phase UX note:
 
 - [x] Configure Supabase Auth for email/password login, including local CLI auth config and redirect URL setup
 - [x] Configure Google sign-in, including local `[auth.external.google]` provider config and callback setup
+- [x] Migrate mobile Google sign-in from browser OAuth launch to native `google_sign_in` plus Supabase `signInWithIdToken(...)`
 - [x] Implement secure session storage and restoration
 - [x] Implement role-aware auth bootstrap and route guards
 - [x] Implement password reset and auth error handling UX
@@ -133,6 +134,7 @@ Verification notes:
 - auth/onboarding/profile redirects and gates are covered by feature tests in `test/core/routing/auth_routing_guard_test.dart`
 - password recovery routes now preserve auth flow and enforce reset-password destination when recovery state is active
 - session-expired, suspended, forbidden, verification, onboarding, and phone-completion gate handling are validated via guard tests and UI state wiring
+- Google sign-in now uses native Android/iOS account selection with web client ID provider configuration still owned by Supabase Auth
 
 ## Phase 4 - Carrier Onboarding, Vehicles, And Verification
 
@@ -394,6 +396,8 @@ Phase 10 progress notes:
 - [x] Expose support email entry points in app
 - [x] Implement webhook authenticity verification, idempotency, and out-of-order event handling
 - [x] Define and implement the full transactional email event set from the canonical docs, not support acknowledgement only
+- [x] Add a first-class transactional email provider adapter for real local and hosted delivery testing
+- [x] Replace generic email bodies with canonical Arabic event templates for every active transactional email event
 
 Phase 11 progress notes:
 
@@ -404,6 +408,7 @@ Phase 11 progress notes:
 - generated document shared routes now resolve to secure signed-URL viewers instead of placeholders
 - user-device registration and notification marking are now server-controlled RPCs, and notification inserts now feed a scheduled Firebase Cloud Messaging HTTP v1 worker so push and in-app delivery share one canonical event source
 - the transactional email inventory now covers booking confirmation, payment proof receipt, payment rejection, payment secured, delivered-pending-review, dispute opened, dispute resolved, payout released, generated document availability, support acknowledgement, and support forwarding
+- local runtime configuration now supports real provider-backed email delivery and native Google sign-in without relying on browser Google auth for mobile flows
 - supporting migration and contract coverage was added in `supabase/migrations/20260317030000_create_operational_workflows_layer.sql` and `test/contracts/supabase/engagement_support_contract_test.dart`
 
 ## Phase 12 - Admin Surface And Operations
@@ -496,6 +501,7 @@ Phase 14 progress notes:
 ## Phase 15 - Staging Launch And Production Readiness
 
 - [ ] Set up staging Supabase project and transactional email provider staging/test configuration
+- [ ] Run hosted provider send plus webhook smoke validation against the real Supabase environment before calling email delivery production-ready
 - [ ] Seed staging reference data and platform settings
 - [ ] Run end-to-end staging rehearsals for shipper, carrier, and admin flows
 - [ ] Verify support email routing and operational playbooks
