@@ -1,7 +1,10 @@
 import { ShieldEllipsis } from "lucide-react";
 
+import { AdminSignInForm } from "@/components/auth/admin-sign-in-form";
+import { getAdminSession } from "@/lib/auth/get-admin-session";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { defaultLocale, isSupportedLocale } from "@/lib/i18n/config";
+import { redirect } from "next/navigation";
 
 export default async function AdminSignInPage({
   params,
@@ -10,6 +13,12 @@ export default async function AdminSignInPage({
 }) {
   const { lang } = await params;
   const locale = isSupportedLocale(lang) ? lang : defaultLocale;
+  const session = await getAdminSession();
+
+  if (session) {
+    redirect(`/${locale}/dashboard`);
+  }
+
   const dictionary = await getDictionary(locale);
 
   return (
@@ -46,9 +55,7 @@ export default async function AdminSignInPage({
               console is ready for the auth shell to attach to them.
             </p>
           </div>
-          <button className="button-primary" type="button">
-            Continue with admin sign in
-          </button>
+          <AdminSignInForm locale={locale} />
         </div>
       </section>
     </main>
