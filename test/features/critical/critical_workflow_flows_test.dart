@@ -936,6 +936,8 @@ class _FakePaymentProofRepository extends PaymentProofRepository {
       id: 'proof-${proofs.length + 1}',
       bookingId: bookingId,
       storagePath: 'payment-proofs/$bookingId/proof-${proofs.length + 1}.png',
+      contentType: 'image/png',
+      byteSize: draft.byteSize,
       paymentRail: paymentRail,
       submittedReference: submittedReference,
       submittedAmountDzd: submittedAmountDzd,

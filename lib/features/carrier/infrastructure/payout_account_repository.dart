@@ -48,6 +48,10 @@ class PayoutAccountRepository {
     if (userId == null) {
       throw const AuthException('authentication_required');
     }
+    _validatePayoutAccountInput(
+      accountType: accountType,
+      bankOrCcpName: bankOrCcpName,
+    );
 
     final response = await _client
         .from('payout_accounts')
@@ -56,7 +60,10 @@ class PayoutAccountRepository {
           'account_type': accountType.databaseValue,
           'account_holder_name': accountHolderName.trim(),
           'account_identifier': accountIdentifier.trim(),
-          'bank_or_ccp_name': _nullable(bankOrCcpName),
+          'bank_or_ccp_name': _normalizedInstitutionName(
+            accountType,
+            bankOrCcpName,
+          ),
           'is_active': isActive,
         })
         .select()
@@ -73,13 +80,20 @@ class PayoutAccountRepository {
     required bool isActive,
     String? bankOrCcpName,
   }) async {
+    _validatePayoutAccountInput(
+      accountType: accountType,
+      bankOrCcpName: bankOrCcpName,
+    );
     final response = await _client
         .from('payout_accounts')
         .update({
           'account_type': accountType.databaseValue,
           'account_holder_name': accountHolderName.trim(),
           'account_identifier': accountIdentifier.trim(),
-          'bank_or_ccp_name': _nullable(bankOrCcpName),
+          'bank_or_ccp_name': _normalizedInstitutionName(
+            accountType,
+            bankOrCcpName,
+          ),
           'is_active': isActive,
         })
         .eq('id', payoutAccountId)
@@ -103,5 +117,27 @@ class PayoutAccountRepository {
       return null;
     }
     return trimmed;
+  }
+
+  void _validatePayoutAccountInput({
+    required PayoutAccountType accountType,
+    required String? bankOrCcpName,
+  }) {
+    if (accountType == PayoutAccountType.bank &&
+        _nullable(bankOrCcpName) == null) {
+      throw const FormatException(
+        'Bank name is required for bank payout accounts.',
+      );
+    }
+  }
+
+  String? _normalizedInstitutionName(
+    PayoutAccountType accountType,
+    String? bankOrCcpName,
+  ) {
+    if (accountType == PayoutAccountType.ccp) {
+      return null;
+    }
+    return _nullable(bankOrCcpName);
   }
 }

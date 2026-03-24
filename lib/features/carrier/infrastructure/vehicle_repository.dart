@@ -211,22 +211,37 @@ class VehicleRepository {
   Future<String> createSignedDocumentUrl(
     VerificationDocumentRecord document,
   ) async {
-    final response = await _client.functions.invoke(
-      'signed-file-url',
-      body: {
-        'bucket_id': 'verification-documents',
-        'object_path': document.storagePath,
-      },
-    );
-
-    final data = response.data as Map<String, dynamic>?;
-    if (data == null || data['signed_url'] == null) {
-      throw const PostgrestException(
-        message: 'document_signed_url_unavailable',
+    try {
+      final response = await _client.functions.invoke(
+        'signed-file-url',
+        body: {
+          'bucket_id': 'verification-documents',
+          'object_path': document.storagePath,
+          'public_base_url': environment.supabaseUrl,
+        },
       );
-    }
 
-    return data['signed_url'] as String;
+      final data = response.data as Map<String, dynamic>?;
+      if (data == null || data['signed_url'] == null) {
+        throw const PostgrestException(
+          message: 'document_signed_url_unavailable',
+        );
+      }
+
+      return data['signed_url'] as String;
+    } catch (error, stackTrace) {
+      logger.warning(
+        'Verification document URL failed',
+        error: error,
+        stackTrace: stackTrace,
+        context: {
+          'documentId': document.id,
+          'storagePath': document.storagePath,
+          'documentType': document.documentType.databaseValue,
+        },
+      );
+      rethrow;
+    }
   }
 
   String _requireUserId() {

@@ -70,11 +70,34 @@ String mapAppErrorMessage(S s, Object error) {
       message.contains('rate limit')) {
     return s.supportRateLimitMessage;
   }
-  if (message.contains('failed to enqueue support request') ||
-      message.contains('support inbox is required') ||
+  if (message.contains('support request not found')) {
+    return s.notFoundMessage;
+  }
+  if (message.contains('support subject and message are required') ||
+      message.contains('support message is required')) {
+    return s.authRequiredFieldMessage;
+  }
+  if (message.contains('support request context is not visible') ||
+      message.contains('support request context is inconsistent')) {
+    return s.notFoundMessage;
+  }
+  if (message.contains('support request access denied') ||
+      message.contains(
+        'admin support status updates require privileged execution',
+      ) ||
+      message.contains(
+        'admin support assignment requires privileged execution',
+      ) ||
+      message.contains('assigned admin profile is invalid') ||
       message.contains('missing authorization header') ||
       message.contains('internal server error')) {
     return s.supportUnavailableMessage;
+  }
+  if (message.contains('document_signed_url_unavailable') ||
+      message.contains('signed url is unavailable') ||
+      message.contains('failed to authorize document access') ||
+      message.contains('forbidden')) {
+    return s.documentViewerUnavailableMessage;
   }
 
   final authMapped = mapAuthErrorMessage(s, rawMessage);

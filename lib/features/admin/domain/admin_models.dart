@@ -5,7 +5,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'admin_models.freezed.dart';
 
-enum AdminQueueSegment { payments, verification, disputes, payouts, email }
+enum AdminQueueSegment {
+  payments,
+  verification,
+  disputes,
+  payouts,
+  support,
+  email,
+}
 
 @freezed
 abstract class AdminQueueFilters with _$AdminQueueFilters {
@@ -25,6 +32,7 @@ abstract class AdminOperationalSummary with _$AdminOperationalSummary {
     required int paymentProofs,
     required int disputes,
     required int eligiblePayouts,
+    required int supportNeedsReply,
     required int emailBacklog,
     required int emailDeadLetter,
     required int auditEventsLast24h,
@@ -42,6 +50,7 @@ abstract class AdminOperationalSummary with _$AdminOperationalSummary {
       paymentProofs: (json['payment_proofs'] as num?)?.toInt() ?? 0,
       disputes: (json['disputes'] as num?)?.toInt() ?? 0,
       eligiblePayouts: (json['eligible_payouts'] as num?)?.toInt() ?? 0,
+      supportNeedsReply: (json['support_needs_reply'] as num?)?.toInt() ?? 0,
       emailBacklog: (json['email_backlog'] as num?)?.toInt() ?? 0,
       emailDeadLetter: (json['email_dead_letter'] as num?)?.toInt() ?? 0,
       auditEventsLast24h: (json['audit_events_last_24h'] as num?)?.toInt() ?? 0,

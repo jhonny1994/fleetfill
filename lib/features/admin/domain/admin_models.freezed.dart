@@ -274,7 +274,7 @@ as String?,
 /// @nodoc
 mixin _$AdminOperationalSummary {
 
- int get verificationPackets; int get pendingVerificationDocuments; int get paymentProofs; int get disputes; int get eligiblePayouts; int get emailBacklog; int get emailDeadLetter; int get auditEventsLast24h; int get overdueDeliveryReviews; int get overduePaymentResubmissions;
+ int get verificationPackets; int get pendingVerificationDocuments; int get paymentProofs; int get disputes; int get eligiblePayouts; int get supportNeedsReply; int get emailBacklog; int get emailDeadLetter; int get auditEventsLast24h; int get overdueDeliveryReviews; int get overduePaymentResubmissions;
 /// Create a copy of AdminOperationalSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -285,16 +285,16 @@ $AdminOperationalSummaryCopyWith<AdminOperationalSummary> get copyWith => _$Admi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdminOperationalSummary&&(identical(other.verificationPackets, verificationPackets) || other.verificationPackets == verificationPackets)&&(identical(other.pendingVerificationDocuments, pendingVerificationDocuments) || other.pendingVerificationDocuments == pendingVerificationDocuments)&&(identical(other.paymentProofs, paymentProofs) || other.paymentProofs == paymentProofs)&&(identical(other.disputes, disputes) || other.disputes == disputes)&&(identical(other.eligiblePayouts, eligiblePayouts) || other.eligiblePayouts == eligiblePayouts)&&(identical(other.emailBacklog, emailBacklog) || other.emailBacklog == emailBacklog)&&(identical(other.emailDeadLetter, emailDeadLetter) || other.emailDeadLetter == emailDeadLetter)&&(identical(other.auditEventsLast24h, auditEventsLast24h) || other.auditEventsLast24h == auditEventsLast24h)&&(identical(other.overdueDeliveryReviews, overdueDeliveryReviews) || other.overdueDeliveryReviews == overdueDeliveryReviews)&&(identical(other.overduePaymentResubmissions, overduePaymentResubmissions) || other.overduePaymentResubmissions == overduePaymentResubmissions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdminOperationalSummary&&(identical(other.verificationPackets, verificationPackets) || other.verificationPackets == verificationPackets)&&(identical(other.pendingVerificationDocuments, pendingVerificationDocuments) || other.pendingVerificationDocuments == pendingVerificationDocuments)&&(identical(other.paymentProofs, paymentProofs) || other.paymentProofs == paymentProofs)&&(identical(other.disputes, disputes) || other.disputes == disputes)&&(identical(other.eligiblePayouts, eligiblePayouts) || other.eligiblePayouts == eligiblePayouts)&&(identical(other.supportNeedsReply, supportNeedsReply) || other.supportNeedsReply == supportNeedsReply)&&(identical(other.emailBacklog, emailBacklog) || other.emailBacklog == emailBacklog)&&(identical(other.emailDeadLetter, emailDeadLetter) || other.emailDeadLetter == emailDeadLetter)&&(identical(other.auditEventsLast24h, auditEventsLast24h) || other.auditEventsLast24h == auditEventsLast24h)&&(identical(other.overdueDeliveryReviews, overdueDeliveryReviews) || other.overdueDeliveryReviews == overdueDeliveryReviews)&&(identical(other.overduePaymentResubmissions, overduePaymentResubmissions) || other.overduePaymentResubmissions == overduePaymentResubmissions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,verificationPackets,pendingVerificationDocuments,paymentProofs,disputes,eligiblePayouts,emailBacklog,emailDeadLetter,auditEventsLast24h,overdueDeliveryReviews,overduePaymentResubmissions);
+int get hashCode => Object.hash(runtimeType,verificationPackets,pendingVerificationDocuments,paymentProofs,disputes,eligiblePayouts,supportNeedsReply,emailBacklog,emailDeadLetter,auditEventsLast24h,overdueDeliveryReviews,overduePaymentResubmissions);
 
 @override
 String toString() {
-  return 'AdminOperationalSummary(verificationPackets: $verificationPackets, pendingVerificationDocuments: $pendingVerificationDocuments, paymentProofs: $paymentProofs, disputes: $disputes, eligiblePayouts: $eligiblePayouts, emailBacklog: $emailBacklog, emailDeadLetter: $emailDeadLetter, auditEventsLast24h: $auditEventsLast24h, overdueDeliveryReviews: $overdueDeliveryReviews, overduePaymentResubmissions: $overduePaymentResubmissions)';
+  return 'AdminOperationalSummary(verificationPackets: $verificationPackets, pendingVerificationDocuments: $pendingVerificationDocuments, paymentProofs: $paymentProofs, disputes: $disputes, eligiblePayouts: $eligiblePayouts, supportNeedsReply: $supportNeedsReply, emailBacklog: $emailBacklog, emailDeadLetter: $emailDeadLetter, auditEventsLast24h: $auditEventsLast24h, overdueDeliveryReviews: $overdueDeliveryReviews, overduePaymentResubmissions: $overduePaymentResubmissions)';
 }
 
 
@@ -305,7 +305,7 @@ abstract mixin class $AdminOperationalSummaryCopyWith<$Res>  {
   factory $AdminOperationalSummaryCopyWith(AdminOperationalSummary value, $Res Function(AdminOperationalSummary) _then) = _$AdminOperationalSummaryCopyWithImpl;
 @useResult
 $Res call({
- int verificationPackets, int pendingVerificationDocuments, int paymentProofs, int disputes, int eligiblePayouts, int emailBacklog, int emailDeadLetter, int auditEventsLast24h, int overdueDeliveryReviews, int overduePaymentResubmissions
+ int verificationPackets, int pendingVerificationDocuments, int paymentProofs, int disputes, int eligiblePayouts, int supportNeedsReply, int emailBacklog, int emailDeadLetter, int auditEventsLast24h, int overdueDeliveryReviews, int overduePaymentResubmissions
 });
 
 
@@ -322,13 +322,14 @@ class _$AdminOperationalSummaryCopyWithImpl<$Res>
 
 /// Create a copy of AdminOperationalSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? verificationPackets = null,Object? pendingVerificationDocuments = null,Object? paymentProofs = null,Object? disputes = null,Object? eligiblePayouts = null,Object? emailBacklog = null,Object? emailDeadLetter = null,Object? auditEventsLast24h = null,Object? overdueDeliveryReviews = null,Object? overduePaymentResubmissions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? verificationPackets = null,Object? pendingVerificationDocuments = null,Object? paymentProofs = null,Object? disputes = null,Object? eligiblePayouts = null,Object? supportNeedsReply = null,Object? emailBacklog = null,Object? emailDeadLetter = null,Object? auditEventsLast24h = null,Object? overdueDeliveryReviews = null,Object? overduePaymentResubmissions = null,}) {
   return _then(_self.copyWith(
 verificationPackets: null == verificationPackets ? _self.verificationPackets : verificationPackets // ignore: cast_nullable_to_non_nullable
 as int,pendingVerificationDocuments: null == pendingVerificationDocuments ? _self.pendingVerificationDocuments : pendingVerificationDocuments // ignore: cast_nullable_to_non_nullable
 as int,paymentProofs: null == paymentProofs ? _self.paymentProofs : paymentProofs // ignore: cast_nullable_to_non_nullable
 as int,disputes: null == disputes ? _self.disputes : disputes // ignore: cast_nullable_to_non_nullable
 as int,eligiblePayouts: null == eligiblePayouts ? _self.eligiblePayouts : eligiblePayouts // ignore: cast_nullable_to_non_nullable
+as int,supportNeedsReply: null == supportNeedsReply ? _self.supportNeedsReply : supportNeedsReply // ignore: cast_nullable_to_non_nullable
 as int,emailBacklog: null == emailBacklog ? _self.emailBacklog : emailBacklog // ignore: cast_nullable_to_non_nullable
 as int,emailDeadLetter: null == emailDeadLetter ? _self.emailDeadLetter : emailDeadLetter // ignore: cast_nullable_to_non_nullable
 as int,auditEventsLast24h: null == auditEventsLast24h ? _self.auditEventsLast24h : auditEventsLast24h // ignore: cast_nullable_to_non_nullable
@@ -419,10 +420,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int verificationPackets,  int pendingVerificationDocuments,  int paymentProofs,  int disputes,  int eligiblePayouts,  int emailBacklog,  int emailDeadLetter,  int auditEventsLast24h,  int overdueDeliveryReviews,  int overduePaymentResubmissions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int verificationPackets,  int pendingVerificationDocuments,  int paymentProofs,  int disputes,  int eligiblePayouts,  int supportNeedsReply,  int emailBacklog,  int emailDeadLetter,  int auditEventsLast24h,  int overdueDeliveryReviews,  int overduePaymentResubmissions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AdminOperationalSummary() when $default != null:
-return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_that.paymentProofs,_that.disputes,_that.eligiblePayouts,_that.emailBacklog,_that.emailDeadLetter,_that.auditEventsLast24h,_that.overdueDeliveryReviews,_that.overduePaymentResubmissions);case _:
+return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_that.paymentProofs,_that.disputes,_that.eligiblePayouts,_that.supportNeedsReply,_that.emailBacklog,_that.emailDeadLetter,_that.auditEventsLast24h,_that.overdueDeliveryReviews,_that.overduePaymentResubmissions);case _:
   return orElse();
 
 }
@@ -440,10 +441,10 @@ return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int verificationPackets,  int pendingVerificationDocuments,  int paymentProofs,  int disputes,  int eligiblePayouts,  int emailBacklog,  int emailDeadLetter,  int auditEventsLast24h,  int overdueDeliveryReviews,  int overduePaymentResubmissions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int verificationPackets,  int pendingVerificationDocuments,  int paymentProofs,  int disputes,  int eligiblePayouts,  int supportNeedsReply,  int emailBacklog,  int emailDeadLetter,  int auditEventsLast24h,  int overdueDeliveryReviews,  int overduePaymentResubmissions)  $default,) {final _that = this;
 switch (_that) {
 case _AdminOperationalSummary():
-return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_that.paymentProofs,_that.disputes,_that.eligiblePayouts,_that.emailBacklog,_that.emailDeadLetter,_that.auditEventsLast24h,_that.overdueDeliveryReviews,_that.overduePaymentResubmissions);case _:
+return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_that.paymentProofs,_that.disputes,_that.eligiblePayouts,_that.supportNeedsReply,_that.emailBacklog,_that.emailDeadLetter,_that.auditEventsLast24h,_that.overdueDeliveryReviews,_that.overduePaymentResubmissions);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -460,10 +461,10 @@ return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int verificationPackets,  int pendingVerificationDocuments,  int paymentProofs,  int disputes,  int eligiblePayouts,  int emailBacklog,  int emailDeadLetter,  int auditEventsLast24h,  int overdueDeliveryReviews,  int overduePaymentResubmissions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int verificationPackets,  int pendingVerificationDocuments,  int paymentProofs,  int disputes,  int eligiblePayouts,  int supportNeedsReply,  int emailBacklog,  int emailDeadLetter,  int auditEventsLast24h,  int overdueDeliveryReviews,  int overduePaymentResubmissions)?  $default,) {final _that = this;
 switch (_that) {
 case _AdminOperationalSummary() when $default != null:
-return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_that.paymentProofs,_that.disputes,_that.eligiblePayouts,_that.emailBacklog,_that.emailDeadLetter,_that.auditEventsLast24h,_that.overdueDeliveryReviews,_that.overduePaymentResubmissions);case _:
+return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_that.paymentProofs,_that.disputes,_that.eligiblePayouts,_that.supportNeedsReply,_that.emailBacklog,_that.emailDeadLetter,_that.auditEventsLast24h,_that.overdueDeliveryReviews,_that.overduePaymentResubmissions);case _:
   return null;
 
 }
@@ -475,7 +476,7 @@ return $default(_that.verificationPackets,_that.pendingVerificationDocuments,_th
 
 
 class _AdminOperationalSummary extends AdminOperationalSummary {
-  const _AdminOperationalSummary({required this.verificationPackets, required this.pendingVerificationDocuments, required this.paymentProofs, required this.disputes, required this.eligiblePayouts, required this.emailBacklog, required this.emailDeadLetter, required this.auditEventsLast24h, required this.overdueDeliveryReviews, required this.overduePaymentResubmissions}): super._();
+  const _AdminOperationalSummary({required this.verificationPackets, required this.pendingVerificationDocuments, required this.paymentProofs, required this.disputes, required this.eligiblePayouts, required this.supportNeedsReply, required this.emailBacklog, required this.emailDeadLetter, required this.auditEventsLast24h, required this.overdueDeliveryReviews, required this.overduePaymentResubmissions}): super._();
   
 
 @override final  int verificationPackets;
@@ -483,6 +484,7 @@ class _AdminOperationalSummary extends AdminOperationalSummary {
 @override final  int paymentProofs;
 @override final  int disputes;
 @override final  int eligiblePayouts;
+@override final  int supportNeedsReply;
 @override final  int emailBacklog;
 @override final  int emailDeadLetter;
 @override final  int auditEventsLast24h;
@@ -499,16 +501,16 @@ _$AdminOperationalSummaryCopyWith<_AdminOperationalSummary> get copyWith => __$A
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminOperationalSummary&&(identical(other.verificationPackets, verificationPackets) || other.verificationPackets == verificationPackets)&&(identical(other.pendingVerificationDocuments, pendingVerificationDocuments) || other.pendingVerificationDocuments == pendingVerificationDocuments)&&(identical(other.paymentProofs, paymentProofs) || other.paymentProofs == paymentProofs)&&(identical(other.disputes, disputes) || other.disputes == disputes)&&(identical(other.eligiblePayouts, eligiblePayouts) || other.eligiblePayouts == eligiblePayouts)&&(identical(other.emailBacklog, emailBacklog) || other.emailBacklog == emailBacklog)&&(identical(other.emailDeadLetter, emailDeadLetter) || other.emailDeadLetter == emailDeadLetter)&&(identical(other.auditEventsLast24h, auditEventsLast24h) || other.auditEventsLast24h == auditEventsLast24h)&&(identical(other.overdueDeliveryReviews, overdueDeliveryReviews) || other.overdueDeliveryReviews == overdueDeliveryReviews)&&(identical(other.overduePaymentResubmissions, overduePaymentResubmissions) || other.overduePaymentResubmissions == overduePaymentResubmissions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminOperationalSummary&&(identical(other.verificationPackets, verificationPackets) || other.verificationPackets == verificationPackets)&&(identical(other.pendingVerificationDocuments, pendingVerificationDocuments) || other.pendingVerificationDocuments == pendingVerificationDocuments)&&(identical(other.paymentProofs, paymentProofs) || other.paymentProofs == paymentProofs)&&(identical(other.disputes, disputes) || other.disputes == disputes)&&(identical(other.eligiblePayouts, eligiblePayouts) || other.eligiblePayouts == eligiblePayouts)&&(identical(other.supportNeedsReply, supportNeedsReply) || other.supportNeedsReply == supportNeedsReply)&&(identical(other.emailBacklog, emailBacklog) || other.emailBacklog == emailBacklog)&&(identical(other.emailDeadLetter, emailDeadLetter) || other.emailDeadLetter == emailDeadLetter)&&(identical(other.auditEventsLast24h, auditEventsLast24h) || other.auditEventsLast24h == auditEventsLast24h)&&(identical(other.overdueDeliveryReviews, overdueDeliveryReviews) || other.overdueDeliveryReviews == overdueDeliveryReviews)&&(identical(other.overduePaymentResubmissions, overduePaymentResubmissions) || other.overduePaymentResubmissions == overduePaymentResubmissions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,verificationPackets,pendingVerificationDocuments,paymentProofs,disputes,eligiblePayouts,emailBacklog,emailDeadLetter,auditEventsLast24h,overdueDeliveryReviews,overduePaymentResubmissions);
+int get hashCode => Object.hash(runtimeType,verificationPackets,pendingVerificationDocuments,paymentProofs,disputes,eligiblePayouts,supportNeedsReply,emailBacklog,emailDeadLetter,auditEventsLast24h,overdueDeliveryReviews,overduePaymentResubmissions);
 
 @override
 String toString() {
-  return 'AdminOperationalSummary(verificationPackets: $verificationPackets, pendingVerificationDocuments: $pendingVerificationDocuments, paymentProofs: $paymentProofs, disputes: $disputes, eligiblePayouts: $eligiblePayouts, emailBacklog: $emailBacklog, emailDeadLetter: $emailDeadLetter, auditEventsLast24h: $auditEventsLast24h, overdueDeliveryReviews: $overdueDeliveryReviews, overduePaymentResubmissions: $overduePaymentResubmissions)';
+  return 'AdminOperationalSummary(verificationPackets: $verificationPackets, pendingVerificationDocuments: $pendingVerificationDocuments, paymentProofs: $paymentProofs, disputes: $disputes, eligiblePayouts: $eligiblePayouts, supportNeedsReply: $supportNeedsReply, emailBacklog: $emailBacklog, emailDeadLetter: $emailDeadLetter, auditEventsLast24h: $auditEventsLast24h, overdueDeliveryReviews: $overdueDeliveryReviews, overduePaymentResubmissions: $overduePaymentResubmissions)';
 }
 
 
@@ -519,7 +521,7 @@ abstract mixin class _$AdminOperationalSummaryCopyWith<$Res> implements $AdminOp
   factory _$AdminOperationalSummaryCopyWith(_AdminOperationalSummary value, $Res Function(_AdminOperationalSummary) _then) = __$AdminOperationalSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- int verificationPackets, int pendingVerificationDocuments, int paymentProofs, int disputes, int eligiblePayouts, int emailBacklog, int emailDeadLetter, int auditEventsLast24h, int overdueDeliveryReviews, int overduePaymentResubmissions
+ int verificationPackets, int pendingVerificationDocuments, int paymentProofs, int disputes, int eligiblePayouts, int supportNeedsReply, int emailBacklog, int emailDeadLetter, int auditEventsLast24h, int overdueDeliveryReviews, int overduePaymentResubmissions
 });
 
 
@@ -536,13 +538,14 @@ class __$AdminOperationalSummaryCopyWithImpl<$Res>
 
 /// Create a copy of AdminOperationalSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? verificationPackets = null,Object? pendingVerificationDocuments = null,Object? paymentProofs = null,Object? disputes = null,Object? eligiblePayouts = null,Object? emailBacklog = null,Object? emailDeadLetter = null,Object? auditEventsLast24h = null,Object? overdueDeliveryReviews = null,Object? overduePaymentResubmissions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? verificationPackets = null,Object? pendingVerificationDocuments = null,Object? paymentProofs = null,Object? disputes = null,Object? eligiblePayouts = null,Object? supportNeedsReply = null,Object? emailBacklog = null,Object? emailDeadLetter = null,Object? auditEventsLast24h = null,Object? overdueDeliveryReviews = null,Object? overduePaymentResubmissions = null,}) {
   return _then(_AdminOperationalSummary(
 verificationPackets: null == verificationPackets ? _self.verificationPackets : verificationPackets // ignore: cast_nullable_to_non_nullable
 as int,pendingVerificationDocuments: null == pendingVerificationDocuments ? _self.pendingVerificationDocuments : pendingVerificationDocuments // ignore: cast_nullable_to_non_nullable
 as int,paymentProofs: null == paymentProofs ? _self.paymentProofs : paymentProofs // ignore: cast_nullable_to_non_nullable
 as int,disputes: null == disputes ? _self.disputes : disputes // ignore: cast_nullable_to_non_nullable
 as int,eligiblePayouts: null == eligiblePayouts ? _self.eligiblePayouts : eligiblePayouts // ignore: cast_nullable_to_non_nullable
+as int,supportNeedsReply: null == supportNeedsReply ? _self.supportNeedsReply : supportNeedsReply // ignore: cast_nullable_to_non_nullable
 as int,emailBacklog: null == emailBacklog ? _self.emailBacklog : emailBacklog // ignore: cast_nullable_to_non_nullable
 as int,emailDeadLetter: null == emailDeadLetter ? _self.emailDeadLetter : emailDeadLetter // ignore: cast_nullable_to_non_nullable
 as int,auditEventsLast24h: null == auditEventsLast24h ? _self.auditEventsLast24h : auditEventsLast24h // ignore: cast_nullable_to_non_nullable

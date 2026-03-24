@@ -205,6 +205,7 @@
       "bookingId": {}
     }
   },
+  "bookingDetailPageTitle": "Détails de la réservation",
   "bookingReviewDescription": "La reputation du transporteur, le detail du trajet et la revue du prix apparaissent ici avant le paiement.",
   "bookingReviewTitle": "Revue de la réservation",
   "cancelLabel": "Annuler",
@@ -222,8 +223,8 @@
   "carrierProfileVerificationRejected": "Rejetee",
   "carrierProfileVerificationVerified": "Verifiee",
   "carrierProfileTitle": "Profil transporteur",
-  "carrierVerificationCenterDescription": "Telechargez et remplacez les documents de vérification du profil ou du véhicule depuis un seul endroit.",
-  "carrierVerificationCenterTitle": "Centre de vérification",
+  "carrierVerificationCenterDescription": "Gerez la vérification transporteur depuis un seul endroit en déposant les documents du conducteur et du véhicule requis.",
+  "carrierVerificationCenterTitle": "Vérification transporteur",
   "carrierVerificationPendingBanner": "Votre dossier de vérification est en cours de revue. Telechargez les documents manquants pour accelerer l'approbation.",
   "carrierVerificationQueueHint": "Terminez les etapes de vérification restantes depuis votre profil.",
   "carrierVerificationRejectedBanner": "La vérification requiert votre attention : {reason}",
@@ -246,11 +247,14 @@
       "carrierId": {}
     }
   },
+  "carrierPublicProfilePageTitle": "Profil du transporteur",
   "confirmLabel": "Confirmer",
   "documentViewerDescription": "Consultez ce document ici ou ouvrez-le dans une autre application.",
   "documentViewerOpenAction": "Ouvrir le document",
   "documentViewerTitle": "Document {documentId}",
+  "documentViewerPageTitle": "Document",
   "documentViewerUnavailableMessage": "L'accès sécurisé au document est temporairement indisponible.",
+  "verificationDocumentViewerTitle": "Document de vérification",
   "@documentViewerTitle": {
     "placeholders": {
       "documentId": {}
@@ -270,6 +274,7 @@
       "documentId": {}
     }
   },
+  "generatedDocumentViewerPageTitle": "Document généré",
   "generatedDocumentTypePaymentReceipt": "Recu de paiement",
   "generatedDocumentTypePayoutReceipt": "Recu de versement",
   "generatedDocumentStatusPendingLabel": "En generation",
@@ -285,6 +290,16 @@
   "@notificationGeneratedDocumentReadyBody": {
     "placeholders": {
       "documentType": {}
+    }
+  },
+  "notificationVerificationPacketApprovedTitle": "Verification approuvee",
+  "notificationVerificationPacketApprovedBody": "Votre dossier de verification a ete approuve. Vous pouvez maintenant poursuivre les operations transporteur.",
+  "notificationVerificationDocumentRejectedTitle": "Document de verification rejete",
+  "notificationVerificationDocumentRejectedBody": "Votre {documentType} a ete rejete. Motif : {reason}",
+  "@notificationVerificationDocumentRejectedBody": {
+    "placeholders": {
+      "documentType": {},
+      "reason": {}
     }
   },
   "disputeEvidenceTitle": "Pieces du litige",
@@ -332,6 +347,7 @@
       "notificationId": {}
     }
   },
+  "notificationDetailPageTitle": "Notification",
   "notificationsCenterDescription": "Restez informe des réservations, paiements, etapes de livraison et alertes du compte.",
   "notificationsCenterTitle": "Notifications",
   "notificationsSettingsEntryDescription": "Gerez l'autorisation et ouvrez votre centre de notifications.",
@@ -375,6 +391,7 @@
       "tripId": {}
     }
   },
+  "oneOffTripDetailPageTitle": "Détails du trajet ponctuel",
   "paymentFlowDescription": "Suivez les etapes de paiement, televersez la preuve et consultez le statut de vérification.",
   "paymentFlowTitle": "Paiement",
   "payoutAccountsDescription": "Ajoutez et gerez les comptes sur lesquels vous recevez vos versements.",
@@ -389,7 +406,7 @@
   "carrierGateVerificationMessage": "Terminez la vérification transporteur avant d'ouvrir cet espace pour publier des trajets ou gérer des réservations.",
   "carrierGatePayoutTitle": "Compte de paiement requis",
   "carrierGatePayoutMessage": "Ajoutez un compte de paiement avant d'ouvrir les réservations transporteur afin que les courses terminées puissent être réglées correctement.",
-  "profileVerificationDocumentsTitle": "Documents de vérification du profil",
+  "profileVerificationDocumentsTitle": "Documents du conducteur",
   "profileSetupDescription": "Ajoutez vos coordonnées pour que les clients, les transporteurs et le support puissent vous joindre.",
   "profileCarrierVerificationHint": "Renseignez d'abord vos informations transporteur, puis deposez les documents de vérification requis depuis votre profil.",
   "profileCompanyNameLabel": "Nom de l'entreprise",
@@ -408,6 +425,7 @@
       "proofId": {}
     }
   },
+  "proofViewerPageTitle": "Preuve de paiement",
   "retryLabel": "Reessayer",
   "roleSelectionDescription": "Choisissez comment vous souhaitez utiliser FleetFill. Cela prepare les bons outils pour votre compte.",
   "roleSelectionCarrierDescription": "Publiez des trajets, gerez les réservations et suivez la vérification.",
@@ -422,6 +440,7 @@
       "routeId": {}
     }
   },
+  "routeDetailPageTitle": "Détails de l'itinéraire",
   "routeErrorMessage": "FleetFill n'a pas pu ouvrir cet ecran.",
   "searchTripsDescription": "Choisissez une expedition et une date pour trouver des trajets compatibles.",
   "searchTripsNavLabel": "Recherche",
@@ -450,6 +469,7 @@
       "shipmentId": {}
     }
   },
+  "shipmentDetailPageTitle": "Details de l'expedition",
   "shipperHomeDescription": "Suivez vos réservations actives, consultez les mises a jour et accedez rapidement aux actions importantes.",
   "shipperHomeActiveBookingsLabel": "Réservations actives",
   "shipperHomeUnreadNotificationsLabel": "Notifications non lues",
@@ -465,6 +485,8 @@
   "splashTitle": "Preparation",
   "startupConfigurationRequiredTitle": "FleetFill est indisponible",
   "startupConfigurationRequiredMessage": "FleetFill n'est pas disponible pour le moment. Reessayez plus tard.",
+  "notificationNewLabel": "Nouveau",
+  "notificationSeenLabel": "Vu",
   "statusNeedsReviewLabel": "A revoir",
   "statusReadyLabel": "Pret",
   "supportDescription": "Posez une question, signalez un probleme ou demandez de l'aide pour une réservation ou un paiement.",
@@ -478,6 +500,7 @@
       "bookingId": {}
     }
   },
+  "trackingDetailPageTitle": "Suivi",
   "updateRequiredDescription": "Mettez FleetFill a jour pour continuer avec la derniere version prise en charge.",
   "updateRequiredTitle": "Mise a jour requise",
   "userDetailDescription": "Les informations expéditeur et transporteur restent organisees par sections dans une seule vue detail.",
@@ -509,8 +532,8 @@
   "vehiclesDescription": "Ajoutez et gerez les véhicules utilises pour le transport.",
   "vehiclesEmptyMessage": "Ajoutez un véhicule avant de publier de la capacité ou de terminer la vérification complete.",
   "vehiclesTitle": "Véhicules",
-  "vehicleVerificationDocumentsTitle": "Documents de vérification du véhicule",
-  "verificationDocumentDriverIdentityLabel": "Identite ou permis du conducteur",
+  "vehicleVerificationDocumentsTitle": "Documents du véhicule",
+  "verificationDocumentDriverIdentityLabel": "Permis de conduire",
   "verificationDocumentMissingMessage": "Aucun fichier téléversé pour le moment.",
   "verificationDocumentNeedsAttentionMessage": "Consultez le motif du rejet puis telechargez un remplacement.",
   "verificationDocumentOpenPreparedMessage": "Votre document est prêt à être consulté.",
@@ -521,11 +544,12 @@
       "reason": {}
     }
   },
+  "verificationDocumentRejectedFallbackReason": "Veuillez revoir les exigences du document et televerser un fichier plus lisible.",
   "verificationDocumentReplacedMessage": "Document de vérification remplace.",
-  "verificationDocumentTransportLicenseLabel": "Licence de transport",
+  "verificationDocumentTransportLicenseLabel": "Licence de transport (héritée)",
   "verificationDocumentTruckInspectionLabel": "Controle technique du camion",
   "verificationDocumentTruckInsuranceLabel": "Assurance du camion",
-  "verificationDocumentTruckRegistrationLabel": "Carte grise du camion",
+  "verificationDocumentTruckRegistrationLabel": "Carte grise",
   "verificationDocumentUploadedMessage": "Document de vérification téléchargé.",
   "verificationDocumentVerifiedMessage": "Verifie et accepte.",
   "verificationReplaceAction": "Remplacer",
@@ -692,6 +716,9 @@
   "paymentProofUploadAction": "Televerser la preuve",
   "paymentProofResubmitAction": "Renvoyer la preuve",
   "paymentProofUploadedMessage": "Preuve de paiement recue.",
+  "paymentRailCcpLabel": "CCP",
+  "paymentRailDahabiaLabel": "Dahabia",
+  "paymentRailBankLabel": "Banque",
   "paymentProofAmountLabel": "Montant soumis",
   "paymentProofReferenceLabel": "Reference soumise",
   "paymentProofStatusLabel": "Statut de la preuve",
@@ -724,6 +751,7 @@
   "trackingEventCompletedLabel": "Terminee",
   "trackingEventCancelledLabel": "Annulee",
   "trackingEventDisputedLabel": "Contestee",
+  "trackingEventAutoCompletedNote": "Reservation terminee automatiquement apres la fin de la fenetre de revue de livraison.",
   "adminDisputesQueueTitle": "Litiges",
   "adminDisputesQueueEmptyMessage": "Aucun litige n'attend de revue pour le moment.",
   "adminPayoutQueueTitle": "Versements",
@@ -777,7 +805,56 @@
   "goBackAction": "Retour",
   "openNotificationsAction": "Ouvrir les notifications",
   "documentPreviewUnavailableMessage": "L'apercu n'est pas disponible pour ce fichier. Ouvrez-le dans une autre application.",
+  "supportInboxTitle": "Vos demandes de support",
+  "supportInboxEmptyMessage": "Vous n'avez encore ouvert aucune demande de support.",
+  "supportRequestCreatedMessage": "Votre demande de support a ete creee.",
+  "supportThreadTitle": "Conversation de support",
+  "supportThreadDetailsTitle": "Details de la demande",
+  "supportStatusLabel": "Statut",
+  "supportPriorityLabel": "Priorite",
+  "supportLastUpdatedLabel": "Derniere mise a jour",
+  "supportReplyLabel": "Reponse",
+  "supportReplyAction": "Envoyer la reponse",
+  "supportReplySentMessage": "Votre reponse a ete envoyee.",
+  "supportThreadNoMessagesMessage": "Aucun message n'a encore ete ajoute a cette demande.",
+  "supportLinkedBookingAction": "Ouvrir la reservation",
+  "supportLinkedPaymentProofAction": "Ouvrir la preuve de paiement",
+  "supportLinkedDisputeAction": "Ouvrir le litige",
+  "supportThreadOpenAction": "Ouvrir la conversation",
+  "supportStatusOpenLabel": "Ouverte",
+  "supportStatusInProgressLabel": "En cours",
+  "supportStatusWaitingForUserLabel": "En attente de l'utilisateur",
+  "supportStatusResolvedLabel": "Resolue",
+  "supportStatusClosedLabel": "Fermee",
+  "supportPriorityNormalLabel": "Normale",
+  "supportPriorityHighLabel": "Haute",
+  "supportPriorityUrgentLabel": "Urgente",
+  "supportMessageSenderUserLabel": "Vous",
+  "supportMessageSenderAdminLabel": "Support FleetFill",
+  "supportMessageSenderSystemLabel": "Systeme",
+  "adminSupportQueueTitle": "File de support",
+  "adminQueueSupportTabLabel": "Support",
+  "adminSupportSearchLabel": "Rechercher des demandes de support",
+  "adminSupportStatusAllLabel": "Tous les statuts",
+  "adminSupportQueueEmptyMessage": "Aucune demande de support ne requiert d'action pour le moment.",
+  "adminSupportControlsTitle": "Commandes support",
+  "adminSupportAssignToMeAction": "M'assigner",
+  "adminSupportUnassignAction": "Retirer l'assignation",
+  "notificationSupportRequestCreatedTitle": "Nouvelle demande de support",
+  "notificationSupportRequestCreatedBody": "Un utilisateur a ouvert une nouvelle demande de support a examiner.",
+  "notificationSupportReplyReceivedTitle": "Le support a repondu",
+  "notificationSupportReplyReceivedBody": "Le support FleetFill a repondu a votre demande.",
+  "notificationSupportUserRepliedTitle": "L'utilisateur a repondu",
+  "notificationSupportUserRepliedBody": "Un utilisateur a repondu a une demande de support existante.",
+  "notificationSupportStatusChangedTitle": "Statut de support mis a jour",
+  "notificationSupportStatusChangedBody": "Le statut de votre demande de support est maintenant {status}.",
+  "@notificationSupportStatusChangedBody": {
+    "placeholders": {
+      "status": {}
+    }
+  },
   "routeOriginWilayaLabel": "Wilaya de depart",
   "routeDestinationWilayaLabel": "Wilaya d'arrivee",
-  "locationUnavailableLabel": "Lieu indisponible"
+  "locationUnavailableLabel": "Lieu indisponible",
+  "localBackendUnavailableMessage": "FleetFill ne peut pas joindre le backend local de développement. Utilisez le profil de lancement émulateur pour les émulateurs Android, et l'adresse IP locale de votre ordinateur pour les appareils réels."
 }

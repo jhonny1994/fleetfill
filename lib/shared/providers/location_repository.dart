@@ -12,7 +12,10 @@ class LocationRepository {
   SupabaseClient get _client => Supabase.instance.client;
 
   Future<List<AlgeriaWilaya>> fetchWilayas() async {
-    final response = await _client.from('wilayas').select().order('id');
+    final response = await _client
+        .from('wilayas')
+        .select()
+        .order('id', ascending: true);
 
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
@@ -26,12 +29,12 @@ class LocationRepository {
               .from('communes')
               .select()
               .order('wilaya_id', ascending: true)
-              .order('name', ascending: true)
+              .order('id', ascending: true)
         : await _client
               .from('communes')
               .select()
               .eq('wilaya_id', wilayaId)
-              .order('name', ascending: true);
+              .order('id', ascending: true);
 
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()

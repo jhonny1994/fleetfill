@@ -76,7 +76,6 @@ Recommended FleetFill Edge Function candidates:
 - `email-provider-webhook`
 - `generate-signed-file-url`
 - `scheduled-automation-tick`
-- `support-email-dispatch`
 
 Use Edge Functions for:
 
@@ -448,7 +447,6 @@ Requirements:
 - `transactional-email-dispatch-worker`
 - `email-provider-webhook`
 - `signed-file-url`
-- `support-email-dispatch`
 
 These names are placeholders and can change, but the boundaries should remain similar.
 

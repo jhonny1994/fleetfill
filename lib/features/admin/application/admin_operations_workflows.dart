@@ -1,5 +1,7 @@
 import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/admin/admin.dart';
+import 'package:fleetfill/features/notifications/notifications.dart';
+import 'package:fleetfill/features/support/support.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final adminOperationsWorkflowControllerProvider =
@@ -86,6 +88,68 @@ class AdminOperationsWorkflowController {
       ..invalidate(adminUsersProvider)
       ..invalidate(adminUserSearchResultsProvider(''))
       ..invalidate(adminUserDetailProvider(profileId))
+      ..invalidate(adminAuditLogsProvider);
+  }
+
+  Future<void> replyToSupportRequest({
+    required String requestId,
+    required String message,
+  }) async {
+    await ref
+        .read(supportRepositoryProvider)
+        .replyToSupportRequest(requestId: requestId, message: message);
+    ref
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminSupportQueueProvider)
+      ..invalidate(
+        adminFilteredSupportQueueProvider((status: null, query: null)),
+      )
+      ..invalidate(supportThreadProvider(requestId))
+      ..invalidate(mySupportRequestsProvider)
+      ..invalidate(myNotificationsProvider)
+      ..invalidate(adminAuditLogsProvider);
+  }
+
+  Future<void> setSupportRequestStatus({
+    required String requestId,
+    required SupportRequestStatus status,
+    SupportRequestPriority? priority,
+  }) async {
+    await ref
+        .read(supportRepositoryProvider)
+        .adminSetSupportRequestStatus(
+          requestId: requestId,
+          status: status,
+          priority: priority,
+        );
+    ref
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminSupportQueueProvider)
+      ..invalidate(
+        adminFilteredSupportQueueProvider((status: null, query: null)),
+      )
+      ..invalidate(supportThreadProvider(requestId))
+      ..invalidate(mySupportRequestsProvider)
+      ..invalidate(myNotificationsProvider)
+      ..invalidate(adminAuditLogsProvider);
+  }
+
+  Future<void> assignSupportRequest({
+    required String requestId,
+    String? assignedAdminId,
+  }) async {
+    await ref
+        .read(supportRepositoryProvider)
+        .adminAssignSupportRequest(
+          requestId: requestId,
+          assignedAdminId: assignedAdminId,
+        );
+    ref
+      ..invalidate(adminSupportQueueProvider)
+      ..invalidate(
+        adminFilteredSupportQueueProvider((status: null, query: null)),
+      )
+      ..invalidate(supportThreadProvider(requestId))
       ..invalidate(adminAuditLogsProvider);
   }
 }

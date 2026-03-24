@@ -34,8 +34,10 @@ class AppListCard extends StatelessWidget {
           ),
           onTap: onTap,
           leading: leading,
-          title: Text(title),
-          subtitle: subtitle == null ? null : Text(subtitle!),
+          title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
+          subtitle: subtitle == null
+              ? null
+              : Text(subtitle!, maxLines: 3, overflow: TextOverflow.ellipsis),
           trailing: trailing,
         ),
       ),

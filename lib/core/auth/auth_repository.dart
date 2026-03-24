@@ -50,7 +50,12 @@ class AuthRepository {
       );
     }
 
-    final user = session.user;
+    final user = await _resolveCurrentUser(session);
+    if (user == null) {
+      await _safeSignOut();
+      return const AuthSnapshot(status: AuthStatus.unauthenticated);
+    }
+
     final userId = user.id;
     final email = user.email?.trim();
     final profile = await _fetchCurrentProfile(userId);
@@ -71,6 +76,23 @@ class AuthRepository {
       isPasswordRecovery: isPasswordRecovery,
       isSessionExpired: isSessionExpired,
     );
+  }
+
+  Future<User?> _resolveCurrentUser(Session session) async {
+    try {
+      final response = await _client.auth.getUser(session.accessToken);
+      return response.user;
+    } on AuthException {
+      return null;
+    }
+  }
+
+  Future<void> _safeSignOut() async {
+    try {
+      await _client.auth.signOut();
+    } on Object {
+      // Best-effort cleanup for invalid cached sessions.
+    }
   }
 
   Future<void> signInWithPassword({

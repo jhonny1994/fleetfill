@@ -55,11 +55,11 @@ class NotificationsCenterScreen extends ConsumerWidget {
                   subtitle: content.body,
                   leading: AppStatusChip(
                     label: item.isRead
-                        ? s.statusReadyLabel
-                        : s.statusNeedsReviewLabel,
+                        ? s.notificationSeenLabel
+                        : s.notificationNewLabel,
                     tone: item.isRead
-                        ? AppStatusTone.success
-                        : AppStatusTone.warning,
+                        ? AppStatusTone.neutral
+                        : AppStatusTone.info,
                   ),
                   trailing: Text(
                     _formatNotificationDate(context, item.createdAt),
@@ -141,6 +141,7 @@ class _NotificationDetailScreenState
     final detailAsync = ref.watch(
       notificationDetailProvider(widget.notificationId),
     );
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
 
     ref.listen<AsyncValue<AppNotificationRecord?>>(
       notificationDetailProvider(widget.notificationId),
@@ -155,7 +156,7 @@ class _NotificationDetailScreenState
     );
 
     return AppPageScaffold(
-      title: s.notificationDetailTitle(widget.notificationId),
+      title: s.notificationDetailPageTitle,
       child: AppAsyncStateView<AppNotificationRecord?>(
         value: detailAsync,
         onRetry: () =>
@@ -165,34 +166,73 @@ class _NotificationDetailScreenState
             return const AppNotFoundState();
           }
           final content = _notificationContent(context, notification);
-          return ListView(
-            children: [
-              AppSectionHeader(
-                title: content.title,
-                subtitle: s.notificationDetailDescription,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Text(content.body),
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref
+                ..invalidate(myNotificationsProvider)
+                ..invalidate(notificationDetailProvider(widget.notificationId));
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                AppSectionHeader(
+                  title: content.title,
+                  subtitle: s.notificationDetailDescription,
                 ),
-              ),
-              if (notification.type == 'generated_document_ready' &&
-                  notification.data['document_id'] is String) ...[
-                const SizedBox(height: AppSpacing.md),
-                FilledButton.icon(
-                  onPressed: () => context.push(
-                    AppRoutePath.sharedGeneratedDocumentViewer.replaceFirst(
-                      ':id',
-                      notification.data['document_id'] as String,
-                    ),
+                const SizedBox(height: AppSpacing.lg),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    child: Text(content.body),
                   ),
-                  icon: const Icon(Icons.description_outlined),
-                  label: Text(s.documentViewerOpenAction),
                 ),
+                if (notification.type == 'generated_document_ready' &&
+                    notification.data['document_id'] is String) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  FilledButton.icon(
+                    onPressed: () => context.push(
+                      AppRoutePath.sharedGeneratedDocumentViewer.replaceFirst(
+                        ':id',
+                        notification.data['document_id'] as String,
+                      ),
+                    ),
+                    icon: const Icon(Icons.description_outlined),
+                    label: Text(s.documentViewerOpenAction),
+                  ),
+                ],
+                if (notification.type == 'verification_document_rejected' &&
+                    notification.data['document_id'] is String) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  FilledButton.icon(
+                    onPressed: () => context.push(
+                      AppRoutePath.sharedDocumentViewer.replaceFirst(
+                        ':id',
+                        notification.data['document_id'] as String,
+                      ),
+                    ),
+                    icon: const Icon(Icons.badge_outlined),
+                    label: Text(s.verificationDocumentViewerTitle),
+                  ),
+                ],
+                if (notification.data['support_request_id'] is String) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  FilledButton.icon(
+                    onPressed: () => context.push(
+                      auth?.role == AppUserRole.admin
+                          ? AppRoutePath.adminQueuesSupport(
+                              notification.data['support_request_id'] as String,
+                            )
+                          : AppRoutePath.sharedSupportThread.replaceFirst(
+                              ':id',
+                              notification.data['support_request_id'] as String,
+                            ),
+                    ),
+                    icon: const Icon(Icons.support_agent_outlined),
+                    label: Text(s.supportThreadOpenAction),
+                  ),
+                ],
               ],
-            ],
+            ),
           );
         },
       ),
@@ -273,6 +313,43 @@ _NotificationContent _notificationContent(
         ),
       ),
     ),
+    'verification_packet_approved' => _NotificationContent(
+      title: s.notificationVerificationPacketApprovedTitle,
+      body: s.notificationVerificationPacketApprovedBody,
+    ),
+    'verification_document_rejected' => _NotificationContent(
+      title: s.notificationVerificationDocumentRejectedTitle,
+      body: s.notificationVerificationDocumentRejectedBody(
+        _verificationDocumentTypeLabel(
+          s,
+          notification.data['document_type'] as String?,
+        ),
+        (notification.data['reason'] as String?)?.trim().isNotEmpty == true
+            ? (notification.data['reason'] as String).trim()
+            : s.verificationDocumentRejectedFallbackReason,
+      ),
+    ),
+    'support_request_created' => _NotificationContent(
+      title: s.notificationSupportRequestCreatedTitle,
+      body: s.notificationSupportRequestCreatedBody,
+    ),
+    'support_reply_received' => _NotificationContent(
+      title: s.notificationSupportReplyReceivedTitle,
+      body: s.notificationSupportReplyReceivedBody,
+    ),
+    'support_user_replied' => _NotificationContent(
+      title: s.notificationSupportUserRepliedTitle,
+      body: s.notificationSupportUserRepliedBody,
+    ),
+    'support_status_changed' => _NotificationContent(
+      title: s.notificationSupportStatusChangedTitle,
+      body: s.notificationSupportStatusChangedBody(
+        _supportStatusLabel(
+          s,
+          notification.data['status'] as String?,
+        ),
+      ),
+    ),
     _ => _NotificationContent(
       title: notification.title,
       body: notification.body,
@@ -288,6 +365,17 @@ String _generatedDocumentTypeLabel(S s, String? documentType) {
   };
 }
 
+String _verificationDocumentTypeLabel(S s, String? documentType) {
+  return switch (documentType) {
+    'driver_identity_or_license' => s.verificationDocumentDriverIdentityLabel,
+    'truck_registration' => s.verificationDocumentTruckRegistrationLabel,
+    'truck_insurance' => s.verificationDocumentTruckInsuranceLabel,
+    'truck_technical_inspection' => s.verificationDocumentTruckInspectionLabel,
+    'transport_license' => s.verificationDocumentTransportLicenseLabel,
+    _ => s.verificationDocumentViewerTitle,
+  };
+}
+
 String _milestoneLabel(S s, String? milestone) {
   return switch (milestone) {
     'payment_under_review' => s.trackingEventPaymentUnderReviewLabel,
@@ -299,6 +387,17 @@ String _milestoneLabel(S s, String? milestone) {
     'cancelled' => s.trackingEventCancelledLabel,
     'disputed' => s.trackingEventDisputedLabel,
     _ => milestone ?? '',
+  };
+}
+
+String _supportStatusLabel(S s, String? status) {
+  return switch (status) {
+    'open' => s.supportStatusOpenLabel,
+    'in_progress' => s.supportStatusInProgressLabel,
+    'waiting_for_user' => s.supportStatusWaitingForUserLabel,
+    'resolved' => s.supportStatusResolvedLabel,
+    'closed' => s.supportStatusClosedLabel,
+    _ => s.supportStatusOpenLabel,
   };
 }
 

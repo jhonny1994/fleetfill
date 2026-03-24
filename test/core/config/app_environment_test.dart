@@ -71,14 +71,29 @@ void main() {
   });
 
   group('AppEnvironmentConfig local Supabase URL normalization', () {
-    test('maps localhost to 10.0.2.2 on Android local builds', () {
+    test(
+      'maps localhost to 10.0.2.2 only for Android emulator local builds',
+      () {
+        final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
+          'http://127.0.0.1:54321',
+          environment: AppEnvironment.local,
+          isAndroid: true,
+          localAndroidNetworkTarget: LocalAndroidNetworkTarget.emulator,
+        );
+
+        expect(normalized, 'http://10.0.2.2:54321');
+      },
+    );
+
+    test('keeps loopback unchanged for Android real-device local builds', () {
       final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
         'http://127.0.0.1:54321',
         environment: AppEnvironment.local,
         isAndroid: true,
+        localAndroidNetworkTarget: LocalAndroidNetworkTarget.device,
       );
 
-      expect(normalized, 'http://10.0.2.2:54321');
+      expect(normalized, 'http://127.0.0.1:54321');
     });
 
     test('keeps hosted URLs unchanged', () {
@@ -86,6 +101,7 @@ void main() {
         'https://example.supabase.co',
         environment: AppEnvironment.local,
         isAndroid: true,
+        localAndroidNetworkTarget: LocalAndroidNetworkTarget.emulator,
       );
 
       expect(normalized, 'https://example.supabase.co');

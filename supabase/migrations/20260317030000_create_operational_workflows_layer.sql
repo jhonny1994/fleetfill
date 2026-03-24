@@ -824,6 +824,7 @@ create or replace function public.booking_status_transition_allowed(
 returns boolean
 language sql
 immutable
+set search_path = public
 as $$
   select case p_old
     when 'pending_payment' then p_new in ('pending_payment', 'payment_under_review', 'cancelled')
@@ -845,6 +846,7 @@ create or replace function public.payment_status_transition_allowed(
 returns boolean
 language sql
 immutable
+set search_path = public
 as $$
   select case p_old
     when 'unpaid' then p_new in ('unpaid', 'proof_submitted')
@@ -1872,7 +1874,7 @@ begin
     b.id,
     'completed',
     'user_visible',
-    'Booking auto-completed after delivery review grace window.',
+    null,
     now()
   from public.bookings as b
   where b.booking_status = 'completed'
@@ -2431,9 +2433,6 @@ grant execute on function public.admin_resolve_dispute_refund(uuid, numeric, tex
 revoke all on function public.admin_release_payout(uuid, text, text) from public, anon;
 grant execute on function public.admin_release_payout(uuid, text, text) to authenticated, service_role;
 
-create unique index if not exists payouts_booking_unique_idx
-on public.payouts (booking_id);
-
 create unique index if not exists payout_accounts_one_active_per_carrier_idx
 on public.payout_accounts (carrier_id)
 where is_active = true;
@@ -2973,29 +2972,43 @@ end;
 $$;
 -- <<< END 20260320120810_harden_email_delivery_rules.sql
 
--- >>> BEGIN 20260320120820_create_support_request_email_rpc.sql
-create or replace function public.enqueue_support_request_emails(
+-- >>> BEGIN 20260320120820_create_support_request_runtime.sql
+create or replace function public.create_support_request(
+  p_subject text,
+  p_message text,
   p_locale text default null,
-  p_subject text default null,
-  p_message text default null,
-  p_support_inbox_email text default null
+  p_shipment_id uuid default null,
+  p_booking_id uuid default null,
+  p_payment_proof_id uuid default null,
+  p_dispute_id uuid default null
 )
-returns jsonb
+returns public.support_requests
 language plpgsql
 security definer
 set search_path = public
 as $$
 declare
   v_actor_id uuid := (select auth.uid());
-  v_actor_email text := lower(trim(coalesce(auth.email(), '')));
-  v_locale text := public.normalize_supported_locale(p_locale);
-  v_subject text := left(nullif(trim(coalesce(p_subject, '')), ''), 160);
+  v_actor_profile public.profiles;
+  v_result public.support_requests;
   v_message text := left(nullif(trim(coalesce(p_message, '')), ''), 4000);
-  v_support_inbox text := lower(trim(coalesce(p_support_inbox_email, '')));
-  v_ack_job_id uuid;
-  v_forward_job_id uuid;
+  v_subject text := left(nullif(trim(coalesce(p_subject, '')), ''), 160);
+  v_preview text;
+  v_locale text := public.normalize_supported_locale(p_locale);
+  v_booking_id uuid := p_booking_id;
+  v_proof_booking_id uuid;
+  v_dispute_booking_id uuid;
 begin
-  if v_actor_id is null or v_actor_email = '' then
+  if v_actor_id is null then
+    raise exception 'authentication_required';
+  end if;
+
+  select *
+  into v_actor_profile
+  from public.profiles
+  where id = v_actor_id;
+
+  if v_actor_profile.id is null then
     raise exception 'authentication_required';
   end if;
 
@@ -3003,85 +3016,456 @@ begin
     raise exception 'Support subject and message are required';
   end if;
 
-  if v_support_inbox = '' then
-    raise exception 'Support inbox is required';
+  if p_shipment_id is not null and not exists (
+    select 1
+    from public.shipments as s
+    where s.id = p_shipment_id
+      and (s.shipper_id = v_actor_id or public.is_admin())
+  ) then
+    raise exception 'Support request context is not visible to current user';
+  end if;
+
+  if p_payment_proof_id is not null then
+    select pp.booking_id
+    into v_proof_booking_id
+    from public.payment_proofs as pp
+    where pp.id = p_payment_proof_id
+      and (
+        exists (
+          select 1
+          from public.bookings as b
+          where b.id = pp.booking_id
+            and public.booking_is_visible_to_current_user(b.id)
+        )
+        or public.is_admin()
+      );
+
+    if v_proof_booking_id is null then
+      raise exception 'Support request context is not visible to current user';
+    end if;
+
+    if v_booking_id is null then
+      v_booking_id := v_proof_booking_id;
+    elsif v_booking_id <> v_proof_booking_id then
+      raise exception 'Support request context is inconsistent';
+    end if;
+  end if;
+
+  if p_dispute_id is not null then
+    select d.booking_id
+    into v_dispute_booking_id
+    from public.disputes as d
+    where d.id = p_dispute_id
+      and (public.booking_is_visible_to_current_user(d.booking_id) or public.is_admin());
+
+    if v_dispute_booking_id is null then
+      raise exception 'Support request context is not visible to current user';
+    end if;
+
+    if v_booking_id is null then
+      v_booking_id := v_dispute_booking_id;
+    elsif v_booking_id <> v_dispute_booking_id then
+      raise exception 'Support request context is inconsistent';
+    end if;
+  end if;
+
+  if v_booking_id is not null and
+     not (public.booking_is_visible_to_current_user(v_booking_id) or public.is_admin()) then
+    raise exception 'Support request context is not visible to current user';
   end if;
 
   perform public.assert_rate_limit(
-    'support-email-dispatch:' || v_actor_id::text,
-    3,
+    'support-request:' || v_actor_id::text,
+    5,
     3600
   );
 
-  insert into public.email_outbox_jobs (
-    event_key,
-    dedupe_key,
-    profile_id,
-    template_key,
-    locale,
-    recipient_email,
-    priority,
-    status,
-    available_at,
-    payload_snapshot
-  ) values (
-    'support_acknowledgement',
-    'support_ack:' || v_actor_id::text || ':' || gen_random_uuid()::text,
-    v_actor_id,
-    'support_acknowledgement',
-    v_locale,
-    v_actor_email,
-    'high',
-    'queued',
-    now(),
-    jsonb_build_object(
-      'subject', v_subject,
-      'message', v_message
-    )
-  )
-  returning id into v_ack_job_id;
+  v_preview := left(regexp_replace(v_message, '\s+', ' ', 'g'), 280);
 
-  insert into public.email_outbox_jobs (
-    event_key,
-    dedupe_key,
-    profile_id,
-    template_key,
-    locale,
-    recipient_email,
-    priority,
+  insert into public.support_requests (
+    created_by,
+    requester_role,
+    subject,
     status,
-    available_at,
-    payload_snapshot
+    priority,
+    shipment_id,
+    booking_id,
+    payment_proof_id,
+    dispute_id,
+    last_message_preview,
+    last_message_sender_type,
+    last_message_at,
+    user_last_read_at,
+    admin_last_read_at
   ) values (
-    'support_request_forwarded',
-    'support_forward:' || v_actor_id::text || ':' || gen_random_uuid()::text,
     v_actor_id,
-    'support_request_forwarded',
-    v_locale,
-    v_support_inbox,
-    'high',
-    'queued',
+    v_actor_profile.role,
+    v_subject,
+    'open',
+    'normal',
+    p_shipment_id,
+    v_booking_id,
+    p_payment_proof_id,
+    p_dispute_id,
+    v_preview,
+    'user',
     now(),
-    jsonb_build_object(
-      'subject', v_subject,
-      'message', v_message,
-      'sender_email', v_actor_email,
-      'profile_id', v_actor_id
-    )
+    now(),
+    null
   )
-  returning id into v_forward_job_id;
+  returning * into v_result;
 
-  return jsonb_build_object(
-    'acknowledgement_job_id', v_ack_job_id,
-    'forward_job_id', v_forward_job_id,
-    'status', 'queued'
+  insert into public.support_messages (
+    request_id,
+    sender_profile_id,
+    sender_type,
+    body
+  ) values (
+    v_result.id,
+    v_actor_id,
+    'user',
+    v_message
   );
+
+  insert into public.notifications (profile_id, type, title, body, data)
+  select
+    p.id,
+    'support_request_created',
+    'support_request_created_title',
+    'support_request_created_body',
+    jsonb_build_object(
+      'support_request_id', v_result.id,
+      'locale', v_locale,
+      'route', '/admin/queues/support/' || v_result.id::text,
+      'status', v_result.status,
+      'requester_role', v_result.requester_role
+    )
+  from public.profiles as p
+  where p.role = 'admin'::public.app_role
+    and p.is_active = true
+    and p.id <> v_actor_id;
+
+  return v_result;
 end;
 $$;
 
-  revoke all on function public.enqueue_support_request_emails(text, text, text, text) from public, anon;
-  grant execute on function public.enqueue_support_request_emails(text, text, text, text) to authenticated, service_role;
-  -- <<< END 20260320120820_create_support_request_email_rpc.sql
+create or replace function public.reply_to_support_request(
+  p_request_id uuid,
+  p_message text
+)
+returns public.support_messages
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_actor_id uuid := (select auth.uid());
+  v_request public.support_requests;
+  v_message text := left(nullif(trim(coalesce(p_message, '')), ''), 4000);
+  v_result public.support_messages;
+  v_sender_type public.support_message_sender_type;
+  v_next_status public.support_request_status;
+  v_preview text;
+begin
+  if v_actor_id is null then
+    raise exception 'authentication_required';
+  end if;
+
+  if v_message is null then
+    raise exception 'Support message is required';
+  end if;
+
+  select *
+  into v_request
+  from public.support_requests
+  where id = p_request_id;
+
+  if v_request.id is null then
+    raise exception 'Support request not found';
+  end if;
+
+  if public.is_admin() then
+    perform public.require_recent_admin_step_up();
+    v_sender_type := 'admin';
+    v_next_status := case
+      when v_request.status in ('resolved', 'closed', 'waiting_for_user') then 'in_progress'
+      else v_request.status
+    end;
+  elsif v_request.created_by = v_actor_id then
+    perform public.assert_rate_limit(
+      'support-reply:' || v_actor_id::text,
+      20,
+      3600
+    );
+    v_sender_type := 'user';
+    v_next_status := case
+      when v_request.status in ('resolved', 'closed', 'waiting_for_user') then 'open'
+      else v_request.status
+    end;
+  else
+    raise exception 'Support request access denied';
+  end if;
+
+  insert into public.support_messages (
+    request_id,
+    sender_profile_id,
+    sender_type,
+    body
+  ) values (
+    v_request.id,
+    v_actor_id,
+    v_sender_type,
+    v_message
+  )
+  returning * into v_result;
+
+  v_preview := left(regexp_replace(v_message, '\s+', ' ', 'g'), 280);
+
+  update public.support_requests
+  set status = v_next_status,
+      last_message_preview = v_preview,
+      last_message_sender_type = v_sender_type,
+      last_message_at = now(),
+      user_last_read_at = case
+        when v_sender_type = 'user' then now()
+        else user_last_read_at
+      end,
+      admin_last_read_at = case
+        when v_sender_type = 'admin' then now()
+        else admin_last_read_at
+      end,
+      updated_at = now()
+  where id = v_request.id
+  returning * into v_request;
+
+  if v_sender_type = 'admin' then
+    insert into public.notifications (profile_id, type, title, body, data)
+    values (
+      v_request.created_by,
+      'support_reply_received',
+      'support_reply_received_title',
+      'support_reply_received_body',
+      jsonb_build_object(
+        'support_request_id', v_request.id,
+        'status', v_request.status,
+        'route', '/shared/support/' || v_request.id::text
+      )
+    );
+
+    perform public.write_admin_audit_log(
+      'support_request_replied',
+      'support_request',
+      v_request.id,
+      'success',
+      null,
+      jsonb_build_object(
+        'support_request_id', v_request.id,
+        'status', v_request.status
+      )
+    );
+  else
+    insert into public.notifications (profile_id, type, title, body, data)
+    select
+      p.id,
+      'support_user_replied',
+      'support_user_replied_title',
+      'support_user_replied_body',
+      jsonb_build_object(
+        'support_request_id', v_request.id,
+        'status', v_request.status,
+        'route', '/admin/queues/support/' || v_request.id::text
+      )
+    from public.profiles as p
+    where p.role = 'admin'::public.app_role
+      and p.is_active = true
+      and p.id <> v_actor_id;
+  end if;
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.mark_support_request_read(
+  p_request_id uuid
+)
+returns public.support_requests
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_actor_id uuid := (select auth.uid());
+  v_result public.support_requests;
+begin
+  if v_actor_id is null then
+    raise exception 'authentication_required';
+  end if;
+
+  if public.is_admin() then
+    update public.support_requests
+    set admin_last_read_at = now(),
+        updated_at = now()
+    where id = p_request_id
+    returning * into v_result;
+  else
+    update public.support_requests
+    set user_last_read_at = now(),
+        updated_at = now()
+    where id = p_request_id
+      and created_by = v_actor_id
+    returning * into v_result;
+  end if;
+
+  if v_result.id is null then
+    raise exception 'Support request not found';
+  end if;
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.admin_set_support_request_status(
+  p_request_id uuid,
+  p_status public.support_request_status,
+  p_priority public.support_request_priority default null
+)
+returns public.support_requests
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_result public.support_requests;
+  v_previous_status public.support_request_status;
+begin
+  if not public.is_admin() and not public.is_service_role() then
+    raise exception 'Admin support status updates require privileged execution';
+  end if;
+
+  if public.is_admin() then
+    perform public.require_recent_admin_step_up();
+  end if;
+
+  select status
+  into v_previous_status
+  from public.support_requests
+  where id = p_request_id;
+
+  update public.support_requests
+  set status = p_status,
+      priority = coalesce(p_priority, priority),
+      updated_at = now()
+  where id = p_request_id
+  returning * into v_result;
+
+  if v_result.id is null then
+    raise exception 'Support request not found';
+  end if;
+
+  if v_previous_status is distinct from v_result.status then
+    insert into public.notifications (profile_id, type, title, body, data)
+    values (
+      v_result.created_by,
+      'support_status_changed',
+      'support_status_changed_title',
+      'support_status_changed_body',
+      jsonb_build_object(
+        'support_request_id', v_result.id,
+        'status', v_result.status,
+        'route', '/shared/support/' || v_result.id::text
+      )
+    );
+  end if;
+
+  perform public.write_admin_audit_log(
+    'support_request_status_updated',
+    'support_request',
+    v_result.id,
+    'success',
+    null,
+    jsonb_build_object(
+      'support_request_id', v_result.id,
+      'previous_status', v_previous_status,
+      'status', v_result.status,
+      'priority', v_result.priority
+    )
+  );
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.admin_assign_support_request(
+  p_request_id uuid,
+  p_assigned_admin_id uuid default null
+)
+returns public.support_requests
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_result public.support_requests;
+begin
+  if not public.is_admin() and not public.is_service_role() then
+    raise exception 'Admin support assignment requires privileged execution';
+  end if;
+
+  if public.is_admin() then
+    perform public.require_recent_admin_step_up();
+  end if;
+
+  if p_assigned_admin_id is not null and not exists (
+    select 1
+    from public.profiles as p
+    where p.id = p_assigned_admin_id
+      and p.role = 'admin'::public.app_role
+      and p.is_active = true
+  ) then
+    raise exception 'Assigned admin profile is invalid';
+  end if;
+
+  update public.support_requests
+  set assigned_admin_id = p_assigned_admin_id,
+      updated_at = now()
+  where id = p_request_id
+  returning * into v_result;
+
+  if v_result.id is null then
+    raise exception 'Support request not found';
+  end if;
+
+  perform public.write_admin_audit_log(
+    'support_request_assigned',
+    'support_request',
+    v_result.id,
+    'success',
+    null,
+    jsonb_build_object(
+      'support_request_id', v_result.id,
+      'assigned_admin_id', v_result.assigned_admin_id
+    )
+  );
+
+  return v_result;
+end;
+$$;
+
+revoke all on function public.create_support_request(text, text, text, uuid, uuid, uuid, uuid) from public, anon;
+grant execute on function public.create_support_request(text, text, text, uuid, uuid, uuid, uuid) to authenticated, service_role;
+
+revoke all on function public.reply_to_support_request(uuid, text) from public, anon;
+grant execute on function public.reply_to_support_request(uuid, text) to authenticated, service_role;
+
+revoke all on function public.mark_support_request_read(uuid) from public, anon;
+grant execute on function public.mark_support_request_read(uuid) to authenticated, service_role;
+
+revoke all on function public.admin_set_support_request_status(uuid, public.support_request_status, public.support_request_priority) from public, anon;
+grant execute on function public.admin_set_support_request_status(uuid, public.support_request_status, public.support_request_priority) to authenticated, service_role;
+
+revoke all on function public.admin_assign_support_request(uuid, uuid) from public, anon;
+grant execute on function public.admin_assign_support_request(uuid, uuid) to authenticated, service_role;
+-- <<< END 20260320120820_create_support_request_runtime.sql
 
   -- >>> BEGIN 20260323110000_seed_transactional_email_templates.sql
   insert into public.email_templates (
@@ -3095,26 +3479,6 @@ $$;
     is_enabled
   )
   values
-    (
-      'support_acknowledgement',
-      'ar',
-      'تم استلام طلب الدعم - {{subject}}',
-      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">تم استلام طلب الدعم</h1><p style="margin:0 0 12px;line-height:1.9;">تم استلام طلب الدعم الخاص بك بعنوان {{subject}} بنجاح.</p><p style="margin:0 0 12px;line-height:1.9;">فريق FleetFill سيقوم بمراجعته والرد عليك في أقرب وقت ممكن.</p><p style="margin:0;color:#666;line-height:1.8;">مع تحيات فريق FleetFill</p></div></body></html>',
-      'تم استلام طلب الدعم\n\nتم استلام طلب الدعم الخاص بك بعنوان {{subject}} بنجاح.\nفريق FleetFill سيقوم بمراجعته والرد عليك في أقرب وقت ممكن.\n\nمع تحيات فريق FleetFill',
-      '{"subject":"طلب مساعدة بخصوص الحجز FF-1001"}'::jsonb,
-      'Arabic acknowledgement sent to the support requester.',
-      true
-    ),
-    (
-      'support_request_forwarded',
-      'ar',
-      'طلب دعم جديد - {{subject}}',
-      '<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Tahoma,Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">طلب دعم جديد</h1><p style="margin:0 0 12px;line-height:1.9;"><strong>الموضوع:</strong> {{subject}}</p><p style="margin:0 0 12px;line-height:1.9;"><strong>بريد المرسل:</strong> {{sender_email}}</p><p style="margin:0;line-height:1.9;"><strong>الرسالة:</strong><br>{{message}}</p></div></body></html>',
-      'طلب دعم جديد\n\nالموضوع: {{subject}}\nبريد المرسل: {{sender_email}}\nالرسالة:\n{{message}}',
-      '{"subject":"طلب مساعدة بخصوص الحجز FF-1001","sender_email":"shipper@example.com","message":"أحتاج مراجعة حالة الحجز والمدفوعات."}'::jsonb,
-      'Arabic support inbox forward copy.',
-      true
-    ),
     (
       'booking_confirmed',
       'ar',
@@ -3226,26 +3590,6 @@ insert into public.email_templates (
 )
 values
   (
-    'support_acknowledgement',
-    'fr',
-    'Demande de support recue - {{subject}}',
-    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Demande de support recue</h1><p style="margin:0 0 12px;line-height:1.8;">Nous avons bien recu votre demande ayant pour objet {{subject}}.</p><p style="margin:0;color:#666;line-height:1.8;">Notre equipe vous repondra des que possible.</p></div></body></html>',
-    'Demande de support recue\n\nNous avons bien recu votre demande ayant pour objet {{subject}}.\nNotre equipe vous repondra des que possible.',
-    '{"subject":"Question sur la reservation FF-1001"}'::jsonb,
-    'French acknowledgement sent to the support requester.',
-    true
-  ),
-  (
-    'support_request_forwarded',
-    'fr',
-    'Nouveau message support - {{subject}}',
-    '<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Nouveau message support</h1><p style="margin:0 0 12px;line-height:1.8;"><strong>Expediteur :</strong> {{sender_email}}</p><p style="margin:0 0 12px;line-height:1.8;"><strong>Objet :</strong> {{subject}}</p><p style="margin:0;line-height:1.8;"><strong>Message :</strong><br>{{message}}</p></div></body></html>',
-    'Nouveau message support\n\nExpediteur : {{sender_email}}\nObjet : {{subject}}\nMessage : {{message}}',
-    '{"sender_email":"shipper@example.com","subject":"Question sur la reservation FF-1001","message":"Pouvez-vous verifier mon paiement ?"}'::jsonb,
-    'French support message forwarded to operations.',
-    true
-  ),
-  (
     'booking_confirmed',
     'fr',
     'Reservation confirmee - {{booking_reference}}',
@@ -3333,26 +3677,6 @@ values
     'Document disponible\n\nLe {{document_type_label}} pour la reservation {{booking_reference}} est pret.\nAcces dans l''application : {{document_route}}',
     '{"booking_reference":"FF-1001","document_type":"payment_receipt","document_route":"/shared/generated-document/doc-1001"}'::jsonb,
     'French generated document availability notice.',
-    true
-  ),
-  (
-    'support_acknowledgement',
-    'en',
-    'Support request received - {{subject}}',
-    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">Support request received</h1><p style="margin:0 0 12px;line-height:1.8;">We received your request with the subject {{subject}}.</p><p style="margin:0;color:#666;line-height:1.8;">Our team will reply as soon as possible.</p></div></body></html>',
-    'Support request received\n\nWe received your request with the subject {{subject}}.\nOur team will reply as soon as possible.',
-    '{"subject":"Question about booking FF-1001"}'::jsonb,
-    'English acknowledgement sent to the support requester.',
-    true
-  ),
-  (
-    'support_request_forwarded',
-    'en',
-    'New support request - {{subject}}',
-    '<!doctype html><html lang="en"><body style="margin:0;padding:24px;background:#f6f6f6;color:#111;font-family:Arial,sans-serif;"><div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;padding:28px;"><div style="font-size:13px;color:#777;margin-bottom:12px;">FleetFill</div><h1 style="margin:0 0 16px;font-size:24px;line-height:1.5;">New support request</h1><p style="margin:0 0 12px;line-height:1.8;"><strong>Sender:</strong> {{sender_email}}</p><p style="margin:0 0 12px;line-height:1.8;"><strong>Subject:</strong> {{subject}}</p><p style="margin:0;line-height:1.8;"><strong>Message:</strong><br>{{message}}</p></div></body></html>',
-    'New support request\n\nSender: {{sender_email}}\nSubject: {{subject}}\nMessage: {{message}}',
-    '{"sender_email":"shipper@example.com","subject":"Question about booking FF-1001","message":"Can you verify my payment?"}'::jsonb,
-    'English support message forwarded to operations.',
     true
   ),
   (
@@ -3686,8 +4010,7 @@ begin
       'driver_identity_or_license',
       'truck_registration',
       'truck_insurance',
-      'truck_technical_inspection',
-      'transport_license'
+      'truck_technical_inspection'
     ) then
       raise exception 'Unsupported verification document type';
     end if;
@@ -4321,6 +4644,12 @@ begin
           from public.payouts as p
           where p.booking_id = b.id
         )
+    ),
+    'support_needs_reply', (
+      select count(*)
+      from public.support_requests as sr
+      where sr.status not in ('resolved', 'closed')
+        and sr.last_message_sender_type = 'user'
     ),
     'email_backlog', (
       select count(*)
@@ -5687,8 +6016,7 @@ begin
       'driver_identity_or_license',
       'truck_registration',
       'truck_insurance',
-      'truck_technical_inspection',
-      'transport_license'
+      'truck_technical_inspection'
     ) then
       raise exception 'Unsupported verification document type';
     end if;

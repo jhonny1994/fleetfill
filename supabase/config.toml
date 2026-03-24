@@ -59,9 +59,6 @@ verify_jwt = false
 [functions.signed-file-url]
 verify_jwt = true
 
-[functions.support-email-dispatch]
-verify_jwt = true
-
 [functions.generated-document-worker]
 verify_jwt = true
 

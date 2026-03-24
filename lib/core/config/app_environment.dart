@@ -6,6 +6,8 @@ part 'app_environment.g.dart';
 
 enum AppEnvironment { local, staging, production }
 
+enum LocalAndroidNetworkTarget { emulator, device, unspecified }
+
 @freezed
 abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
   const factory AppEnvironmentConfig({
@@ -161,13 +163,22 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     required AppEnvironment environment,
     required bool isAndroid,
     bool isWeb = false,
+    LocalAndroidNetworkTarget localAndroidNetworkTarget =
+        LocalAndroidNetworkTarget.unspecified,
   }) {
     return _normalizeSupabaseUrl(
       url,
       environment: environment,
       isAndroidOverride: isAndroid,
       isWebOverride: isWeb,
+      localAndroidNetworkTargetOverride: localAndroidNetworkTarget,
     );
+  }
+
+  static LocalAndroidNetworkTarget resolveLocalAndroidNetworkTargetForTesting({
+    LocalAndroidNetworkTarget? override,
+  }) {
+    return _resolveLocalAndroidNetworkTarget(override: override);
   }
 
   static String _normalizeSupabaseUrl(
@@ -175,6 +186,7 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     required AppEnvironment environment,
     bool? isAndroidOverride,
     bool? isWebOverride,
+    LocalAndroidNetworkTarget? localAndroidNetworkTargetOverride,
   }) {
     final trimmed = url.trim();
     if (trimmed.isEmpty || environment != AppEnvironment.local) {
@@ -199,6 +211,32 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
       return trimmed;
     }
 
+    // Android emulators reach the host machine through 10.0.2.2.
+    // Real devices must use a reachable LAN host directly.
+    if (_resolveLocalAndroidNetworkTarget(
+          override: localAndroidNetworkTargetOverride,
+        ) !=
+        LocalAndroidNetworkTarget.emulator) {
+      return trimmed;
+    }
+
     return uri.replace(host: '10.0.2.2').toString();
+  }
+
+  static LocalAndroidNetworkTarget _resolveLocalAndroidNetworkTarget({
+    LocalAndroidNetworkTarget? override,
+  }) {
+    if (override != null) {
+      return override;
+    }
+
+    final configuredValue = const String.fromEnvironment(
+      'LOCAL_ANDROID_NETWORK_TARGET',
+    ).trim().toLowerCase();
+    return switch (configuredValue) {
+      'emulator' => LocalAndroidNetworkTarget.emulator,
+      'device' => LocalAndroidNetworkTarget.device,
+      _ => LocalAndroidNetworkTarget.unspecified,
+    };
   }
 }

@@ -624,7 +624,7 @@ as double,
 /// @nodoc
 mixin _$PaymentProofRecord {
 
- String get id; String get bookingId; String get storagePath; String get paymentRail; String? get submittedReference; double get submittedAmountDzd; double? get verifiedAmountDzd; String? get verifiedReference; String get status; String? get rejectionReason; String? get reviewedBy; DateTime get submittedAt; DateTime? get reviewedAt; String? get decisionNote; int get version;
+ String get id; String get bookingId; String get storagePath; String? get contentType; int? get byteSize; String get paymentRail; String? get submittedReference; double get submittedAmountDzd; double? get verifiedAmountDzd; String? get verifiedReference; String get status; String? get rejectionReason; String? get reviewedBy; DateTime get submittedAt; DateTime? get reviewedAt; String? get decisionNote; int get version;
 /// Create a copy of PaymentProofRecord
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -635,16 +635,16 @@ $PaymentProofRecordCopyWith<PaymentProofRecord> get copyWith => _$PaymentProofRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentProofRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.storagePath, storagePath) || other.storagePath == storagePath)&&(identical(other.paymentRail, paymentRail) || other.paymentRail == paymentRail)&&(identical(other.submittedReference, submittedReference) || other.submittedReference == submittedReference)&&(identical(other.submittedAmountDzd, submittedAmountDzd) || other.submittedAmountDzd == submittedAmountDzd)&&(identical(other.verifiedAmountDzd, verifiedAmountDzd) || other.verifiedAmountDzd == verifiedAmountDzd)&&(identical(other.verifiedReference, verifiedReference) || other.verifiedReference == verifiedReference)&&(identical(other.status, status) || other.status == status)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&(identical(other.submittedAt, submittedAt) || other.submittedAt == submittedAt)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.version, version) || other.version == version));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentProofRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.storagePath, storagePath) || other.storagePath == storagePath)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.byteSize, byteSize) || other.byteSize == byteSize)&&(identical(other.paymentRail, paymentRail) || other.paymentRail == paymentRail)&&(identical(other.submittedReference, submittedReference) || other.submittedReference == submittedReference)&&(identical(other.submittedAmountDzd, submittedAmountDzd) || other.submittedAmountDzd == submittedAmountDzd)&&(identical(other.verifiedAmountDzd, verifiedAmountDzd) || other.verifiedAmountDzd == verifiedAmountDzd)&&(identical(other.verifiedReference, verifiedReference) || other.verifiedReference == verifiedReference)&&(identical(other.status, status) || other.status == status)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&(identical(other.submittedAt, submittedAt) || other.submittedAt == submittedAt)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.version, version) || other.version == version));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,bookingId,storagePath,paymentRail,submittedReference,submittedAmountDzd,verifiedAmountDzd,verifiedReference,status,rejectionReason,reviewedBy,submittedAt,reviewedAt,decisionNote,version);
+int get hashCode => Object.hash(runtimeType,id,bookingId,storagePath,contentType,byteSize,paymentRail,submittedReference,submittedAmountDzd,verifiedAmountDzd,verifiedReference,status,rejectionReason,reviewedBy,submittedAt,reviewedAt,decisionNote,version);
 
 @override
 String toString() {
-  return 'PaymentProofRecord(id: $id, bookingId: $bookingId, storagePath: $storagePath, paymentRail: $paymentRail, submittedReference: $submittedReference, submittedAmountDzd: $submittedAmountDzd, verifiedAmountDzd: $verifiedAmountDzd, verifiedReference: $verifiedReference, status: $status, rejectionReason: $rejectionReason, reviewedBy: $reviewedBy, submittedAt: $submittedAt, reviewedAt: $reviewedAt, decisionNote: $decisionNote, version: $version)';
+  return 'PaymentProofRecord(id: $id, bookingId: $bookingId, storagePath: $storagePath, contentType: $contentType, byteSize: $byteSize, paymentRail: $paymentRail, submittedReference: $submittedReference, submittedAmountDzd: $submittedAmountDzd, verifiedAmountDzd: $verifiedAmountDzd, verifiedReference: $verifiedReference, status: $status, rejectionReason: $rejectionReason, reviewedBy: $reviewedBy, submittedAt: $submittedAt, reviewedAt: $reviewedAt, decisionNote: $decisionNote, version: $version)';
 }
 
 
@@ -655,7 +655,7 @@ abstract mixin class $PaymentProofRecordCopyWith<$Res>  {
   factory $PaymentProofRecordCopyWith(PaymentProofRecord value, $Res Function(PaymentProofRecord) _then) = _$PaymentProofRecordCopyWithImpl;
 @useResult
 $Res call({
- String id, String bookingId, String storagePath, String paymentRail, String? submittedReference, double submittedAmountDzd, double? verifiedAmountDzd, String? verifiedReference, String status, String? rejectionReason, String? reviewedBy, DateTime submittedAt, DateTime? reviewedAt, String? decisionNote, int version
+ String id, String bookingId, String storagePath, String? contentType, int? byteSize, String paymentRail, String? submittedReference, double submittedAmountDzd, double? verifiedAmountDzd, String? verifiedReference, String status, String? rejectionReason, String? reviewedBy, DateTime submittedAt, DateTime? reviewedAt, String? decisionNote, int version
 });
 
 
@@ -672,12 +672,14 @@ class _$PaymentProofRecordCopyWithImpl<$Res>
 
 /// Create a copy of PaymentProofRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? bookingId = null,Object? storagePath = null,Object? paymentRail = null,Object? submittedReference = freezed,Object? submittedAmountDzd = null,Object? verifiedAmountDzd = freezed,Object? verifiedReference = freezed,Object? status = null,Object? rejectionReason = freezed,Object? reviewedBy = freezed,Object? submittedAt = null,Object? reviewedAt = freezed,Object? decisionNote = freezed,Object? version = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? bookingId = null,Object? storagePath = null,Object? contentType = freezed,Object? byteSize = freezed,Object? paymentRail = null,Object? submittedReference = freezed,Object? submittedAmountDzd = null,Object? verifiedAmountDzd = freezed,Object? verifiedReference = freezed,Object? status = null,Object? rejectionReason = freezed,Object? reviewedBy = freezed,Object? submittedAt = null,Object? reviewedAt = freezed,Object? decisionNote = freezed,Object? version = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as String,storagePath: null == storagePath ? _self.storagePath : storagePath // ignore: cast_nullable_to_non_nullable
-as String,paymentRail: null == paymentRail ? _self.paymentRail : paymentRail // ignore: cast_nullable_to_non_nullable
+as String,contentType: freezed == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
+as String?,byteSize: freezed == byteSize ? _self.byteSize : byteSize // ignore: cast_nullable_to_non_nullable
+as int?,paymentRail: null == paymentRail ? _self.paymentRail : paymentRail // ignore: cast_nullable_to_non_nullable
 as String,submittedReference: freezed == submittedReference ? _self.submittedReference : submittedReference // ignore: cast_nullable_to_non_nullable
 as String?,submittedAmountDzd: null == submittedAmountDzd ? _self.submittedAmountDzd : submittedAmountDzd // ignore: cast_nullable_to_non_nullable
 as double,verifiedAmountDzd: freezed == verifiedAmountDzd ? _self.verifiedAmountDzd : verifiedAmountDzd // ignore: cast_nullable_to_non_nullable
@@ -774,10 +776,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String bookingId,  String storagePath,  String paymentRail,  String? submittedReference,  double submittedAmountDzd,  double? verifiedAmountDzd,  String? verifiedReference,  String status,  String? rejectionReason,  String? reviewedBy,  DateTime submittedAt,  DateTime? reviewedAt,  String? decisionNote,  int version)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String bookingId,  String storagePath,  String? contentType,  int? byteSize,  String paymentRail,  String? submittedReference,  double submittedAmountDzd,  double? verifiedAmountDzd,  String? verifiedReference,  String status,  String? rejectionReason,  String? reviewedBy,  DateTime submittedAt,  DateTime? reviewedAt,  String? decisionNote,  int version)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PaymentProofRecord() when $default != null:
-return $default(_that.id,_that.bookingId,_that.storagePath,_that.paymentRail,_that.submittedReference,_that.submittedAmountDzd,_that.verifiedAmountDzd,_that.verifiedReference,_that.status,_that.rejectionReason,_that.reviewedBy,_that.submittedAt,_that.reviewedAt,_that.decisionNote,_that.version);case _:
+return $default(_that.id,_that.bookingId,_that.storagePath,_that.contentType,_that.byteSize,_that.paymentRail,_that.submittedReference,_that.submittedAmountDzd,_that.verifiedAmountDzd,_that.verifiedReference,_that.status,_that.rejectionReason,_that.reviewedBy,_that.submittedAt,_that.reviewedAt,_that.decisionNote,_that.version);case _:
   return orElse();
 
 }
@@ -795,10 +797,10 @@ return $default(_that.id,_that.bookingId,_that.storagePath,_that.paymentRail,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String bookingId,  String storagePath,  String paymentRail,  String? submittedReference,  double submittedAmountDzd,  double? verifiedAmountDzd,  String? verifiedReference,  String status,  String? rejectionReason,  String? reviewedBy,  DateTime submittedAt,  DateTime? reviewedAt,  String? decisionNote,  int version)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String bookingId,  String storagePath,  String? contentType,  int? byteSize,  String paymentRail,  String? submittedReference,  double submittedAmountDzd,  double? verifiedAmountDzd,  String? verifiedReference,  String status,  String? rejectionReason,  String? reviewedBy,  DateTime submittedAt,  DateTime? reviewedAt,  String? decisionNote,  int version)  $default,) {final _that = this;
 switch (_that) {
 case _PaymentProofRecord():
-return $default(_that.id,_that.bookingId,_that.storagePath,_that.paymentRail,_that.submittedReference,_that.submittedAmountDzd,_that.verifiedAmountDzd,_that.verifiedReference,_that.status,_that.rejectionReason,_that.reviewedBy,_that.submittedAt,_that.reviewedAt,_that.decisionNote,_that.version);case _:
+return $default(_that.id,_that.bookingId,_that.storagePath,_that.contentType,_that.byteSize,_that.paymentRail,_that.submittedReference,_that.submittedAmountDzd,_that.verifiedAmountDzd,_that.verifiedReference,_that.status,_that.rejectionReason,_that.reviewedBy,_that.submittedAt,_that.reviewedAt,_that.decisionNote,_that.version);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -815,10 +817,10 @@ return $default(_that.id,_that.bookingId,_that.storagePath,_that.paymentRail,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String bookingId,  String storagePath,  String paymentRail,  String? submittedReference,  double submittedAmountDzd,  double? verifiedAmountDzd,  String? verifiedReference,  String status,  String? rejectionReason,  String? reviewedBy,  DateTime submittedAt,  DateTime? reviewedAt,  String? decisionNote,  int version)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String bookingId,  String storagePath,  String? contentType,  int? byteSize,  String paymentRail,  String? submittedReference,  double submittedAmountDzd,  double? verifiedAmountDzd,  String? verifiedReference,  String status,  String? rejectionReason,  String? reviewedBy,  DateTime submittedAt,  DateTime? reviewedAt,  String? decisionNote,  int version)?  $default,) {final _that = this;
 switch (_that) {
 case _PaymentProofRecord() when $default != null:
-return $default(_that.id,_that.bookingId,_that.storagePath,_that.paymentRail,_that.submittedReference,_that.submittedAmountDzd,_that.verifiedAmountDzd,_that.verifiedReference,_that.status,_that.rejectionReason,_that.reviewedBy,_that.submittedAt,_that.reviewedAt,_that.decisionNote,_that.version);case _:
+return $default(_that.id,_that.bookingId,_that.storagePath,_that.contentType,_that.byteSize,_that.paymentRail,_that.submittedReference,_that.submittedAmountDzd,_that.verifiedAmountDzd,_that.verifiedReference,_that.status,_that.rejectionReason,_that.reviewedBy,_that.submittedAt,_that.reviewedAt,_that.decisionNote,_that.version);case _:
   return null;
 
 }
@@ -830,12 +832,14 @@ return $default(_that.id,_that.bookingId,_that.storagePath,_that.paymentRail,_th
 
 
 class _PaymentProofRecord extends PaymentProofRecord {
-  const _PaymentProofRecord({required this.id, required this.bookingId, required this.storagePath, required this.paymentRail, required this.submittedReference, required this.submittedAmountDzd, required this.verifiedAmountDzd, required this.verifiedReference, required this.status, required this.rejectionReason, required this.reviewedBy, required this.submittedAt, required this.reviewedAt, required this.decisionNote, required this.version}): super._();
+  const _PaymentProofRecord({required this.id, required this.bookingId, required this.storagePath, required this.contentType, required this.byteSize, required this.paymentRail, required this.submittedReference, required this.submittedAmountDzd, required this.verifiedAmountDzd, required this.verifiedReference, required this.status, required this.rejectionReason, required this.reviewedBy, required this.submittedAt, required this.reviewedAt, required this.decisionNote, required this.version}): super._();
   
 
 @override final  String id;
 @override final  String bookingId;
 @override final  String storagePath;
+@override final  String? contentType;
+@override final  int? byteSize;
 @override final  String paymentRail;
 @override final  String? submittedReference;
 @override final  double submittedAmountDzd;
@@ -859,16 +863,16 @@ _$PaymentProofRecordCopyWith<_PaymentProofRecord> get copyWith => __$PaymentProo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentProofRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.storagePath, storagePath) || other.storagePath == storagePath)&&(identical(other.paymentRail, paymentRail) || other.paymentRail == paymentRail)&&(identical(other.submittedReference, submittedReference) || other.submittedReference == submittedReference)&&(identical(other.submittedAmountDzd, submittedAmountDzd) || other.submittedAmountDzd == submittedAmountDzd)&&(identical(other.verifiedAmountDzd, verifiedAmountDzd) || other.verifiedAmountDzd == verifiedAmountDzd)&&(identical(other.verifiedReference, verifiedReference) || other.verifiedReference == verifiedReference)&&(identical(other.status, status) || other.status == status)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&(identical(other.submittedAt, submittedAt) || other.submittedAt == submittedAt)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.version, version) || other.version == version));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentProofRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.storagePath, storagePath) || other.storagePath == storagePath)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&(identical(other.byteSize, byteSize) || other.byteSize == byteSize)&&(identical(other.paymentRail, paymentRail) || other.paymentRail == paymentRail)&&(identical(other.submittedReference, submittedReference) || other.submittedReference == submittedReference)&&(identical(other.submittedAmountDzd, submittedAmountDzd) || other.submittedAmountDzd == submittedAmountDzd)&&(identical(other.verifiedAmountDzd, verifiedAmountDzd) || other.verifiedAmountDzd == verifiedAmountDzd)&&(identical(other.verifiedReference, verifiedReference) || other.verifiedReference == verifiedReference)&&(identical(other.status, status) || other.status == status)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&(identical(other.submittedAt, submittedAt) || other.submittedAt == submittedAt)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.version, version) || other.version == version));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,bookingId,storagePath,paymentRail,submittedReference,submittedAmountDzd,verifiedAmountDzd,verifiedReference,status,rejectionReason,reviewedBy,submittedAt,reviewedAt,decisionNote,version);
+int get hashCode => Object.hash(runtimeType,id,bookingId,storagePath,contentType,byteSize,paymentRail,submittedReference,submittedAmountDzd,verifiedAmountDzd,verifiedReference,status,rejectionReason,reviewedBy,submittedAt,reviewedAt,decisionNote,version);
 
 @override
 String toString() {
-  return 'PaymentProofRecord(id: $id, bookingId: $bookingId, storagePath: $storagePath, paymentRail: $paymentRail, submittedReference: $submittedReference, submittedAmountDzd: $submittedAmountDzd, verifiedAmountDzd: $verifiedAmountDzd, verifiedReference: $verifiedReference, status: $status, rejectionReason: $rejectionReason, reviewedBy: $reviewedBy, submittedAt: $submittedAt, reviewedAt: $reviewedAt, decisionNote: $decisionNote, version: $version)';
+  return 'PaymentProofRecord(id: $id, bookingId: $bookingId, storagePath: $storagePath, contentType: $contentType, byteSize: $byteSize, paymentRail: $paymentRail, submittedReference: $submittedReference, submittedAmountDzd: $submittedAmountDzd, verifiedAmountDzd: $verifiedAmountDzd, verifiedReference: $verifiedReference, status: $status, rejectionReason: $rejectionReason, reviewedBy: $reviewedBy, submittedAt: $submittedAt, reviewedAt: $reviewedAt, decisionNote: $decisionNote, version: $version)';
 }
 
 
@@ -879,7 +883,7 @@ abstract mixin class _$PaymentProofRecordCopyWith<$Res> implements $PaymentProof
   factory _$PaymentProofRecordCopyWith(_PaymentProofRecord value, $Res Function(_PaymentProofRecord) _then) = __$PaymentProofRecordCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String bookingId, String storagePath, String paymentRail, String? submittedReference, double submittedAmountDzd, double? verifiedAmountDzd, String? verifiedReference, String status, String? rejectionReason, String? reviewedBy, DateTime submittedAt, DateTime? reviewedAt, String? decisionNote, int version
+ String id, String bookingId, String storagePath, String? contentType, int? byteSize, String paymentRail, String? submittedReference, double submittedAmountDzd, double? verifiedAmountDzd, String? verifiedReference, String status, String? rejectionReason, String? reviewedBy, DateTime submittedAt, DateTime? reviewedAt, String? decisionNote, int version
 });
 
 
@@ -896,12 +900,14 @@ class __$PaymentProofRecordCopyWithImpl<$Res>
 
 /// Create a copy of PaymentProofRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? bookingId = null,Object? storagePath = null,Object? paymentRail = null,Object? submittedReference = freezed,Object? submittedAmountDzd = null,Object? verifiedAmountDzd = freezed,Object? verifiedReference = freezed,Object? status = null,Object? rejectionReason = freezed,Object? reviewedBy = freezed,Object? submittedAt = null,Object? reviewedAt = freezed,Object? decisionNote = freezed,Object? version = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? bookingId = null,Object? storagePath = null,Object? contentType = freezed,Object? byteSize = freezed,Object? paymentRail = null,Object? submittedReference = freezed,Object? submittedAmountDzd = null,Object? verifiedAmountDzd = freezed,Object? verifiedReference = freezed,Object? status = null,Object? rejectionReason = freezed,Object? reviewedBy = freezed,Object? submittedAt = null,Object? reviewedAt = freezed,Object? decisionNote = freezed,Object? version = null,}) {
   return _then(_PaymentProofRecord(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as String,storagePath: null == storagePath ? _self.storagePath : storagePath // ignore: cast_nullable_to_non_nullable
-as String,paymentRail: null == paymentRail ? _self.paymentRail : paymentRail // ignore: cast_nullable_to_non_nullable
+as String,contentType: freezed == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
+as String?,byteSize: freezed == byteSize ? _self.byteSize : byteSize // ignore: cast_nullable_to_non_nullable
+as int?,paymentRail: null == paymentRail ? _self.paymentRail : paymentRail // ignore: cast_nullable_to_non_nullable
 as String,submittedReference: freezed == submittedReference ? _self.submittedReference : submittedReference // ignore: cast_nullable_to_non_nullable
 as String?,submittedAmountDzd: null == submittedAmountDzd ? _self.submittedAmountDzd : submittedAmountDzd // ignore: cast_nullable_to_non_nullable
 as double,verifiedAmountDzd: freezed == verifiedAmountDzd ? _self.verifiedAmountDzd : verifiedAmountDzd // ignore: cast_nullable_to_non_nullable

@@ -312,17 +312,6 @@ class PayoutAccountsScreen extends ConsumerWidget {
 
     return AppPageScaffold(
       title: s.payoutAccountsTitle,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => unawaited(
-          showModalBottomSheet<void>(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) => const _PayoutAccountEditorSheet(),
-          ),
-        ),
-        icon: const Icon(Icons.add_rounded),
-        label: Text(s.payoutAccountAddAction),
-      ),
       child: AppAsyncStateView<List<CarrierPayoutAccount>>(
         value: payoutAccountsAsync,
         onRetry: () => ref.invalidate(myPayoutAccountsProvider),
@@ -344,35 +333,62 @@ class PayoutAccountsScreen extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
-            key: const PageStorageKey<String>('payout-accounts-list'),
-            itemCount: accounts.length,
-            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-            itemBuilder: (context, index) {
-              final account = accounts[index];
-              return AppListCard(
-                title: _payoutAccountTypeLabel(s, account.accountType),
-                subtitle: _payoutAccountSubtitle(account),
-                leading: AppStatusChip(
-                  label: account.isActive
-                      ? s.publicationActiveLabel
-                      : s.publicationInactiveLabel,
-                  tone: account.isActive
-                      ? AppStatusTone.success
-                      : AppStatusTone.warning,
-                ),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => unawaited(
-                  showModalBottomSheet<void>(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => _PayoutAccountEditorSheet(
-                      account: account,
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(myPayoutAccountsProvider);
+            },
+            child: ListView(
+              key: const PageStorageKey<String>('payout-accounts-list'),
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: FilledButton.icon(
+                    onPressed: () => unawaited(
+                      showModalBottomSheet<void>(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => const _PayoutAccountEditorSheet(),
+                      ),
                     ),
+                    icon: const Icon(Icons.add_rounded),
+                    label: Text(s.payoutAccountAddAction),
                   ),
                 ),
-              );
-            },
+                const SizedBox(height: AppSpacing.lg),
+                ...accounts.indexed.map((entry) {
+                  final index = entry.$1;
+                  final account = entry.$2;
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: index == accounts.length - 1 ? 0 : AppSpacing.sm,
+                    ),
+                    child: AppListCard(
+                      title: _payoutAccountTypeLabel(s, account.accountType),
+                      subtitle: _payoutAccountSubtitle(account),
+                      leading: AppStatusChip(
+                        label: account.isActive
+                            ? s.publicationActiveLabel
+                            : s.publicationInactiveLabel,
+                        tone: account.isActive
+                            ? AppStatusTone.success
+                            : AppStatusTone.warning,
+                      ),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => unawaited(
+                        showModalBottomSheet<void>(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => _PayoutAccountEditorSheet(
+                            account: account,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
           );
         },
       ),
@@ -457,7 +473,12 @@ class _PayoutAccountEditorSheetState
                     .toList(growable: false),
                 onChanged: (value) {
                   if (value != null) {
-                    setState(() => _selectedType = value);
+                    setState(() {
+                      _selectedType = value;
+                      if (_selectedType == PayoutAccountType.ccp) {
+                        _bankNameController.clear();
+                      }
+                    });
                   }
                 },
               ),
@@ -474,11 +495,14 @@ class _PayoutAccountEditorSheetState
                 validator: _required,
               ),
               const SizedBox(height: AppSpacing.md),
-              AuthTextField(
-                controller: _bankNameController,
-                label: s.payoutAccountInstitutionLabel,
-              ),
-              const SizedBox(height: AppSpacing.md),
+              if (_selectedType == PayoutAccountType.bank) ...[
+                AuthTextField(
+                  controller: _bankNameController,
+                  label: s.payoutAccountInstitutionLabel,
+                  validator: _required,
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
               SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 title: Text(s.routeStatusLabel),
@@ -515,12 +539,15 @@ class _PayoutAccountEditorSheetState
     setState(() => _isSaving = true);
     try {
       final repository = ref.read(payoutAccountRepositoryProvider);
+      final bankOrCcpName = _selectedType == PayoutAccountType.bank
+          ? _bankNameController.text
+          : null;
       if (widget.account == null) {
         await repository.createPayoutAccount(
           accountType: _selectedType,
           accountHolderName: _holderController.text,
           accountIdentifier: _identifierController.text,
-          bankOrCcpName: _bankNameController.text,
+          bankOrCcpName: bankOrCcpName,
           isActive: _isActive,
         );
       } else {
@@ -529,7 +556,7 @@ class _PayoutAccountEditorSheetState
           accountType: _selectedType,
           accountHolderName: _holderController.text,
           accountIdentifier: _identifierController.text,
-          bankOrCcpName: _bankNameController.text,
+          bankOrCcpName: bankOrCcpName,
           isActive: _isActive,
         );
       }
@@ -544,6 +571,10 @@ class _PayoutAccountEditorSheetState
     } on PostgrestException catch (error) {
       if (mounted) {
         AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
+    } on FormatException catch (error) {
+      if (mounted) {
+        AppFeedback.showSnackBar(context, error.message);
       }
     } finally {
       if (mounted) {
@@ -663,7 +694,6 @@ class _ThemeSelectionSheet extends ConsumerWidget {
 String _payoutAccountTypeLabel(S s, PayoutAccountType type) {
   return switch (type) {
     PayoutAccountType.ccp => s.payoutAccountTypeCcpLabel,
-    PayoutAccountType.dahabia => s.payoutAccountTypeDahabiaLabel,
     PayoutAccountType.bank => s.payoutAccountTypeBankLabel,
   };
 }

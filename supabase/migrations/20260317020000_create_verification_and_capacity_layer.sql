@@ -169,13 +169,6 @@ as $$
           and ed.entity_id = cv.id
           and ed.document_type = 'truck_technical_inspection'
       )
-      or not exists (
-        select 1
-        from effective_docs as ed
-        where ed.entity_type = 'vehicle'
-          and ed.entity_id = cv.id
-          and ed.document_type = 'transport_license'
-      )
     );
 $$;
 
@@ -312,6 +305,23 @@ begin
     v_document.entity_id
   );
 
+  if p_status = 'rejected' then
+    insert into public.notifications (profile_id, type, title, body, data)
+    values (
+      v_document.owner_profile_id,
+      'verification_document_rejected',
+      'verification_document_rejected_title',
+      'verification_document_rejected_body',
+      jsonb_build_object(
+        'document_id', v_document.id,
+        'document_type', v_document.document_type,
+        'entity_type', v_document.entity_type,
+        'entity_id', v_document.entity_id,
+        'reason', v_reason
+      )
+    );
+  end if;
+
   perform public.write_admin_audit_log(
     case
       when p_status = 'verified' then 'verification_document_approved'
@@ -421,6 +431,15 @@ begin
     jsonb_build_object('carrier_id', p_carrier_id)
   );
 
+  insert into public.notifications (profile_id, type, title, body, data)
+  values (
+    p_carrier_id,
+    'verification_packet_approved',
+    'verification_packet_approved_title',
+    'verification_packet_approved_body',
+    jsonb_build_object('carrier_id', p_carrier_id)
+  );
+
   perform set_config('app.trusted_operation', 'false', true);
 
   action := 'verification_packet_approved';
@@ -446,6 +465,7 @@ create or replace function public.weekdays_are_valid(days integer[])
 returns boolean
 language sql
 immutable
+set search_path = public
 as $$
   select
     days is not null
@@ -756,6 +776,7 @@ create or replace function public.is_trusted_operation()
 returns boolean
 language sql
 stable
+set search_path = public
 as $$
   select current_setting('app.trusted_operation', true) = 'true';
 $$;
@@ -763,6 +784,7 @@ $$;
 create or replace function public.protect_route_revision_history()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   if public.is_trusted_operation() then
@@ -782,6 +804,7 @@ execute function public.protect_route_revision_history();
 create or replace function public.enforce_route_revision_writes()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   if public.is_trusted_operation() then
@@ -817,6 +840,7 @@ execute function public.enforce_route_revision_writes();
 create or replace function public.enforce_route_revision_history()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   if public.is_trusted_operation() then
@@ -836,6 +860,7 @@ execute function public.enforce_route_revision_history();
 create or replace function public.prevent_capacity_publication_delete_when_booked()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   if tg_table_name = 'routes' then
@@ -871,6 +896,7 @@ execute function public.prevent_capacity_publication_delete_when_booked();
 create or replace function public.enforce_oneoff_trip_writes()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   if public.is_trusted_operation() then
@@ -1447,13 +1473,6 @@ begin
           and ed.entity_id = cv.id
           and ed.document_type = 'truck_technical_inspection'
       )
-      or not exists (
-        select 1
-        from effective_docs as ed
-        where ed.entity_type = 'vehicle'
-          and ed.entity_id = cv.id
-          and ed.document_type = 'transport_license'
-      )
     )
   into v_complete;
 
@@ -1525,9 +1544,6 @@ begin
       )
       and exists (
         select 1 from effective_docs where document_type = 'truck_technical_inspection'
-      )
-      and exists (
-        select 1 from effective_docs where document_type = 'transport_license'
       )
     into v_vehicle_docs_complete;
 
