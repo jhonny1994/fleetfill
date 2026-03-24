@@ -4724,11 +4724,13 @@ declare
   v_fallback_locale text;
   v_enabled_locale_codes text[];
 begin
-  if not public.is_admin() and not public.is_service_role() then
-    raise exception 'Platform setting updates require privileged execution';
+  if not public.is_super_admin() and not public.is_service_role() then
+    raise exception 'Platform setting updates require super admin access';
   end if;
 
-  perform public.require_recent_admin_step_up();
+  if public.is_super_admin() then
+    perform public.require_recent_admin_step_up();
+  end if;
 
   if v_key is null then
     raise exception 'Platform setting key is required';

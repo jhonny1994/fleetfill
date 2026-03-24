@@ -1,13 +1,18 @@
 "use client";
 
 import { Search } from "lucide-react";
+import Link from "next/link";
+
+import type { AppLocale } from "@/lib/i18n/config";
 
 export function CommandSearch({
   defaultValue,
   inputName,
+  locale,
 }: {
   defaultValue?: string;
   inputName?: string;
+  locale?: AppLocale | string;
 }) {
   if (inputName) {
     return (
@@ -25,8 +30,8 @@ export function CommandSearch({
   }
 
   return (
-    <button
-      type="button"
+    <Link
+      href={`/${locale ?? "ar"}/search`}
       className="flex w-full items-center gap-3 rounded-full border border-[var(--color-border)] bg-white/70 px-4 py-3 text-left text-sm text-[var(--color-ink-muted)]"
     >
       <Search className="size-4" />
@@ -34,6 +39,6 @@ export function CommandSearch({
       <span className="ml-auto rounded-full bg-[var(--color-surface-muted)] px-2 py-1 text-[0.72rem] text-[var(--color-ink-base)]">
         /
       </span>
-    </button>
+    </Link>
   );
 }
