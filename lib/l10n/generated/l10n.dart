@@ -482,6 +482,36 @@ class S {
     );
   }
 
+  /// `فعّل بريدك الإلكتروني`
+  String get authConfirmEmailTitle {
+    return Intl.message(
+      'فعّل بريدك الإلكتروني',
+      name: 'authConfirmEmailTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `افتح رابط التفعيل من صندوق بريدك حتى يكتمل إنشاء الحساب وتتابع داخل FleetFill.`
+  String get authConfirmEmailDescription {
+    return Intl.message(
+      'افتح رابط التفعيل من صندوق بريدك حتى يكتمل إنشاء الحساب وتتابع داخل FleetFill.',
+      name: 'authConfirmEmailDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `افتح هذه الصفحة مباشرة بعد إنشاء الحساب أو محاولة تسجيل الدخول حتى يعرف FleetFill أي بريد يجب إعادة إرسال رسالة التفعيل إليه.`
+  String get authConfirmEmailMissingAddressMessage {
+    return Intl.message(
+      'افتح هذه الصفحة مباشرة بعد إنشاء الحساب أو محاولة تسجيل الدخول حتى يعرف FleetFill أي بريد يجب إعادة إرسال رسالة التفعيل إليه.',
+      name: 'authConfirmEmailMissingAddressMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `فعّل بريدك الإلكتروني أولا ثم سجّل دخولك.`
   String get authEmailNotConfirmedMessage {
     return Intl.message(
@@ -527,6 +557,16 @@ class S {
     return Intl.message(
       'تم إلغاء تسجيل الدخول.',
       name: 'authCancelledMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `العودة إلى تسجيل الدخول`
+  String get authBackToSignInAction {
+    return Intl.message(
+      'العودة إلى تسجيل الدخول',
+      name: 'authBackToSignInAction',
       desc: '',
       args: [],
     );
@@ -692,6 +732,26 @@ class S {
     );
   }
 
+  /// `افتح بريدك الإلكتروني`
+  String get authPasswordResetSentTitle {
+    return Intl.message(
+      'افتح بريدك الإلكتروني',
+      name: 'authPasswordResetSentTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `استخدم رابط الاسترداد الذي وصلك عبر البريد لاختيار كلمة مرور جديدة.`
+  String get authPasswordResetSentDescription {
+    return Intl.message(
+      'استخدم رابط الاسترداد الذي وصلك عبر البريد لاختيار كلمة مرور جديدة.',
+      name: 'authPasswordResetSentDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `هذا الحقل مطلوب.`
   String get authRequiredFieldMessage {
     return Intl.message(
@@ -717,6 +777,46 @@ class S {
     return Intl.message(
       'تعذّر إرسال رسالة التأكيد حاليا. تأكد من إعدادات البريد وحاول مرة أخرى.',
       name: 'authEmailDeliveryIssueMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فتح صفحة تسجيل الدخول`
+  String get authOpenSignInAction {
+    return Intl.message(
+      'فتح صفحة تسجيل الدخول',
+      name: 'authOpenSignInAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اطلب رابطا جديدا`
+  String get authRequestAnotherLinkAction {
+    return Intl.message(
+      'اطلب رابطا جديدا',
+      name: 'authRequestAnotherLinkAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعادة إرسال رسالة التفعيل`
+  String get authResendConfirmationAction {
+    return Intl.message(
+      'إعادة إرسال رسالة التفعيل',
+      name: 'authResendConfirmationAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعادة إرسال رسالة إعادة التعيين`
+  String get authResendResetEmailAction {
+    return Intl.message(
+      'إعادة إرسال رسالة إعادة التعيين',
+      name: 'authResendResetEmailAction',
       desc: '',
       args: [],
     );
@@ -887,6 +987,16 @@ class S {
     return Intl.message(
       'تغيير كلمة المرور',
       name: 'authUpdatePasswordAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `استخدم بريدا إلكترونيا مختلفا`
+  String get authUseDifferentEmailAction {
+    return Intl.message(
+      'استخدم بريدا إلكترونيا مختلفا',
+      name: 'authUseDifferentEmailAction',
       desc: '',
       args: [],
     );
@@ -1157,10 +1267,10 @@ class S {
     );
   }
 
-  /// `تسليم البريد الإلكتروني`
+  /// `تسليم البريد التشغيلي`
   String get adminDashboardEmailHealthTitle {
     return Intl.message(
-      'تسليم البريد الإلكتروني',
+      'تسليم البريد التشغيلي',
       name: 'adminDashboardEmailHealthTitle',
       desc: '',
       args: [],
@@ -1227,10 +1337,10 @@ class S {
     );
   }
 
-  /// `البريد الإلكتروني`
+  /// `البريد التشغيلي`
   String get adminQueueEmailTabLabel {
     return Intl.message(
-      'البريد الإلكتروني',
+      'البريد التشغيلي',
       name: 'adminQueueEmailTabLabel',
       desc: '',
       args: [],
@@ -1267,10 +1377,10 @@ class S {
     );
   }
 
-  /// `تسليم البريد الإلكتروني`
+  /// `تسليم البريد التشغيلي`
   String get adminEmailQueueTitle {
     return Intl.message(
-      'تسليم البريد الإلكتروني',
+      'تسليم البريد التشغيلي',
       name: 'adminEmailQueueTitle',
       desc: '',
       args: [],
@@ -1497,10 +1607,10 @@ class S {
     );
   }
 
-  /// `الرسائل الفاشلة`
+  /// `الرسائل التشغيلية الفاشلة`
   String get adminEmailDeadLetterTitle {
     return Intl.message(
-      'الرسائل الفاشلة',
+      'الرسائل التشغيلية الفاشلة',
       name: 'adminEmailDeadLetterTitle',
       desc: '',
       args: [],
@@ -1707,10 +1817,10 @@ class S {
     );
   }
 
-  /// `الرسائل الأخيرة`
+  /// `آخر الرسائل التشغيلية`
   String get adminUserEmailSectionTitle {
     return Intl.message(
-      'الرسائل الأخيرة',
+      'آخر الرسائل التشغيلية',
       name: 'adminUserEmailSectionTitle',
       desc: '',
       args: [],
@@ -2437,9 +2547,9 @@ class S {
     );
   }
 
-  /// `حصل خطأ`
+  /// `حدث خطأ`
   String get errorTitle {
-    return Intl.message('حصل خطأ', name: 'errorTitle', desc: '', args: []);
+    return Intl.message('حدث خطأ', name: 'errorTitle', desc: '', args: []);
   }
 
   /// `اعرض فاتورتك أو إيصالك أو نزله.`
@@ -6930,10 +7040,10 @@ class S {
     );
   }
 
-  /// `لم تقم بفتح أي طلب دعم بعد.`
+  /// `لم تفتح أي طلب دعم بعد.`
   String get supportInboxEmptyMessage {
     return Intl.message(
-      'لم تقم بفتح أي طلب دعم بعد.',
+      'لم تفتح أي طلب دعم بعد.',
       name: 'supportInboxEmptyMessage',
       desc: '',
       args: [],
@@ -7275,10 +7385,10 @@ class S {
     );
   }
 
-  /// `قام مستخدم بفتح طلب دعم جديد يحتاج إلى مراجعة.`
+  /// `فتح مستخدم طلب دعم جديد يحتاج إلى مراجعة.`
   String get notificationSupportRequestCreatedBody {
     return Intl.message(
-      'قام مستخدم بفتح طلب دعم جديد يحتاج إلى مراجعة.',
+      'فتح مستخدم طلب دعم جديد يحتاج إلى مراجعة.',
       name: 'notificationSupportRequestCreatedBody',
       desc: '',
       args: [],
@@ -7295,10 +7405,10 @@ class S {
     );
   }
 
-  /// `قام فريق دعم FleetFill بالرد على طلبك.`
+  /// `ردّ فريق دعم FleetFill على طلبك.`
   String get notificationSupportReplyReceivedBody {
     return Intl.message(
-      'قام فريق دعم FleetFill بالرد على طلبك.',
+      'ردّ فريق دعم FleetFill على طلبك.',
       name: 'notificationSupportReplyReceivedBody',
       desc: '',
       args: [],
@@ -7315,10 +7425,10 @@ class S {
     );
   }
 
-  /// `قام مستخدم بالرد على طلب دعم قائم.`
+  /// `ردّ مستخدم على طلب دعم قائم.`
   String get notificationSupportUserRepliedBody {
     return Intl.message(
-      'قام مستخدم بالرد على طلب دعم قائم.',
+      'ردّ مستخدم على طلب دعم قائم.',
       name: 'notificationSupportUserRepliedBody',
       desc: '',
       args: [],
