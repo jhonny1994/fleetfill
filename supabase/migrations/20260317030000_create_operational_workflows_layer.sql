@@ -3141,8 +3141,8 @@ begin
       'requester_role', v_result.requester_role
     )
   from public.profiles as p
-  where p.role = 'admin'::public.app_role
-    and p.is_active = true
+  inner join public.admin_accounts as aa on aa.profile_id = p.id
+  where aa.is_active = true
     and p.id <> v_actor_id;
 
   return v_result;
@@ -3276,8 +3276,8 @@ begin
         'route', '/admin/queues/support/' || v_request.id::text
       )
     from public.profiles as p
-    where p.role = 'admin'::public.app_role
-      and p.is_active = true
+    inner join public.admin_accounts as aa on aa.profile_id = p.id
+    where aa.is_active = true
       and p.id <> v_actor_id;
   end if;
 
@@ -3417,10 +3417,9 @@ begin
 
   if p_assigned_admin_id is not null and not exists (
     select 1
-    from public.profiles as p
-    where p.id = p_assigned_admin_id
-      and p.role = 'admin'::public.app_role
-      and p.is_active = true
+    from public.admin_accounts as aa
+    where aa.profile_id = p_assigned_admin_id
+      and aa.is_active = true
   ) then
     raise exception 'Assigned admin profile is invalid';
   end if;
@@ -4725,11 +4724,13 @@ declare
   v_fallback_locale text;
   v_enabled_locale_codes text[];
 begin
-  if not public.is_admin() and not public.is_service_role() then
-    raise exception 'Platform setting updates require privileged execution';
+  if not public.is_super_admin() and not public.is_service_role() then
+    raise exception 'Platform setting updates require super admin access';
   end if;
 
-  perform public.require_recent_admin_step_up();
+  if public.is_super_admin() then
+    perform public.require_recent_admin_step_up();
+  end if;
 
   if v_key is null then
     raise exception 'Platform setting key is required';
