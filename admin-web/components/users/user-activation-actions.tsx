@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import type { AppLocale } from "@/lib/i18n/config";
+import { getAdminUi } from "@/lib/i18n/admin-ui";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const schema = z.object({
@@ -14,12 +16,15 @@ const schema = z.object({
 });
 
 export function UserActivationActions({
+  locale,
   profileId,
   isActive,
 }: {
+  locale: AppLocale | string;
   profileId: string;
   isActive: boolean;
 }) {
+  const ui = getAdminUi(locale);
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingValues, setPendingValues] = useState<z.infer<typeof schema> | null>(null);
@@ -53,22 +58,20 @@ export function UserActivationActions({
   return (
     <div className="space-y-4">
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{isActive ? "Suspend user" : "Reactivate user"}</h3>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">{isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}</h3>
         <p className="text-sm leading-6 text-[var(--color-ink-muted)]">
-          {isActive
-            ? "Use this when the account should be blocked from platform activity until an operator resolves the issue."
-            : "Use this to restore account access after a suspension or moderation hold."}
+          {isActive ? ui.actions.suspendBody : ui.actions.reactivateBody}
         </p>
         <form className="space-y-3" onSubmit={form.handleSubmit((values) => setPendingValues(values))}>
           <label className="grid gap-1 text-sm">
-            <span>Reason</span>
+            <span>{ui.labels.reason}</span>
             <textarea
               className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
               {...form.register("reason")}
             />
           </label>
           <button className={isActive ? "button-secondary" : "button-primary"} type="submit">
-            {isActive ? "Suspend user" : "Reactivate user"}
+            {isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}
           </button>
         </form>
       </section>
@@ -76,14 +79,11 @@ export function UserActivationActions({
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
+        locale={locale}
         open={pendingValues !== null}
-        title={isActive ? "Suspend this user?" : "Reactivate this user?"}
-        body={
-          isActive
-            ? "This will block the account from normal app access until an admin reactivates it."
-            : "This will restore the account and allow the user back into the platform."
-        }
-        confirmLabel={isActive ? "Suspend" : "Reactivate"}
+        title={isActive ? ui.actions.suspendTitle : ui.actions.reactivateTitle}
+        body={isActive ? ui.actions.suspendConfirmBody : ui.actions.reactivateConfirmBody}
+        confirmLabel={isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}
         isPending={isPending}
         onCancel={() => setPendingValues(null)}
         onConfirm={confirm}

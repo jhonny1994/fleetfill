@@ -7,6 +7,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { UserActivationActions } from "@/components/users/user-activation-actions";
 import { buildAdminRoute } from "@/lib/admin-routes";
 import { formatDateTime } from "@/lib/formatting/formatters";
+import { getAdminDetailCopy, getAdminUi, getDocumentLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { fetchUserDetail } from "@/lib/queries/admin-users";
 
 export default async function UserDetailPage({
@@ -16,39 +17,41 @@ export default async function UserDetailPage({
 }) {
   const { lang, userId } = await params;
   const detail = await fetchUserDetail(userId);
+  const ui = getAdminUi(lang);
+  const detailCopy = getAdminDetailCopy(lang);
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">User detail not found.</div>;
+    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.users.notFound}</div>;
   }
 
   const displayName = detail.profile.companyName?.trim() || detail.profile.fullName?.trim() || detail.profile.email;
 
   return (
     <DetailWorkspace
-      eyebrow="Users"
+      eyebrow={ui.pages.users.eyebrow}
       title={displayName}
-      description="Operational user context, verification artifacts, recent bookings, and controlled account lifecycle actions."
+      description={detailCopy.users.description}
       facts={[
-        { label: "Role", value: detail.profile.role },
-        { label: "Account state", value: detail.profile.isActive ? "Active" : "Suspended" },
-        { label: "Verification", value: detail.profile.verificationStatus },
-        { label: "Preferred locale", value: detail.profile.preferredLocale.toUpperCase() },
+        { label: ui.labels.role, value: getEnumLabel(lang, "userRoles", detail.profile.role) },
+        { label: ui.labels.accountState, value: getEnumLabel(lang, "activity", detail.profile.isActive ? "active" : "suspended") },
+        { label: ui.labels.verification, value: getEnumLabel(lang, "verification", detail.profile.verificationStatus) },
+        { label: ui.labels.preferredLocale, value: getEnumLabel(lang, "locale", detail.profile.preferredLocale) },
       ]}
       main={
         <>
           <section className="panel space-y-4 p-6">
             <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Profile and verification</h2>
+              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.profileAndVerification}</h2>
               <p className="text-sm text-[var(--color-ink-muted)]">
                 {detail.profile.email}
                 {detail.profile.phoneNumber ? ` • ${detail.profile.phoneNumber}` : ""}
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge label={detail.profile.role} tone="neutral" />
-              <StatusBadge label={detail.profile.isActive ? "Active" : "Suspended"} tone={detail.profile.isActive ? "success" : "danger"} />
+              <StatusBadge label={getEnumLabel(lang, "userRoles", detail.profile.role)} tone="neutral" />
+              <StatusBadge label={getEnumLabel(lang, "activity", detail.profile.isActive ? "active" : "suspended")} tone={detail.profile.isActive ? "success" : "danger"} />
               <StatusBadge
-                label={detail.profile.verificationStatus}
+                label={getEnumLabel(lang, "verification", detail.profile.verificationStatus)}
                 tone={
                   detail.profile.verificationStatus === "verified"
                     ? "success"
@@ -67,17 +70,17 @@ export default async function UserDetailPage({
 
           <section className="grid gap-4 xl:grid-cols-2">
             <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Vehicles</h2>
+              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.vehicles}</h2>
               <div className="space-y-3">
                 {detail.vehicles.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">No vehicles linked to this user.</p>
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noVehicles}</p>
                 ) : (
                   detail.vehicles.map((vehicle) => (
                     <div key={vehicle.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
                       <p className="font-medium text-[var(--color-ink-strong)]">{vehicle.label}</p>
                       <div className="mt-2">
                         <StatusBadge
-                          label={vehicle.verificationStatus}
+                          label={getEnumLabel(lang, "verification", vehicle.verificationStatus)}
                           tone={
                             vehicle.verificationStatus === "verified"
                               ? "success"
@@ -94,20 +97,20 @@ export default async function UserDetailPage({
             </section>
 
             <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Payout accounts</h2>
+              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.payoutAccounts}</h2>
               <div className="space-y-3">
                 {detail.payoutAccounts.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">No payout accounts on file.</p>
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noPayoutAccounts}</p>
                 ) : (
                   detail.payoutAccounts.map((account) => (
                     <div key={account.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
                       <p className="font-medium text-[var(--color-ink-strong)]">
                         {account.accountType.toUpperCase()} • {account.identifier}
                       </p>
-                      <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{account.institutionName ?? "No institution name"}</p>
+                      <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{account.institutionName ?? ui.labels.noInstitution}</p>
                       <div className="mt-2 flex gap-2">
-                        <StatusBadge label={account.isActive ? "Active" : "Inactive"} tone={account.isActive ? "success" : "danger"} />
-                        <StatusBadge label={account.isVerified ? "Verified" : "Unverified"} tone={account.isVerified ? "success" : "warning"} />
+                        <StatusBadge label={getEnumLabel(lang, "activity", account.isActive ? "active" : "inactive")} tone={account.isActive ? "success" : "danger"} />
+                        <StatusBadge label={account.isVerified ? getEnumLabel(lang, "verification", "verified") : getEnumLabel(lang, "verification", "pending")} tone={account.isVerified ? "success" : "warning"} />
                       </div>
                     </div>
                   ))
@@ -118,10 +121,10 @@ export default async function UserDetailPage({
 
           <section className="grid gap-4 xl:grid-cols-2">
             <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Recent shipments</h2>
+              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentShipments}</h2>
               <div className="space-y-3">
                 {detail.shipments.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">No shipments created by this user.</p>
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noShipments}</p>
                 ) : (
                   detail.shipments.map((shipment) => (
                     <div key={shipment.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
@@ -142,10 +145,10 @@ export default async function UserDetailPage({
             </section>
 
             <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Recent bookings</h2>
+              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentBookings}</h2>
               <div className="space-y-3">
                 {detail.bookings.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">No bookings linked to this user.</p>
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noBookings}</p>
                 ) : (
                   detail.bookings.map((booking) => (
                     <div key={booking.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
@@ -153,8 +156,8 @@ export default async function UserDetailPage({
                         {booking.trackingNumber}
                       </Link>
                       <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <StatusBadge label={booking.bookingStatus} tone="neutral" />
-                        <StatusBadge label={booking.paymentStatus} tone={booking.paymentStatus === "secured" ? "success" : "warning"} />
+                        <StatusBadge label={getEnumLabel(lang, "booking", booking.bookingStatus)} tone="neutral" />
+                        <StatusBadge label={getEnumLabel(lang, "payment", booking.paymentStatus)} tone={booking.paymentStatus === "secured" ? "success" : "warning"} />
                       </div>
                     </div>
                   ))
@@ -165,10 +168,10 @@ export default async function UserDetailPage({
 
           <section className="grid gap-4 xl:grid-cols-2">
             <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Support threads</h2>
+              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.supportThreads}</h2>
               <div className="space-y-3">
                 {detail.supportRequests.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">No support threads for this user.</p>
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noSupportThreads}</p>
                 ) : (
                   detail.supportRequests.map((request) => (
                     <div key={request.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
@@ -183,18 +186,18 @@ export default async function UserDetailPage({
             </section>
 
             <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Verification documents</h2>
+              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.verificationDocuments}</h2>
               <div className="space-y-3">
                 {detail.documents.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">No verification documents for this user.</p>
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noVerificationDocuments}</p>
                 ) : (
                   detail.documents.map((document) => (
                     <div key={document.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
-                      <p className="font-medium text-[var(--color-ink-strong)]">{document.documentType}</p>
+                      <p className="font-medium text-[var(--color-ink-strong)]">{getDocumentLabel(lang, document.documentType)}</p>
                       <div className="mt-2 flex gap-2">
-                        <StatusBadge label={document.entityType} tone="neutral" />
+                        <StatusBadge label={getEnumLabel(lang, "entity", document.entityType)} tone="neutral" />
                         <StatusBadge
-                          label={document.status}
+                          label={getEnumLabel(lang, "verification", document.status)}
                           tone={
                             document.status === "verified" ? "success" : document.status === "rejected" ? "danger" : "warning"
                           }
@@ -208,6 +211,7 @@ export default async function UserDetailPage({
           </section>
 
           <TimelinePanel
+            locale={lang}
             items={detail.auditLogs.map((log) => ({
               id: log.id,
               title: log.action,
@@ -219,10 +223,11 @@ export default async function UserDetailPage({
       }
       rail={
         <ActionRail
-          title="Account controls"
-          description="Account lifecycle actions go through the same audited admin RPCs as the existing platform."
+          locale={lang}
+          title={detailCopy.users.controls}
+          description={detailCopy.users.description}
         >
-          <UserActivationActions profileId={detail.profile.id} isActive={detail.profile.isActive} />
+          <UserActivationActions locale={lang} profileId={detail.profile.id} isActive={detail.profile.isActive} />
         </ActionRail>
       }
     />

@@ -7,16 +7,21 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import type { AppLocale } from "@/lib/i18n/config";
+import { getAdminUi } from "@/lib/i18n/admin-ui";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { paymentApproveSchema, paymentRejectSchema } from "@/lib/validation/review-actions";
 
 export function PaymentReviewActions({
+  locale,
   proofId,
   defaultAmount,
 }: {
+  locale: AppLocale | string;
   proofId: string;
   defaultAmount: number;
 }) {
+  const ui = getAdminUi(locale);
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [error, setError] = useState<string | null>(null);
@@ -80,55 +85,57 @@ export function PaymentReviewActions({
   return (
     <div className="space-y-5">
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">Approve proof</h3>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.approveProof}</h3>
         <form className="space-y-3" onSubmit={approveForm.handleSubmit((values) => setPendingApprove(values))}>
           <label className="grid gap-1 text-sm">
-            <span>Verified amount (DZD)</span>
+            <span>{ui.actions.verifiedAmount}</span>
             <input type="number" step="1" className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...approveForm.register("verifiedAmountDzd")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Verified reference</span>
+            <span>{ui.actions.verifiedReference}</span>
             <input className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...approveForm.register("verifiedReference")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Decision note</span>
+            <span>{ui.actions.decisionNote}</span>
             <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...approveForm.register("decisionNote")} />
           </label>
-          <button className="button-primary" type="submit">Approve proof</button>
+          <button className="button-primary" type="submit">{ui.actions.approveProof}</button>
         </form>
       </section>
 
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">Reject proof</h3>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.rejectProof}</h3>
         <form className="space-y-3" onSubmit={rejectForm.handleSubmit((values) => setPendingReject(values))}>
           <label className="grid gap-1 text-sm">
-            <span>Rejection reason</span>
+            <span>{ui.actions.rejectionReason}</span>
             <input className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...rejectForm.register("rejectionReason")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Decision note</span>
+            <span>{ui.actions.decisionNote}</span>
             <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...rejectForm.register("decisionNote")} />
           </label>
-          <button className="button-secondary" type="submit">Reject proof</button>
+          <button className="button-secondary" type="submit">{ui.actions.rejectProof}</button>
         </form>
       </section>
 
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
+        locale={locale}
         open={pendingApprove !== null}
-        title="Approve payment proof?"
-        body="This will verify the payment proof and unblock the secured payment state for the booking."
-        confirmLabel="Approve"
+        title={ui.actions.approveTitle}
+        body={ui.actions.approveBody}
+        confirmLabel={ui.actions.approveProof}
         isPending={isPending}
         onCancel={() => setPendingApprove(null)}
         onConfirm={confirmApprove}
       />
       <ConfirmDialog
+        locale={locale}
         open={pendingReject !== null}
-        title="Reject payment proof?"
-        body="This will reject the submitted proof and push the booking back into payment resubmission flow."
-        confirmLabel="Reject"
+        title={ui.actions.rejectTitle}
+        body={ui.actions.rejectBody}
+        confirmLabel={ui.actions.rejectProof}
         isPending={isPending}
         onCancel={() => setPendingReject(null)}
         onConfirm={confirmReject}

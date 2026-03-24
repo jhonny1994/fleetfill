@@ -1,3 +1,6 @@
+import type { AppLocale } from "@/lib/i18n/config";
+import { getAdminUi } from "@/lib/i18n/admin-ui";
+
 export type TimelineItem = {
   id: string;
   title: string;
@@ -6,17 +9,20 @@ export type TimelineItem = {
 };
 
 export function TimelinePanel({
-  title = "Timeline",
+  locale = "en",
+  title,
   items,
 }: {
+  locale?: AppLocale | string;
   title?: string;
   items: TimelineItem[];
 }) {
+  const ui = getAdminUi(locale);
   return (
     <section className="panel space-y-4 p-5">
-      <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{title}</h2>
+      <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{title ?? ui.labels.timeline}</h2>
       {items.length === 0 ? (
-        <p className="text-sm text-[var(--color-ink-muted)]">No timeline events are available yet.</p>
+        <p className="text-sm text-[var(--color-ink-muted)]">{ui.labels.noTimeline}</p>
       ) : (
         <ol className="space-y-4">
           {items.map((item) => (

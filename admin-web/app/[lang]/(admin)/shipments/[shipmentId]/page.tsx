@@ -4,6 +4,7 @@ import { DetailWorkspace } from "@/components/detail/detail-workspace";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { buildAdminRoute } from "@/lib/admin-routes";
 import { formatDateTime } from "@/lib/formatting/formatters";
+import { getAdminDetailCopy, getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { fetchShipmentWorkspaceDetail } from "@/lib/queries/admin-operations";
 
 export default async function ShipmentDetailPage({
@@ -13,51 +14,53 @@ export default async function ShipmentDetailPage({
 }) {
   const { lang, shipmentId } = await params;
   const detail = await fetchShipmentWorkspaceDetail(shipmentId);
+  const ui = getAdminUi(lang);
+  const detailCopy = getAdminDetailCopy(lang);
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">Shipment detail not found.</div>;
+    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{detailCopy.shipments.notFound}</div>;
   }
 
   return (
     <DetailWorkspace
-      eyebrow="Shipments"
+      eyebrow={detailCopy.shipments.eyebrow}
       title={detail.shipment.description?.trim() || detail.shipment.id}
-      description="Canonical shipment workspace for admin search and operational cross-checks."
+      description={detailCopy.shipments.description}
       facts={[
-        { label: "Status", value: detail.shipment.status },
-        { label: "Weight", value: `${detail.shipment.totalWeightKg} kg` },
-        { label: "Volume", value: detail.shipment.totalVolumeM3 == null ? "—" : `${detail.shipment.totalVolumeM3} m3` },
-        { label: "Created", value: formatDateTime(detail.shipment.createdAt) },
+        { label: ui.labels.state, value: detail.shipment.status },
+        { label: detailCopy.shipments.weightLabel, value: `${detail.shipment.totalWeightKg} kg` },
+        { label: detailCopy.shipments.volumeLabel, value: detail.shipment.totalVolumeM3 == null ? "—" : `${detail.shipment.totalVolumeM3} m3` },
+        { label: detailCopy.shipments.createdLabel, value: formatDateTime(detail.shipment.createdAt) },
       ]}
       main={
         <section className="panel space-y-4 p-6">
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Route context</h2>
+            <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.shipments.routeContext}</h2>
             <p className="text-sm text-[var(--color-ink-muted)]">
               {detail.shipment.originLabel} {"->"} {detail.shipment.destinationLabel}
             </p>
           </div>
           {detail.booking ? (
             <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
-              <p className="font-medium text-[var(--color-ink-strong)]">Linked booking</p>
+              <p className="font-medium text-[var(--color-ink-strong)]">{detailCopy.shipments.linkedBooking}</p>
               <Link href={buildAdminRoute(lang, "booking", detail.booking.id)} className="mt-2 inline-flex text-sm font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
                 {detail.booking.trackingNumber}
               </Link>
               <div className="mt-2 flex gap-2">
-                <StatusBadge label={detail.booking.bookingStatus} tone="neutral" />
-                <StatusBadge label={detail.booking.paymentStatus} tone={detail.booking.paymentStatus === "secured" ? "success" : "warning"} />
+                <StatusBadge label={getEnumLabel(lang, "booking", detail.booking.bookingStatus)} tone="neutral" />
+                <StatusBadge label={getEnumLabel(lang, "payment", detail.booking.paymentStatus)} tone={detail.booking.paymentStatus === "secured" ? "success" : "warning"} />
               </div>
             </div>
           ) : (
-            <p className="text-sm text-[var(--color-ink-muted)]">No booking has been created yet for this shipment.</p>
+            <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.shipments.noBookingYet}</p>
           )}
         </section>
       }
       rail={
         <section className="panel space-y-3 p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">Linked entities</h2>
+          <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{detailCopy.shipments.linkedEntities}</h2>
           <Link className="button-secondary" href={buildAdminRoute(lang, "user", detail.shipment.shipperId)}>
-            Shipper profile
+            {detailCopy.shipments.shipperProfile}
           </Link>
         </section>
       }

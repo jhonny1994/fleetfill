@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "FleetFill Admin",
-  description: "Internal operations console for FleetFill.",
-};
+export const metadata: Metadata = {};
 
 export default function RootLayout({
   children,

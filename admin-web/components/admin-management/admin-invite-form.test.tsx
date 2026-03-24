@@ -32,7 +32,7 @@ describe("AdminInviteForm", () => {
   it("creates admin invitations through the backend rpc", async () => {
     const user = userEvent.setup();
 
-    render(<AdminInviteForm />);
+    render(<AdminInviteForm locale="en" />);
 
     await user.type(screen.getByLabelText("Email"), "ops@fleetfill.dz");
     await user.click(screen.getByRole("button", { name: "Create invitation" }));

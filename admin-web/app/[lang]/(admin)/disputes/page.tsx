@@ -1,5 +1,6 @@
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getAdminDetailCopy, getAdminUi } from "@/lib/i18n/admin-ui";
 import { DisputesQueueView } from "@/components/queues/disputes-queue-view";
 import { fetchDisputeQueue } from "@/lib/queries/admin-queues";
 
@@ -13,16 +14,18 @@ export default async function DisputesPage({
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const query = filters.q?.trim();
   const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
+  const ui = getAdminUi(lang);
+  const detailCopy = getAdminDetailCopy(lang);
   const items = await fetchDisputeQueue({ query });
   const pathname = `/${lang}/disputes`;
 
   return (
     <div className="space-y-4">
       <section className="panel space-y-3 p-6">
-        <p className="eyebrow">Disputes</p>
-        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">Open dispute queue</h1>
+        <p className="eyebrow">{ui.pages.disputes.eyebrow}</p>
+        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.disputes.title}</h1>
         <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
-          Resolve active booking disputes with clear age visibility, evidence counts, and linked booking context.
+          {detailCopy.disputes.description}
         </p>
       </section>
       <AdminFilterBar

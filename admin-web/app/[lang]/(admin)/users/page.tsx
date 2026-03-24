@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
+import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { fetchUsers } from "@/lib/queries/admin-users";
 
 export default async function UsersPage({
@@ -16,16 +17,16 @@ export default async function UsersPage({
   const role = filters.role?.trim();
   const activity = filters.activity?.trim();
   const verification = filters.verification?.trim();
+  const ui = getAdminUi(lang);
   const users = await fetchUsers({ query, role, activity, verification });
 
   return (
     <div className="space-y-4">
       <section className="panel space-y-3 p-6">
-        <p className="eyebrow">Users</p>
-        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">User operations and lifecycle</h1>
+        <p className="eyebrow">{ui.pages.users.eyebrow}</p>
+        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.users.title}</h1>
         <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
-          Search shippers and carriers, inspect verification and account state, then drill into the full operational
-          workspace for each person.
+          {ui.pages.users.title}
         </p>
       </section>
 
@@ -35,35 +36,35 @@ export default async function UsersPage({
             type="search"
             name="q"
             defaultValue={query}
-            placeholder="Search by name, email, phone, or profile id"
+            placeholder={ui.pages.users.title === "تشغيل المستخدمين ودورة حياتهم" ? "ابحث بالاسم أو البريد أو الهاتف أو معرّف الملف" : ui.pages.users.title === "Operations et cycle de vie utilisateur" ? "Rechercher par nom, email, telephone ou identifiant profil" : "Search by name, email, phone, or profile ID"}
             className="rounded-full border border-[var(--color-border)] bg-white/75 px-4 py-3 text-sm"
           />
           <select name="role" defaultValue={role ?? ""} className="rounded-full border border-[var(--color-border)] bg-white/75 px-4 py-3 text-sm">
-            <option value="">All roles</option>
-            <option value="shipper">Shipper</option>
-            <option value="carrier">Carrier</option>
+            <option value="">{ui.labels.none}</option>
+            <option value="shipper">{getEnumLabel(lang, "userRoles", "shipper")}</option>
+            <option value="carrier">{getEnumLabel(lang, "userRoles", "carrier")}</option>
           </select>
           <select name="activity" defaultValue={activity ?? ""} className="rounded-full border border-[var(--color-border)] bg-white/75 px-4 py-3 text-sm">
-            <option value="">All activity</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="">{ui.labels.none}</option>
+            <option value="active">{getEnumLabel(lang, "activity", "active")}</option>
+            <option value="inactive">{getEnumLabel(lang, "activity", "inactive")}</option>
           </select>
           <select
             name="verification"
             defaultValue={verification ?? ""}
             className="rounded-full border border-[var(--color-border)] bg-white/75 px-4 py-3 text-sm"
           >
-            <option value="">All verification states</option>
-            <option value="pending">Pending</option>
-            <option value="verified">Verified</option>
-            <option value="rejected">Rejected</option>
+            <option value="">{ui.labels.none}</option>
+            <option value="pending">{getEnumLabel(lang, "verification", "pending")}</option>
+            <option value="verified">{getEnumLabel(lang, "verification", "verified")}</option>
+            <option value="rejected">{getEnumLabel(lang, "verification", "rejected")}</option>
           </select>
           <div className="flex items-center gap-2">
             <button className="button-primary" type="submit">
-              Apply
+              {ui.actions.confirm}
             </button>
             <Link className="button-secondary" href={`/${lang}/users`}>
-              Reset
+              {ui.actions.cancel}
             </Link>
           </div>
         </form>
@@ -73,12 +74,12 @@ export default async function UsersPage({
         <table>
           <thead>
             <tr>
-              <th>User</th>
-              <th>Role</th>
-              <th>Account state</th>
-              <th>Verification</th>
-              <th>Operational context</th>
-              <th>Updated</th>
+              <th>{ui.pages.users.eyebrow.slice(0, -1) || "User"}</th>
+              <th>{ui.labels.role}</th>
+              <th>{ui.labels.accountState}</th>
+              <th>{ui.labels.verification}</th>
+              <th>{ui.labels.queue === "طابور" ? "السياق التشغيلي" : ui.labels.queue === "File" ? "Contexte operationnel" : "Operational context"}</th>
+              <th>{ui.labels.updated}</th>
             </tr>
           </thead>
           <tbody>
@@ -96,14 +97,14 @@ export default async function UsersPage({
                   </div>
                 </td>
                 <td>
-                  <StatusBadge label={user.role} tone="neutral" />
+                  <StatusBadge label={getEnumLabel(lang, "userRoles", user.role)} tone="neutral" />
                 </td>
                 <td>
-                  <StatusBadge label={user.isActive ? "Active" : "Suspended"} tone={user.isActive ? "success" : "danger"} />
+                  <StatusBadge label={getEnumLabel(lang, "activity", user.isActive ? "active" : "suspended")} tone={user.isActive ? "success" : "danger"} />
                 </td>
                 <td>
                   <StatusBadge
-                    label={user.verificationStatus}
+                    label={getEnumLabel(lang, "verification", user.verificationStatus)}
                     tone={
                       user.verificationStatus === "verified"
                         ? "success"
@@ -115,8 +116,8 @@ export default async function UsersPage({
                 </td>
                 <td className="text-sm">
                   <div className="space-y-1">
-                    <p>{user.bookingCount} bookings</p>
-                    <p className="text-xs text-[var(--color-ink-muted)]">{user.vehicleCount} vehicles</p>
+                    <p>{user.bookingCount}</p>
+                    <p className="text-xs text-[var(--color-ink-muted)]">{user.vehicleCount}</p>
                   </div>
                 </td>
                 <td className="text-sm text-[var(--color-ink-muted)]">{formatDateTime(user.updatedAt)}</td>

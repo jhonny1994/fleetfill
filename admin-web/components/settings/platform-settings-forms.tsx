@@ -7,6 +7,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { getAdminDetailCopy, getAdminUi } from "@/lib/i18n/admin-ui";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { PlatformSettingsSnapshot } from "@/lib/queries/admin-types";
 import type { Json } from "@/lib/supabase/database.types";
@@ -38,13 +39,32 @@ function SectionFrame({
   );
 }
 
+function getSettingAuditDescription(key: "app_runtime" | "booking_pricing" | "delivery_review" | "feature_flags" | "localization") {
+  switch (key) {
+    case "app_runtime":
+      return "Admin-controlled runtime policy for maintenance and minimum supported versions";
+    case "booking_pricing":
+      return "Admin-controlled booking pricing policy";
+    case "delivery_review":
+      return "Admin-controlled delivery review timing";
+    case "feature_flags":
+      return "Admin-controlled runtime feature flags";
+    case "localization":
+      return "Admin-controlled localization policy";
+  }
+}
+
 export function PlatformSettingsForms({
+  locale,
   settings,
   isSuperAdmin,
 }: {
+  locale: string;
   settings: PlatformSettingsSnapshot;
   isSuperAdmin: boolean;
 }) {
+  const ui = getAdminUi(locale);
+  const detailCopy = getAdminDetailCopy(locale);
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [error, setError] = useState<string | null>(null);
@@ -120,8 +140,8 @@ export function PlatformSettingsForms({
   return (
     <div className="space-y-4">
       <SectionFrame
-        title="Runtime policy"
-        body="Maintenance mode and minimum supported mobile versions are the highest-impact platform controls."
+        title={detailCopy.settings.runtimeTitle}
+        body={detailCopy.settings.runtimeBody}
       >
         <form
           className="grid gap-3 md:grid-cols-2"
@@ -134,37 +154,37 @@ export function PlatformSettingsForms({
                 minimum_supported_android_version: values.minimumSupportedAndroidVersion,
                 minimum_supported_ios_version: values.minimumSupportedIosVersion,
               },
-              description: "Admin-controlled runtime policy for maintenance and minimum supported versions",
+              description: getSettingAuditDescription("app_runtime"),
             }),
           )}
         >
           <label className="flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm">
             <input type="checkbox" disabled={disabled} {...runtimeForm.register("maintenanceMode")} />
-            <span>Maintenance mode</span>
+            <span>{detailCopy.settings.maintenanceMode}</span>
           </label>
           <label className="flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm">
             <input type="checkbox" disabled={disabled} {...runtimeForm.register("forceUpdateRequired")} />
-            <span>Force update required</span>
+            <span>{detailCopy.settings.forceUpdateRequired}</span>
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Minimum Android version</span>
+            <span>{detailCopy.settings.minimumAndroidVersion}</span>
             <input type="number" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...runtimeForm.register("minimumSupportedAndroidVersion")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Minimum iOS version</span>
+            <span>{detailCopy.settings.minimumIosVersion}</span>
             <input type="number" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...runtimeForm.register("minimumSupportedIosVersion")} />
           </label>
           <div className="md:col-span-2">
             <button className="button-primary" type="submit" disabled={disabled}>
-              Save runtime policy
+              {detailCopy.settings.saveRuntimePolicy}
             </button>
           </div>
         </form>
       </SectionFrame>
 
       <SectionFrame
-        title="Pricing guardrails"
-        body="These values shape price composition and payment review deadlines for all new bookings."
+        title={detailCopy.settings.pricingTitle}
+        body={detailCopy.settings.pricingBody}
       >
         <form
           className="grid gap-3 md:grid-cols-3"
@@ -179,45 +199,45 @@ export function PlatformSettingsForms({
                 tax_rate: values.taxRate,
                 payment_resubmission_deadline_hours: values.paymentResubmissionDeadlineHours,
               },
-              description: "Admin-controlled booking pricing policy",
+              description: getSettingAuditDescription("booking_pricing"),
             }),
           )}
         >
           <label className="grid gap-1 text-sm">
-            <span>Platform fee rate</span>
+            <span>{detailCopy.settings.platformFeeRate}</span>
             <input type="number" step="0.01" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...pricingForm.register("platformFeeRate")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Carrier fee rate</span>
+            <span>{detailCopy.settings.carrierFeeRate}</span>
             <input type="number" step="0.01" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...pricingForm.register("carrierFeeRate")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Insurance rate</span>
+            <span>{detailCopy.settings.insuranceRate}</span>
             <input type="number" step="0.01" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...pricingForm.register("insuranceRate")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Insurance min fee (DZD)</span>
+            <span>{detailCopy.settings.insuranceMinFee}</span>
             <input type="number" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...pricingForm.register("insuranceMinFeeDzd")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Tax rate</span>
+            <span>{detailCopy.settings.taxRate}</span>
             <input type="number" step="0.01" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...pricingForm.register("taxRate")} />
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Payment resubmission deadline (hours)</span>
+            <span>{detailCopy.settings.paymentResubmissionDeadline}</span>
             <input type="number" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...pricingForm.register("paymentResubmissionDeadlineHours")} />
           </label>
           <div className="md:col-span-3">
             <button className="button-primary" type="submit" disabled={disabled}>
-              Save pricing policy
+              {detailCopy.settings.savePricingPolicy}
             </button>
           </div>
         </form>
       </SectionFrame>
 
       <SectionFrame
-        title="Delivery review"
-        body="The grace window determines when delivered bookings become overdue for operational review."
+        title={detailCopy.settings.reviewTitle}
+        body={detailCopy.settings.reviewBody}
       >
         <form
           className="grid gap-3 md:grid-cols-[minmax(0,260px)_auto]"
@@ -225,25 +245,25 @@ export function PlatformSettingsForms({
             setPendingConfig({
               key: "delivery_review",
               value: { grace_window_hours: values.graceWindowHours },
-              description: "Admin-controlled delivery review timing",
+              description: getSettingAuditDescription("delivery_review"),
             }),
           )}
         >
           <label className="grid gap-1 text-sm">
-            <span>Grace window (hours)</span>
+            <span>{detailCopy.settings.graceWindow}</span>
             <input type="number" disabled={disabled} className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...reviewForm.register("graceWindowHours")} />
           </label>
           <div className="self-end">
             <button className="button-primary" type="submit" disabled={disabled}>
-              Save review policy
+              {detailCopy.settings.saveReviewPolicy}
             </button>
           </div>
         </form>
       </SectionFrame>
 
       <SectionFrame
-        title="Feature flags"
-        body="Keep these small and operationally meaningful. This is not a dumping ground for product logic."
+        title={detailCopy.settings.featureTitle}
+        body={detailCopy.settings.featureBody}
       >
         <form
           className="space-y-3"
@@ -251,23 +271,23 @@ export function PlatformSettingsForms({
             setPendingConfig({
               key: "feature_flags",
               value: { admin_email_resend_enabled: values.adminEmailResendEnabled },
-              description: "Admin-controlled runtime feature flags",
+              description: getSettingAuditDescription("feature_flags"),
             }),
           )}
         >
           <label className="flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm">
             <input type="checkbox" disabled={disabled} {...featureForm.register("adminEmailResendEnabled")} />
-            <span>Enable admin email resend actions</span>
+            <span>{detailCopy.settings.adminEmailResendEnabled}</span>
           </label>
           <button className="button-primary" type="submit" disabled={disabled}>
-            Save feature flags
+            {detailCopy.settings.saveFeatureFlags}
           </button>
         </form>
       </SectionFrame>
 
       <SectionFrame
-        title="Localization policy"
-        body="These values control the fallback locale and the set of enabled locales used across the platform."
+        title={detailCopy.settings.localizationTitle}
+        body={detailCopy.settings.localizationBody}
       >
         <form
           className="grid gap-3 md:grid-cols-2"
@@ -278,20 +298,20 @@ export function PlatformSettingsForms({
                 fallback_locale: values.fallbackLocale,
                 enabled_locales: values.enabledLocales,
               },
-              description: "Admin-controlled localization policy",
+              description: getSettingAuditDescription("localization"),
             }),
           )}
         >
           <label className="grid gap-1 text-sm">
-            <span>Fallback locale</span>
+            <span>{detailCopy.settings.fallbackLocale}</span>
             <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" disabled={disabled} {...localizationForm.register("fallbackLocale")}>
-              <option value="ar">Arabic</option>
-              <option value="fr">French</option>
-              <option value="en">English</option>
+              <option value="ar">{ui.enums.locale.ar}</option>
+              <option value="fr">{ui.enums.locale.fr}</option>
+              <option value="en">{ui.enums.locale.en}</option>
             </select>
           </label>
           <fieldset className="grid gap-2 text-sm">
-            <legend className="mb-1 font-medium text-[var(--color-ink-base)]">Enabled locales</legend>
+            <legend className="mb-1 font-medium text-[var(--color-ink-base)]">{detailCopy.settings.enabledLocales}</legend>
             {(["ar", "fr", "en"] as const).map((localeCode) => (
               <label key={localeCode} className="flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3">
                 <input
@@ -307,13 +327,13 @@ export function PlatformSettingsForms({
                     );
                   }}
                 />
-                <span>{localeCode.toUpperCase()}</span>
+                <span>{ui.enums.locale[localeCode]}</span>
               </label>
             ))}
           </fieldset>
           <div className="md:col-span-2">
             <button className="button-primary" type="submit" disabled={disabled}>
-              Save localization policy
+              {detailCopy.settings.saveLocalizationPolicy}
             </button>
           </div>
         </form>
@@ -321,7 +341,7 @@ export function PlatformSettingsForms({
 
       {!isSuperAdmin ? (
         <p className="text-sm text-[var(--color-amber-700)]">
-          Runtime settings are visible to ops admins, but only super admins can change them.
+          {detailCopy.settings.superAdminOnly}
         </p>
       ) : null}
 
@@ -329,9 +349,9 @@ export function PlatformSettingsForms({
 
       <ConfirmDialog
         open={pendingConfig !== null}
-        title="Save platform setting?"
-        body="This writes directly to the audited runtime settings store and takes effect for future platform behavior."
-        confirmLabel="Save setting"
+        title={ui.actions.saveSettingTitle}
+        body={ui.actions.saveSettingBody}
+        confirmLabel={ui.actions.saveSetting}
         isPending={isPending}
         onCancel={() => setPendingConfig(null)}
         onConfirm={confirmSave}
