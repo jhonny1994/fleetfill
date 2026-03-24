@@ -832,7 +832,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "editShipperProfileTitle": MessageLookupByLibrary.simpleMessage(
       "تعديل ملف المرسل",
     ),
-    "errorTitle": MessageLookupByLibrary.simpleMessage("حصل خطأ"),
+    "errorTitle": MessageLookupByLibrary.simpleMessage("حدث خطأ"),
     "forbiddenAdminStepUpMessage": MessageLookupByLibrary.simpleMessage(
       "أعد تسجيل الدخول قبل فتح هذا القسم الحساس.",
     ),
@@ -1077,13 +1077,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationSeenLabel": MessageLookupByLibrary.simpleMessage("تمت رؤيته"),
     "notificationSupportReplyReceivedBody":
         MessageLookupByLibrary.simpleMessage(
-          "قام فريق دعم FleetFill بالرد على طلبك.",
+          "ردّ فريق دعم FleetFill على طلبك.",
         ),
     "notificationSupportReplyReceivedTitle":
         MessageLookupByLibrary.simpleMessage("تم الرد من الدعم"),
     "notificationSupportRequestCreatedBody":
         MessageLookupByLibrary.simpleMessage(
-          "قام مستخدم بفتح طلب دعم جديد يحتاج إلى مراجعة.",
+          "فتح مستخدم طلب دعم جديد يحتاج إلى مراجعة.",
         ),
     "notificationSupportRequestCreatedTitle":
         MessageLookupByLibrary.simpleMessage("طلب دعم جديد"),
@@ -1091,7 +1091,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationSupportStatusChangedTitle":
         MessageLookupByLibrary.simpleMessage("تم تحديث حالة الدعم"),
     "notificationSupportUserRepliedBody": MessageLookupByLibrary.simpleMessage(
-      "قام مستخدم بالرد على طلب دعم قائم.",
+      "ردّ مستخدم على طلب دعم قائم.",
     ),
     "notificationSupportUserRepliedTitle": MessageLookupByLibrary.simpleMessage(
       "قام المستخدم بالرد",
@@ -1706,7 +1706,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "اطرح سؤالا أو أبلغ عن مشكلة أو اطلب المساعدة بشأن حجز أو دفعة.",
     ),
     "supportInboxEmptyMessage": MessageLookupByLibrary.simpleMessage(
-      "لم تقم بفتح أي طلب دعم بعد.",
+      "لم تفتح أي طلب دعم بعد.",
     ),
     "supportInboxTitle": MessageLookupByLibrary.simpleMessage(
       "طلبات الدعم الخاصة بك",

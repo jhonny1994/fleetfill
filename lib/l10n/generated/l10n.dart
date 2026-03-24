@@ -2547,9 +2547,9 @@ class S {
     );
   }
 
-  /// `حصل خطأ`
+  /// `حدث خطأ`
   String get errorTitle {
-    return Intl.message('حصل خطأ', name: 'errorTitle', desc: '', args: []);
+    return Intl.message('حدث خطأ', name: 'errorTitle', desc: '', args: []);
   }
 
   /// `اعرض فاتورتك أو إيصالك أو نزله.`
@@ -7040,10 +7040,10 @@ class S {
     );
   }
 
-  /// `لم تقم بفتح أي طلب دعم بعد.`
+  /// `لم تفتح أي طلب دعم بعد.`
   String get supportInboxEmptyMessage {
     return Intl.message(
-      'لم تقم بفتح أي طلب دعم بعد.',
+      'لم تفتح أي طلب دعم بعد.',
       name: 'supportInboxEmptyMessage',
       desc: '',
       args: [],
@@ -7385,10 +7385,10 @@ class S {
     );
   }
 
-  /// `قام مستخدم بفتح طلب دعم جديد يحتاج إلى مراجعة.`
+  /// `فتح مستخدم طلب دعم جديد يحتاج إلى مراجعة.`
   String get notificationSupportRequestCreatedBody {
     return Intl.message(
-      'قام مستخدم بفتح طلب دعم جديد يحتاج إلى مراجعة.',
+      'فتح مستخدم طلب دعم جديد يحتاج إلى مراجعة.',
       name: 'notificationSupportRequestCreatedBody',
       desc: '',
       args: [],
@@ -7405,10 +7405,10 @@ class S {
     );
   }
 
-  /// `قام فريق دعم FleetFill بالرد على طلبك.`
+  /// `ردّ فريق دعم FleetFill على طلبك.`
   String get notificationSupportReplyReceivedBody {
     return Intl.message(
-      'قام فريق دعم FleetFill بالرد على طلبك.',
+      'ردّ فريق دعم FleetFill على طلبك.',
       name: 'notificationSupportReplyReceivedBody',
       desc: '',
       args: [],
@@ -7425,10 +7425,10 @@ class S {
     );
   }
 
-  /// `قام مستخدم بالرد على طلب دعم قائم.`
+  /// `ردّ مستخدم على طلب دعم قائم.`
   String get notificationSupportUserRepliedBody {
     return Intl.message(
-      'قام مستخدم بالرد على طلب دعم قائم.',
+      'ردّ مستخدم على طلب دعم قائم.',
       name: 'notificationSupportUserRepliedBody',
       desc: '',
       args: [],
