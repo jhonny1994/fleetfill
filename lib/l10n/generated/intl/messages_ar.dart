@@ -96,7 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "رسائل بانتظار الإرسال",
     ),
     "adminDashboardEmailHealthTitle": MessageLookupByLibrary.simpleMessage(
-      "تسليم البريد الإلكتروني",
+      "تسليم البريد التشغيلي",
     ),
     "adminDashboardNavLabel": MessageLookupByLibrary.simpleMessage("الرئيسية"),
     "adminDashboardOverdueDeliveryReviewsLabel":
@@ -115,7 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا توجد رسائل فاشلة تحتاج إلى متابعة الآن.",
     ),
     "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
-      "الرسائل الفاشلة",
+      "الرسائل التشغيلية الفاشلة",
     ),
     "adminEmailErrorCodeLabel": MessageLookupByLibrary.simpleMessage(
       "رمز الخطأ",
@@ -134,7 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا توجد سجلات بريد إلكتروني تطابق عوامل التصفية الحالية.",
     ),
     "adminEmailQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "تسليم البريد الإلكتروني",
+      "تسليم البريد التشغيلي",
     ),
     "adminEmailResendAction": MessageLookupByLibrary.simpleMessage(
       "إعادة الإرسال",
@@ -207,7 +207,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "النزاعات",
     ),
     "adminQueueEmailTabLabel": MessageLookupByLibrary.simpleMessage(
-      "البريد الإلكتروني",
+      "البريد التشغيلي",
     ),
     "adminQueuePaymentsTabLabel": MessageLookupByLibrary.simpleMessage(
       "المدفوعات",
@@ -329,7 +329,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا توجد سجلات بريد إلكتروني حديثة لهذا المستخدم.",
     ),
     "adminUserEmailSectionTitle": MessageLookupByLibrary.simpleMessage(
-      "الرسائل الأخيرة",
+      "آخر الرسائل التشغيلية",
     ),
     "adminUserReactivateAction": MessageLookupByLibrary.simpleMessage(
       "إعادة تفعيل المستخدم",
@@ -432,8 +432,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "authAuthenticationRequiredMessage": MessageLookupByLibrary.simpleMessage(
       "سجّل دخولك أولًا لتتمكن من المتابعة.",
     ),
+    "authBackToSignInAction": MessageLookupByLibrary.simpleMessage(
+      "العودة إلى تسجيل الدخول",
+    ),
     "authCancelledMessage": MessageLookupByLibrary.simpleMessage(
       "تم إلغاء تسجيل الدخول.",
+    ),
+    "authConfirmEmailDescription": MessageLookupByLibrary.simpleMessage(
+      "افتح رابط التفعيل من صندوق بريدك حتى يكتمل إنشاء الحساب وتتابع داخل FleetFill.",
+    ),
+    "authConfirmEmailMissingAddressMessage": MessageLookupByLibrary.simpleMessage(
+      "افتح هذه الصفحة مباشرة بعد إنشاء الحساب أو محاولة تسجيل الدخول حتى يعرف FleetFill أي بريد يجب إعادة إرسال رسالة التفعيل إليه.",
+    ),
+    "authConfirmEmailTitle": MessageLookupByLibrary.simpleMessage(
+      "فعّل بريدك الإلكتروني",
     ),
     "authConfirmPasswordHint": MessageLookupByLibrary.simpleMessage(
       "أعد إدخال كلمة المرور",
@@ -500,6 +512,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "authNewPasswordLabel": MessageLookupByLibrary.simpleMessage(
       "كلمة المرور الجديدة",
     ),
+    "authOpenSignInAction": MessageLookupByLibrary.simpleMessage(
+      "فتح صفحة تسجيل الدخول",
+    ),
     "authPasswordHint": MessageLookupByLibrary.simpleMessage(
       "أدخل كلمة المرور",
     ),
@@ -513,14 +528,29 @@ class MessageLookup extends MessageLookupByLibrary {
     "authPasswordResetInfoMessage": MessageLookupByLibrary.simpleMessage(
       "سنرسل لك رابط إعادة التعيين إلى بريدك المسجّل.",
     ),
+    "authPasswordResetSentDescription": MessageLookupByLibrary.simpleMessage(
+      "استخدم رابط الاسترداد الذي وصلك عبر البريد لاختيار كلمة مرور جديدة.",
+    ),
+    "authPasswordResetSentTitle": MessageLookupByLibrary.simpleMessage(
+      "افتح بريدك الإلكتروني",
+    ),
     "authPasswordUpdatedMessage": MessageLookupByLibrary.simpleMessage(
       "تم تغيير كلمة المرور بنجاح.",
     ),
     "authRateLimitedMessage": MessageLookupByLibrary.simpleMessage(
       "محاولات كثيرة. انتظر قليلًا وأعد المحاولة.",
     ),
+    "authRequestAnotherLinkAction": MessageLookupByLibrary.simpleMessage(
+      "اطلب رابطا جديدا",
+    ),
     "authRequiredFieldMessage": MessageLookupByLibrary.simpleMessage(
       "هذا الحقل مطلوب.",
+    ),
+    "authResendConfirmationAction": MessageLookupByLibrary.simpleMessage(
+      "إعادة إرسال رسالة التفعيل",
+    ),
+    "authResendResetEmailAction": MessageLookupByLibrary.simpleMessage(
+      "إعادة إرسال رسالة إعادة التعيين",
     ),
     "authResetEmailSentMessage": MessageLookupByLibrary.simpleMessage(
       "تم إرسال تعليمات إعادة تعيين كلمة المرور.",
@@ -569,6 +599,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authUpdatePasswordAction": MessageLookupByLibrary.simpleMessage(
       "تغيير كلمة المرور",
+    ),
+    "authUseDifferentEmailAction": MessageLookupByLibrary.simpleMessage(
+      "استخدم بريدا إلكترونيا مختلفا",
     ),
     "authUserAlreadyRegisteredMessage": MessageLookupByLibrary.simpleMessage(
       "هذا البريد مسجّل مسبقا. سجّل دخولك أو استعد كلمة المرور.",
