@@ -8,7 +8,7 @@
 - `.env.example` - Root env example; currently documents `APP_ENV` and a split local/production model that needs to be collapsed.
 - `.github/workflows/flutter_quality.yml` - Flutter CI currently injects `APP_ENV=local`; must stop relying on named runtime environments.
 - `.github/workflows/supabase_validation.yml` - Supabase validation workflow currently materializes `APP_ENV` into `.env`; must move to pure URL/key-driven config.
-- `.github/workflows/staging_release_candidate.yml` - Release workflow still treats staging as a first-class concept; should be rewritten or renamed around real deploy/release verification.
+- `.github/workflows/release_candidate_verification.yml` - Release workflow should stay aligned with release-rehearsal and production promotion, not a separate runtime environment.
 - `.github/workflows/admin_web_deploy.yml` - Deploy workflow can keep preview/prod as Vercel channels, but wording and assumptions must stop implying app runtime environments.
 - `admin-web/lib/admin-environment.ts` - Admin-only inferred environment label helper; should be removed.
 - `admin-web/components/admin-shell/admin-header.tsx` - Displays the admin environment badge; must be simplified after environment-label removal.
@@ -53,7 +53,7 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 1.2 Remove `staging`, `preview`, and admin-only environment labels as first-class runtime concepts from the implementation plan.
   - [x] 1.3 Keep `LOCAL_ANDROID_NETWORK_TARGET` as the only local-only technical override and explicitly document that it is not an environment.
   - [x] 1.4 Decide the hosted-vs-local classification rule for Flutter runtime logic based on the Supabase host pattern.
-  - [ ] 1.5 Record the distinction between deployment channels and runtime contract so future docs do not reintroduce the split.
+  - [x] 1.5 Record the distinction between deployment channels and runtime contract so future docs do not reintroduce the split.
 
 - [x] 2.0 Refactor Flutter runtime configuration
   - [x] 2.1 Remove the `AppEnvironment` enum from `lib/core/config/app_environment.dart`.
@@ -76,7 +76,7 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 3.6 Keep the emulator/device launch distinction only through `LOCAL_ANDROID_NETWORK_TARGET` and URL differences.
   - [x] 3.7 Check for any remaining Flutter/test references to `AppEnvironment`, `APP_ENV`, or `staging` and remove them.
 
-- [ ] 4.0 Remove the separate admin-web environment system
+- [x] 4.0 Remove the separate admin-web environment system
   - [x] 4.1 Delete or inline-remove `admin-web/lib/admin-environment.ts`.
   - [x] 4.2 Remove environment badge rendering from `admin-web/components/admin-shell/admin-header.tsx`.
   - [x] 4.3 Clean up `admin-web/app/[lang]/(admin)/layout.tsx` if header props/layout become simpler after badge removal.
@@ -86,34 +86,34 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 4.7 Check the admin web for any remaining references to `Local`, `Preview`, or `Production` runtime labels and remove them.
   - [x] 4.8 Verify the admin shell still has good operator context without the badge and does not need a replacement.
 
-- [ ] 5.0 Unify CI/CD and local environment examples
+- [x] 5.0 Unify CI/CD and local environment examples
   - [x] 5.1 Remove `APP_ENV` from `.github/workflows/flutter_quality.yml`.
   - [x] 5.2 Remove `APP_ENV` from `.github/workflows/supabase_validation.yml` and stop writing it into the generated `.env`.
   - [x] 5.3 Ensure Supabase validation still provides only the secrets/URLs the app actually needs.
   - [x] 5.4 Rewrite `.env.example` so it documents one contract driven by secrets and URLs, not named environments.
   - [x] 5.5 Simplify comments in `.env.example` to distinguish local-only values from hosted/cloud values without inventing separate app environments.
-  - [ ] 5.6 Review `.github/workflows/admin_web_deploy.yml` and keep preview/production only as Vercel deployment-channel language.
-  - [x] 5.7 Rewrite or rename `.github/workflows/staging_release_candidate.yml` so it no longer treats staging as a FleetFill runtime environment.
-  - [ ] 5.8 Check for any remaining CI/config references to `staging`, `preview`, or `APP_ENV` that describe runtime behavior and remove them.
+  - [x] 5.6 Review `.github/workflows/admin_web_deploy.yml` and keep preview/production only as Vercel deployment-channel language.
+  - [x] 5.7 Rewrite or rename `.github/workflows/release_candidate_verification.yml` so it no longer treats staging as a FleetFill runtime environment.
+  - [x] 5.8 Check for any remaining CI/config references to `staging`, `preview`, or `APP_ENV` that describe runtime behavior and remove them.
 
-- [ ] 6.0 Rewrite docs around the unified contract
-  - [ ] 6.1 Update `README.md` so the top-level project explanation uses one shared runtime contract across Flutter, admin web, and backend tooling.
-  - [ ] 6.2 Update `docs/03-technical-architecture.md` to define runtime behavior in terms of actual backend target and secrets.
-  - [ ] 6.3 Update `docs/07-implementation-plan.md` to remove split environment concepts from implementation guidance.
-  - [ ] 6.4 Update `docs/09-supabase-implementation-notes.md` so backend/runtime notes match the new contract.
-  - [ ] 6.5 Update admin planning docs to remove the separate admin environment matrix and badge assumptions.
-  - [ ] 6.6 Update readiness and QA docs so they validate real host/backend targeting instead of checking display labels.
-  - [ ] 6.7 Ensure docs still distinguish Vercel preview deployments from FleetFill runtime behavior.
-  - [ ] 6.8 Run a final doc sweep for `staging`, `preview`, `APP_ENV`, and environment-label language that is no longer valid.
+- [x] 6.0 Rewrite docs around the unified contract
+  - [x] 6.1 Update `README.md` so the top-level project explanation uses one shared runtime contract across Flutter, admin web, and backend tooling.
+  - [x] 6.2 Update `docs/03-technical-architecture.md` to define runtime behavior in terms of actual backend target and secrets.
+  - [x] 6.3 Update `docs/07-implementation-plan.md` to remove split environment concepts from implementation guidance.
+  - [x] 6.4 Update `docs/09-supabase-implementation-notes.md` so backend/runtime notes match the new contract.
+  - [x] 6.5 Update admin planning docs to remove the separate admin environment matrix and badge assumptions.
+  - [x] 6.6 Update readiness and QA docs so they validate real host/backend targeting instead of checking display labels.
+  - [x] 6.7 Ensure docs still distinguish Vercel preview deployments from FleetFill runtime behavior.
+  - [x] 6.8 Run a final doc sweep for `staging`, `preview`, `APP_ENV`, and environment-label language that is no longer valid.
 
-- [ ] 7.0 Validate the unified environment contract end to end
-  - [ ] 7.1 Run Flutter config tests and confirm the new hosted-vs-local logic passes.
-  - [ ] 7.2 Run `dart analyze` and the relevant Flutter test targets that cover config/bootstrap behavior.
-  - [ ] 7.3 Run `pnpm --dir admin-web typecheck` and `pnpm --dir admin-web build` to confirm badge-removal cleanup is complete.
-  - [ ] 7.4 Run CI-equivalent local checks for the updated workflows where practical.
-  - [ ] 7.5 Verify the local Flutter launch configs still work for emulator and real-device testing.
-  - [ ] 7.6 Verify the admin web still authenticates and routes correctly without any environment badge dependency.
-  - [ ] 7.7 Do a final repo search to confirm no stale first-class runtime environment concepts remain outside legitimate deployment-channel docs.
+- [x] 7.0 Validate the unified environment contract end to end
+  - [x] 7.1 Run Flutter config tests and confirm the new hosted-vs-local logic passes.
+  - [x] 7.2 Run `dart analyze` and the relevant Flutter test targets that cover config/bootstrap behavior.
+  - [x] 7.3 Run `pnpm --dir admin-web typecheck` and `pnpm --dir admin-web build` to confirm badge-removal cleanup is complete.
+  - [x] 7.4 Run CI-equivalent local checks for the updated workflows where practical.
+  - [x] 7.5 Verify the local Flutter launch configs still work for emulator and real-device testing.
+  - [x] 7.6 Verify the admin web still authenticates and routes correctly without any environment badge dependency.
+  - [x] 7.7 Do a final repo search to confirm no stale first-class runtime environment concepts remain outside legitimate deployment-channel docs.
 
 ## Assumptions And Defaults
 

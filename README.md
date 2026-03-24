@@ -53,6 +53,15 @@ FleetFill is designed for:
 - French
 - English
 
+## Runtime Contract
+
+FleetFill uses one shared runtime contract across Flutter, admin web, CI, and docs:
+
+- actual behavior comes from the URLs, keys, and secrets supplied to the app
+- local development is defined by using local hosts, local Supabase credentials, and local network overrides where needed
+- hosted behavior is defined by using hosted URLs and hosted credentials
+- Vercel preview is a deployment and review channel, not a separate FleetFill runtime mode
+
 ## Support
 
 Support is handled in-app through a ticket and thread workflow, with notifications and optional email as supporting channels rather than the source of truth.

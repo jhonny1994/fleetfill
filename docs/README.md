@@ -34,7 +34,7 @@ These files are important, but they are not parallel sources of product truth:
 - `docs/planning/admin-web/prd-admin-web-console.md` - product requirements document for the admin web console
 - `docs/planning/admin-web/tasks-admin-web-console.md` - implementation task list for the admin web console
 - `docs/planning/operations/polish-backlog.md` - deferred polish backlog
-- `docs/planning/operations/release-operations.md` - staging, release-candidate, versioning, and rollback procedures
+- `docs/planning/operations/release-operations.md` - release-rehearsal, release-candidate, versioning, and rollback procedures
 - `docs/planning/operations/post-launch-stabilization.md` - post-launch operating cadence
 - `docs/planning/operations/production-readiness-audit.md` - current cross-phase audit and production-readiness tracker
 

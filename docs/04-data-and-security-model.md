@@ -91,7 +91,7 @@ Recommended fields:
 - `display_name text`
 - `account_identifier text`
 - `account_holder_name text null`
-- `environment text check in ('staging','production')`
+- `environment text check in ('local','production')`
 - `is_active boolean default true`
 - `instructions_text text null`
 - `created_at timestamptz`
@@ -786,7 +786,7 @@ Signed URL rules:
 - queue workers must treat the outbox as trusted internal data only and must not accept arbitrary client-supplied template instructions
 - provider-specific webhook verification secrets must remain server-side only
 - Google provider client secrets also remain server-side only even when the mobile app uses native Google sign-in
-- local root `.env` may be used for ignored developer secrets, but staging/production secrets must move to managed provider/project secret storage
+- local root `.env` may be used for ignored developer secrets, but hosted production secrets must move to managed provider/project secret storage
 
 ## 5. Why Settings Should Not Be Raw Client Reads
 

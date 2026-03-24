@@ -836,7 +836,7 @@ Desktop layout behavior:
 
 - deploy `admin-web/` as its own Vercel project
 - Preview deployments for branch testing
-- separate Development / Preview / Production environment variables
+- Vercel may keep separate Development / Preview / Production variable sets, but FleetFill runtime behavior still comes from the actual host and Supabase credentials supplied there
 - `NEXT_PUBLIC_*` only for browser-safe values
 - changed environment variables require a new deployment to take effect
 

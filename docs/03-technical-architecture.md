@@ -414,13 +414,13 @@ Recommended application versioning:
 - use semantic-ish application versions such as `major.minor.patch`
 - keep Android `versionCode` and iOS `buildNumber` strictly increasing
 - tie each mobile release to a Git tag and changelog entry
-- keep staging and production builds traceable back to a commit SHA
+- keep release-candidate and production builds traceable back to a commit SHA
 
 Recommended branch and release posture:
 
 - if the team intentionally stays on a single long-lived branch workflow, protect that branch and rely on commit discipline plus CI gates
 - if pull requests are used, require CI to pass before merge
-- create release tags only after staging validation
+- create release tags only after release validation
 
 ### 9.4 CI/CD Architecture
 
@@ -428,9 +428,9 @@ Recommended delivery workflow:
 
 1. push or approved integration step triggers GitHub Actions
 2. CI runs formatting, static analysis, code generation validation, tests, and build checks
-3. approved release workflows deploy non-production backend assets to staging
+3. approved verification workflows prepare release candidates and deployment candidates
 4. tagged releases produce signed release artifacts and production deployment candidates
-5. production rollout happens only after staging verification and rollback readiness review
+5. production rollout happens only after release verification and rollback readiness review
 
 Recommended CI checks:
 
