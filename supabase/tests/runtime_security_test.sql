@@ -161,6 +161,14 @@ values
     'verified'
   );
 
+insert into public.admin_accounts (profile_id, admin_role, is_active, activated_at)
+values (
+  '10000000-0000-4000-8000-000000000004',
+  'super_admin',
+  true,
+  now()
+);
+
 insert into public.vehicles (
   id,
   carrier_id,
