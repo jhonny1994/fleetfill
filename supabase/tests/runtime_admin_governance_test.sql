@@ -2,6 +2,22 @@ begin;
 
 select plan(17);
 
+truncate table public.admin_audit_logs, public.admin_invitations, public.admin_accounts restart identity cascade;
+
+delete from public.profiles
+where id in (
+  '13000000-0000-4000-8000-000000000001',
+  '13000000-0000-4000-8000-000000000002',
+  '13000000-0000-4000-8000-000000000003'
+);
+
+delete from auth.users
+where id in (
+  '13000000-0000-4000-8000-000000000001',
+  '13000000-0000-4000-8000-000000000002',
+  '13000000-0000-4000-8000-000000000003'
+);
+
 create or replace function pg_temp.set_claims(
   p_user_id uuid,
   p_jwt_role text,

@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSignedFileUrl } from "@/lib/queries/signed-files";
 
@@ -50,6 +51,7 @@ export type AdminPaymentDetail = {
 };
 
 export async function fetchPaymentDetail(bookingId: string): Promise<AdminPaymentDetail | null> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: booking, error: bookingError } = await supabase
     .from("bookings")

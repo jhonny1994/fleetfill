@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AdminOperationalSummary,
@@ -32,6 +33,7 @@ function mapSummary(payload: Record<string, unknown> | null): AdminOperationalSu
 }
 
 export async function fetchAdminOperationalSummary() {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.rpc("admin_get_operational_summary");
 

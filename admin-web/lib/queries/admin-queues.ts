@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   DisputeQueueItem,
@@ -40,6 +41,7 @@ export async function fetchPaymentQueue({
   query?: string;
   limit?: number;
 } = {}): Promise<PaymentQueueItem[]> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: proofs, error: proofError } = await supabase
     .from("payment_proofs")
@@ -150,6 +152,7 @@ export async function fetchVerificationQueue({
   query?: string;
   limit?: number;
 } = {}): Promise<VerificationQueueItem[]> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: profiles, error: profileError } = await supabase
     .from("profiles")
@@ -307,6 +310,7 @@ export async function fetchDisputeQueue({
   query?: string;
   limit?: number;
 } = {}): Promise<DisputeQueueItem[]> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("disputes")
@@ -413,6 +417,7 @@ export async function fetchSupportQueue({
   status?: string;
   limit?: number;
 } = {}): Promise<SupportQueueItem[]> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   let request = supabase
     .from("support_requests")

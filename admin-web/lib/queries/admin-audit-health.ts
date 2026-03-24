@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AdminAuditLogItem,
@@ -73,6 +74,7 @@ function mapAuditLog(row: AuditRow): AdminAuditLogItem {
 }
 
 export async function fetchAuditAndHealthSnapshot(): Promise<AuditAndHealthSnapshot> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const [auditResult, emailDeliveriesResult, deadLettersResult, pushDeadLettersResult] = await Promise.all([
     supabase

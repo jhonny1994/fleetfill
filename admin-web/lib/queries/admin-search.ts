@@ -1,4 +1,5 @@
 import { buildAdminRoute } from "@/lib/admin-routes";
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import type { AppLocale } from "@/lib/i18n/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { GlobalSearchGroup } from "@/lib/queries/admin-types";
@@ -32,6 +33,7 @@ export async function fetchGlobalSearchGroups({
     return [];
   }
 
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const bookingOrId = maybeUuid(trimmed);
 

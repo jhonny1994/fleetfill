@@ -1,4 +1,5 @@
 import { diffHoursFromNow } from "@/lib/formatting/formatters";
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import type { EligiblePayoutQueueItem, ReleasedPayoutItem } from "@/lib/queries/admin-types";
 import { resolveProfileDisplayName } from "@/lib/queries/admin-types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -44,6 +45,7 @@ export async function fetchEligiblePayoutQueue({
 }: {
   limit?: number;
 } = {}): Promise<EligiblePayoutQueueItem[]> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: bookings, error } = await supabase
     .from("bookings")
@@ -103,6 +105,7 @@ export async function fetchRecentReleasedPayouts({
 }: {
   limit?: number;
 } = {}): Promise<ReleasedPayoutItem[]> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("payouts")
@@ -133,6 +136,7 @@ export type AdminPayoutDetail = {
 };
 
 export async function fetchPayoutDetail(bookingId: string): Promise<AdminPayoutDetail | null> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: booking, error: bookingError } = await supabase
     .from("bookings")
