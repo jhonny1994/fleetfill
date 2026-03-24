@@ -509,8 +509,9 @@ The internal admin web console should use a desktop-first sidebar structure:
 5. `payouts`
 6. `support`
 7. `users`
-8. `settings`
-9. `audit-and-health`
+8. `admins`
+9. `settings`
+10. `audit-and-health`
 
 Cross-cutting admin web expectations:
 
@@ -519,6 +520,7 @@ Cross-cutting admin web expectations:
 - detail workspaces that keep context visible while actions are taken
 - filters, aging, and action readiness visible without opening every row
 - desktop-first information density with responsive fallback, not mobile-card layouts stretched wider
+- `Admins` is a first-class section in the web console, not a hidden subsection under `Users` or `Settings`
 
 ### 11.1 Admin Dashboard
 

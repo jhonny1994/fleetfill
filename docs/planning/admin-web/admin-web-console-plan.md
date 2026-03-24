@@ -8,6 +8,8 @@ Implementation note:
 
 - the complete consolidated specification now lives in `docs/planning/admin-web/admin-web-master-spec.md`
 - this file remains the delivery plan and inventory companion to that master spec
+- the system-design authority for admin backend, auth, governance, and deployment lives in `docs/planning/admin-web/admin-web-system-design.md`
+- the UI and interaction authority lives in `docs/planning/admin-web/admin-web-ui-ux-spec.md`
 
 ## 1. Goal
 
@@ -27,6 +29,11 @@ It should replace heavy day-to-day ops work in the Flutter admin shell while reu
 - Recharts
 - Supabase Auth / Postgres / Storage / RPCs / Edge Functions
 - Vercel hosting
+
+Implementation quality note:
+
+- this stack is intentionally lean, but it is not minimal in rigor
+- production readiness requires complete admin governance, deployment discipline, and secure-by-default implementation, not only a functional UI scaffold
 
 Non-goals:
 
@@ -62,6 +69,7 @@ admin-web/
         payouts/
         support/
         users/
+        admins/
         settings/
         audit-and-health/
       layout.tsx
@@ -286,6 +294,12 @@ Environment ownership:
 - browser-safe values use `NEXT_PUBLIC_*`
 - sensitive service credentials stay server-side only and should remain minimal in the admin web project
 
+Review workflow:
+
+- use Vercel Preview as the standard review surface for UI changes
+- do not rely on screenshots alone for admin workflow validation
+- each major queue/detail slice should be reviewed in Preview before being considered ready for merge
+
 ## 3. Product Shape
 
 The admin console should be:
@@ -476,8 +490,9 @@ Sidebar:
 5. Payouts
 6. Support
 7. Users
-8. Settings
-9. Audit & Health
+8. Admins
+9. Settings
+10. Audit & Health
 
 Global header:
 
