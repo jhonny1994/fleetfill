@@ -143,16 +143,16 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 5.7 Add zod-backed forms for rejection reasons and other required sensitive action inputs
   - [x] 5.8 Add confirmation dialogs and mutation-state handling for dangerous actions
   - [x] 5.9 Add detail workspace tests covering shared layout behavior and key action flows
-- [ ] 6.0 Implement users, admin management, settings, audit/health, and global search
-  - [ ] 6.1 Implement the users list/search page with role/status/verification context
-  - [ ] 6.2 Implement the user detail workspace with profile, verification, vehicles, related operational context, and suspend/reactivate actions
-  - [ ] 6.3 Implement admin management pages for viewing admins, inviting admins, managing roles, and activation/deactivation
-  - [ ] 6.4 Ensure only `super_admin` can perform admin-governance actions
-  - [ ] 6.5 Implement the settings page using the typed settings backend contract and any required extensions
-  - [ ] 6.6 Implement the audit-and-health page with audit log, email logs, dead-letter visibility, and resend actions where supported
-  - [ ] 6.7 Implement the global search experience across bookings, shipments, users, payment proofs, verification packets, disputes, payouts, support requests, and admins where applicable
-  - [ ] 6.8 Ensure global search routes users into canonical admin detail pages instead of temporary-only overlays
-  - [ ] 6.9 Add tests for settings validation, admin management flows, user actions, and global search routing behavior
+- [x] 6.0 Implement users, admin management, settings, audit/health, and global search
+  - [x] 6.1 Implement the users list/search page with role/status/verification context
+  - [x] 6.2 Implement the user detail workspace with profile, verification, vehicles, related operational context, and suspend/reactivate actions
+  - [x] 6.3 Implement admin management pages for viewing admins, inviting admins, managing roles, and activation/deactivation
+  - [x] 6.4 Ensure only `super_admin` can perform admin-governance actions
+  - [x] 6.5 Implement the settings page using the typed settings backend contract and any required extensions
+  - [x] 6.6 Implement the audit-and-health page with audit log, email logs, dead-letter visibility, and resend actions where supported
+  - [x] 6.7 Implement the global search experience across bookings, shipments, users, payment proofs, verification packets, disputes, payouts, support requests, and admins where applicable
+  - [x] 6.8 Ensure global search routes users into canonical admin detail pages instead of temporary-only overlays
+  - [x] 6.9 Add tests for settings validation, admin management flows, user actions, and global search routing behavior
 - [ ] 7.0 Finalize localization, responsiveness, accessibility, and production hardening
   - [ ] 7.1 Implement server-loaded dictionaries for Arabic, French, and English with Arabic fallback policy
   - [ ] 7.2 Apply locale-aware formatting for dates, money, counts, and references while preserving tabular readability

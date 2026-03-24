@@ -17,7 +17,7 @@ export function AdminHeader({
   return (
     <header className="panel flex flex-col gap-4 p-4 lg:flex-row lg:items-center">
       <div className="min-w-0 flex-1">
-        <CommandSearch />
+        <CommandSearch locale={locale} />
       </div>
       <div className="flex items-center gap-3">
         <StatusBadge label="Preview shell" tone="warning" />
