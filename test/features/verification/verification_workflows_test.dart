@@ -162,7 +162,7 @@ void main() {
       );
     });
 
-    test('keeps carriers without payout accounts out of booking worklists', () {
+    test('allows verified carriers without payout accounts into booking worklists', () {
       final auth = carrierAuth(isCarrierVerified: true);
 
       final decision = AppRouteGuards.evaluate(
@@ -171,11 +171,7 @@ void main() {
         location: AppRoutePath.carrierBookings,
       );
 
-      expect(decision.target, AppRedirectTarget.payoutAccountGate);
-      expect(
-        AppRouteGuards.redirectLocation(decision, auth: auth),
-        AppRoutePath.carrierProfile,
-      );
+      expect(decision.target, AppRedirectTarget.none);
     });
   });
 

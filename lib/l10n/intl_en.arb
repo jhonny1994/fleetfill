@@ -418,6 +418,7 @@
   "startupConfigurationRequiredMessage": "FleetFill is not available right now. Please try again later.",
   "notificationNewLabel": "New",
   "notificationSeenLabel": "Seen",
+  "statusSetupRequiredLabel": "Setup required",
   "statusNeedsReviewLabel": "Needs review",
   "statusReadyLabel": "Ready",
   "supportDescription": "Send a question, report a problem, or ask for help with a booking or payment.",

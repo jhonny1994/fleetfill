@@ -487,6 +487,7 @@
   "startupConfigurationRequiredMessage": "FleetFill غير متاح حاليا. يرجى المحاولة لاحقا.",
   "notificationNewLabel": "جديد",
   "notificationSeenLabel": "تمت رؤيته",
+  "statusSetupRequiredLabel": "يتطلب الإعداد",
   "statusNeedsReviewLabel": "يحتاج مراجعة",
   "statusReadyLabel": "جاهز",
   "supportDescription": "اطرح سؤالا أو أبلغ عن مشكلة أو اطلب المساعدة بشأن حجز أو دفعة.",
