@@ -11,6 +11,18 @@ exception
 end $$;
 
 do $$ begin
+  create type public.admin_role as enum ('super_admin', 'ops_admin');
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create type public.admin_invitation_status as enum ('pending', 'accepted', 'expired', 'revoked');
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$ begin
   create type public.verification_status as enum ('pending', 'verified', 'rejected');
 exception
   when duplicate_object then null;
@@ -557,6 +569,51 @@ create table if not exists public.platform_settings (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.admin_accounts (
+  profile_id uuid primary key references public.profiles (id) on delete cascade,
+  admin_role public.admin_role not null,
+  is_active boolean not null default true,
+  invited_by uuid references public.profiles (id),
+  activated_at timestamptz not null default now(),
+  deactivated_at timestamptz,
+  deactivated_by uuid references public.profiles (id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint admin_accounts_deactivation_consistency_check
+    check (
+      (is_active = true and deactivated_at is null and deactivated_by is null)
+      or (is_active = false and deactivated_at is not null)
+    )
+);
+
+create table if not exists public.admin_invitations (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  role public.admin_role not null,
+  token_hash text not null unique,
+  status public.admin_invitation_status not null default 'pending',
+  expires_at timestamptz not null,
+  invited_by uuid references public.profiles (id),
+  accepted_by_profile_id uuid references public.profiles (id),
+  accepted_at timestamptz,
+  revoked_by uuid references public.profiles (id),
+  revoked_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint admin_invitations_email_check
+    check (char_length(trim(email)) > 0),
+  constraint admin_invitations_pending_acceptance_check
+    check (
+      (status = 'accepted' and accepted_by_profile_id is not null and accepted_at is not null)
+      or (status <> 'accepted' and accepted_by_profile_id is null and accepted_at is null)
+    ),
+  constraint admin_invitations_revoked_consistency_check
+    check (
+      (status = 'revoked' and revoked_at is not null)
+      or (status <> 'revoked' and revoked_by is null and revoked_at is null)
+    )
+);
+
 create table if not exists public.admin_audit_logs (
   id uuid primary key default gen_random_uuid(),
   actor_id uuid references public.profiles (id),
@@ -583,6 +640,20 @@ on public.profiles (role);
 
 create index if not exists profiles_verification_status_idx
 on public.profiles (verification_status);
+
+create index if not exists admin_accounts_role_active_idx
+on public.admin_accounts (admin_role, is_active);
+
+create unique index if not exists admin_accounts_one_active_profile_idx
+on public.admin_accounts (profile_id)
+where is_active;
+
+create index if not exists admin_invitations_status_expires_at_idx
+on public.admin_invitations (status, expires_at);
+
+create unique index if not exists admin_invitations_one_pending_per_email_idx
+on public.admin_invitations (lower(trim(email)))
+where status = 'pending';
 
 create index if not exists vehicles_carrier_id_idx
 on public.vehicles (carrier_id);
@@ -943,6 +1014,19 @@ as $$
   where p.id = (select auth.uid());
 $$;
 
+create or replace function public.current_admin_role()
+returns public.admin_role
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select aa.admin_role
+  from public.admin_accounts as aa
+  where aa.profile_id = (select auth.uid())
+    and aa.is_active = true;
+$$;
+
 create or replace function public.is_admin()
 returns boolean
 language sql
@@ -950,7 +1034,17 @@ stable
 security definer
 set search_path = public
 as $$
-  select coalesce(public.current_user_role() = 'admin', false);
+  select public.current_admin_role() is not null;
+$$;
+
+create or replace function public.is_super_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select coalesce(public.current_admin_role() = 'super_admin', false);
 $$;
 
 create or replace function public.is_service_role()
@@ -960,6 +1054,34 @@ stable
 set search_path = public
 as $$
   select current_setting('request.jwt.claim.role', true) = 'service_role';
+$$;
+
+create or replace function public.active_super_admin_count()
+returns integer
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select count(*)::integer
+  from public.admin_accounts as aa
+  where aa.is_active = true
+    and aa.admin_role = 'super_admin';
+$$;
+
+create or replace function public.is_active_admin_profile(p_profile_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.admin_accounts as aa
+    where aa.profile_id = p_profile_id
+      and aa.is_active = true
+  );
 $$;
 
 create or replace function public.booking_is_visible_to_current_user(p_booking_id uuid)
@@ -1925,6 +2047,594 @@ begin
 end;
 $$;
 
+create or replace function public.expire_admin_invitations()
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_expired_count integer := 0;
+begin
+  update public.admin_invitations
+  set status = 'expired',
+      updated_at = now()
+  where status = 'pending'
+    and expires_at <= now();
+
+  get diagnostics v_expired_count = row_count;
+  return v_expired_count;
+end;
+$$;
+
+create or replace function public.ensure_admin_profile(
+  p_profile_id uuid,
+  p_email text,
+  p_full_name text default null,
+  p_phone_number text default null
+)
+returns public.profiles
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_existing public.profiles;
+  v_email text := lower(trim(coalesce(p_email, '')));
+  v_previous_role_claim text := current_setting('request.jwt.claim.role', true);
+  v_previous_claims text := current_setting('request.jwt.claims', true);
+begin
+  if p_profile_id is null then
+    raise exception 'Admin profile id is required';
+  end if;
+
+  if v_email = '' then
+    raise exception 'Admin email is required';
+  end if;
+
+  perform set_config('request.jwt.claim.role', 'service_role', true);
+  perform set_config(
+    'request.jwt.claims',
+    coalesce(nullif(v_previous_claims, ''), '{"role":"service_role"}'),
+    true
+  );
+
+  insert into public.profiles (
+    id,
+    role,
+    full_name,
+    phone_number,
+    email,
+    is_active,
+    verification_status
+  )
+  values (
+    p_profile_id,
+    'admin',
+    nullif(trim(coalesce(p_full_name, '')), ''),
+    nullif(trim(coalesce(p_phone_number, '')), ''),
+    v_email,
+    true,
+    'verified'
+  )
+  on conflict (id) do update
+  set role = 'admin',
+      full_name = coalesce(
+        nullif(trim(coalesce(excluded.full_name, '')), ''),
+        public.profiles.full_name
+      ),
+      phone_number = coalesce(
+        nullif(trim(coalesce(excluded.phone_number, '')), ''),
+        public.profiles.phone_number
+      ),
+      email = excluded.email,
+      is_active = true,
+      updated_at = now()
+  returning * into v_existing;
+
+  perform set_config('request.jwt.claim.role', coalesce(v_previous_role_claim, ''), true);
+  perform set_config('request.jwt.claims', coalesce(v_previous_claims, '{}'), true);
+
+  return v_existing;
+end;
+$$;
+
+create or replace function public.bootstrap_first_super_admin(
+  p_profile_id uuid,
+  p_full_name text default null,
+  p_phone_number text default null
+)
+returns public.admin_accounts
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_auth_user auth.users;
+  v_result public.admin_accounts;
+begin
+  if not public.is_service_role() then
+    raise exception 'First admin bootstrap requires service role execution';
+  end if;
+
+  if exists (
+    select 1
+    from public.admin_accounts as aa
+    where aa.is_active = true
+  ) then
+    raise exception 'First admin bootstrap is only available before any admin exists';
+  end if;
+
+  select *
+  into v_auth_user
+  from auth.users
+  where id = p_profile_id;
+
+  if v_auth_user.id is null then
+    raise exception 'Bootstrap target auth user was not found';
+  end if;
+
+  perform public.ensure_admin_profile(
+    p_profile_id,
+    v_auth_user.email,
+    coalesce(
+      nullif(trim(coalesce(p_full_name, '')), ''),
+      nullif(trim(coalesce(v_auth_user.raw_user_meta_data->>'full_name', '')), '')
+    ),
+    p_phone_number
+  );
+
+  insert into public.admin_accounts (
+    profile_id,
+    admin_role,
+    is_active,
+    invited_by,
+    activated_at,
+    deactivated_at,
+    deactivated_by
+  )
+  values (
+    p_profile_id,
+    'super_admin',
+    true,
+    null,
+    now(),
+    null,
+    null
+  )
+  on conflict (profile_id) do update
+  set admin_role = 'super_admin',
+      is_active = true,
+      invited_by = null,
+      activated_at = coalesce(public.admin_accounts.activated_at, now()),
+      deactivated_at = null,
+      deactivated_by = null,
+      updated_at = now()
+  returning * into v_result;
+
+  perform public.write_admin_audit_log(
+    'admin_bootstrap_completed',
+    'admin_account',
+    p_profile_id,
+    'success',
+    null,
+    jsonb_build_object(
+      'profile_id', p_profile_id,
+      'admin_role', 'super_admin'
+    )
+  );
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.create_admin_invitation(
+  p_email text,
+  p_role public.admin_role,
+  p_expires_in_hours integer default 72
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_actor_id uuid := (select auth.uid());
+  v_email text := lower(trim(coalesce(p_email, '')));
+  v_invitation public.admin_invitations;
+  v_raw_token text;
+begin
+  perform public.expire_admin_invitations();
+
+  if not public.is_super_admin() and not public.is_service_role() then
+    raise exception 'Admin invitations require super admin access';
+  end if;
+
+  if public.is_super_admin() then
+    perform public.require_recent_admin_step_up();
+  end if;
+
+  if v_email = '' then
+    raise exception 'Admin invitation email is required';
+  end if;
+
+  if exists (
+    select 1
+    from public.admin_accounts as aa
+    inner join public.profiles as p on p.id = aa.profile_id
+    where aa.is_active = true
+      and lower(trim(p.email)) = v_email
+  ) then
+    raise exception 'An active admin already exists for this email';
+  end if;
+
+  if exists (
+    select 1
+    from public.admin_invitations as ai
+    where lower(trim(ai.email)) = v_email
+      and ai.status = 'pending'
+      and ai.expires_at > now()
+  ) then
+    raise exception 'A pending admin invitation already exists for this email';
+  end if;
+
+  if p_expires_in_hours is null or p_expires_in_hours < 1 then
+    raise exception 'Admin invitation expiry must be at least one hour';
+  end if;
+
+  v_raw_token := replace(gen_random_uuid()::text, '-', '') || replace(gen_random_uuid()::text, '-', '');
+
+  insert into public.admin_invitations (
+    email,
+    role,
+    token_hash,
+    status,
+    expires_at,
+    invited_by
+  )
+  values (
+    v_email,
+    p_role,
+    md5(v_raw_token),
+    'pending',
+    now() + make_interval(hours => p_expires_in_hours),
+    v_actor_id
+  )
+  returning * into v_invitation;
+
+  perform public.write_admin_audit_log(
+    'admin_invitation_created',
+    'admin_invitation',
+    v_invitation.id,
+    'success',
+    null,
+    jsonb_build_object(
+      'email', v_invitation.email,
+      'admin_role', v_invitation.role,
+      'expires_at', v_invitation.expires_at
+    )
+  );
+
+  return jsonb_build_object(
+    'id', v_invitation.id,
+    'email', v_invitation.email,
+    'role', v_invitation.role,
+    'status', v_invitation.status,
+    'expires_at', v_invitation.expires_at,
+    'token', v_raw_token
+  );
+end;
+$$;
+
+create or replace function public.revoke_admin_invitation(
+  p_invitation_id uuid,
+  p_reason text default null
+)
+returns public.admin_invitations
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_actor_id uuid := (select auth.uid());
+  v_result public.admin_invitations;
+begin
+  perform public.expire_admin_invitations();
+
+  if not public.is_super_admin() and not public.is_service_role() then
+    raise exception 'Revoking admin invitations requires super admin access';
+  end if;
+
+  if public.is_super_admin() then
+    perform public.require_recent_admin_step_up();
+  end if;
+
+  update public.admin_invitations
+  set status = 'revoked',
+      revoked_by = v_actor_id,
+      revoked_at = now(),
+      updated_at = now()
+  where id = p_invitation_id
+    and status = 'pending'
+    and expires_at > now()
+  returning * into v_result;
+
+  if v_result.id is null then
+    raise exception 'Pending admin invitation not found';
+  end if;
+
+  perform public.write_admin_audit_log(
+    'admin_invitation_revoked',
+    'admin_invitation',
+    v_result.id,
+    'success',
+    left(nullif(trim(coalesce(p_reason, '')), ''), 500),
+    jsonb_build_object(
+      'email', v_result.email,
+      'admin_role', v_result.role
+    )
+  );
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.accept_admin_invitation(
+  p_token text,
+  p_full_name text default null,
+  p_phone_number text default null
+)
+returns public.admin_accounts
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_actor_id uuid := (select auth.uid());
+  v_claim_email text := lower(trim(coalesce(current_setting('request.jwt.claim.email', true), '')));
+  v_invitation public.admin_invitations;
+  v_auth_user auth.users;
+  v_result public.admin_accounts;
+begin
+  perform public.expire_admin_invitations();
+
+  if v_actor_id is null then
+    raise exception 'authentication_required';
+  end if;
+
+  if nullif(trim(coalesce(p_token, '')), '') is null then
+    raise exception 'Admin invitation token is required';
+  end if;
+
+  select *
+  into v_invitation
+  from public.admin_invitations
+  where token_hash = md5(trim(p_token))
+    and status = 'pending'
+    and expires_at > now();
+
+  if v_invitation.id is null then
+    raise exception 'Admin invitation is invalid or expired';
+  end if;
+
+  select *
+  into v_auth_user
+  from auth.users
+  where id = v_actor_id;
+
+  if v_auth_user.id is null then
+    raise exception 'Authenticated user record was not found';
+  end if;
+
+  if lower(trim(v_auth_user.email)) <> lower(trim(v_invitation.email))
+     or (v_claim_email <> '' and v_claim_email <> lower(trim(v_invitation.email))) then
+    raise exception 'Admin invitation email does not match the authenticated account';
+  end if;
+
+  perform public.ensure_admin_profile(
+    v_actor_id,
+    v_auth_user.email,
+    coalesce(
+      nullif(trim(coalesce(p_full_name, '')), ''),
+      nullif(trim(coalesce(v_auth_user.raw_user_meta_data->>'full_name', '')), '')
+    ),
+    p_phone_number
+  );
+
+  insert into public.admin_accounts (
+    profile_id,
+    admin_role,
+    is_active,
+    invited_by,
+    activated_at,
+    deactivated_at,
+    deactivated_by
+  )
+  values (
+    v_actor_id,
+    v_invitation.role,
+    true,
+    v_invitation.invited_by,
+    now(),
+    null,
+    null
+  )
+  on conflict (profile_id) do update
+  set admin_role = excluded.admin_role,
+      is_active = true,
+      invited_by = coalesce(public.admin_accounts.invited_by, excluded.invited_by),
+      activated_at = coalesce(public.admin_accounts.activated_at, now()),
+      deactivated_at = null,
+      deactivated_by = null,
+      updated_at = now()
+  returning * into v_result;
+
+  update public.admin_invitations
+  set status = 'accepted',
+      accepted_by_profile_id = v_actor_id,
+      accepted_at = now(),
+      updated_at = now()
+  where id = v_invitation.id;
+
+  perform public.write_admin_audit_log(
+    'admin_invitation_accepted',
+    'admin_invitation',
+    v_invitation.id,
+    'success',
+    null,
+    jsonb_build_object(
+      'accepted_by_profile_id', v_actor_id,
+      'admin_role', v_result.admin_role
+    )
+  );
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.admin_update_admin_role(
+  p_profile_id uuid,
+  p_role public.admin_role,
+  p_reason text default null
+)
+returns public.admin_accounts
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_result public.admin_accounts;
+begin
+  if not public.is_super_admin() and not public.is_service_role() then
+    raise exception 'Admin role changes require super admin access';
+  end if;
+
+  if public.is_super_admin() then
+    perform public.require_recent_admin_step_up();
+  end if;
+
+  if p_role <> 'super_admin'
+     and exists (
+       select 1
+       from public.admin_accounts as aa
+       where aa.profile_id = p_profile_id
+         and aa.admin_role = 'super_admin'
+         and aa.is_active = true
+     )
+     and public.active_super_admin_count() <= 1 then
+    raise exception 'At least one active super admin must remain';
+  end if;
+
+  update public.admin_accounts
+  set admin_role = p_role,
+      updated_at = now()
+  where profile_id = p_profile_id
+  returning * into v_result;
+
+  if v_result.profile_id is null then
+    raise exception 'Admin account not found';
+  end if;
+
+  perform public.write_admin_audit_log(
+    'admin_role_changed',
+    'admin_account',
+    v_result.profile_id,
+    'success',
+    left(nullif(trim(coalesce(p_reason, '')), ''), 500),
+    jsonb_build_object(
+      'profile_id', v_result.profile_id,
+      'admin_role', v_result.admin_role
+    )
+  );
+
+  return v_result;
+end;
+$$;
+
+create or replace function public.admin_set_admin_account_active(
+  p_profile_id uuid,
+  p_is_active boolean,
+  p_reason text default null
+)
+returns public.admin_accounts
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_result public.admin_accounts;
+begin
+  if not public.is_super_admin() and not public.is_service_role() then
+    raise exception 'Admin activation changes require super admin access';
+  end if;
+
+  if public.is_super_admin() then
+    perform public.require_recent_admin_step_up();
+  end if;
+
+  if p_is_active = false
+     and exists (
+       select 1
+       from public.admin_accounts as aa
+       where aa.profile_id = p_profile_id
+         and aa.admin_role = 'super_admin'
+         and aa.is_active = true
+     )
+     and public.active_super_admin_count() <= 1 then
+    raise exception 'The last active super admin cannot be deactivated';
+  end if;
+
+  update public.admin_accounts
+  set is_active = p_is_active,
+      activated_at = case
+        when p_is_active = true and activated_at is null then now()
+        else activated_at
+      end,
+      deactivated_at = case
+        when p_is_active = true then null
+        else now()
+      end,
+      deactivated_by = case
+        when p_is_active = true then null
+        else (select auth.uid())
+      end,
+      updated_at = now()
+  where profile_id = p_profile_id
+  returning * into v_result;
+
+  if v_result.profile_id is null then
+    raise exception 'Admin account not found';
+  end if;
+
+  if p_is_active = true then
+    update public.profiles
+    set is_active = true,
+        updated_at = now()
+    where id = p_profile_id;
+  else
+    update public.profiles
+    set is_active = false,
+        updated_at = now()
+    where id = p_profile_id;
+  end if;
+
+  perform public.write_admin_audit_log(
+    case when p_is_active then 'admin_account_activated' else 'admin_account_deactivated' end,
+    'admin_account',
+    v_result.profile_id,
+    'success',
+    left(nullif(trim(coalesce(p_reason, '')), ''), 500),
+    jsonb_build_object(
+      'profile_id', v_result.profile_id,
+      'is_active', v_result.is_active,
+      'admin_role', v_result.admin_role
+    )
+  );
+
+  return v_result;
+end;
+$$;
+
 create or replace function public.claim_email_outbox_jobs(
   p_worker_id text,
   p_batch_size integer default 10
@@ -2317,6 +3027,8 @@ alter table public.email_templates enable row level security;
 alter table public.notifications enable row level security;
 alter table public.user_devices enable row level security;
 alter table public.platform_settings enable row level security;
+alter table public.admin_accounts enable row level security;
+alter table public.admin_invitations enable row level security;
 alter table public.admin_audit_logs enable row level security;
 alter table public.support_requests enable row level security;
 alter table public.support_messages enable row level security;
@@ -2679,6 +3391,16 @@ on public.platform_settings for all to authenticated
 using (public.is_admin())
 with check (public.is_admin());
 
+drop policy if exists admin_accounts_select_self_or_admin on public.admin_accounts;
+create policy admin_accounts_select_self_or_admin
+on public.admin_accounts for select to authenticated
+using (profile_id = (select auth.uid()) or public.is_admin());
+
+drop policy if exists admin_invitations_super_admin_read_only on public.admin_invitations;
+create policy admin_invitations_super_admin_read_only
+on public.admin_invitations for select to authenticated
+using (public.is_super_admin());
+
 drop policy if exists admin_audit_logs_admin_read_only on public.admin_audit_logs;
 create policy admin_audit_logs_admin_read_only
 on public.admin_audit_logs for select to authenticated
@@ -2724,6 +3446,14 @@ for each row execute function public.set_updated_at();
 
 create or replace trigger security_rate_limits_set_updated_at
 before update on public.security_rate_limits
+for each row execute function public.set_updated_at();
+
+create or replace trigger admin_accounts_set_updated_at
+before update on public.admin_accounts
+for each row execute function public.set_updated_at();
+
+create or replace trigger admin_invitations_set_updated_at
+before update on public.admin_invitations
 for each row execute function public.set_updated_at();
 
 create or replace trigger support_requests_set_updated_at
@@ -2777,6 +3507,27 @@ grant execute on function public.write_admin_audit_log(text, text, uuid, text, t
 
 revoke all on function public.require_recent_admin_step_up() from public, anon, authenticated;
 grant execute on function public.require_recent_admin_step_up() to service_role;
+
+revoke all on function public.expire_admin_invitations() from public, anon;
+grant execute on function public.expire_admin_invitations() to authenticated, service_role;
+
+revoke all on function public.bootstrap_first_super_admin(uuid, text, text) from public, anon, authenticated;
+grant execute on function public.bootstrap_first_super_admin(uuid, text, text) to service_role;
+
+revoke all on function public.create_admin_invitation(text, public.admin_role, integer) from public, anon;
+grant execute on function public.create_admin_invitation(text, public.admin_role, integer) to authenticated, service_role;
+
+revoke all on function public.revoke_admin_invitation(uuid, text) from public, anon;
+grant execute on function public.revoke_admin_invitation(uuid, text) to authenticated, service_role;
+
+revoke all on function public.accept_admin_invitation(text, text, text) from public, anon;
+grant execute on function public.accept_admin_invitation(text, text, text) to authenticated, service_role;
+
+revoke all on function public.admin_update_admin_role(uuid, public.admin_role, text) from public, anon;
+grant execute on function public.admin_update_admin_role(uuid, public.admin_role, text) to authenticated, service_role;
+
+revoke all on function public.admin_set_admin_account_active(uuid, boolean, text) from public, anon;
+grant execute on function public.admin_set_admin_account_active(uuid, boolean, text) to authenticated, service_role;
 
 revoke all on function public.get_client_settings() from public, anon;
 grant execute on function public.get_client_settings() to authenticated, service_role;
