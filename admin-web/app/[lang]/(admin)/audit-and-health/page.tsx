@@ -19,14 +19,14 @@ export default async function AuditAndHealthPage({
         <p className="eyebrow">{ui.pages.audit.eyebrow}</p>
         <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.title}</h1>
         <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
-          {ui.pages.audit.title}
+          {ui.pages.audit.body}
         </p>
       </section>
 
       <section className="panel space-y-4 p-6">
         <div className="space-y-2">
           <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.auditTrail}</h2>
-          <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.auditTrail}</p>
+          <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.auditTrailBody}</p>
         </div>
         <div className="space-y-3">
           {snapshot.auditLogs.map((log) => (
@@ -51,7 +51,7 @@ export default async function AuditAndHealthPage({
         <section className="panel space-y-4 p-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.emailLogs}</h2>
-            <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.emailLogs}</p>
+            <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.emailLogsBody}</p>
           </div>
           <div className="space-y-3">
             {snapshot.emailDeliveries.map((log) => (
@@ -81,7 +81,7 @@ export default async function AuditAndHealthPage({
         <section className="panel space-y-4 p-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.deadLetters}</h2>
-            <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.deadLetters}</p>
+            <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.deadLettersBody}</p>
           </div>
           <div className="space-y-3">
             {snapshot.deadLetterEmails.map((job) => (

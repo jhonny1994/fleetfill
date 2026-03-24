@@ -160,9 +160,23 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SignUpScreen(),
       ),
       GoRoute(
+        path: AppRoutePath.confirmEmail,
+        name: AppRouteName.confirmEmail.name,
+        builder: (context, state) => ConfirmEmailScreen(
+          email: state.uri.queryParameters['email'],
+        ),
+      ),
+      GoRoute(
         path: AppRoutePath.forgotPassword,
         name: AppRouteName.forgotPassword.name,
         builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: AppRoutePath.resetPasswordSent,
+        name: AppRouteName.resetPasswordSent.name,
+        builder: (context, state) => PasswordResetEmailSentScreen(
+          email: state.uri.queryParameters['email'],
+        ),
       ),
       GoRoute(
         path: AppRoutePath.resetPassword,

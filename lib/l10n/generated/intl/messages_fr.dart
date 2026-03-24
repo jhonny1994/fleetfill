@@ -101,7 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "E-mails en attente",
     ),
     "adminDashboardEmailHealthTitle": MessageLookupByLibrary.simpleMessage(
-      "Distribution des e-mails",
+      "Distribution des e-mails transactionnels",
     ),
     "adminDashboardNavLabel": MessageLookupByLibrary.simpleMessage(
       "Tableau de bord",
@@ -126,7 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Aucun e-mail en échec ne demande d\'action.",
     ),
     "adminEmailDeadLetterTitle": MessageLookupByLibrary.simpleMessage(
-      "E-mails en échec",
+      "E-mails transactionnels en échec",
     ),
     "adminEmailErrorCodeLabel": MessageLookupByLibrary.simpleMessage(
       "Code d\'erreur",
@@ -147,7 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Aucun log e-mail ne correspond aux filtres actuels.",
     ),
     "adminEmailQueueTitle": MessageLookupByLibrary.simpleMessage(
-      "Distribution des e-mails",
+      "Distribution des e-mails transactionnels",
     ),
     "adminEmailResendAction": MessageLookupByLibrary.simpleMessage("Renvoyer"),
     "adminEmailResendSuccess": MessageLookupByLibrary.simpleMessage(
@@ -215,7 +215,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminQueueDisputesTabLabel": MessageLookupByLibrary.simpleMessage(
       "Litiges",
     ),
-    "adminQueueEmailTabLabel": MessageLookupByLibrary.simpleMessage("E-mail"),
+    "adminQueueEmailTabLabel": MessageLookupByLibrary.simpleMessage(
+      "E-mail transactionnel",
+    ),
     "adminQueuePaymentsTabLabel": MessageLookupByLibrary.simpleMessage(
       "Paiements",
     ),
@@ -338,7 +340,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Aucun log e-mail recent pour cet utilisateur.",
     ),
     "adminUserEmailSectionTitle": MessageLookupByLibrary.simpleMessage(
-      "E-mails recents",
+      "E-mails transactionnels recents",
     ),
     "adminUserReactivateAction": MessageLookupByLibrary.simpleMessage(
       "Reactiver l\'utilisateur",
@@ -451,8 +453,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "authAuthenticationRequiredMessage": MessageLookupByLibrary.simpleMessage(
       "Connectez-vous pour continuer cette action.",
     ),
+    "authBackToSignInAction": MessageLookupByLibrary.simpleMessage(
+      "Retour a la connexion",
+    ),
     "authCancelledMessage": MessageLookupByLibrary.simpleMessage(
       "Connexion annulee.",
+    ),
+    "authConfirmEmailDescription": MessageLookupByLibrary.simpleMessage(
+      "Ouvrez le lien de confirmation dans votre boite de reception pour activer ce compte et continuer dans FleetFill.",
+    ),
+    "authConfirmEmailMissingAddressMessage": MessageLookupByLibrary.simpleMessage(
+      "Ouvrez cet ecran juste apres l\'inscription ou une tentative de connexion pour que FleetFill sache quelle boite de reception doit recevoir le lien de confirmation.",
+    ),
+    "authConfirmEmailTitle": MessageLookupByLibrary.simpleMessage(
+      "Confirmez votre e-mail",
     ),
     "authConfirmPasswordHint": MessageLookupByLibrary.simpleMessage(
       "Repetez votre mot de passe",
@@ -519,6 +533,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "authNewPasswordLabel": MessageLookupByLibrary.simpleMessage(
       "Nouveau mot de passe",
     ),
+    "authOpenSignInAction": MessageLookupByLibrary.simpleMessage(
+      "Ouvrir la connexion",
+    ),
     "authPasswordHint": MessageLookupByLibrary.simpleMessage(
       "Entrez votre mot de passe",
     ),
@@ -532,14 +549,29 @@ class MessageLookup extends MessageLookupByLibrary {
     "authPasswordResetInfoMessage": MessageLookupByLibrary.simpleMessage(
       "FleetFill enverra un lien de reinitialisation a l\'adresse e-mail du compte.",
     ),
+    "authPasswordResetSentDescription": MessageLookupByLibrary.simpleMessage(
+      "Ouvrez le lien de recuperation recu dans votre boite de reception pour choisir un nouveau mot de passe.",
+    ),
+    "authPasswordResetSentTitle": MessageLookupByLibrary.simpleMessage(
+      "Verifiez votre e-mail",
+    ),
     "authPasswordUpdatedMessage": MessageLookupByLibrary.simpleMessage(
       "Votre mot de passe a été mis a jour.",
     ),
     "authRateLimitedMessage": MessageLookupByLibrary.simpleMessage(
       "Trop de tentatives d\'authentification. Attendez un instant puis reessayez.",
     ),
+    "authRequestAnotherLinkAction": MessageLookupByLibrary.simpleMessage(
+      "Demander un nouveau lien",
+    ),
     "authRequiredFieldMessage": MessageLookupByLibrary.simpleMessage(
       "Ce champ est obligatoire.",
+    ),
+    "authResendConfirmationAction": MessageLookupByLibrary.simpleMessage(
+      "Renvoyer l\'e-mail de confirmation",
+    ),
+    "authResendResetEmailAction": MessageLookupByLibrary.simpleMessage(
+      "Renvoyer l\'e-mail de reinitialisation",
     ),
     "authResetEmailSentMessage": MessageLookupByLibrary.simpleMessage(
       "Les instructions de reinitialisation ont ete envoyees.",
@@ -588,6 +620,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "authUpdatePasswordAction": MessageLookupByLibrary.simpleMessage(
       "Mettre a jour le mot de passe",
+    ),
+    "authUseDifferentEmailAction": MessageLookupByLibrary.simpleMessage(
+      "Utiliser un autre e-mail",
     ),
     "authUserAlreadyRegisteredMessage": MessageLookupByLibrary.simpleMessage(
       "Un compte existe déjà pour cet e-mail.",

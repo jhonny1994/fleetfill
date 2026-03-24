@@ -125,12 +125,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     setState(() => _isSubmitting = true);
     final s = S.of(context);
+    final email = _emailController.text.trim();
 
     try {
       await ref
           .read(authRepositoryProvider)
           .signInWithPassword(
-            email: _emailController.text.trim(),
+            email: email,
             password: _passwordController.text,
           );
       await ref.read(authSessionControllerProvider.notifier).refresh();
@@ -140,6 +141,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       AppFeedback.showSnackBar(context, s.authSignInSuccess);
     } on AuthException catch (error) {
       if (!mounted) {
+        return;
+      }
+      if (isEmailNotConfirmedException(error)) {
+        context.go(AppRoutePath.authConfirmEmail(email: email));
         return;
       }
       AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
@@ -292,21 +297,22 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final s = S.of(context);
 
     try {
+      final email = _emailController.text.trim();
       final needsConfirmation = await ref
           .read(authRepositoryProvider)
           .signUpWithPassword(
-            email: _emailController.text.trim(),
+            email: email,
             password: _passwordController.text,
           );
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(
-        context,
-        needsConfirmation
-            ? s.authVerificationEmailSentMessage
-            : s.authAccountCreatedMessage,
-      );
+      if (needsConfirmation) {
+        context.go(AppRoutePath.authConfirmEmail(email: email));
+        return;
+      }
+
+      AppFeedback.showSnackBar(context, s.authAccountCreatedMessage);
       context.go(AppRoutePath.signIn);
     } on AuthException catch (error) {
       if (!mounted) {
@@ -339,6 +345,111 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
+      }
+    }
+  }
+}
+
+class ConfirmEmailScreen extends ConsumerStatefulWidget {
+  const ConfirmEmailScreen({required this.email, super.key});
+
+  final String? email;
+
+  @override
+  ConsumerState<ConfirmEmailScreen> createState() => _ConfirmEmailScreenState();
+}
+
+class _ConfirmEmailScreenState extends ConsumerState<ConfirmEmailScreen> {
+  bool _isResending = false;
+
+  String get _email => widget.email?.trim() ?? '';
+  bool get _canResend => _email.isNotEmpty;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+
+    return AuthScaffold(
+      title: s.authConfirmEmailTitle,
+      subtitle: s.authConfirmEmailDescription,
+      heroIcon: Icons.mark_email_read_rounded,
+      footer: TextButton(
+        onPressed: () => context.go(AppRoutePath.signIn),
+        child: Text(s.authBackToSignInAction),
+      ),
+      child: AuthCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AuthInfoBanner(
+              message: _canResend
+                  ? s.authVerificationEmailSentMessage
+                  : s.authConfirmEmailMissingAddressMessage,
+              icon: Icons.alternate_email_rounded,
+            ),
+            if (_canResend) ...[
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                _email,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+            const SizedBox(height: AppSpacing.lg),
+            AuthSubmitButton(
+              label: s.authOpenSignInAction,
+              isLoading: false,
+              onPressed: () => context.go(AppRoutePath.signIn),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            OutlinedButton.icon(
+              onPressed: _isResending || !_canResend
+                  ? null
+                  : () => unawaited(_resend()),
+              icon: _isResending
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.refresh_rounded),
+              label: Text(s.authResendConfirmationAction),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextButton(
+              onPressed: () => context.go(AppRoutePath.signUp),
+              child: Text(s.authUseDifferentEmailAction),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _resend() async {
+    setState(() => _isResending = true);
+    final s = S.of(context);
+
+    try {
+      await ref
+          .read(authRepositoryProvider)
+          .resendSignUpConfirmationEmail(
+            _email,
+          );
+      if (!mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, s.authVerificationEmailSentMessage);
+    } on AuthException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
+    } finally {
+      if (mounted) {
+        setState(() => _isResending = false);
       }
     }
   }
@@ -411,16 +522,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     setState(() => _isSubmitting = true);
     final s = S.of(context);
+    final email = _emailController.text.trim();
 
     try {
-      await ref
-          .read(authRepositoryProvider)
-          .sendPasswordResetEmail(_emailController.text.trim());
+      await ref.read(authRepositoryProvider).sendPasswordResetEmail(email);
       if (!mounted) {
         return;
       }
-      AppFeedback.showSnackBar(context, s.authResetEmailSentMessage);
-      context.go(AppRoutePath.signIn);
+      context.go(AppRoutePath.authResetPasswordSent(email: email));
     } on AuthException catch (error) {
       if (!mounted) {
         return;
@@ -429,6 +538,109 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
+      }
+    }
+  }
+}
+
+class PasswordResetEmailSentScreen extends ConsumerStatefulWidget {
+  const PasswordResetEmailSentScreen({required this.email, super.key});
+
+  final String? email;
+
+  @override
+  ConsumerState<PasswordResetEmailSentScreen> createState() =>
+      _PasswordResetEmailSentScreenState();
+}
+
+class _PasswordResetEmailSentScreenState
+    extends ConsumerState<PasswordResetEmailSentScreen> {
+  bool _isResending = false;
+
+  String get _email => widget.email?.trim() ?? '';
+  bool get _canResend => _email.isNotEmpty;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+
+    return AuthScaffold(
+      title: s.authPasswordResetSentTitle,
+      subtitle: s.authPasswordResetSentDescription,
+      heroIcon: Icons.forward_to_inbox_rounded,
+      footer: TextButton(
+        onPressed: () => context.go(AppRoutePath.signIn),
+        child: Text(s.authBackToSignInAction),
+      ),
+      child: AuthCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AuthInfoBanner(
+              message: _canResend
+                  ? s.authResetEmailSentMessage
+                  : s.authResetPasswordUnavailableMessage,
+              icon: Icons.mail_lock_rounded,
+            ),
+            if (_canResend) ...[
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                _email,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+            const SizedBox(height: AppSpacing.lg),
+            AuthSubmitButton(
+              label: s.authBackToSignInAction,
+              isLoading: false,
+              onPressed: () => context.go(AppRoutePath.signIn),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            OutlinedButton.icon(
+              onPressed: _isResending || !_canResend
+                  ? null
+                  : () => unawaited(_resend()),
+              icon: _isResending
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.refresh_rounded),
+              label: Text(s.authResendResetEmailAction),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextButton(
+              onPressed: () => context.go(AppRoutePath.forgotPassword),
+              child: Text(s.authRequestAnotherLinkAction),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _resend() async {
+    setState(() => _isResending = true);
+    final s = S.of(context);
+
+    try {
+      await ref.read(authRepositoryProvider).resendPasswordResetEmail(_email);
+      if (!mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, s.authResetEmailSentMessage);
+    } on AuthException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, mapAuthExceptionMessage(s, error));
+    } finally {
+      if (mounted) {
+        setState(() => _isResending = false);
       }
     }
   }
@@ -465,6 +677,12 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       title: s.authResetPasswordTitle,
       subtitle: s.authResetPasswordDescription,
       heroIcon: Icons.key_rounded,
+      footer: canReset
+          ? null
+          : TextButton(
+              onPressed: () => context.go(AppRoutePath.forgotPassword),
+              child: Text(s.authRequestAnotherLinkAction),
+            ),
       child: AppFocusTraversal.form(
         child: AuthCard(
           child: canReset
