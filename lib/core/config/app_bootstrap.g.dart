@@ -34,7 +34,7 @@ final class AppBootstrapControllerProvider
 }
 
 String _$appBootstrapControllerHash() =>
-    r'560a26b5495c68084e0df49bd5e9499fb4fbb06b';
+    r'a28708d64f383fbf9339c3b579ccf131e34dc8a9';
 
 abstract class _$AppBootstrapController
     extends $AsyncNotifier<AppBootstrapState> {

@@ -91,7 +91,7 @@ class _FakeNotificationRepository extends NotificationRepository {
   _FakeNotificationRepository({required this.notifications})
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
       );

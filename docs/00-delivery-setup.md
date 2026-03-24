@@ -4,19 +4,20 @@ This document closes the Phase 0 working agreement for FleetFill.
 
 It defines how the project is organized before feature development begins.
 
-## 1. Environment Naming
+## 1. Runtime Contract
 
-FleetFill uses three named environments:
+FleetFill uses one shared runtime contract across Flutter, admin web, CI, and Supabase:
 
-- `local` - developer machine and local test data
-- `staging` - integrated pre-production validation environment
-- `production` - live customer environment
+- local development uses local URLs, local keys, and local-only transport overrides
+- hosted behavior uses hosted URLs, hosted keys, and managed secrets
+
+Release candidates and Vercel previews may still exist as delivery channels, but they are not separate FleetFill runtime modes.
 
 Rules:
 
-- do not blur staging and production secrets
-- every release candidate should be validated in `staging` first
-- runtime config must make the active environment explicit
+- do not blur local and hosted secrets
+- every release candidate should be validated against the intended hosted configuration before production rollout
+- runtime behavior must derive from actual URLs, keys, and secrets rather than a separate environment label
 
 ## 2. Repository And Branch Strategy
 
@@ -103,13 +104,13 @@ Recommended storage path patterns:
 Client-safe values may be exposed to the app through controlled configuration such as:
 
 - Supabase project URL
-- Supabase publishable key for hosted staging/production, or legacy anon key for local CLI/self-hosted development
+- Supabase publishable key for hosted deployments, or legacy anon key for local CLI/self-hosted development
 - Google web client ID used as the native mobile `serverClientId`
 - optional Google iOS client ID override when the bundled native Firebase config should not be the source of truth
 - public support and release URLs
-- non-secret environment labels
+- non-secret public URLs and release metadata
 
-These should be injected through environment-specific app config, not hardcoded repeatedly.
+These should be injected through runtime config based on actual targets, not hardcoded repeatedly.
 
 ### 5.2 Server Secrets
 

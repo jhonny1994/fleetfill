@@ -4541,7 +4541,7 @@ as $$
     with current_environment as (
       select coalesce(
         nullif(current_setting('app.settings.environment', true), ''),
-        'staging'
+        'local'
       )::public.platform_environment as environment
     )
     select coalesce(

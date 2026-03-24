@@ -142,7 +142,7 @@ class _FakePushNotificationService extends PushNotificationService {
   _FakePushNotificationService()
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
         repository: _EmptyNotificationRepository(),
@@ -164,7 +164,7 @@ class _EmptyNotificationRepository extends NotificationRepository {
   _EmptyNotificationRepository()
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
       );
