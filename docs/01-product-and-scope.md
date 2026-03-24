@@ -222,15 +222,17 @@ Alternative user-selectable sorts:
 
 ## 11. Support Model
 
-Customer support starts with email support.
+Customer support is database-backed inside the app.
 
-There is no real-time in-app chat in the initial canonical product definition. Support chat or contact flows can be added later without changing the domain model.
+Support is modeled as tickets and threaded replies, not mailbox-style email handling.
+
+There is no consumer-style real-time chat in the initial canonical product definition. Support can evolve later without changing the core domain model.
 
 Transactional email is part of the platform communication model.
 
 FleetFill uses a server-controlled transactional email provider for outbound operational email such as:
 
-- support acknowledgements
+- support acknowledgements or fallback alerts
 - booking confirmation messages
 - payment review and rejection messages
 - dispute and payout updates

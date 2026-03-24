@@ -143,7 +143,7 @@ Verification notes:
 
 - [x] Implement verification document domain models and repositories
 - [x] Build vehicle CRUD flows
-- [x] Build document upload flow for driver identity/license and truck documents
+- [x] Build document upload flow for driver's license and vehicle documents
 - [x] Support document replacement with preserved history
 - [x] Show verification status and rejection reasons in carrier UX
 - [x] Implement carrier verification gates before route, booking, or payout-relevant operational actions
@@ -157,7 +157,7 @@ Verification notes:
 
 Verification notes:
 
-- carrier verification now lives under the carrier profile branch with dedicated vehicle CRUD, verification center, document upload/replace flows, and visible rejection reasons in localized copy
+- carrier verification now lives under the carrier profile branch with dedicated vehicle CRUD, a unified verification center, document upload/replace flows, and visible document-level rejection reasons in localized copy
 - admin verification now uses privileged SQL review functions for document review and packet approval so append-only history and audit logging stay server-controlled
 - verification packet aggregation now keeps the latest document version per document type while preserving older history records in `verification_documents`
 - feature coverage was expanded in `test/features/verification/verification_workflows_test.dart` for latest-document selection, carrier operational gates, and Phase 4 SQL contract safeguards
