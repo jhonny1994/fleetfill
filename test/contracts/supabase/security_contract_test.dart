@@ -79,7 +79,7 @@ void main() {
         'create or replace function public.admin_retry_dead_letter_email_job(',
       );
       auditTracker = File(
-        'docs/working/production-readiness-audit.md',
+        'docs/planning/operations/production-readiness-audit.md',
       ).readAsStringSync();
     });
 

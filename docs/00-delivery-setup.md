@@ -33,7 +33,7 @@ Rules:
 
 ## 3. Package And Code Structure Strategy
 
-FleetFill currently uses one Flutter app codebase.
+FleetFill currently uses one Flutter app codebase for shipper and carrier surfaces, with a separate internal admin web console planned as the long-term primary admin surface.
 
 Recommended boundaries:
 
@@ -41,13 +41,30 @@ Recommended boundaries:
 - `shared/` - reusable widgets, shared models, shared providers, design-system primitives
 - `features/shipper/` - shipper-only flows
 - `features/carrier/` - carrier-only flows
-- `features/admin/` - internal admin experience inside the same app unless split later
+- `features/admin/` - temporary internal admin fallback surface inside the Flutter app while the primary admin web console reaches parity
 - `features/profile/`, `features/support/`, `features/notifications/`, `features/onboarding/` - cross-role feature groups
 
 Current decision:
 
-- keep one codebase and one app shell for now
-- keep admin as an internal role surface, not a separate product yet
+- keep one customer-facing Flutter app shell for shipper and carrier flows
+- build the primary admin experience as a separate internal web product in the same repository
+
+Recommended repository shape:
+
+```text
+fleetfill/
+  lib/                  # Flutter mobile app
+  supabase/             # shared backend
+  docs/
+  admin-web/            # Next.js internal admin console
+```
+
+Admin delivery agreement:
+
+- `admin-web/` is deployed separately from the Flutter app
+- the admin web console reuses the same Supabase project, schema, storage, RPCs, and Edge Functions
+- business rules remain server-controlled in Supabase; the web app is an operations UI, not a second backend
+- the Flutter admin surface remains available only as a transitional fallback for urgent internal operations until web parity is reached
 
 ## 4. Naming Conventions
 
@@ -170,5 +187,6 @@ Current ADR set:
 - `docs/adr/ADR-002-one-shipment-one-booking-one-trip.md`
 - `docs/adr/ADR-003-platform-held-payment-flow.md`
 - `docs/adr/ADR-004-supabase-rpc-edge-boundaries.md`
+- `docs/adr/ADR-005-admin-web-console.md`
 
 Add new ADRs only for decisions that significantly affect domain, schema, workflow, or platform shape.

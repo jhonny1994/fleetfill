@@ -101,6 +101,10 @@ They can:
 - manage platform settings
 - audit sensitive actions
 
+Admins operate primarily through a separate internal web console.
+
+The Flutter app may retain a narrow internal fallback surface for urgent triage during transition, but it is not the long-term primary admin workspace.
+
 ## 5. Authentication And Identity
 
 ### 5.1 Authentication
@@ -123,7 +127,7 @@ Phone number is mandatory on the profile before the user can perform operational
 ### 6.1 Included In The Core Product
 
 - Mobile app for shippers and carriers
-- Internal admin operations experience
+- Internal admin web operations console
 - Exact route search by Algeria commune pair and desired date
 - Recurring routes and one-off trips
 - One shipment to one booking to one truck/trip
@@ -156,6 +160,7 @@ The core design must support future improvements without changing the fundamenta
 - improved support tooling
 - additional payment and payout automation
 - iOS public rollout
+- richer admin assignment, reporting, and SLA tooling without rewriting the backend domain
 
 ## 7. Supported Payment Rails
 

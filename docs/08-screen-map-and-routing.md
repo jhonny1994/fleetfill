@@ -487,12 +487,38 @@ Do not create separate success pages for booking created, payment submitted, rev
 
 Admin should stay lean on mobile.
 
+The long-term primary admin experience is a separate internal web console.
+
+The Flutter admin shell exists as a transitional fallback only.
+
 Recommended sections:
 
 1. `dashboard`
 2. `queues`
 3. `users`
 4. `settings`
+
+### 11.0 Admin Web Information Architecture
+
+The internal admin web console should use a desktop-first sidebar structure:
+
+1. `dashboard`
+2. `payments`
+3. `verification`
+4. `disputes`
+5. `payouts`
+6. `support`
+7. `users`
+8. `settings`
+9. `audit-and-health`
+
+Cross-cutting admin web expectations:
+
+- one global search entry for bookings, shipments, users, proofs, disputes, payouts, and support requests
+- queue-first navigation
+- detail workspaces that keep context visible while actions are taken
+- filters, aging, and action readiness visible without opening every row
+- desktop-first information density with responsive fallback, not mobile-card layouts stretched wider
 
 ### 11.1 Admin Dashboard
 
