@@ -35,7 +35,7 @@ exception
 end $$;
 
 do $$ begin
-  create type public.platform_environment as enum ('staging', 'production');
+  create type public.platform_environment as enum ('local', 'production');
 exception
   when duplicate_object then null;
 end $$;
@@ -1622,7 +1622,7 @@ as $$
     with current_environment as (
       select coalesce(
         nullif(current_setting('app.settings.environment', true), ''),
-        'staging'
+        'local'
       )::public.platform_environment as environment
     )
     select coalesce(
