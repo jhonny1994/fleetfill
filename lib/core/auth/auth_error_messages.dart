@@ -1,6 +1,16 @@
 import 'package:fleetfill/core/localization/localization.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+bool isEmailNotConfirmedAuthError(
+  String rawMessage, {
+  String? code,
+}) {
+  final normalizedCode = code?.trim().toLowerCase();
+  final message = rawMessage.toLowerCase();
+  return normalizedCode == 'email_not_confirmed' ||
+      message.contains('email not confirmed');
+}
+
 String mapAuthErrorMessage(
   S s,
   String rawMessage, {
@@ -16,8 +26,7 @@ String mapAuthErrorMessage(
       message.contains('user already registered')) {
     return s.authUserAlreadyRegisteredMessage;
   }
-  if (normalizedCode == 'email_not_confirmed' ||
-      message.contains('email not confirmed')) {
+  if (isEmailNotConfirmedAuthError(rawMessage, code: code)) {
     return s.authEmailNotConfirmedMessage;
   }
   if (normalizedCode == 'email_address_invalid' ||
@@ -49,9 +58,6 @@ String mapAuthErrorMessage(
   }
   if (message.contains('invalid login credentials')) {
     return s.authInvalidCredentialsMessage;
-  }
-  if (message.contains('email not confirmed')) {
-    return s.authEmailNotConfirmedMessage;
   }
   if (message.contains('user already registered')) {
     return s.authUserAlreadyRegisteredMessage;
@@ -88,4 +94,8 @@ String mapAuthExceptionMessage(S s, AuthException error) {
     code: error.code,
     statusCode: error.statusCode,
   );
+}
+
+bool isEmailNotConfirmedException(AuthException error) {
+  return isEmailNotConfirmedAuthError(error.message, code: error.code);
 }
