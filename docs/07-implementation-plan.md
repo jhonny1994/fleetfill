@@ -14,10 +14,10 @@ Rules:
 - [x] Confirm Flutter, Dart, Android, Supabase, and transactional email provider accounts/environments are accessible
 - [x] Confirm package strategy for Flutter app, admin surface, and shared code boundaries
 - [x] Confirm that the long-term admin surface is a separate internal web console hosted independently from the Flutter app
-- [x] Confirm repository structure, branch strategy, and environment naming (`local`, `staging`, `production`)
+- [x] Confirm repository structure, branch strategy, and the shared URL/key-driven runtime contract
 - [x] Create ADRs for the most irreversible decisions already captured in the docs
 - [x] Define naming conventions for tables, enums, files, routes, providers, and storage paths
-- [x] Define secrets ownership and where each secret is stored for local, staging, and production
+- [x] Define secrets ownership and where each secret is stored for local development and hosted deployment
 - [x] Define release responsibilities for app, backend, storage, and operations changes
 
 ## Phase 1 - Project Foundation
@@ -25,7 +25,7 @@ Rules:
 ### Flutter App Foundation
 
 - [x] Create the Flutter project with the agreed folder structure from `docs/03-technical-architecture.md`
-- [x] Configure Flutter flavors or environment selection for local, staging, and production
+- [x] Configure Flutter runtime inputs around actual URLs, keys, and local-network overrides instead of named app environments
 - [x] Add core packages: Riverpod, Freezed, json_serializable, GoRouter, Supabase Flutter, flutter-intl, SharedPreferences, secure storage, notifications, PDF/viewer support as needed
 - [x] Configure code generation for Freezed, JSON, and localization
 - [x] Set up root app bootstrap flow for config loading, auth/session restoration, theme restoration, and locale restoration
@@ -433,7 +433,7 @@ Transitional note:
 ### Admin Web Console
 
 - [ ] Create `admin-web/` as a separate Next.js + TypeScript app inside the same repository
-- [ ] Configure Vercel deployment, preview environments, and admin-web environment variable ownership
+- [ ] Configure Vercel deployment, preview delivery workflow, and admin-web environment variable ownership
 - [ ] Implement full admin governance backend support for `super_admin` and `ops_admin`, including first-admin bootstrap, invitations, role changes, activation/deactivation, and last-super-admin protection
 - [ ] Implement admin auth/session handling against the existing Supabase project
 - [ ] Implement admin web layout with sidebar, command/search entry, queue list, detail workspaces, and first-class `Admins` section
@@ -520,12 +520,12 @@ Phase 14 progress notes:
 - dispute creation now supports private evidence attachments with secure signed access from admin review flows
 - Android Firebase client wiring now follows the native Firebase config path for production builds, while server push auth is handled separately through a service-account secret in the Edge runtime
 
-## Phase 15 - Staging Launch And Production Readiness
+## Phase 15 - Release Rehearsal And Production Readiness
 
-- [ ] Set up staging Supabase project and transactional email provider staging/test configuration
+- [ ] Set up the hosted release/test Supabase project and transactional email provider test configuration
 - [ ] Run hosted provider send plus webhook smoke validation against the real Supabase environment before calling email delivery production-ready
-- [ ] Seed staging reference data and platform settings
-- [ ] Run end-to-end staging rehearsals for shipper, carrier, and admin flows
+- [ ] Seed hosted release reference data and platform settings
+- [ ] Run end-to-end release rehearsals for shipper, carrier, and admin flows
 - [ ] Verify support email routing and operational playbooks
 - [ ] Verify payout and refund operational procedure with test data
 - [ ] Verify scheduled/background automation works reliably on the actual Supabase plan or document the operational fallback
@@ -539,7 +539,7 @@ Phase 14 progress notes:
 - [ ] Define branch naming, tag naming, and changelog conventions
 - [ ] Create GitHub Actions workflows for Flutter quality checks and build validation
 - [ ] Create GitHub Actions workflows for controlled Supabase migration/function deployment validation
-- [ ] Create staging deployment workflow and release-candidate workflow
+- [ ] Create release verification workflow and release-candidate workflow
 - [ ] Ensure every release artifact is traceable to commit SHA and tag
 - [ ] Define mobile versioning rules for app version, Android `versionCode`, and iOS `buildNumber`
 - [ ] Define rollback procedure for app release and backend deployment failures
@@ -551,8 +551,8 @@ Phase 14 progress notes:
 
 Phase 15 progress notes:
 
-- GitHub Actions workflow scaffolding now covers Flutter quality gates, Supabase validation, and a manual staging or release-candidate verification entry point
-- release operations are now documented in `docs/planning/operations/release-operations.md`, including branch/tag conventions, versioning rules, staging gates, release-candidate checks, monitoring, and rollback expectations
+- GitHub Actions workflow scaffolding now covers Flutter quality gates, Supabase validation, and a manual release-candidate verification entry point
+- release operations are now documented in `docs/planning/operations/release-operations.md`, including branch/tag conventions, versioning rules, release rehearsal gates, release-candidate checks, monitoring, and rollback expectations
 - Android release configuration now prefers explicit release signing credentials while still falling back to debug signing for local-only release runs until secrets are supplied
 - README and environment example files now reflect the baseline production env shape more accurately, including required push/email worker secrets and optional FlutterFire override posture
 
@@ -579,4 +579,4 @@ A major feature area is only done when all are true:
 - [ ] security/RLS rules are implemented and verified
 - [ ] auditability is in place for sensitive operations
 - [ ] automated tests cover the critical path
-- [ ] staging verification has been completed where applicable
+- [ ] release verification has been completed where applicable

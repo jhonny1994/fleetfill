@@ -283,7 +283,7 @@ Rules:
 
 - deploy `admin-web/` as its own Vercel project
 - use Preview deployments for branch testing and internal review
-- set environment variables separately for Production, Preview, and Development
+- treat Preview and Production as Vercel delivery channels; runtime behavior still comes from the actual URLs and keys configured there
 - remember that changed environment variables require a new deployment to take effect
 - use a dedicated admin domain in production later
 

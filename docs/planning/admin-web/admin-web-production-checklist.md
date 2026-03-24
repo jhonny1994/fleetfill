@@ -36,7 +36,7 @@ Evidence should point to code, docs, workflows, or explicit validation commands.
 | Error handling | `partial` | Boundaries exist and auth leak was fixed; broader fault injection still missing |
 | CI | `partial` | Dedicated `admin-web` workflow and full Supabase suite workflow exist; still needs first green GitHub runs |
 | CD / deployment | `partial` | Deployment workflow is defined, but Vercel wiring and first green deploy are still pending |
-| Environment and secrets | `partial` | `.env.example` exists, but deployment env validation is incomplete |
+| Environment and secrets | `partial` | `.env.example` exists, but hosted deployment config validation is incomplete |
 | Repo hygiene | `partial` | Core structure is good, log handling is cleaner, and `next-env.d.ts` is now a deliberate tracked convention; broader cleanup still remains |
 | Observability and ops | `partial` | Audit and queue health exist; deploy/runtime monitoring not fully set |
 | Browser QA | `partial` | Critical auth smoke done locally; full queue/action QA still pending |
@@ -341,7 +341,7 @@ What exists:
 
 Still needed:
 
-- preview deployment benchmark
+- hosted deployment benchmark
 - realistic queue volume dogfooding
 
 ## 13. Error Handling
@@ -494,10 +494,10 @@ What exists:
 
 Senior-production expectation:
 
-- a complete environment matrix should exist for:
-  - local
-  - preview
-  - production
+- a complete configuration matrix should exist for:
+  - local development
+  - hosted preview deployments
+  - hosted production deployments
 - each variable should document:
   - where it lives
   - whether it is public or secret
@@ -534,7 +534,6 @@ Senior-production expectation:
 
 Remaining to close:
 
-- add `admin-web/next-env.d.ts` to version control in the next commit
 - review `AGENTS.md` / `CLAUDE.md` presence in `admin-web/` and confirm they are intentionally part of repo guidance, not stray scaffolding
 
 Evidence:
