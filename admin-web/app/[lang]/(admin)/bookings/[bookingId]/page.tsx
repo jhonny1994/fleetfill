@@ -5,6 +5,7 @@ import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { buildAdminRoute } from "@/lib/admin-routes";
 import { formatCurrencyDzd, formatDateTime } from "@/lib/formatting/formatters";
+import { formatTemplate, getAdminDetailCopy, getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { fetchBookingWorkspaceDetail } from "@/lib/queries/admin-operations";
 
 export default async function BookingDetailPage({
@@ -14,48 +15,57 @@ export default async function BookingDetailPage({
 }) {
   const { lang, bookingId } = await params;
   const detail = await fetchBookingWorkspaceDetail(bookingId);
+  const ui = getAdminUi(lang);
+  const detailCopy = getAdminDetailCopy(lang);
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">Booking detail not found.</div>;
+    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.bookings.notFound}</div>;
   }
 
   return (
     <DetailWorkspace
-      eyebrow="Bookings"
+      eyebrow={ui.pages.bookings.eyebrow}
       title={detail.booking.trackingNumber}
-      description="Canonical booking workspace used by search and cross-queue operations. This is the anchor for shipment, payment, dispute, and payout context."
+      description={detailCopy.bookings.description}
       facts={[
-        { label: "Booking state", value: detail.booking.bookingStatus },
-        { label: "Payment state", value: detail.booking.paymentStatus },
-        { label: "Shipper total", value: formatCurrencyDzd(detail.booking.shipperTotalDzd) },
-        { label: "Carrier payout", value: formatCurrencyDzd(detail.booking.carrierPayoutDzd) },
+        { label: detailCopy.bookings.bookingStateLabel, value: getEnumLabel(lang, "booking", detail.booking.bookingStatus) },
+        { label: detailCopy.bookings.paymentStateLabel, value: getEnumLabel(lang, "payment", detail.booking.paymentStatus) },
+        { label: detailCopy.bookings.shipperTotalLabel, value: formatCurrencyDzd(detail.booking.shipperTotalDzd) },
+        { label: detailCopy.bookings.carrierPayoutLabel, value: formatCurrencyDzd(detail.booking.carrierPayoutDzd) },
       ]}
       main={
         <>
           <section className="panel space-y-3 p-6">
-            <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">Linked operations</h2>
+            <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.bookings.linkedOps}</h2>
             <div className="flex flex-wrap gap-2">
               <Link className="button-secondary" href={buildAdminRoute(lang, "payment", detail.booking.id)}>
-                Payment review
+                {ui.actions.paymentReview}
               </Link>
               <Link className="button-secondary" href={buildAdminRoute(lang, "payout", detail.booking.id)}>
-                Payout detail
+                {ui.actions.payoutDetail}
               </Link>
               <Link className="button-secondary" href={buildAdminRoute(lang, "dispute", detail.booking.id)}>
-                Dispute detail
+                {ui.actions.disputeDetail}
               </Link>
               <Link className="button-secondary" href={buildAdminRoute(lang, "shipment", detail.booking.shipmentId)}>
-                Shipment detail
+                {ui.actions.shipmentDetail}
               </Link>
             </div>
             <div className="flex flex-wrap gap-2">
-              <StatusBadge label={`${detail.paymentProofCount} payment proofs`} tone="neutral" />
-              {detail.disputeStatus ? <StatusBadge label={`Dispute ${detail.disputeStatus}`} tone="warning" /> : null}
-              {detail.payoutStatus ? <StatusBadge label={`Payout ${detail.payoutStatus}`} tone="success" /> : null}
+              <StatusBadge label={formatTemplate(detailCopy.bookings.paymentProofCount, { count: detail.paymentProofCount })} tone="neutral" />
+              {detail.disputeStatus ? (
+                <StatusBadge label={formatTemplate(detailCopy.bookings.disputeBadge, { state: getEnumLabel(lang, "dispute", detail.disputeStatus) })} tone="warning" />
+              ) : null}
+              {detail.payoutStatus ? (
+                <StatusBadge label={formatTemplate(detailCopy.bookings.payoutBadge, { state: getEnumLabel(lang, "payout", detail.payoutStatus) })} tone="success" />
+              ) : null}
             </div>
             {detail.shipment ? (
               <p className="text-sm text-[var(--color-ink-muted)]">
-                Shipment {detail.shipment.originLabel} {"->"} {detail.shipment.destinationLabel}
+                {formatTemplate(detailCopy.bookings.shipmentSummary, {
+                  origin: detail.shipment.originLabel,
+                  destination: detail.shipment.destinationLabel,
+                })}
               </p>
             ) : null}
           </section>
@@ -63,7 +73,7 @@ export default async function BookingDetailPage({
             items={detail.trackingEvents.map((event) => ({
               id: event.id,
               title: event.eventType,
-              detail: event.note ?? "No note",
+              detail: event.note ?? ui.labels.noNote,
               at: formatDateTime(event.recordedAt),
             }))}
           />
@@ -71,9 +81,9 @@ export default async function BookingDetailPage({
       }
       rail={
         <section className="panel space-y-3 p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">References</h2>
-          <p className="text-sm text-[var(--color-ink-muted)]">Payment reference {detail.booking.paymentReference}</p>
-          <p className="text-sm text-[var(--color-ink-muted)]">Created {formatDateTime(detail.booking.createdAt)}</p>
+          <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{ui.pages.bookings.references}</h2>
+          <p className="text-sm text-[var(--color-ink-muted)]">{formatTemplate(detailCopy.bookings.paymentReference, { reference: detail.booking.paymentReference })}</p>
+          <p className="text-sm text-[var(--color-ink-muted)]">{formatTemplate(detailCopy.bookings.createdAt, { date: formatDateTime(detail.booking.createdAt) })}</p>
         </section>
       }
     />

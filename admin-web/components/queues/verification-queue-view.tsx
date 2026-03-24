@@ -6,13 +6,15 @@ import Link from "next/link";
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatDateTime } from "@/lib/formatting/formatters";
+import { formatTemplate, getAdminUi, getDocumentLabel } from "@/lib/i18n/admin-ui";
 import type { VerificationQueueItem } from "@/lib/queries/admin-types";
 
 function buildColumns(locale: string): ColumnDef<VerificationQueueItem>[] {
+  const ui = getAdminUi(locale);
   return [
   {
     accessorKey: "displayName",
-    header: "Carrier",
+    header: ui.labels.carrier,
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
@@ -25,36 +27,37 @@ function buildColumns(locale: string): ColumnDef<VerificationQueueItem>[] {
   },
   {
     accessorKey: "pendingDocumentCount",
-    header: "Pending review",
+    header: ui.labels.verification,
     enableSorting: true,
-    cell: ({ row }) => <StatusBadge label={`${row.original.pendingDocumentCount} pending`} tone="warning" />,
+    cell: ({ row }) => <StatusBadge label={formatTemplate(ui.labels.queue === "طابور" ? "{count} قيد المراجعة" : ui.labels.queue === "File" ? "{count} en attente" : "{count} pending", { count: row.original.pendingDocumentCount })} tone="warning" />,
   },
   {
     accessorKey: "profilePendingDocuments",
-    header: "Missing / blocked",
+    header: ui.labels.missingOrBlocked,
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
-        <p>{row.original.profileMissingDocuments.length > 0 ? row.original.profileMissingDocuments.join(", ") : "Profile docs complete"}</p>
+        <p>{row.original.profileMissingDocuments.length > 0 ? row.original.profileMissingDocuments.map((item) => getDocumentLabel(locale, item)).join(", ") : ui.labels.profileDocsComplete}</p>
         <p className="text-xs text-[var(--color-ink-muted)]">
-          {row.original.vehicles.length} vehicles •{" "}
+          {formatTemplate(ui.labels.vehiclesSummary, { count: row.original.vehicles.length })} •{" "}
           {row.original.vehicles
             .flatMap((vehicle) => vehicle.missingDocuments)
             .slice(0, 2)
-            .join(", ") || "Vehicle docs complete"}
+            .map((item) => getDocumentLabel(locale, item))
+            .join(", ") || ui.labels.vehicleDocsComplete}
         </p>
       </div>
     ),
   },
   {
     accessorKey: "latestRelevantUpdateAt",
-    header: "Latest activity",
+    header: ui.labels.latestActivity,
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
         <p>{formatDateTime(row.original.latestRelevantUpdateAt)}</p>
         <p className="text-xs text-[var(--color-ink-muted)]">
-          {row.original.vehicles.map((vehicle) => vehicle.label).slice(0, 2).join(" • ") || "No vehicles yet"}
+          {row.original.vehicles.map((vehicle) => vehicle.label).slice(0, 2).join(" • ") || ui.labels.noVehiclesYet}
         </p>
       </div>
     ),
@@ -63,13 +66,14 @@ function buildColumns(locale: string): ColumnDef<VerificationQueueItem>[] {
 }
 
 export function VerificationQueueView({ items, locale }: { items: VerificationQueueItem[]; locale: string }) {
+  const ui = getAdminUi(locale);
   return (
     <AdminDataTable
       data={items}
       columns={buildColumns(locale)}
-      emptyEyebrow="Verification"
-      emptyTitle="No carrier packets are waiting on review."
-      emptyBody="When a carrier uploads or resubmits verification documents, the packet will appear here."
+      emptyEyebrow={ui.pages.verification.eyebrow}
+      emptyTitle={ui.labels.noCarrierPacketsWaiting}
+      emptyBody={ui.labels.noCarrierPacketsWaitingBody}
     />
   );
 }

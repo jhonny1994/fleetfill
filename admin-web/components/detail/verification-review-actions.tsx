@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import type { AppLocale } from "@/lib/i18n/config";
+import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { verificationReviewSchema } from "@/lib/validation/review-actions";
 
@@ -17,12 +19,15 @@ type DocumentOption = {
 };
 
 export function VerificationReviewActions({
+  locale,
   carrierId,
   documents,
 }: {
+  locale: AppLocale | string;
   carrierId: string;
   documents: DocumentOption[];
 }) {
+  const ui = getAdminUi(locale);
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingApproveAll, setPendingApproveAll] = useState(false);
@@ -75,59 +80,61 @@ export function VerificationReviewActions({
   return (
     <div className="space-y-5">
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">Approve complete packet</h3>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.approvePacket}</h3>
         <p className="text-sm text-[var(--color-ink-muted)]">
-          Use this when the full driver and vehicle packet is complete and ready to verify in one action.
+          {ui.actions.approvePacketBody}
         </p>
         <button className="button-primary" type="button" onClick={() => setPendingApproveAll(true)}>
-          Approve packet
+          {ui.actions.approvePacket}
         </button>
       </section>
 
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">Review individual document</h3>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.reviewDocument}</h3>
         <form className="space-y-3" onSubmit={form.handleSubmit((values) => setPendingDocumentReview(values))}>
           <label className="grid gap-1 text-sm">
-            <span>Document</span>
+            <span>{ui.actions.document}</span>
             <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("documentId")}>
               {documents.map((document) => (
                 <option key={document.id} value={document.id}>
-                  {document.label} • {document.status}
+                  {document.label} • {getEnumLabel(locale, "verification", document.status)}
                 </option>
               ))}
             </select>
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Decision</span>
+            <span>{ui.actions.decision}</span>
             <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("status")}>
-              <option value="verified">Approve document</option>
-              <option value="rejected">Reject document</option>
+              <option value="verified">{ui.actions.approveDocument}</option>
+              <option value="rejected">{ui.actions.rejectDocument}</option>
             </select>
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Reason (required on rejection)</span>
+            <span>{ui.actions.reasonRequired}</span>
             <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("reason")} />
           </label>
-          <button className="button-secondary" type="submit">Review document</button>
+          <button className="button-secondary" type="submit">{ui.actions.reviewDocument}</button>
         </form>
       </section>
 
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
+        locale={locale}
         open={pendingApproveAll}
-        title="Approve the full verification packet?"
-        body="This will mark the packet approved and send the verification-approved notification when the packet becomes fully verified."
-        confirmLabel="Approve packet"
+        title={ui.actions.approvePacketTitle}
+        body={ui.actions.approvePacketConfirmBody}
+        confirmLabel={ui.actions.approvePacket}
         isPending={isPending}
         onCancel={() => setPendingApproveAll(false)}
         onConfirm={confirmApproveAll}
       />
       <ConfirmDialog
+        locale={locale}
         open={pendingDocumentReview !== null}
-        title="Submit document review?"
-        body="This will update the document review state immediately and refresh the carrier packet."
-        confirmLabel="Submit review"
+        title={ui.actions.submitReviewTitle}
+        body={ui.actions.submitReviewBody}
+        confirmLabel={ui.actions.reviewDocument}
         isPending={isPending}
         onCancel={() => setPendingDocumentReview(null)}
         onConfirm={confirmDocumentReview}

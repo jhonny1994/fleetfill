@@ -4,51 +4,56 @@ import { FilePreviewPanel } from "@/components/detail/file-preview-panel";
 import { PaymentReviewActions } from "@/components/detail/payment-review-actions";
 import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { formatCurrencyDzd, formatDateTime } from "@/lib/formatting/formatters";
+import { formatTemplate, getAdminActionLabel, getAdminDetailCopy, getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { fetchPaymentDetail } from "@/lib/queries/admin-payments";
 
 export default async function PaymentDetailPage({
   params,
 }: {
-  params: Promise<{ bookingId: string }>;
+  params: Promise<{ lang: string; bookingId: string }>;
 }) {
-  const { bookingId } = await params;
+  const { lang, bookingId } = await params;
   const detail = await fetchPaymentDetail(bookingId);
+  const ui = getAdminUi(lang);
+  const copy = getAdminDetailCopy(lang).payments;
 
   if (!detail || !detail.latestProof) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">Payment detail not found.</div>;
+    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.payments.notFound}</div>;
   }
 
   return (
     <DetailWorkspace
-      eyebrow="Payments"
-      title={`Proof review for ${detail.booking.tracking_number}`}
-      description="Review the latest submitted payment proof against the expected booking totals, then approve or reject using the controlled admin workflows."
+      eyebrow={ui.pages.payments.eyebrow}
+      title={formatTemplate(copy.title, { trackingNumber: detail.booking.tracking_number })}
+      description={copy.description}
       facts={[
-        { label: "Booking", value: detail.booking.tracking_number },
-        { label: "Payment state", value: detail.booking.payment_status },
-        { label: "Submitted amount", value: formatCurrencyDzd(Number(detail.latestProof.submitted_amount_dzd)) },
-        { label: "Expected total", value: formatCurrencyDzd(Number(detail.booking.shipper_total_dzd)) },
+        { label: ui.labels.booking, value: detail.booking.tracking_number },
+        { label: ui.labels.paymentState, value: getEnumLabel(lang, "payment", detail.booking.payment_status) },
+        { label: copy.submittedAmountLabel, value: formatCurrencyDzd(Number(detail.latestProof.submitted_amount_dzd)) },
+        { label: copy.expectedTotalLabel, value: formatCurrencyDzd(Number(detail.booking.shipper_total_dzd)) },
       ]}
       main={
         <>
           <FilePreviewPanel
-            title="Proof preview"
-            label={`${detail.latestProof.payment_rail.toUpperCase()} proof`}
+            locale={lang}
+            title={ui.pages.payments.preview}
+            label={formatTemplate(copy.proofLabel, { rail: detail.latestProof.payment_rail.toUpperCase() })}
             storagePath={detail.latestProof.storage_path}
             contentType={detail.latestProof.content_type}
             signedUrl={detail.signedUrl}
           />
           <TimelinePanel
+            locale={lang}
             items={[
               {
                 id: "submitted",
-                title: "Proof submitted",
-                detail: detail.latestProof.submitted_reference ?? "No submitted reference",
+                title: copy.submittedTitle,
+                detail: detail.latestProof.submitted_reference ?? ui.labels.noSubmittedReference,
                 at: formatDateTime(detail.latestProof.submitted_at),
               },
               ...detail.auditLogs.map((log) => ({
                 id: log.id,
-                title: log.action,
+                title: getAdminActionLabel(lang, log.action),
                 detail: log.reason ?? log.outcome,
                 at: formatDateTime(log.created_at),
               })),
@@ -58,10 +63,12 @@ export default async function PaymentDetailPage({
       }
       rail={
         <ActionRail
-          title="Payment actions"
-          description="All decisions here call the same audited payment-proof RPCs used by the existing platform."
+          locale={lang}
+          title={ui.pages.payments.actions}
+          description={copy.paymentActionsBody}
         >
           <PaymentReviewActions
+            locale={lang}
             proofId={detail.latestProof.id}
             defaultAmount={Number(detail.latestProof.submitted_amount_dzd)}
           />

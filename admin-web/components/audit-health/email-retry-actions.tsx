@@ -4,14 +4,22 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { getAdminUi } from "@/lib/i18n/admin-ui";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
-export function EmailDeliveryRetryAction({ deliveryLogId }: { deliveryLogId: string }) {
+export function EmailDeliveryRetryAction({
+  deliveryLogId,
+  locale = "en",
+}: {
+  deliveryLogId: string;
+  locale?: string;
+}) {
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const ui = getAdminUi(locale);
 
   async function retry() {
     setIsPending(true);
@@ -31,14 +39,15 @@ export function EmailDeliveryRetryAction({ deliveryLogId }: { deliveryLogId: str
   return (
     <div className="space-y-2">
       <button type="button" className="button-secondary" onClick={() => setOpen(true)}>
-        Retry delivery
+        {ui.actions.retryEmailDelivery}
       </button>
       {error ? <p className="text-xs text-[var(--color-red-700)]">{error}</p> : null}
       <ConfirmDialog
         open={open}
-        title="Retry this email delivery?"
-        body="This queues a fresh high-priority email job from the failed delivery log."
-        confirmLabel="Retry"
+        locale={locale}
+        title={ui.actions.retryEmailDeliveryTitle}
+        body={ui.actions.retryEmailDeliveryBody}
+        confirmLabel={ui.actions.retry}
         isPending={isPending}
         onCancel={() => setOpen(false)}
         onConfirm={retry}
@@ -47,12 +56,19 @@ export function EmailDeliveryRetryAction({ deliveryLogId }: { deliveryLogId: str
   );
 }
 
-export function EmailDeadLetterRetryAction({ jobId }: { jobId: string }) {
+export function EmailDeadLetterRetryAction({
+  jobId,
+  locale = "en",
+}: {
+  jobId: string;
+  locale?: string;
+}) {
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const ui = getAdminUi(locale);
 
   async function retry() {
     setIsPending(true);
@@ -72,14 +88,15 @@ export function EmailDeadLetterRetryAction({ jobId }: { jobId: string }) {
   return (
     <div className="space-y-2">
       <button type="button" className="button-secondary" onClick={() => setOpen(true)}>
-        Retry dead-letter
+        {ui.actions.retryDeadLetter}
       </button>
       {error ? <p className="text-xs text-[var(--color-red-700)]">{error}</p> : null}
       <ConfirmDialog
         open={open}
-        title="Retry this dead-letter email?"
-        body="This creates a new queued email outbox job from the dead-letter payload."
-        confirmLabel="Retry"
+        locale={locale}
+        title={ui.actions.retryDeadLetterTitle}
+        body={ui.actions.retryDeadLetterBody}
+        confirmLabel={ui.actions.retry}
         isPending={isPending}
         onCancel={() => setOpen(false)}
         onConfirm={retry}

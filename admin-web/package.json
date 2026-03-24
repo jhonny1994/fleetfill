@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "i18n:scan-hardcoded": "node scripts/find-hardcoded-strings.mjs",
+    "i18n:audit-keys": "node scripts/audit-i18n-keys.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

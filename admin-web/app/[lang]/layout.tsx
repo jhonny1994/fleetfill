@@ -1,8 +1,28 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getLocaleDirection, isSupportedLocale, type AppLocale } from "@/lib/i18n/config";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+
+  if (!isSupportedLocale(lang)) {
+    return {};
+  }
+
+  const dictionary = await getDictionary(lang);
+
+  return {
+    title: dictionary.appTitle,
+    description: dictionary.shell.body,
+  };
+}
 
 export default async function LocalizedLayout({
   children,

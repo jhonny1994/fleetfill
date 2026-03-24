@@ -1,4 +1,5 @@
 import { Bell, ShieldCheck } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { AdminIdentityControls } from "@/components/admin-shell/admin-identity-controls";
 import { CommandSearch } from "@/components/shared/command-search";
@@ -11,18 +12,21 @@ export function AdminHeader({
   fullName,
   roleLabel,
   dictionary,
+  navigationTrigger,
 }: {
   locale: AppLocale;
   fullName: string;
   roleLabel: string;
   dictionary: AdminDictionary;
+  navigationTrigger?: ReactNode;
 }) {
   return (
     <header className="panel flex flex-col gap-4 p-4 lg:flex-row lg:items-center">
-      <div className="min-w-0 flex-1">
+      <div className="flex min-w-0 items-center gap-3 lg:flex-1">
+        {navigationTrigger ? <div className="lg:hidden">{navigationTrigger}</div> : null}
         <CommandSearch locale={locale} placeholder={dictionary.shell.searchPlaceholder} shortcutLabel="/" />
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <StatusBadge label={dictionary.shell.previewShell} tone="warning" />
         <button
           type="button"

@@ -1,5 +1,6 @@
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getAdminDetailCopy, getAdminUi } from "@/lib/i18n/admin-ui";
 import { PayoutsQueueView } from "@/components/queues/payouts-queue-view";
 import { fetchEligiblePayoutQueue, fetchRecentReleasedPayouts } from "@/lib/queries/admin-payouts";
 
@@ -10,6 +11,8 @@ export default async function PayoutsPage({
 }) {
   const { lang } = await params;
   const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
+  const ui = getAdminUi(lang);
+  const detailCopy = getAdminDetailCopy(lang);
   const [eligible, released] = await Promise.all([
     fetchEligiblePayoutQueue(),
     fetchRecentReleasedPayouts(),
@@ -18,10 +21,10 @@ export default async function PayoutsPage({
   return (
     <div className="space-y-4">
       <section className="panel space-y-3 p-6">
-        <p className="eyebrow">Payouts</p>
-        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">Carrier payout operations</h1>
+        <p className="eyebrow">{ui.pages.payouts.eyebrow}</p>
+        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.payouts.title}</h1>
         <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
-          Monitor bookings that are ready for release and keep the payout audit trail visible without leaving the admin desk.
+          {detailCopy.payouts.description}
         </p>
       </section>
       <AdminFilterBar

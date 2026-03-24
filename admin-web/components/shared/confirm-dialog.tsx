@@ -2,10 +2,14 @@
 
 import { useId } from "react";
 
+import type { AppLocale } from "@/lib/i18n/config";
+import { getAdminUi } from "@/lib/i18n/admin-ui";
+
 type ConfirmDialogProps = {
   open: boolean;
   title: string;
   body: string;
+  locale?: AppLocale | string;
   confirmLabel?: string;
   cancelLabel?: string;
   isPending?: boolean;
@@ -17,12 +21,14 @@ export function ConfirmDialog({
   open,
   title,
   body,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
+  locale = "en",
+  confirmLabel,
+  cancelLabel,
   isPending = false,
   onCancel,
   onConfirm,
 }: ConfirmDialogProps) {
+  const ui = getAdminUi(locale);
   const titleId = useId();
   const bodyId = useId();
 
@@ -47,10 +53,10 @@ export function ConfirmDialog({
         </p>
         <div className="flex gap-3">
           <button className="button-secondary" type="button" onClick={onCancel} disabled={isPending}>
-            {cancelLabel}
+            {cancelLabel ?? ui.actions.cancel}
           </button>
           <button className="button-primary" type="button" onClick={onConfirm} disabled={isPending}>
-            {isPending ? "Working..." : confirmLabel}
+            {isPending ? ui.actions.working : (confirmLabel ?? ui.actions.confirm)}
           </button>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { AdminHeader } from "@/components/admin-shell/admin-header";
+import { MobileAdminSidebar } from "@/components/admin-shell/mobile-admin-sidebar";
 import { AdminSidebar } from "@/components/admin-shell/admin-sidebar";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { defaultLocale, isSupportedLocale } from "@/lib/i18n/config";
@@ -24,9 +25,6 @@ export default async function AdminLayout({
 
   return (
     <div className="space-y-4 lg:grid lg:min-h-[calc(100vh-2rem)] lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-4 lg:space-y-0">
-      <div className="lg:hidden">
-        <AdminSidebar locale={locale} dictionary={dictionary} compact />
-      </div>
       <div className="hidden lg:block">
         <AdminSidebar locale={locale} dictionary={dictionary} />
       </div>
@@ -36,6 +34,7 @@ export default async function AdminLayout({
           fullName={session.fullName ?? session.email ?? "FleetFill admin"}
           roleLabel={roleLabel}
           dictionary={dictionary}
+          navigationTrigger={<MobileAdminSidebar locale={locale} dictionary={dictionary} />}
         />
         <main className="space-y-4">{children}</main>
       </div>

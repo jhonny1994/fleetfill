@@ -23,10 +23,10 @@ describe("UserActivationActions", () => {
   it("submits the admin profile activation rpc with the inverse active state", async () => {
     const user = userEvent.setup();
 
-    render(<UserActivationActions profileId="profile-1" isActive />);
+    render(<UserActivationActions locale="en" profileId="profile-1" isActive />);
 
     await user.click(screen.getByRole("button", { name: "Suspend user" }));
-    await user.click(screen.getByRole("button", { name: "Suspend" }));
+    await user.click(screen.getAllByRole("button", { name: "Suspend user" })[1]);
 
     await waitFor(() =>
       expect(rpcSpy).toHaveBeenCalledWith("admin_set_profile_active", {
