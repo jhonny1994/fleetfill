@@ -1,6 +1,6 @@
 # Release Operations
 
-This file defines the operational release workflow for FleetFill staging, release candidates, and production rollout.
+This file defines the operational release workflow for FleetFill local development, release candidates, and production rollout.
 
 ## Branch, Tag, And Changelog Conventions
 
@@ -15,21 +15,21 @@ This file defines the operational release workflow for FleetFill staging, releas
 - app versions use `major.minor.patch`
 - Android `versionCode` must increase for every release candidate and production rollout
 - iOS `buildNumber` must increase for every release candidate and production rollout
-- staging and production artifacts must record the source commit SHA used to produce them
+- release-candidate and production artifacts must record the source commit SHA used to produce them
 
-## Staging Checklist
+## Release Rehearsal Checklist
 
 - validate the current commit with `dart analyze`, `flutter test`, `supabase db reset --yes`, and `supabase db lint --debug`
 - validate `admin-web` with `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build`
-- confirm staging secrets remain distinct from production secrets
-- seed staging reference data and current platform settings
-- verify shipper, carrier, and admin critical flows with staging data
+- confirm hosted rehearsal secrets remain distinct from production secrets
+- seed hosted rehearsal reference data and current platform settings
+- verify shipper, carrier, and admin critical flows with hosted rehearsal data
 - verify `ops_admin` and `super_admin` browser flows in the admin web preview
 - verify support email routing, payout procedure rehearsal, refund procedure rehearsal, and scheduled automation health
 
 ## Release Candidate Checklist
 
-- create or confirm the release tag only after staging validation succeeds
+- create or confirm the release tag only after release rehearsal succeeds
 - build Android release artifacts from the tagged commit
 - verify the admin web preview deployment for the tagged commit and confirm production Vercel variables are present
 - review accessibility, Arabic/French/English QA, profile-mode performance, and app-size checks

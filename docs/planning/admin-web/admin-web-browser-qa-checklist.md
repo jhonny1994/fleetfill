@@ -21,7 +21,7 @@ Record result per row:
 ## Preconditions
 
 - preview deployment URL is available
-- seeded or staging-like data exists for:
+- seeded release-like data exists for:
   - pending payment proof
   - pending verification packet
   - open dispute

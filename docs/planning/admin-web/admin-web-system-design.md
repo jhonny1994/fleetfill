@@ -549,7 +549,7 @@ Required shared component families:
 
 ### 19.3 Review Workflow
 
-- Preview deployments are the primary review surface for admin-web UI
+- Preview deployments are the primary review surface for admin-web UI, but they are a delivery channel rather than a separate FleetFill runtime mode
 - queue/detail slices should be validated in Preview before merge
 
 ## 20. Observability And Audit

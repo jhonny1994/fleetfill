@@ -4250,7 +4250,7 @@ export type Database = {
         | "rejected"
         | "refunded"
         | "released_to_carrier"
-      platform_environment: "staging" | "production"
+      platform_environment: "local" | "production"
       shipment_status: "draft" | "booked" | "cancelled"
       support_message_sender_type: "user" | "admin" | "system"
       support_request_priority: "normal" | "high" | "urgent"
@@ -4980,7 +4980,7 @@ export const Constants = {
         "refunded",
         "released_to_carrier",
       ],
-      platform_environment: ["staging", "production"],
+      platform_environment: ["local", "production"],
       shipment_status: ["draft", "booked", "cancelled"],
       support_message_sender_type: ["user", "admin", "system"],
       support_request_priority: ["normal", "high", "urgent"],
