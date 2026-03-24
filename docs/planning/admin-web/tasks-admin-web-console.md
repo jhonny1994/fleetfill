@@ -92,28 +92,28 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ## Tasks
 
-- [ ] 0.0 Create feature branch
-  - [ ] 0.1 Create and checkout a new branch for this feature using the required `codex/` prefix
-  - [ ] 0.2 Confirm the branch is active before starting `admin-web/` work
-- [ ] 1.0 Finalize admin governance and backend foundations
-  - [ ] 1.1 Design and document the admin data model for `super_admin`, `ops_admin`, admin lifecycle, and invitation flow
-  - [ ] 1.2 Add the required Supabase schema changes for admin governance, including admin-specific tables or equivalent structures
-  - [ ] 1.3 Implement a safe first-admin bootstrap path that is controlled and non-public
-  - [ ] 1.4 Implement admin invitation, revocation, expiration, and acceptance workflows
-  - [ ] 1.5 Implement role management rules for exactly two admin roles: `super_admin` and `ops_admin`
-  - [ ] 1.6 Add guardrails that prevent losing the last active `super_admin`
-  - [ ] 1.7 Add audit logging for admin governance actions such as invite, accept, revoke, activate, deactivate, and role changes
-  - [ ] 1.8 Add database tests and runtime tests for admin governance and privileged execution rules
-- [ ] 2.0 Scaffold the `admin-web` application and lock the shared frontend foundation
-  - [ ] 2.1 Create the `admin-web/` app with Next.js, App Router, and TypeScript
-  - [ ] 2.2 Add and configure Tailwind CSS, shadcn/ui foundations, TanStack Query, TanStack Table, Recharts, react-hook-form, zod, and Supabase SSR dependencies
-  - [ ] 2.3 Configure base project files such as `package.json`, `tsconfig.json`, linting, formatting, and `next.config.ts`
-  - [ ] 2.4 Create the base folder structure under `app/`, `components/`, `lib/`, and `tests/`
-  - [ ] 2.5 Create the localized route structure using `app/[lang]/...`
-  - [ ] 2.6 Add route-level `loading.tsx`, `error.tsx`, `not-found.tsx`, and `global-error.tsx` files following the locked App Router conventions
-  - [ ] 2.7 Add shared visual tokens and base styling primitives aligned with the admin UI lock
-  - [ ] 2.8 Document the required environment variables and local run commands for `admin-web/`
-  - [ ] 2.9 Add the first shared shell, queue, badge, dialog, and form-field component specs to keep implementation aligned with the UI/UX spec
+- [x] 0.0 Create feature branch
+  - [x] 0.1 Create and checkout a new branch for this feature using the required `codex/` prefix
+  - [x] 0.2 Confirm the branch is active before starting `admin-web/` work
+- [x] 1.0 Finalize admin governance and backend foundations
+  - [x] 1.1 Design and document the admin data model for `super_admin`, `ops_admin`, admin lifecycle, and invitation flow
+  - [x] 1.2 Add the required Supabase schema changes for admin governance, including admin-specific tables or equivalent structures
+  - [x] 1.3 Implement a safe first-admin bootstrap path that is controlled and non-public
+  - [x] 1.4 Implement admin invitation, revocation, expiration, and acceptance workflows
+  - [x] 1.5 Implement role management rules for exactly two admin roles: `super_admin` and `ops_admin`
+  - [x] 1.6 Add guardrails that prevent losing the last active `super_admin`
+  - [x] 1.7 Add audit logging for admin governance actions such as invite, accept, revoke, activate, deactivate, and role changes
+  - [x] 1.8 Add database tests and runtime tests for admin governance and privileged execution rules
+- [x] 2.0 Scaffold the `admin-web` application and lock the shared frontend foundation
+  - [x] 2.1 Create the `admin-web/` app with Next.js, App Router, and TypeScript
+  - [x] 2.2 Add and configure Tailwind CSS, shadcn/ui foundations, TanStack Query, TanStack Table, Recharts, react-hook-form, zod, and Supabase SSR dependencies
+  - [x] 2.3 Configure base project files such as `package.json`, `tsconfig.json`, linting, formatting, and `next.config.ts`
+  - [x] 2.4 Create the base folder structure under `app/`, `components/`, `lib/`, and `tests/`
+  - [x] 2.5 Create the localized route structure using `app/[lang]/...`
+  - [x] 2.6 Add route-level `loading.tsx`, `error.tsx`, `not-found.tsx`, and `global-error.tsx` files following the locked App Router conventions
+  - [x] 2.7 Add shared visual tokens and base styling primitives aligned with the admin UI lock
+  - [x] 2.8 Document the required environment variables and local run commands for `admin-web/`
+  - [x] 2.9 Add the first shared shell, queue, badge, dialog, and form-field component specs to keep implementation aligned with the UI/UX spec
 - [ ] 3.0 Implement admin authentication, authorization, and shared application shell
   - [ ] 3.1 Create server-side and browser-side Supabase client helpers using `@supabase/ssr`
   - [ ] 3.2 Implement cookie-based auth handling in `proxy.ts`

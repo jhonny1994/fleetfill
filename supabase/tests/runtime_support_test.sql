@@ -140,6 +140,14 @@ values
     'verified'
   );
 
+insert into public.admin_accounts (profile_id, admin_role, is_active, activated_at)
+values (
+  (select admin_id from pg_temp.fixture_ids),
+  'ops_admin',
+  true,
+  now()
+);
+
 truncate table public.security_rate_limits;
 
 set local role authenticated;
