@@ -36,7 +36,7 @@ export default async function SupportPage({
           { value: "closed", label: "Closed" },
         ]}
       />
-      <SupportQueueView items={items} />
+      <SupportQueueView items={items} locale={lang} />
     </div>
   );
 }

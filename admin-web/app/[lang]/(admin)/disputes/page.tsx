@@ -24,7 +24,7 @@ export default async function DisputesPage({
         </p>
       </section>
       <AdminFilterBar pathname={pathname} query={query} />
-      <DisputesQueueView items={items} />
+      <DisputesQueueView items={items} locale={lang} />
     </div>
   );
 }
