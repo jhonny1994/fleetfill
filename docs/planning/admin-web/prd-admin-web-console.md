@@ -2,6 +2,17 @@
 
 ## 1. Introduction / Overview
 
+This PRD is part of a larger admin-web documentation system.
+
+Use it together with:
+
+- [C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-master-spec.md](C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-master-spec.md)
+- [C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-system-design.md](C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-system-design.md)
+- [C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-ui-ux-spec.md](C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-ui-ux-spec.md)
+- [C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-console-plan.md](C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-console-plan.md)
+
+This file defines product scope and required behavior. It should not be treated as a standalone architecture or UI source.
+
 FleetFill needs a dedicated internal admin web console that becomes the primary operations surface for FleetFill staff.
 
 The current Flutter admin is useful as a temporary internal tool, but it is not sufficient as the long-term operational workspace. Admin work in FleetFill is desktop-shaped: payment proof review, carrier verification, disputes, support, payout release, user controls, runtime settings, delivery health, and auditability all require denser layouts, stronger queue workflows, and clearer operational context than a mobile-first admin surface can provide.
@@ -83,100 +94,109 @@ Key decisions already locked:
 20. The system must support canonical deep links to major admin pages and detail views.
 21. The system must visually indicate the active admin location at all times.
 22. The system must avoid raw UUIDs as page-level titles when a human-readable title or compact reference is available.
+23. The system must provide a first-class `Admins` section in the web console for admin governance instead of hiding admin management inside generic user tooling.
 
 ### 4.4 Dashboard / Control Tower
 
-23. The system must provide a dashboard that shows queue backlog counts for key admin workflows.
-24. The dashboard must show oldest waiting or aging indicators for major queues.
-25. The dashboard must show exception or failure alerts that require operational attention.
-26. The dashboard must provide quick links into the main queues.
-27. The dashboard must provide access to global search.
-28. The dashboard must not rely on chart-heavy or decorative analytics as the primary interface.
+24. The system must provide a dashboard that shows queue backlog counts for key admin workflows.
+25. The dashboard must show oldest waiting or aging indicators for major queues.
+26. The dashboard must show exception or failure alerts that require operational attention.
+27. The dashboard must provide quick links into the main queues.
+28. The dashboard must provide access to global search.
+29. The dashboard must not rely on chart-heavy or decorative analytics as the primary interface.
 
 ### 4.5 Payments Queue
 
-29. The system must provide a payments queue for reviewing submitted payment proofs.
-30. Each payments queue row must show booking context, proof status, amount, and aging information.
-31. The system must provide a payment detail workspace that includes booking summary, proof preview, payment metadata, decision actions, and audit history.
-32. The system must allow admins to approve payment proofs through the existing or extended server-controlled workflow.
-33. The system must allow admins to reject payment proofs with a reason through the existing or extended server-controlled workflow.
+30. The system must provide a payments queue for reviewing submitted payment proofs.
+31. Each payments queue row must show booking context, proof status, amount, and aging information.
+32. The system must provide a payment detail workspace that includes booking summary, proof preview, payment metadata, decision actions, and audit history.
+33. The system must allow admins to approve payment proofs through the existing or extended server-controlled workflow.
+34. The system must allow admins to reject payment proofs with a reason through the existing or extended server-controlled workflow.
 
 ### 4.6 Verification Queue
 
-34. The system must provide a verification queue for carrier verification packets.
-35. Each verification queue row must show carrier identity, packet status, missing documents summary, and aging information.
-36. The system must provide a verification packet workspace that groups driver and vehicle documents together.
-37. The verification packet workspace must show document previews and current document states.
-38. The system must allow document-level approve actions through the existing or extended server-controlled workflow.
-39. The system must allow document-level reject actions with a reason through the existing or extended server-controlled workflow.
-40. The system must allow full packet approval through the existing or extended server-controlled workflow.
-41. The system must show missing required documents when a packet is incomplete.
+35. The system must provide a verification queue for carrier verification packets.
+36. Each verification queue row must show carrier identity, packet status, missing documents summary, and aging information.
+37. The system must provide a verification packet workspace that groups driver and vehicle documents together.
+38. The verification packet workspace must show document previews and current document states.
+39. The system must allow document-level approve actions through the existing or extended server-controlled workflow.
+40. The system must allow document-level reject actions with a reason through the existing or extended server-controlled workflow.
+41. The system must allow full packet approval through the existing or extended server-controlled workflow.
+42. The system must show missing required documents when a packet is incomplete.
 
 ### 4.7 Disputes Queue
 
-42. The system must provide a disputes queue.
-43. Each disputes queue row must show dispute reason, linked booking, current state, and aging information.
-44. The system must provide a dispute detail workspace containing booking context, payment context, evidence preview, tracking/timeline context, and decision actions.
-45. The system must allow admins to resolve disputes through the existing or extended server-controlled workflow.
-46. The system must preserve auditability for all dispute decisions.
+43. The system must provide a disputes queue.
+44. Each disputes queue row must show dispute reason, linked booking, current state, and aging information.
+45. The system must provide a dispute detail workspace containing booking context, payment context, evidence preview, tracking/timeline context, and decision actions.
+46. The system must allow admins to resolve disputes through the existing or extended server-controlled workflow.
+47. The system must preserve auditability for all dispute decisions.
 
 ### 4.8 Payouts Queue
 
-47. The system must provide a payouts queue for eligible payouts and payout history visibility.
-48. Each payouts queue row must show booking reference, carrier, payout amount, and readiness/age information.
-49. The system must provide a payout detail workspace with booking commercial context, payout account context, payout action controls, and audit history.
-50. The system must allow payout release only through the existing or extended server-controlled workflow.
+48. The system must provide a payouts queue for eligible payouts and payout history visibility.
+49. Each payouts queue row must show booking reference, carrier, payout amount, and readiness/age information.
+50. The system must provide a payout detail workspace with booking commercial context, payout account context, payout action controls, and audit history.
+51. The system must allow payout release only through the existing or extended server-controlled workflow.
 
 ### 4.9 Support Queue
 
-51. The system must provide a support queue backed by the support request and support message model.
-52. Each support queue row must show subject, requester, status, linked context, unread/new state, and last reply age.
-53. The system must provide a support thread workspace that shows the full thread history and linked operational context.
-54. The system must allow admins to reply to support requests.
-55. The system must allow admins to update support request status.
-56. The system must use clear read-state language such as `New` and `Seen`, not confusing workflow-state labels.
+52. The system must provide a support queue backed by the support request and support message model.
+53. Each support queue row must show subject, requester, status, linked context, unread/new state, and last reply age.
+54. The system must provide a support thread workspace that shows the full thread history and linked operational context.
+55. The system must allow admins to reply to support requests.
+56. The system must allow admins to update support request status.
+57. The system must use clear read-state language such as `New` and `Seen`, not confusing workflow-state labels.
 
 ### 4.10 Users
 
-57. The system must provide a user search and listing surface.
-58. The system must provide user detail workspaces showing profile details, role/status, verification summary, vehicles where relevant, and related operational context.
-59. The system must allow authorized admins to suspend and reactivate users through controlled admin workflows.
+58. The system must provide a user search and listing surface.
+59. The system must provide user detail workspaces showing profile details, role/status, verification summary, vehicles where relevant, and related operational context.
+60. The system must allow authorized admins to suspend and reactivate users through controlled admin workflows.
 
-### 4.11 Settings
+### 4.11 Admin Management
 
-60. The system must provide runtime settings management for platform operations.
-61. The settings surface must include maintenance mode, minimum app version settings, locale enablement, and operational flags already supported or newly required by the backend.
-62. The settings surface must preserve auditability for sensitive changes.
+61. The system must provide an `Admins` section for admin-account and invitation management.
+62. The system must provide an active-admin listing with role and active/inactive status.
+63. The system must provide an invitations listing with invitation status and expiry visibility.
+64. The system must allow `super_admin` users to invite admins, revoke invitations, change admin roles, and activate/deactivate admin accounts through controlled workflows.
+65. The system must show blocked governance actions clearly when a last-`super_admin` safeguard or permission rule prevents the action.
 
-### 4.12 Audit And Health
+### 4.12 Settings
 
-63. The system must provide an admin audit log view.
-64. The system must provide email log and dead-letter visibility.
-65. The system must provide safe resend controls where supported by the backend.
-66. The system must surface operational failures or exception states relevant to admin action.
-67. The system must include admin-governance audit events such as invites, role changes, activation/deactivation, and bootstrap actions.
+66. The system must provide runtime settings management for platform operations.
+67. The settings surface must include maintenance mode, minimum app version settings, locale enablement, and operational flags already supported or newly required by the backend.
+68. The settings surface must preserve auditability for sensitive changes.
 
-### 4.13 Global Search
+### 4.13 Audit And Health
 
-68. The system must provide global search accessible from the admin shell.
-69. Global search must support lookup by human-readable terms and exact references/IDs.
-70. Global search must return grouped results across bookings, shipments, users, payment proofs, verification packets, disputes, payouts, support requests, and admins where appropriate.
-71. Selecting a search result must open the canonical admin detail page for that entity.
+69. The system must provide an admin audit log view.
+70. The system must provide email log and dead-letter visibility.
+71. The system must provide safe resend controls where supported by the backend.
+72. The system must surface operational failures or exception states relevant to admin action.
+73. The system must include admin-governance audit events such as invites, role changes, activation/deactivation, and bootstrap actions.
 
-### 4.14 Shared UX And Layout Behavior
+### 4.14 Global Search
 
-72. The system must use a shared queue pattern across major admin modules.
-73. The system must use a shared detail-workspace pattern across major admin modules.
-74. The system must preserve queue context during refresh rather than blanking whole pages.
-75. The system must provide clear loading, empty, and error states for each major route.
-76. The system must support keyboard navigation and visible focus states across the shell, tables, dialogs, and detail workspaces.
-77. The system must use color as a supporting signal only, never the only indicator of state.
-78. The system must keep motion minimal and functional rather than decorative.
+74. The system must provide global search accessible from the admin shell.
+75. Global search must support lookup by human-readable terms and exact references/IDs.
+76. Global search must return grouped results across bookings, shipments, users, payment proofs, verification packets, disputes, payouts, support requests, and admins where appropriate.
+77. Selecting a search result must open the canonical admin detail page for that entity.
 
-### 4.15 Flutter Admin Relationship
+### 4.15 Shared UX And Layout Behavior
 
-79. The system must keep the existing Flutter admin available as a lightweight companion for emergency/mobile admin actions during rollout and early adoption.
-80. The system must not require the Flutter admin to remain the primary day-to-day operations surface once the web console is ready.
+78. The system must use a shared queue pattern across major admin modules.
+79. The system must use a shared detail-workspace pattern across major admin modules.
+80. The system must preserve queue context during refresh rather than blanking whole pages.
+81. The system must provide clear loading, empty, and error states for each major route.
+82. The system must support keyboard navigation and visible focus states across the shell, tables, dialogs, and detail workspaces.
+83. The system must use color as a supporting signal only, never the only indicator of state.
+84. The system must keep motion minimal and functional rather than decorative.
+
+### 4.16 Flutter Admin Relationship
+
+85. The system must keep the existing Flutter admin available as a lightweight companion for emergency/mobile admin actions during rollout and early adoption.
+86. The system must not require the Flutter admin to remain the primary day-to-day operations surface once the web console is ready.
 
 ## 5. Non-Goals (Out of Scope)
 
@@ -209,6 +229,8 @@ Key decisions already locked:
 Reference docs already created for this direction:
 
 - [C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-master-spec.md](C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-master-spec.md)
+- [C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-system-design.md](C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-system-design.md)
+- [C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-ui-ux-spec.md](C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-ui-ux-spec.md)
 - [C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-console-plan.md](C:\Users\raouf\projects\fleetfill\docs\planning\admin-web\admin-web-console-plan.md)
 - [C:\Users\raouf\projects\fleetfill\docs\adr\ADR-005-admin-web-console.md](C:\Users\raouf\projects\fleetfill\docs\adr\ADR-005-admin-web-console.md)
 
@@ -231,6 +253,7 @@ Reference docs already created for this direction:
 - Auth should use `@supabase/ssr` with cookie-based session handling.
 - Sensitive actions must continue using RPCs and Edge Functions rather than duplicated browser logic.
 - The system will likely require backend additions beyond the current Flutter admin support, including admin governance tables, functions, and policies.
+- The system design for those backend additions is defined in the admin web system-design doc and should not be reinvented ad hoc during implementation.
 - Server Components should be the default in Next.js, with narrow Client Component boundaries for interactive features.
 - The app should use route-level `loading.tsx`, `error.tsx`, and `not-found.tsx` patterns for major route groups.
 - Queue pages should be treated as dynamic operational pages rather than aggressively cached static views.
@@ -251,5 +274,5 @@ Reference docs already created for this direction:
 
 1. Should `ops_admin` be allowed to manage some admin-adjacent settings, or should all admin management remain `super_admin` only?
 2. Should admin invitation acceptance create a new auth account only, or also support linking to a pre-existing account email if it exists?
-3. Should admin management live under `Users`, `Settings`, or a dedicated `Admins` section in the final IA?
+3. Should audit-and-health include admin session-security events such as privileged sign-ins and forced sign-outs in v1, or land those immediately after launch?
 4. Which admin-governance events should also generate notifications or email alerts internally?

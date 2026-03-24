@@ -70,8 +70,11 @@
 - `admin-web/lib/validation/admin-management.ts` - zod schemas for admin invites and admin management actions.
 - `supabase/migrations/*admin*.sql` - New or updated migrations for admin governance, bootstrap, invites, and permissions.
 - `supabase/tests/*admin*.sql` - Database tests for admin governance and privileged flows.
-- `tasks/prd-admin-web-console.md` - Product requirements document that defines the final admin web console scope.
-- `docs/working/admin-web-master-spec.md` - Consolidated implementation-grade admin web specification.
+- `docs/planning/admin-web/prd-admin-web-console.md` - Product requirements document that defines the final admin web console scope.
+- `docs/planning/admin-web/admin-web-master-spec.md` - Umbrella implementation-grade admin web specification.
+- `docs/planning/admin-web/admin-web-system-design.md` - Technical source for governance, auth, data flow, and deployment decisions.
+- `docs/planning/admin-web/admin-web-ui-ux-spec.md` - UI/UX source for page patterns, component behavior, and responsive rules.
+- `docs/planning/admin-web/admin-web-console-plan.md` - Delivery companion and rollout inventory for the admin web program.
 
 ### Notes
 
@@ -79,6 +82,7 @@
 - The admin web console must reuse the existing Supabase backend where possible, but the feature explicitly includes adding missing backend/admin-governance capabilities when required.
 - Sensitive actions must continue to go through RPCs and Edge Functions.
 - The existing Flutter admin remains a lightweight companion during rollout, but the web console is the primary implementation target.
+- This task list is not a standalone plan; it must stay aligned with the PRD, master spec, system design, UI/UX spec, and delivery plan listed above.
 
 ## Instructions for Completing Tasks
 
@@ -109,6 +113,7 @@ Update the file after completing each sub-task, not just after completing an ent
   - [ ] 2.6 Add route-level `loading.tsx`, `error.tsx`, `not-found.tsx`, and `global-error.tsx` files following the locked App Router conventions
   - [ ] 2.7 Add shared visual tokens and base styling primitives aligned with the admin UI lock
   - [ ] 2.8 Document the required environment variables and local run commands for `admin-web/`
+  - [ ] 2.9 Add the first shared shell, queue, badge, dialog, and form-field component specs to keep implementation aligned with the UI/UX spec
 - [ ] 3.0 Implement admin authentication, authorization, and shared application shell
   - [ ] 3.1 Create server-side and browser-side Supabase client helpers using `@supabase/ssr`
   - [ ] 3.2 Implement cookie-based auth handling in `proxy.ts`
@@ -157,3 +162,4 @@ Update the file after completing each sub-task, not just after completing an ent
   - [ ] 7.6 Finalize Vercel deployment configuration, preview environment variable ownership, and production environment documentation
   - [ ] 7.7 Run frontend and backend validation for admin governance, auth, i18n, queue behavior, detail workspaces, and settings flows
   - [ ] 7.8 Validate that the web console delivers full production-ready admin functionality, not just parity with incomplete existing Flutter surfaces
+  - [ ] 7.9 Verify the final build still matches the master spec, system design, UI/UX spec, and PRD instead of drifting into module-by-module one-offs

@@ -41,7 +41,7 @@ These are the non-manual blockers that still prevent a clean "nothing missing or
 - [x] Finish the accessibility release pass for core shared widgets and trust-sensitive flows, especially semantics for money summaries, status chips, cards, and async status updates (`lib/shared/widgets/money_summary_card.dart`, `lib/shared/widgets/status_chip.dart`, `lib/shared/widgets/app_list_card.dart`, `docs/05-ux-and-localization.md`)
 - [x] Run executable Supabase runtime security and email tests in CI instead of relying only on local instructions and manual invocation (`.github/workflows/supabase_validation.yml`, `supabase/tests/runtime_security_test.sql`, `supabase/tests/runtime_email_test.sql`, `supabase/README.md`)
 - [x] Replace the old desktop-hosted smoke-only posture with mobile-agnostic automated critical-flow coverage in regular Flutter tests (`test/features/critical/critical_workflow_flows_test.dart`, `test/features/settings/settings_surface_test.dart`, `docs/03-technical-architecture.md`, `docs/07-implementation-plan.md`)
-- [x] Add real release traceability artifacts so every release can map to a changelog entry and user-facing release notes as required by the release policy (`CHANGELOG.md`, `docs/working/release-operations.md`, `.github/RELEASE_TEMPLATE.md`, `.github/workflows/staging_release_candidate.yml`)
+- [x] Add real release traceability artifacts so every release can map to a changelog entry and user-facing release notes as required by the release policy (`CHANGELOG.md`, `docs/planning/operations/release-operations.md`, `.github/RELEASE_TEMPLATE.md`, `.github/workflows/staging_release_candidate.yml`)
 
 ### Medium
 

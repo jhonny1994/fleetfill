@@ -434,12 +434,14 @@ Transitional note:
 
 - [ ] Create `admin-web/` as a separate Next.js + TypeScript app inside the same repository
 - [ ] Configure Vercel deployment, preview environments, and admin-web environment variable ownership
+- [ ] Implement full admin governance backend support for `super_admin` and `ops_admin`, including first-admin bootstrap, invitations, role changes, activation/deactivation, and last-super-admin protection
 - [ ] Implement admin auth/session handling against the existing Supabase project
-- [ ] Implement admin web layout with sidebar, command/search entry, queue list, and detail workspaces
+- [ ] Implement admin web layout with sidebar, command/search entry, queue list, detail workspaces, and first-class `Admins` section
 - [ ] Build desktop-first queue surfaces for payments, verification, disputes, payouts, support, and email health
 - [ ] Build admin dashboard/control tower with queue counts, oldest-item age, exception alerts, and quick drill-ins
-- [ ] Build user management, settings, and audit log surfaces in admin web
+- [ ] Build user management, admin management, settings, and audit log surfaces in admin web
 - [ ] Keep admin actions bound to existing Supabase RPC and Edge Function contracts instead of duplicating business logic
+- [ ] Keep admin-web implementation aligned with the PRD, master spec, system design, and UI/UX spec instead of allowing module-by-module drift
 - [ ] Reach parity on critical admin queues before reducing Flutter-admin usage
 
 ### Admin Audit And Monitoring

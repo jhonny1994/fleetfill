@@ -90,7 +90,10 @@ They can:
 
 ### 4.4 Admin
 
-Admins share the same privilege level.
+Admins operate through two internal privilege levels:
+
+- `super_admin`
+- `ops_admin`
 
 They can:
 
@@ -100,6 +103,9 @@ They can:
 - approve refunds and payouts
 - manage platform settings
 - audit sensitive actions
+
+- `ops_admin` handles day-to-day operational review work such as payments, verification, disputes, payouts, support, and user operations.
+- `super_admin` can do all `ops_admin` work and additionally controls admin invitations, admin lifecycle, role changes, and other high-impact governance actions.
 
 Admins operate primarily through a separate internal web console.
 
