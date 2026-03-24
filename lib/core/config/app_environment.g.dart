@@ -9,7 +9,6 @@ part of 'app_environment.dart';
 _AppEnvironmentConfig _$AppEnvironmentConfigFromJson(
   Map<String, dynamic> json,
 ) => _AppEnvironmentConfig(
-  environment: $enumDecode(_$AppEnvironmentEnumMap, json['environment']),
   supabaseUrl: json['supabaseUrl'] as String? ?? '',
   supabaseAnonKey: json['supabaseAnonKey'] as String? ?? '',
   firebaseApiKey: json['firebaseApiKey'] as String? ?? '',
@@ -28,7 +27,6 @@ _AppEnvironmentConfig _$AppEnvironmentConfigFromJson(
 Map<String, dynamic> _$AppEnvironmentConfigToJson(
   _AppEnvironmentConfig instance,
 ) => <String, dynamic>{
-  'environment': _$AppEnvironmentEnumMap[instance.environment]!,
   'supabaseUrl': instance.supabaseUrl,
   'supabaseAnonKey': instance.supabaseAnonKey,
   'firebaseApiKey': instance.firebaseApiKey,
@@ -42,10 +40,4 @@ Map<String, dynamic> _$AppEnvironmentConfigToJson(
   'maintenanceMode': instance.maintenanceMode,
   'forceUpdateRequired': instance.forceUpdateRequired,
   'crashReportingEnabled': instance.crashReportingEnabled,
-};
-
-const _$AppEnvironmentEnumMap = {
-  AppEnvironment.local: 'local',
-  AppEnvironment.staging: 'staging',
-  AppEnvironment.production: 'production',
 };

@@ -25,7 +25,9 @@ void main() {
               const FlutterSecureStorage(),
             ),
             appEnvironmentConfigProvider.overrideWithValue(
-              const AppEnvironmentConfig(environment: AppEnvironment.local),
+              const AppEnvironmentConfig(
+                supabaseUrl: 'http://127.0.0.1:54321',
+              ),
             ),
             initialThemeModeProvider.overrideWithValue(ThemeMode.light),
             initialLocaleProvider.overrideWithValue(const Locale('en')),

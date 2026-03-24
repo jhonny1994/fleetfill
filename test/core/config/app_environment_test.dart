@@ -2,10 +2,69 @@ import 'package:fleetfill/core/config/app_environment.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  group('AppEnvironmentConfig backend classification', () {
+    test('treats loopback and local hostnames as local backends', () {
+      expect(
+        AppEnvironmentConfig.isLocalBackendUrlForTesting(
+          'http://127.0.0.1:54321',
+        ),
+        isTrue,
+      );
+      expect(
+        AppEnvironmentConfig.isLocalBackendUrlForTesting(
+          'http://localhost:54321',
+        ),
+        isTrue,
+      );
+      expect(
+        AppEnvironmentConfig.isLocalBackendUrlForTesting(
+          'http://fleetfill.local:54321',
+        ),
+        isTrue,
+      );
+    });
+
+    test('treats Android emulator and LAN hosts as local backends', () {
+      expect(
+        AppEnvironmentConfig.isLocalBackendUrlForTesting(
+          'http://10.0.2.2:54321',
+        ),
+        isTrue,
+      );
+      expect(
+        AppEnvironmentConfig.isLocalBackendUrlForTesting(
+          'http://192.168.100.13:54321',
+        ),
+        isTrue,
+      );
+      expect(
+        AppEnvironmentConfig.isLocalBackendUrlForTesting(
+          'http://10.10.1.25:54321',
+        ),
+        isTrue,
+      );
+    });
+
+    test('treats hosted Supabase URLs as hosted backends', () {
+      expect(
+        AppEnvironmentConfig.isLocalBackendUrlForTesting(
+          'https://fleetfill.supabase.co',
+        ),
+        isFalse,
+      );
+      expect(
+        AppEnvironmentConfig.isLocalBackendUrlForTesting(
+          'https://example.com',
+        ),
+        isFalse,
+      );
+    });
+  });
+
   group('AppEnvironmentConfig client key resolution', () {
-    test('prefers anon key in local environment', () {
+    test('prefers anon key for local backends', () {
       final key = AppEnvironmentConfig.resolveClientKeyForTesting(
-        environment: AppEnvironment.local,
+        supabaseUrl: 'http://127.0.0.1:54321',
         publishableKey: 'sb_publishable_local',
         anonKey: 'legacy_anon_local',
       );
@@ -13,34 +72,28 @@ void main() {
       expect(key, 'legacy_anon_local');
     });
 
-    test('falls back to publishable key locally when anon is missing', () {
+    test('falls back to publishable key for local backends when anon is missing', () {
       final key = AppEnvironmentConfig.resolveClientKeyForTesting(
-        environment: AppEnvironment.local,
+        supabaseUrl: 'http://localhost:54321',
         publishableKey: 'sb_publishable_local',
       );
 
       expect(key, 'sb_publishable_local');
     });
 
-    test('prefers publishable key in production-like environments', () {
-      final stagingKey = AppEnvironmentConfig.resolveClientKeyForTesting(
-        environment: AppEnvironment.staging,
-        publishableKey: 'sb_publishable_stage',
-        anonKey: 'legacy_anon_stage',
-      );
-      final productionKey = AppEnvironmentConfig.resolveClientKeyForTesting(
-        environment: AppEnvironment.production,
+    test('prefers publishable key for hosted backends', () {
+      final key = AppEnvironmentConfig.resolveClientKeyForTesting(
+        supabaseUrl: 'https://fleetfill.supabase.co',
         publishableKey: 'sb_publishable_prod',
         anonKey: 'legacy_anon_prod',
       );
 
-      expect(stagingKey, 'sb_publishable_stage');
-      expect(productionKey, 'sb_publishable_prod');
+      expect(key, 'sb_publishable_prod');
     });
 
-    test('falls back to anon key in production-like environments', () {
+    test('falls back to anon key for hosted backends when publishable is missing', () {
       final key = AppEnvironmentConfig.resolveClientKeyForTesting(
-        environment: AppEnvironment.production,
+        supabaseUrl: 'https://fleetfill.supabase.co',
         anonKey: 'legacy_anon_prod',
       );
 
@@ -51,7 +104,6 @@ void main() {
   group('AppEnvironmentConfig Google client ID resolution', () {
     test('serializes optional Google client IDs from JSON payloads', () {
       final config = AppEnvironmentConfig.fromJson(<String, dynamic>{
-        'environment': 'production',
         'googleWebClientId': 'web-client-id',
         'googleIosClientId': 'ios-client-id',
       });
@@ -61,9 +113,7 @@ void main() {
     });
 
     test('defaults Google client IDs to empty strings when absent', () {
-      final config = AppEnvironmentConfig.fromJson(<String, dynamic>{
-        'environment': 'local',
-      });
+      final config = AppEnvironmentConfig.fromJson(<String, dynamic>{});
 
       expect(config.googleWebClientId, isEmpty);
       expect(config.googleIosClientId, isEmpty);
@@ -72,11 +122,10 @@ void main() {
 
   group('AppEnvironmentConfig local Supabase URL normalization', () {
     test(
-      'maps localhost to 10.0.2.2 only for Android emulator local builds',
+      'maps loopback to 10.0.2.2 only for Android emulator local builds',
       () {
         final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
           'http://127.0.0.1:54321',
-          environment: AppEnvironment.local,
           isAndroid: true,
           localAndroidNetworkTarget: LocalAndroidNetworkTarget.emulator,
         );
@@ -88,7 +137,6 @@ void main() {
     test('keeps loopback unchanged for Android real-device local builds', () {
       final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
         'http://127.0.0.1:54321',
-        environment: AppEnvironment.local,
         isAndroid: true,
         localAndroidNetworkTarget: LocalAndroidNetworkTarget.device,
       );
@@ -96,22 +144,26 @@ void main() {
       expect(normalized, 'http://127.0.0.1:54321');
     });
 
-    test('keeps hosted URLs unchanged', () {
-      final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
-        'https://example.supabase.co',
-        environment: AppEnvironment.local,
+    test('keeps LAN and hosted URLs unchanged', () {
+      final lanUrl = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
+        'http://192.168.100.13:54321',
+        isAndroid: true,
+        localAndroidNetworkTarget: LocalAndroidNetworkTarget.emulator,
+      );
+      final hostedUrl = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
+        'https://fleetfill.supabase.co',
         isAndroid: true,
         localAndroidNetworkTarget: LocalAndroidNetworkTarget.emulator,
       );
 
-      expect(normalized, 'https://example.supabase.co');
+      expect(lanUrl, 'http://192.168.100.13:54321');
+      expect(hostedUrl, 'https://fleetfill.supabase.co');
     });
 
-    test('keeps localhost unchanged outside Android local builds', () {
+    test('keeps loopback unchanged outside Android builds', () {
       final normalized = AppEnvironmentConfig.normalizeSupabaseUrlForTesting(
         'http://localhost:54321',
-        environment: AppEnvironment.production,
-        isAndroid: true,
+        isAndroid: false,
       );
 
       expect(normalized, 'http://localhost:54321');

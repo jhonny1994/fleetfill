@@ -6,7 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('NotificationRepository', () {
-    const environment = AppEnvironmentConfig(environment: AppEnvironment.local);
+    const environment = AppEnvironmentConfig(
+      supabaseUrl: 'http://127.0.0.1:54321',
+    );
     const logger = DebugAppLogger();
 
     test('uses bounded notification page size', () {
@@ -15,7 +17,7 @@ void main() {
         logger: logger,
       );
 
-      expect(repository.environment.environment, AppEnvironment.local);
+      expect(repository.environment.isLocalBackend, isTrue);
       expect(NotificationRepository.notificationsPageSize, 50);
     });
 
@@ -63,7 +65,7 @@ class _FakeNotificationRepository extends NotificationRepository {
   _FakeNotificationRepository({required this.notifications})
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
       );

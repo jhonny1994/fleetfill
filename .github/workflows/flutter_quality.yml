@@ -11,7 +11,6 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     env:
-      APP_ENV: local
       HAS_GOOGLE_SERVICES: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON != '' }}
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
       GOOGLE_IOS_CLIENT_ID: ${{ vars.GOOGLE_IOS_CLIENT_ID }}
@@ -47,7 +46,6 @@ jobs:
         if: ${{ env.HAS_GOOGLE_SERVICES == 'true' }}
         run: >
           flutter build apk --debug
-          --dart-define=APP_ENV=${{ env.APP_ENV }}
           --dart-define=GOOGLE_WEB_CLIENT_ID=${{ env.GOOGLE_WEB_CLIENT_ID }}
           --dart-define=GOOGLE_IOS_CLIENT_ID=${{ env.GOOGLE_IOS_CLIENT_ID }}
 
