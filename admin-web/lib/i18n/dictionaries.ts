@@ -39,10 +39,6 @@ const dictionaries = {
         settings: "الإعدادات",
         auditAndHealth: "التدقيق وصحة النظام",
       },
-      previewShell: "البيئة الحالية",
-      environmentLocal: "محلي",
-      environmentPreview: "معاينة",
-      environmentProduction: "إنتاج",
       role: {
         superAdmin: "مشرف عام",
         opsAdmin: "مشرف عمليات",
@@ -175,10 +171,6 @@ const dictionaries = {
         settings: "Paramètres",
         auditAndHealth: "Audit et santé",
       },
-      previewShell: "Environnement",
-      environmentLocal: "Local",
-      environmentPreview: "Preview",
-      environmentProduction: "Production",
       role: {
         superAdmin: "Super admin",
         opsAdmin: "Admin opérations",
@@ -312,10 +304,6 @@ const dictionaries = {
         settings: "Settings",
         auditAndHealth: "Audit & health",
       },
-      previewShell: "Environment",
-      environmentLocal: "Local",
-      environmentPreview: "Preview",
-      environmentProduction: "Production",
       role: {
         superAdmin: "Super admin",
         opsAdmin: "Ops admin",
