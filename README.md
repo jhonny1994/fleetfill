@@ -80,3 +80,15 @@ Before production launch, FleetFill exposes in-app policy surfaces that cover:
 FleetFill is under active development.
 
 This repository tracks the product and engineering work behind the app. Public release notes should focus on what changed for users, not internal implementation details.
+
+## Documentation
+
+The active documentation baseline lives in [docs/README.md](C:\Users\raouf\projects\fleetfill\docs\README.md).
+
+Use that index for:
+
+- product scope
+- architecture and runtime contract
+- operations and communications
+- admin-web contract
+- delivery and release readiness

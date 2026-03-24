@@ -31,7 +31,7 @@ void main() {
     late String payoutReleaseFunction;
     late String adminRetryDeadLetterFunction;
     late String workflowLayer;
-    late String auditTracker;
+    late String deliveryDoc;
 
     setUpAll(() {
       securityHelpersMigration = File(
@@ -78,8 +78,8 @@ void main() {
         workflowLayer,
         'create or replace function public.admin_retry_dead_letter_email_job(',
       );
-      auditTracker = File(
-        'docs/planning/operations/production-readiness-audit.md',
+      deliveryDoc = File(
+        'docs/delivery.md',
       ).readAsStringSync();
     });
 
@@ -215,15 +215,15 @@ void main() {
       },
     );
 
-    test('tracks remaining manual-only work in the audit doc', () {
+    test('tracks remaining manual-only work in the delivery doc', () {
       expect(
-        auditTracker.contains(
-          'Manual Or User-Intervention Validation Still Required',
+        deliveryDoc.contains(
+          'Remaining Manual Or Environment-Specific Validation',
         ),
         isTrue,
       );
       expect(
-        auditTracker.contains(
+        deliveryDoc.contains(
           'Profile the app on a representative Android device in profile mode',
         ),
         isTrue,
