@@ -47,8 +47,8 @@ export function PaymentReviewActions({
     const { error: rpcError } = await supabase.rpc("admin_approve_payment_proof", {
       p_payment_proof_id: proofId,
       p_verified_amount_dzd: pendingApprove.verifiedAmountDzd,
-      p_verified_reference: pendingApprove.verifiedReference || null,
-      p_decision_note: pendingApprove.decisionNote || null,
+      p_verified_reference: pendingApprove.verifiedReference || undefined,
+      p_decision_note: pendingApprove.decisionNote || undefined,
     });
     setIsPending(false);
     setPendingApprove(null);
@@ -66,7 +66,7 @@ export function PaymentReviewActions({
     const { error: rpcError } = await supabase.rpc("admin_reject_payment_proof", {
       p_payment_proof_id: proofId,
       p_rejection_reason: pendingReject.rejectionReason,
-      p_decision_note: pendingReject.decisionNote || null,
+      p_decision_note: pendingReject.decisionNote || undefined,
     });
     setIsPending(false);
     setPendingReject(null);

@@ -1,4 +1,5 @@
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { DisputesQueueView } from "@/components/queues/disputes-queue-view";
 import { fetchDisputeQueue } from "@/lib/queries/admin-queues";
 
@@ -11,6 +12,7 @@ export default async function DisputesPage({
 }) {
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const query = filters.q?.trim();
+  const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const items = await fetchDisputeQueue({ query });
   const pathname = `/${lang}/disputes`;
 
@@ -23,7 +25,22 @@ export default async function DisputesPage({
           Resolve active booking disputes with clear age visibility, evidence counts, and linked booking context.
         </p>
       </section>
-      <AdminFilterBar pathname={pathname} query={query} />
+      <AdminFilterBar
+        pathname={pathname}
+        query={query}
+        locale={lang as "ar" | "fr" | "en"}
+        labels={{
+          searchPlaceholder: dictionary.shell.searchPlaceholder,
+          status: dictionary.common.status,
+          allStatuses: dictionary.common.allStatuses,
+          apply: dictionary.common.apply,
+          reset: dictionary.common.reset,
+          query: dictionary.common.query,
+          clearAll: dictionary.common.clearAll,
+          refresh: dictionary.common.refresh,
+          refreshAriaLabel: dictionary.common.refreshQueue,
+        }}
+      />
       <DisputesQueueView items={items} locale={lang} />
     </div>
   );

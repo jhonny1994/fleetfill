@@ -153,13 +153,13 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 6.7 Implement the global search experience across bookings, shipments, users, payment proofs, verification packets, disputes, payouts, support requests, and admins where applicable
   - [x] 6.8 Ensure global search routes users into canonical admin detail pages instead of temporary-only overlays
   - [x] 6.9 Add tests for settings validation, admin management flows, user actions, and global search routing behavior
-- [ ] 7.0 Finalize localization, responsiveness, accessibility, and production hardening
-  - [ ] 7.1 Implement server-loaded dictionaries for Arabic, French, and English with Arabic fallback policy
-  - [ ] 7.2 Apply locale-aware formatting for dates, money, counts, and references while preserving tabular readability
-  - [ ] 7.3 Validate desktop-first responsive behavior across mobile, tablet, desktop, and wide-desktop breakpoints
-  - [ ] 7.4 Ensure the admin shell, queues, dialogs, tables, and detail workspaces meet the locked keyboard and focus requirements
-  - [ ] 7.5 Ensure color usage is not the only state signal and that all critical actions have accessible labels
-  - [ ] 7.6 Finalize Vercel deployment configuration, preview environment variable ownership, and production environment documentation
-  - [ ] 7.7 Run frontend and backend validation for admin governance, auth, i18n, queue behavior, detail workspaces, and settings flows
-  - [ ] 7.8 Validate that the web console delivers full production-ready admin functionality, not just parity with incomplete existing Flutter surfaces
-  - [ ] 7.9 Verify the final build still matches the master spec, system design, UI/UX spec, and PRD instead of drifting into module-by-module one-offs
+- [x] 7.0 Finalize localization, responsiveness, accessibility, and production hardening
+  - [x] 7.1 Implement server-loaded dictionaries for Arabic, French, and English with Arabic fallback policy
+  - [x] 7.2 Apply locale-aware formatting for dates, money, counts, and references while preserving tabular readability
+  - [x] 7.3 Validate desktop-first responsive behavior across mobile, tablet, desktop, and wide-desktop breakpoints
+  - [x] 7.4 Ensure the admin shell, queues, dialogs, tables, and detail workspaces meet the locked keyboard and focus requirements
+  - [x] 7.5 Ensure color usage is not the only state signal and that all critical actions have accessible labels
+  - [x] 7.6 Finalize Vercel deployment configuration, preview environment variable ownership, and production environment documentation
+  - [x] 7.7 Run frontend and backend validation for admin governance, auth, i18n, queue behavior, detail workspaces, and settings flows
+  - [x] 7.8 Validate that the web console delivers full production-ready admin functionality, not just parity with incomplete existing Flutter surfaces
+  - [x] 7.9 Verify the final build still matches the master spec, system design, UI/UX spec, and PRD instead of drifting into module-by-module one-offs

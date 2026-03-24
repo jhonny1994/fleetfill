@@ -4,6 +4,10 @@ import { StatusBadge } from "@/components/shared/status-badge";
 
 export function ExceptionAlerts({
   alerts,
+  clearLabel = "Clear",
+  noExceptionsBody = "No control-tower exceptions are currently above the attention threshold.",
+  urgentLabel = "Urgent",
+  watchLabel = "Watch",
 }: {
   alerts: Array<{
     id: string;
@@ -11,15 +15,17 @@ export function ExceptionAlerts({
     title: string;
     body: string;
   }>;
+  clearLabel?: string;
+  noExceptionsBody?: string;
+  urgentLabel?: string;
+  watchLabel?: string;
 }) {
   if (alerts.length === 0) {
     return (
       <section className="panel p-5">
         <div className="flex items-center gap-3">
-          <StatusBadge label="Clear" tone="success" />
-          <p className="text-sm text-[var(--color-ink-muted)]">
-            No control-tower exceptions are currently above the attention threshold.
-          </p>
+          <StatusBadge label={clearLabel} tone="success" />
+          <p className="text-sm text-[var(--color-ink-muted)]">{noExceptionsBody}</p>
         </div>
       </section>
     );
@@ -35,7 +41,7 @@ export function ExceptionAlerts({
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">{alert.title}</h3>
-              <StatusBadge label={alert.tone === "danger" ? "Urgent" : "Watch"} tone={alert.tone} />
+              <StatusBadge label={alert.tone === "danger" ? urgentLabel : watchLabel} tone={alert.tone} />
             </div>
             <p className="text-sm text-[var(--color-ink-muted)]">{alert.body}</p>
           </div>

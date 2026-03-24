@@ -11,10 +11,12 @@ export function AdminIdentityControls({
   locale,
   label,
   detail,
+  signOutLabel,
 }: {
   locale: AppLocale;
   label: string;
   detail: string;
+  signOutLabel: string;
 }) {
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
@@ -37,7 +39,7 @@ export function AdminIdentityControls({
       <button
         type="button"
         className="flex size-9 items-center justify-center rounded-full border border-[var(--color-border)]"
-        aria-label="Sign out"
+        aria-label={signOutLabel}
         onClick={handleSignOut}
         disabled={isPending}
       >

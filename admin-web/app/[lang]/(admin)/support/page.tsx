@@ -1,4 +1,5 @@
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { SupportQueueView } from "@/components/queues/support-queue-view";
 import { fetchSupportQueue } from "@/lib/queries/admin-queues";
 
@@ -12,6 +13,7 @@ export default async function SupportPage({
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const query = filters.q?.trim();
   const status = filters.status?.trim();
+  const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const items = await fetchSupportQueue({ query, status });
   const pathname = `/${lang}/support`;
 
@@ -28,6 +30,18 @@ export default async function SupportPage({
         pathname={pathname}
         query={query}
         status={status}
+        locale={lang as "ar" | "fr" | "en"}
+        labels={{
+          searchPlaceholder: dictionary.shell.searchPlaceholder,
+          status: dictionary.common.status,
+          allStatuses: dictionary.common.allStatuses,
+          apply: dictionary.common.apply,
+          reset: dictionary.common.reset,
+          query: dictionary.common.query,
+          clearAll: dictionary.common.clearAll,
+          refresh: dictionary.common.refresh,
+          refreshAriaLabel: dictionary.common.refreshQueue,
+        }}
         statusOptions={[
           { value: "open", label: "Open" },
           { value: "in_progress", label: "In progress" },

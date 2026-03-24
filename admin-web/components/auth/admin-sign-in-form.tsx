@@ -6,21 +6,30 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import type { AdminDictionary } from "@/lib/i18n/dictionaries";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { AppLocale } from "@/lib/i18n/config";
 
-const signInSchema = z.object({
-  email: z.string().trim().email("Enter a valid admin email."),
-  password: z.string().min(8, "Use at least 8 characters."),
-});
+type SignInValues = {
+  email: string;
+  password: string;
+};
 
-type SignInValues = z.infer<typeof signInSchema>;
-
-export function AdminSignInForm({ locale }: { locale: AppLocale }) {
+export function AdminSignInForm({
+  locale,
+  dictionary,
+}: {
+  locale: AppLocale;
+  dictionary: AdminDictionary;
+}) {
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
   const [authError, setAuthError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const signInSchema = z.object({
+    email: z.string().trim().email(dictionary.auth.invalidEmail),
+    password: z.string().min(8, dictionary.auth.passwordTooShort),
+  });
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -43,7 +52,7 @@ export function AdminSignInForm({ locale }: { locale: AppLocale }) {
     }
 
     if (!data.user) {
-      setAuthError("We could not establish an admin session.");
+      setAuthError(dictionary.auth.noSession);
       return;
     }
 
@@ -59,7 +68,7 @@ export function AdminSignInForm({ locale }: { locale: AppLocale }) {
 
     if (!adminAccount || adminAccount.is_active !== true || profile?.is_active !== true) {
       await supabase.auth.signOut();
-      setAuthError("This account does not have active FleetFill admin access.");
+      setAuthError(dictionary.auth.inactiveAdmin);
       return;
     }
 
@@ -73,13 +82,13 @@ export function AdminSignInForm({ locale }: { locale: AppLocale }) {
     <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
       <div className="space-y-2">
         <label className="text-sm font-medium text-[var(--color-ink-strong)]" htmlFor="email">
-          Admin email
+          {dictionary.auth.emailLabel}
         </label>
         <input
           id="email"
           type="email"
-          className="w-full rounded-[22px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-ink-strong)] outline-none"
-          placeholder="admin@fleetfill.dz"
+          className="w-full rounded-[22px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-ink-strong)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+          placeholder={dictionary.auth.emailPlaceholder}
           autoComplete="email"
           {...form.register("email")}
         />
@@ -89,13 +98,13 @@ export function AdminSignInForm({ locale }: { locale: AppLocale }) {
       </div>
       <div className="space-y-2">
         <label className="text-sm font-medium text-[var(--color-ink-strong)]" htmlFor="password">
-          Password
+          {dictionary.auth.passwordLabel}
         </label>
         <input
           id="password"
           type="password"
-          className="w-full rounded-[22px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-ink-strong)] outline-none"
-          placeholder="Enter your admin password"
+          className="w-full rounded-[22px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-ink-strong)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+          placeholder={dictionary.auth.passwordPlaceholder}
           autoComplete="current-password"
           {...form.register("password")}
         />
@@ -107,7 +116,7 @@ export function AdminSignInForm({ locale }: { locale: AppLocale }) {
       </div>
       {authError ? <p className="text-sm text-[var(--color-red-700)]">{authError}</p> : null}
       <button className="button-primary w-full" type="submit" disabled={isPending}>
-        {isPending ? "Signing in..." : "Continue with admin sign in"}
+        {isPending ? dictionary.auth.submitting : dictionary.auth.submit}
       </button>
     </form>
   );

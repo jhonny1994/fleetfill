@@ -1,4 +1,5 @@
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { VerificationQueueView } from "@/components/queues/verification-queue-view";
 import { fetchVerificationQueue } from "@/lib/queries/admin-queues";
 
@@ -11,6 +12,7 @@ export default async function VerificationPage({
 }) {
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const query = filters.q?.trim();
+  const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const items = await fetchVerificationQueue({ query });
   const pathname = `/${lang}/verification`;
 
@@ -23,7 +25,22 @@ export default async function VerificationPage({
           See the unified driver and vehicle verification packet, including missing documents and per-vehicle blocking context.
         </p>
       </section>
-      <AdminFilterBar pathname={pathname} query={query} />
+      <AdminFilterBar
+        pathname={pathname}
+        query={query}
+        locale={lang as "ar" | "fr" | "en"}
+        labels={{
+          searchPlaceholder: dictionary.shell.searchPlaceholder,
+          status: dictionary.common.status,
+          allStatuses: dictionary.common.allStatuses,
+          apply: dictionary.common.apply,
+          reset: dictionary.common.reset,
+          query: dictionary.common.query,
+          clearAll: dictionary.common.clearAll,
+          refresh: dictionary.common.refresh,
+          refreshAriaLabel: dictionary.common.refreshQueue,
+        }}
+      />
       <VerificationQueueView items={items} locale={lang} />
     </div>
   );

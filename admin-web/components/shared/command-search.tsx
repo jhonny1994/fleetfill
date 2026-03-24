@@ -9,10 +9,14 @@ export function CommandSearch({
   defaultValue,
   inputName,
   locale,
+  placeholder,
+  shortcutLabel = "/",
 }: {
   defaultValue?: string;
   inputName?: string;
   locale?: AppLocale | string;
+  placeholder: string;
+  shortcutLabel?: string;
 }) {
   if (inputName) {
     return (
@@ -22,7 +26,7 @@ export function CommandSearch({
           type="search"
           name={inputName}
           defaultValue={defaultValue}
-          placeholder="Search bookings, users, disputes, payouts, support..."
+          placeholder={placeholder}
           className="min-w-0 flex-1 border-0 bg-transparent text-[var(--color-ink-strong)] outline-none placeholder:text-[var(--color-ink-muted)]"
         />
       </label>
@@ -35,9 +39,9 @@ export function CommandSearch({
       className="flex w-full items-center gap-3 rounded-full border border-[var(--color-border)] bg-white/70 px-4 py-3 text-left text-sm text-[var(--color-ink-muted)]"
     >
       <Search className="size-4" />
-      <span>Search bookings, users, disputes, payouts, support...</span>
+      <span>{placeholder}</span>
       <span className="ml-auto rounded-full bg-[var(--color-surface-muted)] px-2 py-1 text-[0.72rem] text-[var(--color-ink-base)]">
-        /
+        {shortcutLabel}
       </span>
     </Link>
   );

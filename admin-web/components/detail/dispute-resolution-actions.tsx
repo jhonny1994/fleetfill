@@ -38,7 +38,7 @@ export function DisputeResolutionActions({ disputeId }: { disputeId: string }) {
     setError(null);
     const { error: rpcError } = await supabase.rpc("admin_resolve_dispute_complete", {
       p_dispute_id: disputeId,
-      p_resolution_note: pendingComplete.resolutionNote || null,
+      p_resolution_note: pendingComplete.resolutionNote || undefined,
     });
     setIsPending(false);
     setPendingComplete(null);
@@ -57,8 +57,8 @@ export function DisputeResolutionActions({ disputeId }: { disputeId: string }) {
       p_dispute_id: disputeId,
       p_refund_amount_dzd: pendingRefund.refundAmountDzd,
       p_refund_reason: pendingRefund.refundReason,
-      p_external_reference: pendingRefund.externalReference || null,
-      p_resolution_note: pendingRefund.resolutionNote || null,
+      p_external_reference: pendingRefund.externalReference || undefined,
+      p_resolution_note: pendingRefund.resolutionNote || undefined,
     });
     setIsPending(false);
     setPendingRefund(null);

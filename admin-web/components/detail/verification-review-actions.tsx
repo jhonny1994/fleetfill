@@ -61,7 +61,7 @@ export function VerificationReviewActions({
     const { error: rpcError } = await supabase.rpc("admin_review_verification_document", {
       p_document_id: pendingDocumentReview.documentId,
       p_status: pendingDocumentReview.status,
-      p_reason: pendingDocumentReview.reason || null,
+      p_reason: pendingDocumentReview.reason || undefined,
     });
     setIsPending(false);
     setPendingDocumentReview(null);

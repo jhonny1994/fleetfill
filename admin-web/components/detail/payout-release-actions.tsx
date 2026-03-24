@@ -30,8 +30,8 @@ export function PayoutReleaseActions({ bookingId }: { bookingId: string }) {
     setError(null);
     const { error: rpcError } = await supabase.rpc("admin_release_payout", {
       p_booking_id: bookingId,
-      p_external_reference: pendingValues.externalReference || null,
-      p_note: pendingValues.note || null,
+      p_external_reference: pendingValues.externalReference || undefined,
+      p_note: pendingValues.note || undefined,
     });
     setIsPending(false);
     setPendingValues(null);

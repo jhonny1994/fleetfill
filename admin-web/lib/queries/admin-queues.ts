@@ -296,7 +296,6 @@ type DisputeRow = {
   booking_id: string;
   reason: string;
   status: string;
-  evidence_count: number;
   created_at: string | null;
   updated_at: string | null;
 };
@@ -311,7 +310,7 @@ export async function fetchDisputeQueue({
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("disputes")
-    .select("id, booking_id, reason, status, evidence_count, created_at, updated_at")
+    .select("id, booking_id, reason, status, created_at, updated_at")
     .eq("status", "open")
     .order("created_at", { ascending: true })
     .limit(limit);
@@ -322,15 +321,26 @@ export async function fetchDisputeQueue({
 
   const disputeRows = (data ?? []) as DisputeRow[];
   const bookingIds = [...new Set(disputeRows.map((dispute) => dispute.booking_id))];
-  const { data: bookings } = bookingIds.length
-    ? await supabase.from("bookings").select("id, tracking_number").in("id", bookingIds)
-    : { data: [] };
+  const [bookingsResult, evidenceResult] = await Promise.all([
+    bookingIds.length
+      ? supabase.from("bookings").select("id, tracking_number").in("id", bookingIds)
+      : Promise.resolve({ data: [], error: null }),
+    disputeRows.length
+      ? supabase.from("dispute_evidence").select("id, dispute_id").in("dispute_id", disputeRows.map((row) => row.id))
+      : Promise.resolve({ data: [], error: null }),
+  ]);
+  if (bookingsResult.error) throw bookingsResult.error;
+  if (evidenceResult.error) throw evidenceResult.error;
   const trackingMap = new Map(
-    ((bookings ?? []) as Array<{ id: string; tracking_number: string }>).map((booking) => [
+    ((bookingsResult.data ?? []) as Array<{ id: string; tracking_number: string }>).map((booking) => [
       booking.id,
       booking.tracking_number,
     ]),
   );
+  const evidenceCountByDispute = new Map<string, number>();
+  for (const row of (evidenceResult.data ?? []) as Array<{ dispute_id: string }>) {
+    evidenceCountByDispute.set(row.dispute_id, (evidenceCountByDispute.get(row.dispute_id) ?? 0) + 1);
+  }
 
   const normalized = query?.trim().toLowerCase();
   const results = disputeRows.map((dispute) => ({
@@ -339,7 +349,7 @@ export async function fetchDisputeQueue({
     trackingNumber: trackingMap.get(dispute.booking_id) ?? null,
     reason: dispute.reason,
     status: dispute.status,
-    evidenceCount: dispute.evidence_count ?? 0,
+    evidenceCount: evidenceCountByDispute.get(dispute.id) ?? 0,
     createdAt: dispute.created_at,
     updatedAt: dispute.updated_at,
     ageHours: diffHoursFromNow(dispute.created_at),
@@ -367,6 +377,11 @@ type SupportRow = {
   last_message_at: string;
   admin_last_read_at: string | null;
 };
+
+const supportStatuses = ["open", "in_progress", "waiting_for_user", "resolved", "closed"] as const;
+function isSupportStatus(value: string): value is (typeof supportStatuses)[number] {
+  return supportStatuses.includes(value as (typeof supportStatuses)[number]);
+}
 
 function isUuidLike(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
@@ -406,7 +421,7 @@ export async function fetchSupportQueue({
     );
 
   const normalizedStatus = status?.trim();
-  if (normalizedStatus) {
+  if (normalizedStatus && isSupportStatus(normalizedStatus)) {
     request = request.eq("status", normalizedStatus);
   }
 

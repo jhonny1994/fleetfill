@@ -69,15 +69,28 @@ export type DashboardAlert = {
   body: string;
 };
 
-export function buildDashboardAlerts(summary: AdminOperationalSummary): DashboardAlert[] {
+export function buildDashboardAlerts(
+  summary: AdminOperationalSummary,
+  labels: {
+    deliveryReviewOverdueTitle: string;
+    deliveryReviewOverdueBody: string;
+    paymentResubmissionOverdueTitle: string;
+    paymentResubmissionOverdueBody: string;
+    emailDeadLetterTitle: string;
+    emailDeadLetterBody: string;
+    supportNeedsReplyTitle: string;
+    supportNeedsReplyBody: string;
+  },
+): DashboardAlert[] {
   const alerts: DashboardAlert[] = [];
+  const withCount = (template: string, count: number) => template.replace("{count}", String(count));
 
   if (summary.overdueDeliveryReviews > 0) {
     alerts.push({
       id: "delivery-review-overdue",
       tone: "danger",
-      title: "Delivered bookings are waiting on review.",
-      body: `${summary.overdueDeliveryReviews} bookings have stayed in delivered-pending-review beyond the configured grace window.`,
+      title: labels.deliveryReviewOverdueTitle,
+      body: withCount(labels.deliveryReviewOverdueBody, summary.overdueDeliveryReviews),
     });
   }
 
@@ -85,8 +98,8 @@ export function buildDashboardAlerts(summary: AdminOperationalSummary): Dashboar
     alerts.push({
       id: "payment-resubmission-overdue",
       tone: "warning",
-      title: "Rejected payments have gone stale.",
-      body: `${summary.overduePaymentResubmissions} bookings still need a payment-proof resubmission.`,
+      title: labels.paymentResubmissionOverdueTitle,
+      body: withCount(labels.paymentResubmissionOverdueBody, summary.overduePaymentResubmissions),
     });
   }
 
@@ -94,8 +107,8 @@ export function buildDashboardAlerts(summary: AdminOperationalSummary): Dashboar
     alerts.push({
       id: "email-dead-letter",
       tone: "warning",
-      title: "Delivery failures need operator attention.",
-      body: `${summary.emailDeadLetter} email jobs are in dead-letter state.`,
+      title: labels.emailDeadLetterTitle,
+      body: withCount(labels.emailDeadLetterBody, summary.emailDeadLetter),
     });
   }
 
@@ -103,8 +116,8 @@ export function buildDashboardAlerts(summary: AdminOperationalSummary): Dashboar
     alerts.push({
       id: "support-needs-reply",
       tone: "warning",
-      title: "Support queue has user messages waiting.",
-      body: `${summary.supportNeedsReply} support requests have unread user follow-ups for admins.`,
+      title: labels.supportNeedsReplyTitle,
+      body: withCount(labels.supportNeedsReplyBody, summary.supportNeedsReply),
     });
   }
 

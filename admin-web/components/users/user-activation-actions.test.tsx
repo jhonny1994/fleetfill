@@ -32,7 +32,7 @@ describe("UserActivationActions", () => {
       expect(rpcSpy).toHaveBeenCalledWith("admin_set_profile_active", {
         p_profile_id: "profile-1",
         p_is_active: false,
-        p_reason: null,
+        p_reason: undefined,
       }),
     );
     expect(refreshSpy).toHaveBeenCalled();

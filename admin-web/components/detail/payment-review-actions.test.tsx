@@ -32,8 +32,8 @@ describe("PaymentReviewActions", () => {
       expect(rpcSpy).toHaveBeenCalledWith("admin_approve_payment_proof", {
         p_payment_proof_id: "proof-1",
         p_verified_amount_dzd: 12000,
-        p_verified_reference: null,
-        p_decision_note: null,
+        p_verified_reference: undefined,
+        p_decision_note: undefined,
       }),
     );
     expect(refreshSpy).toHaveBeenCalled();

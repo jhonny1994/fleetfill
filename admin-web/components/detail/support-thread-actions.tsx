@@ -60,7 +60,7 @@ export function SupportThreadActions({
     const { error: rpcError } = await supabase.rpc("admin_set_support_request_status", {
       p_request_id: requestId,
       p_status: pendingStatus.status,
-      p_priority: pendingStatus.priority ?? null,
+      p_priority: pendingStatus.priority ?? undefined,
     });
     setIsPending(false);
     setPendingStatus(null);
