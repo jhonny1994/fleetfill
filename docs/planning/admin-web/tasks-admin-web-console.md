@@ -1,0 +1,159 @@
+## Relevant Files
+
+- `admin-web/package.json` - Admin web app package manifest and scripts.
+- `admin-web/next.config.ts` - Next.js app configuration.
+- `admin-web/tsconfig.json` - TypeScript configuration for the admin web app.
+- `admin-web/postcss.config.mjs` - Tailwind/PostCSS integration.
+- `admin-web/eslint.config.mjs` - Linting configuration for the admin app.
+- `admin-web/app/[lang]/layout.tsx` - Root localized layout for the admin web app.
+- `admin-web/app/[lang]/(auth)/sign-in/page.tsx` - Admin sign-in entry page.
+- `admin-web/app/[lang]/(admin)/layout.tsx` - Shared authenticated admin shell layout.
+- `admin-web/app/[lang]/(admin)/dashboard/page.tsx` - Control-tower dashboard page.
+- `admin-web/app/[lang]/(admin)/payments/page.tsx` - Payments queue page.
+- `admin-web/app/[lang]/(admin)/payments/[bookingId]/page.tsx` - Payment detail workspace.
+- `admin-web/app/[lang]/(admin)/verification/page.tsx` - Verification queue page.
+- `admin-web/app/[lang]/(admin)/verification/[carrierId]/page.tsx` - Verification packet detail workspace.
+- `admin-web/app/[lang]/(admin)/disputes/page.tsx` - Disputes queue page.
+- `admin-web/app/[lang]/(admin)/disputes/[bookingId]/page.tsx` - Dispute detail workspace.
+- `admin-web/app/[lang]/(admin)/payouts/page.tsx` - Payouts queue page.
+- `admin-web/app/[lang]/(admin)/payouts/[bookingId]/page.tsx` - Payout detail workspace.
+- `admin-web/app/[lang]/(admin)/support/page.tsx` - Support queue page.
+- `admin-web/app/[lang]/(admin)/support/[requestId]/page.tsx` - Support detail/thread workspace.
+- `admin-web/app/[lang]/(admin)/users/page.tsx` - Users listing/search page.
+- `admin-web/app/[lang]/(admin)/users/[userId]/page.tsx` - User detail workspace.
+- `admin-web/app/[lang]/(admin)/admins/page.tsx` - Admin management listing page.
+- `admin-web/app/[lang]/(admin)/admins/invitations/page.tsx` - Admin invitations management page.
+- `admin-web/app/[lang]/(admin)/settings/page.tsx` - Settings administration page.
+- `admin-web/app/[lang]/(admin)/audit-and-health/page.tsx` - Audit and operational health page.
+- `admin-web/app/[lang]/loading.tsx` - Localized route loading state.
+- `admin-web/app/[lang]/not-found.tsx` - Localized not-found state.
+- `admin-web/app/[lang]/(admin)/error.tsx` - Admin route error boundary UI.
+- `admin-web/app/global-error.tsx` - Global app error boundary UI.
+- `admin-web/app/proxy.ts` - Request-time locale and auth cookie handling.
+- `admin-web/components/admin-shell/admin-sidebar.tsx` - Persistent sidebar navigation.
+- `admin-web/components/admin-shell/admin-header.tsx` - Global header with search and identity controls.
+- `admin-web/components/dashboard/queue-metric-strip.tsx` - Dashboard backlog metric strip component.
+- `admin-web/components/dashboard/exception-alerts.tsx` - Dashboard exception alert component.
+- `admin-web/components/queues/admin-filter-bar.tsx` - Shared queue filter/search toolbar.
+- `admin-web/components/queues/admin-data-table.tsx` - Shared dense queue table wrapper.
+- `admin-web/components/queues/status-badge.tsx` - Shared status/read-state badge component.
+- `admin-web/components/detail/action-rail.tsx` - Shared action rail for sensitive admin mutations.
+- `admin-web/components/detail/timeline-panel.tsx` - Shared timeline/history panel.
+- `admin-web/components/detail/file-preview-panel.tsx` - Shared proof/document preview panel.
+- `admin-web/components/admin-management/admin-invite-form.tsx` - Admin invitation creation form.
+- `admin-web/components/admin-management/admin-role-badge.tsx` - Shared admin role display component.
+- `admin-web/components/shared/empty-state.tsx` - Shared empty state for queue/detail pages.
+- `admin-web/components/shared/error-state.tsx` - Shared inline error state.
+- `admin-web/components/shared/confirm-dialog.tsx` - Shared confirmation dialog.
+- `admin-web/components/shared/command-search.tsx` - Global search UI.
+- `admin-web/lib/supabase/server.ts` - Server-side Supabase client factory.
+- `admin-web/lib/supabase/client.ts` - Browser-side Supabase client factory.
+- `admin-web/lib/auth/get-admin-session.ts` - Admin session lookup and guard helper.
+- `admin-web/lib/auth/require-admin.ts` - Server-side admin authorization helper.
+- `admin-web/lib/auth/require-super-admin.ts` - Super-admin-only guard helper.
+- `admin-web/lib/i18n/config.ts` - Supported locale and fallback config.
+- `admin-web/lib/i18n/dictionaries.ts` - Server dictionary loader.
+- `admin-web/lib/formatting/formatters.ts` - Shared date, money, identifier, and tabular formatters.
+- `admin-web/lib/queries/query-keys.ts` - Stable TanStack Query key definitions.
+- `admin-web/lib/queries/admin-dashboard.ts` - Dashboard data loader/query helpers.
+- `admin-web/lib/queries/admin-payments.ts` - Payments queue/detail query helpers.
+- `admin-web/lib/queries/admin-verification.ts` - Verification queue/detail query helpers.
+- `admin-web/lib/queries/admin-disputes.ts` - Disputes queue/detail query helpers.
+- `admin-web/lib/queries/admin-payouts.ts` - Payouts queue/detail query helpers.
+- `admin-web/lib/queries/admin-support.ts` - Support queue/detail query helpers.
+- `admin-web/lib/queries/admin-users.ts` - Users listing/detail query helpers.
+- `admin-web/lib/queries/admin-admins.ts` - Admin accounts and invitations query helpers.
+- `admin-web/lib/queries/admin-settings.ts` - Settings query helpers.
+- `admin-web/lib/queries/admin-audit-health.ts` - Audit and health query helpers.
+- `admin-web/lib/validation/review-actions.ts` - zod schemas for rejection reasons and sensitive action forms.
+- `admin-web/lib/validation/settings.ts` - zod schemas for runtime settings edits.
+- `admin-web/lib/validation/admin-management.ts` - zod schemas for admin invites and admin management actions.
+- `supabase/migrations/*admin*.sql` - New or updated migrations for admin governance, bootstrap, invites, and permissions.
+- `supabase/tests/*admin*.sql` - Database tests for admin governance and privileged flows.
+- `tasks/prd-admin-web-console.md` - Product requirements document that defines the final admin web console scope.
+- `docs/working/admin-web-master-spec.md` - Consolidated implementation-grade admin web specification.
+
+### Notes
+
+- Unit tests should typically live alongside or near the feature modules they cover inside `admin-web/`.
+- The admin web console must reuse the existing Supabase backend where possible, but the feature explicitly includes adding missing backend/admin-governance capabilities when required.
+- Sensitive actions must continue to go through RPCs and Edge Functions.
+- The existing Flutter admin remains a lightweight companion during rollout, but the web console is the primary implementation target.
+
+## Instructions for Completing Tasks
+
+**IMPORTANT:** As you complete each task, you must check it off in this markdown file by changing `- [ ]` to `- [x]`. This helps track progress and ensures you don't skip any steps.
+
+Update the file after completing each sub-task, not just after completing an entire parent task.
+
+## Tasks
+
+- [ ] 0.0 Create feature branch
+  - [ ] 0.1 Create and checkout a new branch for this feature using the required `codex/` prefix
+  - [ ] 0.2 Confirm the branch is active before starting `admin-web/` work
+- [ ] 1.0 Finalize admin governance and backend foundations
+  - [ ] 1.1 Design and document the admin data model for `super_admin`, `ops_admin`, admin lifecycle, and invitation flow
+  - [ ] 1.2 Add the required Supabase schema changes for admin governance, including admin-specific tables or equivalent structures
+  - [ ] 1.3 Implement a safe first-admin bootstrap path that is controlled and non-public
+  - [ ] 1.4 Implement admin invitation, revocation, expiration, and acceptance workflows
+  - [ ] 1.5 Implement role management rules for exactly two admin roles: `super_admin` and `ops_admin`
+  - [ ] 1.6 Add guardrails that prevent losing the last active `super_admin`
+  - [ ] 1.7 Add audit logging for admin governance actions such as invite, accept, revoke, activate, deactivate, and role changes
+  - [ ] 1.8 Add database tests and runtime tests for admin governance and privileged execution rules
+- [ ] 2.0 Scaffold the `admin-web` application and lock the shared frontend foundation
+  - [ ] 2.1 Create the `admin-web/` app with Next.js, App Router, and TypeScript
+  - [ ] 2.2 Add and configure Tailwind CSS, shadcn/ui foundations, TanStack Query, TanStack Table, Recharts, react-hook-form, zod, and Supabase SSR dependencies
+  - [ ] 2.3 Configure base project files such as `package.json`, `tsconfig.json`, linting, formatting, and `next.config.ts`
+  - [ ] 2.4 Create the base folder structure under `app/`, `components/`, `lib/`, and `tests/`
+  - [ ] 2.5 Create the localized route structure using `app/[lang]/...`
+  - [ ] 2.6 Add route-level `loading.tsx`, `error.tsx`, `not-found.tsx`, and `global-error.tsx` files following the locked App Router conventions
+  - [ ] 2.7 Add shared visual tokens and base styling primitives aligned with the admin UI lock
+  - [ ] 2.8 Document the required environment variables and local run commands for `admin-web/`
+- [ ] 3.0 Implement admin authentication, authorization, and shared application shell
+  - [ ] 3.1 Create server-side and browser-side Supabase client helpers using `@supabase/ssr`
+  - [ ] 3.2 Implement cookie-based auth handling in `proxy.ts`
+  - [ ] 3.3 Build server-side admin session helpers that validate authenticated admin access
+  - [ ] 3.4 Build super-admin-only guard helpers for governance and admin-management routes
+  - [ ] 3.5 Create the localized admin sign-in route and signed-in redirect behavior
+  - [ ] 3.6 Build the shared authenticated admin shell layout with desktop sidebar and global header
+  - [ ] 3.7 Implement active navigation state, header identity controls, and shell loading behavior
+  - [ ] 3.8 Implement the global command/search entry UI shell placeholder so feature pages can integrate into it later
+  - [ ] 3.9 Add auth and shell smoke tests for protected routes, admin-only access, and super-admin-only access
+- [ ] 4.0 Build the control-tower and queue experiences
+  - [ ] 4.1 Build the dashboard/control-tower page with backlog strips, aging indicators, alerts, and quick links
+  - [ ] 4.2 Create shared queue primitives including the filter bar, active filters row, dense data table, status badges, and inline empty/error states
+  - [ ] 4.3 Implement the payments queue page with operational columns, search/filter behavior, and stable refresh behavior
+  - [ ] 4.4 Implement the verification queue page with packet visibility, missing-doc summaries, and aging indicators
+  - [ ] 4.5 Implement the disputes queue page with operational state, linked booking context, and age visibility
+  - [ ] 4.6 Implement the payouts queue page with eligible/released visibility and readiness context
+  - [ ] 4.7 Implement the support queue page with status, linked context, and `New` / `Seen` read-state language
+  - [ ] 4.8 Add shared queue tests covering loading, filtering, sorting, and refresh/context preservation behavior
+- [ ] 5.0 Build the detail workspaces and sensitive admin actions
+  - [ ] 5.1 Create a shared detail workspace pattern with summary facts, preview panel, timeline/history block, linked entities, action rail, and audit block
+  - [ ] 5.2 Implement the payment detail workspace using controlled backend workflows for approve/reject actions
+  - [ ] 5.3 Implement the verification packet detail workspace using controlled backend workflows for document review and packet approval
+  - [ ] 5.4 Implement the dispute detail workspace using controlled backend workflows for dispute resolution
+  - [ ] 5.5 Implement the payout detail workspace using controlled backend workflows for payout release
+  - [ ] 5.6 Implement the support detail workspace with thread view, reply flow, and status-update controls
+  - [ ] 5.7 Add zod-backed forms for rejection reasons and other required sensitive action inputs
+  - [ ] 5.8 Add confirmation dialogs and mutation-state handling for dangerous actions
+  - [ ] 5.9 Add detail workspace tests covering shared layout behavior and key action flows
+- [ ] 6.0 Implement users, admin management, settings, audit/health, and global search
+  - [ ] 6.1 Implement the users list/search page with role/status/verification context
+  - [ ] 6.2 Implement the user detail workspace with profile, verification, vehicles, related operational context, and suspend/reactivate actions
+  - [ ] 6.3 Implement admin management pages for viewing admins, inviting admins, managing roles, and activation/deactivation
+  - [ ] 6.4 Ensure only `super_admin` can perform admin-governance actions
+  - [ ] 6.5 Implement the settings page using the typed settings backend contract and any required extensions
+  - [ ] 6.6 Implement the audit-and-health page with audit log, email logs, dead-letter visibility, and resend actions where supported
+  - [ ] 6.7 Implement the global search experience across bookings, shipments, users, payment proofs, verification packets, disputes, payouts, support requests, and admins where applicable
+  - [ ] 6.8 Ensure global search routes users into canonical admin detail pages instead of temporary-only overlays
+  - [ ] 6.9 Add tests for settings validation, admin management flows, user actions, and global search routing behavior
+- [ ] 7.0 Finalize localization, responsiveness, accessibility, and production hardening
+  - [ ] 7.1 Implement server-loaded dictionaries for Arabic, French, and English with Arabic fallback policy
+  - [ ] 7.2 Apply locale-aware formatting for dates, money, counts, and references while preserving tabular readability
+  - [ ] 7.3 Validate desktop-first responsive behavior across mobile, tablet, desktop, and wide-desktop breakpoints
+  - [ ] 7.4 Ensure the admin shell, queues, dialogs, tables, and detail workspaces meet the locked keyboard and focus requirements
+  - [ ] 7.5 Ensure color usage is not the only state signal and that all critical actions have accessible labels
+  - [ ] 7.6 Finalize Vercel deployment configuration, preview environment variable ownership, and production environment documentation
+  - [ ] 7.7 Run frontend and backend validation for admin governance, auth, i18n, queue behavior, detail workspaces, and settings flows
+  - [ ] 7.8 Validate that the web console delivers full production-ready admin functionality, not just parity with incomplete existing Flutter surfaces

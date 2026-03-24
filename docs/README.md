@@ -1,8 +1,8 @@
 # FleetFill Documentation
 
-This directory contains both canonical product docs and working delivery documents.
+This directory is the single home for product, architecture, planning, ADRs, and implementation templates.
 
-The folder was getting noisy because not everything under `docs/` is the same kind of artifact. Use the categories below instead of treating every file as equal product truth.
+Not everything under `docs/` carries the same authority. Use the categories below instead of treating every file as equal product truth.
 
 ## Canonical Product Truth
 
@@ -25,14 +25,25 @@ Only these files should define product truth.
 
 These files are important, but they are not parallel sources of product truth:
 
-- `docs/working/polish-backlog.md` - deferred polish backlog
-- `docs/working/release-operations.md` - staging, release-candidate, versioning, and rollback procedures
-- `docs/working/post-launch-stabilization.md` - post-launch operating cadence
-- `docs/working/production-readiness-audit.md` - current cross-phase audit and production-readiness tracker
+- `docs/planning/admin-web/admin-web-console-plan.md` - detailed admin web scope, IA, feature inventory, and rollout plan
+- `docs/planning/admin-web/admin-web-master-spec.md` - consolidated implementation-grade spec for the admin web product
+- `docs/planning/admin-web/prd-admin-web-console.md` - product requirements document for the admin web console
+- `docs/planning/admin-web/tasks-admin-web-console.md` - implementation task list for the admin web console
+- `docs/planning/operations/polish-backlog.md` - deferred polish backlog
+- `docs/planning/operations/release-operations.md` - staging, release-candidate, versioning, and rollback procedures
+- `docs/planning/operations/post-launch-stabilization.md` - post-launch operating cadence
+- `docs/planning/operations/production-readiness-audit.md` - current cross-phase audit and production-readiness tracker
 
 Consolidation note:
 
-- the old phase 0-4 audit and delivery playbook were folded into `docs/working/production-readiness-audit.md` and this index to remove stale parallel guidance
+- the old phase 0-4 audit and delivery playbook were folded into `docs/planning/operations/production-readiness-audit.md` and this index to remove stale parallel guidance
+
+## Templates And Generators
+
+These files are process templates, not product truth:
+
+- `docs/templates/create-prd.md` - PRD generation rules
+- `docs/templates/generate-tasks.md` - task-list generation rules
 
 ## Reference Assets
 
@@ -47,8 +58,8 @@ These are supporting assets, not narrative docs:
 - Do not create parallel truth sources for product rules, states, pricing, schema, or security behavior.
 - Update the canonical file instead of adding overlapping notes elsewhere.
 - Apply the same consolidation rule used for dev-phase migrations: rewrite the owning canonical doc or tracker layer instead of stacking patch notes on top of older notes.
-- Use `docs/working/polish-backlog.md` only for deferred polish work, not for domain or security truth.
-- Use `docs/working/production-readiness-audit.md` to track findings, remediation, validation status, and historical audit carry-forward notes.
+- Use `docs/planning/operations/polish-backlog.md` only for deferred polish work, not for domain or security truth.
+- Use `docs/planning/operations/production-readiness-audit.md` to track findings, remediation, validation status, and historical audit carry-forward notes.
 - If a decision changes the domain, update `docs/02-domain-and-state-model.md` first.
 - If a decision changes data ownership, RLS, or storage, update `docs/04-data-and-security-model.md`.
 - If a decision changes user flows or UI behavior, update `docs/05-ux-and-localization.md`.
