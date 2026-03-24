@@ -59,13 +59,6 @@ class AuthRepository {
     final userId = user.id;
     final email = user.email?.trim();
     final profile = await _fetchCurrentProfile(userId);
-    if (!hasValidResolvedProfile(profile)) {
-      await _safeSignOut();
-      return AuthSnapshot(
-        status: AuthStatus.unauthenticated,
-        isSessionExpired: isSessionExpired,
-      );
-    }
     final hasPayoutAccount = await _fetchHasPayoutAccount(profile);
 
     return AuthSnapshot(
@@ -119,6 +112,14 @@ class AuthRepository {
       emailRedirectTo: authRedirectUri,
     );
     return response.session == null;
+  }
+
+  Future<void> resendSignUpConfirmationEmail(String email) {
+    return _client.auth.resend(
+      email: email,
+      type: OtpType.signup,
+      emailRedirectTo: authRedirectUri,
+    );
   }
 
   Future<void> signInWithGoogle() {
@@ -189,6 +190,14 @@ class AuthRepository {
     return _client.auth.resetPasswordForEmail(
       email,
       redirectTo: authRedirectUri,
+    );
+  }
+
+  Future<void> resendPasswordResetEmail(String email) {
+    return _client.auth.resend(
+      email: email,
+      type: OtpType.recovery,
+      emailRedirectTo: authRedirectUri,
     );
   }
 
@@ -341,8 +350,6 @@ class AuthRepository {
     return InputSanitizers.normalizeAlgerianPhoneNumber(value);
   }
 }
-
-bool hasValidResolvedProfile(AppProfile? profile) => profile != null;
 
 class _GoogleSignInConfig {
   const _GoogleSignInConfig({

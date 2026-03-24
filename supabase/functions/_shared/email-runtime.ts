@@ -71,6 +71,22 @@ export function requiredEnv(name: string) {
   return value
 }
 
+export function hasServiceRoleAccess(req: Request) {
+  const serviceRoleKey = requiredEnv('SUPABASE_SERVICE_ROLE_KEY')
+  const authorization = req.headers.get('Authorization')?.trim()
+  const apiKey = req.headers.get('apikey')?.trim()
+
+  if (apiKey === serviceRoleKey || authorization === serviceRoleKey) {
+    return true
+  }
+
+  if (authorization == null || !authorization.startsWith('Bearer ')) {
+    return false
+  }
+
+  return authorization.slice('Bearer '.length).trim() === serviceRoleKey
+}
+
 export function normalizeSupportedLocale(locale: string | null | undefined) {
   const normalized = locale?.trim().toLowerCase()
   if (normalized != null && normalized.length > 0) {
