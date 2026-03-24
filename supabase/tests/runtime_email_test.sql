@@ -102,6 +102,14 @@ values
     'verified'
   );
 
+insert into public.admin_accounts (profile_id, admin_role, is_active, activated_at)
+values (
+  '12000000-0000-4000-8000-000000000002',
+  'ops_admin',
+  true,
+  now()
+);
+
 select ok(
   exists(
     select 1
