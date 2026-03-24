@@ -1,3 +1,4 @@
+import { requireServerSuperAdmin } from "@/lib/auth/require-server-super-admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AdminAccountDetail,
@@ -73,6 +74,7 @@ export async function fetchAdminAccountsAndInvitations(): Promise<{
   accounts: AdminAccountListItem[];
   invitations: AdminInvitationListItem[];
 }> {
+  await requireServerSuperAdmin();
   const supabase = await createSupabaseServerClient();
   const [accountsResult, invitationsResult] = await Promise.all([
     supabase
@@ -150,6 +152,7 @@ export async function fetchAdminAccountsAndInvitations(): Promise<{
 }
 
 export async function fetchAdminAccountDetail(profileId: string): Promise<AdminAccountDetail | null> {
+  await requireServerSuperAdmin();
   const { accounts, invitations } = await fetchAdminAccountsAndInvitations();
   const account = accounts.find((item) => item.profileId === profileId);
   if (!account) return null;

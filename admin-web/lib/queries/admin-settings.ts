@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { PlatformSettingsSnapshot } from "@/lib/queries/admin-types";
 
@@ -8,6 +9,7 @@ type PlatformSettingRow = {
 };
 
 export async function fetchPlatformSettingsSnapshot(): Promise<PlatformSettingsSnapshot> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("platform_settings")

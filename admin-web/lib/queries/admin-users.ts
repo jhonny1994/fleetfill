@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AdminAuditLogItem,
@@ -164,6 +165,7 @@ export async function fetchUsers({
   verification?: string;
   limit?: number;
 } = {}): Promise<AdminUserListItem[]> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   let request = supabase
     .from("profiles")
@@ -247,6 +249,7 @@ export async function fetchUsers({
 }
 
 export async function fetchUserDetail(userId: string): Promise<AdminUserDetail | null> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
