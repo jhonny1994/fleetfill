@@ -24,11 +24,11 @@ export default async function AdminLayout({
       : dictionary.shell.role.opsAdmin;
 
   return (
-    <div className="space-y-4 lg:grid lg:min-h-[calc(100vh-2rem)] lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-4 lg:space-y-0">
+    <div className="space-y-3 lg:grid lg:min-h-[calc(100vh-2rem)] lg:grid-cols-[244px_minmax(0,1fr)] lg:gap-3 lg:space-y-0">
       <div className="hidden lg:block">
         <AdminSidebar locale={locale} dictionary={dictionary} />
       </div>
-      <div className="space-y-4">
+      <div className="space-y-3">
         <AdminHeader
           locale={locale}
           fullName={session.fullName ?? session.email ?? "FleetFill admin"}
@@ -36,7 +36,7 @@ export default async function AdminLayout({
           dictionary={dictionary}
           navigationTrigger={<MobileAdminSidebar locale={locale} dictionary={dictionary} />}
         />
-        <main className="space-y-4">{children}</main>
+        <main className="space-y-3">{children}</main>
       </div>
     </div>
   );

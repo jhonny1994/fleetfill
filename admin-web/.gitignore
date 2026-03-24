@@ -39,3 +39,5 @@ admin-web-start.log
 
 # typescript
 *.tsbuildinfo
+
+.vercel

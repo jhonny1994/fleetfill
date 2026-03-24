@@ -37,43 +37,48 @@ export function AdminFilterBar({
 }) {
   return (
     <div className="space-y-3">
-      <section className="panel flex flex-col gap-4 p-4 lg:flex-row lg:items-center">
-        <form className="flex min-w-0 flex-1 flex-col gap-3 lg:flex-row lg:items-center" action={pathname} method="get">
-          <div className="min-w-0 flex-1">
-            <CommandSearch
-              defaultValue={query}
-              inputName="q"
-              locale={locale}
-              placeholder={labels.searchPlaceholder}
-            />
+      <section className="panel toolbar-surface">
+        <form className="toolbar-row" action={pathname} method="get">
+          <div className="toolbar-controls">
+            <div className="min-w-0 flex-[1.6]">
+              <CommandSearch
+                defaultValue={query}
+                inputName="q"
+                locale={locale}
+                placeholder={labels.searchPlaceholder}
+              />
+            </div>
+            {statusOptions.length > 0 ? (
+              <label className="min-w-[180px] max-w-[220px]">
+                <span className="sr-only">{labels.status}</span>
+                <select
+                  aria-label={labels.status}
+                  name="status"
+                  defaultValue={status ?? ""}
+                  className="admin-field admin-select"
+                >
+                  <option value="">{labels.allStatuses}</option>
+                  {statusOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
           </div>
-          {statusOptions.length > 0 ? (
-            <label className="flex flex-col gap-1 text-sm font-medium text-[var(--color-ink-base)]">
-              <span>{labels.status}</span>
-              <select
-                name="status"
-                defaultValue={status ?? ""}
-                className="h-11 rounded-full border border-[var(--color-border)] bg-white/75 px-4 text-sm outline-none"
-              >
-                <option value="">{labels.allStatuses}</option>
-                {statusOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
-          <div className="flex items-center gap-2 lg:ml-auto">
+          <div className="toolbar-actions">
             <button className="button-primary" type="submit">
               {labels.apply}
             </button>
-            <Link className="button-secondary" href={pathname}>
-              {labels.reset}
-            </Link>
+            <div className="toolbar-utility">
+              <Link className="button-secondary" href={pathname}>
+                {labels.reset}
+              </Link>
+              <RefreshButton label={labels.refresh} ariaLabel={labels.refreshAriaLabel} />
+            </div>
           </div>
         </form>
-        <RefreshButton label={labels.refresh} ariaLabel={labels.refreshAriaLabel} />
       </section>
       <ActiveFiltersRow
         pathname={pathname}

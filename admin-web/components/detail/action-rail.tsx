@@ -16,12 +16,12 @@ export function ActionRail({
 }) {
   const ui = getAdminUi(locale);
   return (
-    <aside className="panel space-y-4 p-5">
-      <div className="space-y-2">
+    <aside className="panel space-y-3 p-4">
+      <div className="section-header">
         <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{title ?? ui.actions.confirm}</h2>
         {description ? <p className="text-sm text-[var(--color-ink-muted)]">{description}</p> : null}
       </div>
-      <div className="space-y-4">{children}</div>
+      <div className="space-y-3">{children}</div>
     </aside>
   );
 }
