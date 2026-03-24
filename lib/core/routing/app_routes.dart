@@ -6,7 +6,9 @@ enum AppRouteName {
   welcome,
   signIn,
   signUp,
+  confirmEmail,
   forgotPassword,
+  resetPasswordSent,
   resetPassword,
   roleSelection,
   languageSelection,
@@ -74,8 +76,20 @@ abstract final class AppRoutePath {
 
   static const signIn = '/auth/sign-in';
   static const signUp = '/auth/sign-up';
+  static const confirmEmail = '/auth/confirm-email';
   static const forgotPassword = '/auth/forgot-password';
+  static const resetPasswordSent = '/auth/reset-password-sent';
   static const resetPassword = '/auth/reset-password';
+
+  static String authConfirmEmail({String? email}) => Uri(
+    path: confirmEmail,
+    queryParameters: _optionalEmailQuery(email),
+  ).toString();
+
+  static String authResetPasswordSent({String? email}) => Uri(
+    path: resetPasswordSent,
+    queryParameters: _optionalEmailQuery(email),
+  ).toString();
 
   static const roleSelection = '/onboarding/role-selection';
   static const languageSelection = '/onboarding/language-selection';
@@ -153,4 +167,13 @@ abstract final class AppRoutePath {
   static String adminUserDetail(String userId) => '/admin/users/$userId';
   static const adminSettings = '/admin/settings';
   static const adminAuditLog = '/admin/settings/audit-log';
+
+  static Map<String, String>? _optionalEmailQuery(String? email) {
+    final trimmed = email?.trim() ?? '';
+    if (trimmed.isEmpty) {
+      return null;
+    }
+
+    return <String, String>{'email': trimmed};
+  }
 }

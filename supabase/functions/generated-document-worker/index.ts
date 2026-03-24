@@ -1,6 +1,11 @@
 import { PDFDocument, StandardFonts } from 'https://esm.sh/pdf-lib@1.17.1'
 
-import { createServiceClient, jsonResponse, requiredEnv } from '../_shared/email-runtime.ts'
+import {
+  createServiceClient,
+  hasServiceRoleAccess,
+  jsonResponse,
+  requiredEnv,
+} from '../_shared/email-runtime.ts'
 
 type GeneratedDocumentRow = {
   id: string
@@ -142,9 +147,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const authorization = req.headers.get('Authorization')
-    const expectedAuthorization = `Bearer ${requiredEnv('SUPABASE_SERVICE_ROLE_KEY')}`
-    if (authorization !== expectedAuthorization) {
+    if (!hasServiceRoleAccess(req)) {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 
