@@ -77,14 +77,14 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 3.7 Check for any remaining Flutter/test references to `AppEnvironment`, `APP_ENV`, or `staging` and remove them.
 
 - [ ] 4.0 Remove the separate admin-web environment system
-  - [ ] 4.1 Delete or inline-remove `admin-web/lib/admin-environment.ts`.
-  - [ ] 4.2 Remove environment badge rendering from `admin-web/components/admin-shell/admin-header.tsx`.
-  - [ ] 4.3 Clean up `admin-web/app/[lang]/(admin)/layout.tsx` if header props/layout become simpler after badge removal.
-  - [ ] 4.4 Remove environment-label strings from `admin-web/lib/i18n/dictionaries.ts`.
-  - [ ] 4.5 Remove `NEXT_PUBLIC_ADMIN_ENVIRONMENT_LABEL` from `admin-web/.env.example`.
-  - [ ] 4.6 Rewrite `admin-web/README.md` so `NEXT_PUBLIC_SITE_URL` is described only as host/callback/deploy context, not as an app environment switch.
-  - [ ] 4.7 Check the admin web for any remaining references to `Local`, `Preview`, or `Production` runtime labels and remove them.
-  - [ ] 4.8 Verify the admin shell still has good operator context without the badge and does not need a replacement.
+  - [x] 4.1 Delete or inline-remove `admin-web/lib/admin-environment.ts`.
+  - [x] 4.2 Remove environment badge rendering from `admin-web/components/admin-shell/admin-header.tsx`.
+  - [x] 4.3 Clean up `admin-web/app/[lang]/(admin)/layout.tsx` if header props/layout become simpler after badge removal.
+  - [x] 4.4 Remove environment-label strings from `admin-web/lib/i18n/dictionaries.ts`.
+  - [x] 4.5 Remove `NEXT_PUBLIC_ADMIN_ENVIRONMENT_LABEL` from `admin-web/.env.example`.
+  - [x] 4.6 Rewrite `admin-web/README.md` so `NEXT_PUBLIC_SITE_URL` is described only as host/callback/deploy context, not as an app environment switch.
+  - [x] 4.7 Check the admin web for any remaining references to `Local`, `Preview`, or `Production` runtime labels and remove them.
+  - [x] 4.8 Verify the admin shell still has good operator context without the badge and does not need a replacement.
 
 - [ ] 5.0 Unify CI/CD and local environment examples
   - [x] 5.1 Remove `APP_ENV` from `.github/workflows/flutter_quality.yml`.
