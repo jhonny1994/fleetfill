@@ -84,29 +84,39 @@ export function AdminAccountActions({
   }
 
   return (
-    <div className="space-y-5">
-      <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.changeRole}</h3>
+    <div className="space-y-3.5">
+      <section className="compact-section">
+        <div className="section-header">
+          <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">{ui.actions.changeRole}</h3>
+          <p>{ui.actions.changeRoleBody}</p>
+        </div>
         <form className="space-y-3" onSubmit={roleForm.handleSubmit((values) => setPendingRole(values))}>
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.role}</span>
-            <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...roleForm.register("role")}>
+            <select className="admin-field admin-select" {...roleForm.register("role")}>
               <option value="ops_admin">{getEnumLabel(locale, "adminRoles", "ops_admin")}</option>
               <option value="super_admin">{getEnumLabel(locale, "adminRoles", "super_admin")}</option>
             </select>
           </label>
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.reason}</span>
-            <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...roleForm.register("reason")} />
+            <textarea className="admin-field min-h-[4.25rem]" {...roleForm.register("reason")} />
           </label>
-          <button className="button-secondary" type="submit">
-            {ui.actions.updateRole}
-          </button>
+          <div className="form-actions">
+            <button className="button-secondary" type="submit">
+              {ui.actions.updateRole}
+            </button>
+          </div>
         </form>
       </section>
 
-      <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}</h3>
+      <section className={`compact-section ${isActive ? "danger-section" : ""}`}>
+        <div className="section-header">
+          <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">
+            {isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
+          </h3>
+          <p>{isActive ? ui.actions.deactivateAdminBody : ui.actions.reactivateAdminBody}</p>
+        </div>
         <form
           className="space-y-3"
           onSubmit={activationForm.handleSubmit((values) =>
@@ -118,11 +128,13 @@ export function AdminAccountActions({
         >
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.reason}</span>
-            <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...activationForm.register("reason")} />
+            <textarea className="admin-field min-h-[4.25rem]" {...activationForm.register("reason")} />
           </label>
-          <button className={isActive ? "button-secondary" : "button-primary"} type="submit">
-            {isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
-          </button>
+          <div className="form-actions">
+            <button className={isActive ? "button-danger" : "button-primary"} type="submit">
+              {isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
+            </button>
+          </div>
         </form>
       </section>
 
@@ -131,8 +143,8 @@ export function AdminAccountActions({
       <ConfirmDialog
         locale={locale}
         open={pendingRole !== null}
-        title={ui.actions.updateRole}
-        body={ui.actions.updateRole}
+        title={ui.actions.changeRoleTitle}
+        body={ui.actions.changeRoleConfirmBody}
         confirmLabel={ui.actions.updateRole}
         isPending={isPending}
         onCancel={() => setPendingRole(null)}
@@ -141,8 +153,8 @@ export function AdminAccountActions({
       <ConfirmDialog
         locale={locale}
         open={pendingActivation !== null}
-        title={isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
-        body={isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
+        title={isActive ? ui.actions.deactivateAdminTitle : ui.actions.reactivateAdminTitle}
+        body={isActive ? ui.actions.deactivateAdminConfirmBody : ui.actions.reactivateAdminConfirmBody}
         confirmLabel={isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
         isPending={isPending}
         onCancel={() => setPendingActivation(null)}
