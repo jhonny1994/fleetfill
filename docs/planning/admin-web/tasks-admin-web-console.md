@@ -124,15 +124,15 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 3.7 Implement active navigation state, header identity controls, and shell loading behavior
   - [x] 3.8 Implement the global command/search entry UI shell placeholder so feature pages can integrate into it later
   - [x] 3.9 Add auth and shell smoke tests for protected routes, admin-only access, and super-admin-only access
-- [ ] 4.0 Build the control-tower and queue experiences
-  - [ ] 4.1 Build the dashboard/control-tower page with backlog strips, aging indicators, alerts, and quick links
-  - [ ] 4.2 Create shared queue primitives including the filter bar, active filters row, dense data table, status badges, and inline empty/error states
-  - [ ] 4.3 Implement the payments queue page with operational columns, search/filter behavior, and stable refresh behavior
-  - [ ] 4.4 Implement the verification queue page with packet visibility, missing-doc summaries, and aging indicators
-  - [ ] 4.5 Implement the disputes queue page with operational state, linked booking context, and age visibility
-  - [ ] 4.6 Implement the payouts queue page with eligible/released visibility and readiness context
-  - [ ] 4.7 Implement the support queue page with status, linked context, and `New` / `Seen` read-state language
-  - [ ] 4.8 Add shared queue tests covering loading, filtering, sorting, and refresh/context preservation behavior
+- [x] 4.0 Build the control-tower and queue experiences
+  - [x] 4.1 Build the dashboard/control-tower page with backlog strips, aging indicators, alerts, and quick links
+  - [x] 4.2 Create shared queue primitives including the filter bar, active filters row, dense data table, status badges, and inline empty/error states
+  - [x] 4.3 Implement the payments queue page with operational columns, search/filter behavior, and stable refresh behavior
+  - [x] 4.4 Implement the verification queue page with packet visibility, missing-doc summaries, and aging indicators
+  - [x] 4.5 Implement the disputes queue page with operational state, linked booking context, and age visibility
+  - [x] 4.6 Implement the payouts queue page with eligible/released visibility and readiness context
+  - [x] 4.7 Implement the support queue page with status, linked context, and `New` / `Seen` read-state language
+  - [x] 4.8 Add shared queue tests covering loading, filtering, sorting, and refresh/context preservation behavior
 - [ ] 5.0 Build the detail workspaces and sensitive admin actions
   - [ ] 5.1 Create a shared detail workspace pattern with summary facts, preview panel, timeline/history block, linked entities, action rail, and audit block
   - [ ] 5.2 Implement the payment detail workspace using controlled backend workflows for approve/reject actions
