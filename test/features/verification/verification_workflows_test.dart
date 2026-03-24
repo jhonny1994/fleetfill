@@ -86,7 +86,9 @@ void main() {
   });
 
   group('Carrier operational gates', () {
-    const environment = AppEnvironmentConfig(environment: AppEnvironment.local);
+    const environment = AppEnvironmentConfig(
+      supabaseUrl: 'http://127.0.0.1:54321',
+    );
 
     AppBootstrapState bootstrap(AuthSnapshot auth) {
       return AppBootstrapState(

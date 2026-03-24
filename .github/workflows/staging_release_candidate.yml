@@ -1,15 +1,7 @@
-name: Staging And Release Candidate
+name: Release Candidate Verification
 
 on:
   workflow_dispatch:
-    inputs:
-      target:
-        description: Deployment target
-        required: true
-        type: choice
-        options:
-          - staging
-          - release-candidate
 
 jobs:
   verify:
@@ -20,7 +12,7 @@ jobs:
 
       - name: Record target
         run: |
-          echo "Preparing ${{ inputs.target }} verification."
+          echo "Preparing release candidate verification."
           echo "Commit SHA: $GITHUB_SHA"
           echo "Tagged release required before production rollout."
 
@@ -39,11 +31,10 @@ jobs:
           grep -q "## \[$VERSION\]" CHANGELOG.md
           echo "Verified CHANGELOG.md entry for version $VERSION"
 
-      - name: Require environment secrets at runtime
+      - name: Require deployment credentials at runtime
         run: |
           test -n "${{ secrets.SUPABASE_ACCESS_TOKEN }}"
-          test -n "${{ secrets.STAGING_SUPABASE_PROJECT_REF }}"
 
       - name: Output operational checklist reminder
         run: |
-          echo "Run staging rehearsal, rollback review, and release checklist before promotion."
+          echo "Run release rehearsal, rollback review, and release checklist before promotion."

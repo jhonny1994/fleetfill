@@ -31,7 +31,9 @@ void main() {
       ProviderScope(
         overrides: [
           appEnvironmentConfigProvider.overrideWithValue(
-            const AppEnvironmentConfig(environment: AppEnvironment.local),
+            const AppEnvironmentConfig(
+              supabaseUrl: 'http://127.0.0.1:54321',
+            ),
           ),
         ],
         child: _LocalizedRouterApp(router: router),

@@ -36,7 +36,9 @@ void main() {
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
           secureStorageProvider.overrideWithValue(const FlutterSecureStorage()),
           appEnvironmentConfigProvider.overrideWithValue(
-            const AppEnvironmentConfig(environment: AppEnvironment.local),
+            const AppEnvironmentConfig(
+              supabaseUrl: 'http://127.0.0.1:54321',
+            ),
           ),
           initialThemeModeProvider.overrideWithValue(ThemeMode.dark),
           initialLocaleProvider.overrideWithValue(const Locale('fr')),
@@ -464,7 +466,9 @@ class _ReadyBootstrapController extends AppBootstrapController {
   Future<AppBootstrapState> build() async {
     return const AppBootstrapState(
       status: BootstrapStateStatus.ready,
-      environment: AppEnvironmentConfig(environment: AppEnvironment.local),
+      environment: AppEnvironmentConfig(
+        supabaseUrl: 'http://127.0.0.1:54321',
+      ),
       clientSettings: ClientSettings(
         bookingPricing: BookingPricingSettings(
           platformFeeRate: 0.05,
@@ -667,7 +671,7 @@ class _FakeShipmentRepository extends ShipmentRepository {
   _FakeShipmentRepository(this.store)
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
       );
@@ -721,7 +725,7 @@ class _FakeBookingRepository extends BookingRepository {
   _FakeBookingRepository(this.store)
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
       );
@@ -906,7 +910,7 @@ class _FakePaymentProofRepository extends PaymentProofRepository {
   _FakePaymentProofRepository(this.store)
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
       );
@@ -993,7 +997,7 @@ class _FakeDisputeRepository extends DisputeRepository {
   _FakeDisputeRepository(this.store)
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
       );
@@ -1075,7 +1079,7 @@ class _FakeNotificationRepository extends NotificationRepository {
   _FakeNotificationRepository()
     : super(
         environment: const AppEnvironmentConfig(
-          environment: AppEnvironment.local,
+          supabaseUrl: 'http://127.0.0.1:54321',
         ),
         logger: const DebugAppLogger(),
       );

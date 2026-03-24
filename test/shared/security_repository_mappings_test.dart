@@ -6,7 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Shared repository mappings', () {
-    const environment = AppEnvironmentConfig(environment: AppEnvironment.local);
+    const environment = AppEnvironmentConfig(
+      supabaseUrl: 'http://127.0.0.1:54321',
+    );
     const logger = DebugAppLogger();
 
     test('booking repository maps typed client settings payload', () {
@@ -43,7 +45,7 @@ void main() {
         ],
       });
 
-      expect(repository.environment.environment, AppEnvironment.local);
+      expect(repository.environment.isLocalBackend, isTrue);
       expect(settings.bookingPricing.taxRate, 0.19);
       expect(
         settings.paymentAccounts.single.instructionsText,

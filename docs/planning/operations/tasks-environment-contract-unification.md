@@ -44,37 +44,37 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ## Tasks
 
-- [ ] 0.0 Create feature branch
-  - [ ] 0.1 Create and checkout a new branch for the environment-contract unification work.
-  - [ ] 0.2 Confirm the branch starts from the intended base and does not mix unrelated UI/admin work.
+- [x] 0.0 Create feature branch
+  - [x] 0.1 Create and checkout a new branch for the environment-contract unification work.
+  - [x] 0.2 Confirm the branch starts from the intended base and does not mix unrelated UI/admin work.
 
-- [ ] 1.0 Lock the unified environment contract
-  - [ ] 1.1 Define the new contract in implementation terms: FleetFill runtime behavior is determined by actual URLs, client keys, and secrets, not named app environments.
-  - [ ] 1.2 Remove `staging`, `preview`, and admin-only environment labels as first-class runtime concepts from the implementation plan.
-  - [ ] 1.3 Keep `LOCAL_ANDROID_NETWORK_TARGET` as the only local-only technical override and explicitly document that it is not an environment.
-  - [ ] 1.4 Decide the hosted-vs-local classification rule for Flutter runtime logic based on the Supabase host pattern.
+- [x] 1.0 Lock the unified environment contract
+  - [x] 1.1 Define the new contract in implementation terms: FleetFill runtime behavior is determined by actual URLs, client keys, and secrets, not named app environments.
+  - [x] 1.2 Remove `staging`, `preview`, and admin-only environment labels as first-class runtime concepts from the implementation plan.
+  - [x] 1.3 Keep `LOCAL_ANDROID_NETWORK_TARGET` as the only local-only technical override and explicitly document that it is not an environment.
+  - [x] 1.4 Decide the hosted-vs-local classification rule for Flutter runtime logic based on the Supabase host pattern.
   - [ ] 1.5 Record the distinction between deployment channels and runtime contract so future docs do not reintroduce the split.
 
-- [ ] 2.0 Refactor Flutter runtime configuration
-  - [ ] 2.1 Remove the `AppEnvironment` enum from `lib/core/config/app_environment.dart`.
-  - [ ] 2.2 Remove the `environment` field from `AppEnvironmentConfig`.
-  - [ ] 2.3 Remove `APP_ENV` parsing from `AppEnvironmentConfig.fromDefines()`.
-  - [ ] 2.4 Introduce a small internal helper in Flutter config that classifies Supabase URLs as local/dev target vs hosted target.
-  - [ ] 2.5 Change client-key precedence so local/dev targets prefer `SUPABASE_ANON_KEY` and hosted targets prefer `SUPABASE_PUBLISHABLE_KEY`.
-  - [ ] 2.6 Keep backward-compatible fallback behavior when only one of the two client keys is present.
-  - [ ] 2.7 Update local URL normalization so Android emulator host substitution depends on the URL being local/dev plus `LOCAL_ANDROID_NETWORK_TARGET=emulator`.
-  - [ ] 2.8 Update bootstrap failure handling in `app_bootstrap.dart` so unreachable local/dev backends still fail loudly, while hosted targets degrade safely.
-  - [ ] 2.9 Remove environment-name-based logging/branching from bootstrap and replace it with target-kind-aware logging where still useful.
-  - [ ] 2.10 Regenerate the Flutter codegen outputs affected by the config model change.
+- [x] 2.0 Refactor Flutter runtime configuration
+  - [x] 2.1 Remove the `AppEnvironment` enum from `lib/core/config/app_environment.dart`.
+  - [x] 2.2 Remove the `environment` field from `AppEnvironmentConfig`.
+  - [x] 2.3 Remove `APP_ENV` parsing from `AppEnvironmentConfig.fromDefines()`.
+  - [x] 2.4 Introduce a small internal helper in Flutter config that classifies Supabase URLs as local/dev target vs hosted target.
+  - [x] 2.5 Change client-key precedence so local/dev targets prefer `SUPABASE_ANON_KEY` and hosted targets prefer `SUPABASE_PUBLISHABLE_KEY`.
+  - [x] 2.6 Keep backward-compatible fallback behavior when only one of the two client keys is present.
+  - [x] 2.7 Update local URL normalization so Android emulator host substitution depends on the URL being local/dev plus `LOCAL_ANDROID_NETWORK_TARGET=emulator`.
+  - [x] 2.8 Update bootstrap failure handling in `app_bootstrap.dart` so unreachable local/dev backends still fail loudly, while hosted targets degrade safely.
+  - [x] 2.9 Remove environment-name-based logging/branching from bootstrap and replace it with target-kind-aware logging where still useful.
+  - [x] 2.10 Regenerate the Flutter codegen outputs affected by the config model change.
 
-- [ ] 3.0 Update Flutter tests and local tooling
-  - [ ] 3.1 Rewrite `test/core/config/app_environment_test.dart` around local/dev vs hosted classification instead of enum values.
-  - [ ] 3.2 Add test cases for loopback, emulator, LAN host, and hosted Supabase URLs.
-  - [ ] 3.3 Add test cases for client-key precedence using the new contract.
-  - [ ] 3.4 Add test cases confirming local-only normalization does not affect hosted URLs.
-  - [ ] 3.5 Remove `APP_ENV` from `.vscode/launch.json`.
-  - [ ] 3.6 Keep the emulator/device launch distinction only through `LOCAL_ANDROID_NETWORK_TARGET` and URL differences.
-  - [ ] 3.7 Check for any remaining Flutter/test references to `AppEnvironment`, `APP_ENV`, or `staging` and remove them.
+- [x] 3.0 Update Flutter tests and local tooling
+  - [x] 3.1 Rewrite `test/core/config/app_environment_test.dart` around local/dev vs hosted classification instead of enum values.
+  - [x] 3.2 Add test cases for loopback, emulator, LAN host, and hosted Supabase URLs.
+  - [x] 3.3 Add test cases for client-key precedence using the new contract.
+  - [x] 3.4 Add test cases confirming local-only normalization does not affect hosted URLs.
+  - [x] 3.5 Remove `APP_ENV` from `.vscode/launch.json`.
+  - [x] 3.6 Keep the emulator/device launch distinction only through `LOCAL_ANDROID_NETWORK_TARGET` and URL differences.
+  - [x] 3.7 Check for any remaining Flutter/test references to `AppEnvironment`, `APP_ENV`, or `staging` and remove them.
 
 - [ ] 4.0 Remove the separate admin-web environment system
   - [ ] 4.1 Delete or inline-remove `admin-web/lib/admin-environment.ts`.
@@ -87,13 +87,13 @@ Update the file after completing each sub-task, not just after completing an ent
   - [ ] 4.8 Verify the admin shell still has good operator context without the badge and does not need a replacement.
 
 - [ ] 5.0 Unify CI/CD and local environment examples
-  - [ ] 5.1 Remove `APP_ENV` from `.github/workflows/flutter_quality.yml`.
-  - [ ] 5.2 Remove `APP_ENV` from `.github/workflows/supabase_validation.yml` and stop writing it into the generated `.env`.
-  - [ ] 5.3 Ensure Supabase validation still provides only the secrets/URLs the app actually needs.
-  - [ ] 5.4 Rewrite `.env.example` so it documents one contract driven by secrets and URLs, not named environments.
-  - [ ] 5.5 Simplify comments in `.env.example` to distinguish local-only values from hosted/cloud values without inventing separate app environments.
+  - [x] 5.1 Remove `APP_ENV` from `.github/workflows/flutter_quality.yml`.
+  - [x] 5.2 Remove `APP_ENV` from `.github/workflows/supabase_validation.yml` and stop writing it into the generated `.env`.
+  - [x] 5.3 Ensure Supabase validation still provides only the secrets/URLs the app actually needs.
+  - [x] 5.4 Rewrite `.env.example` so it documents one contract driven by secrets and URLs, not named environments.
+  - [x] 5.5 Simplify comments in `.env.example` to distinguish local-only values from hosted/cloud values without inventing separate app environments.
   - [ ] 5.6 Review `.github/workflows/admin_web_deploy.yml` and keep preview/production only as Vercel deployment-channel language.
-  - [ ] 5.7 Rewrite or rename `.github/workflows/staging_release_candidate.yml` so it no longer treats staging as a FleetFill runtime environment.
+  - [x] 5.7 Rewrite or rename `.github/workflows/staging_release_candidate.yml` so it no longer treats staging as a FleetFill runtime environment.
   - [ ] 5.8 Check for any remaining CI/config references to `staging`, `preview`, or `APP_ENV` that describe runtime behavior and remove them.
 
 - [ ] 6.0 Rewrite docs around the unified contract
