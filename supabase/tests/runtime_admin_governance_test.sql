@@ -1,6 +1,6 @@
 begin;
 
-select plan(15);
+select plan(17);
 
 create or replace function pg_temp.set_claims(
   p_user_id uuid,
@@ -234,6 +234,21 @@ select matches(
   'ops admins cannot create admin invitations'
 );
 
+select matches(
+  pg_temp.capture_error(
+    $$
+      select public.admin_upsert_platform_setting(
+        'feature_flags',
+        jsonb_build_object('admin_email_resend_enabled', false),
+        false,
+        'Attempted by ops admin'
+      )
+    $$
+  ),
+  '.*super admin access.*',
+  'ops admins cannot change runtime platform settings'
+);
+
 reset role;
 set local role authenticated;
 select pg_temp.set_claims(
@@ -340,6 +355,20 @@ select is(
   ),
   1,
   'revoking an invitation writes an audit log'
+);
+
+select is(
+  (
+    select (value->>'admin_email_resend_enabled')::boolean
+    from public.admin_upsert_platform_setting(
+      'feature_flags',
+      jsonb_build_object('admin_email_resend_enabled', false),
+      false,
+      'Disable resend feature'
+    )
+  ),
+  false,
+  'super admin can update platform settings'
 );
 
 select * from finish();
