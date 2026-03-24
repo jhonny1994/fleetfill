@@ -1,4 +1,5 @@
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { PayoutsQueueView } from "@/components/queues/payouts-queue-view";
 import { fetchEligiblePayoutQueue, fetchRecentReleasedPayouts } from "@/lib/queries/admin-payouts";
 
@@ -8,6 +9,7 @@ export default async function PayoutsPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
+  const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const [eligible, released] = await Promise.all([
     fetchEligiblePayoutQueue(),
     fetchRecentReleasedPayouts(),
@@ -22,7 +24,21 @@ export default async function PayoutsPage({
           Monitor bookings that are ready for release and keep the payout audit trail visible without leaving the admin desk.
         </p>
       </section>
-      <AdminFilterBar pathname={`/${lang}/payouts`} />
+      <AdminFilterBar
+        pathname={`/${lang}/payouts`}
+        locale={lang as "ar" | "fr" | "en"}
+        labels={{
+          searchPlaceholder: dictionary.shell.searchPlaceholder,
+          status: dictionary.common.status,
+          allStatuses: dictionary.common.allStatuses,
+          apply: dictionary.common.apply,
+          reset: dictionary.common.reset,
+          query: dictionary.common.query,
+          clearAll: dictionary.common.clearAll,
+          refresh: dictionary.common.refresh,
+          refreshAriaLabel: dictionary.common.refreshQueue,
+        }}
+      />
       <PayoutsQueueView eligible={eligible} released={released} locale={lang} />
     </div>
   );

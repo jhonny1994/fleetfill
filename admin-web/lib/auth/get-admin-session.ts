@@ -1,6 +1,7 @@
 import { cache } from "react";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/database.types";
 
 export type AdminSession = {
   userId: string;
@@ -9,21 +10,14 @@ export type AdminSession = {
   adminRole: "super_admin" | "ops_admin";
 };
 
-type AdminAccountRow = {
-  admin_role: "super_admin" | "ops_admin";
-  is_active: boolean;
-  profiles:
-    | {
-        full_name: string | null;
-        email: string | null;
-        is_active: boolean;
-      }
-    | {
-        full_name: string | null;
-        email: string | null;
-        is_active: boolean;
-      }[]
-    | null;
+type AdminAccountRow = Pick<
+  Database["public"]["Tables"]["admin_accounts"]["Row"],
+  "admin_role" | "is_active"
+> & {
+  profile: Pick<
+    Database["public"]["Tables"]["profiles"]["Row"],
+    "full_name" | "email" | "is_active"
+  > | null;
 };
 
 export function resolveAdminSessionData({
@@ -39,9 +33,7 @@ export function resolveAdminSessionData({
     return null;
   }
 
-  const profile = Array.isArray(adminAccount.profiles)
-    ? adminAccount.profiles[0]
-    : adminAccount.profiles;
+  const profile = adminAccount.profile;
 
   if (!profile || profile.is_active !== true) {
     return null;
@@ -67,7 +59,9 @@ export const getAdminSession = cache(async (): Promise<AdminSession | null> => {
 
   const { data: adminAccount } = await supabase
     .from("admin_accounts")
-    .select("admin_role,is_active,profiles:profile_id(full_name,email,is_active)")
+    .select(
+      "admin_role,is_active,profile:profiles!admin_accounts_profile_id_fkey(full_name,email,is_active)",
+    )
     .eq("profile_id", user.id)
     .maybeSingle();
 

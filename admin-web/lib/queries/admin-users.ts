@@ -15,6 +15,17 @@ function isUuidLike(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value.trim());
 }
 
+const userRoles = ["shipper", "carrier", "admin"] as const;
+const verificationStatuses = ["pending", "rejected", "verified"] as const;
+
+function isUserRole(value: string): value is (typeof userRoles)[number] {
+  return userRoles.includes(value as (typeof userRoles)[number]);
+}
+
+function isVerificationStatus(value: string): value is (typeof verificationStatuses)[number] {
+  return verificationStatuses.includes(value as (typeof verificationStatuses)[number]);
+}
+
 function buildProfileSearchFilter(query: string) {
   const trimmed = query.trim();
   const filters = [
@@ -163,8 +174,9 @@ export async function fetchUsers({
     .order("updated_at", { ascending: false })
     .limit(limit);
 
-  if (role?.trim()) {
-    request = request.eq("role", role.trim());
+  const normalizedRole = role?.trim();
+  if (normalizedRole && isUserRole(normalizedRole)) {
+    request = request.eq("role", normalizedRole);
   }
 
   if (activity === "active") {
@@ -173,8 +185,9 @@ export async function fetchUsers({
     request = request.eq("is_active", false);
   }
 
-  if (verification?.trim()) {
-    request = request.eq("verification_status", verification.trim());
+  const normalizedVerification = verification?.trim();
+  if (normalizedVerification && isVerificationStatus(normalizedVerification)) {
+    request = request.eq("verification_status", normalizedVerification);
   }
 
   if (query?.trim()) {

@@ -9,6 +9,7 @@ import { z } from "zod";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { PlatformSettingsSnapshot } from "@/lib/queries/admin-types";
+import type { Json } from "@/lib/supabase/database.types";
 import {
   appRuntimeSettingsSchema,
   bookingPricingSettingsSchema,
@@ -49,7 +50,7 @@ export function PlatformSettingsForms({
   const [error, setError] = useState<string | null>(null);
   const [pendingConfig, setPendingConfig] = useState<{
     key: string;
-    value: Record<string, unknown>;
+    value: Json;
     description: string;
   } | null>(null);
   const [isPending, setIsPending] = useState(false);
