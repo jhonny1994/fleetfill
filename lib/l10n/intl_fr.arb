@@ -487,6 +487,7 @@
   "startupConfigurationRequiredMessage": "FleetFill n'est pas disponible pour le moment. Reessayez plus tard.",
   "notificationNewLabel": "Nouveau",
   "notificationSeenLabel": "Vu",
+  "statusSetupRequiredLabel": "Configuration requise",
   "statusNeedsReviewLabel": "A revoir",
   "statusReadyLabel": "Pret",
   "supportDescription": "Posez une question, signalez un probleme ou demandez de l'aide pour une réservation ou un paiement.",

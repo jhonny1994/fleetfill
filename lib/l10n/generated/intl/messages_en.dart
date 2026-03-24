@@ -1710,6 +1710,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Needs review",
     ),
     "statusReadyLabel": MessageLookupByLibrary.simpleMessage("Ready"),
+    "statusSetupRequiredLabel": MessageLookupByLibrary.simpleMessage(
+      "Setup required",
+    ),
     "supportConfiguredEmailMessage": m19,
     "supportDescription": MessageLookupByLibrary.simpleMessage(
       "Send a question, report a problem, or ask for help with a booking or payment.",
