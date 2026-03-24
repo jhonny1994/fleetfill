@@ -1,4 +1,9 @@
-import { createServiceClient, jsonResponse, requiredEnv } from '../_shared/email-runtime.ts'
+import {
+  createServiceClient,
+  hasServiceRoleAccess,
+  jsonResponse,
+  requiredEnv,
+} from '../_shared/email-runtime.ts'
 
 type TaskResult = {
   name: string
@@ -85,11 +90,9 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const authorization = req.headers.get('Authorization')
     const serviceRoleKey = requiredEnv('SUPABASE_SERVICE_ROLE_KEY')
     const supabaseUrl = requiredEnv('SUPABASE_URL')
-    const expectedAuthorization = `Bearer ${serviceRoleKey}`
-    if (authorization !== expectedAuthorization) {
+    if (!hasServiceRoleAccess(req)) {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 

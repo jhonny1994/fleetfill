@@ -37,6 +37,9 @@ site_url = "http://localhost:3000"
 additional_redirect_urls = ["fleetfill://auth-callback"]
 jwt_expiry = 3600
 
+[auth.email]
+enable_confirmations = true
+
 [auth.external.google]
 enabled = true
 client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"

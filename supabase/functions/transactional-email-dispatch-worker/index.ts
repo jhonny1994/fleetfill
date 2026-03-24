@@ -2,6 +2,7 @@ import {
   computeRetryDelaySeconds,
   createServiceClient,
   dispatchEmail,
+  hasServiceRoleAccess,
   inferDeliveryStatus,
   jsonResponse,
   normalizeSupportedLocale,
@@ -17,9 +18,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const authorization = req.headers.get('Authorization')
-    const expectedAuthorization = `Bearer ${requiredEnv('SUPABASE_SERVICE_ROLE_KEY')}`
-    if (authorization !== expectedAuthorization) {
+    if (!hasServiceRoleAccess(req)) {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 
