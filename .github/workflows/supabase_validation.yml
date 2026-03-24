@@ -11,7 +11,6 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     env:
-      APP_ENV: local
       SUPABASE_URL: http://127.0.0.1:54321
       SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID != '' && vars.GOOGLE_WEB_CLIENT_ID || 'dummy-google-web-client-id.apps.googleusercontent.com' }}
@@ -31,7 +30,6 @@ jobs:
         shell: bash
         run: |
           cat > .env <<EOF
-          APP_ENV=${APP_ENV}
           SUPABASE_URL=${SUPABASE_URL}
           SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
           GOOGLE_WEB_CLIENT_ID=${GOOGLE_WEB_CLIENT_ID}
