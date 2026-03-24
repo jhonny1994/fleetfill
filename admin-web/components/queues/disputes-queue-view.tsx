@@ -1,20 +1,24 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatDateTime, formatQueueAge } from "@/lib/formatting/formatters";
 import type { DisputeQueueItem } from "@/lib/queries/admin-types";
 
-const columns: ColumnDef<DisputeQueueItem>[] = [
+function buildColumns(locale: string): ColumnDef<DisputeQueueItem>[] {
+  return [
   {
     accessorKey: "trackingNumber",
     header: "Booking",
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
-        <p className="font-semibold text-[var(--color-ink-strong)]">{row.original.trackingNumber ?? "Unknown booking"}</p>
+        <Link href={`/${locale}/disputes/${row.original.bookingId}`} className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
+          {row.original.trackingNumber ?? "Unknown booking"}
+        </Link>
         <p className="text-xs text-[var(--color-ink-muted)]">{formatCompactReference(row.original.bookingId)}</p>
       </div>
     ),
@@ -48,12 +52,13 @@ const columns: ColumnDef<DisputeQueueItem>[] = [
     ),
   },
 ];
+}
 
-export function DisputesQueueView({ items }: { items: DisputeQueueItem[] }) {
+export function DisputesQueueView({ items, locale }: { items: DisputeQueueItem[]; locale: string }) {
   return (
     <AdminDataTable
       data={items}
-      columns={columns}
+      columns={buildColumns(locale)}
       emptyEyebrow="Disputes"
       emptyTitle="No open disputes require attention."
       emptyBody="Resolved and closed disputes leave this queue automatically."

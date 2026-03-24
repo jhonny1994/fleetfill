@@ -23,7 +23,7 @@ export default async function PayoutsPage({
         </p>
       </section>
       <AdminFilterBar pathname={`/${lang}/payouts`} />
-      <PayoutsQueueView eligible={eligible} released={released} />
+      <PayoutsQueueView eligible={eligible} released={released} locale={lang} />
     </div>
   );
 }

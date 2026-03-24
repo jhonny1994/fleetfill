@@ -29,6 +29,16 @@ type PayoutRow = {
   created_at: string | null;
 };
 
+type PayoutAccountRow = {
+  id: string;
+  carrier_id: string;
+  account_type: string;
+  account_holder_name: string;
+  account_identifier: string;
+  bank_or_ccp_name: string | null;
+  is_verified: boolean;
+};
+
 export async function fetchEligiblePayoutQueue({
   limit = 50,
 }: {
@@ -113,4 +123,55 @@ export async function fetchRecentReleasedPayouts({
     externalReference: payout.external_reference,
     processedAt: payout.processed_at ?? payout.created_at,
   }));
+}
+
+export type AdminPayoutDetail = {
+  booking: BookingRow;
+  carrierName: string;
+  activePayoutAccount: PayoutAccountRow | null;
+  existingPayout: PayoutRow | null;
+};
+
+export async function fetchPayoutDetail(bookingId: string): Promise<AdminPayoutDetail | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data: booking, error: bookingError } = await supabase
+    .from("bookings")
+    .select("id, carrier_id, tracking_number, carrier_payout_dzd, updated_at")
+    .eq("id", bookingId)
+    .maybeSingle();
+
+  if (bookingError) {
+    throw bookingError;
+  }
+  if (!booking) {
+    return null;
+  }
+
+  const [{ data: carrier }, { data: payoutAccount }, { data: payouts }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("id, email, full_name, company_name")
+      .eq("id", (booking as BookingRow).carrier_id)
+      .maybeSingle(),
+    supabase
+      .from("payout_accounts")
+      .select("id, carrier_id, account_type, account_holder_name, account_identifier, bank_or_ccp_name, is_verified")
+      .eq("carrier_id", (booking as BookingRow).carrier_id)
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from("payouts")
+      .select("id, booking_id, carrier_id, amount_dzd, status, external_reference, processed_at, created_at")
+      .eq("booking_id", bookingId)
+      .order("created_at", { ascending: false })
+      .limit(1),
+  ]);
+
+  return {
+    booking: booking as BookingRow,
+    carrierName: resolveProfileDisplayName(carrier as ProfileRow | null),
+    activePayoutAccount: (payoutAccount as PayoutAccountRow | null) ?? null,
+    existingPayout: ((payouts ?? []) as PayoutRow[])[0] ?? null,
+  };
 }

@@ -133,16 +133,16 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 4.6 Implement the payouts queue page with eligible/released visibility and readiness context
   - [x] 4.7 Implement the support queue page with status, linked context, and `New` / `Seen` read-state language
   - [x] 4.8 Add shared queue tests covering loading, filtering, sorting, and refresh/context preservation behavior
-- [ ] 5.0 Build the detail workspaces and sensitive admin actions
-  - [ ] 5.1 Create a shared detail workspace pattern with summary facts, preview panel, timeline/history block, linked entities, action rail, and audit block
-  - [ ] 5.2 Implement the payment detail workspace using controlled backend workflows for approve/reject actions
-  - [ ] 5.3 Implement the verification packet detail workspace using controlled backend workflows for document review and packet approval
-  - [ ] 5.4 Implement the dispute detail workspace using controlled backend workflows for dispute resolution
-  - [ ] 5.5 Implement the payout detail workspace using controlled backend workflows for payout release
-  - [ ] 5.6 Implement the support detail workspace with thread view, reply flow, and status-update controls
-  - [ ] 5.7 Add zod-backed forms for rejection reasons and other required sensitive action inputs
-  - [ ] 5.8 Add confirmation dialogs and mutation-state handling for dangerous actions
-  - [ ] 5.9 Add detail workspace tests covering shared layout behavior and key action flows
+- [x] 5.0 Build the detail workspaces and sensitive admin actions
+  - [x] 5.1 Create a shared detail workspace pattern with summary facts, preview panel, timeline/history block, linked entities, action rail, and audit block
+  - [x] 5.2 Implement the payment detail workspace using controlled backend workflows for approve/reject actions
+  - [x] 5.3 Implement the verification packet detail workspace using controlled backend workflows for document review and packet approval
+  - [x] 5.4 Implement the dispute detail workspace using controlled backend workflows for dispute resolution
+  - [x] 5.5 Implement the payout detail workspace using controlled backend workflows for payout release
+  - [x] 5.6 Implement the support detail workspace with thread view, reply flow, and status-update controls
+  - [x] 5.7 Add zod-backed forms for rejection reasons and other required sensitive action inputs
+  - [x] 5.8 Add confirmation dialogs and mutation-state handling for dangerous actions
+  - [x] 5.9 Add detail workspace tests covering shared layout behavior and key action flows
 - [ ] 6.0 Implement users, admin management, settings, audit/health, and global search
   - [ ] 6.1 Implement the users list/search page with role/status/verification context
   - [ ] 6.2 Implement the user detail workspace with profile, verification, vehicles, related operational context, and suspend/reactivate actions

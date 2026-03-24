@@ -25,7 +25,7 @@ export default async function PaymentsPage({
         </p>
       </section>
       <AdminFilterBar pathname={pathname} query={query} />
-      <PaymentsQueueView items={items} />
+      <PaymentsQueueView items={items} locale={lang} />
     </div>
   );
 }

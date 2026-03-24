@@ -1,20 +1,24 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatCurrencyDzd, formatDateTime, formatQueueAge } from "@/lib/formatting/formatters";
 import type { PaymentQueueItem } from "@/lib/queries/admin-types";
 
-const columns: ColumnDef<PaymentQueueItem>[] = [
+function buildColumns(locale: string): ColumnDef<PaymentQueueItem>[] {
+  return [
   {
     accessorKey: "trackingNumber",
     header: "Booking",
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
-        <p className="font-semibold text-[var(--color-ink-strong)]">{row.original.trackingNumber}</p>
+        <Link href={`/${locale}/payments/${row.original.bookingId}`} className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
+          {row.original.trackingNumber}
+        </Link>
         <p className="text-xs text-[var(--color-ink-muted)]">{formatCompactReference(row.original.bookingId)}</p>
       </div>
     ),
@@ -57,12 +61,13 @@ const columns: ColumnDef<PaymentQueueItem>[] = [
     ),
   },
 ];
+}
 
-export function PaymentsQueueView({ items }: { items: PaymentQueueItem[] }) {
+export function PaymentsQueueView({ items, locale }: { items: PaymentQueueItem[]; locale: string }) {
   return (
     <AdminDataTable
       data={items}
-      columns={columns}
+      columns={buildColumns(locale)}
       emptyEyebrow="Payments"
       emptyTitle="No payment proofs need review."
       emptyBody="This queue will repopulate when shippers submit new proofs or a payment review returns to pending."

@@ -1,20 +1,24 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatCurrencyDzd, formatDateTime, formatQueueAge } from "@/lib/formatting/formatters";
 import type { EligiblePayoutQueueItem, ReleasedPayoutItem } from "@/lib/queries/admin-types";
 
-const eligibleColumns: ColumnDef<EligiblePayoutQueueItem>[] = [
+function buildEligibleColumns(locale: string): ColumnDef<EligiblePayoutQueueItem>[] {
+  return [
   {
     accessorKey: "trackingNumber",
     header: "Booking",
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
-        <p className="font-semibold text-[var(--color-ink-strong)]">{row.original.trackingNumber}</p>
+        <Link href={`/${locale}/payouts/${row.original.bookingId}`} className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
+          {row.original.trackingNumber}
+        </Link>
         <p className="text-xs text-[var(--color-ink-muted)]">{formatCompactReference(row.original.bookingId)}</p>
       </div>
     ),
@@ -48,6 +52,7 @@ const eligibleColumns: ColumnDef<EligiblePayoutQueueItem>[] = [
     ),
   },
 ];
+}
 
 const releasedColumns: ColumnDef<ReleasedPayoutItem>[] = [
   {
@@ -79,9 +84,11 @@ const releasedColumns: ColumnDef<ReleasedPayoutItem>[] = [
 export function PayoutsQueueView({
   eligible,
   released,
+  locale,
 }: {
   eligible: EligiblePayoutQueueItem[];
   released: ReleasedPayoutItem[];
+  locale: string;
 }) {
   return (
     <div className="space-y-4">
@@ -95,7 +102,7 @@ export function PayoutsQueueView({
         </div>
         <AdminDataTable
           data={eligible}
-          columns={eligibleColumns}
+          columns={buildEligibleColumns(locale)}
           emptyEyebrow="Payouts"
           emptyTitle="No payouts are ready right now."
           emptyBody="Completed, secured bookings without open disputes will appear here when they are eligible for release."

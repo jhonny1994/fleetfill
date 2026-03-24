@@ -24,7 +24,7 @@ export default async function VerificationPage({
         </p>
       </section>
       <AdminFilterBar pathname={pathname} query={query} />
-      <VerificationQueueView items={items} />
+      <VerificationQueueView items={items} locale={lang} />
     </div>
   );
 }
