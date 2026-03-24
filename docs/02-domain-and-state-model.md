@@ -91,7 +91,6 @@ The destination account FleetFill uses when paying a carrier.
 Supported payout rails:
 
 - CCP
-- Dahabia
 - bank
 
 ### 2.11 Platform Payment Account
@@ -364,11 +363,10 @@ Every rejection requires a reason.
 
 Required current document sets:
 
-- driver identity/license document
-- truck registration
+- driver's license
+- vehicle registration card
 - truck insurance
 - truck technical inspection
-- transport license
 
 ## 12. Route Change Rules
 
