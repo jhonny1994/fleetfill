@@ -13,6 +13,7 @@ Rules:
 
 - [x] Confirm Flutter, Dart, Android, Supabase, and transactional email provider accounts/environments are accessible
 - [x] Confirm package strategy for Flutter app, admin surface, and shared code boundaries
+- [x] Confirm that the long-term admin surface is a separate internal web console hosted independently from the Flutter app
 - [x] Confirm repository structure, branch strategy, and environment naming (`local`, `staging`, `production`)
 - [x] Create ADRs for the most irreversible decisions already captured in the docs
 - [x] Define naming conventions for tables, enums, files, routes, providers, and storage paths
@@ -424,6 +425,23 @@ Phase 11 progress notes:
 - [x] Keep mobile admin lean: use one queues page with segmented sections instead of many top-level admin tabs
 - [x] Build typed client-settings response/API from `platform_settings` rather than raw client table reads
 
+Transitional note:
+
+- the current Flutter admin surface is a temporary internal fallback
+- the primary long-term admin experience should move to `admin-web/` while reusing the same Supabase backend contracts
+
+### Admin Web Console
+
+- [ ] Create `admin-web/` as a separate Next.js + TypeScript app inside the same repository
+- [ ] Configure Vercel deployment, preview environments, and admin-web environment variable ownership
+- [ ] Implement admin auth/session handling against the existing Supabase project
+- [ ] Implement admin web layout with sidebar, command/search entry, queue list, and detail workspaces
+- [ ] Build desktop-first queue surfaces for payments, verification, disputes, payouts, support, and email health
+- [ ] Build admin dashboard/control tower with queue counts, oldest-item age, exception alerts, and quick drill-ins
+- [ ] Build user management, settings, and audit log surfaces in admin web
+- [ ] Keep admin actions bound to existing Supabase RPC and Edge Function contracts instead of duplicating business logic
+- [ ] Reach parity on critical admin queues before reducing Flutter-admin usage
+
 ### Admin Audit And Monitoring
 
 - [x] Build admin audit log viewer
@@ -532,7 +550,7 @@ Phase 14 progress notes:
 Phase 15 progress notes:
 
 - GitHub Actions workflow scaffolding now covers Flutter quality gates, Supabase validation, and a manual staging or release-candidate verification entry point
-- release operations are now documented in `docs/working/release-operations.md`, including branch/tag conventions, versioning rules, staging gates, release-candidate checks, monitoring, and rollback expectations
+- release operations are now documented in `docs/planning/operations/release-operations.md`, including branch/tag conventions, versioning rules, staging gates, release-candidate checks, monitoring, and rollback expectations
 - Android release configuration now prefers explicit release signing credentials while still falling back to debug signing for local-only release runs until secrets are supplied
 - README and environment example files now reflect the baseline production env shape more accurately, including required push/email worker secrets and optional FlutterFire override posture
 
@@ -547,7 +565,7 @@ Phase 15 progress notes:
 
 Phase 16 progress notes:
 
-- post-launch stabilization cadence is now documented in `docs/working/post-launch-stabilization.md`, covering daily health review, weekly trend review, support/copy updates, and backlog discipline
+- post-launch stabilization cadence is now documented in `docs/planning/operations/post-launch-stabilization.md`, covering daily health review, weekly trend review, support/copy updates, and backlog discipline
 - crash reporting hooks now emit structured logger output so post-launch investigations can inspect uncaught framework and platform failures even before a third-party sink is connected
 
 ## Cross-Phase Definition Of Done

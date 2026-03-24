@@ -42,6 +42,15 @@ The goal is to keep business correctness inside the database boundary wherever a
 | `Project secrets` | Edge Function secrets such as transactional email provider API keys | standard server secret handling | never expose to client |
 | `Logs / dashboard observability` | workflow debugging and ops visibility | baseline production support | complement with structured app logs |
 
+Admin web note:
+
+- the separate admin web console reuses this same Supabase project
+- browser clients must use the public anon key plus authenticated admin sessions
+- prefer the Supabase publishable key format for new Next.js admin-web setup
+- never expose service-role credentials to `admin-web/`
+- keep privileged verification, payment, dispute, payout, support, and settings actions in RPCs or Edge Functions with audit logging
+- use `@supabase/ssr` with cookie-based auth handling for Next.js admin-web sessions
+
 ## 3. When To Use SQL Functions vs Edge Functions
 
 ### 3.1 Use Database Functions / RPC For

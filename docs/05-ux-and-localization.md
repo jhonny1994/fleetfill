@@ -166,6 +166,36 @@ The requested date belongs to search, not to the shipment draft form.
 - adapt layouts based on available width and safe-area constraints, not device-name or tablet detection
 - use compact mobile layouts by default
 - expand to wider tablet/admin layouts only when width meaningfully supports it
+
+## 4.1 Admin UX Direction
+
+FleetFill admin should be desktop-first.
+
+Rules:
+
+- the primary admin experience should live in a browser-based internal console
+- admin home should be queue-first and exception-first, not analytics-heavy
+- dashboard should answer what needs attention now, what is blocked, and where to go next
+- queues should prefer dense tables, clear aging, status, assignee, and action affordances
+- detail views should combine facts, files, timeline, and actions in one workspace where possible
+- the mobile admin surface should remain lean and transitional rather than expanding into a full operations cockpit
+
+Admin UI style rules:
+
+- use a restrained operations-console visual language, not marketing-style gradients or decorative card grids
+- default to light theme for operational clarity; dark mode may exist later but should not drive the initial visual system
+- prioritize readability, scan speed, and row comparison over visual flourish
+- use semantic color sparingly and consistently: danger for blocked/risk, warning for pending/action needed, success for completed/safe, neutral for informational states
+- avoid showing raw IDs in titles when a human label, reference, or compact identifier can be shown instead
+- use tables for queues and evidence-heavy detail sidebars instead of stacking endless cards vertically on desktop
+
+Admin interaction rules:
+
+- every queue row must expose a clear primary next action
+- destructive or high-risk actions must require confirmation and preserve auditability
+- loading states should preserve surrounding context instead of blanking whole pages
+- unread/new state must use neutral read-state language such as `New` and `Seen`, not workflow-state words
+- charts should be minimal and only used for operational trend explanation, not as decoration
 - preserve readability by constraining max content width on large screens where appropriate
 - role shells may switch from bottom navigation to wider navigation patterns on larger layouts if implemented later
 - respect keyboard `viewInsets` so forms, sheets, and dialogs stay usable during text entry

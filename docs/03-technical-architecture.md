@@ -7,16 +7,21 @@ FleetFill uses Flutter on the client and Supabase on the backend.
 Primary stack:
 
 - Flutter for Android and iOS clients
+- Next.js for the internal admin web console
 - Riverpod for application state
 - Freezed and json_serializable for domain models and immutable states
 - GoRouter for navigation and route guards
 - flutter-intl for UI localization workflow and ARB generation
+- TypeScript for the admin web application
+- Tailwind CSS plus shadcn/ui for admin web UI
+- TanStack Query and TanStack Table for admin queue data and desktop table interaction
 - SharedPreferences for persisted local app preferences such as theme mode and pre-auth locale restoration
 - Supabase Auth for identity
 - Postgres for data and policies
 - Supabase Storage for private files
 - transactional email provider API for operational email delivery
 - Firebase Cloud Messaging plus in-app notifications for operational delivery
+- Vercel for admin web deployment
 
 ## 2. Client Architecture
 
@@ -45,6 +50,7 @@ lib/
     admin/
     support/
     notifications/
+admin-web/            # separate Next.js app in the same repository
 ```
 
 Recommended layer split inside features:
@@ -113,6 +119,28 @@ Recommended shell behavior:
 - deep links must resolve only after auth and authorization checks
 - back-button behavior must preserve tab history correctly instead of bouncing users out of their role shell unexpectedly
 - avoid route-per-microstep flows; prefer sheets, dialogs, and inline states for pickers, confirmations, and short success states
+
+### 2.4.1 Admin Web Architecture
+
+The primary admin experience should live in a separate internal web app.
+
+Rules:
+
+- keep the admin web console desktop-first and queue-first
+- treat Supabase as the shared contract boundary between mobile and admin
+- do not reimplement booking, payment, verification, dispute, payout, or support business rules in browser-only code
+- use Next.js route groups and nested layouts for queue/detail workspaces
+- use App Router conventions such as `layout.tsx`, `loading.tsx`, `error.tsx`, and `not-found.tsx` instead of ad hoc page-state composition
+- prefer table and split-pane workflows for admin queues instead of card-heavy mobile layouts
+- use the Flutter admin surface only as a temporary fallback, not the long-term control tower
+
+Next.js implementation rules:
+
+- Server Components are the default for pages, layouts, data reads, and non-interactive composition
+- Client Components should be introduced only for interactive controls, client state, providers, and browser-only integrations
+- keep `"use client"` boundaries narrow to reduce bundle size
+- use route-segment loading UI and nested error boundaries instead of one global spinner for the whole app
+- treat admin queue pages as request-time data surfaces unless a view is explicitly safe to cache
 
 Permissions policy:
 
@@ -212,6 +240,13 @@ Recommended guard families:
 - support remote logout and session invalidation as part of account security operations
 - require recent sign-in for sensitive admin actions such as payout release, dispute resolution, user suspension, and sensitive settings changes
 - production admin accounts should use MFA or equivalent step-up protection as soon as operationally available
+
+Admin web security rules:
+
+- never ship a service-role key to the browser
+- use the public Supabase client with admin-user sessions and backend-enforced authorization
+- sensitive admin actions should run through existing RPCs and Edge Functions with server-side authorization and audit logging
+- the admin web app may use server-side rendering or route handlers for session shaping, but not to bypass Supabase authorization rules
 
 ### 3.5 Email Ownership Rules
 
