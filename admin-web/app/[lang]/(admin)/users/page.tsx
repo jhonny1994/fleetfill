@@ -24,42 +24,43 @@ export default async function UsersPage({
     <div className="space-y-4">
       <section className="panel space-y-3 p-6">
         <p className="eyebrow">{ui.pages.users.eyebrow}</p>
-        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.users.title}</h1>
+        <h1 className="text-[1.7rem] font-semibold text-[var(--color-ink-strong)]">{ui.pages.users.title}</h1>
         <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
-          {ui.pages.users.title}
+          {ui.pages.users.listBody}
         </p>
       </section>
 
-      <section className="panel p-4">
-        <form className="grid gap-3 lg:grid-cols-[minmax(0,1.2fr)_repeat(3,minmax(0,0.55fr))_auto]" action={`/${lang}/users`} method="get">
+      <section className="panel stacked-filter-surface p-5">
+        <form className="stacked-filter-form" action={`/${lang}/users`} method="get">
           <input
             type="search"
             name="q"
             defaultValue={query}
-            placeholder={ui.pages.users.title === "تشغيل المستخدمين ودورة حياتهم" ? "ابحث بالاسم أو البريد أو الهاتف أو معرّف الملف" : ui.pages.users.title === "Operations et cycle de vie utilisateur" ? "Rechercher par nom, email, telephone ou identifiant profil" : "Search by name, email, phone, or profile ID"}
-            className="rounded-full border border-[var(--color-border)] bg-white/75 px-4 py-3 text-sm"
+            placeholder={ui.pages.users.searchPlaceholder}
+            className="admin-field stacked-filter-search"
           />
-          <select name="role" defaultValue={role ?? ""} className="rounded-full border border-[var(--color-border)] bg-white/75 px-4 py-3 text-sm">
-            <option value="">{ui.labels.none}</option>
-            <option value="shipper">{getEnumLabel(lang, "userRoles", "shipper")}</option>
-            <option value="carrier">{getEnumLabel(lang, "userRoles", "carrier")}</option>
-          </select>
-          <select name="activity" defaultValue={activity ?? ""} className="rounded-full border border-[var(--color-border)] bg-white/75 px-4 py-3 text-sm">
-            <option value="">{ui.labels.none}</option>
-            <option value="active">{getEnumLabel(lang, "activity", "active")}</option>
-            <option value="inactive">{getEnumLabel(lang, "activity", "inactive")}</option>
-          </select>
-          <select
-            name="verification"
-            defaultValue={verification ?? ""}
-            className="rounded-full border border-[var(--color-border)] bg-white/75 px-4 py-3 text-sm"
-          >
-            <option value="">{ui.labels.none}</option>
-            <option value="pending">{getEnumLabel(lang, "verification", "pending")}</option>
-            <option value="verified">{getEnumLabel(lang, "verification", "verified")}</option>
-            <option value="rejected">{getEnumLabel(lang, "verification", "rejected")}</option>
-          </select>
-          <div className="flex items-center gap-2">
+          <div className="stacked-filter-secondary">
+            <select aria-label={ui.labels.role} name="role" defaultValue={role ?? ""} className="admin-field admin-select">
+              <option value="">{ui.labels.allRoles}</option>
+              <option value="shipper">{getEnumLabel(lang, "userRoles", "shipper")}</option>
+              <option value="carrier">{getEnumLabel(lang, "userRoles", "carrier")}</option>
+            </select>
+            <select aria-label={ui.labels.accountState} name="activity" defaultValue={activity ?? ""} className="admin-field admin-select">
+              <option value="">{ui.labels.allAccountStates}</option>
+              <option value="active">{getEnumLabel(lang, "activity", "active")}</option>
+              <option value="inactive">{getEnumLabel(lang, "activity", "inactive")}</option>
+            </select>
+            <select
+              aria-label={ui.labels.verification}
+              name="verification"
+              defaultValue={verification ?? ""}
+              className="admin-field admin-select"
+            >
+              <option value="">{ui.labels.allVerificationStates}</option>
+              <option value="pending">{getEnumLabel(lang, "verification", "pending")}</option>
+              <option value="verified">{getEnumLabel(lang, "verification", "verified")}</option>
+              <option value="rejected">{getEnumLabel(lang, "verification", "rejected")}</option>
+            </select>
             <button className="button-primary" type="submit">
               {ui.actions.confirm}
             </button>
@@ -74,12 +75,13 @@ export default async function UsersPage({
         <table>
           <thead>
             <tr>
-              <th>{ui.pages.users.eyebrow.slice(0, -1) || "User"}</th>
+              <th>{ui.pages.users.userLabel}</th>
               <th>{ui.labels.role}</th>
               <th>{ui.labels.accountState}</th>
               <th>{ui.labels.verification}</th>
-              <th>{ui.labels.queue === "طابور" ? "السياق التشغيلي" : ui.labels.queue === "File" ? "Contexte operationnel" : "Operational context"}</th>
+              <th>{ui.labels.operationalContext}</th>
               <th>{ui.labels.updated}</th>
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -116,11 +118,16 @@ export default async function UsersPage({
                 </td>
                 <td className="text-sm">
                   <div className="space-y-1">
-                    <p>{user.bookingCount}</p>
-                    <p className="text-xs text-[var(--color-ink-muted)]">{user.vehicleCount}</p>
+                    <p>{user.bookingCount} {ui.pages.users.bookingsLabel}</p>
+                    <p className="text-xs text-[var(--color-ink-muted)]">{ui.labels.vehiclesSummary.replace("{count}", String(user.vehicleCount))}</p>
                   </div>
                 </td>
                 <td className="text-sm text-[var(--color-ink-muted)]">{formatDateTime(user.updatedAt)}</td>
+                <td>
+                  <Link className="button-secondary" href={`/${lang}/users/${user.profileId}`}>
+                    {ui.actions.openDetail}
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>

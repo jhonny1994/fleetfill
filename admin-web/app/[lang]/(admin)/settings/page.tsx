@@ -15,9 +15,9 @@ export default async function SettingsPage({
 
   return (
     <div className="space-y-4">
-      <section className="panel space-y-3 p-6">
+      <section className="panel space-y-3 p-5">
         <p className="eyebrow">{ui.pages.settings.eyebrow}</p>
-        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.settings.title}</h1>
+        <h1 className="text-[1.55rem] font-semibold text-[var(--color-ink-strong)]">{ui.pages.settings.title}</h1>
         <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
           {detailCopy.settings.description}
         </p>
