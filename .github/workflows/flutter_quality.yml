@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - phase14-16-release-readiness
   pull_request:
 
 jobs:

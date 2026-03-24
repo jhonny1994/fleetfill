@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - codex/admin-web-console
     paths:
       - "admin-web/**"
       - ".github/workflows/admin_web_quality.yml"
