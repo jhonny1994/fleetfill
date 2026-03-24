@@ -629,6 +629,53 @@ Recommended fields:
 - `metadata jsonb null`
 - `created_at timestamptz`
 
+### 2.20b `admin_accounts`
+
+Purpose: explicit internal admin governance state layered on top of `profiles`.
+
+Recommended fields:
+
+- `profile_id uuid pk fk -> profiles.id`
+- `admin_role text check in ('super_admin','ops_admin')`
+- `is_active boolean default true`
+- `invited_by uuid null fk -> profiles.id`
+- `activated_at timestamptz null`
+- `deactivated_at timestamptz null`
+- `deactivated_by uuid null fk -> profiles.id`
+- `created_at timestamptz`
+- `updated_at timestamptz`
+
+Rules:
+
+- `profiles.role = 'admin'` is not sufficient by itself for governance
+- `admin_accounts` is the authoritative admin-governance layer for internal admin access
+- only active admin accounts may enter the admin web console or perform privileged admin actions
+- the system must protect against deactivating or removing the last active `super_admin`
+
+### 2.20c `admin_invitations`
+
+Purpose: secure invitation and bootstrap-adjacent lifecycle for internal admins.
+
+Recommended fields:
+
+- `id uuid pk`
+- `email text`
+- `role text check in ('super_admin','ops_admin')`
+- `token_hash text`
+- `status text check in ('pending','accepted','expired','revoked')`
+- `expires_at timestamptz`
+- `invited_by uuid fk -> profiles.id`
+- `accepted_by_profile_id uuid null fk -> profiles.id`
+- `created_at timestamptz`
+- `updated_at timestamptz`
+
+Rules:
+
+- no public admin signup path exists in the canonical product
+- invitations must be single-use, expiring, and auditable
+- only `super_admin` may create, revoke, or manage invitations
+- acceptance must flow through a privileged backend path, not raw client-side profile edits
+
 ### 2.21 `wilayas` and `communes`
 
 Purpose: Algeria location seed tables sourced from `data/locations/wilayas-with-municipalities.json`.
@@ -690,12 +737,16 @@ Carriers:
 Admins:
 
 - read and manage all operational entities required for review, payout, dispute, and audit workflows
+- are additionally governed through `admin_accounts` and `admin_invitations`
+- must be constrained by explicit role checks for `super_admin` vs `ops_admin`
 
 Service-role and server-controlled rules:
 
 - service-role credentials must never be shipped in the client
 - service-role access is restricted to server-side functions, secure jobs, and controlled operational scripts
 - critical financial and verification mutations must re-check authorization server-side even if the client UI is already role-gated
+- first-admin bootstrap must be non-public and tightly controlled
+- admin invitation, activation, deactivation, and role-change workflows must be audited and must not allow loss of the last active `super_admin`
 
 ### 4.3 Sensitive File Access
 

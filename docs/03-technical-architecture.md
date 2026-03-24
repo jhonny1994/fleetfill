@@ -247,6 +247,7 @@ Admin web security rules:
 - use the public Supabase client with admin-user sessions and backend-enforced authorization
 - sensitive admin actions should run through existing RPCs and Edge Functions with server-side authorization and audit logging
 - the admin web app may use server-side rendering or route handlers for session shaping, but not to bypass Supabase authorization rules
+- admin-management flows such as first-admin bootstrap, invite acceptance, role change, and admin deactivation should be modeled as first-class privileged workflows, not ad hoc profile edits
 
 ### 3.5 Email Ownership Rules
 

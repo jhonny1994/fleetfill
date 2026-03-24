@@ -6,6 +6,14 @@ It consolidates the current product decision, architecture direction, UI lock, a
 
 This file does not replace canonical product truth. It gathers the admin-specific decisions already locked across the canonical docs and turns them into a complete build specification.
 
+Document role inside the admin planning ecosystem:
+
+- the PRD defines the required product scope
+- the tasks file defines implementation sequencing
+- the system design defines governance, data, auth, and deployment shape
+- the UI/UX spec defines interface behavior and visual rules
+- this master spec ties those decisions together into one implementation-grade source
+
 ## 1. Product Intent
 
 FleetFill admin is not a public-facing dashboard and not a generic SaaS analytics shell.
@@ -188,6 +196,47 @@ Rules:
 - risky states must stand out immediately
 - color is never the only signal
 
+### 4.5 Token System Lock
+
+The admin web must use a three-layer token system:
+
+1. primitive tokens
+2. semantic tokens
+3. component tokens
+
+Token rules:
+
+- no raw hex values inside feature components
+- no hardcoded spacing values inside queue/detail feature code unless already mapped to tokens
+- typography, spacing, radius, border, shadow, and motion must all resolve through shared tokens
+- Tailwind configuration should map to the token system rather than drifting into one-off utility values
+
+Minimum token groups required before broad feature implementation:
+
+- color primitives
+- semantic color roles
+- spacing scale
+- typography scale
+- radius scale
+- border colors
+- shadow levels
+- motion durations/easings
+- status color tokens
+
+## 4.6 Visual Thesis
+
+Visual thesis:
+
+- FleetFill admin should feel like a freight operations ledger brought into a modern browser workspace: clean, serious, sharp, and quietly authoritative.
+
+Content thesis:
+
+- every page should orient first, clarify second, and only then expose action.
+
+Interaction thesis:
+
+- motion should only support clarity, such as panel appearance, route transitions, and mutation feedback; no ornamental animation should compete with operational scanning.
+
 ## 5. UX Principles
 
 ### 5.1 Queue First
@@ -257,8 +306,9 @@ V1 should use:
 5. Payouts
 6. Support
 7. Users
-8. Settings
-9. Audit & Health
+8. Admins
+9. Settings
+10. Audit & Health
 
 ### 6.2 Global Header
 
@@ -446,6 +496,24 @@ Sections:
 - resend controls
 - automation exception visibility
 
+### 7.10 Admins
+
+List page:
+
+- active admins
+- pending and historical invitations
+- role visibility
+- active/inactive status
+- invite action
+
+Detail and management actions:
+
+- create invite
+- revoke invite
+- change admin role
+- activate/deactivate admin
+- show governance safeguards and blocked actions explicitly
+
 ## 8. Layout System
 
 ### 8.1 Breakpoints
@@ -560,6 +628,37 @@ Must-have shared components:
 - no page-specific card inventions unless truly necessary
 - one table pattern reused across modules
 
+### 11.2 Required Component Specs
+
+These components must have explicit specs before broad implementation:
+
+- sidebar navigation
+- top utility header
+- command search
+- dashboard metric tile
+- exception alert strip
+- queue filter bar
+- dense data table
+- status badge
+- SLA/age badge
+- action rail
+- file preview panel
+- timeline panel
+- confirmation dialog
+- form field primitives
+
+Each spec should define:
+
+- default state
+- hover state
+- focus state
+- active state
+- disabled state where relevant
+- loading state where relevant
+- error state where relevant
+- keyboard interaction behavior
+- responsive behavior
+
 ## 12. Status Language Lock
 
 Use:
@@ -638,6 +737,28 @@ Sensitive actions must continue to use:
 - Edge Functions
 - existing audit logging
 
+### 14.1 Secure-by-Default Rules
+
+Admin-web implementation must follow these security defaults:
+
+- all admin-only routes must be verified server-side before render
+- all super-admin-only routes must be verified server-side before render
+- the browser must never decide authorization by UI visibility alone
+- all sensitive mutations must be denied by default unless the backend explicitly authorizes them
+- mutation forms must not trust hidden fields for actor, role, or target authority
+- invitation tokens must be single-use, expiring, and non-enumerable
+- first-admin bootstrap must be one-time or tightly controlled and must not remain publicly reusable
+- audit writes must happen in the same privileged workflow as the protected action wherever possible
+- any admin-management action must protect against loss of the last active `super_admin`
+
+### 14.2 Session And Account Security
+
+- production admin accounts should require MFA as soon as the implementation path is available
+- session refresh should be handled centrally through SSR/cookie flow
+- the admin UI should expose clear session-expired recovery paths
+- recent step-up requirements for sensitive actions should be reflected in the web UX, not only as backend errors
+- admin sign-in, invite acceptance, and privilege changes should all be represented in audit trails
+
 ## 15. Internationalization Lock
 
 Supported locales:
@@ -668,6 +789,13 @@ Table behavior:
 - collapse columns intentionally
 - never shrink into unreadable text
 - preserve key actions at all supported widths
+
+Desktop layout behavior:
+
+- queue pages should prefer table + detail navigation patterns
+- detail pages may use two-column layouts on desktop where context density benefits from it
+- tablet may collapse the sidebar and reduce table columns, but should not invent a separate IA
+- mobile should preserve critical access, but not force full queue density
 
 ## 17. Data and State Lock
 
@@ -712,6 +840,20 @@ Table behavior:
 - `NEXT_PUBLIC_*` only for browser-safe values
 - changed environment variables require a new deployment to take effect
 
+Deployment workflow:
+
+- every meaningful admin-web branch should have a Preview deployment available for review
+- preview environments should be considered the primary UI review surface before merging
+- production deployment should happen only after parity checks against the locked v1 scope
+- deployment instructions must not tell implementers to curl/fetch the deployment as the source of truth; the deployment URL itself is the review surface
+
+Environment ownership:
+
+- Vercel owns web runtime variables
+- Supabase owns backend secrets and privileged credentials
+- if a variable is browser-visible, it must use the `NEXT_PUBLIC_` prefix and be safe to expose
+- service-role credentials must never be placed in Vercel browser-exposed env vars
+
 ## 22. V1 Scope
 
 Build first:
@@ -724,8 +866,9 @@ Build first:
 6. payouts
 7. support
 8. users
-9. settings
-10. audit & health
+9. admins
+10. settings
+11. audit & health
 
 ## 23. Not In V1
 
