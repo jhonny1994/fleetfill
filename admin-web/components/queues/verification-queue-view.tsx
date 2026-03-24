@@ -1,20 +1,24 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatDateTime } from "@/lib/formatting/formatters";
 import type { VerificationQueueItem } from "@/lib/queries/admin-types";
 
-const columns: ColumnDef<VerificationQueueItem>[] = [
+function buildColumns(locale: string): ColumnDef<VerificationQueueItem>[] {
+  return [
   {
     accessorKey: "displayName",
     header: "Carrier",
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
-        <p className="font-semibold text-[var(--color-ink-strong)]">{row.original.displayName}</p>
+        <Link href={`/${locale}/verification/${row.original.carrierId}`} className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
+          {row.original.displayName}
+        </Link>
         <p className="text-xs text-[var(--color-ink-muted)]">{formatCompactReference(row.original.carrierId)}</p>
       </div>
     ),
@@ -56,12 +60,13 @@ const columns: ColumnDef<VerificationQueueItem>[] = [
     ),
   },
 ];
+}
 
-export function VerificationQueueView({ items }: { items: VerificationQueueItem[] }) {
+export function VerificationQueueView({ items, locale }: { items: VerificationQueueItem[]; locale: string }) {
   return (
     <AdminDataTable
       data={items}
-      columns={columns}
+      columns={buildColumns(locale)}
       emptyEyebrow="Verification"
       emptyTitle="No carrier packets are waiting on review."
       emptyBody="When a carrier uploads or resubmits verification documents, the packet will appear here."
