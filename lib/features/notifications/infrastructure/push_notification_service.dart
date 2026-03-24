@@ -115,7 +115,7 @@ class PushNotificationService {
     required AuthSnapshot auth,
     required Locale locale,
   }) async {
-    if (!auth.isAuthenticated || auth.userId == null) {
+    if (!auth.isAuthenticated || auth.userId == null || auth.profile == null) {
       _lastRegisteredToken = null;
       _lastRegisteredUserId = null;
       _lastRegisteredLocale = null;

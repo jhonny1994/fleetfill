@@ -104,12 +104,17 @@ class FleetFillApp extends ConsumerWidget {
     AsyncValue<AppBootstrapState> bootstrap,
   ) {
     if (bootstrap.hasError && !bootstrap.hasValue) {
+      final bootstrapError = bootstrap.error;
+      final message = bootstrapError is AppBootstrapLocalBackendException
+          ? S.of(context).localBackendUnavailableMessage
+          : S.of(context).routeErrorMessage;
+
       return AppErrorState(
         error: AppError(
           code: 'bootstrap_failed',
-          message: S.of(context).routeErrorMessage,
+          message: message,
           technicalDetails: BidiFormatters.latinIdentifier(
-            bootstrap.stackTrace?.toString() ?? bootstrap.error.toString(),
+            bootstrap.stackTrace?.toString() ?? bootstrapError.toString(),
           ),
         ),
         onRetry: () => unawaited(

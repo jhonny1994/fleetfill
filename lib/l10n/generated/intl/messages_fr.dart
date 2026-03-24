@@ -46,27 +46,33 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m10(documentType) =>
       "Votre ${documentType} est pret a etre consulte en toute securite.";
 
-  static String m11(tripId) => "Trajet ponctuel ${tripId}";
+  static String m11(status) =>
+      "Le statut de votre demande de support est maintenant ${status}.";
 
-  static String m12(proofId) => "Preuve ${proofId}";
+  static String m12(documentType, reason) =>
+      "Votre ${documentType} a ete rejete. Motif : ${reason}";
 
-  static String m13(routeId) => "Route ${routeId}";
+  static String m13(tripId) => "Trajet ponctuel ${tripId}";
 
-  static String m14(dates) =>
+  static String m14(proofId) => "Preuve ${proofId}";
+
+  static String m15(routeId) => "Route ${routeId}";
+
+  static String m16(dates) =>
       "Aucun resultat exact le même jour. Dates exactes les plus proches : ${dates}";
 
-  static String m15(count) => "Resultats de recherche (${count})";
+  static String m17(count) => "Resultats de recherche (${count})";
 
-  static String m16(shipmentId) => "Expedition ${shipmentId}";
+  static String m18(shipmentId) => "Expedition ${shipmentId}";
 
-  static String m17(supportEmail) => "E-mail du support : ${supportEmail}";
+  static String m19(supportEmail) => "E-mail du support : ${supportEmail}";
 
-  static String m18(bookingId) => "Suivi ${bookingId}";
+  static String m20(bookingId) => "Suivi ${bookingId}";
 
-  static String m19(reason) =>
+  static String m21(reason) =>
       "La vérification du véhicule requiert votre attention : ${reason}";
 
-  static String m20(reason) => "Rejete : ${reason}";
+  static String m22(reason) => "Rejete : ${reason}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -216,6 +222,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "adminQueuePayoutsTabLabel": MessageLookupByLibrary.simpleMessage(
       "Paiements transporteur",
     ),
+    "adminQueueSupportTabLabel": MessageLookupByLibrary.simpleMessage(
+      "Support",
+    ),
     "adminQueueVerificationTabLabel": MessageLookupByLibrary.simpleMessage(
       "Vérification",
     ),
@@ -288,6 +297,27 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "adminSettingsTitle": MessageLookupByLibrary.simpleMessage(
       "Paramètres admin",
+    ),
+    "adminSupportAssignToMeAction": MessageLookupByLibrary.simpleMessage(
+      "M\'assigner",
+    ),
+    "adminSupportControlsTitle": MessageLookupByLibrary.simpleMessage(
+      "Commandes support",
+    ),
+    "adminSupportQueueEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Aucune demande de support ne requiert d\'action pour le moment.",
+    ),
+    "adminSupportQueueTitle": MessageLookupByLibrary.simpleMessage(
+      "File de support",
+    ),
+    "adminSupportSearchLabel": MessageLookupByLibrary.simpleMessage(
+      "Rechercher des demandes de support",
+    ),
+    "adminSupportStatusAllLabel": MessageLookupByLibrary.simpleMessage(
+      "Tous les statuts",
+    ),
+    "adminSupportUnassignAction": MessageLookupByLibrary.simpleMessage(
+      "Retirer l\'assignation",
     ),
     "adminUserAccountSectionTitle": MessageLookupByLibrary.simpleMessage(
       "Vue du compte",
@@ -586,6 +616,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bookingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez le statut de la réservation, les détails du paiement et le recapitulatif du prix.",
     ),
+    "bookingDetailPageTitle": MessageLookupByLibrary.simpleMessage(
+      "Détails de la réservation",
+    ),
     "bookingDetailTitle": m1,
     "bookingInsuranceAction": MessageLookupByLibrary.simpleMessage(
       "Option d\'assurance",
@@ -718,6 +751,9 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Aucun commentaire d\'avis n\'est encore visible.",
         ),
+    "carrierPublicProfilePageTitle": MessageLookupByLibrary.simpleMessage(
+      "Profil du transporteur",
+    ),
     "carrierPublicProfileRatingLabel": MessageLookupByLibrary.simpleMessage(
       "Note moyenne",
     ),
@@ -731,10 +767,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Gerez les camions, telechargez les documents manquants et resolvez les blocages de vérification.",
     ),
     "carrierVerificationCenterDescription": MessageLookupByLibrary.simpleMessage(
-      "Telechargez et remplacez les documents de vérification du profil ou du véhicule depuis un seul endroit.",
+      "Gerez la vérification transporteur depuis un seul endroit en déposant les documents du conducteur et du véhicule requis.",
     ),
     "carrierVerificationCenterTitle": MessageLookupByLibrary.simpleMessage(
-      "Centre de vérification",
+      "Vérification transporteur",
     ),
     "carrierVerificationPendingBanner": MessageLookupByLibrary.simpleMessage(
       "Votre dossier de vérification est en cours de revue. Telechargez les documents manquants pour accelerer l\'approbation.",
@@ -775,6 +811,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "documentViewerOpenAction": MessageLookupByLibrary.simpleMessage(
       "Ouvrir le document",
     ),
+    "documentViewerPageTitle": MessageLookupByLibrary.simpleMessage("Document"),
     "documentViewerTitle": m5,
     "documentViewerUnavailableMessage": MessageLookupByLibrary.simpleMessage(
       "L\'accès sécurisé au document est temporairement indisponible.",
@@ -839,6 +876,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "generatedDocumentViewerDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez ou telechargez votre facture ou votre reçu.",
     ),
+    "generatedDocumentViewerPageTitle": MessageLookupByLibrary.simpleMessage(
+      "Document généré",
+    ),
     "generatedDocumentViewerTitle": m6,
     "generatedDocumentsEmptyMessage": MessageLookupByLibrary.simpleMessage(
       "Les factures et reçus générés apparaitront ici lorsqu\'ils seront disponibles.",
@@ -898,6 +938,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Preparation de votre experience.",
     ),
     "loadingTitle": MessageLookupByLibrary.simpleMessage("Chargement"),
+    "localBackendUnavailableMessage": MessageLookupByLibrary.simpleMessage(
+      "FleetFill ne peut pas joindre le backend local de développement. Utilisez le profil de lancement émulateur pour les émulateurs Android, et l\'adresse IP locale de votre ordinateur pour les appareils réels.",
+    ),
     "locationUnavailableLabel": MessageLookupByLibrary.simpleMessage(
       "Lieu indisponible",
     ),
@@ -999,6 +1042,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez le detail complet de cette notification.",
     ),
+    "notificationDetailPageTitle": MessageLookupByLibrary.simpleMessage(
+      "Notification",
+    ),
     "notificationDetailTitle": m9,
     "notificationDisputeOpenedBody": MessageLookupByLibrary.simpleMessage(
       "Votre litige a été ouvert et est en attente d\'examen.",
@@ -1015,6 +1061,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationGeneratedDocumentReadyBody": m10,
     "notificationGeneratedDocumentReadyTitle":
         MessageLookupByLibrary.simpleMessage("Document pret"),
+    "notificationNewLabel": MessageLookupByLibrary.simpleMessage("Nouveau"),
     "notificationPaymentProofSubmittedBody": MessageLookupByLibrary.simpleMessage(
       "Nous avons reçu votre preuve de paiement. Nous allons la verifier sous peu.",
     ),
@@ -1038,6 +1085,37 @@ class MessageLookup extends MessageLookupByLibrary {
     "notificationPayoutReleasedTitle": MessageLookupByLibrary.simpleMessage(
       "Paiement transporteur libéré",
     ),
+    "notificationSeenLabel": MessageLookupByLibrary.simpleMessage("Vu"),
+    "notificationSupportReplyReceivedBody":
+        MessageLookupByLibrary.simpleMessage(
+          "Le support FleetFill a repondu a votre demande.",
+        ),
+    "notificationSupportReplyReceivedTitle":
+        MessageLookupByLibrary.simpleMessage("Le support a repondu"),
+    "notificationSupportRequestCreatedBody":
+        MessageLookupByLibrary.simpleMessage(
+          "Un utilisateur a ouvert une nouvelle demande de support a examiner.",
+        ),
+    "notificationSupportRequestCreatedTitle":
+        MessageLookupByLibrary.simpleMessage("Nouvelle demande de support"),
+    "notificationSupportStatusChangedBody": m11,
+    "notificationSupportStatusChangedTitle":
+        MessageLookupByLibrary.simpleMessage("Statut de support mis a jour"),
+    "notificationSupportUserRepliedBody": MessageLookupByLibrary.simpleMessage(
+      "Un utilisateur a repondu a une demande de support existante.",
+    ),
+    "notificationSupportUserRepliedTitle": MessageLookupByLibrary.simpleMessage(
+      "L\'utilisateur a repondu",
+    ),
+    "notificationVerificationDocumentRejectedBody": m12,
+    "notificationVerificationDocumentRejectedTitle":
+        MessageLookupByLibrary.simpleMessage("Document de verification rejete"),
+    "notificationVerificationPacketApprovedBody":
+        MessageLookupByLibrary.simpleMessage(
+          "Votre dossier de verification a ete approuve. Vous pouvez maintenant poursuivre les operations transporteur.",
+        ),
+    "notificationVerificationPacketApprovedTitle":
+        MessageLookupByLibrary.simpleMessage("Verification approuvee"),
     "notificationsCenterDescription": MessageLookupByLibrary.simpleMessage(
       "Restez informe des réservations, paiements, etapes de livraison et alertes du compte.",
     ),
@@ -1113,7 +1191,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "oneOffTripDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez ce trajet avant de reserver.",
     ),
-    "oneOffTripDetailTitle": m11,
+    "oneOffTripDetailPageTitle": MessageLookupByLibrary.simpleMessage(
+      "Détails du trajet ponctuel",
+    ),
+    "oneOffTripDetailTitle": m13,
     "oneOffTripEditTitle": MessageLookupByLibrary.simpleMessage(
       "Modifier le trajet ponctuel",
     ),
@@ -1201,6 +1282,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentProofVerifiedReferenceLabel": MessageLookupByLibrary.simpleMessage(
       "Reference verifiee",
     ),
+    "paymentRailBankLabel": MessageLookupByLibrary.simpleMessage("Banque"),
+    "paymentRailCcpLabel": MessageLookupByLibrary.simpleMessage("CCP"),
+    "paymentRailDahabiaLabel": MessageLookupByLibrary.simpleMessage("Dahabia"),
     "paymentStatusProofSubmittedLabel": MessageLookupByLibrary.simpleMessage(
       "Preuve soumise",
     ),
@@ -1318,12 +1402,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Configuration du profil",
     ),
     "profileVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
-      "Documents de vérification du profil",
+      "Documents du conducteur",
     ),
     "proofViewerDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez ici la preuve de paiement de cette réservation ou ouvrez-la dans une autre application.",
     ),
-    "proofViewerTitle": m12,
+    "proofViewerPageTitle": MessageLookupByLibrary.simpleMessage(
+      "Preuve de paiement",
+    ),
+    "proofViewerTitle": m14,
     "publicationActiveLabel": MessageLookupByLibrary.simpleMessage("Actif"),
     "publicationEffectiveDateFutureMessage": MessageLookupByLibrary.simpleMessage(
       "Choisissez une date et une heure d\'effet egales ou posterieures a maintenant.",
@@ -1431,7 +1518,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "routeDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez ce trajet avant de reserver.",
     ),
-    "routeDetailTitle": m13,
+    "routeDetailPageTitle": MessageLookupByLibrary.simpleMessage(
+      "Détails de l\'itinéraire",
+    ),
+    "routeDetailTitle": m15,
     "routeEditTitle": MessageLookupByLibrary.simpleMessage(
       "Modifier la ligne recurrente",
     ),
@@ -1525,7 +1615,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Aucun resultat ne correspond au tri et aux filtres actuels.",
     ),
     "searchTripsNavLabel": MessageLookupByLibrary.simpleMessage("Recherche"),
-    "searchTripsNearestDateMessage": m14,
+    "searchTripsNearestDateMessage": m16,
     "searchTripsNearestDateTitle": MessageLookupByLibrary.simpleMessage(
       "Dates exactes les plus proches",
     ),
@@ -1544,7 +1634,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchTripsRequiresDraftMessage": MessageLookupByLibrary.simpleMessage(
       "Creez une expedition avant de rechercher des trajets compatibles.",
     ),
-    "searchTripsResultsTitle": m15,
+    "searchTripsResultsTitle": m17,
     "searchTripsTitle": MessageLookupByLibrary.simpleMessage(
       "Rechercher un trajet",
     ),
@@ -1598,7 +1688,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "shipmentDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Consultez le trajet, le poids, le volume et les details de l\'expedition.",
     ),
-    "shipmentDetailTitle": m16,
+    "shipmentDetailPageTitle": MessageLookupByLibrary.simpleMessage(
+      "Details de l\'expedition",
+    ),
+    "shipmentDetailTitle": m18,
     "shipmentEditAction": MessageLookupByLibrary.simpleMessage(
       "Modifier l\'expedition",
     ),
@@ -1665,15 +1758,50 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "statusNeedsReviewLabel": MessageLookupByLibrary.simpleMessage("A revoir"),
     "statusReadyLabel": MessageLookupByLibrary.simpleMessage("Pret"),
-    "supportConfiguredEmailMessage": m17,
+    "supportConfiguredEmailMessage": m19,
     "supportDescription": MessageLookupByLibrary.simpleMessage(
       "Posez une question, signalez un probleme ou demandez de l\'aide pour une réservation ou un paiement.",
+    ),
+    "supportInboxEmptyMessage": MessageLookupByLibrary.simpleMessage(
+      "Vous n\'avez encore ouvert aucune demande de support.",
+    ),
+    "supportInboxTitle": MessageLookupByLibrary.simpleMessage(
+      "Vos demandes de support",
+    ),
+    "supportLastUpdatedLabel": MessageLookupByLibrary.simpleMessage(
+      "Derniere mise a jour",
+    ),
+    "supportLinkedBookingAction": MessageLookupByLibrary.simpleMessage(
+      "Ouvrir la reservation",
+    ),
+    "supportLinkedDisputeAction": MessageLookupByLibrary.simpleMessage(
+      "Ouvrir le litige",
+    ),
+    "supportLinkedPaymentProofAction": MessageLookupByLibrary.simpleMessage(
+      "Ouvrir la preuve de paiement",
     ),
     "supportMessageLabel": MessageLookupByLibrary.simpleMessage(
       "Message au support",
     ),
+    "supportMessageSenderAdminLabel": MessageLookupByLibrary.simpleMessage(
+      "Support FleetFill",
+    ),
+    "supportMessageSenderSystemLabel": MessageLookupByLibrary.simpleMessage(
+      "Systeme",
+    ),
+    "supportMessageSenderUserLabel": MessageLookupByLibrary.simpleMessage(
+      "Vous",
+    ),
     "supportMessageSentMessage": MessageLookupByLibrary.simpleMessage(
       "Message de support envoye.",
+    ),
+    "supportPriorityHighLabel": MessageLookupByLibrary.simpleMessage("Haute"),
+    "supportPriorityLabel": MessageLookupByLibrary.simpleMessage("Priorite"),
+    "supportPriorityNormalLabel": MessageLookupByLibrary.simpleMessage(
+      "Normale",
+    ),
+    "supportPriorityUrgentLabel": MessageLookupByLibrary.simpleMessage(
+      "Urgente",
     ),
     "supportRateLimitMessage": MessageLookupByLibrary.simpleMessage(
       "Vous avez envoye trop de messages de support recemment. Reessayez plus tard.",
@@ -1681,11 +1809,45 @@ class MessageLookup extends MessageLookupByLibrary {
     "supportReferenceHintMessage": MessageLookupByLibrary.simpleMessage(
       "Ajoutez tout identifiant de réservation, numéro de suivi ou reference de paiement qui aidera le support a enqueter plus vite.",
     ),
+    "supportReplyAction": MessageLookupByLibrary.simpleMessage(
+      "Envoyer la reponse",
+    ),
+    "supportReplyLabel": MessageLookupByLibrary.simpleMessage("Reponse"),
+    "supportReplySentMessage": MessageLookupByLibrary.simpleMessage(
+      "Votre reponse a ete envoyee.",
+    ),
+    "supportRequestCreatedMessage": MessageLookupByLibrary.simpleMessage(
+      "Votre demande de support a ete creee.",
+    ),
     "supportSendAction": MessageLookupByLibrary.simpleMessage(
       "Envoyer le message",
     ),
+    "supportStatusClosedLabel": MessageLookupByLibrary.simpleMessage("Fermee"),
+    "supportStatusInProgressLabel": MessageLookupByLibrary.simpleMessage(
+      "En cours",
+    ),
+    "supportStatusLabel": MessageLookupByLibrary.simpleMessage("Statut"),
+    "supportStatusOpenLabel": MessageLookupByLibrary.simpleMessage("Ouverte"),
+    "supportStatusResolvedLabel": MessageLookupByLibrary.simpleMessage(
+      "Resolue",
+    ),
+    "supportStatusWaitingForUserLabel": MessageLookupByLibrary.simpleMessage(
+      "En attente de l\'utilisateur",
+    ),
     "supportSubjectLabel": MessageLookupByLibrary.simpleMessage(
       "Sujet du support",
+    ),
+    "supportThreadDetailsTitle": MessageLookupByLibrary.simpleMessage(
+      "Details de la demande",
+    ),
+    "supportThreadNoMessagesMessage": MessageLookupByLibrary.simpleMessage(
+      "Aucun message n\'a encore ete ajoute a cette demande.",
+    ),
+    "supportThreadOpenAction": MessageLookupByLibrary.simpleMessage(
+      "Ouvrir la conversation",
+    ),
+    "supportThreadTitle": MessageLookupByLibrary.simpleMessage(
+      "Conversation de support",
     ),
     "supportTitle": MessageLookupByLibrary.simpleMessage("Support"),
     "supportUnavailableMessage": MessageLookupByLibrary.simpleMessage(
@@ -1698,7 +1860,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackingDetailDescription": MessageLookupByLibrary.simpleMessage(
       "Suivez la livraison, confirmez la reception, ouvrez un litige ou laissez un avis.",
     ),
-    "trackingDetailTitle": m18,
+    "trackingDetailPageTitle": MessageLookupByLibrary.simpleMessage("Suivi"),
+    "trackingDetailTitle": m20,
+    "trackingEventAutoCompletedNote": MessageLookupByLibrary.simpleMessage(
+      "Reservation terminee automatiquement apres la fin de la fenetre de revue de livraison.",
+    ),
     "trackingEventCancelledLabel": MessageLookupByLibrary.simpleMessage(
       "Annulee",
     ),
@@ -1794,9 +1960,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Type de véhicule",
     ),
     "vehicleVerificationDocumentsTitle": MessageLookupByLibrary.simpleMessage(
-      "Documents de vérification du véhicule",
+      "Documents du véhicule",
     ),
-    "vehicleVerificationRejectedBanner": m19,
+    "vehicleVerificationRejectedBanner": m21,
     "vehiclesDescription": MessageLookupByLibrary.simpleMessage(
       "Ajoutez et gerez les véhicules utilises pour le transport.",
     ),
@@ -1805,9 +1971,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "vehiclesTitle": MessageLookupByLibrary.simpleMessage("Véhicules"),
     "verificationDocumentDriverIdentityLabel":
-        MessageLookupByLibrary.simpleMessage(
-          "Identite ou permis du conducteur",
-        ),
+        MessageLookupByLibrary.simpleMessage("Permis de conduire"),
     "verificationDocumentMissingMessage": MessageLookupByLibrary.simpleMessage(
       "Aucun fichier téléversé pour le moment.",
     ),
@@ -1822,23 +1986,30 @@ class MessageLookup extends MessageLookupByLibrary {
     "verificationDocumentPendingMessage": MessageLookupByLibrary.simpleMessage(
       "Téléchargé et en attente d\'une revue admin.",
     ),
-    "verificationDocumentRejectedMessage": m20,
+    "verificationDocumentRejectedFallbackReason":
+        MessageLookupByLibrary.simpleMessage(
+          "Veuillez revoir les exigences du document et televerser un fichier plus lisible.",
+        ),
+    "verificationDocumentRejectedMessage": m22,
     "verificationDocumentReplacedMessage": MessageLookupByLibrary.simpleMessage(
       "Document de vérification remplace.",
     ),
     "verificationDocumentTransportLicenseLabel":
-        MessageLookupByLibrary.simpleMessage("Licence de transport"),
+        MessageLookupByLibrary.simpleMessage("Licence de transport (héritée)"),
     "verificationDocumentTruckInspectionLabel":
         MessageLookupByLibrary.simpleMessage("Controle technique du camion"),
     "verificationDocumentTruckInsuranceLabel":
         MessageLookupByLibrary.simpleMessage("Assurance du camion"),
     "verificationDocumentTruckRegistrationLabel":
-        MessageLookupByLibrary.simpleMessage("Carte grise du camion"),
+        MessageLookupByLibrary.simpleMessage("Carte grise"),
     "verificationDocumentUploadedMessage": MessageLookupByLibrary.simpleMessage(
       "Document de vérification téléchargé.",
     ),
     "verificationDocumentVerifiedMessage": MessageLookupByLibrary.simpleMessage(
       "Verifie et accepte.",
+    ),
+    "verificationDocumentViewerTitle": MessageLookupByLibrary.simpleMessage(
+      "Document de vérification",
     ),
     "verificationReplaceAction": MessageLookupByLibrary.simpleMessage(
       "Remplacer",

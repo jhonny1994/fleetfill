@@ -69,52 +69,60 @@ class ShipperHomeScreen extends ConsumerWidget {
 
     return AppPageScaffold(
       title: s.shipperHomeTitle,
-      child: ListView(
-        key: const PageStorageKey<String>('shipper-home-screen'),
-        children: [
-          AppSectionHeader(
-            title: s.shipperHomeTitle,
-            subtitle: s.shipperHomeDescription,
-            showTitle: false,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          ProfileSummaryCard(
-            title: s.shipperHomeTitle,
-            rows: [
-              ProfileSummaryRow(
-                label: s.shipperHomeActiveBookingsLabel,
-                value: BidiFormatters.latinIdentifier(
-                  activeBookings.toString(),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref
+            ..invalidate(myShipperShipmentsProvider)
+            ..invalidate(myShipperBookingsProvider);
+        },
+        child: ListView(
+          key: const PageStorageKey<String>('shipper-home-screen'),
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            AppSectionHeader(
+              title: s.shipperHomeTitle,
+              subtitle: s.shipperHomeDescription,
+              showTitle: false,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            ProfileSummaryCard(
+              title: s.shipperHomeTitle,
+              rows: [
+                ProfileSummaryRow(
+                  label: s.shipperHomeActiveBookingsLabel,
+                  value: BidiFormatters.latinIdentifier(
+                    activeBookings.toString(),
+                  ),
                 ),
-              ),
-              ProfileSummaryRow(
-                label: s.myShipmentsTitle,
-                value: BidiFormatters.latinIdentifier(
-                  (shipmentsAsync.asData?.value.length ?? 0).toString(),
+                ProfileSummaryRow(
+                  label: s.myShipmentsTitle,
+                  value: BidiFormatters.latinIdentifier(
+                    (shipmentsAsync.asData?.value.length ?? 0).toString(),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            s.shipperHomeQuickActionsTitle,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppListCard(
-            title: s.searchTripsTitle,
-            subtitle: s.searchTripsDescription,
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.go(AppRoutePath.shipperSearch),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppListCard(
-            title: s.supportTitle,
-            subtitle: s.supportDescription,
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.push(AppRoutePath.sharedSupport),
-          ),
-        ],
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              s.shipperHomeQuickActionsTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            AppListCard(
+              title: s.searchTripsTitle,
+              subtitle: s.searchTripsDescription,
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.go(AppRoutePath.shipperSearch),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            AppListCard(
+              title: s.supportTitle,
+              subtitle: s.supportDescription,
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.push(AppRoutePath.sharedSupport),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -131,11 +139,6 @@ class MyShipmentsScreen extends ConsumerWidget {
 
     return AppPageScaffold(
       title: s.myShipmentsTitle,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openShipmentEditor(context),
-        icon: const Icon(Icons.add_rounded),
-        label: Text(s.shipmentCreateAction),
-      ),
       child: AppAsyncStateView<List<ShipmentDraftRecord>>(
         value: shipmentsAsync,
         onRetry: () => ref.invalidate(myShipperShipmentsProvider),
@@ -144,6 +147,11 @@ class MyShipmentsScreen extends ConsumerWidget {
             return AppEmptyState(
               title: s.myShipmentsTitle,
               message: s.shipmentsEmptyMessage,
+              action: FilledButton.icon(
+                onPressed: () => _openShipmentEditor(context),
+                icon: const Icon(Icons.add_rounded),
+                label: Text(s.shipmentCreateAction),
+              ),
             );
           }
           if (locationDirectoryAsync.isLoading) {
@@ -166,38 +174,85 @@ class MyShipmentsScreen extends ConsumerWidget {
               commune.id: commune,
           };
 
-          return ListView.separated(
-            key: const PageStorageKey<String>('shipper-shipments-list'),
-            itemCount: shipments.length,
-            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-            itemBuilder: (context, index) {
-              final shipment = shipments[index];
-              return AppListCard(
-                title: _shipmentLaneLabel(context, shipment, communeMap),
-                subtitle: _shipmentSubtitle(context, shipment),
-                leading: AppStatusChip(
-                  label: _shipmentStatusLabel(s, shipment.status),
-                  tone: shipment.status == ShipmentStatus.draft
-                      ? AppStatusTone.info
-                      : shipment.status == ShipmentStatus.booked
-                      ? AppStatusTone.success
-                      : AppStatusTone.warning,
-                ),
-                trailing: IconButton(
-                  onPressed: shipment.status == ShipmentStatus.draft
-                      ? () => _openShipmentEditor(context, shipment: shipment)
-                      : null,
-                  icon: const Icon(Icons.edit_outlined),
-                  tooltip: s.shipmentEditAction,
-                ),
-                onTap: () => context.push(
-                  AppRoutePath.sharedShipmentDetail.replaceFirst(
-                    ':id',
-                    shipment.id,
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref
+                ..invalidate(myShipperShipmentsProvider)
+                ..invalidate(locationDirectoryProvider);
+            },
+            child: ListView(
+              key: const PageStorageKey<String>('shipper-shipments-list'),
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: FilledButton.icon(
+                    onPressed: () => _openShipmentEditor(context),
+                    icon: const Icon(Icons.add_rounded),
+                    label: Text(s.shipmentCreateAction),
                   ),
                 ),
-              );
-            },
+                const SizedBox(height: AppSpacing.lg),
+                ...shipments.indexed.map((entry) {
+                  final index = entry.$1;
+                  final shipment = entry.$2;
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: index == shipments.length - 1 ? 0 : AppSpacing.sm,
+                    ),
+                    child: AppListCard(
+                      title: _shipmentLaneLabel(context, shipment, communeMap),
+                      subtitle: _shipmentSubtitle(context, shipment),
+                      leading: AppStatusChip(
+                        label: _shipmentStatusLabel(s, shipment.status),
+                        tone: shipment.status == ShipmentStatus.draft
+                            ? AppStatusTone.info
+                            : shipment.status == ShipmentStatus.booked
+                            ? AppStatusTone.success
+                            : AppStatusTone.warning,
+                      ),
+                      trailing: shipment.status == ShipmentStatus.draft
+                          ? PopupMenuButton<_ShipmentListAction>(
+                              tooltip: s.shipmentEditAction,
+                              onSelected: (action) {
+                                if (action == _ShipmentListAction.edit) {
+                                  _openShipmentEditor(
+                                    context,
+                                    shipment: shipment,
+                                  );
+                                  return;
+                                }
+                                unawaited(
+                                  _deleteShipmentFromList(
+                                    context,
+                                    ref,
+                                    shipment,
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context) => [
+                                PopupMenuItem<_ShipmentListAction>(
+                                  value: _ShipmentListAction.edit,
+                                  child: Text(s.shipmentEditAction),
+                                ),
+                                PopupMenuItem<_ShipmentListAction>(
+                                  value: _ShipmentListAction.delete,
+                                  child: Text(s.shipmentDeleteAction),
+                                ),
+                              ],
+                            )
+                          : null,
+                      onTap: () => context.push(
+                        AppRoutePath.sharedShipmentDetail.replaceFirst(
+                          ':id',
+                          shipment.id,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
           );
         },
       ),
@@ -216,7 +271,36 @@ class MyShipmentsScreen extends ConsumerWidget {
       ),
     );
   }
+
+  Future<void> _deleteShipmentFromList(
+    BuildContext context,
+    WidgetRef ref,
+    ShipmentDraftRecord shipment,
+  ) async {
+    final confirmed = await _confirmShipmentDelete(context);
+    if (!context.mounted || confirmed != true) {
+      return;
+    }
+
+    final s = S.of(context);
+    try {
+      await ref
+          .read(shipmentWorkflowControllerProvider)
+          .deleteShipmentDraft(shipment.id);
+      if (!context.mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, s.shipmentDeletedMessage);
+    } on PostgrestException catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    }
+  }
 }
+
+enum _ShipmentListAction { edit, delete }
 
 class SearchTripsScreen extends ConsumerStatefulWidget {
   const SearchTripsScreen({super.key});
@@ -289,102 +373,135 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
             DateTime.now().day,
           );
 
-          return ListView(
-            key: const PageStorageKey<String>('shipper-search-screen'),
-            children: [
-              AppSectionHeader(
-                title: s.searchTripsTitle,
-                subtitle: s.searchTripsDescription,
-                showTitle: false,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              AuthCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    DropdownButtonFormField<String>(
-                      initialValue: _selectedShipmentId,
-                      decoration: InputDecoration(
-                        labelText: s.searchShipmentSelectorLabel,
-                      ),
-                      items: draftShipments
-                          .map(
-                            (shipment) => DropdownMenuItem(
-                              value: shipment.id,
-                              child: Text(
-                                _shipmentSelectorLabel(
-                                  context,
-                                  shipment,
-                                  locationDirectoryAsync.asData!.value.communes,
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref
+                ..invalidate(myShipperShipmentsProvider)
+                ..invalidate(locationDirectoryProvider);
+            },
+            child: ListView(
+              key: const PageStorageKey<String>('shipper-search-screen'),
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                AppSectionHeader(
+                  title: s.searchTripsTitle,
+                  subtitle: s.searchTripsDescription,
+                  showTitle: false,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                AuthCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      DropdownButtonFormField<String>(
+                        initialValue: _selectedShipmentId,
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          labelText: s.searchShipmentSelectorLabel,
+                        ),
+                        selectedItemBuilder: (context) => draftShipments
+                            .map(
+                              (shipment) => Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  _shipmentSelectorLabel(
+                                    context,
+                                    shipment,
+                                    locationDirectoryAsync
+                                        .asData!
+                                        .value
+                                        .communes,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(growable: false),
-                      onChanged: (value) {
-                        if (value == null) {
-                          return;
-                        }
-                        final nextShipment = draftShipments.firstWhere(
-                          (shipment) => shipment.id == value,
-                        );
-                        setState(() {
-                          _selectedShipmentId = value;
-                          _response = null;
-                        });
-                        _scheduleSearch(nextShipment, reset: true);
-                      },
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _DateButtonField(
-                      label: s.searchRequestedDateLabel,
-                      value: _requestedDate == null
-                          ? null
-                          : _formatDate(_requestedDate!),
-                      onPressed: () => unawaited(_pickRequestedDate(context)),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _CompactShipmentSummaryCard(
-                      shipment: selectedShipment,
-                      communes: locationDirectoryAsync.asData!.value.communes,
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    AuthSubmitButton(
-                      label: s.searchTripsAction,
-                      isLoading: _isSearching,
-                      onPressed: () =>
-                          _scheduleSearch(selectedShipment, reset: true),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              if (_response != null) ...[
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () =>
-                            unawaited(_openSearchControlsSheet(context)),
-                        icon: const Icon(Icons.tune_rounded),
-                        label: Text(s.searchTripsControlsAction),
+                            )
+                            .toList(growable: false),
+                        items: draftShipments
+                            .map(
+                              (shipment) => DropdownMenuItem(
+                                value: shipment.id,
+                                child: Text(
+                                  _shipmentSelectorLabel(
+                                    context,
+                                    shipment,
+                                    locationDirectoryAsync
+                                        .asData!
+                                        .value
+                                        .communes,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            )
+                            .toList(growable: false),
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          final nextShipment = draftShipments.firstWhere(
+                            (shipment) => shipment.id == value,
+                          );
+                          setState(() {
+                            _selectedShipmentId = value;
+                            _response = null;
+                          });
+                          _scheduleSearch(nextShipment, reset: true);
+                        },
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: AppSpacing.md),
+                      _DateButtonField(
+                        label: s.searchRequestedDateLabel,
+                        value: _requestedDate == null
+                            ? null
+                            : _formatDate(_requestedDate!),
+                        onPressed: () => unawaited(_pickRequestedDate(context)),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      _CompactShipmentSummaryCard(
+                        shipment: selectedShipment,
+                        communes: locationDirectoryAsync.asData!.value.communes,
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      AuthSubmitButton(
+                        label: s.searchTripsAction,
+                        isLoading: _isSearching,
+                        onPressed: () =>
+                            _scheduleSearch(selectedShipment, reset: true),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.md),
-                _SearchResultsSection(
-                  shipment: selectedShipment,
-                  response: _response!,
-                  sort: _sort,
-                  includeRecurring: _includeRecurring,
-                  includeOneOff: _includeOneOff,
-                  onLoadMore: _response!.nextOffset == null
-                      ? null
-                      : () => _scheduleSearch(selectedShipment, reset: false),
-                ),
+                const SizedBox(height: AppSpacing.lg),
+                if (_response != null) ...[
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              unawaited(_openSearchControlsSheet(context)),
+                          icon: const Icon(Icons.tune_rounded),
+                          label: Text(s.searchTripsControlsAction),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _SearchResultsSection(
+                    shipment: selectedShipment,
+                    response: _response!,
+                    sort: _sort,
+                    includeRecurring: _includeRecurring,
+                    includeOneOff: _includeOneOff,
+                    onLoadMore: _response!.nextOffset == null
+                        ? null
+                        : () => _scheduleSearch(selectedShipment, reset: false),
+                  ),
+                ],
               ],
-            ],
+            ),
           );
         },
       ),
@@ -1176,10 +1293,19 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
               const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<String>(
                 initialValue: paymentRail,
-                items: const [
-                  DropdownMenuItem(value: 'ccp', child: Text('CCP')),
-                  DropdownMenuItem(value: 'dahabia', child: Text('Dahabia')),
-                  DropdownMenuItem(value: 'bank', child: Text('Bank')),
+                items: [
+                  DropdownMenuItem(
+                    value: 'ccp',
+                    child: Text(s.paymentRailCcpLabel),
+                  ),
+                  DropdownMenuItem(
+                    value: 'dahabia',
+                    child: Text(s.paymentRailDahabiaLabel),
+                  ),
+                  DropdownMenuItem(
+                    value: 'bank',
+                    child: Text(s.paymentRailBankLabel),
+                  ),
                 ],
                 onChanged: (value) {
                   if (value != null) setModalState(() => paymentRail = value);
@@ -1315,14 +1441,6 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final wilayasAsync = ref.watch(wilayasProvider);
-    final originSeedAsync = _originWilayaId == null && _originCommuneId != null
-        ? ref.watch(communeByIdProvider(_originCommuneId!))
-        : null;
-    final destinationSeedAsync =
-        _destinationWilayaId == null && _destinationCommuneId != null
-        ? ref.watch(communeByIdProvider(_destinationCommuneId!))
-        : null;
 
     if (!_initialized) {
       final shipment = widget.shipment;
@@ -1335,6 +1453,15 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
       _detailsController.text = shipment?.details ?? '';
       _initialized = true;
     }
+
+    final wilayasAsync = ref.watch(wilayasProvider);
+    final originSeedAsync = _originWilayaId == null && _originCommuneId != null
+        ? ref.watch(communeByIdProvider(_originCommuneId!))
+        : null;
+    final destinationSeedAsync =
+        _destinationWilayaId == null && _destinationCommuneId != null
+        ? ref.watch(communeByIdProvider(_destinationCommuneId!))
+        : null;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -1570,25 +1697,7 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
     final shipment = widget.shipment;
     if (shipment == null) return;
     final s = S.of(context);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AppFocusTraversal.dialog(
-        child: AlertDialog(
-          title: Text(s.shipmentDeleteAction),
-          content: Text(s.shipmentDeleteConfirmationMessage),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(s.cancelLabel),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(s.confirmLabel),
-            ),
-          ],
-        ),
-      ),
-    );
+    final confirmed = await _confirmShipmentDelete(context);
     if (confirmed != true) return;
     setState(() => _isSaving = true);
     try {
@@ -1857,6 +1966,29 @@ String _shipmentSubtitle(BuildContext context, ShipmentDraftRecord shipment) {
     parts.add(details);
   }
   return parts.join(' • ');
+}
+
+Future<bool?> _confirmShipmentDelete(BuildContext context) {
+  final s = S.of(context);
+  return showDialog<bool>(
+    context: context,
+    builder: (context) => AppFocusTraversal.dialog(
+      child: AlertDialog(
+        title: Text(s.shipmentDeleteAction),
+        content: Text(s.shipmentDeleteConfirmationMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(s.cancelLabel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(s.confirmLabel),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 String _shipmentSelectorLabel(

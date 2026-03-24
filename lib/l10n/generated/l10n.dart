@@ -982,10 +982,10 @@ class S {
     );
   }
 
-  /// `اعرض رحلاتك واستقبل حجوزات من شاحنين يبحثون عن نقل.`
+  /// `اعرض رحلاتك واستقبل حجوزات من مرسلين يبحثون عن نقل.`
   String get welcomeCarrierDescription {
     return Intl.message(
-      'اعرض رحلاتك واستقبل حجوزات من شاحنين يبحثون عن نقل.',
+      'اعرض رحلاتك واستقبل حجوزات من مرسلين يبحثون عن نقل.',
       name: 'welcomeCarrierDescription',
       desc: '',
       args: [],
@@ -1027,10 +1027,10 @@ class S {
     );
   }
 
-  /// `كل شيء واضح بين الشاحن والناقل — من الحجز إلى التسليم.`
+  /// `كل شيء واضح بين المرسل والناقل — من الحجز إلى التسليم.`
   String get welcomeTrustDescription {
     return Intl.message(
-      'كل شيء واضح بين الشاحن والناقل — من الحجز إلى التسليم.',
+      'كل شيء واضح بين المرسل والناقل — من الحجز إلى التسليم.',
       name: 'welcomeTrustDescription',
       desc: '',
       args: [],
@@ -1727,10 +1727,10 @@ class S {
     );
   }
 
-  /// `الشاحن`
+  /// `المرسل`
   String get adminUserRoleShipperLabel {
     return Intl.message(
-      'الشاحن',
+      'المرسل',
       name: 'adminUserRoleShipperLabel',
       desc: '',
       args: [],
@@ -1987,6 +1987,16 @@ class S {
     );
   }
 
+  /// `تفاصيل الحجز`
+  String get bookingDetailPageTitle {
+    return Intl.message(
+      'تفاصيل الحجز',
+      name: 'bookingDetailPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `راجع سمعة الناقل وتفاصيل الرحلة والسعر قبل الدفع.`
   String get bookingReviewDescription {
     return Intl.message(
@@ -2152,20 +2162,20 @@ class S {
     );
   }
 
-  /// `ارفع واستبدل وثائق التحقق الخاصة بالملف الشخصي أو المركبة من مكان واحد.`
+  /// `أدر تحقق الناقل من مكان واحد عبر رفع وثائق السائق والمركبة المطلوبة.`
   String get carrierVerificationCenterDescription {
     return Intl.message(
-      'ارفع واستبدل وثائق التحقق الخاصة بالملف الشخصي أو المركبة من مكان واحد.',
+      'أدر تحقق الناقل من مكان واحد عبر رفع وثائق السائق والمركبة المطلوبة.',
       name: 'carrierVerificationCenterDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `مركز التحقق`
+  /// `تحقق الناقل`
   String get carrierVerificationCenterTitle {
     return Intl.message(
-      'مركز التحقق',
+      'تحقق الناقل',
       name: 'carrierVerificationCenterTitle',
       desc: '',
       args: [],
@@ -2292,6 +2302,16 @@ class S {
     );
   }
 
+  /// `ملف الناقل`
+  String get carrierPublicProfilePageTitle {
+    return Intl.message(
+      'ملف الناقل',
+      name: 'carrierPublicProfilePageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `تأكيد`
   String get confirmLabel {
     return Intl.message('تأكيد', name: 'confirmLabel', desc: '', args: []);
@@ -2327,11 +2347,31 @@ class S {
     );
   }
 
+  /// `المستند`
+  String get documentViewerPageTitle {
+    return Intl.message(
+      'المستند',
+      name: 'documentViewerPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `الوصول الآمن إلى المستند غير متاح مؤقتا.`
   String get documentViewerUnavailableMessage {
     return Intl.message(
       'الوصول الآمن إلى المستند غير متاح مؤقتا.',
       name: 'documentViewerUnavailableMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مستند التحقق`
+  String get verificationDocumentViewerTitle {
+    return Intl.message(
+      'مستند التحقق',
+      name: 'verificationDocumentViewerTitle',
       desc: '',
       args: [],
     );
@@ -2367,30 +2407,30 @@ class S {
     );
   }
 
-  /// `حدّث بيانات الاتصال الخاصة بالشاحن.`
+  /// `حدّث بيانات الاتصال الخاصة بالمرسل.`
   String get editShipperProfileDescription {
     return Intl.message(
-      'حدّث بيانات الاتصال الخاصة بالشاحن.',
+      'حدّث بيانات الاتصال الخاصة بالمرسل.',
       name: 'editShipperProfileDescription',
       desc: '',
       args: [],
     );
   }
 
-  /// `تم تحديث ملف الشاحن.`
+  /// `تم تحديث ملف المرسل.`
   String get editShipperProfileSavedMessage {
     return Intl.message(
-      'تم تحديث ملف الشاحن.',
+      'تم تحديث ملف المرسل.',
       name: 'editShipperProfileSavedMessage',
       desc: '',
       args: [],
     );
   }
 
-  /// `تعديل ملف الشاحن`
+  /// `تعديل ملف المرسل`
   String get editShipperProfileTitle {
     return Intl.message(
-      'تعديل ملف الشاحن',
+      'تعديل ملف المرسل',
       name: 'editShipperProfileTitle',
       desc: '',
       args: [],
@@ -2419,6 +2459,16 @@ class S {
       name: 'generatedDocumentViewerTitle',
       desc: '',
       args: [documentId],
+    );
+  }
+
+  /// `المستند المُولَّد`
+  String get generatedDocumentViewerPageTitle {
+    return Intl.message(
+      'المستند المُولَّد',
+      name: 'generatedDocumentViewerPageTitle',
+      desc: '',
+      args: [],
     );
   }
 
@@ -2539,6 +2589,49 @@ class S {
       name: 'notificationGeneratedDocumentReadyBody',
       desc: '',
       args: [documentType],
+    );
+  }
+
+  /// `تم اعتماد التحقق`
+  String get notificationVerificationPacketApprovedTitle {
+    return Intl.message(
+      'تم اعتماد التحقق',
+      name: 'notificationVerificationPacketApprovedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم اعتماد ملف التحقق الخاص بك. يمكنك الآن متابعة عمليات الناقل.`
+  String get notificationVerificationPacketApprovedBody {
+    return Intl.message(
+      'تم اعتماد ملف التحقق الخاص بك. يمكنك الآن متابعة عمليات الناقل.',
+      name: 'notificationVerificationPacketApprovedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفض وثيقة التحقق`
+  String get notificationVerificationDocumentRejectedTitle {
+    return Intl.message(
+      'تم رفض وثيقة التحقق',
+      name: 'notificationVerificationDocumentRejectedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفض {documentType}. السبب: {reason}`
+  String notificationVerificationDocumentRejectedBody(
+    Object documentType,
+    Object reason,
+  ) {
+    return Intl.message(
+      'تم رفض $documentType. السبب: $reason',
+      name: 'notificationVerificationDocumentRejectedBody',
+      desc: '',
+      args: [documentType, reason],
     );
   }
 
@@ -2829,6 +2922,16 @@ class S {
       name: 'notificationDetailTitle',
       desc: '',
       args: [notificationId],
+    );
+  }
+
+  /// `الإشعار`
+  String get notificationDetailPageTitle {
+    return Intl.message(
+      'الإشعار',
+      name: 'notificationDetailPageTitle',
+      desc: '',
+      args: [],
     );
   }
 
@@ -3157,6 +3260,16 @@ class S {
     );
   }
 
+  /// `تفاصيل الرحلة الفردية`
+  String get oneOffTripDetailPageTitle {
+    return Intl.message(
+      'تفاصيل الرحلة الفردية',
+      name: 'oneOffTripDetailPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `اتبع خطوات الدفع وارفع الإثبات وتابع حالة المراجعة.`
   String get paymentFlowDescription {
     return Intl.message(
@@ -3292,10 +3405,10 @@ class S {
     );
   }
 
-  /// `وثائق تحقق الملف الشخصي`
+  /// `وثائق السائق`
   String get profileVerificationDocumentsTitle {
     return Intl.message(
-      'وثائق تحقق الملف الشخصي',
+      'وثائق السائق',
       name: 'profileVerificationDocumentsTitle',
       desc: '',
       args: [],
@@ -3432,6 +3545,16 @@ class S {
     );
   }
 
+  /// `إثبات الدفع`
+  String get proofViewerPageTitle {
+    return Intl.message(
+      'إثبات الدفع',
+      name: 'proofViewerPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `إعادة المحاولة`
   String get retryLabel {
     return Intl.message(
@@ -3482,10 +3605,10 @@ class S {
     );
   }
 
-  /// `أنا شاحن`
+  /// `أنا مرسل`
   String get roleSelectionShipperTitle {
     return Intl.message(
-      'أنا شاحن',
+      'أنا مرسل',
       name: 'roleSelectionShipperTitle',
       desc: '',
       args: [],
@@ -3519,6 +3642,16 @@ class S {
       name: 'routeDetailTitle',
       desc: '',
       args: [routeId],
+    );
+  }
+
+  /// `تفاصيل المسار`
+  String get routeDetailPageTitle {
+    return Intl.message(
+      'تفاصيل المسار',
+      name: 'routeDetailPageTitle',
+      desc: '',
+      args: [],
     );
   }
 
@@ -3747,6 +3880,16 @@ class S {
     );
   }
 
+  /// `تفاصيل الشحنة`
+  String get shipmentDetailPageTitle {
+    return Intl.message(
+      'تفاصيل الشحنة',
+      name: 'shipmentDetailPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `تابع حجوزاتك وآخر التحديثات وانتقل بسرعة لأهم الإجراءات.`
   String get shipperHomeDescription {
     return Intl.message(
@@ -3807,10 +3950,10 @@ class S {
     );
   }
 
-  /// `الرئيسية للشاحن`
+  /// `الرئيسية للمرسل`
   String get shipperHomeTitle {
     return Intl.message(
-      'الرئيسية للشاحن',
+      'الرئيسية للمرسل',
       name: 'shipperHomeTitle',
       desc: '',
       args: [],
@@ -3837,20 +3980,20 @@ class S {
     );
   }
 
-  /// `بيانات الشاحن`
+  /// `بيانات المرسل`
   String get shipperProfileSectionTitle {
     return Intl.message(
-      'بيانات الشاحن',
+      'بيانات المرسل',
       name: 'shipperProfileSectionTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `ملف الشاحن`
+  /// `ملف المرسل`
   String get shipperProfileTitle {
     return Intl.message(
-      'ملف الشاحن',
+      'ملف المرسل',
       name: 'shipperProfileTitle',
       desc: '',
       args: [],
@@ -3892,6 +4035,26 @@ class S {
     return Intl.message(
       'FleetFill غير متاح حاليا. يرجى المحاولة لاحقا.',
       name: 'startupConfigurationRequiredMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جديد`
+  String get notificationNewLabel {
+    return Intl.message(
+      'جديد',
+      name: 'notificationNewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت رؤيته`
+  String get notificationSeenLabel {
+    return Intl.message(
+      'تمت رؤيته',
+      name: 'notificationSeenLabel',
       desc: '',
       args: [],
     );
@@ -3964,6 +4127,16 @@ class S {
       name: 'trackingDetailTitle',
       desc: '',
       args: [bookingId],
+    );
+  }
+
+  /// `التتبع`
+  String get trackingDetailPageTitle {
+    return Intl.message(
+      'التتبع',
+      name: 'trackingDetailPageTitle',
+      desc: '',
+      args: [],
     );
   }
 
@@ -4222,20 +4395,20 @@ class S {
     return Intl.message('المركبات', name: 'vehiclesTitle', desc: '', args: []);
   }
 
-  /// `وثائق تحقق المركبة`
+  /// `وثائق المركبة`
   String get vehicleVerificationDocumentsTitle {
     return Intl.message(
-      'وثائق تحقق المركبة',
+      'وثائق المركبة',
       name: 'vehicleVerificationDocumentsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `هوية السائق أو الرخصة`
+  /// `رخصة السياقة`
   String get verificationDocumentDriverIdentityLabel {
     return Intl.message(
-      'هوية السائق أو الرخصة',
+      'رخصة السياقة',
       name: 'verificationDocumentDriverIdentityLabel',
       desc: '',
       args: [],
@@ -4292,6 +4465,16 @@ class S {
     );
   }
 
+  /// `يرجى مراجعة متطلبات الوثيقة ورفع ملف أوضح.`
+  String get verificationDocumentRejectedFallbackReason {
+    return Intl.message(
+      'يرجى مراجعة متطلبات الوثيقة ورفع ملف أوضح.',
+      name: 'verificationDocumentRejectedFallbackReason',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `تم استبدال وثيقة التحقق.`
   String get verificationDocumentReplacedMessage {
     return Intl.message(
@@ -4302,10 +4485,10 @@ class S {
     );
   }
 
-  /// `رخصة النقل`
+  /// `رخصة النقل (قديمة)`
   String get verificationDocumentTransportLicenseLabel {
     return Intl.message(
-      'رخصة النقل',
+      'رخصة النقل (قديمة)',
       name: 'verificationDocumentTransportLicenseLabel',
       desc: '',
       args: [],
@@ -4332,10 +4515,10 @@ class S {
     );
   }
 
-  /// `تسجيل الشاحنة`
+  /// `البطاقة الرمادية`
   String get verificationDocumentTruckRegistrationLabel {
     return Intl.message(
-      'تسجيل الشاحنة',
+      'البطاقة الرمادية',
       name: 'verificationDocumentTruckRegistrationLabel',
       desc: '',
       args: [],
@@ -5897,6 +6080,31 @@ class S {
     );
   }
 
+  /// `CCP`
+  String get paymentRailCcpLabel {
+    return Intl.message('CCP', name: 'paymentRailCcpLabel', desc: '', args: []);
+  }
+
+  /// `الذهبية`
+  String get paymentRailDahabiaLabel {
+    return Intl.message(
+      'الذهبية',
+      name: 'paymentRailDahabiaLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بنك`
+  String get paymentRailBankLabel {
+    return Intl.message(
+      'بنك',
+      name: 'paymentRailBankLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `المبلغ المرسل`
   String get paymentProofAmountLabel {
     return Intl.message(
@@ -6217,6 +6425,16 @@ class S {
     );
   }
 
+  /// `اكتمل الحجز تلقائيا بعد انتهاء نافذة مراجعة التسليم.`
+  String get trackingEventAutoCompletedNote {
+    return Intl.message(
+      'اكتمل الحجز تلقائيا بعد انتهاء نافذة مراجعة التسليم.',
+      name: 'trackingEventAutoCompletedNote',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `النزاعات`
   String get adminDisputesQueueTitle {
     return Intl.message(
@@ -6377,10 +6595,10 @@ class S {
     );
   }
 
-  /// `تستلم FleetFill دفعة الشاحن قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى الشاحن مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.`
+  /// `تستلم FleetFill دفعة المرسل قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى المرسل مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.`
   String get legalTermsBody {
     return Intl.message(
-      'تستلم FleetFill دفعة الشاحن قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى الشاحن مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.',
+      'تستلم FleetFill دفعة المرسل قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى المرسل مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.',
       name: 'legalTermsBody',
       desc: '',
       args: [],
@@ -6692,6 +6910,431 @@ class S {
     );
   }
 
+  /// `طلبات الدعم الخاصة بك`
+  String get supportInboxTitle {
+    return Intl.message(
+      'طلبات الدعم الخاصة بك',
+      name: 'supportInboxTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لم تقم بفتح أي طلب دعم بعد.`
+  String get supportInboxEmptyMessage {
+    return Intl.message(
+      'لم تقم بفتح أي طلب دعم بعد.',
+      name: 'supportInboxEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم إنشاء طلب الدعم بنجاح.`
+  String get supportRequestCreatedMessage {
+    return Intl.message(
+      'تم إنشاء طلب الدعم بنجاح.',
+      name: 'supportRequestCreatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `محادثة الدعم`
+  String get supportThreadTitle {
+    return Intl.message(
+      'محادثة الدعم',
+      name: 'supportThreadTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تفاصيل الطلب`
+  String get supportThreadDetailsTitle {
+    return Intl.message(
+      'تفاصيل الطلب',
+      name: 'supportThreadDetailsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحالة`
+  String get supportStatusLabel {
+    return Intl.message(
+      'الحالة',
+      name: 'supportStatusLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الأولوية`
+  String get supportPriorityLabel {
+    return Intl.message(
+      'الأولوية',
+      name: 'supportPriorityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `آخر تحديث`
+  String get supportLastUpdatedLabel {
+    return Intl.message(
+      'آخر تحديث',
+      name: 'supportLastUpdatedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الرد`
+  String get supportReplyLabel {
+    return Intl.message('الرد', name: 'supportReplyLabel', desc: '', args: []);
+  }
+
+  /// `إرسال الرد`
+  String get supportReplyAction {
+    return Intl.message(
+      'إرسال الرد',
+      name: 'supportReplyAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم إرسال الرد.`
+  String get supportReplySentMessage {
+    return Intl.message(
+      'تم إرسال الرد.',
+      name: 'supportReplySentMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد رسائل في هذا الطلب حتى الآن.`
+  String get supportThreadNoMessagesMessage {
+    return Intl.message(
+      'لا توجد رسائل في هذا الطلب حتى الآن.',
+      name: 'supportThreadNoMessagesMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فتح الحجز`
+  String get supportLinkedBookingAction {
+    return Intl.message(
+      'فتح الحجز',
+      name: 'supportLinkedBookingAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فتح إثبات الدفع`
+  String get supportLinkedPaymentProofAction {
+    return Intl.message(
+      'فتح إثبات الدفع',
+      name: 'supportLinkedPaymentProofAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فتح النزاع`
+  String get supportLinkedDisputeAction {
+    return Intl.message(
+      'فتح النزاع',
+      name: 'supportLinkedDisputeAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فتح المحادثة`
+  String get supportThreadOpenAction {
+    return Intl.message(
+      'فتح المحادثة',
+      name: 'supportThreadOpenAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مفتوح`
+  String get supportStatusOpenLabel {
+    return Intl.message(
+      'مفتوح',
+      name: 'supportStatusOpenLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `قيد المعالجة`
+  String get supportStatusInProgressLabel {
+    return Intl.message(
+      'قيد المعالجة',
+      name: 'supportStatusInProgressLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بانتظار المستخدم`
+  String get supportStatusWaitingForUserLabel {
+    return Intl.message(
+      'بانتظار المستخدم',
+      name: 'supportStatusWaitingForUserLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم الحل`
+  String get supportStatusResolvedLabel {
+    return Intl.message(
+      'تم الحل',
+      name: 'supportStatusResolvedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مغلق`
+  String get supportStatusClosedLabel {
+    return Intl.message(
+      'مغلق',
+      name: 'supportStatusClosedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `عادية`
+  String get supportPriorityNormalLabel {
+    return Intl.message(
+      'عادية',
+      name: 'supportPriorityNormalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مرتفعة`
+  String get supportPriorityHighLabel {
+    return Intl.message(
+      'مرتفعة',
+      name: 'supportPriorityHighLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `عاجلة`
+  String get supportPriorityUrgentLabel {
+    return Intl.message(
+      'عاجلة',
+      name: 'supportPriorityUrgentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أنت`
+  String get supportMessageSenderUserLabel {
+    return Intl.message(
+      'أنت',
+      name: 'supportMessageSenderUserLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `دعم FleetFill`
+  String get supportMessageSenderAdminLabel {
+    return Intl.message(
+      'دعم FleetFill',
+      name: 'supportMessageSenderAdminLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `النظام`
+  String get supportMessageSenderSystemLabel {
+    return Intl.message(
+      'النظام',
+      name: 'supportMessageSenderSystemLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `قائمة الدعم`
+  String get adminSupportQueueTitle {
+    return Intl.message(
+      'قائمة الدعم',
+      name: 'adminSupportQueueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الدعم`
+  String get adminQueueSupportTabLabel {
+    return Intl.message(
+      'الدعم',
+      name: 'adminQueueSupportTabLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `البحث في طلبات الدعم`
+  String get adminSupportSearchLabel {
+    return Intl.message(
+      'البحث في طلبات الدعم',
+      name: 'adminSupportSearchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `كل الحالات`
+  String get adminSupportStatusAllLabel {
+    return Intl.message(
+      'كل الحالات',
+      name: 'adminSupportStatusAllLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد طلبات دعم تحتاج إلى معالجة الآن.`
+  String get adminSupportQueueEmptyMessage {
+    return Intl.message(
+      'لا توجد طلبات دعم تحتاج إلى معالجة الآن.',
+      name: 'adminSupportQueueEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `عناصر تحكم الدعم`
+  String get adminSupportControlsTitle {
+    return Intl.message(
+      'عناصر تحكم الدعم',
+      name: 'adminSupportControlsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إسناد إليّ`
+  String get adminSupportAssignToMeAction {
+    return Intl.message(
+      'إسناد إليّ',
+      name: 'adminSupportAssignToMeAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إزالة الإسناد`
+  String get adminSupportUnassignAction {
+    return Intl.message(
+      'إزالة الإسناد',
+      name: 'adminSupportUnassignAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلب دعم جديد`
+  String get notificationSupportRequestCreatedTitle {
+    return Intl.message(
+      'طلب دعم جديد',
+      name: 'notificationSupportRequestCreatedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `قام مستخدم بفتح طلب دعم جديد يحتاج إلى مراجعة.`
+  String get notificationSupportRequestCreatedBody {
+    return Intl.message(
+      'قام مستخدم بفتح طلب دعم جديد يحتاج إلى مراجعة.',
+      name: 'notificationSupportRequestCreatedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم الرد من الدعم`
+  String get notificationSupportReplyReceivedTitle {
+    return Intl.message(
+      'تم الرد من الدعم',
+      name: 'notificationSupportReplyReceivedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `قام فريق دعم FleetFill بالرد على طلبك.`
+  String get notificationSupportReplyReceivedBody {
+    return Intl.message(
+      'قام فريق دعم FleetFill بالرد على طلبك.',
+      name: 'notificationSupportReplyReceivedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `قام المستخدم بالرد`
+  String get notificationSupportUserRepliedTitle {
+    return Intl.message(
+      'قام المستخدم بالرد',
+      name: 'notificationSupportUserRepliedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `قام مستخدم بالرد على طلب دعم قائم.`
+  String get notificationSupportUserRepliedBody {
+    return Intl.message(
+      'قام مستخدم بالرد على طلب دعم قائم.',
+      name: 'notificationSupportUserRepliedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تحديث حالة الدعم`
+  String get notificationSupportStatusChangedTitle {
+    return Intl.message(
+      'تم تحديث حالة الدعم',
+      name: 'notificationSupportStatusChangedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أصبحت حالة طلب الدعم الآن {status}.`
+  String notificationSupportStatusChangedBody(Object status) {
+    return Intl.message(
+      'أصبحت حالة طلب الدعم الآن $status.',
+      name: 'notificationSupportStatusChangedBody',
+      desc: '',
+      args: [status],
+    );
+  }
+
   /// `ولاية الانطلاق`
   String get routeOriginWilayaLabel {
     return Intl.message(
@@ -6717,6 +7360,16 @@ class S {
     return Intl.message(
       'الموقع غير متاح',
       name: 'locationUnavailableLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعذر على FleetFill الوصول إلى الخادم المحلي للتطوير. استخدم إعداد تشغيل المحاكي مع محاكيات Android، واستخدم عنوان الشبكة المحلية للكمبيوتر على الأجهزة الحقيقية.`
+  String get localBackendUnavailableMessage {
+    return Intl.message(
+      'تعذر على FleetFill الوصول إلى الخادم المحلي للتطوير. استخدم إعداد تشغيل المحاكي مع محاكيات Android، واستخدم عنوان الشبكة المحلية للكمبيوتر على الأجهزة الحقيقية.',
+      name: 'localBackendUnavailableMessage',
       desc: '',
       args: [],
     );

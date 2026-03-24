@@ -139,11 +139,11 @@ select ok(
   exists(
     select 1
     from public.email_templates
-    where template_key = 'support_acknowledgement'
+    where template_key = 'generated_document_available'
       and language_code = 'ar'
       and is_enabled = true
   ),
-  'Arabic support acknowledgement template exists in the canonical registry'
+  'Arabic generated document notification template exists in the canonical registry'
 );
 
 select is(
@@ -153,7 +153,7 @@ select is(
     where is_enabled = true
       and language_code in ('ar', 'fr', 'en')
   ),
-  33,
+  27,
   'transactional email template registry contains all active templates for Arabic, French, and English'
 );
 
@@ -355,7 +355,7 @@ values
   (
     'b1000000-0000-4000-8000-000000000001',
     '12000000-0000-4000-8000-000000000001',
-    'support_acknowledgement',
+    'booking_confirmed',
     'en',
     'mail-shipper@example.com',
     'provider-soft-1',
@@ -368,7 +368,7 @@ values
   (
     'b1000000-0000-4000-8000-000000000002',
     '12000000-0000-4000-8000-000000000001',
-    'support_acknowledgement',
+    'booking_confirmed',
     'en',
     'mail-shipper@example.com',
     'provider-soft-2',

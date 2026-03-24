@@ -27,13 +27,34 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final shipperNavigatorKey = ref.watch(shipperShellNavigatorKeyProvider);
   final carrierNavigatorKey = ref.watch(carrierShellNavigatorKeyProvider);
   final adminNavigatorKey = ref.watch(adminShellNavigatorKeyProvider);
-  final bootstrapState = ref.watch(appBootstrapControllerProvider);
-  final authSessionState = ref.watch(authSessionControllerProvider);
+  final refreshNotifier = ValueNotifier<int>(0);
+  ref.onDispose(refreshNotifier.dispose);
+  void refresh() => refreshNotifier.value++;
+  ref
+    ..listen<AsyncValue<AppBootstrapState>>(
+      appBootstrapControllerProvider,
+      (_, _) => refresh(),
+    )
+    ..listen<AsyncValue<AuthSnapshot>>(
+      authSessionControllerProvider,
+      (_, _) => refresh(),
+    )
+    ..listen<bool>(
+      preAuthOnboardingControllerProvider,
+      (_, _) => refresh(),
+    )
+    ..listen<bool>(
+      notificationOnboardingControllerProvider,
+      (_, _) => refresh(),
+    );
 
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: AppRoutePath.splash,
+    refreshListenable: refreshNotifier,
     redirect: (context, state) {
+      final bootstrapState = ref.read(appBootstrapControllerProvider);
+      final authSessionState = ref.read(authSessionControllerProvider);
       final resolvedBootstrap = bootstrapState.hasValue
           ? bootstrapState.requireValue
           : null;
@@ -72,8 +93,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return redirectLocation;
     },
     errorBuilder: (context, state) {
-      final bootstrap = bootstrapState.asData?.value;
-      final authSessionValue = ref.watch(authSessionControllerProvider);
+      final bootstrap = ref.read(appBootstrapControllerProvider).asData?.value;
+      final authSessionValue = ref.read(authSessionControllerProvider);
       final authSnapshot = authSessionValue.hasValue
           ? authSessionValue.requireValue
           : bootstrap?.auth;
@@ -427,6 +448,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 ),
               ),
               GoRoute(
+                path: 'support/:requestId',
+                name: AppRouteName.adminSupportRequestDetail.name,
+                builder: (context, state) => AdminSupportRequestDetailScreen(
+                  requestId: state.pathParameters['requestId']!,
+                ),
+              ),
+              GoRoute(
                 path: 'email/:logId',
                 name: AppRouteName.adminEmailLogDetail.name,
                 builder: (context, state) => AdminEmailLogDetailScreen(
@@ -495,6 +523,14 @@ List<RouteBase> _sharedRoutes(GlobalKey<NavigatorState> rootNavigatorKey) {
       path: AppRoutePath.sharedSupport,
       name: AppRouteName.sharedSupport.name,
       builder: (context, state) => const SupportHomeScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      path: AppRoutePath.sharedSupportThread,
+      name: AppRouteName.sharedSupportThread.name,
+      builder: (context, state) => SupportThreadScreen(
+        requestId: state.pathParameters['id']!,
+      ),
     ),
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,

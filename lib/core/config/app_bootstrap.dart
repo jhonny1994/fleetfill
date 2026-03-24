@@ -14,6 +14,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'app_bootstrap.g.dart';
 
+const _bootstrapLocalNetworkTimeout = Duration(seconds: 8);
+
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError('sharedPreferencesProvider must be overridden');
 });
@@ -94,9 +96,9 @@ Future<bool> _initializeSupabase(AppEnvironmentConfig environment) async {
 }
 
 Future<ClientSettings> _fetchClientSettings() async {
-  final response = await Supabase.instance.client.rpc<Map<String, dynamic>>(
-    'get_client_settings',
-  );
+  final response = await Supabase.instance.client
+      .rpc<Map<String, dynamic>>('get_client_settings')
+      .timeout(_bootstrapLocalNetworkTimeout);
   return ClientSettings.fromJson(response);
 }
 
@@ -104,11 +106,14 @@ Future<({AppEnvironmentConfig environment, ClientSettings clientSettings})>
 _resolveRuntimeEnvironment(
   AppEnvironmentConfig environment,
 ) async {
+  final fallbackClientSettings = ClientSettings.fromJson(
+    const <String, dynamic>{},
+  );
   if (!environment.hasSupabaseConfig ||
       !AppBootstrapController.supabaseInitialized) {
     return (
       environment: environment,
-      clientSettings: ClientSettings.fromJson(const <String, dynamic>{}),
+      clientSettings: fallbackClientSettings,
     );
   }
 
@@ -123,10 +128,18 @@ _resolveRuntimeEnvironment(
       ),
       clientSettings: clientSettings,
     );
-  } on Object {
+  } on Object catch (error) {
+    if (environment.environment == AppEnvironment.local) {
+      throw AppBootstrapLocalBackendException(
+        supabaseUrl: environment.supabaseUrl,
+        reason:
+            'Failed to load runtime client settings from the local Supabase backend: $error',
+      );
+    }
+
     return (
       environment: environment,
-      clientSettings: ClientSettings.fromJson(const <String, dynamic>{}),
+      clientSettings: fallbackClientSettings,
     );
   }
 }
@@ -162,8 +175,19 @@ class AppBootstrapController extends _$AppBootstrapController {
   Future<AppBootstrapState> build() async {
     final configuredEnvironment = ref.watch(appEnvironmentConfigProvider);
     final logger = ref.watch(appLoggerProvider);
+    final localAndroidNetworkTarget =
+        AppEnvironmentConfig.resolveLocalAndroidNetworkTargetForTesting();
 
     try {
+      logger.info(
+        'Starting app bootstrap',
+        context: {
+          'environment': configuredEnvironment.environment.name,
+          'supabaseUrl': configuredEnvironment.supabaseUrl,
+          'hasSupabaseConfig': configuredEnvironment.hasSupabaseConfig,
+          'localAndroidNetworkTarget': localAndroidNetworkTarget.name,
+        },
+      );
       final runtime = await _resolveRuntimeEnvironment(
         configuredEnvironment,
       );
@@ -172,11 +196,23 @@ class AppBootstrapController extends _$AppBootstrapController {
           .buildSnapshot(
             isPasswordRecovery: false,
             isSessionExpired: false,
+          )
+          .timeout(
+            _bootstrapLocalNetworkTimeout,
+            onTimeout: () => throw AppBootstrapLocalBackendException(
+              supabaseUrl: runtime.environment.supabaseUrl,
+              reason:
+                  'Timed out while loading the initial auth/profile bootstrap state from the local backend.',
+            ),
           );
 
       if (supabaseInitialized) {
         logger.info(
           'Supabase initialized for ${runtime.environment.environment.name}',
+          context: {
+            'supabaseUrl': runtime.environment.supabaseUrl,
+            'localAndroidNetworkTarget': localAndroidNetworkTarget.name,
+          },
         );
       }
 
@@ -208,4 +244,18 @@ class AppBootstrapController extends _$AppBootstrapController {
     state = const AsyncLoading();
     state = await AsyncValue.guard(build);
   }
+}
+
+class AppBootstrapLocalBackendException implements Exception {
+  const AppBootstrapLocalBackendException({
+    required this.supabaseUrl,
+    required this.reason,
+  });
+
+  final String supabaseUrl;
+  final String reason;
+
+  @override
+  String toString() =>
+      'Local backend unavailable (url=$supabaseUrl, reason=$reason)';
 }

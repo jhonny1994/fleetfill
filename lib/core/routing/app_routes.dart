@@ -19,6 +19,7 @@ enum AppRouteName {
   sharedNotificationDetail,
   sharedSettings,
   sharedSupport,
+  sharedSupportThread,
   sharedPolicies,
   sharedShipmentDetail,
   sharedBookingDetail,
@@ -56,6 +57,7 @@ enum AppRouteName {
   adminPaymentProofDetail,
   adminDisputeDetail,
   adminPayoutDetail,
+  adminSupportRequestDetail,
   adminEmailLogDetail,
   adminUsers,
   adminUserDetail,
@@ -88,6 +90,7 @@ abstract final class AppRoutePath {
   static const sharedNotificationDetail = '/shared/notification/:id';
   static const sharedSettings = '/shared/settings';
   static const sharedSupport = '/shared/support';
+  static const sharedSupportThread = '/shared/support/:id';
   static const sharedPolicies = '/shared/policies';
   static const sharedShipmentDetail = '/shared/shipment/:id';
   static const sharedBookingDetail = '/shared/booking/:id';
@@ -142,6 +145,8 @@ abstract final class AppRoutePath {
       '/admin/queues/disputes/$disputeId';
   static String adminQueuesPayout(String bookingId) =>
       '/admin/queues/payouts/$bookingId';
+  static String adminQueuesSupport(String requestId) =>
+      '/admin/queues/support/$requestId';
   static String adminQueuesEmailLog(String logId) =>
       '/admin/queues/email/$logId';
   static const adminUsers = '/admin/users';

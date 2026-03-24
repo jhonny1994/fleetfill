@@ -182,12 +182,11 @@ class ShipmentDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedShipmentId = BidiFormatters.trackingId(shipmentId);
     final shipmentAsync = ref.watch(shipmentDetailProvider(shipmentId));
     final communesAsync = ref.watch(communesProvider);
 
     return AppPageScaffold(
-      title: s.shipmentDetailTitle(formattedShipmentId),
+      title: s.shipmentDetailPageTitle,
       child: AppAsyncStateView<ShipmentDraftRecord?>(
         value: shipmentAsync,
         onRetry: () => ref.invalidate(shipmentDetailProvider(shipmentId)),
@@ -195,6 +194,12 @@ class ShipmentDetailScreen extends ConsumerWidget {
           if (shipment == null) {
             return const AppNotFoundState();
           }
+          final originCommuneAsync = ref.watch(
+            communeByIdProvider(shipment.originCommuneId),
+          );
+          final destinationCommuneAsync = ref.watch(
+            communeByIdProvider(shipment.destinationCommuneId),
+          );
           if (communesAsync.isLoading) {
             return const AppLoadingState();
           }
@@ -214,10 +219,20 @@ class ShipmentDetailScreen extends ConsumerWidget {
             for (final commune in communesAsync.requireValue)
               commune.id: commune,
           };
+          final originCommune =
+              communeMap[shipment.originCommuneId] ??
+              originCommuneAsync.asData?.value;
+          final destinationCommune =
+              communeMap[shipment.destinationCommuneId] ??
+              destinationCommuneAsync.asData?.value;
           return ListView(
             children: [
               AppSectionHeader(
-                title: _sharedShipmentLaneLabel(context, communeMap, shipment),
+                title: _sharedShipmentLaneTitle(
+                  context,
+                  originCommune: originCommune,
+                  destinationCommune: destinationCommune,
+                ),
                 subtitle: s.shipmentDetailDescription,
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -269,11 +284,10 @@ class BookingDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedBookingId = BidiFormatters.trackingId(bookingId);
     final bookingAsync = ref.watch(bookingDetailProvider(bookingId));
 
     return AppPageScaffold(
-      title: s.bookingDetailTitle(formattedBookingId),
+      title: s.bookingDetailPageTitle,
       child: AppAsyncStateView<BookingRecord?>(
         value: bookingAsync,
         onRetry: () => ref.invalidate(bookingDetailProvider(bookingId)),
@@ -281,85 +295,93 @@ class BookingDetailScreen extends ConsumerWidget {
           if (booking == null) {
             return const AppNotFoundState();
           }
-          return ListView(
-            children: [
-              AppSectionHeader(
-                title: s.bookingDetailTitle(formattedBookingId),
-                subtitle: s.bookingDetailDescription,
-                showTitle: false,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              ProfileSummaryCard(
-                title: s.bookingReviewTitle,
-                rows: [
-                  ProfileSummaryRow(
-                    label: s.bookingTrackingNumberLabel,
-                    value: BidiFormatters.latinIdentifier(
-                      booking.trackingNumber,
-                    ),
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(bookingDetailProvider(bookingId));
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                AppSectionHeader(
+                  title: s.bookingDetailTitle(
+                    BidiFormatters.trackingId(bookingId),
                   ),
-                  ProfileSummaryRow(
-                    label: s.bookingPaymentReferenceLabel,
-                    value: BidiFormatters.latinIdentifier(
-                      booking.paymentReference,
-                    ),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.routeStatusLabel,
-                    value: _bookingStatusLabel(s, booking.bookingStatus),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.paymentFlowTitle,
-                    value: _paymentStatusLabel(s, booking.paymentStatus),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.bookingTotalLabel,
-                    value: _sharedMoney(s, booking.shipperTotalDzd),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              MoneySummaryCard(
-                title: s.bookingPricingBreakdownAction,
-                lines: [
-                  MoneySummaryLine(
-                    label: s.bookingBasePriceLabel,
-                    amount: _sharedMoney(s, booking.basePriceDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingPlatformFeeLabel,
-                    amount: _sharedMoney(s, booking.platformFeeDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingCarrierFeeLabel,
-                    amount: _sharedMoney(s, booking.carrierFeeDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingInsuranceFeeLabel,
-                    amount: _sharedMoney(s, booking.insuranceFeeDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingTaxFeeLabel,
-                    amount: _sharedMoney(s, booking.taxFeeDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingTotalLabel,
-                    amount: _sharedMoney(s, booking.shipperTotalDzd),
-                    emphasis: true,
-                  ),
-                ],
-              ),
-              if (booking.paymentStatus == PaymentStatus.unpaid) ...[
-                const SizedBox(height: AppSpacing.lg),
-                FilledButton(
-                  onPressed: () => context.push(
-                    AppRoutePath.shipperPaymentFlow,
-                    extra: booking.id,
-                  ),
-                  child: Text(s.paymentFlowTitle),
+                  subtitle: s.bookingDetailDescription,
+                  showTitle: false,
                 ),
+                const SizedBox(height: AppSpacing.lg),
+                ProfileSummaryCard(
+                  title: s.bookingReviewTitle,
+                  rows: [
+                    ProfileSummaryRow(
+                      label: s.bookingTrackingNumberLabel,
+                      value: BidiFormatters.latinIdentifier(
+                        booking.trackingNumber,
+                      ),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.bookingPaymentReferenceLabel,
+                      value: BidiFormatters.latinIdentifier(
+                        booking.paymentReference,
+                      ),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.routeStatusLabel,
+                      value: _bookingStatusLabel(s, booking.bookingStatus),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.paymentFlowTitle,
+                      value: _paymentStatusLabel(s, booking.paymentStatus),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.bookingTotalLabel,
+                      value: _sharedMoney(s, booking.shipperTotalDzd),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                MoneySummaryCard(
+                  title: s.bookingPricingBreakdownAction,
+                  lines: [
+                    MoneySummaryLine(
+                      label: s.bookingBasePriceLabel,
+                      amount: _sharedMoney(s, booking.basePriceDzd),
+                    ),
+                    MoneySummaryLine(
+                      label: s.bookingPlatformFeeLabel,
+                      amount: _sharedMoney(s, booking.platformFeeDzd),
+                    ),
+                    MoneySummaryLine(
+                      label: s.bookingCarrierFeeLabel,
+                      amount: _sharedMoney(s, booking.carrierFeeDzd),
+                    ),
+                    MoneySummaryLine(
+                      label: s.bookingInsuranceFeeLabel,
+                      amount: _sharedMoney(s, booking.insuranceFeeDzd),
+                    ),
+                    MoneySummaryLine(
+                      label: s.bookingTaxFeeLabel,
+                      amount: _sharedMoney(s, booking.taxFeeDzd),
+                    ),
+                    MoneySummaryLine(
+                      label: s.bookingTotalLabel,
+                      amount: _sharedMoney(s, booking.shipperTotalDzd),
+                      emphasis: true,
+                    ),
+                  ],
+                ),
+                if (booking.paymentStatus == PaymentStatus.unpaid) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  FilledButton(
+                    onPressed: () => context.push(
+                      AppRoutePath.shipperPaymentFlow,
+                      extra: booking.id,
+                    ),
+                    child: Text(s.paymentFlowTitle),
+                  ),
+                ],
               ],
-            ],
+            ),
           );
         },
       ),
@@ -375,13 +397,12 @@ class BookingTrackingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedBookingId = BidiFormatters.trackingId(bookingId);
     final bookingAsync = ref.watch(bookingDetailProvider(bookingId));
     final eventsAsync = ref.watch(trackingEventsProvider(bookingId));
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
 
     return AppPageScaffold(
-      title: s.trackingDetailTitle(formattedBookingId),
+      title: s.trackingDetailPageTitle,
       child: AppAsyncStateView<BookingRecord?>(
         value: bookingAsync,
         onRetry: () => ref.invalidate(bookingDetailProvider(bookingId)),
@@ -396,142 +417,157 @@ class BookingTrackingScreen extends ConsumerWidget {
               auth?.role == AppUserRole.shipper &&
               auth?.userId == booking.shipperId;
 
-          return ListView(
-            key: const PageStorageKey<String>('booking-tracking-screen'),
-            children: [
-              AppSectionHeader(
-                title: s.trackingDetailTitle(formattedBookingId),
-                subtitle: s.trackingDetailDescription,
-                showTitle: false,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              ProfileSummaryCard(
-                title: s.bookingReviewTitle,
-                rows: [
-                  ProfileSummaryRow(
-                    label: s.bookingTrackingNumberLabel,
-                    value: BidiFormatters.latinIdentifier(
-                      booking.trackingNumber,
-                    ),
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref
+                ..invalidate(bookingDetailProvider(bookingId))
+                ..invalidate(trackingEventsProvider(bookingId));
+            },
+            child: ListView(
+              key: const PageStorageKey<String>('booking-tracking-screen'),
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                AppSectionHeader(
+                  title: s.trackingDetailTitle(
+                    BidiFormatters.trackingId(bookingId),
                   ),
-                  ProfileSummaryRow(
-                    label: s.routeStatusLabel,
-                    value: _bookingStatusLabel(s, booking.bookingStatus),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.paymentFlowTitle,
-                    value: _paymentStatusLabel(s, booking.paymentStatus),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              if (canCarrierAdvance &&
-                  booking.bookingStatus == BookingStatus.confirmed) ...[
-                OutlinedButton(
-                  onPressed: () => unawaited(
-                    _recordMilestone(context, ref, booking, 'picked_up'),
-                  ),
-                  child: Text(s.bookingStatusPickedUpLabel),
+                  subtitle: s.trackingDetailDescription,
+                  showTitle: false,
                 ),
-                const SizedBox(height: AppSpacing.sm),
-              ],
-              if (canCarrierAdvance &&
-                  booking.bookingStatus == BookingStatus.pickedUp) ...[
-                OutlinedButton(
-                  onPressed: () => unawaited(
-                    _recordMilestone(context, ref, booking, 'in_transit'),
-                  ),
-                  child: Text(s.bookingStatusInTransitLabel),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-              ],
-              if (canCarrierAdvance &&
-                  booking.bookingStatus == BookingStatus.inTransit) ...[
-                OutlinedButton(
-                  onPressed: () => unawaited(
-                    _recordMilestone(
-                      context,
-                      ref,
-                      booking,
-                      'delivered_pending_review',
-                    ),
-                  ),
-                  child: Text(s.bookingStatusDeliveredPendingReviewLabel),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-              ],
-              if (canShipperConfirm &&
-                  booking.bookingStatus ==
-                      BookingStatus.deliveredPendingReview) ...[
-                FilledButton(
-                  onPressed: () =>
-                      unawaited(_confirmDelivery(context, ref, booking)),
-                  child: Text(s.deliveryConfirmAction),
-                ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              if (canShipperConfirm &&
-                  booking.bookingStatus ==
-                      BookingStatus.deliveredPendingReview) ...[
-                OutlinedButton(
-                  onPressed: () =>
-                      unawaited(_openDispute(context, ref, booking)),
-                  child: Text(s.bookingStatusDisputedLabel),
-                ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              if (canShipperConfirm &&
-                  booking.bookingStatus == BookingStatus.completed) ...[
-                OutlinedButton(
-                  onPressed: () =>
-                      unawaited(_openReview(context, ref, booking)),
-                  child: Text(s.ratingSubmitAction),
-                ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              Text(
-                s.trackingTimelineTitle,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              eventsAsync.when(
-                data: (events) => events.isEmpty
-                    ? AppEmptyState(
-                        title: s.trackingTimelineTitle,
-                        message: s.trackingTimelineEmptyMessage,
-                      )
-                    : Column(
-                        children: events
-                            .map(
-                              (event) => Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: AppSpacing.sm,
-                                ),
-                                child: AppListCard(
-                                  title: _trackingEventLabel(
-                                    s,
-                                    event.eventType,
-                                  ),
-                                  subtitle:
-                                      event.note == null || event.note!.isEmpty
-                                      ? _sharedFormatDate(event.recordedAt)
-                                      : '${_sharedFormatDate(event.recordedAt)} • ${event.note}',
-                                ),
-                              ),
-                            )
-                            .toList(growable: false),
+                const SizedBox(height: AppSpacing.lg),
+                ProfileSummaryCard(
+                  title: s.bookingReviewTitle,
+                  rows: [
+                    ProfileSummaryRow(
+                      label: s.bookingTrackingNumberLabel,
+                      value: BidiFormatters.latinIdentifier(
+                        booking.trackingNumber,
                       ),
-                loading: () => const AppLoadingState(),
-                error: (error, stackTrace) => AppErrorState(
-                  error: AppError(
-                    code: 'tracking_events_failed',
-                    message: mapAppErrorMessage(s, error),
-                  ),
-                  onRetry: () =>
-                      ref.invalidate(trackingEventsProvider(bookingId)),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.routeStatusLabel,
+                      value: _bookingStatusLabel(s, booking.bookingStatus),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.paymentFlowTitle,
+                      value: _paymentStatusLabel(s, booking.paymentStatus),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: AppSpacing.md),
+                if (canCarrierAdvance &&
+                    booking.bookingStatus == BookingStatus.confirmed) ...[
+                  OutlinedButton(
+                    onPressed: () => unawaited(
+                      _recordMilestone(context, ref, booking, 'picked_up'),
+                    ),
+                    child: Text(s.bookingStatusPickedUpLabel),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                ],
+                if (canCarrierAdvance &&
+                    booking.bookingStatus == BookingStatus.pickedUp) ...[
+                  OutlinedButton(
+                    onPressed: () => unawaited(
+                      _recordMilestone(context, ref, booking, 'in_transit'),
+                    ),
+                    child: Text(s.bookingStatusInTransitLabel),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                ],
+                if (canCarrierAdvance &&
+                    booking.bookingStatus == BookingStatus.inTransit) ...[
+                  OutlinedButton(
+                    onPressed: () => unawaited(
+                      _recordMilestone(
+                        context,
+                        ref,
+                        booking,
+                        'delivered_pending_review',
+                      ),
+                    ),
+                    child: Text(s.bookingStatusDeliveredPendingReviewLabel),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                ],
+                if (canShipperConfirm &&
+                    booking.bookingStatus ==
+                        BookingStatus.deliveredPendingReview) ...[
+                  FilledButton(
+                    onPressed: () =>
+                        unawaited(_confirmDelivery(context, ref, booking)),
+                    child: Text(s.deliveryConfirmAction),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                if (canShipperConfirm &&
+                    booking.bookingStatus ==
+                        BookingStatus.deliveredPendingReview) ...[
+                  OutlinedButton(
+                    onPressed: () =>
+                        unawaited(_openDispute(context, ref, booking)),
+                    child: Text(s.bookingStatusDisputedLabel),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                if (canShipperConfirm &&
+                    booking.bookingStatus == BookingStatus.completed) ...[
+                  OutlinedButton(
+                    onPressed: () =>
+                        unawaited(_openReview(context, ref, booking)),
+                    child: Text(s.ratingSubmitAction),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                Text(
+                  s.trackingTimelineTitle,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                eventsAsync.when(
+                  data: (events) => events.isEmpty
+                      ? AppEmptyState(
+                          title: s.trackingTimelineTitle,
+                          message: s.trackingTimelineEmptyMessage,
+                        )
+                      : Column(
+                          children: events
+                              .map(
+                                (event) => Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: AppSpacing.sm,
+                                  ),
+                                  child: AppListCard(
+                                    title: _trackingEventLabel(
+                                      s,
+                                      event.eventType,
+                                    ),
+                                    subtitle: switch (_trackingEventNote(
+                                      s,
+                                      event.eventType,
+                                      event.note,
+                                    )) {
+                                      final note? =>
+                                        '${_sharedFormatDate(event.recordedAt)} • $note',
+                                      _ => _sharedFormatDate(event.recordedAt),
+                                    },
+                                  ),
+                                ),
+                              )
+                              .toList(growable: false),
+                        ),
+                  loading: () => const AppLoadingState(),
+                  error: (error, stackTrace) => AppErrorState(
+                    error: AppError(
+                      code: 'tracking_events_failed',
+                      message: mapAppErrorMessage(s, error),
+                    ),
+                    onRetry: () =>
+                        ref.invalidate(trackingEventsProvider(bookingId)),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -833,11 +869,10 @@ class CarrierPublicProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedCarrierId = BidiFormatters.latinIdentifier(carrierId);
     final profile = ref.watch(publicCarrierProfileProvider(carrierId));
 
     return AppPageScaffold(
-      title: s.carrierPublicProfileTitle(formattedCarrierId),
+      title: s.carrierPublicProfilePageTitle,
       child: profile.when(
         loading: () => const AppLoadingState(),
         error: (error, stackTrace) {
@@ -931,12 +966,11 @@ class RouteDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedRouteId = BidiFormatters.latinIdentifier(routeId);
     final routeAsync = ref.watch(carrierRouteDetailProvider(routeId));
     final communesAsync = ref.watch(communesProvider);
 
     return AppPageScaffold(
-      title: s.routeDetailTitle(formattedRouteId),
+      title: s.routeDetailPageTitle,
       child: AppAsyncStateView<CarrierRoute?>(
         value: routeAsync,
         onRetry: () => ref.invalidate(carrierRouteDetailProvider(routeId)),
@@ -964,66 +998,74 @@ class RouteDetailScreen extends ConsumerWidget {
               commune.id: commune,
           };
 
-          return ListView(
-            children: [
-              AppSectionHeader(
-                title: _sharedLaneLabel(
-                  context,
-                  communeMap,
-                  route.originCommuneId,
-                  route.destinationCommuneId,
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref
+                ..invalidate(carrierRouteDetailProvider(routeId))
+                ..invalidate(communesProvider);
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                AppSectionHeader(
+                  title: _sharedLaneLabel(
+                    context,
+                    communeMap,
+                    route.originCommuneId,
+                    route.destinationCommuneId,
+                  ),
+                  subtitle: s.routeDetailDescription,
                 ),
-                subtitle: s.routeDetailDescription,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              ProfileSummaryCard(
-                title: s.myRoutesSummaryTitle,
-                rows: [
-                  ProfileSummaryRow(
-                    label: s.routeDepartureTimeLabel,
-                    value: _sharedFormatSqlTime(
-                      context,
-                      route.defaultDepartureTime,
+                const SizedBox(height: AppSpacing.lg),
+                ProfileSummaryCard(
+                  title: s.myRoutesSummaryTitle,
+                  rows: [
+                    ProfileSummaryRow(
+                      label: s.routeDepartureTimeLabel,
+                      value: _sharedFormatSqlTime(
+                        context,
+                        route.defaultDepartureTime,
+                      ),
                     ),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.routeRecurringDaysLabel,
-                    value: _sharedFormatWeekdays(
-                      context,
-                      route.recurringDaysOfWeek,
+                    ProfileSummaryRow(
+                      label: s.routeRecurringDaysLabel,
+                      value: _sharedFormatWeekdays(
+                        context,
+                        route.recurringDaysOfWeek,
+                      ),
                     ),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.routeEffectiveFromLabel,
-                    value: _sharedFormatDate(route.effectiveFrom),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.routePricePerKgLabel,
-                    value:
-                        '${BidiFormatters.latinIdentifier(route.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
-                  ),
-                  ProfileSummaryRow(
-                    label: s.vehicleCapacityWeightLabel,
-                    value:
-                        '${BidiFormatters.latinIdentifier(route.totalCapacityKg.toStringAsFixed(0))} kg',
-                  ),
-                  ProfileSummaryRow(
-                    label: s.vehicleCapacityVolumeLabel,
-                    value: route.totalCapacityVolumeM3 == null
-                        ? '-'
-                        : BidiFormatters.latinIdentifier(
-                            route.totalCapacityVolumeM3!.toStringAsFixed(1),
-                          ),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.routeStatusLabel,
-                    value: route.isActive
-                        ? s.publicationActiveLabel
-                        : s.publicationInactiveLabel,
-                  ),
-                ],
-              ),
-            ],
+                    ProfileSummaryRow(
+                      label: s.routeEffectiveFromLabel,
+                      value: _sharedFormatDate(route.effectiveFrom),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.routePricePerKgLabel,
+                      value:
+                          '${BidiFormatters.latinIdentifier(route.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
+                    ),
+                    ProfileSummaryRow(
+                      label: s.vehicleCapacityWeightLabel,
+                      value:
+                          '${BidiFormatters.latinIdentifier(route.totalCapacityKg.toStringAsFixed(0))} kg',
+                    ),
+                    ProfileSummaryRow(
+                      label: s.vehicleCapacityVolumeLabel,
+                      value: route.totalCapacityVolumeM3 == null
+                          ? '-'
+                          : BidiFormatters.latinIdentifier(
+                              route.totalCapacityVolumeM3!.toStringAsFixed(1),
+                            ),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.routeStatusLabel,
+                      value: route.isActive
+                          ? s.publicationActiveLabel
+                          : s.publicationInactiveLabel,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -1039,12 +1081,11 @@ class OneOffTripDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedTripId = BidiFormatters.latinIdentifier(tripId);
     final tripAsync = ref.watch(oneOffTripDetailProvider(tripId));
     final communesAsync = ref.watch(communesProvider);
 
     return AppPageScaffold(
-      title: s.oneOffTripDetailTitle(formattedTripId),
+      title: s.oneOffTripDetailPageTitle,
       child: AppAsyncStateView<CarrierOneOffTrip?>(
         value: tripAsync,
         onRetry: () => ref.invalidate(oneOffTripDetailProvider(tripId)),
@@ -1072,53 +1113,61 @@ class OneOffTripDetailScreen extends ConsumerWidget {
               commune.id: commune,
           };
 
-          return ListView(
-            children: [
-              AppSectionHeader(
-                title: _sharedLaneLabel(
-                  context,
-                  communeMap,
-                  trip.originCommuneId,
-                  trip.destinationCommuneId,
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref
+                ..invalidate(oneOffTripDetailProvider(tripId))
+                ..invalidate(communesProvider);
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                AppSectionHeader(
+                  title: _sharedLaneLabel(
+                    context,
+                    communeMap,
+                    trip.originCommuneId,
+                    trip.destinationCommuneId,
+                  ),
+                  subtitle: s.oneOffTripDetailDescription,
                 ),
-                subtitle: s.oneOffTripDetailDescription,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              ProfileSummaryCard(
-                title: s.myRoutesSummaryTitle,
-                rows: [
-                  ProfileSummaryRow(
-                    label: s.oneOffTripDepartureLabel,
-                    value:
-                        '${_sharedFormatDate(trip.departureAt)} • ${TimeOfDay.fromDateTime(trip.departureAt).format(context)}',
-                  ),
-                  ProfileSummaryRow(
-                    label: s.routePricePerKgLabel,
-                    value:
-                        '${BidiFormatters.latinIdentifier(trip.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
-                  ),
-                  ProfileSummaryRow(
-                    label: s.vehicleCapacityWeightLabel,
-                    value:
-                        '${BidiFormatters.latinIdentifier(trip.totalCapacityKg.toStringAsFixed(0))} kg',
-                  ),
-                  ProfileSummaryRow(
-                    label: s.vehicleCapacityVolumeLabel,
-                    value: trip.totalCapacityVolumeM3 == null
-                        ? '-'
-                        : BidiFormatters.latinIdentifier(
-                            trip.totalCapacityVolumeM3!.toStringAsFixed(1),
-                          ),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.routeStatusLabel,
-                    value: trip.isActive
-                        ? s.publicationActiveLabel
-                        : s.publicationInactiveLabel,
-                  ),
-                ],
-              ),
-            ],
+                const SizedBox(height: AppSpacing.lg),
+                ProfileSummaryCard(
+                  title: s.myRoutesSummaryTitle,
+                  rows: [
+                    ProfileSummaryRow(
+                      label: s.oneOffTripDepartureLabel,
+                      value:
+                          '${_sharedFormatDate(trip.departureAt)} • ${TimeOfDay.fromDateTime(trip.departureAt).format(context)}',
+                    ),
+                    ProfileSummaryRow(
+                      label: s.routePricePerKgLabel,
+                      value:
+                          '${BidiFormatters.latinIdentifier(trip.pricePerKgDzd.toStringAsFixed(0))} ${s.pricePerKgUnitLabel}',
+                    ),
+                    ProfileSummaryRow(
+                      label: s.vehicleCapacityWeightLabel,
+                      value:
+                          '${BidiFormatters.latinIdentifier(trip.totalCapacityKg.toStringAsFixed(0))} kg',
+                    ),
+                    ProfileSummaryRow(
+                      label: s.vehicleCapacityVolumeLabel,
+                      value: trip.totalCapacityVolumeM3 == null
+                          ? '-'
+                          : BidiFormatters.latinIdentifier(
+                              trip.totalCapacityVolumeM3!.toStringAsFixed(1),
+                            ),
+                    ),
+                    ProfileSummaryRow(
+                      label: s.routeStatusLabel,
+                      value: trip.isActive
+                          ? s.publicationActiveLabel
+                          : s.publicationInactiveLabel,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -1134,11 +1183,10 @@ class ProofViewerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedProofId = BidiFormatters.latinIdentifier(proofId);
     final proofAsync = ref.watch(paymentProofDetailProvider(proofId));
 
     return AppPageScaffold(
-      title: s.proofViewerTitle(formattedProofId),
+      title: s.proofViewerPageTitle,
       child: AppAsyncStateView<PaymentProofRecord?>(
         value: proofAsync,
         onRetry: () => ref.invalidate(paymentProofDetailProvider(proofId)),
@@ -1169,10 +1217,11 @@ class ProofViewerScreen extends ConsumerWidget {
                 );
               }
               return _SignedFileViewer(
-                title: s.proofViewerTitle(formattedProofId),
+                title: s.proofViewerPageTitle,
                 message: s.proofViewerDescription,
                 signedUrl: snapshot.data!,
                 storagePath: proof.storagePath,
+                contentType: proof.contentType,
               );
             },
           );
@@ -1207,11 +1256,10 @@ class DisputeEvidenceViewerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedEvidenceId = BidiFormatters.latinIdentifier(evidenceId);
     final evidenceAsync = ref.watch(disputeEvidenceDetailProvider(evidenceId));
 
     return AppPageScaffold(
-      title: s.documentViewerTitle(formattedEvidenceId),
+      title: s.documentViewerPageTitle,
       child: AppAsyncStateView<DisputeEvidenceRecord?>(
         value: evidenceAsync,
         onRetry: () =>
@@ -1247,7 +1295,7 @@ class DisputeEvidenceViewerScreen extends ConsumerWidget {
               }
 
               return _SignedFileViewer(
-                title: s.documentViewerTitle(formattedEvidenceId),
+                title: s.documentViewerPageTitle,
                 message: evidence.note?.trim().isNotEmpty == true
                     ? evidence.note!
                     : s.documentViewerDescription,
@@ -1271,13 +1319,12 @@ class DocumentViewerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedDocumentId = BidiFormatters.latinIdentifier(documentId);
     final documentAsync = ref.watch(
       verificationDocumentDetailProvider(documentId),
     );
 
     return AppPageScaffold(
-      title: s.documentViewerTitle(formattedDocumentId),
+      title: s.verificationDocumentViewerTitle,
       child: AppAsyncStateView<VerificationDocumentRecord?>(
         value: documentAsync,
         onRetry: () =>
@@ -1300,10 +1347,10 @@ class DocumentViewerScreen extends ConsumerWidget {
                 return AppErrorState(
                   error: AppError(
                     code: 'document_signed_url_failed',
-                    message: mapAuthErrorMessage(
+                    message: mapAppErrorMessage(
                       s,
-                      snapshot.error?.toString() ??
-                          'document_signed_url_unavailable',
+                      snapshot.error ??
+                          Exception('document_signed_url_unavailable'),
                     ),
                     technicalDetails: snapshot.error?.toString(),
                   ),
@@ -1314,7 +1361,10 @@ class DocumentViewerScreen extends ConsumerWidget {
               }
 
               return _SignedFileViewer(
-                title: s.documentViewerTitle(formattedDocumentId),
+                title: _verificationDocumentTypeLabel(
+                  s,
+                  document.documentType,
+                ),
                 message: s.documentViewerDescription,
                 signedUrl: snapshot.data!,
                 storagePath: document.storagePath,
@@ -1328,6 +1378,24 @@ class DocumentViewerScreen extends ConsumerWidget {
   }
 }
 
+String _verificationDocumentTypeLabel(
+  S s,
+  VerificationDocumentType type,
+) {
+  return switch (type) {
+    VerificationDocumentType.driverIdentityOrLicense =>
+      s.verificationDocumentDriverIdentityLabel,
+    VerificationDocumentType.truckRegistration =>
+      s.verificationDocumentTruckRegistrationLabel,
+    VerificationDocumentType.truckInsurance =>
+      s.verificationDocumentTruckInsuranceLabel,
+    VerificationDocumentType.truckTechnicalInspection =>
+      s.verificationDocumentTruckInspectionLabel,
+    VerificationDocumentType.transportLicense =>
+      s.verificationDocumentTransportLicenseLabel,
+  };
+}
+
 class GeneratedDocumentViewerScreen extends ConsumerWidget {
   const GeneratedDocumentViewerScreen({required this.documentId, super.key});
 
@@ -1336,13 +1404,12 @@ class GeneratedDocumentViewerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
-    final formattedDocumentId = BidiFormatters.latinIdentifier(documentId);
     final documentAsync = ref.watch(
       generatedDocumentDetailProvider(documentId),
     );
 
     return AppPageScaffold(
-      title: s.generatedDocumentViewerTitle(formattedDocumentId),
+      title: s.generatedDocumentViewerPageTitle,
       child: AppAsyncStateView<GeneratedDocumentRecord?>(
         value: documentAsync,
         onRetry: () =>
@@ -1355,7 +1422,7 @@ class GeneratedDocumentViewerScreen extends ConsumerWidget {
           if (document.isPending) {
             return AppStateMessage(
               icon: Icons.hourglass_top_rounded,
-              title: s.generatedDocumentViewerTitle(formattedDocumentId),
+              title: s.generatedDocumentViewerPageTitle,
               message: s.generatedDocumentPendingMessage,
             );
           }
@@ -1364,7 +1431,7 @@ class GeneratedDocumentViewerScreen extends ConsumerWidget {
             final trimmedFailureReason = document.failureReason?.trim();
             return AppStateMessage(
               icon: Icons.error_outline_rounded,
-              title: s.generatedDocumentViewerTitle(formattedDocumentId),
+              title: s.generatedDocumentViewerPageTitle,
               message:
                   trimmedFailureReason != null &&
                       trimmedFailureReason.isNotEmpty
@@ -1514,8 +1581,6 @@ class _SignedFileViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -1542,11 +1607,6 @@ class _SignedFileViewer extends StatelessWidget {
                       Text(message),
                     ],
                   ),
-                ),
-                FilledButton.icon(
-                  onPressed: () => unawaited(_openExternal(signedUrl)),
-                  icon: const Icon(Icons.open_in_new_rounded),
-                  label: Text(s.documentViewerOpenAction),
                 ),
               ],
             ),
@@ -1594,7 +1654,17 @@ class _SignedFilePreview extends StatelessWidget {
           minScale: 1,
           maxScale: 4,
           child: Container(
-            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
+                  Theme.of(context).colorScheme.surfaceContainerLow,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
             alignment: Alignment.center,
             child: Image.network(
               signedUrl,
@@ -1686,17 +1756,18 @@ bool _pathLooksLike(
   );
 }
 
-String _sharedShipmentLaneLabel(
-  BuildContext context,
-  Map<int, AlgeriaCommune> communeMap,
-  ShipmentDraftRecord shipment,
-) {
-  return _sharedLaneLabel(
-    context,
-    communeMap,
-    shipment.originCommuneId,
-    shipment.destinationCommuneId,
-  );
+String _sharedShipmentLaneTitle(
+  BuildContext context, {
+  AlgeriaCommune? originCommune,
+  AlgeriaCommune? destinationCommune,
+}) {
+  final locale = Localizations.localeOf(context);
+  final s = S.of(context);
+  final origin =
+      originCommune?.displayName(locale) ?? s.locationUnavailableLabel;
+  final destination =
+      destinationCommune?.displayName(locale) ?? s.locationUnavailableLabel;
+  return '$origin -> $destination';
 }
 
 String _sharedFormatDate(DateTime value) {
@@ -1770,4 +1841,18 @@ String _trackingEventLabel(S s, String eventType) {
     'disputed' => s.trackingEventDisputedLabel,
     _ => eventType,
   };
+}
+
+String? _trackingEventNote(S s, String eventType, String? note) {
+  final trimmed = note?.trim();
+  if (trimmed == null || trimmed.isEmpty) {
+    return null;
+  }
+
+  if (eventType == 'completed' &&
+      trimmed == 'Booking auto-completed after delivery review grace window.') {
+    return s.trackingEventAutoCompletedNote;
+  }
+
+  return trimmed;
 }

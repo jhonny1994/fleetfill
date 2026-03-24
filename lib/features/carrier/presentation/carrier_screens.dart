@@ -173,61 +173,68 @@ class CarrierHomeScreen extends ConsumerWidget {
 
     return AppPageScaffold(
       title: s.carrierHomeTitle,
-      child: ListView(
-        children: [
-          AppSectionHeader(
-            title: s.carrierHomeTitle,
-            subtitle: s.carrierHomeDescription,
-            showTitle: false,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          ProfileSummaryCard(
-            title: s.carrierVerificationSummaryTitle,
-            rows: [
-              ProfileSummaryRow(
-                label: s.carrierProfileVerificationLabel,
-                value: verificationStatusLabel(
-                  s,
-                  auth?.profile?.verificationStatus,
-                ),
-              ),
-              ProfileSummaryRow(
-                label: s.vehiclesTitle,
-                value: vehicles.asData?.value.length.toString() ?? '-',
-              ),
-              ProfileSummaryRow(
-                label: s.payoutAccountsTitle,
-                value: auth?.hasPayoutAccount == true
-                    ? s.statusReadyLabel
-                    : s.statusNeedsReviewLabel,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          if (auth?.isCarrierVerified != true)
-            AuthInfoBanner(
-              message:
-                  auth?.profile?.verificationRejectionReason?.isNotEmpty == true
-                  ? s.carrierVerificationRejectedBanner(
-                      auth!.profile!.verificationRejectionReason!,
-                    )
-                  : s.carrierVerificationPendingBanner,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(myVehiclesProvider);
+        },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            AppSectionHeader(
+              title: s.carrierHomeTitle,
+              subtitle: s.carrierHomeDescription,
+              showTitle: false,
             ),
-          const SizedBox(height: AppSpacing.md),
-          AppListCard(
-            title: s.vehiclesTitle,
-            subtitle: s.carrierVehiclesShortcutDescription,
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.go(AppRoutePath.carrierVehicles()),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppListCard(
-            title: s.carrierVerificationCenterTitle,
-            subtitle: s.carrierVerificationQueueHint,
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () => context.go(AppRoutePath.carrierVerification),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.lg),
+            ProfileSummaryCard(
+              title: s.carrierVerificationSummaryTitle,
+              rows: [
+                ProfileSummaryRow(
+                  label: s.carrierProfileVerificationLabel,
+                  value: verificationStatusLabel(
+                    s,
+                    auth?.profile?.verificationStatus,
+                  ),
+                ),
+                ProfileSummaryRow(
+                  label: s.vehiclesTitle,
+                  value: vehicles.asData?.value.length.toString() ?? '-',
+                ),
+                ProfileSummaryRow(
+                  label: s.payoutAccountsTitle,
+                  value: auth?.hasPayoutAccount == true
+                      ? s.statusReadyLabel
+                      : s.statusNeedsReviewLabel,
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            if (auth?.isCarrierVerified != true)
+              AuthInfoBanner(
+                message:
+                    auth?.profile?.verificationRejectionReason?.isNotEmpty ==
+                        true
+                    ? s.carrierVerificationRejectedBanner(
+                        auth!.profile!.verificationRejectionReason!,
+                      )
+                    : s.carrierVerificationPendingBanner,
+              ),
+            const SizedBox(height: AppSpacing.md),
+            AppListCard(
+              title: s.vehiclesTitle,
+              subtitle: s.carrierVehiclesShortcutDescription,
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.go(AppRoutePath.carrierVehicles()),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            AppListCard(
+              title: s.carrierVerificationCenterTitle,
+              subtitle: s.carrierVerificationQueueHint,
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.go(AppRoutePath.carrierVerification),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -254,25 +261,31 @@ class CarrierBookingsScreen extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
-            key: const PageStorageKey<String>('carrier-bookings-list'),
-            itemCount: bookings.length,
-            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-            itemBuilder: (context, index) {
-              final booking = bookings[index];
-              return AppListCard(
-                title: booking.trackingNumber,
-                subtitle:
-                    '${_carrierBookingStatusLabel(s, booking.bookingStatus)} • ${BidiFormatters.latinIdentifier(booking.weightKg.toStringAsFixed(0))} kg',
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => context.push(
-                  AppRoutePath.sharedTrackingDetail.replaceFirst(
-                    ':id',
-                    booking.id,
-                  ),
-                ),
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(carrierBookingsProvider);
             },
+            child: ListView.separated(
+              key: const PageStorageKey<String>('carrier-bookings-list'),
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: bookings.length,
+              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
+              itemBuilder: (context, index) {
+                final booking = bookings[index];
+                return AppListCard(
+                  title: booking.trackingNumber,
+                  subtitle:
+                      '${_carrierBookingStatusLabel(s, booking.bookingStatus)} • ${BidiFormatters.latinIdentifier(booking.weightKg.toStringAsFixed(0))} kg',
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => context.push(
+                    AppRoutePath.sharedTrackingDetail.replaceFirst(
+                      ':id',
+                      booking.id,
+                    ),
+                  ),
+                );
+              },
+            ),
           );
         },
       ),
@@ -290,11 +303,6 @@ class MyVehiclesScreen extends ConsumerWidget {
 
     return AppPageScaffold(
       title: s.vehiclesTitle,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push(AppRoutePath.carrierVehicleCreate()),
-        icon: const Icon(Icons.add_rounded),
-        label: Text(s.vehicleCreateAction),
-      ),
       child: AppAsyncStateView<List<CarrierVehicle>>(
         value: vehicles,
         onRetry: () => ref.invalidate(myVehiclesProvider),
@@ -311,27 +319,51 @@ class MyVehiclesScreen extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
-            itemCount: items.length,
-            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-            itemBuilder: (context, index) {
-              final vehicle = items[index];
-              final formattedCapacity = BidiFormatters.latinIdentifier(
-                vehicle.capacityWeightKg.toStringAsFixed(0),
-              );
-              return AppListCard(
-                title: BidiFormatters.licensePlate(vehicle.plateNumber),
-                subtitle: '${vehicle.vehicleType} • $formattedCapacity kg',
-                leading: _verificationChip(
-                  s,
-                  vehicle.verificationStatus,
-                  vehicle.verificationRejectionReason,
-                ),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () =>
-                    context.push(AppRoutePath.carrierVehicleDetail(vehicle.id)),
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(myVehiclesProvider);
             },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: FilledButton.icon(
+                    onPressed: () =>
+                        context.push(AppRoutePath.carrierVehicleCreate()),
+                    icon: const Icon(Icons.add_rounded),
+                    label: Text(s.vehicleCreateAction),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                ...items.indexed.map((entry) {
+                  final index = entry.$1;
+                  final vehicle = entry.$2;
+                  final formattedCapacity = BidiFormatters.latinIdentifier(
+                    vehicle.capacityWeightKg.toStringAsFixed(0),
+                  );
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: index == items.length - 1 ? 0 : AppSpacing.sm,
+                    ),
+                    child: AppListCard(
+                      title: BidiFormatters.licensePlate(vehicle.plateNumber),
+                      subtitle:
+                          '${vehicle.vehicleType} • $formattedCapacity kg',
+                      leading: _verificationChip(
+                        s,
+                        vehicle.verificationStatus,
+                        vehicle.verificationRejectionReason,
+                      ),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => context.push(
+                        AppRoutePath.carrierVehicleDetail(vehicle.id),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
           );
         },
       ),
@@ -394,77 +426,92 @@ class _VehicleEditorScreenState extends ConsumerState<VehicleEditorScreen> {
             _initialized = true;
           }
 
-          return ListView(
-            children: [
-              AppSectionHeader(
-                title: widget.vehicleId == null
-                    ? s.vehicleCreateTitle
-                    : s.vehicleEditTitle,
-                subtitle: s.vehicleEditorDescription,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              AuthCard(
-                child: AppFocusTraversal.form(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        AuthTextField(
-                          controller: _plateController,
-                          label: s.vehiclePlateLabel,
-                          textInputAction: TextInputAction.next,
-                          validator: _requiredValidator,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        AuthTextField(
-                          controller: _typeController,
-                          label: s.vehicleTypeLabel,
-                          textInputAction: TextInputAction.next,
-                          validator: _requiredValidator,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        AuthTextField(
-                          controller: _weightController,
-                          label: s.vehicleCapacityWeightLabel,
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          validator: _positiveNumberValidator,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        AuthTextField(
-                          controller: _volumeController,
-                          label: s.vehicleCapacityVolumeLabel,
-                          keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref
+                ..invalidate(vehicleDetailProvider(widget.vehicleId!))
+                ..invalidate(
+                  verificationDocumentsForEntityProvider(
+                    (
+                      entityType: VerificationEntityType.vehicle,
+                      entityId: widget.vehicleId!,
+                    ),
+                  ),
+                );
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                AppSectionHeader(
+                  title: widget.vehicleId == null
+                      ? s.vehicleCreateTitle
+                      : s.vehicleEditTitle,
+                  subtitle: s.vehicleEditorDescription,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                AuthCard(
+                  child: AppFocusTraversal.form(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          AuthTextField(
+                            controller: _plateController,
+                            label: s.vehiclePlateLabel,
+                            textInputAction: TextInputAction.next,
+                            validator: _requiredValidator,
                           ),
-                          textInputAction: TextInputAction.done,
-                          validator: _optionalNumberValidator,
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        AuthSubmitButton(
-                          label: widget.vehicleId == null
-                              ? s.vehicleCreateAction
-                              : s.vehicleSaveAction,
-                          isLoading: _isSaving,
-                          onPressed: () => unawaited(_save(vehicle)),
-                        ),
-                        if (vehicle != null) ...[
-                          const SizedBox(height: AppSpacing.sm),
-                          OutlinedButton.icon(
-                            onPressed: _isSaving
-                                ? null
-                                : () => unawaited(_deleteVehicle(vehicle.id)),
-                            icon: const Icon(Icons.delete_outline_rounded),
-                            label: Text(s.vehicleDeleteAction),
+                          const SizedBox(height: AppSpacing.md),
+                          AuthTextField(
+                            controller: _typeController,
+                            label: s.vehicleTypeLabel,
+                            textInputAction: TextInputAction.next,
+                            validator: _requiredValidator,
                           ),
+                          const SizedBox(height: AppSpacing.md),
+                          AuthTextField(
+                            controller: _weightController,
+                            label: s.vehicleCapacityWeightLabel,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
+                            validator: _positiveNumberValidator,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          AuthTextField(
+                            controller: _volumeController,
+                            label: s.vehicleCapacityVolumeLabel,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            textInputAction: TextInputAction.done,
+                            validator: _optionalNumberValidator,
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          AuthSubmitButton(
+                            label: widget.vehicleId == null
+                                ? s.vehicleCreateAction
+                                : s.vehicleSaveAction,
+                            isLoading: _isSaving,
+                            onPressed: () => unawaited(_save(vehicle)),
+                          ),
+                          if (vehicle != null) ...[
+                            const SizedBox(height: AppSpacing.sm),
+                            OutlinedButton.icon(
+                              onPressed: _isSaving
+                                  ? null
+                                  : () => unawaited(_deleteVehicle(vehicle.id)),
+                              icon: const Icon(Icons.delete_outline_rounded),
+                              label: Text(s.vehicleDeleteAction),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -674,23 +721,8 @@ class VehicleDetailScreen extends ConsumerWidget {
                     label: s.vehicleCapacityVolumeLabel,
                     value: formattedVolume,
                   ),
-                  ProfileSummaryRow(
-                    label: s.carrierProfileVerificationLabel,
-                    value: verificationStatusLabel(
-                      s,
-                      vehicle.verificationStatus,
-                    ),
-                  ),
                 ],
               ),
-              if ((vehicle.verificationRejectionReason ?? '').isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.md),
-                AuthInfoBanner(
-                  message: s.vehicleVerificationRejectedBanner(
-                    vehicle.verificationRejectionReason!,
-                  ),
-                ),
-              ],
               const SizedBox(height: AppSpacing.lg),
               _VerificationDocumentsSection(
                 entityType: VerificationEntityType.vehicle,
@@ -724,68 +756,78 @@ class CarrierVerificationCenterScreen extends ConsumerWidget {
 
     return AppPageScaffold(
       title: s.carrierVerificationCenterTitle,
-      child: ListView(
-        children: [
-          AppSectionHeader(
-            title: s.carrierVerificationCenterTitle,
-            subtitle: s.carrierVerificationCenterDescription,
-            showTitle: false,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          _VerificationDocumentsSection(
-            entityType: VerificationEntityType.profile,
-            entityId: auth?.userId ?? '',
-            documentsAsync: profileDocuments,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            s.vehiclesTitle,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          vehicles.when(
-            data: (items) {
-              if (items.isEmpty) {
-                return AppEmptyState(
-                  title: s.vehiclesTitle,
-                  message: s.vehiclesEmptyMessage,
-                );
-              }
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref
+            ..invalidate(myVehiclesProvider)
+            ..invalidate(
+              verificationDocumentsForEntityProvider(
+                (
+                  entityType: VerificationEntityType.profile,
+                  entityId: auth?.userId ?? '',
+                ),
+              ),
+            );
+        },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            AppSectionHeader(
+              title: s.carrierVerificationCenterTitle,
+              subtitle: s.carrierVerificationCenterDescription,
+              showTitle: false,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            _VerificationDocumentsSection(
+              entityType: VerificationEntityType.profile,
+              entityId: auth?.userId ?? '',
+              documentsAsync: profileDocuments,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              s.vehiclesTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            vehicles.when(
+              data: (items) {
+                if (items.isEmpty) {
+                  return AppEmptyState(
+                    title: s.vehiclesTitle,
+                    message: s.vehiclesEmptyMessage,
+                  );
+                }
 
-              return Column(
-                children: items
-                    .map(
-                      (vehicle) => Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        child: AppListCard(
-                          title: vehicle.plateNumber,
-                          subtitle: vehicle.vehicleType,
-                          leading: _verificationChip(
-                            s,
-                            vehicle.verificationStatus,
-                            vehicle.verificationRejectionReason,
-                          ),
-                          trailing: const Icon(Icons.chevron_right_rounded),
-                          onTap: () => context.push(
-                            AppRoutePath.carrierVehicleDetail(vehicle.id),
+                return Column(
+                  children: items
+                      .map(
+                        (vehicle) => Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                          child: AppListCard(
+                            title: vehicle.plateNumber,
+                            subtitle: vehicle.vehicleType,
+                            trailing: const Icon(Icons.chevron_right_rounded),
+                            onTap: () => context.push(
+                              AppRoutePath.carrierVehicleDetail(vehicle.id),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                    .toList(growable: false),
-              );
-            },
-            loading: () => const AppLoadingState(),
-            error: (error, stackTrace) => AppErrorState(
-              error: AppError(
-                code: 'vehicles_load_failed',
-                message: mapAppErrorMessage(s, error),
-                technicalDetails: stackTrace.toString(),
+                      )
+                      .toList(growable: false),
+                );
+              },
+              loading: () => const AppLoadingState(),
+              error: (error, stackTrace) => AppErrorState(
+                error: AppError(
+                  code: 'vehicles_load_failed',
+                  message: mapAppErrorMessage(s, error),
+                  technicalDetails: stackTrace.toString(),
+                ),
+                onRetry: () => ref.invalidate(myVehiclesProvider),
               ),
-              onRetry: () => ref.invalidate(myVehiclesProvider),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -807,9 +849,11 @@ class _VerificationDocumentsSection extends ConsumerWidget {
     final s = S.of(context);
     final supportedDocumentTypes = VerificationDocumentType.values
         .where(
-          (type) => entityType == VerificationEntityType.profile
-              ? type.isProfileDocument
-              : !type.isProfileDocument,
+          (type) =>
+              type.isLiveDocument &&
+              (entityType == VerificationEntityType.profile
+                  ? type.isProfileDocument
+                  : !type.isProfileDocument),
         )
         .toList(growable: false);
 
@@ -951,14 +995,6 @@ class _VerificationDocumentsSection extends ConsumerWidget {
         uploadResult.replacedExistingDocument
             ? s.verificationDocumentReplacedMessage
             : s.verificationDocumentUploadedMessage,
-      );
-      unawaited(
-        context.push(
-          AppRoutePath.sharedDocumentViewer.replaceFirst(
-            ':id',
-            uploadResult.document.id,
-          ),
-        ),
       );
     } on PostgrestException catch (error) {
       if (context.mounted) {

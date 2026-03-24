@@ -1,5 +1,5 @@
 begin;
-select plan(9);
+select plan(17);
 
 select ok(
   exists (select 1 from pg_proc where proname = 'create_carrier_route'),
@@ -17,8 +17,52 @@ select ok(
 );
 
 select ok(
-  exists (select 1 from pg_proc where proname = 'enqueue_support_request_emails'),
-  'enqueue_support_request_emails exists'
+  exists (select 1 from pg_proc where proname = 'create_support_request'),
+  'create_support_request exists'
+);
+
+select ok(
+  exists (select 1 from pg_proc where proname = 'reply_to_support_request'),
+  'reply_to_support_request exists'
+);
+
+select ok(
+  exists (select 1 from pg_proc where proname = 'mark_support_request_read'),
+  'mark_support_request_read exists'
+);
+
+select ok(
+  exists (select 1 from pg_proc where proname = 'admin_set_support_request_status'),
+  'admin_set_support_request_status exists'
+);
+
+select ok(
+  exists (select 1 from pg_proc where proname = 'admin_assign_support_request'),
+  'admin_assign_support_request exists'
+);
+
+select ok(
+  exists (select 1 from pg_proc where proname = 'authorize_private_file_access_for_user'),
+  'authorize_private_file_access_for_user exists'
+);
+
+select ok(
+  exists (select 1 from pg_class where relname = 'support_requests'),
+  'support_requests table exists'
+);
+
+select ok(
+  exists (select 1 from pg_class where relname = 'support_messages'),
+  'support_messages table exists'
+);
+
+select ok(
+  exists (
+    select 1
+    from pg_trigger
+    where tgname = 'support_messages_append_only_guard'
+  ),
+  'support_messages append-only trigger exists'
 );
 
 select ok(
