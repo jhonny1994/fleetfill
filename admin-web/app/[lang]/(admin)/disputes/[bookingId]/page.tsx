@@ -4,39 +4,42 @@ import { DisputeResolutionActions } from "@/components/detail/dispute-resolution
 import { FilePreviewPanel } from "@/components/detail/file-preview-panel";
 import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { formatCurrencyDzd, formatDateTime } from "@/lib/formatting/formatters";
+import { formatTemplate, getAdminDetailCopy, getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { fetchDisputeDetail } from "@/lib/queries/admin-disputes";
 
 export default async function DisputeDetailPage({
   params,
 }: {
-  params: Promise<{ bookingId: string }>;
+  params: Promise<{ lang: string; bookingId: string }>;
 }) {
-  const { bookingId } = await params;
+  const { lang, bookingId } = await params;
   const detail = await fetchDisputeDetail(bookingId);
+  const ui = getAdminUi(lang);
+  const detailCopy = getAdminDetailCopy(lang);
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">Dispute detail not found.</div>;
+    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.disputes.notFound}</div>;
   }
 
   const previewEvidence = detail.evidence[0] ?? null;
 
   return (
     <DetailWorkspace
-      eyebrow="Disputes"
-      title={`Dispute for ${detail.booking.tracking_number}`}
-      description="Review the dispute reason, evidence, and refund history before resolving the dispute with or without a refund."
+      eyebrow={ui.pages.disputes.eyebrow}
+      title={detail.booking.tracking_number}
+      description={detailCopy.disputes.description}
       facts={[
-        { label: "Booking", value: detail.booking.tracking_number },
-        { label: "Reason", value: detail.dispute.reason },
-        { label: "Dispute state", value: detail.dispute.status },
-        { label: "Evidence items", value: String(detail.evidence.length) },
+        { label: detailCopy.disputes.bookingLabel, value: detail.booking.tracking_number },
+        { label: ui.labels.reason, value: detail.dispute.reason },
+        { label: detailCopy.disputes.disputeStateLabel, value: getEnumLabel(lang, "dispute", detail.dispute.status) },
+        { label: detailCopy.disputes.evidenceItemsLabel, value: String(detail.evidence.length) },
       ]}
       main={
         <>
           {previewEvidence ? (
             <FilePreviewPanel
-              title="Evidence preview"
-              label={previewEvidence.note ?? "Dispute evidence"}
+              title={ui.pages.disputes.preview}
+              label={previewEvidence.note ?? ui.labels.noNote}
               storagePath={previewEvidence.storage_path}
               contentType={previewEvidence.content_type}
               signedUrl={previewEvidence.signedUrl}
@@ -46,13 +49,15 @@ export default async function DisputeDetailPage({
             items={[
               {
                 id: detail.dispute.id,
-                title: "Dispute opened",
+                title: detailCopy.disputes.opened,
                 detail: detail.dispute.description ?? detail.dispute.reason,
                 at: formatDateTime(detail.dispute.created_at),
               },
               ...detail.refunds.map((refund) => ({
                 id: refund.id,
-                title: `Refund ${refund.status}`,
+                title: formatTemplate(detailCopy.disputes.refundEntry, {
+                  state: getEnumLabel(lang, "payout", refund.status),
+                }),
                 detail: `${formatCurrencyDzd(Number(refund.amount_dzd))} • ${refund.reason}`,
                 at: formatDateTime(refund.processed_at),
               })),
@@ -61,8 +66,8 @@ export default async function DisputeDetailPage({
         </>
       }
       rail={
-        <ActionRail title="Dispute actions" description="Use the dispute workflows to close the case cleanly or issue a refund-backed resolution.">
-          <DisputeResolutionActions disputeId={detail.dispute.id} />
+        <ActionRail locale={lang} title={ui.pages.disputes.actions} description={ui.pages.disputes.title}>
+          <DisputeResolutionActions locale={lang} disputeId={detail.dispute.id} />
         </ActionRail>
       }
     />

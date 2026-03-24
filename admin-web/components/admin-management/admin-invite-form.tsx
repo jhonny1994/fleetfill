@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import type { AppLocale } from "@/lib/i18n/config";
+import { formatTemplate, getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { adminInviteSchema } from "@/lib/validation/admin-management";
 
@@ -18,7 +20,8 @@ type InviteResult = {
   token: string;
 };
 
-export function AdminInviteForm() {
+export function AdminInviteForm({ locale }: { locale: AppLocale | string }) {
+  const ui = getAdminUi(locale);
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<InviteResult | null>(null);
@@ -63,28 +66,27 @@ export function AdminInviteForm() {
   return (
     <section className="panel space-y-4 p-6">
       <div className="space-y-2">
-        <p className="eyebrow">Admins</p>
-        <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">Invite a new admin</h2>
+        <p className="eyebrow">{ui.pages.admins.eyebrow}</p>
+        <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.admins.inviteTitle}</h2>
         <p className="text-sm leading-6 text-[var(--color-ink-muted)]">
-          New admins are created by invitation only. The raw token is shown once here so it can be delivered through your
-          secure internal channel.
+          {ui.pages.admins.inviteBody}
         </p>
       </div>
 
       <form className="grid gap-3 md:grid-cols-3" onSubmit={form.handleSubmit(onSubmit)}>
         <label className="grid gap-1 text-sm md:col-span-2">
-          <span>Email</span>
+          <span>{ui.labels.email}</span>
           <input className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("email")} />
         </label>
         <label className="grid gap-1 text-sm">
-          <span>Role</span>
+          <span>{ui.labels.role}</span>
           <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("role")}>
-            <option value="ops_admin">Ops admin</option>
-            <option value="super_admin">Super admin</option>
+            <option value="ops_admin">{getEnumLabel(locale, "adminRoles", "ops_admin")}</option>
+            <option value="super_admin">{getEnumLabel(locale, "adminRoles", "super_admin")}</option>
           </select>
         </label>
         <label className="grid gap-1 text-sm">
-          <span>Expiry (hours)</span>
+          <span>{ui.actions.expiryHours}</span>
           <input
             type="number"
             min="1"
@@ -95,7 +97,7 @@ export function AdminInviteForm() {
         </label>
         <div className="md:col-span-2 md:self-end">
           <button className="button-primary" type="submit" disabled={isPending}>
-            {isPending ? "Creating invite..." : "Create invitation"}
+            {isPending ? ui.actions.creatingInvitation : ui.actions.createInvitation}
           </button>
         </div>
       </form>
@@ -106,14 +108,19 @@ export function AdminInviteForm() {
         <div className="rounded-[22px] border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-[var(--color-ink-strong)]">Invitation created for {result.email}</p>
+              <p className="text-sm font-semibold text-[var(--color-ink-strong)]">
+                {formatTemplate(ui.pages.admins.invitationCreatedFor, { email: result.email })}
+              </p>
               <p className="text-xs text-[var(--color-ink-muted)]">
-                Role {result.role} • expires {new Date(result.expires_at).toLocaleString()}
+                {formatTemplate(ui.pages.admins.invitationMeta, {
+                  role: getEnumLabel(locale, "adminRoles", result.role),
+                  date: new Date(result.expires_at).toLocaleString(),
+                })}
               </p>
             </div>
             <button type="button" className="button-secondary" onClick={copyToken}>
               <Copy className="size-4" />
-              Copy token
+              {ui.actions.copyToken}
             </button>
           </div>
           <div className="mt-3 rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3 font-mono text-xs text-[var(--color-ink-strong)]">

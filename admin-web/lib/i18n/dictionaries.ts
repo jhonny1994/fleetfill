@@ -45,6 +45,8 @@ const dictionaries = {
       },
       searchPlaceholder: "ابحث عن الحجوزات، الشحنات، المستخدمين، النزاعات، التحويلات، والدعم...",
       searchShortcut: "اختصار البحث",
+      openNavigation: "فتح التنقل",
+      closeNavigation: "إغلاق التنقل",
     },
     common: {
       queue: "طابور",
@@ -175,6 +177,8 @@ const dictionaries = {
       },
       searchPlaceholder: "Rechercher des bookings, utilisateurs, litiges, versements, support...",
       searchShortcut: "Raccourci recherche",
+      openNavigation: "Ouvrir la navigation",
+      closeNavigation: "Fermer la navigation",
     },
     common: {
       queue: "File",
@@ -306,6 +310,8 @@ const dictionaries = {
       },
       searchPlaceholder: "Search bookings, users, disputes, payouts, support...",
       searchShortcut: "Search shortcut",
+      openNavigation: "Open navigation",
+      closeNavigation: "Close navigation",
     },
     common: {
       queue: "Queue",
@@ -397,6 +403,10 @@ const dictionaries = {
 
 export type AdminDictionary = (typeof dictionaries)[AppLocale];
 
-export async function getDictionary(locale: AppLocale) {
+export function resolveAdminDictionary(locale: AppLocale) {
   return dictionaries[locale];
+}
+
+export async function getDictionary(locale: AppLocale) {
+  return resolveAdminDictionary(locale);
 }

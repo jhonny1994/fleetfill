@@ -7,18 +7,23 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import type { AppLocale } from "@/lib/i18n/config";
+import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { supportReplySchema, supportStatusSchema } from "@/lib/validation/review-actions";
 
 export function SupportThreadActions({
+  locale,
   requestId,
   currentStatus,
   currentPriority,
 }: {
+  locale: AppLocale | string;
   requestId: string;
   currentStatus: string;
   currentPriority: string;
 }) {
+  const ui = getAdminUi(locale);
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingReply, setPendingReply] = useState<z.infer<typeof supportReplySchema> | null>(null);
@@ -74,57 +79,59 @@ export function SupportThreadActions({
   return (
     <div className="space-y-5">
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">Reply to thread</h3>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.reply}</h3>
         <form className="space-y-3" onSubmit={replyForm.handleSubmit((values) => setPendingReply(values))}>
           <label className="grid gap-1 text-sm">
-            <span>Reply</span>
+            <span>{ui.actions.replyLabel}</span>
             <textarea className="min-h-28 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...replyForm.register("message")} />
           </label>
-          <button className="button-primary" type="submit">Send reply</button>
+          <button className="button-primary" type="submit">{ui.actions.reply}</button>
         </form>
       </section>
 
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">Update status</h3>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.updateStatus}</h3>
         <form className="space-y-3" onSubmit={statusForm.handleSubmit((values) => setPendingStatus(values))}>
           <label className="grid gap-1 text-sm">
-            <span>Status</span>
+            <span>{ui.labels.state}</span>
             <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...statusForm.register("status")}>
-              <option value="open">Open</option>
-              <option value="in_progress">In progress</option>
-              <option value="waiting_for_user">Waiting for user</option>
-              <option value="resolved">Resolved</option>
-              <option value="closed">Closed</option>
+              <option value="open">{getEnumLabel(locale, "supportStatus", "open")}</option>
+              <option value="in_progress">{getEnumLabel(locale, "supportStatus", "in_progress")}</option>
+              <option value="waiting_for_user">{getEnumLabel(locale, "supportStatus", "waiting_for_user")}</option>
+              <option value="resolved">{getEnumLabel(locale, "supportStatus", "resolved")}</option>
+              <option value="closed">{getEnumLabel(locale, "supportStatus", "closed")}</option>
             </select>
           </label>
           <label className="grid gap-1 text-sm">
-            <span>Priority</span>
+            <span>{ui.labels.priority}</span>
             <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...statusForm.register("priority")}>
-              <option value="normal">Normal</option>
-              <option value="high">High</option>
-              <option value="urgent">Urgent</option>
+              <option value="normal">{getEnumLabel(locale, "supportPriority", "normal")}</option>
+              <option value="high">{getEnumLabel(locale, "supportPriority", "high")}</option>
+              <option value="urgent">{getEnumLabel(locale, "supportPriority", "urgent")}</option>
             </select>
           </label>
-          <button className="button-secondary" type="submit">Update status</button>
+          <button className="button-secondary" type="submit">{ui.actions.updateStatus}</button>
         </form>
       </section>
 
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
+        locale={locale}
         open={pendingReply !== null}
-        title="Send admin reply?"
-        body="This will post your reply into the support thread and notify the user."
-        confirmLabel="Send reply"
+        title={ui.actions.sendReplyTitle}
+        body={ui.actions.sendReplyBody}
+        confirmLabel={ui.actions.reply}
         isPending={isPending}
         onCancel={() => setPendingReply(null)}
         onConfirm={confirmReply}
       />
       <ConfirmDialog
+        locale={locale}
         open={pendingStatus !== null}
-        title="Update support status?"
-        body="This will change the support workflow state and priority for the thread."
-        confirmLabel="Update"
+        title={ui.actions.updateStatusTitle}
+        body={ui.actions.updateStatusBody}
+        confirmLabel={ui.actions.updateStatus}
         isPending={isPending}
         onCancel={() => setPendingStatus(null)}
         onConfirm={confirmStatus}
