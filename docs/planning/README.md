@@ -25,3 +25,5 @@ Use the admin-web planning docs as one connected system, not as isolated notes:
 - `admin-web-system-design.md` answers how the web app, Supabase, governance, and deployment fit together
 - `admin-web-ui-ux-spec.md` answers how the product should look, behave, and scale responsively
 - `admin-web-console-plan.md` turns the locked decisions into practical rollout phases and feature inventory
+- `admin-web-production-checklist.md` is the release-readiness tracker that records what is complete, what is only partially proven, and what still blocks a true production launch
+- `admin-web-browser-qa-checklist.md` is the operator-grade preview QA checklist for role access, queues, mutations, locales, and responsive fallback
