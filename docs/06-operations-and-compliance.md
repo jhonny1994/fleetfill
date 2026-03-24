@@ -151,7 +151,6 @@ Payout release must create:
 Supported payout destinations:
 
 - CCP
-- Dahabia
 - bank
 
 ## 7. SLA Baseline

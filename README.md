@@ -55,7 +55,7 @@ FleetFill is designed for:
 
 ## Support
 
-Support starts with email-based assistance inside the app.
+Support is handled in-app through a ticket and thread workflow, with notifications and optional email as supporting channels rather than the source of truth.
 
 ## Policies And Disclosures
 

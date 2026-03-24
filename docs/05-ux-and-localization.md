@@ -283,20 +283,23 @@ Trust cues should matter more than decorative UI.
 ## 9.1 Carrier Verification UX
 
 - vehicles and verification live under the carrier profile branch, not as extra carrier shell tabs
+- carrier verification should feel unified for the user, with one verification center containing driver documents and vehicle documents
 - profile and vehicle verification documents should be managed from sections/cards with upload and replace actions instead of route-per-document flows
-- latest verification status and rejection reason must stay visible near the affected profile or vehicle record so carriers can correct issues quickly
+- required live documents are driver's license, vehicle registration card, insurance, and technical inspection
+- latest document status and rejection reason must stay visible near the affected document record so carriers can correct issues quickly
 
 ## 10. Support UX
 
 Support entry point should be simple:
 
-- support email visible in profile and booking flows
-- prefilled subject/body options where useful
-- escalation copy that explains what information to send
+- support inbox visible in profile and booking flows
+- simple ticket creation with prefilled subject/body options where useful
+- threaded replies between user and admin inside the platform
+- escalation copy that explains what information to include
 
-Support chat is not required in the canonical launch UX.
+Realtime chat is not required in the canonical launch UX.
 
-Email communications sent by FleetFill must align with the same trust-first tone used in the app.
+Email communications sent by FleetFill should act as notifications or fallback alerts and align with the same trust-first tone used in the app.
 
 Rules:
 

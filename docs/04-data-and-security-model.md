@@ -58,7 +58,6 @@ Purpose: carrier payout destination.
 Supported `account_type` values:
 
 - `ccp`
-- `dahabia`
 - `bank`
 
 Recommended fields:
