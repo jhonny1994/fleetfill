@@ -15,8 +15,12 @@ on:
 
 jobs:
   preview:
-    if: ${{ github.event_name == 'pull_request' && secrets.VERCEL_TOKEN != '' && vars.VERCEL_ORG_ID != '' && vars.VERCEL_ADMIN_WEB_PROJECT_ID != '' }}
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
     defaults:
       run:
         working-directory: admin-web
@@ -24,12 +28,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check Vercel preview configuration
+        id: config
+        shell: bash
+        run: |
+          if [[ -n "$VERCEL_TOKEN" && -n "$VERCEL_ORG_ID" && -n "$VERCEL_PROJECT_ID" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping preview deploy because Vercel configuration is incomplete."
+          fi
+
       - name: Set up pnpm
+        if: steps.config.outputs.configured == 'true'
         uses: pnpm/action-setup@v4
         with:
           version: 10
 
       - name: Set up Node.js
+        if: steps.config.outputs.configured == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -37,29 +54,28 @@ jobs:
           cache-dependency-path: admin-web/pnpm-lock.yaml
 
       - name: Verify Vercel CLI
+        if: steps.config.outputs.configured == 'true'
         run: pnpm dlx vercel --version
 
       - name: Pull preview environment
+        if: steps.config.outputs.configured == 'true'
         run: pnpm dlx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
 
       - name: Build preview deployment
+        if: steps.config.outputs.configured == 'true'
         run: pnpm dlx vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
 
       - name: Deploy preview
+        if: steps.config.outputs.configured == 'true'
         run: pnpm dlx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
 
   production:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.VERCEL_TOKEN != '' && vars.VERCEL_ORG_ID != '' && vars.VERCEL_ADMIN_WEB_PROJECT_ID != '' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
     defaults:
       run:
         working-directory: admin-web
@@ -67,12 +83,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check Vercel production configuration
+        id: config
+        shell: bash
+        run: |
+          if [[ -n "$VERCEL_TOKEN" && -n "$VERCEL_ORG_ID" && -n "$VERCEL_PROJECT_ID" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping production deploy because Vercel configuration is incomplete."
+          fi
+
       - name: Set up pnpm
+        if: steps.config.outputs.configured == 'true'
         uses: pnpm/action-setup@v4
         with:
           version: 10
 
       - name: Set up Node.js
+        if: steps.config.outputs.configured == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -80,22 +109,17 @@ jobs:
           cache-dependency-path: admin-web/pnpm-lock.yaml
 
       - name: Verify Vercel CLI
+        if: steps.config.outputs.configured == 'true'
         run: pnpm dlx vercel --version
 
       - name: Pull production environment
+        if: steps.config.outputs.configured == 'true'
         run: pnpm dlx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
 
       - name: Build production deployment
+        if: steps.config.outputs.configured == 'true'
         run: pnpm dlx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
 
       - name: Deploy production
+        if: steps.config.outputs.configured == 'true'
         run: pnpm dlx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
