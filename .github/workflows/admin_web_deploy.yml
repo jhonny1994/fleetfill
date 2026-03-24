@@ -1,0 +1,101 @@
+name: Admin Web Deploy
+
+on:
+  pull_request:
+    paths:
+      - "admin-web/**"
+      - ".github/workflows/admin_web_deploy.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "admin-web/**"
+      - ".github/workflows/admin_web_deploy.yml"
+  workflow_dispatch:
+
+jobs:
+  preview:
+    if: ${{ github.event_name == 'pull_request' && secrets.VERCEL_TOKEN != '' && vars.VERCEL_ORG_ID != '' && vars.VERCEL_ADMIN_WEB_PROJECT_ID != '' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin-web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: admin-web/pnpm-lock.yaml
+
+      - name: Verify Vercel CLI
+        run: pnpm dlx vercel --version
+
+      - name: Pull preview environment
+        run: pnpm dlx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
+
+      - name: Build preview deployment
+        run: pnpm dlx vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
+
+      - name: Deploy preview
+        run: pnpm dlx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
+
+  production:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.VERCEL_TOKEN != '' && vars.VERCEL_ORG_ID != '' && vars.VERCEL_ADMIN_WEB_PROJECT_ID != '' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin-web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: admin-web/pnpm-lock.yaml
+
+      - name: Verify Vercel CLI
+        run: pnpm dlx vercel --version
+
+      - name: Pull production environment
+        run: pnpm dlx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
+
+      - name: Build production deployment
+        run: pnpm dlx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
+
+      - name: Deploy production
+        run: pnpm dlx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}

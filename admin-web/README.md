@@ -57,3 +57,23 @@ supabase test db
 - Production should use the admin-only domain and production Supabase environment variables.
 - Do not expose `service_role` keys to the browser or to Next.js client bundles.
 - Sensitive admin mutations continue to run through the backend RPC layer.
+
+## CI/CD
+
+GitHub Actions workflows:
+
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_quality.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_quality.yml)
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\supabase_validation.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\supabase_validation.yml)
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_deploy.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_deploy.yml)
+
+GitHub configuration expected for deployment:
+
+- secret `VERCEL_TOKEN`
+- variable `VERCEL_ORG_ID`
+- variable `VERCEL_ADMIN_WEB_PROJECT_ID`
+
+Vercel runtime variables expected by the app:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SITE_URL`
