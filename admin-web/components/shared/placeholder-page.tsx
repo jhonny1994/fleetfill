@@ -43,14 +43,14 @@ export function PlaceholderPage({
           };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <p className="eyebrow">{eyebrow}</p>
         <StatusBadge label={copy.scaffolded} tone="warning" />
       </div>
       <EmptyState eyebrow={eyebrow} title={title} body={body} />
-      <section className="panel grid gap-4 p-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-3">
+      <section className="panel grid gap-4 p-5 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="space-y-2">
           <h3 className="text-lg font-semibold text-[var(--color-ink-strong)]">
             {copy.ready}
           </h3>
@@ -58,10 +58,10 @@ export function PlaceholderPage({
             {copy.descriptionText}
           </p>
         </div>
-        <div className="rounded-[24px] border border-[var(--color-border)] bg-white/65 p-4">
+        <div className="rounded-[22px] border border-[var(--color-border)] bg-white/65 p-4">
           <div className="flex items-center justify-between text-sm font-medium text-[var(--color-ink-base)]">
             <span>{copy.note}</span>
-            <ArrowRight className="size-4" />
+            <ArrowRight className="rtl-flip size-4" />
           </div>
           <p className="mt-3 text-sm text-[var(--color-ink-muted)]">
             {copy.noteBody}

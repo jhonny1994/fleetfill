@@ -84,10 +84,10 @@ export function AdminDataTable<TData>({
 
 function SortIcon({ direction }: { direction: false | "asc" | "desc" }) {
   if (direction === "asc") {
-    return <ArrowUp className="size-4" />;
+    return <ArrowUp className="size-4 shrink-0" />;
   }
   if (direction === "desc") {
-    return <ArrowDown className="size-4" />;
+    return <ArrowDown className="size-4 shrink-0" />;
   }
-  return <ArrowUpDown className="size-4 opacity-60" />;
+  return <ArrowUpDown className="size-4 shrink-0 opacity-60" />;
 }

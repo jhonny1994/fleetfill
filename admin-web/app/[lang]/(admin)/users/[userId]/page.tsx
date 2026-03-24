@@ -39,9 +39,9 @@ export default async function UserDetailPage({
       ]}
       main={
         <>
-          <section className="panel space-y-4 p-6">
+          <section className="panel space-y-4 p-5">
             <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.profileAndVerification}</h2>
+              <h2 className="text-[1.1rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.profileAndVerification}</h2>
               <p className="text-sm text-[var(--color-ink-muted)]">
                 {detail.profile.email}
                 {detail.profile.phoneNumber ? ` • ${detail.profile.phoneNumber}` : ""}
@@ -62,21 +62,39 @@ export default async function UserDetailPage({
               />
             </div>
             {detail.profile.verificationRejectionReason ? (
-              <p className="rounded-2xl border border-[var(--color-red-100)] bg-[var(--color-red-100)] px-4 py-3 text-sm text-[var(--color-red-700)]">
+              <p className="rounded-[14px] border border-[var(--color-red-100)] bg-[var(--color-red-100)] px-4 py-3 text-sm text-[var(--color-red-700)]">
                 {detail.profile.verificationRejectionReason}
               </p>
             ) : null}
+            <div className="meta-grid">
+              <div className="meta-card">
+                <p className="meta-card-label">{detailCopy.users.vehicles}</p>
+                <p className="meta-card-value">{detail.vehicles.length}</p>
+              </div>
+              <div className="meta-card">
+                <p className="meta-card-label">{detailCopy.users.recentBookings}</p>
+                <p className="meta-card-value">{detail.bookings.length}</p>
+              </div>
+              <div className="meta-card">
+                <p className="meta-card-label">{detailCopy.users.supportThreads}</p>
+                <p className="meta-card-value">{detail.supportRequests.length}</p>
+              </div>
+              <div className="meta-card">
+                <p className="meta-card-label">{detailCopy.users.payoutAccounts}</p>
+                <p className="meta-card-value">{detail.payoutAccounts.length}</p>
+              </div>
+            </div>
           </section>
 
           <section className="grid gap-4 xl:grid-cols-2">
-            <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.vehicles}</h2>
+            <section className="panel space-y-3 p-5">
+              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.vehicles}</h2>
               <div className="space-y-3">
                 {detail.vehicles.length === 0 ? (
                   <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noVehicles}</p>
                 ) : (
-                  detail.vehicles.map((vehicle) => (
-                    <div key={vehicle.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+                  detail.vehicles.slice(0, 3).map((vehicle) => (
+                    <div key={vehicle.id} className="section-card p-3.5">
                       <p className="font-medium text-[var(--color-ink-strong)]">{vehicle.label}</p>
                       <div className="mt-2">
                         <StatusBadge
@@ -96,14 +114,14 @@ export default async function UserDetailPage({
               </div>
             </section>
 
-            <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.payoutAccounts}</h2>
+            <section className="panel space-y-3 p-5">
+              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.payoutAccounts}</h2>
               <div className="space-y-3">
                 {detail.payoutAccounts.length === 0 ? (
                   <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noPayoutAccounts}</p>
                 ) : (
-                  detail.payoutAccounts.map((account) => (
-                    <div key={account.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+                  detail.payoutAccounts.slice(0, 3).map((account) => (
+                    <div key={account.id} className="section-card p-3.5">
                       <p className="font-medium text-[var(--color-ink-strong)]">
                         {account.accountType.toUpperCase()} • {account.identifier}
                       </p>
@@ -120,14 +138,14 @@ export default async function UserDetailPage({
           </section>
 
           <section className="grid gap-4 xl:grid-cols-2">
-            <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentShipments}</h2>
+            <section className="panel space-y-3 p-5">
+              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentShipments}</h2>
               <div className="space-y-3">
                 {detail.shipments.length === 0 ? (
                   <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noShipments}</p>
                 ) : (
-                  detail.shipments.map((shipment) => (
-                    <div key={shipment.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+                  detail.shipments.slice(0, 3).map((shipment) => (
+                    <div key={shipment.id} className="section-card p-3.5">
                       <Link href={buildAdminRoute(lang, "shipment", shipment.id)} className="font-medium text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
                         {shipment.description?.trim() || shipment.id}
                       </Link>
@@ -144,14 +162,14 @@ export default async function UserDetailPage({
               </div>
             </section>
 
-            <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentBookings}</h2>
+            <section className="panel space-y-3 p-5">
+              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentBookings}</h2>
               <div className="space-y-3">
                 {detail.bookings.length === 0 ? (
                   <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noBookings}</p>
                 ) : (
-                  detail.bookings.map((booking) => (
-                    <div key={booking.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+                  detail.bookings.slice(0, 3).map((booking) => (
+                    <div key={booking.id} className="section-card p-3.5">
                       <Link href={buildAdminRoute(lang, "booking", booking.id)} className="font-medium text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
                         {booking.trackingNumber}
                       </Link>
@@ -167,14 +185,14 @@ export default async function UserDetailPage({
           </section>
 
           <section className="grid gap-4 xl:grid-cols-2">
-            <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.supportThreads}</h2>
+            <section className="panel space-y-3 p-5">
+              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.supportThreads}</h2>
               <div className="space-y-3">
                 {detail.supportRequests.length === 0 ? (
                   <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noSupportThreads}</p>
                 ) : (
-                  detail.supportRequests.map((request) => (
-                    <div key={request.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+                  detail.supportRequests.slice(0, 3).map((request) => (
+                    <div key={request.id} className="section-card p-3.5">
                       <Link href={buildAdminRoute(lang, "support", request.id)} className="font-medium text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
                         {request.subject}
                       </Link>
@@ -185,14 +203,14 @@ export default async function UserDetailPage({
               </div>
             </section>
 
-            <section className="panel space-y-3 p-6">
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.verificationDocuments}</h2>
+            <section className="panel space-y-3 p-5">
+              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.verificationDocuments}</h2>
               <div className="space-y-3">
                 {detail.documents.length === 0 ? (
                   <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noVerificationDocuments}</p>
                 ) : (
-                  detail.documents.map((document) => (
-                    <div key={document.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+                  detail.documents.slice(0, 4).map((document) => (
+                    <div key={document.id} className="section-card p-3.5">
                       <p className="font-medium text-[var(--color-ink-strong)]">{getDocumentLabel(lang, document.documentType)}</p>
                       <div className="mt-2 flex gap-2">
                         <StatusBadge label={getEnumLabel(lang, "entity", document.entityType)} tone="neutral" />
@@ -225,7 +243,6 @@ export default async function UserDetailPage({
         <ActionRail
           locale={lang}
           title={detailCopy.users.controls}
-          description={detailCopy.users.description}
         >
           <UserActivationActions locale={lang} profileId={detail.profile.id} isActive={detail.profile.isActive} />
         </ActionRail>

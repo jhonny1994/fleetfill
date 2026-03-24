@@ -2,8 +2,10 @@ import { Bell, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { AdminIdentityControls } from "@/components/admin-shell/admin-identity-controls";
+import { AdminLocaleSwitcher } from "@/components/admin-shell/admin-locale-switcher";
 import { CommandSearch } from "@/components/shared/command-search";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { getAdminEnvironmentLabel } from "@/lib/admin-environment";
 import type { AppLocale } from "@/lib/i18n/config";
 import type { AdminDictionary } from "@/lib/i18n/dictionaries";
 
@@ -20,22 +22,25 @@ export function AdminHeader({
   dictionary: AdminDictionary;
   navigationTrigger?: ReactNode;
 }) {
+  const environmentLabel = getAdminEnvironmentLabel(dictionary);
+
   return (
-    <header className="panel flex flex-col gap-4 p-4 lg:flex-row lg:items-center">
-      <div className="flex min-w-0 items-center gap-3 lg:flex-1">
+    <header className="panel flex flex-col gap-3 p-3 lg:flex-row lg:items-center">
+      <div className="flex min-w-0 items-center gap-2.5 lg:flex-1">
         {navigationTrigger ? <div className="lg:hidden">{navigationTrigger}</div> : null}
         <CommandSearch locale={locale} placeholder={dictionary.shell.searchPlaceholder} shortcutLabel="/" />
       </div>
-      <div className="flex flex-wrap items-center gap-3">
-        <StatusBadge label={dictionary.shell.previewShell} tone="warning" />
+      <div className="flex flex-wrap items-center gap-2">
+        <AdminLocaleSwitcher locale={locale} dictionary={dictionary} />
+        <StatusBadge label={`${dictionary.shell.previewShell}: ${environmentLabel}`} tone="warning" />
         <button
           type="button"
-          className="flex size-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-white/70"
+          className="admin-toolbar-icon"
           aria-label={dictionary.auth.openAlerts}
         >
           <Bell className="size-4" />
         </button>
-        <div className="flex items-center gap-2 rounded-full bg-[var(--color-sand-100)] px-3 py-2 text-sm font-medium text-[var(--color-accent-ink)]">
+        <div className="admin-toolbar-chip bg-[var(--color-sand-100)] text-[var(--color-accent-ink)]">
           <ShieldCheck className="size-4 text-[var(--color-accent)]" />
           <span>{roleLabel}</span>
         </div>

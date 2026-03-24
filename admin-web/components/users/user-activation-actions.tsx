@@ -56,9 +56,9 @@ export function UserActivationActions({
   }
 
   return (
-    <div className="space-y-4">
-      <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}</h3>
+    <div className="space-y-3">
+      <section className={`compact-section ${isActive ? "danger-section" : ""}`}>
+        <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">{isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}</h3>
         <p className="text-sm leading-6 text-[var(--color-ink-muted)]">
           {isActive ? ui.actions.suspendBody : ui.actions.reactivateBody}
         </p>
@@ -66,13 +66,15 @@ export function UserActivationActions({
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.reason}</span>
             <textarea
-              className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              className="admin-field min-h-[5.25rem]"
               {...form.register("reason")}
             />
           </label>
-          <button className={isActive ? "button-secondary" : "button-primary"} type="submit">
-            {isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}
-          </button>
+          <div className="form-actions">
+            <button className={isActive ? "button-danger" : "button-primary"} type="submit">
+              {isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}
+            </button>
+          </div>
         </form>
       </section>
 
