@@ -24,6 +24,17 @@ These items still need representative-device or hosted-environment execution:
 - Verify hosted Supabase Auth email delivery with real inboxes.
 - Deploy and verify hosted Edge Functions, secrets, scheduler, and provider webhooks in Supabase cloud.
 
+## Hosted Rollout Order
+
+Promote the hosted system in this order:
+
+- run the local verification gate from the current `main` state
+- apply Supabase migrations to the linked cloud project
+- deploy repo-owned Edge Functions
+- configure hosted secrets, auth redirects, SMTP, and provider settings
+- configure Vercel production variables for `admin-web/`
+- verify hosted auth, transactional email, push, and admin operations against the real cloud project
+
 ## Release Gate
 
 Do not claim production-ready rollout until all of the following are true:
