@@ -64,23 +64,23 @@ export function AdminInviteForm({ locale }: { locale: AppLocale | string }) {
   }
 
   return (
-    <section className="panel space-y-4 p-6">
+    <section className="panel space-y-4 p-5">
       <div className="space-y-2">
         <p className="eyebrow">{ui.pages.admins.eyebrow}</p>
-        <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.admins.inviteTitle}</h2>
-        <p className="text-sm leading-6 text-[var(--color-ink-muted)]">
+        <h2 className="text-[1.45rem] font-semibold text-[var(--color-ink-strong)]">{ui.pages.admins.inviteTitle}</h2>
+        <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
           {ui.pages.admins.inviteBody}
         </p>
       </div>
 
-      <form className="grid gap-3 md:grid-cols-3" onSubmit={form.handleSubmit(onSubmit)}>
-        <label className="grid gap-1 text-sm md:col-span-2">
+      <form className="grid gap-3 xl:grid-cols-[minmax(0,1.4fr)_220px_160px_auto]" onSubmit={form.handleSubmit(onSubmit)}>
+        <label className="grid gap-1 text-sm">
           <span>{ui.labels.email}</span>
-          <input className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("email")} />
+          <input className="admin-field" {...form.register("email")} />
         </label>
         <label className="grid gap-1 text-sm">
           <span>{ui.labels.role}</span>
-          <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("role")}>
+          <select className="admin-field admin-select" {...form.register("role")}>
             <option value="ops_admin">{getEnumLabel(locale, "adminRoles", "ops_admin")}</option>
             <option value="super_admin">{getEnumLabel(locale, "adminRoles", "super_admin")}</option>
           </select>
@@ -91,11 +91,11 @@ export function AdminInviteForm({ locale }: { locale: AppLocale | string }) {
             type="number"
             min="1"
             max="168"
-            className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+            className="admin-field"
             {...form.register("expiresInHours")}
           />
         </label>
-        <div className="md:col-span-2 md:self-end">
+        <div className="self-end">
           <button className="button-primary" type="submit" disabled={isPending}>
             {isPending ? ui.actions.creatingInvitation : ui.actions.createInvitation}
           </button>
@@ -105,7 +105,7 @@ export function AdminInviteForm({ locale }: { locale: AppLocale | string }) {
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       {result ? (
-        <div className="rounded-[22px] border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-4">
+        <div className="section-card p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm font-semibold text-[var(--color-ink-strong)]">
@@ -123,7 +123,7 @@ export function AdminInviteForm({ locale }: { locale: AppLocale | string }) {
               {ui.actions.copyToken}
             </button>
           </div>
-          <div className="mt-3 rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3 font-mono text-xs text-[var(--color-ink-strong)]">
+          <div className="mt-3 rounded-[var(--radius-control)] border border-[var(--color-border)] bg-white px-4 py-3 font-mono text-xs text-[var(--color-ink-strong)]">
             {result.token}
           </div>
         </div>

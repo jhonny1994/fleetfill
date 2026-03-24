@@ -38,29 +38,41 @@ export function AdminSidebar({
   const items = navItems(dictionary);
 
   return (
-    <aside className={cn("panel flex gap-5", compact ? "flex-col px-3 py-3" : "h-full flex-col p-5", className)}>
+    <aside
+      className={cn(
+        "panel flex gap-4",
+        locale === "ar" ? "text-right" : "text-left",
+        compact ? "flex-col px-3 py-3" : "h-full flex-col p-3.5",
+        className,
+      )}
+    >
       {compact ? (
-        <p className="px-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
+        <p
+          className={cn(
+            "px-1 text-xs font-semibold text-[var(--color-ink-muted)]",
+            locale === "ar" ? "tracking-normal" : "uppercase tracking-[0.14em]",
+          )}
+        >
           {dictionary.shell.title}
         </p>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <p className="eyebrow">{dictionary.shell.eyebrow}</p>
-          <h1 className="text-xl font-semibold text-[var(--color-ink-strong)]">{dictionary.shell.title}</h1>
-          <p className="text-sm text-[var(--color-ink-muted)]">
+          <h1 className="text-[1.02rem] font-semibold text-[var(--color-ink-strong)]">{dictionary.shell.title}</h1>
+          <p className="text-sm leading-5 text-[var(--color-ink-muted)]">
             {dictionary.shell.body}
           </p>
         </div>
       )}
-      <nav className={cn("gap-2", compact ? "flex overflow-x-auto pb-1" : "grid")}>
+      <nav className={cn("gap-1.5", compact ? "grid" : "grid")}>
         {items.map(([slug, label]) => (
           <Link
             key={slug}
             href={`/${locale}/${slug}`}
             onClick={onNavigate}
             className={cn(
-              "rounded-2xl px-4 py-3 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2",
-              compact && "whitespace-nowrap",
+              "rounded-[var(--radius-control)] px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2",
+              compact && "whitespace-normal",
               activeSegment === slug
                 ? "bg-[var(--color-sand-100)] text-[var(--color-accent-ink)]"
                 : "text-[var(--color-ink-base)] hover:bg-white/65",
