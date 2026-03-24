@@ -14,17 +14,12 @@ type AdminAccountRow = {
   activated_at: string | null;
   deactivated_at: string | null;
   updated_at: string | null;
-  profiles:
+  profile:
     | {
         full_name: string | null;
-        email: string | null;
+        email: string;
         company_name: string | null;
       }
-    | {
-        full_name: string | null;
-        email: string | null;
-        company_name: string | null;
-      }[]
     | null;
 };
 
@@ -57,10 +52,6 @@ type AuditRow = {
   created_at: string | null;
 };
 
-function resolveProfile(record: AdminAccountRow["profiles"]) {
-  return Array.isArray(record) ? record[0] ?? null : record;
-}
-
 function resolveDisplayName(name: string | null, email: string | null | undefined) {
   return name?.trim() || email?.trim() || "Unknown admin";
 }
@@ -86,7 +77,9 @@ export async function fetchAdminAccountsAndInvitations(): Promise<{
   const [accountsResult, invitationsResult] = await Promise.all([
     supabase
       .from("admin_accounts")
-      .select("profile_id, admin_role, is_active, invited_by, activated_at, deactivated_at, updated_at, profiles:profile_id(full_name,email,company_name)")
+      .select(
+        "profile_id, admin_role, is_active, invited_by, activated_at, deactivated_at, updated_at, profile:profiles!admin_accounts_profile_id_fkey(full_name,email,company_name)",
+      )
       .order("updated_at", { ascending: false }),
     supabase
       .from("admin_invitations")
@@ -120,7 +113,7 @@ export async function fetchAdminAccountsAndInvitations(): Promise<{
 
   return {
     accounts: accountRows.map((row) => {
-      const profile = resolveProfile(row.profiles);
+      const profile = row.profile;
       return {
         profileId: row.profile_id,
         displayName: resolveDisplayName(profile?.full_name ?? null, profile?.email),

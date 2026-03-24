@@ -14,6 +14,18 @@ vi.mock("next/link", () => ({
 
 const refreshSpy = vi.fn();
 
+const labels = {
+  searchPlaceholder: "Search bookings",
+  status: "Status",
+  allStatuses: "All statuses",
+  apply: "Apply",
+  reset: "Reset",
+  query: "Query",
+  clearAll: "Clear all",
+  refresh: "Refresh",
+  refreshAriaLabel: "Refresh queue",
+};
+
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     refresh: refreshSpy,
@@ -27,6 +39,8 @@ describe("AdminFilterBar", () => {
         pathname="/ar/support"
         query="booking issue"
         status="open"
+        locale="ar"
+        labels={labels}
         statusOptions={[
           { value: "open", label: "Open" },
           { value: "resolved", label: "Resolved" },
@@ -41,7 +55,7 @@ describe("AdminFilterBar", () => {
   });
 
   it("renders reset actions against the canonical queue path", () => {
-    render(<AdminFilterBar pathname="/ar/payments" query="trk" />);
+    render(<AdminFilterBar pathname="/ar/payments" query="trk" locale="ar" labels={labels} />);
 
     expect(screen.getByRole("link", { name: "Reset" })).toHaveAttribute("href", "/ar/payments");
     expect(screen.getByRole("link", { name: "Clear all" })).toHaveAttribute("href", "/ar/payments");

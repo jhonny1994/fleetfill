@@ -17,7 +17,6 @@ type DisputeRow = {
   status: string;
   resolution: string | null;
   resolution_note: string | null;
-  evidence_count: number;
   created_at: string | null;
 };
 
@@ -46,7 +45,7 @@ export async function fetchDisputeDetail(bookingId: string): Promise<AdminDisput
   const supabase = await createSupabaseServerClient();
   const { data: dispute, error: disputeError } = await supabase
     .from("disputes")
-    .select("id, booking_id, reason, description, status, resolution, resolution_note, evidence_count, created_at")
+    .select("id, booking_id, reason, description, status, resolution, resolution_note, created_at")
     .eq("booking_id", bookingId)
     .order("created_at", { ascending: false })
     .limit(1)
@@ -94,7 +93,10 @@ export async function fetchDisputeDetail(bookingId: string): Promise<AdminDisput
   );
 
   return {
-    dispute: dispute as DisputeRow,
+    dispute: {
+      ...(dispute as DisputeRow),
+      description: dispute.description,
+    },
     booking: booking as BookingRow,
     evidence: evidenceRows.map((item, index) => ({ ...item, signedUrl: signedUrls[index] })),
     refunds: (refunds ?? []) as Array<{

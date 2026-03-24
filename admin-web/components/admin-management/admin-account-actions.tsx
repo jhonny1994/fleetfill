@@ -48,8 +48,8 @@ export function AdminAccountActions({
     setError(null);
     const { error: rpcError } = await supabase.rpc("admin_update_admin_role", {
       p_profile_id: profileId,
-      p_new_role: pendingRole.role,
-      p_reason: pendingRole.reason || null,
+      p_role: pendingRole.role,
+      p_reason: pendingRole.reason || undefined,
     });
     setIsPending(false);
     setPendingRole(null);
@@ -67,7 +67,7 @@ export function AdminAccountActions({
     const { error: rpcError } = await supabase.rpc("admin_set_admin_account_active", {
       p_profile_id: profileId,
       p_is_active: pendingActivation.isActive,
-      p_reason: pendingActivation.reason || null,
+      p_reason: pendingActivation.reason || undefined,
     });
     setIsPending(false);
     setPendingActivation(null);

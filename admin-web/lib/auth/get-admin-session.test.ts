@@ -21,7 +21,7 @@ describe("resolveAdminSessionData", () => {
         adminAccount: {
           admin_role: "ops_admin",
           is_active: false,
-          profiles: {
+          profile: {
             full_name: "Ops Admin",
             email: "admin@example.com",
             is_active: true,
@@ -39,9 +39,9 @@ describe("resolveAdminSessionData", () => {
         adminAccount: {
           admin_role: "super_admin",
           is_active: true,
-          profiles: {
+          profile: {
             full_name: "Super Admin",
-            email: null,
+            email: "admin@example.com",
             is_active: true,
           },
         },

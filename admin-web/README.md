@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FleetFill Admin Web
 
-## Getting Started
+Internal desktop-first operations console for FleetFill.
 
-First, run the development server:
+## Stack
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- TanStack Query
+- TanStack Table
+- Supabase SSR
+- pnpm
+
+## Local Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Default local URL:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment
 
-## Learn More
+Copy [`admin-web/.env.example`](C:\Users\raouf\projects\fleetfill\admin-web\.env.example) into `.env.local` and set:
 
-To learn more about Next.js, take a look at the following resources:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SITE_URL`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Use the local Supabase browser URL for web development, typically `http://127.0.0.1:54321`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Verification Commands
 
-## Deploy on Vercel
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+From the repo root, backend validation remains:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+supabase db lint
+supabase test db
+```
+
+## Vercel Notes
+
+- Preview deployments should point to the shared Supabase project with preview-safe environment variables managed in Vercel.
+- Production should use the admin-only domain and production Supabase environment variables.
+- Do not expose `service_role` keys to the browser or to Next.js client bundles.
+- Sensitive admin mutations continue to run through the backend RPC layer.

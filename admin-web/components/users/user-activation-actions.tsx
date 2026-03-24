@@ -39,7 +39,7 @@ export function UserActivationActions({
     const { error: rpcError } = await supabase.rpc("admin_set_profile_active", {
       p_profile_id: profileId,
       p_is_active: !isActive,
-      p_reason: pendingValues.reason || null,
+      p_reason: pendingValues.reason || undefined,
     });
     setIsPending(false);
     setPendingValues(null);
