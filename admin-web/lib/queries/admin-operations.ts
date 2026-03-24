@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { BookingWorkspaceDetail, ShipmentWorkspaceDetail } from "@/lib/queries/admin-types";
 
@@ -41,6 +42,7 @@ type TrackingEventRow = {
 };
 
 export async function fetchBookingWorkspaceDetail(bookingId: string): Promise<BookingWorkspaceDetail | null> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: booking, error: bookingError } = await supabase
     .from("bookings")
@@ -120,6 +122,7 @@ export async function fetchBookingWorkspaceDetail(bookingId: string): Promise<Bo
 }
 
 export async function fetchShipmentWorkspaceDetail(shipmentId: string): Promise<ShipmentWorkspaceDetail | null> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: shipment, error: shipmentError } = await supabase
     .from("shipments")

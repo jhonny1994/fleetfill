@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSignedFileUrl } from "@/lib/queries/signed-files";
 
@@ -64,6 +65,7 @@ function documentLabel(documentType: string) {
 }
 
 export async function fetchVerificationDetail(carrierId: string): Promise<AdminVerificationDetail | null> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: profile, error: profileError } = await supabase
     .from("profiles")

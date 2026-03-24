@@ -1,3 +1,4 @@
+import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type SupportRequestRow = {
@@ -27,6 +28,7 @@ export type AdminSupportDetail = {
 };
 
 export async function fetchSupportDetail(requestId: string): Promise<AdminSupportDetail | null> {
+  await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: request, error: requestError } = await supabase
     .from("support_requests")
