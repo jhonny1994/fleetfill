@@ -1,30 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --color-sand-50: #f8f4ea;
-  --color-sand-100: #f1e9d8;
-  --color-sand-300: #d3bc8b;
-  --color-slate-100: #e9eef2;
-  --color-slate-700: #314757;
-  --color-green-100: #dff1e6;
-  --color-green-600: #17603f;
-  --color-amber-100: #f8ebc7;
-  --color-amber-700: #8e6515;
+  --color-sand-50: #eef8f7;
+  --color-sand-100: #d7efed;
+  --color-sand-300: #77c9c1;
+  --color-slate-100: #e7eef1;
+  --color-slate-700: #35505f;
+  --color-green-100: #daf2ef;
+  --color-green-600: #0f766e;
+  --color-amber-100: #f9ecd2;
+  --color-amber-700: #9a6700;
   --color-red-100: #f8dfdc;
   --color-red-700: #8e3025;
-  --color-background: #f7f3eb;
-  --color-surface: rgba(255, 252, 245, 0.92);
-  --color-surface-strong: #fffaf0;
-  --color-surface-muted: #f1e9da;
-  --color-border: rgba(65, 87, 106, 0.14);
-  --color-border-strong: rgba(65, 87, 106, 0.22);
-  --color-ink-strong: #172631;
-  --color-ink-base: #314757;
-  --color-ink-muted: #5f7484;
-  --color-accent: #9e7f48;
-  --color-accent-ink: #5f4b22;
-  --shadow-panel: 0 24px 80px rgba(23, 38, 49, 0.08);
-  --shadow-line: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --color-background: #f4f8f7;
+  --color-surface: rgba(255, 255, 255, 0.9);
+  --color-surface-strong: #ffffff;
+  --color-surface-muted: #eaf4f3;
+  --color-border: rgba(17, 54, 64, 0.12);
+  --color-border-strong: rgba(17, 54, 64, 0.2);
+  --color-ink-strong: #16323c;
+  --color-ink-base: #2f4a56;
+  --color-ink-muted: #607781;
+  --color-accent: #0b6e69;
+  --color-accent-ink: #0a504c;
+  --shadow-panel: 0 24px 80px rgba(11, 56, 65, 0.09);
+  --shadow-line: inset 0 1px 0 rgba(255, 255, 255, 0.72);
   --radius-panel: 28px;
   --radius-chip: 999px;
 }
@@ -45,9 +45,10 @@ body {
   min-height: 100vh;
   color: var(--color-ink-base);
   background:
-    radial-gradient(circle at top left, rgba(158, 127, 72, 0.16), transparent 28%),
-    linear-gradient(180deg, #fcfaf5 0%, #f7f3eb 55%, #efe7d8 100%);
-  font-family: "Segoe UI", "Noto Sans Arabic", "Trebuchet MS", sans-serif;
+    radial-gradient(circle at top left, rgba(11, 110, 105, 0.16), transparent 26%),
+    radial-gradient(circle at right top, rgba(29, 78, 216, 0.08), transparent 24%),
+    linear-gradient(180deg, #fbfdfd 0%, #f4f8f7 52%, #e8f1f0 100%);
+  font-family: "Roboto", "Noto Sans Arabic", "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
 }
 
@@ -75,8 +76,8 @@ select {
 .admin-body {
   min-height: 100vh;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 36%),
-    radial-gradient(circle at right top, rgba(158, 127, 72, 0.12), transparent 24%);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.46), transparent 36%),
+    radial-gradient(circle at right top, rgba(11, 110, 105, 0.12), transparent 24%);
 }
 
 .panel {
@@ -103,8 +104,8 @@ select {
   gap: 0.5rem;
   border: 0;
   border-radius: 999px;
-  background: linear-gradient(135deg, #af8a4e, #8c6e3e);
-  color: #fffdf8;
+  background: linear-gradient(135deg, #0b6e69, #0a5651);
+  color: #f9fffe;
   padding: 0.85rem 1.25rem;
   font-weight: 600;
   cursor: pointer;
@@ -123,7 +124,7 @@ select {
   gap: 0.5rem;
   border: 1px solid var(--color-border-strong);
   border-radius: 999px;
-  background: rgba(255, 250, 240, 0.7);
+  background: rgba(255, 255, 255, 0.78);
   color: var(--color-ink-strong);
   padding: 0.85rem 1.25rem;
   font-weight: 600;

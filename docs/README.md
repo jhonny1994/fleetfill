@@ -29,6 +29,8 @@ These files are important, but they are not parallel sources of product truth:
 - `docs/planning/admin-web/admin-web-master-spec.md` - consolidated implementation-grade spec for the admin web product
 - `docs/planning/admin-web/admin-web-system-design.md` - system design for the admin web product and backend/governance integration
 - `docs/planning/admin-web/admin-web-ui-ux-spec.md` - UI/UX specification for the admin web product
+- `docs/planning/admin-web/admin-web-production-checklist.md` - release-readiness checklist and certification tracker for the admin web console
+- `docs/planning/admin-web/admin-web-browser-qa-checklist.md` - preview/browser QA checklist for certifying admin-web flows before release
 - `docs/planning/admin-web/prd-admin-web-console.md` - product requirements document for the admin web console
 - `docs/planning/admin-web/tasks-admin-web-console.md` - implementation task list for the admin web console
 - `docs/planning/operations/polish-backlog.md` - deferred polish backlog
@@ -47,6 +49,8 @@ Admin planning ecosystem:
 - `admin-web-master-spec.md` is the umbrella build spec tying product, architecture, and design together
 - `admin-web-system-design.md` owns the admin-web technical architecture, governance model, and backend integration shape
 - `admin-web-ui-ux-spec.md` owns the interaction model, visual system, page patterns, and responsive UX rules
+- `admin-web-production-checklist.md` owns the broader launch-readiness matrix across product completeness, governance, CI/CD, QA, deployment, and operations
+- `admin-web-browser-qa-checklist.md` owns the manual preview QA pass and the role-by-role browser certification checklist
 - `admin-web-console-plan.md` is the delivery companion that maps the locked decisions into rollout phases and implementation slices
 
 ## Templates And Generators
