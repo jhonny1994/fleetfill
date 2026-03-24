@@ -4,6 +4,7 @@ import 'package:fleetfill/features/admin/admin.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
 import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:fleetfill/features/shipper/shipper.dart';
+import 'package:fleetfill/features/support/support.dart';
 import 'package:fleetfill/shared/models/models.dart';
 import 'package:fleetfill/shared/providers/location_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -298,6 +299,43 @@ final adminAutomationAlertsProvider =
       return ref
           .read(adminOperationsRepositoryProvider)
           .fetchOverdueAutomationAlerts();
+    });
+
+final mySupportRequestsProvider = FutureProvider<List<SupportRequestRecord>>((
+  ref,
+) {
+  return ref.read(supportRepositoryProvider).fetchMySupportRequests();
+});
+
+final FutureProviderFamily<SupportThreadRecord?, String> supportThreadProvider =
+    FutureProvider.autoDispose.family<SupportThreadRecord?, String>((
+      ref,
+      requestId,
+    ) {
+      return ref.read(supportRepositoryProvider).fetchSupportThread(requestId);
+    });
+
+final adminSupportQueueProvider = FutureProvider<List<SupportRequestRecord>>((
+  ref,
+) {
+  return ref.read(supportRepositoryProvider).fetchAdminSupportRequests();
+});
+
+final FutureProviderFamily<
+  List<SupportRequestRecord>,
+  ({String? query, String? status})
+>
+adminFilteredSupportQueueProvider = FutureProvider.autoDispose
+    .family<List<SupportRequestRecord>, ({String? status, String? query})>((
+      ref,
+      filter,
+    ) {
+      return ref
+          .read(supportRepositoryProvider)
+          .fetchAdminSupportRequests(
+            status: filter.status,
+            query: filter.query,
+          );
     });
 
 final clientSettingsProvider = FutureProvider<ClientSettings>((ref) {

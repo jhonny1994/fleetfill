@@ -81,6 +81,11 @@ Notes:
   - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`
   - Flutter `--dart-define` or editor launch config: app runtime values such as `APP_ENV`, `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, and `GOOGLE_WEB_CLIENT_ID`
   - GitHub Actions: repository variables for non-secret client IDs and repository secrets for secrets such as `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET`
+- Android local runtime should use two explicit launch paths:
+  - emulator: `SUPABASE_URL=http://127.0.0.1:54321` with `LOCAL_ANDROID_NETWORK_TARGET=emulator`, so the app rewrites loopback to `10.0.2.2`
+  - real device: use a reachable desktop LAN IP in `SUPABASE_URL`, for example `http://192.168.x.x:54321`, with `LOCAL_ANDROID_NETWORK_TARGET=device`
+- The phone and desktop must be on the same reachable network for the local-device path.
+- ADB over Wi-Fi only helps debugging; it does not replace a reachable backend host in the app runtime config.
 - Google auth is always treated as enabled in the client runtime. Control availability through Supabase provider setup, not app flags.
 - The app push path should normally use native Firebase client config files (`google-services.json` / `GoogleService-Info.plist`) supplied outside git, while the optional `FIREBASE_*` app vars remain available only as explicit runtime overrides.
 - Local Edge Function smoke runs also require the transactional email sender/webhook env vars above; otherwise functions may boot but return `500` on first use because required server secrets are missing.
@@ -95,7 +100,11 @@ Database functions / RPC responsibilities:
 - `finalize_payment_proof`
 - `finalize_verification_document`
 - `finalize_dispute_evidence`
-- `enqueue_support_request_emails`
+- `create_support_request`
+- `reply_to_support_request`
+- `mark_support_request_read`
+- `admin_set_support_request_status`
+- `admin_assign_support_request`
 - `email_templates` as the canonical transactional email content registry
 - `claim_push_outbox_jobs`
 - `complete_push_outbox_job`
@@ -112,14 +121,13 @@ Edge Function responsibilities:
 - `transactional-email-dispatch-worker`
 - `email-provider-webhook`
 - `signed-file-url`
-- `support-email-dispatch`
 - `generated-document-worker`
 - `push-dispatch-worker`
 
 Production-grade alignment notes:
 
 - Edge Functions should orchestrate only HTTP/integration work and call RPC for canonical mutations
-- support email queueing is server-controlled through `enqueue_support_request_emails(...)`, not direct table inserts from Edge code
+- support requests are DB-backed through `support_requests` and `support_messages`; app and admin flows mutate them only through RPC, not direct client table writes
 - transactional email content is DB-owned through `email_templates`; the Edge worker resolves and renders the active template before calling the provider adapter
 - generated document workers claim, complete, fail, and recover jobs through RPC instead of mutating queue state ad hoc
 - scheduled maintenance recovers email, push, and generated-document worker locks before dispatching workers so the same tick can reclaim newly unstuck work

@@ -29,7 +29,17 @@ class LocaleController extends Notifier<Locale?> {
       _,
       next,
     ) {
-      final profileLocale = next.asData?.value.profile?.preferredLocale;
+      final auth = next.asData?.value;
+      if (auth == null || !auth.isAuthenticated) {
+        return;
+      }
+
+      if (shouldPersistLocalLocaleToProfile(auth: auth, localLocale: state)) {
+        unawaited(setLocale(state, syncProfile: true));
+        return;
+      }
+
+      final profileLocale = auth.profile?.preferredLocale;
       if (profileLocale == null || profileLocale.trim().isEmpty) {
         return;
       }
@@ -92,4 +102,18 @@ class LocaleController extends Notifier<Locale?> {
 
     await setLocale(normalized);
   }
+}
+
+bool shouldPersistLocalLocaleToProfile({
+  required AuthSnapshot auth,
+  required Locale? localLocale,
+}) {
+  if (localLocale == null ||
+      auth.profile == null ||
+      auth.hasCompletedOnboarding) {
+    return false;
+  }
+
+  final profileLocale = auth.profile!.preferredLocale.trim().toLowerCase();
+  return profileLocale.isEmpty || profileLocale != localLocale.languageCode;
 }

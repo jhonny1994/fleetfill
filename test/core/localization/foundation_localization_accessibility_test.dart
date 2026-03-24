@@ -45,6 +45,13 @@ void main() {
       expect(BidiFormatters.trackingId('BK-12345'), expected);
     });
 
+    test('normalizes Arabic numerals to Western digits', () {
+      expect(
+        BidiFormatters.westernDigits('٢٠٢٦/٠٣/٢٣ ٠٧:٣٩'),
+        '2026/03/23 07:39',
+      );
+    });
+
     test('formats prices with bidi-safe latin output', () {
       final value = BidiFormatters.price(12500, locale: 'ar');
 

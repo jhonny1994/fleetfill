@@ -27,6 +27,8 @@ extension VerificationDocumentTypeX on VerificationDocumentType {
   bool get isProfileDocument =>
       this == VerificationDocumentType.driverIdentityOrLicense;
 
+  bool get isLiveDocument => this != VerificationDocumentType.transportLicense;
+
   static VerificationDocumentType fromDatabase(String value) {
     return switch (value) {
       'driver_identity_or_license' =>

@@ -99,12 +99,12 @@
   "welcomeShipperTitle": "لديك بضاعة تريد نقلها",
   "welcomeShipperDescription": "سجّل شحنتك واعثر على الشاحنة المناسبة بسرعة.",
   "welcomeCarrierTitle": "لديك شاحنة وأماكن فارغة",
-  "welcomeCarrierDescription": "اعرض رحلاتك واستقبل حجوزات من شاحنين يبحثون عن نقل.",
+  "welcomeCarrierDescription": "اعرض رحلاتك واستقبل حجوزات من مرسلين يبحثون عن نقل.",
   "welcomeSkipAction": "تخطّي",
   "welcomeBackAction": "السابق",
   "welcomeNextAction": "التالي",
   "welcomeTrustTitle": "كيف يعمل FleetFill؟",
-  "welcomeTrustDescription": "كل شيء واضح بين الشاحن والناقل — من الحجز إلى التسليم.",
+  "welcomeTrustDescription": "كل شيء واضح بين المرسل والناقل — من الحجز إلى التسليم.",
   "welcomeExactMatchTitle": "اربط الشحنة بالشاحنة المناسبة",
   "welcomeExactMatchDescription": "ابحث بالمسار والتاريخ واحصل على نتائج مطابقة فعلًا.",
   "welcomePaymentTitle": "دفع مضمون وشفاف",
@@ -174,7 +174,7 @@
   "adminUserDocumentsEmptyMessage": "لا توجد وثائق تحقق متاحة لهذا المستخدم.",
   "adminUserEmailSectionTitle": "الرسائل الأخيرة",
   "adminUserEmailEmptyMessage": "لا توجد سجلات بريد إلكتروني حديثة لهذا المستخدم.",
-  "adminUserRoleShipperLabel": "الشاحن",
+  "adminUserRoleShipperLabel": "المرسل",
   "adminUserRoleCarrierLabel": "الناقل",
   "adminUserRoleAdminLabel": "الإدارة",
   "adminSettingsMonitoringSummaryTitle": "ملخص الخدمة",
@@ -205,6 +205,7 @@
       "bookingId": {}
     }
   },
+  "bookingDetailPageTitle": "تفاصيل الحجز",
   "bookingReviewDescription": "راجع سمعة الناقل وتفاصيل الرحلة والسعر قبل الدفع.",
   "bookingReviewTitle": "مراجعة الحجز",
   "cancelLabel": "إلغاء",
@@ -222,8 +223,8 @@
   "carrierProfileVerificationRejected": "مرفوض",
   "carrierProfileVerificationVerified": "موثّق",
   "carrierProfileTitle": "ملف الناقل",
-  "carrierVerificationCenterDescription": "ارفع واستبدل وثائق التحقق الخاصة بالملف الشخصي أو المركبة من مكان واحد.",
-  "carrierVerificationCenterTitle": "مركز التحقق",
+  "carrierVerificationCenterDescription": "أدر تحقق الناقل من مكان واحد عبر رفع وثائق السائق والمركبة المطلوبة.",
+  "carrierVerificationCenterTitle": "تحقق الناقل",
   "carrierVerificationPendingBanner": "ملفك قيد المراجعة. ارفع أي وثائق ناقصة لتسريع الاعتماد.",
   "carrierVerificationQueueHint": "أكمل خطوات التحقق المتبقية من ملفك الشخصي.",
   "carrierVerificationRejectedBanner": "التحقق يحتاج تصحيح: {reason}",
@@ -246,11 +247,14 @@
       "carrierId": {}
     }
   },
+  "carrierPublicProfilePageTitle": "ملف الناقل",
   "confirmLabel": "تأكيد",
   "documentViewerDescription": "اعرض هذا المستند هنا أو افتحه في تطبيق آخر.",
   "documentViewerOpenAction": "افتح المستند",
   "documentViewerTitle": "المستند {documentId}",
+  "documentViewerPageTitle": "المستند",
   "documentViewerUnavailableMessage": "الوصول الآمن إلى المستند غير متاح مؤقتا.",
+  "verificationDocumentViewerTitle": "مستند التحقق",
   "@documentViewerTitle": {
     "placeholders": {
       "documentId": {}
@@ -259,9 +263,9 @@
   "editCarrierProfileDescription": "حدّث بيانات الاتصال ومعلومات الناقل الخاصة بك.",
   "editCarrierProfileSavedMessage": "تم تحديث ملف الناقل.",
   "editCarrierProfileTitle": "تعديل ملف الناقل",
-  "editShipperProfileDescription": "حدّث بيانات الاتصال الخاصة بالشاحن.",
-  "editShipperProfileSavedMessage": "تم تحديث ملف الشاحن.",
-  "editShipperProfileTitle": "تعديل ملف الشاحن",
+  "editShipperProfileDescription": "حدّث بيانات الاتصال الخاصة بالمرسل.",
+  "editShipperProfileSavedMessage": "تم تحديث ملف المرسل.",
+  "editShipperProfileTitle": "تعديل ملف المرسل",
   "errorTitle": "حصل خطأ",
   "generatedDocumentViewerDescription": "اعرض فاتورتك أو إيصالك أو نزله.",
   "generatedDocumentViewerTitle": "المستند المُولَّد {documentId}",
@@ -270,6 +274,7 @@
       "documentId": {}
     }
   },
+  "generatedDocumentViewerPageTitle": "المستند المُولَّد",
   "generatedDocumentTypePaymentReceipt": "إيصال الدفع",
   "generatedDocumentTypePayoutReceipt": "إيصال التحويل",
   "generatedDocumentStatusPendingLabel": "قيد الإنشاء",
@@ -285,6 +290,16 @@
   "@notificationGeneratedDocumentReadyBody": {
     "placeholders": {
       "documentType": {}
+    }
+  },
+  "notificationVerificationPacketApprovedTitle": "تم اعتماد التحقق",
+  "notificationVerificationPacketApprovedBody": "تم اعتماد ملف التحقق الخاص بك. يمكنك الآن متابعة عمليات الناقل.",
+  "notificationVerificationDocumentRejectedTitle": "تم رفض وثيقة التحقق",
+  "notificationVerificationDocumentRejectedBody": "تم رفض {documentType}. السبب: {reason}",
+  "@notificationVerificationDocumentRejectedBody": {
+    "placeholders": {
+      "documentType": {},
+      "reason": {}
     }
   },
   "disputeEvidenceTitle": "أدلة النزاع",
@@ -332,6 +347,7 @@
       "notificationId": {}
     }
   },
+  "notificationDetailPageTitle": "الإشعار",
   "notificationsCenterDescription": "ابق على اطلاع على الحجوزات والمدفوعات ومراحل التسليم وتنبيهات الحساب.",
   "notificationsCenterTitle": "الإشعارات",
   "notificationsSettingsEntryDescription": "أدر حالة الإذن وافتح مركز الإشعارات.",
@@ -375,6 +391,7 @@
       "tripId": {}
     }
   },
+  "oneOffTripDetailPageTitle": "تفاصيل الرحلة الفردية",
   "paymentFlowDescription": "اتبع خطوات الدفع وارفع الإثبات وتابع حالة المراجعة.",
   "paymentFlowTitle": "الدفع",
   "payoutAccountsDescription": "أضف الحسابات التي تستقبل عليها التحويلات وأدرها.",
@@ -389,7 +406,7 @@
   "carrierGateVerificationMessage": "أكمل تحقق الناقل قبل فتح هذه المساحة لنشر المسارات أو إدارة الحجوزات.",
   "carrierGatePayoutTitle": "حساب الدفع مطلوب",
   "carrierGatePayoutMessage": "أضف حساب دفع قبل فتح حجوزات الناقل حتى تتم تسوية الأعمال المكتملة بشكل صحيح.",
-  "profileVerificationDocumentsTitle": "وثائق تحقق الملف الشخصي",
+  "profileVerificationDocumentsTitle": "وثائق السائق",
   "profileSetupDescription": "أضف بياناتك حتى يتمكن العملاء والناقلون والدعم من التواصل معك.",
   "profileCarrierVerificationHint": "أكمل بيانات الناقل أولًا، ثم ارفع وثائق التحقق من ملفك الشخصي.",
   "profileCompanyNameLabel": "اسم الشركة",
@@ -408,12 +425,13 @@
       "proofId": {}
     }
   },
+  "proofViewerPageTitle": "إثبات الدفع",
   "retryLabel": "إعادة المحاولة",
   "roleSelectionDescription": "اختر كيف تريد استخدام FleetFill حتى نجهز الأدوات المناسبة لحسابك.",
   "roleSelectionCarrierDescription": "انشر رحلاتك، أدر الحجوزات، وأكمل التحقق.",
   "roleSelectionCarrierTitle": "أنا ناقل",
   "roleSelectionShipperDescription": "سجّل شحناتك، قارن بين العروض، وتابع التسليم.",
-  "roleSelectionShipperTitle": "أنا شاحن",
+  "roleSelectionShipperTitle": "أنا مرسل",
   "roleSelectionTitle": "كيف تريد استخدام FleetFill؟",
   "routeDetailDescription": "راجع هذا المسار قبل الحجز.",
   "routeDetailTitle": "المسار {routeId}",
@@ -422,6 +440,7 @@
       "routeId": {}
     }
   },
+  "routeDetailPageTitle": "تفاصيل المسار",
   "routeErrorMessage": "تعذر على FleetFill فتح هذا المسار.",
   "searchTripsDescription": "اختر شحنة وتاريخا للعثور على الرحلات المناسبة.",
   "searchTripsNavLabel": "البحث",
@@ -450,21 +469,24 @@
       "shipmentId": {}
     }
   },
+  "shipmentDetailPageTitle": "تفاصيل الشحنة",
   "shipperHomeDescription": "تابع حجوزاتك وآخر التحديثات وانتقل بسرعة لأهم الإجراءات.",
   "shipperHomeActiveBookingsLabel": "الحجوزات النشطة",
   "shipperHomeUnreadNotificationsLabel": "الإشعارات غير المقروءة",
   "shipperHomeNoRecentNotificationMessage": "ستظهر آخر التحديثات هنا.",
   "shipperHomeQuickActionsTitle": "إجراءات سريعة",
   "shipperHomeNavLabel": "الرئيسية",
-  "shipperHomeTitle": "الرئيسية للشاحن",
+  "shipperHomeTitle": "الرئيسية للمرسل",
   "shipperProfileDescription": "أدر بيانات التواصل والإعدادات وخيارات الدعم.",
   "shipperProfileNavLabel": "الملف",
-  "shipperProfileSectionTitle": "بيانات الشاحن",
-  "shipperProfileTitle": "ملف الشاحن",
+  "shipperProfileSectionTitle": "بيانات المرسل",
+  "shipperProfileTitle": "ملف المرسل",
   "splashDescription": "لحظة، نجهّز FleetFill لك.",
   "splashTitle": "جاري التجهيز",
   "startupConfigurationRequiredTitle": "FleetFill غير متاح",
   "startupConfigurationRequiredMessage": "FleetFill غير متاح حاليا. يرجى المحاولة لاحقا.",
+  "notificationNewLabel": "جديد",
+  "notificationSeenLabel": "تمت رؤيته",
   "statusNeedsReviewLabel": "يحتاج مراجعة",
   "statusReadyLabel": "جاهز",
   "supportDescription": "اطرح سؤالا أو أبلغ عن مشكلة أو اطلب المساعدة بشأن حجز أو دفعة.",
@@ -478,6 +500,7 @@
       "bookingId": {}
     }
   },
+  "trackingDetailPageTitle": "التتبع",
   "updateRequiredDescription": "حدّث FleetFill لمتابعة الاستخدام بأحدث إصدار مدعوم.",
   "updateRequiredTitle": "تحديث مطلوب",
   "userDetailDescription": "راجع بيانات الحساب والحجوزات والمركبات والوثائق.",
@@ -509,8 +532,8 @@
   "vehiclesDescription": "أضف المركبات التي تستخدمها للنقل وأدرها.",
   "vehiclesEmptyMessage": "أضف مركبة قبل نشر السعة أو إكمال التحقق الكامل.",
   "vehiclesTitle": "المركبات",
-  "vehicleVerificationDocumentsTitle": "وثائق تحقق المركبة",
-  "verificationDocumentDriverIdentityLabel": "هوية السائق أو الرخصة",
+  "vehicleVerificationDocumentsTitle": "وثائق المركبة",
+  "verificationDocumentDriverIdentityLabel": "رخصة السياقة",
   "verificationDocumentMissingMessage": "لم يتم رفع أي ملف بعد.",
   "verificationDocumentNeedsAttentionMessage": "راجع سبب الرفض ثم ارفع بديلا.",
   "verificationDocumentOpenPreparedMessage": "وثيقتك جاهزة للفتح.",
@@ -521,11 +544,12 @@
       "reason": {}
     }
   },
+  "verificationDocumentRejectedFallbackReason": "يرجى مراجعة متطلبات الوثيقة ورفع ملف أوضح.",
   "verificationDocumentReplacedMessage": "تم استبدال وثيقة التحقق.",
-  "verificationDocumentTransportLicenseLabel": "رخصة النقل",
+  "verificationDocumentTransportLicenseLabel": "رخصة النقل (قديمة)",
   "verificationDocumentTruckInspectionLabel": "الفحص التقني للشاحنة",
   "verificationDocumentTruckInsuranceLabel": "تأمين الشاحنة",
-  "verificationDocumentTruckRegistrationLabel": "تسجيل الشاحنة",
+  "verificationDocumentTruckRegistrationLabel": "البطاقة الرمادية",
   "verificationDocumentUploadedMessage": "تم رفع وثيقة التحقق.",
   "verificationDocumentVerifiedMessage": "تم التحقق منها واعتمادها.",
   "verificationReplaceAction": "استبدال",
@@ -692,6 +716,9 @@
   "paymentProofUploadAction": "رفع إثبات الدفع",
   "paymentProofResubmitAction": "إعادة إرسال الإثبات",
   "paymentProofUploadedMessage": "تم استلام إثبات الدفع.",
+  "paymentRailCcpLabel": "CCP",
+  "paymentRailDahabiaLabel": "الذهبية",
+  "paymentRailBankLabel": "بنك",
   "paymentProofAmountLabel": "المبلغ المرسل",
   "paymentProofReferenceLabel": "المرجع المرسل",
   "paymentProofStatusLabel": "حالة الإثبات",
@@ -724,6 +751,7 @@
   "trackingEventCompletedLabel": "مكتمل",
   "trackingEventCancelledLabel": "ملغى",
   "trackingEventDisputedLabel": "متنازع عليه",
+  "trackingEventAutoCompletedNote": "اكتمل الحجز تلقائيا بعد انتهاء نافذة مراجعة التسليم.",
   "adminDisputesQueueTitle": "النزاعات",
   "adminDisputesQueueEmptyMessage": "لا توجد نزاعات بانتظار المراجعة الآن.",
   "adminPayoutQueueTitle": "التحويلات",
@@ -745,7 +773,7 @@
   "legalPoliciesDescription": "راجع شروط الخدمة والخصوصية والدفع والنزاعات قبل استخدام FleetFill.",
   "legalPoliciesSupportHint": "إذا احتجت إلى توضيح حول هذه السياسات، فتواصل مع دعم FleetFill قبل متابعة الحجز أو الدفع أو النزاع.",
   "legalTermsTitle": "شروط الخدمة",
-  "legalTermsBody": "تستلم FleetFill دفعة الشاحن قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى الشاحن مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.",
+  "legalTermsBody": "تستلم FleetFill دفعة المرسل قبل أي تحويل إلى الناقل. يغطي كل حجز شحنة واحدة على مسار أو رحلة مؤكدة واحدة. يبقى المرسل مسؤولا عن دقة تفاصيل الشحنة، ويبقى الناقل مسؤولا عن صلاحية الوثائق والامتثال القانوني للنقل.",
   "legalPrivacyTitle": "الخصوصية والاحتفاظ بالبيانات",
   "legalPrivacyBody": "تحتفظ FleetFill ببيانات الدفع والشحن والدعم والتدقيق فقط عند الحاجة لتشغيل الخدمة والتحقيق في النزاعات والوفاء بالالتزامات القانونية أو المالية. ويظل الوصول محصورا بصاحب الحساب والموظفين المصرح لهم.",
   "legalPaymentDisclosureTitle": "إفصاح الدفع والضمان",
@@ -777,7 +805,56 @@
   "goBackAction": "رجوع",
   "openNotificationsAction": "فتح الإشعارات",
   "documentPreviewUnavailableMessage": "المعاينة غير متاحة لهذا الملف. افتحه في تطبيق آخر.",
+  "supportInboxTitle": "طلبات الدعم الخاصة بك",
+  "supportInboxEmptyMessage": "لم تقم بفتح أي طلب دعم بعد.",
+  "supportRequestCreatedMessage": "تم إنشاء طلب الدعم بنجاح.",
+  "supportThreadTitle": "محادثة الدعم",
+  "supportThreadDetailsTitle": "تفاصيل الطلب",
+  "supportStatusLabel": "الحالة",
+  "supportPriorityLabel": "الأولوية",
+  "supportLastUpdatedLabel": "آخر تحديث",
+  "supportReplyLabel": "الرد",
+  "supportReplyAction": "إرسال الرد",
+  "supportReplySentMessage": "تم إرسال الرد.",
+  "supportThreadNoMessagesMessage": "لا توجد رسائل في هذا الطلب حتى الآن.",
+  "supportLinkedBookingAction": "فتح الحجز",
+  "supportLinkedPaymentProofAction": "فتح إثبات الدفع",
+  "supportLinkedDisputeAction": "فتح النزاع",
+  "supportThreadOpenAction": "فتح المحادثة",
+  "supportStatusOpenLabel": "مفتوح",
+  "supportStatusInProgressLabel": "قيد المعالجة",
+  "supportStatusWaitingForUserLabel": "بانتظار المستخدم",
+  "supportStatusResolvedLabel": "تم الحل",
+  "supportStatusClosedLabel": "مغلق",
+  "supportPriorityNormalLabel": "عادية",
+  "supportPriorityHighLabel": "مرتفعة",
+  "supportPriorityUrgentLabel": "عاجلة",
+  "supportMessageSenderUserLabel": "أنت",
+  "supportMessageSenderAdminLabel": "دعم FleetFill",
+  "supportMessageSenderSystemLabel": "النظام",
+  "adminSupportQueueTitle": "قائمة الدعم",
+  "adminQueueSupportTabLabel": "الدعم",
+  "adminSupportSearchLabel": "البحث في طلبات الدعم",
+  "adminSupportStatusAllLabel": "كل الحالات",
+  "adminSupportQueueEmptyMessage": "لا توجد طلبات دعم تحتاج إلى معالجة الآن.",
+  "adminSupportControlsTitle": "عناصر تحكم الدعم",
+  "adminSupportAssignToMeAction": "إسناد إليّ",
+  "adminSupportUnassignAction": "إزالة الإسناد",
+  "notificationSupportRequestCreatedTitle": "طلب دعم جديد",
+  "notificationSupportRequestCreatedBody": "قام مستخدم بفتح طلب دعم جديد يحتاج إلى مراجعة.",
+  "notificationSupportReplyReceivedTitle": "تم الرد من الدعم",
+  "notificationSupportReplyReceivedBody": "قام فريق دعم FleetFill بالرد على طلبك.",
+  "notificationSupportUserRepliedTitle": "قام المستخدم بالرد",
+  "notificationSupportUserRepliedBody": "قام مستخدم بالرد على طلب دعم قائم.",
+  "notificationSupportStatusChangedTitle": "تم تحديث حالة الدعم",
+  "notificationSupportStatusChangedBody": "أصبحت حالة طلب الدعم الآن {status}.",
+  "@notificationSupportStatusChangedBody": {
+    "placeholders": {
+      "status": {}
+    }
+  },
   "routeOriginWilayaLabel": "ولاية الانطلاق",
   "routeDestinationWilayaLabel": "ولاية الوصول",
-  "locationUnavailableLabel": "الموقع غير متاح"
+  "locationUnavailableLabel": "الموقع غير متاح",
+  "localBackendUnavailableMessage": "تعذر على FleetFill الوصول إلى الخادم المحلي للتطوير. استخدم إعداد تشغيل المحاكي مع محاكيات Android، واستخدم عنوان الشبكة المحلية للكمبيوتر على الأجهزة الحقيقية."
 }

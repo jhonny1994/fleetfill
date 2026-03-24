@@ -123,6 +123,7 @@
       "bookingId": {}
     }
   },
+  "bookingDetailPageTitle": "Booking details",
   "bookingReviewDescription": "Carrier reputation, trip detail, and pricing review live here before payment.",
   "bookingReviewTitle": "Booking review",
   "cancelLabel": "Cancel",
@@ -140,8 +141,8 @@
   "carrierProfileVerificationRejected": "Rejected",
   "carrierProfileVerificationVerified": "Verified",
   "carrierProfileTitle": "Carrier profile",
-  "carrierVerificationCenterDescription": "Upload and replace profile or vehicle verification documents.",
-  "carrierVerificationCenterTitle": "Verification center",
+  "carrierVerificationCenterDescription": "Manage your carrier verification from one place by uploading the required driver and vehicle documents.",
+  "carrierVerificationCenterTitle": "Carrier verification",
   "carrierVerificationPendingBanner": "Your verification is under review. Upload any missing documents to keep it moving.",
   "carrierVerificationQueueHint": "Finish the remaining verification steps from your profile.",
   "carrierVerificationRejectedBanner": "Verification needs attention: {reason}",
@@ -164,11 +165,14 @@
       "carrierId": {}
     }
   },
+  "carrierPublicProfilePageTitle": "Carrier profile",
   "confirmLabel": "Confirm",
   "documentViewerDescription": "View this document here or open it in another app.",
   "documentViewerOpenAction": "Open document",
   "documentViewerTitle": "Document {documentId}",
+  "documentViewerPageTitle": "Document",
   "documentViewerUnavailableMessage": "Secure document access is temporarily unavailable.",
+  "verificationDocumentViewerTitle": "Verification document",
   "@documentViewerTitle": {
     "placeholders": {
       "documentId": {}
@@ -191,6 +195,7 @@
       "documentId": {}
     }
   },
+  "generatedDocumentViewerPageTitle": "Generated document",
   "generatedDocumentTypePaymentReceipt": "Payment receipt",
   "generatedDocumentTypePayoutReceipt": "Payout receipt",
   "generatedDocumentStatusPendingLabel": "Generating",
@@ -206,6 +211,16 @@
   "@notificationGeneratedDocumentReadyBody": {
     "placeholders": {
       "documentType": {}
+    }
+  },
+  "notificationVerificationPacketApprovedTitle": "Verification approved",
+  "notificationVerificationPacketApprovedBody": "Your verification packet has been approved. You can now continue carrier operations.",
+  "notificationVerificationDocumentRejectedTitle": "Verification document rejected",
+  "notificationVerificationDocumentRejectedBody": "Your {documentType} was rejected. Reason: {reason}",
+  "@notificationVerificationDocumentRejectedBody": {
+    "placeholders": {
+      "documentType": {},
+      "reason": {}
     }
   },
   "languageOptionArabic": "Arabic",
@@ -239,6 +254,7 @@
       "notificationId": {}
     }
   },
+  "notificationDetailPageTitle": "Notification",
   "notificationsCenterDescription": "Stay up to date with bookings, payments, delivery progress, and account alerts.",
   "notificationsCenterTitle": "Notifications",
   "notificationsSettingsEntryDescription": "Manage permission status and open your notification inbox.",
@@ -291,6 +307,7 @@
       "tripId": {}
     }
   },
+  "oneOffTripDetailPageTitle": "One-off trip details",
   "paymentFlowDescription": "Follow the payment steps, upload proof, and track the review status.",
   "paymentFlowTitle": "Payment",
   "payoutAccountsDescription": "Add and manage the accounts where you receive payouts.",
@@ -321,7 +338,7 @@
   "carrierGatePayoutTitle": "Payout account required",
   "carrierGatePayoutMessage": "Add a payout account before opening carrier bookings so completed jobs can be settled correctly.",
   "profileCarrierVerificationHint": "Add your carrier details now, then upload the required verification documents from your profile.",
-  "profileVerificationDocumentsTitle": "Profile verification documents",
+  "profileVerificationDocumentsTitle": "Driver documents",
   "profileCompanyNameLabel": "Company name",
   "profileFullNameLabel": "Full name",
   "profileInvalidCompanyNameMessage": "Enter a valid company name.",
@@ -339,6 +356,7 @@
       "proofId": {}
     }
   },
+  "proofViewerPageTitle": "Payment proof",
   "retryLabel": "Retry",
   "roleSelectionCarrierDescription": "Publish trips, manage bookings, and keep verification moving.",
   "roleSelectionCarrierTitle": "Continue as a carrier",
@@ -353,6 +371,7 @@
       "routeId": {}
     }
   },
+  "routeDetailPageTitle": "Route details",
   "routeErrorMessage": "FleetFill could not open this route.",
   "searchTripsDescription": "Choose a shipment and date to find matching trips.",
   "searchTripsNavLabel": "Search",
@@ -381,6 +400,7 @@
       "shipmentId": {}
     }
   },
+  "shipmentDetailPageTitle": "Shipment details",
   "shipperHomeDescription": "Track active bookings, check updates, and jump to your most-used actions.",
   "shipperHomeActiveBookingsLabel": "Active bookings",
   "shipperHomeUnreadNotificationsLabel": "Unread notifications",
@@ -396,6 +416,8 @@
   "splashTitle": "Getting ready",
   "startupConfigurationRequiredTitle": "FleetFill is unavailable",
   "startupConfigurationRequiredMessage": "FleetFill is not available right now. Please try again later.",
+  "notificationNewLabel": "New",
+  "notificationSeenLabel": "Seen",
   "statusNeedsReviewLabel": "Needs review",
   "statusReadyLabel": "Ready",
   "supportDescription": "Send a question, report a problem, or ask for help with a booking or payment.",
@@ -409,6 +431,7 @@
       "bookingId": {}
     }
   },
+  "trackingDetailPageTitle": "Tracking",
   "updateRequiredDescription": "Update FleetFill to keep using the latest supported version.",
   "updateRequiredTitle": "Update required",
   "userDetailDescription": "Review account details, bookings, vehicles, and documents.",
@@ -440,8 +463,8 @@
   "vehiclesDescription": "Add and manage the vehicles you use for transport.",
   "vehiclesEmptyMessage": "Add a vehicle before you publish capacity or complete full verification.",
   "vehiclesTitle": "Vehicles",
-  "vehicleVerificationDocumentsTitle": "Vehicle verification documents",
-  "verificationDocumentDriverIdentityLabel": "Driver identity or license",
+  "vehicleVerificationDocumentsTitle": "Vehicle documents",
+  "verificationDocumentDriverIdentityLabel": "Driver's license",
   "verificationDocumentMissingMessage": "No file uploaded yet.",
   "verificationDocumentNeedsAttentionMessage": "Review the rejection reason and upload a replacement.",
   "verificationDocumentOpenPreparedMessage": "Your document is ready to open.",
@@ -452,11 +475,12 @@
       "reason": {}
     }
   },
+  "verificationDocumentRejectedFallbackReason": "Please review the document requirements and upload a clearer file.",
   "verificationDocumentReplacedMessage": "Verification document replaced.",
-  "verificationDocumentTransportLicenseLabel": "Transport license",
+  "verificationDocumentTransportLicenseLabel": "Transport license (legacy)",
   "verificationDocumentTruckInspectionLabel": "Truck technical inspection",
   "verificationDocumentTruckInsuranceLabel": "Truck insurance",
-  "verificationDocumentTruckRegistrationLabel": "Truck registration",
+  "verificationDocumentTruckRegistrationLabel": "Vehicle registration card",
   "verificationDocumentUploadedMessage": "Verification document uploaded.",
   "verificationDocumentVerifiedMessage": "Verified and accepted.",
   "verificationReplaceAction": "Replace",
@@ -611,6 +635,9 @@
   "paymentProofUploadAction": "Upload payment proof",
   "paymentProofResubmitAction": "Resubmit payment proof",
   "paymentProofUploadedMessage": "Payment proof received.",
+  "paymentRailCcpLabel": "CCP",
+  "paymentRailDahabiaLabel": "Dahabia",
+  "paymentRailBankLabel": "Bank",
   "paymentProofAmountLabel": "Submitted amount",
   "paymentProofReferenceLabel": "Submitted reference",
   "paymentProofStatusLabel": "Proof status",
@@ -643,6 +670,7 @@
   "trackingEventCompletedLabel": "Completed",
   "trackingEventCancelledLabel": "Cancelled",
   "trackingEventDisputedLabel": "Disputed",
+  "trackingEventAutoCompletedNote": "Automatically completed after the delivery review window ended.",
   "adminDisputesQueueTitle": "Disputes",
   "adminDisputesQueueEmptyMessage": "No disputes are waiting for review right now.",
   "adminPayoutQueueTitle": "Payouts",
@@ -777,7 +805,56 @@
   "adminSettingsFeatureFlagsSectionTitle": "Optional features",
   "adminSettingsEmailResendEnabledLabel": "Enable admin email resend",
   "adminAuditLogEmptyMessage": "No admin audit events have been recorded yet.",
+  "supportInboxTitle": "Your support requests",
+  "supportInboxEmptyMessage": "You have not opened any support requests yet.",
+  "supportRequestCreatedMessage": "Your support request was created.",
+  "supportThreadTitle": "Support thread",
+  "supportThreadDetailsTitle": "Request details",
+  "supportStatusLabel": "Status",
+  "supportPriorityLabel": "Priority",
+  "supportLastUpdatedLabel": "Last updated",
+  "supportReplyLabel": "Reply",
+  "supportReplyAction": "Send reply",
+  "supportReplySentMessage": "Your reply was sent.",
+  "supportThreadNoMessagesMessage": "No messages have been added to this request yet.",
+  "supportLinkedBookingAction": "Open booking",
+  "supportLinkedPaymentProofAction": "Open payment proof",
+  "supportLinkedDisputeAction": "Open dispute",
+  "supportThreadOpenAction": "Open support thread",
+  "supportStatusOpenLabel": "Open",
+  "supportStatusInProgressLabel": "In progress",
+  "supportStatusWaitingForUserLabel": "Waiting for user",
+  "supportStatusResolvedLabel": "Resolved",
+  "supportStatusClosedLabel": "Closed",
+  "supportPriorityNormalLabel": "Normal",
+  "supportPriorityHighLabel": "High",
+  "supportPriorityUrgentLabel": "Urgent",
+  "supportMessageSenderUserLabel": "You",
+  "supportMessageSenderAdminLabel": "FleetFill support",
+  "supportMessageSenderSystemLabel": "System",
+  "adminSupportQueueTitle": "Support queue",
+  "adminQueueSupportTabLabel": "Support",
+  "adminSupportSearchLabel": "Search support requests",
+  "adminSupportStatusAllLabel": "All statuses",
+  "adminSupportQueueEmptyMessage": "No support requests need attention right now.",
+  "adminSupportControlsTitle": "Support controls",
+  "adminSupportAssignToMeAction": "Assign to me",
+  "adminSupportUnassignAction": "Remove assignment",
+  "notificationSupportRequestCreatedTitle": "New support request",
+  "notificationSupportRequestCreatedBody": "A user opened a new support request that needs review.",
+  "notificationSupportReplyReceivedTitle": "Support replied",
+  "notificationSupportReplyReceivedBody": "FleetFill support replied to your request.",
+  "notificationSupportUserRepliedTitle": "User replied",
+  "notificationSupportUserRepliedBody": "A user replied to an existing support request.",
+  "notificationSupportStatusChangedTitle": "Support status updated",
+  "notificationSupportStatusChangedBody": "Your support request status is now {status}.",
+  "@notificationSupportStatusChangedBody": {
+    "placeholders": {
+      "status": {}
+    }
+  },
   "routeOriginWilayaLabel": "Origin wilaya",
   "routeDestinationWilayaLabel": "Destination wilaya",
-  "locationUnavailableLabel": "Location unavailable"
+  "locationUnavailableLabel": "Location unavailable",
+  "localBackendUnavailableMessage": "FleetFill could not reach the local development backend. Use the emulator launch profile for Android emulators, and use your computer's LAN IP for real devices."
 }

@@ -772,10 +772,72 @@ for each row execute function public.set_updated_at();
 
 -- >>> BEGIN 20260317150000_create_runtime_support_tables.sql
 do $$ begin
+  create type public.support_request_status as enum (
+    'open',
+    'in_progress',
+    'waiting_for_user',
+    'resolved',
+    'closed'
+  );
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create type public.support_request_priority as enum (
+    'normal',
+    'high',
+    'urgent'
+  );
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create type public.support_message_sender_type as enum (
+    'user',
+    'admin',
+    'system'
+  );
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$ begin
   create type public.upload_session_status as enum ('authorized', 'finalized', 'cancelled', 'expired');
 exception
   when duplicate_object then null;
 end $$;
+
+create table if not exists public.support_requests (
+  id uuid primary key default gen_random_uuid(),
+  created_by uuid not null references public.profiles (id) on delete cascade,
+  requester_role public.app_role not null,
+  subject text not null,
+  status public.support_request_status not null default 'open',
+  priority public.support_request_priority not null default 'normal',
+  shipment_id uuid references public.shipments (id) on delete set null,
+  booking_id uuid references public.bookings (id) on delete set null,
+  payment_proof_id uuid references public.payment_proofs (id) on delete set null,
+  dispute_id uuid references public.disputes (id) on delete set null,
+  assigned_admin_id uuid references public.profiles (id) on delete set null,
+  last_message_preview text,
+  last_message_sender_type public.support_message_sender_type not null default 'user',
+  last_message_at timestamptz not null default now(),
+  user_last_read_at timestamptz,
+  admin_last_read_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.support_messages (
+  id uuid primary key default gen_random_uuid(),
+  request_id uuid not null references public.support_requests (id) on delete cascade,
+  sender_profile_id uuid references public.profiles (id) on delete set null,
+  sender_type public.support_message_sender_type not null,
+  body text not null,
+  created_at timestamptz not null default now()
+);
 
 create table if not exists public.upload_sessions (
   id uuid primary key default gen_random_uuid(),
@@ -836,6 +898,18 @@ add column if not exists checksum_sha256 text;
 
 create index if not exists upload_sessions_profile_id_idx
 on public.upload_sessions (profile_id);
+
+create index if not exists support_requests_created_by_last_message_at_idx
+on public.support_requests (created_by, last_message_at desc);
+
+create index if not exists support_requests_status_last_message_at_idx
+on public.support_requests (status, last_message_at desc);
+
+create index if not exists support_requests_assigned_admin_last_message_at_idx
+on public.support_requests (assigned_admin_id, last_message_at desc);
+
+create index if not exists support_messages_request_id_created_at_idx
+on public.support_messages (request_id, created_at asc);
 
 create index if not exists upload_sessions_bucket_status_expires_at_idx
 on public.upload_sessions (bucket_id, status, expires_at);
@@ -1044,6 +1118,65 @@ begin
 end;
 $$;
 
+create or replace function public.consume_rate_limit_for_actor(
+  p_actor_id uuid,
+  p_action_key text,
+  p_limit integer,
+  p_window_seconds integer
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_window_started_at timestamptz;
+  v_hit_count integer;
+begin
+  if p_actor_id is null then
+    raise exception 'Authentication is required';
+  end if;
+
+  if p_limit <= 0 or p_window_seconds <= 0 then
+    raise exception 'Rate-limit configuration must be positive';
+  end if;
+
+  v_window_started_at := to_timestamp(
+    floor(extract(epoch from now()) / p_window_seconds) * p_window_seconds
+  );
+
+  insert into public.security_rate_limits (
+    actor_id,
+    action_key,
+    window_started_at,
+    hit_count
+  )
+  values (p_actor_id, p_action_key, v_window_started_at, 1)
+  on conflict (actor_id, action_key, window_started_at)
+  do update
+  set
+    hit_count = public.security_rate_limits.hit_count + 1,
+    updated_at = now()
+  returning hit_count into v_hit_count;
+
+  if v_hit_count > p_limit then
+    perform public.record_abuse_event(
+      p_action_key,
+      'rate_limit_exceeded',
+      jsonb_build_object(
+        'limit', p_limit,
+        'window_seconds', p_window_seconds,
+        'hit_count', v_hit_count,
+        'actor_id', p_actor_id
+      )
+    );
+    return false;
+  end if;
+
+  return true;
+end;
+$$;
+
 create or replace function public.assert_rate_limit(
   p_action_key text,
   p_limit integer,
@@ -1056,6 +1189,29 @@ set search_path = public
 as $$
 begin
   if not public.consume_rate_limit(p_action_key, p_limit, p_window_seconds) then
+    raise exception 'Rate limit exceeded for %', p_action_key;
+  end if;
+end;
+$$;
+
+create or replace function public.assert_rate_limit_for_actor(
+  p_actor_id uuid,
+  p_action_key text,
+  p_limit integer,
+  p_window_seconds integer
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not public.consume_rate_limit_for_actor(
+    p_actor_id,
+    p_action_key,
+    p_limit,
+    p_window_seconds
+  ) then
     raise exception 'Rate limit exceeded for %', p_action_key;
   end if;
 end;
@@ -1252,14 +1408,44 @@ create or replace function public.authorize_private_file_access(
 )
 returns boolean
 language plpgsql
-stable
+volatile
 security definer
 set search_path = public
 as $$
 begin
-  perform public.assert_rate_limit('signed_url_generation', 30, 60);
+  return public.authorize_private_file_access_for_user(
+    (select auth.uid()),
+    p_bucket_id,
+    p_object_path
+  );
+end;
+$$;
 
-  if public.is_admin() then
+create or replace function public.authorize_private_file_access_for_user(
+  p_actor_id uuid,
+  p_bucket_id text,
+  p_object_path text
+)
+returns boolean
+language plpgsql
+volatile
+security definer
+set search_path = public
+as $$
+begin
+  perform public.assert_rate_limit_for_actor(
+    p_actor_id,
+    'signed_url_generation',
+    30,
+    60
+  );
+
+  if exists (
+    select 1
+    from public.profiles as p
+    where p.id = p_actor_id
+      and p.role = 'admin'
+  ) then
     return true;
   end if;
 
@@ -1269,7 +1455,7 @@ begin
       from public.payment_proofs as pp
       join public.bookings as b on b.id = pp.booking_id
       where pp.storage_path = p_object_path
-        and b.shipper_id = (select auth.uid())
+        and b.shipper_id = p_actor_id
     );
   end if;
 
@@ -1278,7 +1464,7 @@ begin
       select 1
       from public.verification_documents as vd
       where vd.storage_path = p_object_path
-        and vd.owner_profile_id = (select auth.uid())
+        and vd.owner_profile_id = p_actor_id
     );
   end if;
 
@@ -1288,7 +1474,7 @@ begin
       from public.generated_documents as gd
       join public.bookings as b on b.id = gd.booking_id
       where gd.storage_path = p_object_path
-        and (b.shipper_id = (select auth.uid()) or b.carrier_id = (select auth.uid()))
+        and (b.shipper_id = p_actor_id or b.carrier_id = p_actor_id)
     );
   end if;
 
@@ -1415,8 +1601,7 @@ begin
       'driver_identity_or_license',
       'truck_registration',
       'truck_insurance',
-      'truck_technical_inspection',
-      'transport_license'
+      'truck_technical_inspection'
     ) then
       raise exception 'Unsupported verification document type';
     end if;
@@ -2133,6 +2318,8 @@ alter table public.notifications enable row level security;
 alter table public.user_devices enable row level security;
 alter table public.platform_settings enable row level security;
 alter table public.admin_audit_logs enable row level security;
+alter table public.support_requests enable row level security;
+alter table public.support_messages enable row level security;
 alter table public.upload_sessions enable row level security;
 alter table public.security_rate_limits enable row level security;
 alter table public.security_abuse_events enable row level security;
@@ -2447,6 +2634,23 @@ on public.notifications for update to authenticated
 using (profile_id = (select auth.uid()) or public.is_admin())
 with check (profile_id = (select auth.uid()) or public.is_admin());
 
+drop policy if exists support_requests_select_participant_or_admin on public.support_requests;
+create policy support_requests_select_participant_or_admin
+on public.support_requests for select to authenticated
+using (created_by = (select auth.uid()) or public.is_admin());
+
+drop policy if exists support_messages_select_participant_or_admin on public.support_messages;
+create policy support_messages_select_participant_or_admin
+on public.support_messages for select to authenticated
+using (
+  exists (
+    select 1
+    from public.support_requests as sr
+    where sr.id = request_id
+      and (sr.created_by = (select auth.uid()) or public.is_admin())
+  )
+);
+
 drop policy if exists user_devices_owner_or_admin on public.user_devices;
 drop policy if exists user_devices_select_owner_or_admin on public.user_devices;
 create policy user_devices_select_owner_or_admin
@@ -2522,6 +2726,10 @@ create or replace trigger security_rate_limits_set_updated_at
 before update on public.security_rate_limits
 for each row execute function public.set_updated_at();
 
+create or replace trigger support_requests_set_updated_at
+before update on public.support_requests
+for each row execute function public.set_updated_at();
+
 create or replace trigger profiles_normalize_columns
 before insert or update on public.profiles
 for each row execute function public.normalize_profile_columns();
@@ -2556,6 +2764,10 @@ for each row execute function public.enforce_append_only_history();
 
 create or replace trigger admin_audit_logs_append_only_guard
 before update or delete on public.admin_audit_logs
+for each row execute function public.enforce_append_only_history();
+
+create or replace trigger support_messages_append_only_guard
+before update or delete on public.support_messages
 for each row execute function public.enforce_append_only_history();
 -- <<< END 20260317150600_create_storage_policies_and_security_triggers.sql
 
@@ -2598,4 +2810,13 @@ grant execute on function public.finalize_verification_document(uuid) to authent
 
 revoke all on function public.authorize_private_file_access(text, text) from public, anon;
 grant execute on function public.authorize_private_file_access(text, text) to authenticated, service_role;
+
+revoke all on function public.consume_rate_limit_for_actor(uuid, text, integer, integer) from public, anon;
+grant execute on function public.consume_rate_limit_for_actor(uuid, text, integer, integer) to service_role;
+
+revoke all on function public.assert_rate_limit_for_actor(uuid, text, integer, integer) from public, anon;
+grant execute on function public.assert_rate_limit_for_actor(uuid, text, integer, integer) to service_role;
+
+revoke all on function public.authorize_private_file_access_for_user(uuid, text, text) from public, anon;
+grant execute on function public.authorize_private_file_access_for_user(uuid, text, text) to service_role;
 -- <<< END 20260317150700_grant_runtime_function_access.sql

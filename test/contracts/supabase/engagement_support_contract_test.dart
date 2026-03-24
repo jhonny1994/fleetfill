@@ -9,7 +9,7 @@ void main() {
     late String emailEnqueueMigration;
     late String notificationDeviceHardeningMigration;
     late String emailHardeningMigration;
-    late String supportRequestMigration;
+    late String supportRuntimeMigration;
 
     setUpAll(() {
       carrierReviewMigration = File(
@@ -27,7 +27,7 @@ void main() {
       emailHardeningMigration = File(
         'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
-      supportRequestMigration = File(
+      supportRuntimeMigration = File(
         'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync();
     });
@@ -52,7 +52,7 @@ void main() {
       );
     });
 
-    test('hardens locale-aware notification and support email handling', () {
+    test('hardens locale-aware notification and support request handling', () {
       expect(
         notificationDeviceHardeningMigration.contains(
           'normalize_supported_locale',
@@ -74,11 +74,15 @@ void main() {
       expect(emailHardeningMigration.contains("when 'opened' then 3"), isTrue);
       expect(emailHardeningMigration.contains("when 'clicked' then 4"), isTrue);
       expect(
-        supportRequestMigration.contains('enqueue_support_request_emails'),
+        supportRuntimeMigration.contains('create_support_request'),
         isTrue,
       );
       expect(
-        supportRequestMigration.contains('support_acknowledgement'),
+        supportRuntimeMigration.contains('reply_to_support_request'),
+        isTrue,
+      );
+      expect(
+        supportRuntimeMigration.contains('admin_set_support_request_status'),
         isTrue,
       );
     });

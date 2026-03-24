@@ -5,6 +5,7 @@ import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/admin/admin.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
 import 'package:fleetfill/features/profile/profile.dart';
+import 'package:fleetfill/features/support/support.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -72,159 +73,173 @@ class AdminDashboardScreen extends ConsumerWidget {
       child: AppAsyncStateView<AdminOperationalSummary>(
         value: summaryAsync,
         onRetry: () => ref.invalidate(adminOperationalSummaryProvider),
-        data: (summary) => ListView(
-          key: const PageStorageKey<String>('admin-dashboard-list'),
-          children: [
-            AppSectionHeader(
-              title: s.adminDashboardTitle,
-              subtitle: s.adminDashboardDescription,
-              showTitle: false,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            ProfileSummaryCard(
-              title: s.adminDashboardBacklogHealthTitle,
-              rows: [
-                ProfileSummaryRow(
-                  label: s.adminPaymentProofQueueTitle,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.paymentProofs.toString(),
+        data: (summary) => RefreshIndicator(
+          onRefresh: () async {
+            ref
+              ..invalidate(adminOperationalSummaryProvider)
+              ..invalidate(adminAutomationAlertsProvider);
+          },
+          child: ListView(
+            key: const PageStorageKey<String>('admin-dashboard-list'),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              AppSectionHeader(
+                title: s.adminDashboardTitle,
+                subtitle: s.adminDashboardDescription,
+                showTitle: false,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ProfileSummaryCard(
+                title: s.adminDashboardBacklogHealthTitle,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.adminPaymentProofQueueTitle,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.paymentProofs.toString(),
+                    ),
                   ),
-                ),
-                ProfileSummaryRow(
-                  label: s.adminVerificationQueueTitle,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.verificationPackets.toString(),
+                  ProfileSummaryRow(
+                    label: s.adminVerificationQueueTitle,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.verificationPackets.toString(),
+                    ),
                   ),
-                ),
-                ProfileSummaryRow(
-                  label: s.adminDisputesQueueTitle,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.disputes.toString(),
+                  ProfileSummaryRow(
+                    label: s.adminDisputesQueueTitle,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.disputes.toString(),
+                    ),
                   ),
-                ),
-                ProfileSummaryRow(
-                  label: s.adminPayoutEligibleTitle,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.eligiblePayouts.toString(),
+                  ProfileSummaryRow(
+                    label: s.adminPayoutEligibleTitle,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.eligiblePayouts.toString(),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            ProfileSummaryCard(
-              title: s.adminDashboardAutomationTitle,
-              rows: [
-                ProfileSummaryRow(
-                  label: s.adminDashboardOverdueDeliveryReviewsLabel,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.overdueDeliveryReviews.toString(),
+                  ProfileSummaryRow(
+                    label: s.adminSupportQueueTitle,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.supportNeedsReply.toString(),
+                    ),
                   ),
-                ),
-                ProfileSummaryRow(
-                  label: s.adminDashboardOverduePaymentResubmissionsLabel,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.overduePaymentResubmissions.toString(),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              ProfileSummaryCard(
+                title: s.adminDashboardAutomationTitle,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.adminDashboardOverdueDeliveryReviewsLabel,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.overdueDeliveryReviews.toString(),
+                    ),
                   ),
-                ),
-                ProfileSummaryRow(
-                  label: s.adminAuditLogTitle,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.auditEventsLast24h.toString(),
+                  ProfileSummaryRow(
+                    label: s.adminDashboardOverduePaymentResubmissionsLabel,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.overduePaymentResubmissions.toString(),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            ProfileSummaryCard(
-              title: s.adminDashboardEmailHealthTitle,
-              rows: [
-                ProfileSummaryRow(
-                  label: s.adminDashboardEmailBacklogLabel,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.emailBacklog.toString(),
+                  ProfileSummaryRow(
+                    label: s.adminAuditLogTitle,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.auditEventsLast24h.toString(),
+                    ),
                   ),
-                ),
-                ProfileSummaryRow(
-                  label: s.adminDashboardDeadLetterLabel,
-                  value: BidiFormatters.latinIdentifier(
-                    summary.emailDeadLetter.toString(),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              ProfileSummaryCard(
+                title: s.adminDashboardEmailHealthTitle,
+                rows: [
+                  ProfileSummaryRow(
+                    label: s.adminDashboardEmailBacklogLabel,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.emailBacklog.toString(),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            automationAlertsAsync.when(
-              data: (alerts) => alerts.isEmpty
-                  ? const SizedBox.shrink()
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          s.adminDashboardAutomationTitle,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        ...alerts
-                            .take(6)
-                            .map(
-                              (alert) => Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: AppSpacing.sm,
-                                ),
-                                child: AppListCard(
-                                  title: alert.booking.trackingNumber,
-                                  subtitle:
-                                      alert.kind == 'delivery_review_overdue'
-                                      ? s.adminDashboardOverdueDeliveryReviewsLabel
-                                      : s.adminDashboardOverduePaymentResubmissionsLabel,
-                                  trailing: const Icon(
-                                    Icons.chevron_right_rounded,
+                  ProfileSummaryRow(
+                    label: s.adminDashboardDeadLetterLabel,
+                    value: BidiFormatters.latinIdentifier(
+                      summary.emailDeadLetter.toString(),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              automationAlertsAsync.when(
+                data: (alerts) => alerts.isEmpty
+                    ? const SizedBox.shrink()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            s.adminDashboardAutomationTitle,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          ...alerts
+                              .take(6)
+                              .map(
+                                (alert) => Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: AppSpacing.sm,
                                   ),
-                                  onTap: () => context.push(
-                                    AppRoutePath.sharedBookingDetail
-                                        .replaceFirst(
-                                          ':id',
-                                          alert.booking.id,
-                                        ),
+                                  child: AppListCard(
+                                    title: alert.booking.trackingNumber,
+                                    subtitle:
+                                        alert.kind == 'delivery_review_overdue'
+                                        ? s.adminDashboardOverdueDeliveryReviewsLabel
+                                        : s.adminDashboardOverduePaymentResubmissionsLabel,
+                                    trailing: const Icon(
+                                      Icons.chevron_right_rounded,
+                                    ),
+                                    onTap: () => context.push(
+                                      AppRoutePath.sharedBookingDetail
+                                          .replaceFirst(
+                                            ':id',
+                                            alert.booking.id,
+                                          ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                      ],
-                    ),
-              loading: () => const SizedBox.shrink(),
-              error: (_, _) => const SizedBox.shrink(),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            const _AdminBookingSearchSection(),
-            const SizedBox(height: AppSpacing.lg),
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: [
-                OutlinedButton.icon(
-                  onPressed: () => context.go(AppRoutePath.adminQueues),
-                  icon: const Icon(Icons.inventory_2_outlined),
-                  label: Text(s.adminQueuesNavLabel),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () => context.go(AppRoutePath.adminUsers),
-                  icon: const Icon(Icons.group_outlined),
-                  label: Text(s.adminUsersNavLabel),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () => context.go(AppRoutePath.adminSettings),
-                  icon: const Icon(Icons.settings_outlined),
-                  label: Text(s.adminSettingsNavLabel),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () => context.go(AppRoutePath.adminAuditLog),
-                  icon: const Icon(Icons.history_rounded),
-                  label: Text(s.adminAuditLogTitle),
-                ),
-              ],
-            ),
-          ],
+                        ],
+                      ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              const _AdminBookingSearchSection(),
+              const SizedBox(height: AppSpacing.lg),
+              Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.sm,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () => context.go(AppRoutePath.adminQueues),
+                    icon: const Icon(Icons.inventory_2_outlined),
+                    label: Text(s.adminQueuesNavLabel),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () => context.go(AppRoutePath.adminUsers),
+                    icon: const Icon(Icons.group_outlined),
+                    label: Text(s.adminUsersNavLabel),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () => context.go(AppRoutePath.adminSettings),
+                    icon: const Icon(Icons.settings_outlined),
+                    label: Text(s.adminSettingsNavLabel),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () => context.go(AppRoutePath.adminAuditLog),
+                    icon: const Icon(Icons.history_rounded),
+                    label: Text(s.adminAuditLogTitle),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -339,57 +354,82 @@ class _AdminQueuesScreenState extends ConsumerState<AdminQueuesScreen> {
 
     return AppPageScaffold(
       title: s.adminQueuesTitle,
-      child: ListView(
-        key: const PageStorageKey<String>('admin-queues-list'),
-        children: [
-          AppSectionHeader(
-            title: s.adminQueuesTitle,
-            subtitle: s.adminQueuesDescription,
-            showTitle: false,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          SegmentedButton<AdminQueueSegment>(
-            segments: [
-              ButtonSegment(
-                value: AdminQueueSegment.payments,
-                label: Text(s.adminQueuePaymentsTabLabel),
-                icon: const Icon(Icons.receipt_long_outlined),
-              ),
-              ButtonSegment(
-                value: AdminQueueSegment.verification,
-                label: Text(s.adminQueueVerificationTabLabel),
-                icon: const Icon(Icons.verified_user_outlined),
-              ),
-              ButtonSegment(
-                value: AdminQueueSegment.disputes,
-                label: Text(s.adminQueueDisputesTabLabel),
-                icon: const Icon(Icons.report_problem_outlined),
-              ),
-              ButtonSegment(
-                value: AdminQueueSegment.payouts,
-                label: Text(s.adminQueuePayoutsTabLabel),
-                icon: const Icon(Icons.account_balance_wallet_outlined),
-              ),
-              ButtonSegment(
-                value: AdminQueueSegment.email,
-                label: Text(s.adminQueueEmailTabLabel),
-                icon: const Icon(Icons.mail_outline_rounded),
-              ),
-            ],
-            selected: {_selectedSegment},
-            onSelectionChanged: (selection) {
-              setState(() => _selectedSegment = selection.first);
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref
+            ..invalidate(pendingPaymentProofsProvider)
+            ..invalidate(pendingVerificationPacketsProvider)
+            ..invalidate(openDisputesProvider)
+            ..invalidate(adminEligiblePayoutsProvider)
+            ..invalidate(
+              adminFilteredSupportQueueProvider((
+                status: null,
+                query: '',
+              )),
+            )
+            ..invalidate(adminEmailLogsProvider)
+            ..invalidate(adminDeadLetterEmailJobsProvider);
+        },
+        child: ListView(
+          key: const PageStorageKey<String>('admin-queues-list'),
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            AppSectionHeader(
+              title: s.adminQueuesTitle,
+              subtitle: s.adminQueuesDescription,
+              showTitle: false,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            SegmentedButton<AdminQueueSegment>(
+              segments: [
+                ButtonSegment(
+                  value: AdminQueueSegment.payments,
+                  label: Text(s.adminQueuePaymentsTabLabel),
+                  icon: const Icon(Icons.receipt_long_outlined),
+                ),
+                ButtonSegment(
+                  value: AdminQueueSegment.verification,
+                  label: Text(s.adminQueueVerificationTabLabel),
+                  icon: const Icon(Icons.verified_user_outlined),
+                ),
+                ButtonSegment(
+                  value: AdminQueueSegment.disputes,
+                  label: Text(s.adminQueueDisputesTabLabel),
+                  icon: const Icon(Icons.report_problem_outlined),
+                ),
+                ButtonSegment(
+                  value: AdminQueueSegment.payouts,
+                  label: Text(s.adminQueuePayoutsTabLabel),
+                  icon: const Icon(Icons.account_balance_wallet_outlined),
+                ),
+                ButtonSegment(
+                  value: AdminQueueSegment.support,
+                  label: Text(s.adminQueueSupportTabLabel),
+                  icon: const Icon(Icons.support_agent_outlined),
+                ),
+                ButtonSegment(
+                  value: AdminQueueSegment.email,
+                  label: Text(s.adminQueueEmailTabLabel),
+                  icon: const Icon(Icons.mail_outline_rounded),
+                ),
+              ],
+              selected: {_selectedSegment},
+              onSelectionChanged: (selection) {
+                setState(() => _selectedSegment = selection.first);
+              },
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            switch (_selectedSegment) {
+              AdminQueueSegment.payments => _AdminPaymentsQueueSection(),
+              AdminQueueSegment.verification =>
+                _AdminVerificationQueueSection(),
+              AdminQueueSegment.disputes => _AdminDisputesQueueSection(),
+              AdminQueueSegment.payouts => _AdminPayoutsQueueSection(),
+              AdminQueueSegment.support => _AdminSupportQueueSection(),
+              AdminQueueSegment.email => _AdminEmailQueueSection(),
             },
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          switch (_selectedSegment) {
-            AdminQueueSegment.payments => _AdminPaymentsQueueSection(),
-            AdminQueueSegment.verification => _AdminVerificationQueueSection(),
-            AdminQueueSegment.disputes => _AdminDisputesQueueSection(),
-            AdminQueueSegment.payouts => _AdminPayoutsQueueSection(),
-            AdminQueueSegment.email => _AdminEmailQueueSection(),
-          },
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -523,6 +563,20 @@ class AdminPayoutDetailScreen extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+
+class AdminSupportRequestDetailScreen extends StatelessWidget {
+  const AdminSupportRequestDetailScreen({
+    required this.requestId,
+    super.key,
+  });
+
+  final String requestId;
+
+  @override
+  Widget build(BuildContext context) {
+    return SupportThreadScreen(requestId: requestId, isAdmin: true);
   }
 }
 
@@ -1047,6 +1101,128 @@ class _AdminPayoutsQueueSectionState
               technicalDetails: stackTrace.toString(),
             ),
             onRetry: () => ref.invalidate(payoutsProvider),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AdminSupportQueueSection extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<_AdminSupportQueueSection> createState() =>
+      _AdminSupportQueueSectionState();
+}
+
+class _AdminSupportQueueSectionState
+    extends ConsumerState<_AdminSupportQueueSection> {
+  final TextEditingController _queryController = TextEditingController();
+  String? _selectedStatus;
+
+  @override
+  void dispose() {
+    _queryController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    final queueAsync = ref.watch(
+      adminFilteredSupportQueueProvider(
+        (status: _selectedStatus, query: _queryController.text.trim()),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          s.adminSupportQueueTitle,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        TextField(
+          controller: _queryController,
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(labelText: s.adminSupportSearchLabel),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        DropdownButtonFormField<String?>(
+          initialValue: _selectedStatus,
+          decoration: InputDecoration(labelText: s.supportStatusLabel),
+          items: [
+            DropdownMenuItem<String?>(
+              child: Text(s.adminSupportStatusAllLabel),
+            ),
+            ...[
+              'open',
+              'in_progress',
+              'waiting_for_user',
+              'resolved',
+              'closed',
+            ].map(
+              (status) => DropdownMenuItem<String?>(
+                value: status,
+                child: Text(
+                  _supportStatusLabel(s, _supportStatusFromValue(status)),
+                ),
+              ),
+            ),
+          ],
+          onChanged: (value) => setState(() => _selectedStatus = value),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        queueAsync.when(
+          data: (requests) {
+            if (requests.isEmpty) {
+              return AppEmptyState(
+                title: s.adminSupportQueueTitle,
+                message: s.adminSupportQueueEmptyMessage,
+              );
+            }
+
+            return Column(
+              children: requests
+                  .map(
+                    (request) => Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      child: AppListCard(
+                        title: request.subject,
+                        subtitle:
+                            '${_supportStatusLabel(s, request.status)} • ${request.lastMessagePreview ?? s.supportThreadNoMessagesMessage}',
+                        leading: AppStatusChip(
+                          label: request.hasUnreadForAdmin
+                              ? s.statusNeedsReviewLabel
+                              : s.statusReadyLabel,
+                          tone: request.hasUnreadForAdmin
+                              ? AppStatusTone.warning
+                              : AppStatusTone.success,
+                        ),
+                        trailing: Text(
+                          _formatDate(request.lastMessageAt),
+                        ),
+                        onTap: () => context.push(
+                          AppRoutePath.adminQueuesSupport(request.id),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(growable: false),
+            );
+          },
+          loading: () => const AppLoadingState(),
+          error: (error, stackTrace) => AppErrorState(
+            error: AppError(
+              code: 'admin_support_queue_failed',
+              message: mapAppErrorMessage(s, error),
+              technicalDetails: stackTrace.toString(),
+            ),
+            onRetry: () => ref.invalidate(
+              adminFilteredSupportQueueProvider(
+                (status: _selectedStatus, query: _queryController.text.trim()),
+              ),
+            ),
           ),
         ),
       ],
@@ -2540,6 +2716,27 @@ String _paymentStatusLabel(S s, PaymentStatus status) {
     PaymentStatus.rejected => s.paymentStatusRejectedLabel,
     PaymentStatus.refunded => s.paymentStatusRefundedLabel,
     PaymentStatus.releasedToCarrier => s.paymentStatusReleasedToCarrierLabel,
+  };
+}
+
+String _supportStatusLabel(S s, SupportRequestStatus status) {
+  return switch (status) {
+    SupportRequestStatus.open => s.supportStatusOpenLabel,
+    SupportRequestStatus.inProgress => s.supportStatusInProgressLabel,
+    SupportRequestStatus.waitingForUser => s.supportStatusWaitingForUserLabel,
+    SupportRequestStatus.resolved => s.supportStatusResolvedLabel,
+    SupportRequestStatus.closed => s.supportStatusClosedLabel,
+  };
+}
+
+SupportRequestStatus _supportStatusFromValue(String value) {
+  return switch (value) {
+    'open' => SupportRequestStatus.open,
+    'in_progress' => SupportRequestStatus.inProgress,
+    'waiting_for_user' => SupportRequestStatus.waitingForUser,
+    'resolved' => SupportRequestStatus.resolved,
+    'closed' => SupportRequestStatus.closed,
+    _ => SupportRequestStatus.open,
   };
 }
 

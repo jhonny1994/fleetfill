@@ -4,14 +4,12 @@ part 'payout_account_models.freezed.dart';
 
 enum PayoutAccountType {
   ccp,
-  dahabia,
   bank
   ;
 
   static PayoutAccountType fromDatabase(Object? value) {
     return switch (value) {
       'ccp' => PayoutAccountType.ccp,
-      'dahabia' => PayoutAccountType.dahabia,
       _ => PayoutAccountType.bank,
     };
   }
