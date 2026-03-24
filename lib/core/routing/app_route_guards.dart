@@ -60,11 +60,6 @@ class AppRouteGuards {
         location.startsWith('${AppRoutePath.carrierBookings}/');
   }
 
-  static bool _needsPayoutAccount(String location) {
-    return location == AppRoutePath.carrierBookings ||
-        location.startsWith('${AppRoutePath.carrierBookings}/');
-  }
-
   static bool _isAdminLocation(String location) {
     return location.startsWith('/admin');
   }
@@ -208,13 +203,6 @@ class AppRouteGuards {
     if (needsCarrierVerification && !auth.isCarrierVerified) {
       return const RouteGuardDecision(
         target: AppRedirectTarget.verificationGate,
-      );
-    }
-
-    final needsPayoutAccount = _needsPayoutAccount(location);
-    if (needsPayoutAccount && !auth.hasPayoutAccount) {
-      return const RouteGuardDecision(
-        target: AppRedirectTarget.payoutAccountGate,
       );
     }
 

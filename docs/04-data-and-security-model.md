@@ -124,7 +124,6 @@ Required current document types:
 - `truck_registration`
 - `truck_insurance`
 - `truck_technical_inspection`
-- `transport_license`
 
 ### 2.5 `routes`
 

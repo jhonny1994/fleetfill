@@ -54,7 +54,9 @@ class CarrierShellScreen extends ConsumerWidget {
     AuthSnapshot? auth,
     int index,
   ) {
-    final blocker = _blockerForIndex(auth, index);
+    final blocker = _blockerForReason(
+      carrierNavigationBlockReasonForIndex(auth, index),
+    );
     if (blocker != null) {
       unawaited(_showCarrierGateDialog(context, blocker));
       return;
@@ -66,21 +68,12 @@ class CarrierShellScreen extends ConsumerWidget {
     );
   }
 
-  _CarrierNavBlocker? _blockerForIndex(AuthSnapshot? auth, int index) {
-    if (auth == null) {
-      return null;
-    }
-    final needsPhone = !auth.hasPhoneNumber;
-    final needsVerification = !auth.isCarrierVerified;
-    final needsPayout = !auth.hasPayoutAccount;
-
-    return switch (index) {
-      1 when needsPhone => _CarrierNavBlocker.phone(),
-      1 when needsVerification => _CarrierNavBlocker.verification(),
-      2 when needsPhone => _CarrierNavBlocker.phone(),
-      2 when needsVerification => _CarrierNavBlocker.verification(),
-      2 when needsPayout => _CarrierNavBlocker.payout(),
-      _ => null,
+  _CarrierNavBlocker? _blockerForReason(CarrierNavigationBlockReason? reason) {
+    return switch (reason) {
+      CarrierNavigationBlockReason.phone => _CarrierNavBlocker.phone(),
+      CarrierNavigationBlockReason.verification =>
+        _CarrierNavBlocker.verification(),
+      null => null,
     };
   }
 
@@ -114,6 +107,30 @@ class CarrierShellScreen extends ConsumerWidget {
   }
 }
 
+enum CarrierNavigationBlockReason {
+  phone,
+  verification,
+}
+
+CarrierNavigationBlockReason? carrierNavigationBlockReasonForIndex(
+  AuthSnapshot? auth,
+  int index,
+) {
+  if (auth == null) {
+    return null;
+  }
+  final needsPhone = !auth.hasPhoneNumber;
+  final needsVerification = !auth.isCarrierVerified;
+
+  return switch (index) {
+    1 when needsPhone => CarrierNavigationBlockReason.phone,
+    1 when needsVerification => CarrierNavigationBlockReason.verification,
+    2 when needsPhone => CarrierNavigationBlockReason.phone,
+    2 when needsVerification => CarrierNavigationBlockReason.verification,
+    _ => null,
+  };
+}
+
 class _CarrierNavBlocker {
   const _CarrierNavBlocker._({
     required this.nextRoute,
@@ -138,14 +155,6 @@ class _CarrierNavBlocker {
         actionLabel: _verificationAction,
       );
 
-  _CarrierNavBlocker.payout()
-    : this._(
-        nextRoute: AppRoutePath.carrierPayoutAccounts(),
-        title: _payoutTitle,
-        message: _payoutMessage,
-        actionLabel: _payoutAction,
-      );
-
   final String nextRoute;
   final String Function(S) title;
   final String Function(S) message;
@@ -157,9 +166,6 @@ class _CarrierNavBlocker {
   static String _verificationTitle(S s) => s.carrierGateVerificationTitle;
   static String _verificationMessage(S s) => s.carrierGateVerificationMessage;
   static String _verificationAction(S s) => s.carrierVerificationCenterTitle;
-  static String _payoutTitle(S s) => s.carrierGatePayoutTitle;
-  static String _payoutMessage(S s) => s.carrierGatePayoutMessage;
-  static String _payoutAction(S s) => s.payoutAccountsTitle;
 }
 
 class CarrierHomeScreen extends ConsumerWidget {
@@ -204,7 +210,7 @@ class CarrierHomeScreen extends ConsumerWidget {
                   label: s.payoutAccountsTitle,
                   value: auth?.hasPayoutAccount == true
                       ? s.statusReadyLabel
-                      : s.statusNeedsReviewLabel,
+                      : s.statusSetupRequiredLabel,
                 ),
               ],
             ),
@@ -1034,7 +1040,7 @@ class _VerificationDocumentsSection extends ConsumerWidget {
 Widget _verificationChip(
   S s,
   AppVerificationState state,
-  String? rejectionReason,
+  String? _,
 ) {
   final tone = switch (state) {
     AppVerificationState.verified => AppStatusTone.success,
@@ -1042,11 +1048,7 @@ Widget _verificationChip(
     AppVerificationState.pending => AppStatusTone.warning,
   };
 
-  final label =
-      state == AppVerificationState.rejected &&
-          (rejectionReason ?? '').trim().isNotEmpty
-      ? s.statusNeedsReviewLabel
-      : verificationStatusLabel(s, state);
+  final label = verificationStatusLabel(s, state);
 
   return AppStatusChip(label: label, tone: tone);
 }

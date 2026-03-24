@@ -147,3 +147,27 @@ abstract class SupportThreadRecord with _$SupportThreadRecord {
     required List<SupportMessageRecord> messages,
   }) = _SupportThreadRecord;
 }
+
+bool shouldMarkSupportThreadRead({
+  required SupportRequestRecord request,
+  required bool isAdmin,
+  DateTime? lastMarkedMessageAt,
+}) {
+  final hasUnread = isAdmin ? request.hasUnreadForAdmin : request.hasUnreadForUser;
+  if (!hasUnread) {
+    return false;
+  }
+
+  if (lastMarkedMessageAt == null) {
+    return true;
+  }
+
+  return request.lastMessageAt.isAfter(lastMarkedMessageAt);
+}
+
+bool shouldShowSupportDisputeAction({
+  required SupportRequestRecord request,
+  required bool isAdmin,
+}) {
+  return isAdmin && request.disputeId != null;
+}

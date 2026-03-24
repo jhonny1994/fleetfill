@@ -1665,6 +1665,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "يحتاج مراجعة",
     ),
     "statusReadyLabel": MessageLookupByLibrary.simpleMessage("جاهز"),
+    "statusSetupRequiredLabel": MessageLookupByLibrary.simpleMessage(
+      "يتطلب الإعداد",
+    ),
     "supportConfiguredEmailMessage": m19,
     "supportDescription": MessageLookupByLibrary.simpleMessage(
       "اطرح سؤالا أو أبلغ عن مشكلة أو اطلب المساعدة بشأن حجز أو دفعة.",

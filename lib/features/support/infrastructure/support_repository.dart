@@ -149,9 +149,7 @@ class SupportRepository {
 
     final trimmedQuery = query?.trim();
     if (trimmedQuery != null && trimmedQuery.isNotEmpty) {
-      request = request.or(
-        'subject.ilike.%$trimmedQuery%,created_by.eq.$trimmedQuery,booking_id.eq.$trimmedQuery,shipment_id.eq.$trimmedQuery,payment_proof_id.eq.$trimmedQuery,dispute_id.eq.$trimmedQuery',
-      );
+      request = request.or(buildAdminSupportSearchFilter(trimmedQuery));
     }
 
     final response = await request
@@ -194,6 +192,32 @@ class SupportRepository {
     );
     return SupportRequestRecord.fromJson(response);
   }
+}
+
+String buildAdminSupportSearchFilter(String query) {
+  final trimmedQuery = query.trim();
+  final filters = <String>[
+    'subject.ilike.%$trimmedQuery%',
+  ];
+
+  if (_isUuidLike(trimmedQuery)) {
+    filters.addAll([
+      'created_by.eq.$trimmedQuery',
+      'booking_id.eq.$trimmedQuery',
+      'shipment_id.eq.$trimmedQuery',
+      'payment_proof_id.eq.$trimmedQuery',
+      'dispute_id.eq.$trimmedQuery',
+    ]);
+  }
+
+  return filters.join(',');
+}
+
+bool _isUuidLike(String value) {
+  final normalized = value.trim();
+  return RegExp(
+    r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$',
+  ).hasMatch(normalized);
 }
 
 String _supportRequestStatusValue(SupportRequestStatus status) {

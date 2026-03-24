@@ -108,11 +108,11 @@ class _SupportHomeScreenState extends ConsumerState<SupportHomeScreen> {
                                 '${_supportStatusLabel(s, request.status)} • ${request.lastMessagePreview ?? s.supportThreadNoMessagesMessage}',
                             leading: AppStatusChip(
                               label: request.hasUnreadForUser
-                                  ? s.statusNeedsReviewLabel
-                                  : s.statusReadyLabel,
+                                  ? s.notificationNewLabel
+                                  : s.notificationSeenLabel,
                               tone: request.hasUnreadForUser
-                                  ? AppStatusTone.warning
-                                  : AppStatusTone.success,
+                                  ? AppStatusTone.info
+                                  : AppStatusTone.neutral,
                             ),
                             trailing: Text(
                               BidiFormatters.latinIdentifier(
@@ -191,7 +191,7 @@ class SupportThreadScreen extends ConsumerStatefulWidget {
 class _SupportThreadScreenState extends ConsumerState<SupportThreadScreen> {
   final _replyController = TextEditingController();
   bool _isSubmitting = false;
-  bool _markRequested = false;
+  DateTime? _lastMarkedMessageAt;
 
   @override
   void dispose() {
@@ -209,17 +209,18 @@ class _SupportThreadScreenState extends ConsumerState<SupportThreadScreen> {
       supportThreadProvider(widget.requestId),
       (_, next) {
         final thread = next.asData?.value;
-        if (thread == null || _markRequested) {
+        if (thread == null) {
           return;
         }
-        final shouldMarkRead = widget.isAdmin
-            ? thread.request.hasUnreadForAdmin
-            : thread.request.hasUnreadForUser;
-        if (!shouldMarkRead) {
+        if (!shouldMarkSupportThreadRead(
+          request: thread.request,
+          isAdmin: widget.isAdmin,
+          lastMarkedMessageAt: _lastMarkedMessageAt,
+        )) {
           return;
         }
-        _markRequested = true;
-        unawaited(_markRead());
+        final requestLastMessageAt = thread.request.lastMessageAt;
+        unawaited(_markRead(requestLastMessageAt));
       },
     );
 
@@ -291,7 +292,12 @@ class _SupportThreadScreenState extends ConsumerState<SupportThreadScreen> {
                           ),
                           child: Text(s.supportLinkedPaymentProofAction),
                         ),
-                      if (request.disputeId != null)
+                      if (
+                        shouldShowSupportDisputeAction(
+                          request: request,
+                          isAdmin: widget.isAdmin,
+                        )
+                      )
                         OutlinedButton(
                           onPressed: () => context.push(
                             AppRoutePath.adminQueuesDispute(request.disputeId!),
@@ -359,13 +365,14 @@ class _SupportThreadScreenState extends ConsumerState<SupportThreadScreen> {
     );
   }
 
-  Future<void> _markRead() async {
+  Future<void> _markRead(DateTime messageTimestamp) async {
     try {
       await ref
           .read(supportWorkflowControllerProvider)
           .markSupportRequestRead(widget.requestId);
+      _lastMarkedMessageAt = messageTimestamp;
     } on Exception {
-      _markRequested = false;
+      _lastMarkedMessageAt = null;
     }
   }
 

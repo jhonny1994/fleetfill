@@ -59,6 +59,13 @@ class AuthRepository {
     final userId = user.id;
     final email = user.email?.trim();
     final profile = await _fetchCurrentProfile(userId);
+    if (!hasValidResolvedProfile(profile)) {
+      await _safeSignOut();
+      return AuthSnapshot(
+        status: AuthStatus.unauthenticated,
+        isSessionExpired: isSessionExpired,
+      );
+    }
     final hasPayoutAccount = await _fetchHasPayoutAccount(profile);
 
     return AuthSnapshot(
@@ -334,6 +341,8 @@ class AuthRepository {
     return InputSanitizers.normalizeAlgerianPhoneNumber(value);
   }
 }
+
+bool hasValidResolvedProfile(AppProfile? profile) => profile != null;
 
 class _GoogleSignInConfig {
   const _GoogleSignInConfig({

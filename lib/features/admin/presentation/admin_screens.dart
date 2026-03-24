@@ -1193,11 +1193,11 @@ class _AdminSupportQueueSectionState
                             '${_supportStatusLabel(s, request.status)} • ${request.lastMessagePreview ?? s.supportThreadNoMessagesMessage}',
                         leading: AppStatusChip(
                           label: request.hasUnreadForAdmin
-                              ? s.statusNeedsReviewLabel
-                              : s.statusReadyLabel,
+                              ? s.notificationNewLabel
+                              : s.notificationSeenLabel,
                           tone: request.hasUnreadForAdmin
-                              ? AppStatusTone.warning
-                              : AppStatusTone.success,
+                              ? AppStatusTone.info
+                              : AppStatusTone.neutral,
                         ),
                         trailing: Text(
                           _formatDate(request.lastMessageAt),

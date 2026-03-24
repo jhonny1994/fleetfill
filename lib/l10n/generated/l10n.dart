@@ -4060,6 +4060,16 @@ class S {
     );
   }
 
+  /// `يتطلب الإعداد`
+  String get statusSetupRequiredLabel {
+    return Intl.message(
+      'يتطلب الإعداد',
+      name: 'statusSetupRequiredLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `يحتاج مراجعة`
   String get statusNeedsReviewLabel {
     return Intl.message(
