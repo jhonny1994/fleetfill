@@ -369,7 +369,7 @@ Before relying on it in production, verify:
 
 - actual availability of the scheduling mechanism on your project/plan
 - acceptable cadence for your workflows
-- timeout and quota behavior in real staging tests
+- timeout and quota behavior in real hosted rehearsal tests
 
 ## 11. pg_net Guidance
 

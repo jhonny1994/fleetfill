@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/core/config/app_environment.dart';
 import 'package:fleetfill/core/localization/locale_controller.dart';
@@ -129,7 +131,7 @@ _resolveRuntimeEnvironment(
       clientSettings: clientSettings,
     );
   } on Object catch (error) {
-    if (environment.environment == AppEnvironment.local) {
+    if (environment.isLocalBackend) {
       throw AppBootstrapLocalBackendException(
         supabaseUrl: environment.supabaseUrl,
         reason:
@@ -182,7 +184,7 @@ class AppBootstrapController extends _$AppBootstrapController {
       logger.info(
         'Starting app bootstrap',
         context: {
-          'environment': configuredEnvironment.environment.name,
+          'supabaseTargetKind': configuredEnvironment.supabaseTargetKind,
           'supabaseUrl': configuredEnvironment.supabaseUrl,
           'hasSupabaseConfig': configuredEnvironment.hasSupabaseConfig,
           'localAndroidNetworkTarget': localAndroidNetworkTarget.name,
@@ -199,18 +201,27 @@ class AppBootstrapController extends _$AppBootstrapController {
           )
           .timeout(
             _bootstrapLocalNetworkTimeout,
-            onTimeout: () => throw AppBootstrapLocalBackendException(
-              supabaseUrl: runtime.environment.supabaseUrl,
-              reason:
-                  'Timed out while loading the initial auth/profile bootstrap state from the local backend.',
-            ),
+            onTimeout: () {
+              if (runtime.environment.isLocalBackend) {
+                throw AppBootstrapLocalBackendException(
+                  supabaseUrl: runtime.environment.supabaseUrl,
+                  reason:
+                      'Timed out while loading the initial auth/profile bootstrap state from the local backend.',
+                );
+              }
+
+              throw TimeoutException(
+                'Timed out while loading the initial auth/profile bootstrap state.',
+              );
+            },
           );
 
       if (supabaseInitialized) {
         logger.info(
-          'Supabase initialized for ${runtime.environment.environment.name}',
+          'Supabase initialized for ${runtime.environment.supabaseTargetKind}',
           context: {
             'supabaseUrl': runtime.environment.supabaseUrl,
+            'supabaseTargetKind': runtime.environment.supabaseTargetKind,
             'localAndroidNetworkTarget': localAndroidNetworkTarget.name,
           },
         );

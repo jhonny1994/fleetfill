@@ -4,14 +4,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'app_environment.freezed.dart';
 part 'app_environment.g.dart';
 
-enum AppEnvironment { local, staging, production }
-
 enum LocalAndroidNetworkTarget { emulator, device, unspecified }
 
 @freezed
 abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
   const factory AppEnvironmentConfig({
-    required AppEnvironment environment,
     @Default('') String supabaseUrl,
     @Default('') String supabaseAnonKey,
     @Default('') String firebaseApiKey,
@@ -32,8 +29,11 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
       _$AppEnvironmentConfigFromJson(json);
 
   factory AppEnvironmentConfig.fromDefines() {
-    final environment = _parseEnvironment(
-      const String.fromEnvironment('APP_ENV'),
+    final supabaseUrl = _normalizeSupabaseUrl(
+      _firstNonEmpty([
+        const String.fromEnvironment('SUPABASE_URL'),
+        const String.fromEnvironment('APP_SUPABASE_URL'),
+      ]),
     );
     final publishableKey = _firstNonEmpty([
       const String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY'),
@@ -45,16 +45,9 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     ]);
 
     return AppEnvironmentConfig(
-      environment: environment,
-      supabaseUrl: _normalizeSupabaseUrl(
-        _firstNonEmpty([
-          const String.fromEnvironment('SUPABASE_URL'),
-          const String.fromEnvironment('APP_SUPABASE_URL'),
-        ]),
-        environment: environment,
-      ),
+      supabaseUrl: supabaseUrl,
       supabaseAnonKey: _resolveClientKey(
-        environment: environment,
+        supabaseUrl: supabaseUrl,
         publishableKey: publishableKey,
         anonKey: anonKey,
       ),
@@ -106,45 +99,43 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
   bool get hasSupabaseConfig =>
       supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
 
-  static AppEnvironment _parseEnvironment(String value) {
-    return AppEnvironment.values.firstWhere(
-      (candidate) => candidate.name == value,
-      orElse: () => AppEnvironment.local,
-    );
-  }
+  bool get isLocalBackend => _isLocalBackendUrl(supabaseUrl);
+
+  String get supabaseTargetKind => isLocalBackend ? 'local' : 'hosted';
 
   static bool _parseBool(String value) => value.toLowerCase() == 'true';
 
   static String resolveClientKeyForTesting({
-    required AppEnvironment environment,
+    required String supabaseUrl,
     String publishableKey = '',
     String anonKey = '',
   }) {
     return _resolveClientKey(
-      environment: environment,
+      supabaseUrl: supabaseUrl,
       publishableKey: publishableKey,
       anonKey: anonKey,
     );
   }
 
   static String _resolveClientKey({
-    required AppEnvironment environment,
+    required String supabaseUrl,
     required String publishableKey,
     required String anonKey,
   }) {
     final normalizedPublishableKey = publishableKey.trim();
     final normalizedAnonKey = anonKey.trim();
 
-    return switch (environment) {
-      AppEnvironment.local => _firstNonEmpty([
+    if (_isLocalBackendUrl(supabaseUrl)) {
+      return _firstNonEmpty([
         normalizedAnonKey,
         normalizedPublishableKey,
-      ]),
-      AppEnvironment.staging || AppEnvironment.production => _firstNonEmpty([
-        normalizedPublishableKey,
-        normalizedAnonKey,
-      ]),
-    };
+      ]);
+    }
+
+    return _firstNonEmpty([
+      normalizedPublishableKey,
+      normalizedAnonKey,
+    ]);
   }
 
   static String _firstNonEmpty(List<String> values) {
@@ -160,7 +151,6 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
 
   static String normalizeSupabaseUrlForTesting(
     String url, {
-    required AppEnvironment environment,
     required bool isAndroid,
     bool isWeb = false,
     LocalAndroidNetworkTarget localAndroidNetworkTarget =
@@ -168,12 +158,14 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
   }) {
     return _normalizeSupabaseUrl(
       url,
-      environment: environment,
       isAndroidOverride: isAndroid,
       isWebOverride: isWeb,
       localAndroidNetworkTargetOverride: localAndroidNetworkTarget,
     );
   }
+
+  static bool isLocalBackendUrlForTesting(String url) =>
+      _isLocalBackendUrl(url);
 
   static LocalAndroidNetworkTarget resolveLocalAndroidNetworkTargetForTesting({
     LocalAndroidNetworkTarget? override,
@@ -183,13 +175,17 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
 
   static String _normalizeSupabaseUrl(
     String url, {
-    required AppEnvironment environment,
     bool? isAndroidOverride,
     bool? isWebOverride,
     LocalAndroidNetworkTarget? localAndroidNetworkTargetOverride,
   }) {
     final trimmed = url.trim();
-    if (trimmed.isEmpty || environment != AppEnvironment.local) {
+    if (trimmed.isEmpty) {
+      return trimmed;
+    }
+
+    final uri = Uri.tryParse(trimmed);
+    if (uri == null || !_isLoopbackHost(uri.host.toLowerCase())) {
       return trimmed;
     }
 
@@ -198,16 +194,6 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
         isAndroidOverride ??
         (!isWebPlatform && defaultTargetPlatform == TargetPlatform.android);
     if (!isAndroidPlatform) {
-      return trimmed;
-    }
-
-    final uri = Uri.tryParse(trimmed);
-    if (uri == null) {
-      return trimmed;
-    }
-
-    final host = uri.host.toLowerCase();
-    if (host != '127.0.0.1' && host != 'localhost') {
       return trimmed;
     }
 
@@ -221,6 +207,59 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     }
 
     return uri.replace(host: '10.0.2.2').toString();
+  }
+
+  static bool _isLocalBackendUrl(String url) {
+    final trimmed = url.trim();
+    if (trimmed.isEmpty) {
+      return false;
+    }
+
+    final uri = Uri.tryParse(trimmed);
+    if (uri == null) {
+      return false;
+    }
+
+    final host = uri.host.toLowerCase();
+    return _isLoopbackHost(host) ||
+        host.endsWith('.local') ||
+        _isPrivateIpv4(host);
+  }
+
+  static bool _isLoopbackHost(String host) =>
+      host == 'localhost' ||
+      host == '127.0.0.1' ||
+      host == '::1' ||
+      host == '10.0.2.2';
+
+  static bool _isPrivateIpv4(String host) {
+    final parts = host.split('.');
+    if (parts.length != 4) {
+      return false;
+    }
+
+    final octets = <int>[];
+    for (final part in parts) {
+      final value = int.tryParse(part);
+      if (value == null || value < 0 || value > 255) {
+        return false;
+      }
+      octets.add(value);
+    }
+
+    final first = octets[0];
+    final second = octets[1];
+    if (first == 10) {
+      return true;
+    }
+    if (first == 172 && second >= 16 && second <= 31) {
+      return true;
+    }
+    if (first == 192 && second == 168) {
+      return true;
+    }
+
+    return false;
   }
 
   static LocalAndroidNetworkTarget _resolveLocalAndroidNetworkTarget({

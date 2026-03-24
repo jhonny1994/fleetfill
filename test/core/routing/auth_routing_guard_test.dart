@@ -2,7 +2,9 @@ import 'package:fleetfill/core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const environment = AppEnvironmentConfig(environment: AppEnvironment.local);
+  const environment = AppEnvironmentConfig(
+    supabaseUrl: 'http://127.0.0.1:54321',
+  );
 
   AppBootstrapState bootstrap(AuthSnapshot auth) {
     return AppBootstrapState(

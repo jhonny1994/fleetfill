@@ -184,7 +184,7 @@ Email quality gates:
 Release governance gates:
 
 - release candidate must map to a tagged Git commit
-- staging verification must complete before production rollout
+- hosted release rehearsal must complete before production rollout
 - rollback plan must exist for app release and backend deployment changes
 - migrations affecting money, auth, or auditability should not ship without explicit review
 
