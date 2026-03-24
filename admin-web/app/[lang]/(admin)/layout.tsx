@@ -14,7 +14,7 @@ export default async function AdminLayout({
 }) {
   const { lang } = await params;
   const locale = isSupportedLocale(lang) ? lang : defaultLocale;
-  await requireAdmin(locale);
+  const session = await requireAdmin(locale);
 
   return (
     <div className="grid min-h-[calc(100vh-2rem)] gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
@@ -22,7 +22,11 @@ export default async function AdminLayout({
         <AdminSidebar locale={locale} />
       </div>
       <div className="space-y-4">
-        <AdminHeader />
+        <AdminHeader
+          locale={locale}
+          fullName={session.fullName ?? session.email ?? "FleetFill admin"}
+          roleLabel={session.adminRole === "super_admin" ? "Super admin" : "Ops admin"}
+        />
         <main className="space-y-4">{children}</main>
       </div>
     </div>

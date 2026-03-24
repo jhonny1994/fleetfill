@@ -114,16 +114,16 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 2.7 Add shared visual tokens and base styling primitives aligned with the admin UI lock
   - [x] 2.8 Document the required environment variables and local run commands for `admin-web/`
   - [x] 2.9 Add the first shared shell, queue, badge, dialog, and form-field component specs to keep implementation aligned with the UI/UX spec
-- [ ] 3.0 Implement admin authentication, authorization, and shared application shell
-  - [ ] 3.1 Create server-side and browser-side Supabase client helpers using `@supabase/ssr`
-  - [ ] 3.2 Implement cookie-based auth handling in `proxy.ts`
-  - [ ] 3.3 Build server-side admin session helpers that validate authenticated admin access
-  - [ ] 3.4 Build super-admin-only guard helpers for governance and admin-management routes
-  - [ ] 3.5 Create the localized admin sign-in route and signed-in redirect behavior
-  - [ ] 3.6 Build the shared authenticated admin shell layout with desktop sidebar and global header
-  - [ ] 3.7 Implement active navigation state, header identity controls, and shell loading behavior
-  - [ ] 3.8 Implement the global command/search entry UI shell placeholder so feature pages can integrate into it later
-  - [ ] 3.9 Add auth and shell smoke tests for protected routes, admin-only access, and super-admin-only access
+- [x] 3.0 Implement admin authentication, authorization, and shared application shell
+  - [x] 3.1 Create server-side and browser-side Supabase client helpers using `@supabase/ssr`
+  - [x] 3.2 Implement cookie-based auth handling in `proxy.ts`
+  - [x] 3.3 Build server-side admin session helpers that validate authenticated admin access
+  - [x] 3.4 Build super-admin-only guard helpers for governance and admin-management routes
+  - [x] 3.5 Create the localized admin sign-in route and signed-in redirect behavior
+  - [x] 3.6 Build the shared authenticated admin shell layout with desktop sidebar and global header
+  - [x] 3.7 Implement active navigation state, header identity controls, and shell loading behavior
+  - [x] 3.8 Implement the global command/search entry UI shell placeholder so feature pages can integrate into it later
+  - [x] 3.9 Add auth and shell smoke tests for protected routes, admin-only access, and super-admin-only access
 - [ ] 4.0 Build the control-tower and queue experiences
   - [ ] 4.1 Build the dashboard/control-tower page with backlog strips, aging indicators, alerts, and quick links
   - [ ] 4.2 Create shared queue primitives including the filter bar, active filters row, dense data table, status badges, and inline empty/error states

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 import type { AppLocale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
@@ -18,11 +21,11 @@ const items = [
 
 export function AdminSidebar({
   locale,
-  activeSegment,
 }: {
   locale: AppLocale;
-  activeSegment?: string;
 }) {
+  const activeSegment = useSelectedLayoutSegment();
+
   return (
     <aside className="panel flex h-full flex-col gap-5 p-5">
       <div className="space-y-2">
