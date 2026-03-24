@@ -1,4 +1,4 @@
-name: Admin Web Deploy
+name: FleetFill Admin Web Deploy
 
 on:
   pull_request:
