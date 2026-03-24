@@ -136,3 +136,35 @@ select {
   border-radius: 999px;
   background: currentColor;
 }
+
+.table-shell {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: rgba(255, 252, 245, 0.74);
+}
+
+.table-shell table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-shell th {
+  background: rgba(241, 233, 218, 0.8);
+  color: var(--color-ink-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.table-shell th,
+.table-shell td {
+  padding: 0.95rem 1rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table-shell tbody tr + tr td {
+  border-top: 1px solid var(--color-border);
+}
