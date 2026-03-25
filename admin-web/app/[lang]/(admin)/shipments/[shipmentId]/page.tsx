@@ -27,7 +27,7 @@ export default async function ShipmentDetailPage({
       title={detail.shipment.description?.trim() || detail.shipment.id}
       description={detailCopy.shipments.description}
       facts={[
-        { label: ui.labels.state, value: detail.shipment.status },
+        { label: ui.labels.state, value: getEnumLabel(lang, "shipment", detail.shipment.status) },
         { label: detailCopy.shipments.weightLabel, value: `${detail.shipment.totalWeightKg} kg` },
         { label: detailCopy.shipments.volumeLabel, value: detail.shipment.totalVolumeM3 == null ? "—" : `${detail.shipment.totalVolumeM3} m3` },
         { label: detailCopy.shipments.createdLabel, value: formatDateTime(detail.shipment.createdAt) },

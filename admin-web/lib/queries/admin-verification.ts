@@ -32,7 +32,6 @@ type VerificationDocument = {
 };
 
 export type VerificationDocumentDetail = VerificationDocument & {
-  label: string;
   signedUrl: string | null;
 };
 
@@ -49,21 +48,6 @@ export type AdminVerificationDetail = {
   }>;
 };
 
-function documentLabel(documentType: string) {
-  switch (documentType) {
-    case "driver_identity_or_license":
-      return "Driver license";
-    case "truck_registration":
-      return "Registration card";
-    case "truck_insurance":
-      return "Insurance";
-    case "truck_technical_inspection":
-      return "Technical inspection";
-    default:
-      return documentType;
-  }
-}
-
 export async function fetchVerificationDetail(carrierId: string): Promise<AdminVerificationDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
@@ -71,6 +55,7 @@ export async function fetchVerificationDetail(carrierId: string): Promise<AdminV
     .from("profiles")
     .select("id, email, full_name, company_name, verification_status")
     .eq("id", carrierId)
+    .eq("role", "carrier")
     .maybeSingle();
 
   if (profileError) {
@@ -137,7 +122,6 @@ export async function fetchVerificationDetail(carrierId: string): Promise<AdminV
     vehicles: vehicleRows,
     documents: documentList.map((document, index) => ({
       ...document,
-      label: documentLabel(document.document_type),
       signedUrl: signedUrls[index],
     })),
     auditLogs: ((auditLogs ?? []) as Array<{

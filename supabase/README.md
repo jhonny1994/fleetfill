@@ -23,6 +23,8 @@ Rules:
 
 - target best practice is deterministic local seeding through `supabase/seed.sql` or `supabase/seeds/`
 - FleetFill seeds locations from `supabase/seeds/locations.sql`, generated from the canonical JSON in `data/locations/wilayas-with-municipalities.json`
+- local resets automatically seed locations because `supabase/config.toml` includes both `./seed.sql` and `./seeds/locations.sql` under `[db.seed]`
+- hosted rollouts should apply the same deterministic seed with `supabase db push --linked --include-seed`; this is now the default behavior in [C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1](C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1)
 - regenerate the SQL seed with:
   - `dart run tool/locations/generate_supabase_location_seed.dart`
 - the importer below remains available as maintenance tooling, not the primary local bootstrap path
@@ -53,7 +55,8 @@ Example root `.env` entries:
 - `SUPABASE_URL=https://your-project-ref.supabase.co`
 - `SUPABASE_PUBLISHABLE_KEY=...`
 - `SUPABASE_ANON_KEY=...` (local CLI/self-hosted only)
-- `SUPABASE_SERVICE_ROLE_KEY=...`
+- `SUPABASE_SECRET_KEY=...`
+- `INTERNAL_AUTOMATION_TOKEN=...`
 - `SUPABASE_DB_URL=...` (needed only when applying repo-owned scheduler SQL directly to the hosted database)
 - `MAINTENANCE_MODE=false`
 - `FORCE_UPDATE_REQUIRED=false`
@@ -76,6 +79,7 @@ Example root `.env` entries:
 Notes:
 
 - The mobile app prefers `SUPABASE_ANON_KEY` for local CLI/self-hosted targets and `SUPABASE_PUBLISHABLE_KEY` for hosted targets, with fallback only when one key is intentionally absent.
+- `SUPABASE_SECRET_KEY` is the repo-facing privileged hosted backend credential for service clients and rollout tooling; hosted Edge Functions receive the same value through `SB_SECRET_KEY` because Supabase blocks custom secrets that start with `SUPABASE_`.
 - Recommended ownership split:
   - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`, plus optional hosted rollout secrets like `SUPABASE_DB_URL`
   - Flutter `--dart-define` or editor launch config: app runtime values such as `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, and `GOOGLE_WEB_CLIENT_ID`
@@ -135,18 +139,21 @@ Production-grade alignment notes:
 ## Secrets Placement
 
 - Supabase project / Edge Function secrets
+  - `SB_SECRET_KEY` for privileged Supabase service clients used by hosted Edge Functions
+  - `INTERNAL_AUTOMATION_TOKEN` for scheduler-triggered and worker-to-worker Edge Function authorization
   - Firebase service account JSON for FCM HTTP v1 push delivery
   - transactional email provider API key
   - transactional email provider webhook verification secret where supported
   - any direct integration secrets consumed by Edge Functions
 - Supabase Vault
-  - DB-side secrets required by scheduled SQL or `pg_cron` / `pg_net`-driven calls
+  - DB-side secrets required by scheduled SQL or `pg_cron` / `pg_net`-driven calls, including `fleetfill_internal_automation_token`
   - project URL / anon token references only if a DB-side scheduled call truly needs them
 
 ## Scheduling Posture
 
 - preferred pattern: `pg_cron` triggers one Edge Function worker every minute
 - repo-managed scheduler setup now lives in `supabase/scripts/configure_scheduled_automation.sql`
+- scheduler-to-function and worker-to-worker authorization should use `INTERNAL_AUTOMATION_TOKEN`, not raw service-role bearer reuse
 - production rollout can apply it from the repo root with [C:\Users\raouf\projects\fleetfill\tool\apply_supabase_scheduler.ps1](C:\Users\raouf\projects\fleetfill\tool\apply_supabase_scheduler.ps1) when `SUPABASE_DB_URL` is present in root `.env`
 - initial worker scope:
   - email outbox draining

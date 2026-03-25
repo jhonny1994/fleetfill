@@ -4,6 +4,7 @@ import { ExceptionAlerts } from "@/components/dashboard/exception-alerts";
 import { QueueMetricStrip } from "@/components/dashboard/queue-metric-strip";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatCurrencyDzd, formatQueueAge } from "@/lib/formatting/formatters";
+import { getDocumentLabel } from "@/lib/i18n/admin-ui";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import {
   buildDashboardAlerts,
@@ -78,7 +79,9 @@ export default async function DashboardPage({
           rows={previews.verification.map((item) => ({
             title: item.displayName,
             detail: `${item.pendingDocumentCount} ${dictionary.dashboard.pendingDocuments} • ${item.vehicleCount} ${dictionary.dashboard.vehicles}`,
-            meta: item.profileMissingDocuments[0] ?? dictionary.dashboard.readyForReview,
+            meta: item.profileMissingDocuments[0]
+              ? getDocumentLabel(locale, item.profileMissingDocuments[0])
+              : dictionary.dashboard.readyForReview,
           }))}
         />
         <PreviewPanel

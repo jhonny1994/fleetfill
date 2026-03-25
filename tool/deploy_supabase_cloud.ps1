@@ -38,7 +38,7 @@ if (-not $SkipLocalGate) {
   Invoke-Checked -Description "Supabase db tests" -Script { supabase test db }
 }
 
-Invoke-Checked -Description "Push Supabase migrations" -Script { supabase db push --linked }
+Invoke-Checked -Description "Push Supabase migrations and seed data" -Script { supabase db push --linked --include-seed }
 Invoke-Checked -Description "Push Supabase config" -Script { supabase config push --project-ref $ProjectRef --yes }
 Invoke-Checked -Description "Sync Supabase cloud secrets" -Script { powershell -NoProfile -ExecutionPolicy Bypass -File tool/sync_supabase_cloud_secrets.ps1 -ProjectRef $ProjectRef -EnvFile $EnvFile }
 
@@ -53,17 +53,26 @@ foreach ($functionName in $deployableFunctions) {
 }
 
 $apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
-$cloudApiKey = ($apiKeys | Where-Object { $_.type -eq "legacy" -and $_.name -eq "service_role" } | Select-Object -First 1).api_key
-if ([string]::IsNullOrWhiteSpace($cloudApiKey)) {
-  $cloudApiKey = ($apiKeys | Where-Object { $_.type -eq "secret" } | Select-Object -First 1).api_key
+$cloudSecretKey = ($apiKeys | Where-Object { $_.type -eq "secret" } | Select-Object -First 1).api_key
+if ([string]::IsNullOrWhiteSpace($cloudSecretKey)) {
+  throw "Could not resolve the cloud Supabase secret key for $ProjectRef."
 }
-if ([string]::IsNullOrWhiteSpace($cloudApiKey)) {
-  throw "Could not resolve the cloud Supabase secret API key for $ProjectRef."
+
+$internalAutomationToken = ""
+if (Test-Path $EnvFile) {
+  foreach ($line in Get-Content $EnvFile) {
+    if ($line -match '^INTERNAL_AUTOMATION_TOKEN=') {
+      $internalAutomationToken = ($line -split '=', 2)[1]
+    }
+  }
+}
+if ([string]::IsNullOrWhiteSpace($internalAutomationToken)) {
+  throw "Missing INTERNAL_AUTOMATION_TOKEN in $EnvFile."
 }
 
 if (-not $SkipScheduler) {
   Invoke-Checked -Description "Configure hosted scheduler" -Script {
-    powershell -NoProfile -ExecutionPolicy Bypass -File tool/apply_supabase_scheduler.ps1 -EnvFile $EnvFile -ProjectUrl "https://$ProjectRef.supabase.co" -ApiKey $cloudApiKey
+    powershell -NoProfile -ExecutionPolicy Bypass -File tool/apply_supabase_scheduler.ps1 -EnvFile $EnvFile -ProjectUrl "https://$ProjectRef.supabase.co" -SecretKey $cloudSecretKey -InternalAutomationToken $internalAutomationToken
   }
 }
 
@@ -73,7 +82,7 @@ Invoke-Checked -Description "Sync admin-web Vercel env" -Script {
 
 if (-not $SkipHostedVerify) {
   Invoke-Checked -Description "Verify hosted rollout" -Script {
-    powershell -NoProfile -ExecutionPolicy Bypass -File tool/verify_hosted_rollout.ps1 -ProjectRef $ProjectRef -AdminSiteUrl $AdminSiteUrl -ProjectDir admin-web -VercelScope $VercelScope -ApiKey $cloudApiKey
+    powershell -NoProfile -ExecutionPolicy Bypass -File tool/verify_hosted_rollout.ps1 -ProjectRef $ProjectRef -AdminSiteUrl $AdminSiteUrl -ProjectDir admin-web -VercelScope $VercelScope -SecretKey $cloudSecretKey -InternalAutomationToken $internalAutomationToken
   }
 }
 

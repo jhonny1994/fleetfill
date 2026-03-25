@@ -1,5 +1,6 @@
 import { buildAdminRoute } from "@/lib/admin-routes";
 import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
+import { getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
 import type { AppLocale } from "@/lib/i18n/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { GlobalSearchGroup } from "@/lib/queries/admin-types";
@@ -114,7 +115,7 @@ export async function fetchGlobalSearchGroups({
     id: booking.id,
     title: booking.tracking_number,
     subtitle: booking.payment_reference,
-    meta: `${booking.booking_status} • ${booking.payment_status}`,
+    meta: `${getEnumLabel(locale, "booking", booking.booking_status)} • ${getEnumLabel(locale, "payment", booking.payment_status)}`,
     href: buildAdminRoute(locale, "booking", booking.id),
   }));
   if (bookingItems.length) groups.push({ kind: "booking", label: "Bookings", items: bookingItems });
@@ -123,7 +124,7 @@ export async function fetchGlobalSearchGroups({
     id: shipment.id,
     title: shipment.description?.trim() || `Shipment ${shipment.id.slice(0, 8)}`,
     subtitle: shipment.id,
-    meta: shipment.status,
+    meta: getEnumLabel(locale, "shipment", shipment.status),
     href: buildAdminRoute(locale, "shipment", shipment.id),
   }));
   if (shipmentItems.length) groups.push({ kind: "shipment", label: "Shipments", items: shipmentItems });
@@ -132,7 +133,7 @@ export async function fetchGlobalSearchGroups({
     id: profile.id,
     title: profile.company_name?.trim() || profile.full_name?.trim() || profile.email,
     subtitle: profile.email,
-    meta: `${profile.role} • ${profile.verification_status}`,
+    meta: `${getEnumLabel(locale, "userRoles", profile.role)} • ${getUserVerificationLabel(locale, profile.role, profile.verification_status)}`,
     href: buildAdminRoute(locale, "user", profile.id),
   }));
   if (userItems.length) groups.push({ kind: "user", label: "Users", items: userItems });
@@ -141,7 +142,7 @@ export async function fetchGlobalSearchGroups({
     id: proof.id,
     title: proof.submitted_reference?.trim() || `Payment proof ${proof.id.slice(0, 8)}`,
     subtitle: proof.booking_id,
-    meta: proof.status,
+    meta: getEnumLabel(locale, "payment", proof.status),
     href: buildAdminRoute(locale, "payment", proof.booking_id),
   }));
   if (paymentItems.length) groups.push({ kind: "payment", label: "Payment proofs", items: paymentItems });
@@ -150,7 +151,7 @@ export async function fetchGlobalSearchGroups({
     id: profile.id,
     title: profile.company_name?.trim() || profile.full_name?.trim() || profile.email,
     subtitle: profile.email,
-    meta: profile.verification_status,
+    meta: getUserVerificationLabel(locale, "carrier", profile.verification_status),
     href: buildAdminRoute(locale, "verification", profile.id),
   }));
   if (verificationItems.length) groups.push({ kind: "verification", label: "Verification packets", items: verificationItems });
@@ -159,7 +160,7 @@ export async function fetchGlobalSearchGroups({
     id: dispute.id,
     title: dispute.reason,
     subtitle: dispute.booking_id,
-    meta: dispute.status,
+    meta: getEnumLabel(locale, "dispute", dispute.status),
     href: buildAdminRoute(locale, "dispute", dispute.booking_id),
   }));
   if (disputeItems.length) groups.push({ kind: "dispute", label: "Disputes", items: disputeItems });
@@ -168,7 +169,7 @@ export async function fetchGlobalSearchGroups({
     id: payout.id,
     title: payout.external_reference?.trim() || `Payout ${payout.id.slice(0, 8)}`,
     subtitle: payout.booking_id,
-    meta: payout.status,
+    meta: getEnumLabel(locale, "payout", payout.status),
     href: buildAdminRoute(locale, "payout", payout.booking_id),
   }));
   if (payoutItems.length) groups.push({ kind: "payout", label: "Payouts", items: payoutItems });
@@ -177,7 +178,7 @@ export async function fetchGlobalSearchGroups({
     id: request.id,
     title: request.subject,
     subtitle: request.booking_id ?? request.id,
-    meta: request.status,
+    meta: getEnumLabel(locale, "supportStatus", request.status),
     href: buildAdminRoute(locale, "support", request.id),
   }));
   if (supportItems.length) groups.push({ kind: "support", label: "Support", items: supportItems });
@@ -194,7 +195,7 @@ export async function fetchGlobalSearchGroups({
           id: row.profile_id,
           title: profile?.full_name?.trim() || profile?.email?.trim() || row.profile_id,
           subtitle: profile?.email ?? row.profile_id,
-          meta: row.admin_role,
+          meta: getEnumLabel(locale, "adminRoles", row.admin_role),
           href: buildAdminRoute(locale, "admin", row.profile_id),
         };
       })

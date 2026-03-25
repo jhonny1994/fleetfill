@@ -245,7 +245,7 @@ void main() {
         isTrue,
       );
       expect(
-        signedFileUrlFunction.contains('SUPABASE_SERVICE_ROLE_KEY'),
+        signedFileUrlFunction.contains('SUPABASE_SECRET_KEY'),
         isTrue,
       );
       expect(

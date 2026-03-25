@@ -11,11 +11,13 @@ This folder contains active operational scripts for FleetFill.
 - `sync_github_production_config.ps1`
   - syncs production GitHub variables and secrets from local project config
 - `sync_supabase_cloud_secrets.ps1`
-  - syncs the required Edge Function secrets from root `.env`
+  - syncs the required Edge Function secrets from root `.env`, including `SB_SECRET_KEY` (sourced from local `SUPABASE_SECRET_KEY`) and the internal automation token used by scheduler and worker endpoints
 - `sync_admin_vercel_env.ps1`
   - syncs the admin-web public runtime values into Vercel production
 - `apply_supabase_scheduler.ps1`
-  - installs the hosted cron/scheduler SQL when `SUPABASE_DB_URL` is available
+  - installs the hosted cron/scheduler SQL using the Supabase secret key for management RPC access and the internal automation token for scheduler auth
+- `create_admin_account.ps1`
+  - creates or reuses a hosted auth user, upserts the admin profile, and grants the requested admin role
 - `run_remote_sql.mjs`
   - internal helper used by the scheduler setup
 

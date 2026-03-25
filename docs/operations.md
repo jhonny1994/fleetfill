@@ -54,6 +54,12 @@ Use FleetFill transactional infrastructure for:
 
 Admin email health surfaces should describe transactional email only unless a dedicated auth diagnostics view is added.
 
+Operational credential split:
+
+- `SUPABASE_SECRET_KEY` is for privileged service-client or admin access.
+- `INTERNAL_AUTOMATION_TOKEN` is for FleetFill internal scheduler and worker endpoint authorization.
+- Do not reuse the Supabase secret key as the scheduler bearer for internal Edge endpoints.
+
 ## Release Operations
 
 Production readiness requires:

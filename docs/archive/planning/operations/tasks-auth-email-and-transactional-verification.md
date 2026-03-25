@@ -65,7 +65,7 @@ Update the file after completing each sub-task, not just after completing an ent
   - [ ] 4.6 Verify failure cases in cloud, including invalid, expired, and reused links
   - [ ] 4.7 Document the exact hosted settings and non-repo steps required to reproduce and maintain auth email delivery
 - [ ] 5.0 Verify the transactional email pipeline end to end in Supabase cloud
-  - [ ] 5.1 Verify that required runtime inputs are present in cloud for the scheduler and worker, including `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, provider credentials, sender identity, and webhook secret
+  - [ ] 5.1 Verify that required runtime inputs are present in cloud for the scheduler and worker, including `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `INTERNAL_AUTOMATION_TOKEN`, provider credentials, sender identity, and webhook secret
   - [ ] 5.2 Verify that the scheduled automation job exists in cloud and uses the correct Vault secrets
   - [ ] 5.3 Trigger or seed at least one known transactional email event in cloud
   - [ ] 5.4 Verify outbox row creation and worker claim behavior

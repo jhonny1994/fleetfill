@@ -56,10 +56,10 @@ enabled = true
 policy = "per_worker"
 
 [functions.scheduled-automation-tick]
-verify_jwt = true
+verify_jwt = false
 
 [functions.transactional-email-dispatch-worker]
-verify_jwt = true
+verify_jwt = false
 
 [functions.email-provider-webhook]
 verify_jwt = false
@@ -68,7 +68,7 @@ verify_jwt = false
 verify_jwt = true
 
 [functions.generated-document-worker]
-verify_jwt = true
+verify_jwt = false
 
 [functions.push-dispatch-worker]
-verify_jwt = true
+verify_jwt = false

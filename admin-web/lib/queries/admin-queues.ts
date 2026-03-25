@@ -157,6 +157,7 @@ export async function fetchVerificationQueue({
   const { data: profiles, error: profileError } = await supabase
     .from("profiles")
     .select("id, email, full_name, company_name, verification_status, updated_at")
+    .eq("role", "carrier")
     .in("verification_status", ["pending", "rejected"])
     .order("updated_at", { ascending: true })
     .limit(limit * 3);

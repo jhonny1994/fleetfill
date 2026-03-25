@@ -22,7 +22,7 @@ These items still need representative-device or hosted-environment execution:
 - Run TalkBack and large-text accessibility checks.
 - Run manual Arabic, French, and English localization QA.
 - Verify hosted Supabase Auth email delivery with real inboxes.
-- Deploy and verify hosted Edge Functions, secrets, scheduler, and provider webhooks in Supabase cloud.
+- Deploy and verify hosted Edge Functions, the internal automation token, scheduler, and provider webhooks in Supabase cloud.
 
 ## Hosted Rollout Order
 
@@ -31,7 +31,7 @@ Promote the hosted system in this order:
 - run the local verification gate from the current `main` state
 - run [C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1](C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1) from the repo root
 - push `main` so Vercel Git integration publishes the current `admin-web/` commit
-- verify hosted auth, transactional email, push, and admin operations against the real cloud project
+- verify hosted auth, internal scheduler/worker auth, transactional email, push, and admin operations against the real cloud project
 
 ## Release Gate
 

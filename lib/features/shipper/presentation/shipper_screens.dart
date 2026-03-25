@@ -1429,6 +1429,7 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
   int? _destinationCommuneId;
   bool _isSaving = false;
   bool _initialized = false;
+  String? _lastLocationDebugSnapshot;
 
   @override
   void dispose() {
@@ -1436,6 +1437,42 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
     _volumeController.dispose();
     _detailsController.dispose();
     super.dispose();
+  }
+
+  void _debugLocationPicker(String message) {
+    if (!kDebugMode) {
+      return;
+    }
+    debugPrint('[ShipmentLocationPicker] $message');
+  }
+
+  void _logLocationSnapshot({
+    required List<AlgeriaWilaya> wilayas,
+    required int? resolvedOriginWilayaId,
+    required int? resolvedDestinationWilayaId,
+    required List<AlgeriaCommune> originCommunes,
+    required List<AlgeriaCommune> destinationCommunes,
+    required bool isOriginCommunesLoading,
+    required bool isDestinationCommunesLoading,
+  }) {
+    if (!kDebugMode) {
+      return;
+    }
+    final snapshot =
+        'wilayas=${wilayas.length}'
+        ' originWilaya=$resolvedOriginWilayaId'
+        ' originCommune=$_originCommuneId'
+        ' originCommunes=${originCommunes.length}'
+        ' originLoading=$isOriginCommunesLoading'
+        ' destinationWilaya=$resolvedDestinationWilayaId'
+        ' destinationCommune=$_destinationCommuneId'
+        ' destinationCommunes=${destinationCommunes.length}'
+        ' destinationLoading=$isDestinationCommunesLoading';
+    if (snapshot == _lastLocationDebugSnapshot) {
+      return;
+    }
+    _lastLocationDebugSnapshot = snapshot;
+    _debugLocationPicker(snapshot);
   }
 
   @override
@@ -1479,6 +1516,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                 destinationSeedAsync?.error;
 
             if (initialLocationError != null) {
+              _debugLocationPicker(
+                'initial location load failed: $initialLocationError',
+              );
               return AppErrorState(
                 error: AppError(
                   code: 'shipment_locations_load_failed',
@@ -1525,6 +1565,9 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                 originCommunesAsync?.error ?? destinationCommunesAsync?.error;
 
             if (communeOptionsError != null) {
+              _debugLocationPicker(
+                'communes load failed: $communeOptionsError',
+              );
               return AppErrorState(
                 error: AppError(
                   code: 'shipment_communes_by_wilaya_failed',
@@ -1551,6 +1594,19 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
             final destinationCommunes =
                 destinationCommunesAsync?.asData?.value ??
                 const <AlgeriaCommune>[];
+            final isOriginCommunesLoading = originCommunesAsync?.isLoading == true;
+            final isDestinationCommunesLoading =
+                destinationCommunesAsync?.isLoading == true;
+
+            _logLocationSnapshot(
+              wilayas: wilayas,
+              resolvedOriginWilayaId: resolvedOriginWilayaId,
+              resolvedDestinationWilayaId: resolvedDestinationWilayaId,
+              originCommunes: originCommunes,
+              destinationCommunes: destinationCommunes,
+              isOriginCommunesLoading: isOriginCommunesLoading,
+              isDestinationCommunesLoading: isDestinationCommunesLoading,
+            );
 
             return Form(
               key: _formKey,
@@ -1564,44 +1620,56 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _WilayaDropdownField(
+                  _WilayaPickerField(
                     label: s.routeOriginWilayaLabel,
                     value: _originWilayaId,
                     wilayas: wilayas,
                     onChanged: (value) => setState(() {
+                      _debugLocationPicker(
+                        'origin wilaya changed: $value -> reset origin commune',
+                      );
                       _originWilayaId = value;
                       _originCommuneId = null;
                     }),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _CommuneDropdownField(
+                  _CommunePickerField(
                     label: s.routeOriginLabel,
                     value: _originCommuneId,
                     enabled: resolvedOriginWilayaId != null,
-                    isLoading: originCommunesAsync?.isLoading == true,
+                    isLoading: isOriginCommunesLoading,
                     communeOptions: originCommunes,
-                    onChanged: (value) =>
-                        setState(() => _originCommuneId = value),
+                    onChanged: (value) => setState(() {
+                      _debugLocationPicker('origin commune changed: $value');
+                      _originCommuneId = value;
+                    }),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _WilayaDropdownField(
+                  _WilayaPickerField(
                     label: s.routeDestinationWilayaLabel,
                     value: _destinationWilayaId,
                     wilayas: wilayas,
                     onChanged: (value) => setState(() {
+                      _debugLocationPicker(
+                        'destination wilaya changed: $value -> reset destination commune',
+                      );
                       _destinationWilayaId = value;
                       _destinationCommuneId = null;
                     }),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _CommuneDropdownField(
+                  _CommunePickerField(
                     label: s.routeDestinationLabel,
                     value: _destinationCommuneId,
                     enabled: resolvedDestinationWilayaId != null,
-                    isLoading: destinationCommunesAsync?.isLoading == true,
+                    isLoading: isDestinationCommunesLoading,
                     communeOptions: destinationCommunes,
-                    onChanged: (value) =>
-                        setState(() => _destinationCommuneId = value),
+                    onChanged: (value) => setState(() {
+                      _debugLocationPicker(
+                        'destination commune changed: $value',
+                      );
+                      _destinationCommuneId = value;
+                    }),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AuthTextField(
@@ -2104,8 +2172,8 @@ class _PlatformPaymentAccountView {
   final String accountHolderName;
 }
 
-class _WilayaDropdownField extends StatelessWidget {
-  const _WilayaDropdownField({
+class _WilayaPickerField extends StatelessWidget {
+  const _WilayaPickerField({
     required this.label,
     required this.value,
     required this.wilayas,
@@ -2120,9 +2188,13 @@ class _WilayaDropdownField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
+    final effectiveValue = wilayas.any((wilaya) => wilaya.id == value)
+        ? value
+        : null;
     return DropdownButtonFormField<int>(
-      key: ValueKey<String>('wilaya-$label-$value'),
-      initialValue: value,
+      key: ValueKey<String>('wilaya-$label-$effectiveValue'),
+      initialValue: effectiveValue,
+      isExpanded: true,
       decoration: InputDecoration(labelText: label),
       items: wilayas
           .map(
@@ -2143,8 +2215,8 @@ class _WilayaDropdownField extends StatelessWidget {
   }
 }
 
-class _CommuneDropdownField extends StatelessWidget {
-  const _CommuneDropdownField({
+class _CommunePickerField extends StatelessWidget {
+  const _CommunePickerField({
     required this.label,
     required this.value,
     required this.communeOptions,
@@ -2163,18 +2235,26 @@ class _CommuneDropdownField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
-
+    final effectiveValue = communeOptions.any((commune) => commune.id == value)
+        ? value
+        : null;
     return DropdownButtonFormField<int>(
-      key: ValueKey<String>('commune-$label-$value-$enabled'),
-      initialValue: value,
-      decoration: InputDecoration(labelText: label),
-      disabledHint: isLoading
+      key: ValueKey<String>('commune-$label-$effectiveValue-$enabled'),
+      initialValue: effectiveValue,
+      isExpanded: true,
+      decoration: InputDecoration(
+        labelText: label,
+        suffixIcon: isLoading
           ? const SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
             )
           : null,
+      ),
       items: communeOptions
           .map(
             (commune) => DropdownMenuItem<int>(
