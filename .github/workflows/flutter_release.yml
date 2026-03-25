@@ -1,0 +1,136 @@
+name: Flutter Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag (example: v1.0.0)"
+        required: true
+      release_name:
+        description: "Optional release name"
+        required: false
+      prerelease:
+        description: "Mark release as prerelease"
+        type: boolean
+        default: false
+      draft:
+        description: "Create release as draft"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  android-release:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ vars.PRODUCTION_SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ vars.PRODUCTION_SUPABASE_PUBLISHABLE_KEY }}
+      GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
+      GOOGLE_IOS_CLIENT_ID: ${{ vars.GOOGLE_IOS_CLIENT_ID }}
+      FLEETFILL_RELEASE_STORE_FILE: app/upload-keystore.jks
+      FLEETFILL_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}
+      FLEETFILL_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
+      FLEETFILL_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify release configuration is present
+        shell: bash
+        run: |
+          test -n "${SUPABASE_URL}"
+          test -n "${SUPABASE_PUBLISHABLE_KEY}"
+          test -n "${GOOGLE_WEB_CLIENT_ID}"
+          test -n "${FLEETFILL_RELEASE_STORE_PASSWORD}"
+          test -n "${FLEETFILL_RELEASE_KEY_ALIAS}"
+          test -n "${FLEETFILL_RELEASE_KEY_PASSWORD}"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Materialize Android Firebase config
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
+        shell: bash
+        run: |
+          test -n "$GOOGLE_SERVICES_JSON"
+          echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+
+      - name: Materialize Android signing keystore
+        env:
+          ANDROID_RELEASE_KEYSTORE_BASE64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}
+        shell: bash
+        run: |
+          test -n "$ANDROID_RELEASE_KEYSTORE_BASE64"
+          echo "$ANDROID_RELEASE_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+
+      - name: Build signed Android app bundle
+        run: >
+          flutter build appbundle --release
+          --dart-define=SUPABASE_URL=${{ env.SUPABASE_URL }}
+          --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ env.SUPABASE_PUBLISHABLE_KEY }}
+          --dart-define=GOOGLE_WEB_CLIENT_ID=${{ env.GOOGLE_WEB_CLIENT_ID }}
+          --dart-define=GOOGLE_IOS_CLIENT_ID=${{ env.GOOGLE_IOS_CLIENT_ID }}
+          --dart-define=CRASH_REPORTING_ENABLED=true
+          --dart-define=MAINTENANCE_MODE=false
+          --dart-define=FORCE_UPDATE_REQUIRED=false
+
+      - name: Build signed Android APK
+        run: >
+          flutter build apk --release
+          --dart-define=SUPABASE_URL=${{ env.SUPABASE_URL }}
+          --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ env.SUPABASE_PUBLISHABLE_KEY }}
+          --dart-define=GOOGLE_WEB_CLIENT_ID=${{ env.GOOGLE_WEB_CLIENT_ID }}
+          --dart-define=GOOGLE_IOS_CLIENT_ID=${{ env.GOOGLE_IOS_CLIENT_ID }}
+          --dart-define=CRASH_REPORTING_ENABLED=true
+          --dart-define=MAINTENANCE_MODE=false
+          --dart-define=FORCE_UPDATE_REQUIRED=false
+
+      - name: Resolve release metadata
+        id: release_meta
+        shell: bash
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            echo "tag=${{ inputs.release_tag }}" >> "$GITHUB_OUTPUT"
+            if [[ -n "${{ inputs.release_name }}" ]]; then
+              echo "name=${{ inputs.release_name }}" >> "$GITHUB_OUTPUT"
+            else
+              echo "name=FleetFill ${{ inputs.release_tag }}" >> "$GITHUB_OUTPUT"
+            fi
+            echo "draft=${{ inputs.draft }}" >> "$GITHUB_OUTPUT"
+            echo "prerelease=${{ inputs.prerelease }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            echo "name=FleetFill ${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            echo "draft=false" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release_meta.outputs.tag }}
+          name: ${{ steps.release_meta.outputs.name }}
+          target_commitish: ${{ github.sha }}
+          draft: ${{ steps.release_meta.outputs.draft == 'true' }}
+          prerelease: ${{ steps.release_meta.outputs.prerelease == 'true' }}
+          generate_release_notes: true
+          files: |
+            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/flutter-apk/app-release.apk

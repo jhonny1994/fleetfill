@@ -1,40 +1,43 @@
-# FleetFill Docs
+# وثائق FleetFill
 
-This folder now has one active documentation set and one archive.
+هذه الصفحة هي الفهرس العربي الرئيسي للوثائق النشطة.
 
-Use the active set first:
+الترجمات:
 
-- [product.md](C:\Users\raouf\projects\fleetfill\docs\product.md) - product scope, users, rules, flows, and shared language
-- [architecture.md](C:\Users\raouf\projects\fleetfill\docs\architecture.md) - system design, runtime contract, backend boundaries, and security model
-- [operations.md](C:\Users\raouf\projects\fleetfill\docs\operations.md) - support, payments, disputes, release operations, and email ownership
-- [admin-web.md](C:\Users\raouf\projects\fleetfill\docs\admin-web.md) - the admin console product and technical contract
-- [delivery.md](C:\Users\raouf\projects\fleetfill\docs\delivery.md) - current readiness, validation status, release gates, and remaining manual checks
+- [English](C:\Users\raouf\projects\fleetfill\docs\README.en.md)
+- [Français](C:\Users\raouf\projects\fleetfill\docs\README.fr.md)
 
-Reference folders:
+## الوثائق النشطة
 
-- [adr](C:\Users\raouf\projects\fleetfill\docs\adr) - irreversible architectural decisions
-- [templates](C:\Users\raouf\projects\fleetfill\docs\templates) - PRD and task generation rules
-- [workitems](C:\Users\raouf\projects\fleetfill\docs\workitems) - active feature PRDs and task lists
-- [archive](C:\Users\raouf\projects\fleetfill\docs\archive) - historical numbered docs, planning packs, and superseded detail sets
+- [product.md](C:\Users\raouf\projects\fleetfill\docs\product.md)
+  - نطاق المنتج، الفئات المستهدفة، القواعد الأساسية، ومسارات الاستخدام
+- [architecture.md](C:\Users\raouf\projects\fleetfill\docs\architecture.md)
+  - المعمارية، عقد التشغيل، حدود الخلفية، والأمن
+- [operations.md](C:\Users\raouf\projects\fleetfill\docs\operations.md)
+  - التشغيل، المدفوعات، النزاعات، الدعم، والبريد
+- [admin-web.md](C:\Users\raouf\projects\fleetfill\docs\admin-web.md)
+  - عقد لوحة الإدارة من ناحية المنتج والتنفيذ
+- [delivery.md](C:\Users\raouf\projects\fleetfill\docs\delivery.md)
+  - جاهزية الإطلاق، التحقق، والفجوات التشغيلية المتبقية
+- [releases.md](C:\Users\raouf\projects\fleetfill\docs\releases.md)
+  - الإصدارات، التوقيع، أسرار GitHub، ومسار نشر النسخ الإنتاجية
+- [repository-structure.md](C:\Users\raouf\projects\fleetfill\docs\repository-structure.md)
+  - هيكلة المستودع وما هو نشط، محلي، أو مؤرشف
 
-## Rules
+## مراجع إضافية
 
-- Keep product truth in the active root docs, not in work items or archive notes.
-- Update the owning active doc when behavior changes.
-- Use `docs/workitems/` for implementation planning only.
-- Move superseded or exploratory material into `docs/archive/` instead of leaving parallel truth at the root.
+- [adr](C:\Users\raouf\projects\fleetfill\docs\adr)
+- [templates](C:\Users\raouf\projects\fleetfill\docs\templates)
+- [workitems](C:\Users\raouf\projects\fleetfill\docs\workitems)
+- [archive](C:\Users\raouf\projects\fleetfill\docs\archive)
 
-## Ownership
+## لقطات المنتج
 
-- Update [product.md](C:\Users\raouf\projects\fleetfill\docs\product.md) for domain rules, user journeys, search, booking, and account behavior.
-- Update [architecture.md](C:\Users\raouf\projects\fleetfill\docs\architecture.md) for runtime config, Flutter routing, Supabase boundaries, security, storage, and automation.
-- Update [operations.md](C:\Users\raouf\projects\fleetfill\docs\operations.md) for payment review, support, disputes, payouts, compliance, and communications.
-- Update [admin-web.md](C:\Users\raouf\projects\fleetfill\docs\admin-web.md) for admin console scope and operator experience.
-- Update [delivery.md](C:\Users\raouf\projects\fleetfill\docs\delivery.md) for implementation status, release readiness, and manual validation gates.
+- [لقطات التطبيق](C:\Users\raouf\projects\fleetfill\docs\assets\screenshots\mobile\README.md)
+- [لقطات لوحة الإدارة](C:\Users\raouf\projects\fleetfill\docs\assets\screenshots\admin\README.md)
 
-## Posture
+## قاعدة العمل
 
-- One long-lived product, not a throwaway MVP.
-- Android is the primary production client.
-- Supabase local and Supabase cloud run the same product contract with different URLs, keys, and secrets.
-- Auth email and transactional email are separate systems and should stay documented that way.
+- الحقيقة النشطة تبقى في ملفات `docs/` الأساسية
+- مواد التخطيط القديمة أو المنتهية تنتقل إلى `docs/archive/`
+- `docs/workitems/` للتنفيذ والمتابعة، وليس لوصف الحقيقة النهائية للمنتج

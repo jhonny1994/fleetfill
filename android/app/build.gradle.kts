@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -6,10 +8,32 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-val releaseKeystorePath = providers.gradleProperty("FLEETFILL_RELEASE_STORE_FILE")
-val releaseKeystorePassword = providers.gradleProperty("FLEETFILL_RELEASE_STORE_PASSWORD")
-val releaseKeyAlias = providers.gradleProperty("FLEETFILL_RELEASE_KEY_ALIAS")
-val releaseKeyPassword = providers.gradleProperty("FLEETFILL_RELEASE_KEY_PASSWORD")
+val releaseSigningProperties = Properties()
+val releaseSigningPropertiesFile = rootProject.file("app/release-signing.local.properties")
+
+if (releaseSigningPropertiesFile.exists()) {
+    releaseSigningPropertiesFile.inputStream().use { releaseSigningProperties.load(it) }
+}
+
+fun signingValue(name: String): String? =
+    releaseSigningProperties.getProperty(name)?.takeIf { it.isNotBlank() }
+
+val releaseKeystorePath =
+    providers.gradleProperty("FLEETFILL_RELEASE_STORE_FILE")
+        .orElse(providers.environmentVariable("FLEETFILL_RELEASE_STORE_FILE"))
+        .orElse(signingValue("FLEETFILL_RELEASE_STORE_FILE") ?: "")
+val releaseKeystorePassword =
+    providers.gradleProperty("FLEETFILL_RELEASE_STORE_PASSWORD")
+        .orElse(providers.environmentVariable("FLEETFILL_RELEASE_STORE_PASSWORD"))
+        .orElse(signingValue("FLEETFILL_RELEASE_STORE_PASSWORD") ?: "")
+val releaseKeyAlias =
+    providers.gradleProperty("FLEETFILL_RELEASE_KEY_ALIAS")
+        .orElse(providers.environmentVariable("FLEETFILL_RELEASE_KEY_ALIAS"))
+        .orElse(signingValue("FLEETFILL_RELEASE_KEY_ALIAS") ?: "")
+val releaseKeyPassword =
+    providers.gradleProperty("FLEETFILL_RELEASE_KEY_PASSWORD")
+        .orElse(providers.environmentVariable("FLEETFILL_RELEASE_KEY_PASSWORD"))
+        .orElse(signingValue("FLEETFILL_RELEASE_KEY_PASSWORD") ?: "")
 
 android {
     namespace = "com.carbodex.fleetfill"

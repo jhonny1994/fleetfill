@@ -41,6 +41,7 @@ assets/*service-account*.json
 **/firebase-service-account*.json
 firebase-debug.log
 firebase-debug.*.log
+supabase-functions.log
 supabase/.branches/
 supabase/.temp/
 
@@ -55,5 +56,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /android/.kotlin/
+/android/app/google-services.json
+/android/app/*.jks
 
 .agents
+.vercel

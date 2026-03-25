@@ -50,11 +50,11 @@ Run it locally with:
 
 Example root `.env` entries:
 
-- `APP_ENV=production`
 - `SUPABASE_URL=https://your-project-ref.supabase.co`
 - `SUPABASE_PUBLISHABLE_KEY=...`
 - `SUPABASE_ANON_KEY=...` (local CLI/self-hosted only)
 - `SUPABASE_SERVICE_ROLE_KEY=...`
+- `SUPABASE_DB_URL=...` (needed only when applying repo-owned scheduler SQL directly to the hosted database)
 - `MAINTENANCE_MODE=false`
 - `FORCE_UPDATE_REQUIRED=false`
 - `CRASH_REPORTING_ENABLED=false`
@@ -75,11 +75,10 @@ Example root `.env` entries:
 
 Notes:
 
-- The mobile app uses `SUPABASE_ANON_KEY` first in `APP_ENV=local`, because local CLI/self-hosted Supabase does not manage hosted publishable keys.
-- The mobile app uses `SUPABASE_PUBLISHABLE_KEY` first in `APP_ENV=staging` and `APP_ENV=production`, with `SUPABASE_ANON_KEY` only as a compatibility fallback.
+- The mobile app prefers `SUPABASE_ANON_KEY` for local CLI/self-hosted targets and `SUPABASE_PUBLISHABLE_KEY` for hosted targets, with fallback only when one key is intentionally absent.
 - Recommended ownership split:
-  - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`
-  - Flutter `--dart-define` or editor launch config: app runtime values such as `APP_ENV`, `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, and `GOOGLE_WEB_CLIENT_ID`
+  - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`, plus optional hosted rollout secrets like `SUPABASE_DB_URL`
+  - Flutter `--dart-define` or editor launch config: app runtime values such as `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, and `GOOGLE_WEB_CLIENT_ID`
   - GitHub Actions: repository variables for non-secret client IDs and repository secrets for secrets such as `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET`
 - Android local runtime should use two explicit launch paths:
   - emulator: `SUPABASE_URL=http://127.0.0.1:54321` with `LOCAL_ANDROID_NETWORK_TARGET=emulator`, so the app rewrites loopback to `10.0.2.2`
@@ -148,12 +147,28 @@ Production-grade alignment notes:
 
 - preferred pattern: `pg_cron` triggers one Edge Function worker every minute
 - repo-managed scheduler setup now lives in `supabase/scripts/configure_scheduled_automation.sql`
+- production rollout can apply it from the repo root with [C:\Users\raouf\projects\fleetfill\tool\apply_supabase_scheduler.ps1](C:\Users\raouf\projects\fleetfill\tool\apply_supabase_scheduler.ps1) when `SUPABASE_DB_URL` is present in root `.env`
 - initial worker scope:
   - email outbox draining
   - delivery grace-window expiry
   - payment resubmission expiry
   - stale queue lock recovery
 - actual plan quotas and availability still need verification on the target Supabase project before production use
+
+## Hosted Rollout Helpers
+
+- [C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1](C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1)
+  - runs the local validation gate
+  - pushes cloud migrations and config
+  - syncs function secrets
+  - deploys all repo-owned Edge Functions that have an `index.ts`
+  - installs the scheduler when `SUPABASE_DB_URL` is available
+  - syncs Vercel admin env values
+  - runs hosted verification
+- [C:\Users\raouf\projects\fleetfill\tool\verify_hosted_rollout.ps1](C:\Users\raouf\projects\fleetfill\tool\verify_hosted_rollout.ps1)
+  - verifies live function inventory and auth boundaries
+  - checks Vercel production env values
+  - checks the live admin sign-in route
 
 ## Database Regression Checks
 
