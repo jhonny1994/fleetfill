@@ -11,6 +11,23 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Resolve-CloudAdminKey {
+  param([string]$ProjectRef)
+
+  $apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
+  $legacyServiceRoleKey = ($apiKeys | Where-Object { $_.name -eq "service_role" } | Select-Object -First 1).api_key
+  if (-not [string]::IsNullOrWhiteSpace($legacyServiceRoleKey)) {
+    return $legacyServiceRoleKey
+  }
+
+  $secretKey = ($apiKeys | Where-Object { $_.type -eq "secret" } | Select-Object -First 1).api_key
+  if (-not [string]::IsNullOrWhiteSpace($secretKey) -and $secretKey -notmatch '·') {
+    return $secretKey
+  }
+
+  throw "Could not resolve a usable cloud admin API key for $ProjectRef."
+}
+
 function Assert-CommandSucceeded {
   param(
     [int]$ExitCode,
@@ -79,15 +96,16 @@ if ($signInResponse.StatusCode -lt 200 -or $signInResponse.StatusCode -ge 400) {
 
 $supabaseSecretKey = $SecretKey
 $resolvedInternalAutomationToken = $InternalAutomationToken
-if (([string]::IsNullOrWhiteSpace($supabaseSecretKey) -or [string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken)) -and (Test-Path ".env")) {
+if ([string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken) -and (Test-Path ".env")) {
   foreach ($line in Get-Content ".env") {
-    if ($line -match '^SUPABASE_SECRET_KEY=') {
-      $supabaseSecretKey = ($line -split '=', 2)[1]
-    }
     if ($line -match '^INTERNAL_AUTOMATION_TOKEN=') {
       $resolvedInternalAutomationToken = ($line -split '=', 2)[1]
     }
   }
+}
+
+if ([string]::IsNullOrWhiteSpace($supabaseSecretKey) -or $supabaseSecretKey -match '·') {
+  $supabaseSecretKey = Resolve-CloudAdminKey -ProjectRef $ProjectRef
 }
 
 if (-not [string]::IsNullOrWhiteSpace($supabaseSecretKey)) {

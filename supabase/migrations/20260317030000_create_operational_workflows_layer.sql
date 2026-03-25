@@ -6247,8 +6247,6 @@ create schema if not exists extensions;
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
 
-alter extension pg_net set schema extensions;
-
 create or replace function public.configure_scheduled_automation(
   project_url text,
   internal_automation_token text
