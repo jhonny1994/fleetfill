@@ -31,10 +31,6 @@ jobs:
           grep -q "## \[$VERSION\]" CHANGELOG.md
           echo "Verified CHANGELOG.md entry for version $VERSION"
 
-      - name: Require deployment credentials at runtime
-        run: |
-          test -n "${{ secrets.SUPABASE_ACCESS_TOKEN }}"
-
       - name: Output operational checklist reminder
         run: |
           echo "Run release rehearsal, rollback review, and release checklist before promotion."

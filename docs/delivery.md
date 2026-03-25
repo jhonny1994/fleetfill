@@ -29,10 +29,8 @@ These items still need representative-device or hosted-environment execution:
 Promote the hosted system in this order:
 
 - run the local verification gate from the current `main` state
-- apply Supabase migrations to the linked cloud project
-- deploy repo-owned Edge Functions
-- configure hosted secrets, auth redirects, SMTP, and provider settings
-- configure Vercel production variables for `admin-web/`
+- run [C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1](C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1) from the repo root
+- push `main` so Vercel Git integration publishes the current `admin-web/` commit
 - verify hosted auth, transactional email, push, and admin operations against the real cloud project
 
 ## Release Gate
@@ -52,3 +50,4 @@ Do not claim production-ready rollout until all of the following are true:
 - local Supabase runtime rehearsal
 - admin-web type and lint verification
 - manual operator checks before promotion
+- hosted verification via [C:\Users\raouf\projects\fleetfill\tool\verify_hosted_rollout.ps1](C:\Users\raouf\projects\fleetfill\tool\verify_hosted_rollout.ps1)
