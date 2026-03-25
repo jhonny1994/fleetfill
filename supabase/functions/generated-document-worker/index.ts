@@ -2,7 +2,7 @@ import { PDFDocument, StandardFonts } from 'https://esm.sh/pdf-lib@1.17.1'
 
 import {
   createServiceClient,
-  hasServiceRoleAccess,
+  hasInternalAutomationAccess,
   jsonResponse,
   requiredEnv,
 } from '../_shared/email-runtime.ts'
@@ -147,7 +147,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    if (!hasServiceRoleAccess(req)) {
+    if (!hasInternalAutomationAccess(req)) {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 

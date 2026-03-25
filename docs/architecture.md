@@ -36,7 +36,7 @@ There is no separate product model for local, staging, or production. The same a
 ## Data And Security
 
 - RLS is the default access boundary.
-- Privileged workflows are exposed through narrowly granted RPCs and service-role workers.
+- Privileged workflows are exposed through narrowly granted RPCs and internally authenticated workers.
 - Private files stay in protected storage paths with server-validated access.
 - Audit logging is required for sensitive admin actions.
 - Rate limiting applies to high-risk user actions like proof uploads and disputes.
@@ -64,6 +64,8 @@ Scheduled operations run through the automation tick and supporting workers. The
 - dispatch push
 - process generated documents
 - run bounded operational maintenance tasks
+
+The scheduler and internal worker endpoints use a FleetFill-controlled internal automation token. Service-role credentials remain reserved for privileged database or admin access, not for internal Edge endpoint auth.
 
 ## Documentation Rule
 

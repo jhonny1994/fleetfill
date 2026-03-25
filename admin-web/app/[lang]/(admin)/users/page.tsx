@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminUi, getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
 import { fetchUsers } from "@/lib/queries/admin-users";
 
 export default async function UsersPage({
@@ -106,9 +106,11 @@ export default async function UsersPage({
                 </td>
                 <td>
                   <StatusBadge
-                    label={getEnumLabel(lang, "verification", user.verificationStatus)}
+                    label={getUserVerificationLabel(lang, user.role, user.verificationStatus)}
                     tone={
-                      user.verificationStatus === "verified"
+                      user.role !== "carrier"
+                        ? "neutral"
+                        : user.verificationStatus === "verified"
                         ? "success"
                         : user.verificationStatus === "rejected"
                           ? "danger"

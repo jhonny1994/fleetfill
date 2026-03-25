@@ -97,7 +97,7 @@ export default async function VerificationDetailPage({
             carrierId={detail.profile.id}
             documents={detail.documents.map((document) => ({
               id: document.id,
-              label: document.label,
+              label: getDocumentLabel(lang, document.document_type),
               status: document.status,
             }))}
           />

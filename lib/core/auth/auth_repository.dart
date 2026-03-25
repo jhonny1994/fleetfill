@@ -98,8 +98,8 @@ class AuthRepository {
   Future<void> signInWithPassword({
     required String email,
     required String password,
-  }) {
-    return _client.auth.signInWithPassword(email: email, password: password);
+  }) async {
+    await _client.auth.signInWithPassword(email: email, password: password);
   }
 
   Future<bool> signUpWithPassword({

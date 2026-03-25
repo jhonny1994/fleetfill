@@ -71,20 +71,23 @@ export function requiredEnv(name: string) {
   return value
 }
 
-export function hasServiceRoleAccess(req: Request) {
-  const serviceRoleKey = requiredEnv('SUPABASE_SERVICE_ROLE_KEY')
-  const authorization = req.headers.get('Authorization')?.trim()
-  const apiKey = req.headers.get('apikey')?.trim()
+export function requiredInternalAutomationToken() {
+  return requiredEnv('INTERNAL_AUTOMATION_TOKEN')
+}
 
-  if (apiKey === serviceRoleKey || authorization === serviceRoleKey) {
-    return true
-  }
+export function requiredSupabaseSecretKey() {
+  return Deno.env.get('SB_SECRET_KEY')?.trim() || requiredEnv('SUPABASE_SECRET_KEY')
+}
+
+export function hasInternalAutomationAccess(req: Request) {
+  const internalAutomationToken = requiredInternalAutomationToken()
+  const authorization = req.headers.get('Authorization')?.trim()
 
   if (authorization == null || !authorization.startsWith('Bearer ')) {
     return false
   }
 
-  return authorization.slice('Bearer '.length).trim() === serviceRoleKey
+  return authorization.slice('Bearer '.length).trim() === internalAutomationToken
 }
 
 export function normalizeSupportedLocale(locale: string | null | undefined) {
@@ -98,7 +101,7 @@ export function normalizeSupportedLocale(locale: string | null | undefined) {
 export function createServiceClient() {
   return createClient(
     requiredEnv('SUPABASE_URL'),
-    requiredEnv('SUPABASE_SERVICE_ROLE_KEY'),
+    requiredSupabaseSecretKey(),
   )
 }
 

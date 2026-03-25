@@ -1,7 +1,8 @@
 import {
   createServiceClient,
-  hasServiceRoleAccess,
+  hasInternalAutomationAccess,
   jsonResponse,
+  requiredInternalAutomationToken,
   requiredEnv,
 } from '../_shared/email-runtime.ts'
 
@@ -15,7 +16,7 @@ type TaskResult = {
 }
 
 async function invokeWorker(
-  serviceRoleKey: string,
+  internalAutomationToken: string,
   supabaseUrl: string,
   name: string,
   path: string,
@@ -25,7 +26,7 @@ async function invokeWorker(
     const response = await fetch(`${supabaseUrl}/functions/v1/${path}`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${serviceRoleKey}`,
+        Authorization: `Bearer ${internalAutomationToken}`,
         'content-type': 'application/json',
       },
       body: JSON.stringify(body),
@@ -90,9 +91,9 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const serviceRoleKey = requiredEnv('SUPABASE_SERVICE_ROLE_KEY')
+    const internalAutomationToken = requiredInternalAutomationToken()
     const supabaseUrl = requiredEnv('SUPABASE_URL')
-    if (!hasServiceRoleAccess(req)) {
+    if (!hasInternalAutomationAccess(req)) {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 
@@ -122,7 +123,7 @@ Deno.serve(async (req: Request) => {
 
     taskResults.push(
       await invokeWorker(
-        serviceRoleKey,
+        internalAutomationToken,
         supabaseUrl,
         'transactional_email_dispatch_worker',
         'transactional-email-dispatch-worker',
@@ -131,7 +132,7 @@ Deno.serve(async (req: Request) => {
     )
     taskResults.push(
       await invokeWorker(
-        serviceRoleKey,
+        internalAutomationToken,
         supabaseUrl,
         'push_dispatch_worker',
         'push-dispatch-worker',
@@ -140,7 +141,7 @@ Deno.serve(async (req: Request) => {
     )
     taskResults.push(
       await invokeWorker(
-        serviceRoleKey,
+        internalAutomationToken,
         supabaseUrl,
         'generated_document_worker',
         'generated-document-worker',

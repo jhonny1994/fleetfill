@@ -1,6 +1,6 @@
 import {
   createServiceClient,
-  hasServiceRoleAccess,
+  hasInternalAutomationAccess,
   isTruthyEnv,
   jsonResponse,
   requiredEnv,
@@ -228,7 +228,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    if (!hasServiceRoleAccess(req)) {
+    if (!hasInternalAutomationAccess(req)) {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 

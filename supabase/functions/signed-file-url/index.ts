@@ -80,13 +80,13 @@ function requireEnv(name: string) {
   return value
 }
 
-function requireServiceRoleKey() {
+function requireSupabaseSecretKey() {
   const value =
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')?.trim() ??
-    Deno.env.get('SERVICE_ROLE_KEY')?.trim()
+    Deno.env.get('SB_SECRET_KEY')?.trim() ??
+    Deno.env.get('SUPABASE_SECRET_KEY')?.trim()
   if (!value) {
     throw new Error(
-      'Missing required environment variable: SUPABASE_SERVICE_ROLE_KEY or SERVICE_ROLE_KEY',
+      'Missing required environment variable: SB_SECRET_KEY or SUPABASE_SECRET_KEY',
     )
   }
   return value
@@ -123,7 +123,7 @@ Deno.serve(async (req: Request) => {
   try {
     const supabaseUrl = requireEnv('SUPABASE_URL')
     const anonKey = requireEnv('SUPABASE_ANON_KEY')
-    const serviceRoleKey = requireServiceRoleKey()
+    const supabaseSecretKey = requireSupabaseSecretKey()
 
     const userClient = createClient(supabaseUrl, anonKey, {
       global: {
@@ -131,7 +131,7 @@ Deno.serve(async (req: Request) => {
       },
     })
 
-    const serviceClient = createClient(supabaseUrl, serviceRoleKey)
+    const serviceClient = createClient(supabaseUrl, supabaseSecretKey)
 
     const {
       data: { user },

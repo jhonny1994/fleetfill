@@ -56,6 +56,7 @@ class VerificationAdminRepository {
         .from('profiles')
         .select()
         .eq('id', carrierId)
+        .eq('role', 'carrier')
         .or('verification_status.eq.pending,verification_status.eq.rejected')
         .limit(1);
 
@@ -140,6 +141,7 @@ class VerificationAdminRepository {
     final response = await _client
         .from('profiles')
         .select()
+        .eq('role', 'carrier')
         .or('verification_status.eq.pending,verification_status.eq.rejected')
         .order('updated_at', ascending: true)
         .limit(limit);

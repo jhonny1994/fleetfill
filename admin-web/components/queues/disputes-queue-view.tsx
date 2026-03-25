@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatDateTime, formatQueueAge } from "@/lib/formatting/formatters";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import type { DisputeQueueItem } from "@/lib/queries/admin-types";
 
 function buildColumns(locale: string): ColumnDef<DisputeQueueItem>[] {
@@ -40,7 +40,7 @@ function buildColumns(locale: string): ColumnDef<DisputeQueueItem>[] {
     accessorKey: "status",
     header: ui.labels.state,
     enableSorting: true,
-    cell: ({ row }) => <StatusBadge label={row.original.status} tone="warning" />,
+    cell: ({ row }) => <StatusBadge label={getEnumLabel(locale, "dispute", row.original.status)} tone="warning" />,
   },
   {
     accessorKey: "ageHours",
