@@ -24,9 +24,27 @@ function Get-EnvMap {
   return $map
 }
 
+function Resolve-CloudServiceClientKey {
+  param([string]$ProjectRef)
+
+  $apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
+  $legacyServiceRoleKey = ($apiKeys | Where-Object { $_.name -eq "service_role" } | Select-Object -First 1).api_key
+  if (-not [string]::IsNullOrWhiteSpace($legacyServiceRoleKey)) {
+    return $legacyServiceRoleKey
+  }
+
+  $secretKey = ($apiKeys | Where-Object { $_.type -eq "secret" } | Select-Object -First 1).api_key
+  if (-not [string]::IsNullOrWhiteSpace($secretKey) -and $secretKey -notmatch '·') {
+    return $secretKey
+  }
+
+  throw "Could not resolve a usable cloud service credential for $ProjectRef."
+}
+
 $envMap = Get-EnvMap -Path $EnvFile
+$cloudServiceClientKey = Resolve-CloudServiceClientKey -ProjectRef $ProjectRef
 $secretValues = [ordered]@{
-  SB_SECRET_KEY                        = $envMap["SUPABASE_SECRET_KEY"]
+  SB_SECRET_KEY                        = $cloudServiceClientKey
   INTERNAL_AUTOMATION_TOKEN             = $envMap["INTERNAL_AUTOMATION_TOKEN"]
   TRANSACTIONAL_EMAIL_PROVIDER            = $envMap["TRANSACTIONAL_EMAIL_PROVIDER"]
   TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT   = $envMap["TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT"]
