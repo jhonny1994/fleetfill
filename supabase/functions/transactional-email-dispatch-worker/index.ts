@@ -2,7 +2,7 @@ import {
   computeRetryDelaySeconds,
   createServiceClient,
   dispatchEmail,
-  hasServiceRoleAccess,
+  hasInternalAutomationAccess,
   inferDeliveryStatus,
   jsonResponse,
   normalizeSupportedLocale,
@@ -18,7 +18,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    if (!hasServiceRoleAccess(req)) {
+    if (!hasInternalAutomationAccess(req)) {
       return jsonResponse({ error: 'Unauthorized' }, 401)
     }
 

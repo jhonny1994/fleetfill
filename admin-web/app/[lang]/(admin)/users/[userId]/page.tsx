@@ -7,7 +7,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { UserActivationActions } from "@/components/users/user-activation-actions";
 import { buildAdminRoute } from "@/lib/admin-routes";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminDetailCopy, getAdminUi, getDocumentLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminDetailCopy, getAdminUi, getDocumentLabel, getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
 import { fetchUserDetail } from "@/lib/queries/admin-users";
 
 export default async function UserDetailPage({
@@ -34,7 +34,7 @@ export default async function UserDetailPage({
       facts={[
         { label: ui.labels.role, value: getEnumLabel(lang, "userRoles", detail.profile.role) },
         { label: ui.labels.accountState, value: getEnumLabel(lang, "activity", detail.profile.isActive ? "active" : "suspended") },
-        { label: ui.labels.verification, value: getEnumLabel(lang, "verification", detail.profile.verificationStatus) },
+        { label: ui.labels.verification, value: getUserVerificationLabel(lang, detail.profile.role, detail.profile.verificationStatus) },
         { label: ui.labels.preferredLocale, value: getEnumLabel(lang, "locale", detail.profile.preferredLocale) },
       ]}
       main={
@@ -51,9 +51,11 @@ export default async function UserDetailPage({
               <StatusBadge label={getEnumLabel(lang, "userRoles", detail.profile.role)} tone="neutral" />
               <StatusBadge label={getEnumLabel(lang, "activity", detail.profile.isActive ? "active" : "suspended")} tone={detail.profile.isActive ? "success" : "danger"} />
               <StatusBadge
-                label={getEnumLabel(lang, "verification", detail.profile.verificationStatus)}
+                label={getUserVerificationLabel(lang, detail.profile.role, detail.profile.verificationStatus)}
                 tone={
-                  detail.profile.verificationStatus === "verified"
+                  detail.profile.role !== "carrier"
+                    ? "neutral"
+                    : detail.profile.verificationStatus === "verified"
                     ? "success"
                     : detail.profile.verificationStatus === "rejected"
                       ? "danger"
@@ -61,7 +63,7 @@ export default async function UserDetailPage({
                 }
               />
             </div>
-            {detail.profile.verificationRejectionReason ? (
+            {detail.profile.role === "carrier" && detail.profile.verificationRejectionReason ? (
               <p className="rounded-[14px] border border-[var(--color-red-100)] bg-[var(--color-red-100)] px-4 py-3 text-sm text-[var(--color-red-700)]">
                 {detail.profile.verificationRejectionReason}
               </p>
@@ -153,7 +155,7 @@ export default async function UserDetailPage({
                         {shipment.originLabel} {"->"} {shipment.destinationLabel}
                       </p>
                       <div className="mt-2 flex items-center gap-2">
-                        <StatusBadge label={shipment.status} tone="neutral" />
+                        <StatusBadge label={getEnumLabel(lang, "shipment", shipment.status)} tone="neutral" />
                         <span className="text-xs text-[var(--color-ink-muted)]">{shipment.totalWeightKg} kg</span>
                       </div>
                     </div>

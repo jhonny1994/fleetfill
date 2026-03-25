@@ -3,7 +3,7 @@
 --
 -- Required Vault secret names:
 -- - fleetfill_project_url
--- - fleetfill_service_role_key
+-- - fleetfill_internal_automation_token
 
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
@@ -21,7 +21,7 @@ select cron.schedule(
       url := (select decrypted_secret from vault.decrypted_secrets where name = 'fleetfill_project_url') || '/functions/v1/scheduled-automation-tick',
       headers := jsonb_build_object(
         'Content-Type', 'application/json',
-        'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'fleetfill_service_role_key')
+        'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'fleetfill_internal_automation_token')
       ),
       body := jsonb_build_object('source', 'pg_cron')
     );

@@ -75,7 +75,7 @@ Update the file after completing each sub-task, not just after completing an ent
 
 - [ ] 5.0 Verify the existing transactional email pipeline end to end in Supabase cloud
   - [ ] 5.1 Reuse the current outbox, scheduler, worker, and webhook architecture rather than redesigning the transactional path
-  - [ ] 5.2 Verify that cloud has the required runtime inputs for the existing scheduler and worker (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, provider creds, sender, webhook secret)
+  - [ ] 5.2 Verify that cloud has the required runtime inputs for the existing scheduler and worker (`SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `INTERNAL_AUTOMATION_TOKEN`, provider creds, sender, webhook secret)
   - [ ] 5.3 Verify that the existing scheduled automation job and Vault-backed invocation are present and correct in cloud
   - [ ] 5.4 Trigger or seed at least one existing transactional event and confirm the current outbox path creates and claims work correctly
   - [ ] 5.5 Verify provider acceptance, message-id capture, webhook return, and delivery-log reconciliation through the existing codepath

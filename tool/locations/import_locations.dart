@@ -16,13 +16,13 @@ Future<void> main() async {
 
 Future<_SupabaseEnv> _resolveSupabaseEnv() async {
   final apiUrl = Platform.environment['API_URL'];
-  final serviceRoleKey = Platform.environment['SERVICE_ROLE_KEY'];
+  final supabaseSecretKey = Platform.environment['SUPABASE_SECRET_KEY'];
 
   if (apiUrl != null &&
       apiUrl.isNotEmpty &&
-      serviceRoleKey != null &&
-      serviceRoleKey.isNotEmpty) {
-    return _SupabaseEnv(apiUrl: apiUrl, serviceRoleKey: serviceRoleKey);
+      supabaseSecretKey != null &&
+      supabaseSecretKey.isNotEmpty) {
+    return _SupabaseEnv(apiUrl: apiUrl, serviceRoleKey: supabaseSecretKey);
   }
 
   final result = await Process.run('supabase', ['status', '-o', 'env']);
@@ -52,7 +52,7 @@ Future<_SupabaseEnv> _resolveSupabaseEnv() async {
       resolvedServiceRoleKey == null ||
       resolvedServiceRoleKey.isEmpty) {
     throw StateError(
-      'Missing API_URL or SERVICE_ROLE_KEY from Supabase status.',
+      'Missing API_URL or local CLI SERVICE_ROLE_KEY from Supabase status.',
     );
   }
 

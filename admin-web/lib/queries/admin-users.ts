@@ -189,6 +189,10 @@ export async function fetchUsers({
 
   const normalizedVerification = verification?.trim();
   if (normalizedVerification && isVerificationStatus(normalizedVerification)) {
+    if (normalizedRole && normalizedRole !== "carrier") {
+      return [];
+    }
+    request = request.eq("role", "carrier");
     request = request.eq("verification_status", normalizedVerification);
   }
 

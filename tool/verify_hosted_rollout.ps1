@@ -4,7 +4,8 @@ param(
   [string]$AdminSiteUrl = "https://fleetfill.vercel.app",
   [string]$ProjectDir = "admin-web",
   [string]$VercelScope = "jhonny1994s-projects",
-  [string]$ApiKey = "",
+  [string]$SecretKey = "",
+  [string]$InternalAutomationToken = "",
   [switch]$RequirePreviewEnv
 )
 
@@ -76,19 +77,23 @@ if ($signInResponse.StatusCode -lt 200 -or $signInResponse.StatusCode -ge 400) {
   throw "Admin sign-in page returned status $($signInResponse.StatusCode)."
 }
 
-$serviceRoleKey = $ApiKey
-if ([string]::IsNullOrWhiteSpace($serviceRoleKey) -and (Test-Path ".env")) {
+$supabaseSecretKey = $SecretKey
+$resolvedInternalAutomationToken = $InternalAutomationToken
+if (([string]::IsNullOrWhiteSpace($supabaseSecretKey) -or [string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken)) -and (Test-Path ".env")) {
   foreach ($line in Get-Content ".env") {
-    if ($line -match '^SUPABASE_SERVICE_ROLE_KEY=') {
-      $serviceRoleKey = ($line -split '=', 2)[1]
+    if ($line -match '^SUPABASE_SECRET_KEY=') {
+      $supabaseSecretKey = ($line -split '=', 2)[1]
+    }
+    if ($line -match '^INTERNAL_AUTOMATION_TOKEN=') {
+      $resolvedInternalAutomationToken = ($line -split '=', 2)[1]
     }
   }
 }
 
-if (-not [string]::IsNullOrWhiteSpace($serviceRoleKey)) {
+if (-not [string]::IsNullOrWhiteSpace($supabaseSecretKey)) {
   $rpcHeaders = @{
-    apikey        = $serviceRoleKey
-    Authorization = "Bearer $serviceRoleKey"
+    apikey        = $supabaseSecretKey
+    Authorization = "Bearer $supabaseSecretKey"
     "Content-Type" = "application/json"
   }
 
@@ -100,6 +105,33 @@ if (-not [string]::IsNullOrWhiteSpace($serviceRoleKey)) {
 
   if (@($schedulerStatus).Count -eq 0) {
     throw "Hosted scheduled automation job is not installed."
+  }
+
+  $wilayas = Invoke-RestMethod `
+    -Uri "https://$ProjectRef.supabase.co/rest/v1/wilayas?select=id&limit=1" `
+    -Method Get `
+    -Headers $rpcHeaders
+
+  if (@($wilayas).Count -eq 0) {
+    throw "Hosted location seed is missing: table 'wilayas' returned no rows."
+  }
+}
+
+if (-not [string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken)) {
+  $authHeaders = @{
+    Authorization = "Bearer $resolvedInternalAutomationToken"
+    "Content-Type" = "application/json"
+  }
+
+  $response = Invoke-WebRequest `
+    -Uri "https://$ProjectRef.supabase.co/functions/v1/scheduled-automation-tick" `
+    -Method POST `
+    -Headers $authHeaders `
+    -Body "{}" `
+    -UseBasicParsing
+
+  if ($response.StatusCode -lt 200 -or $response.StatusCode -ge 600) {
+    throw "Protected function 'scheduled-automation-tick' did not accept the internal automation token."
   }
 }
 

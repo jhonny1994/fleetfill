@@ -6250,7 +6250,7 @@ alter extension pg_net set schema extensions;
 
 create or replace function public.configure_scheduled_automation(
   project_url text,
-  bearer_token text
+  internal_automation_token text
 )
 returns void
 language plpgsql
@@ -6262,15 +6262,15 @@ begin
     raise exception 'project_url is required';
   end if;
 
-  if coalesce(bearer_token, '') = '' then
-    raise exception 'bearer_token is required';
+  if coalesce(internal_automation_token, '') = '' then
+    raise exception 'internal_automation_token is required';
   end if;
 
   create extension if not exists pg_cron;
   create extension if not exists pg_net;
 
   delete from vault.secrets
-  where name in ('fleetfill_project_url', 'fleetfill_service_role_key');
+  where name in ('fleetfill_project_url', 'fleetfill_internal_automation_token');
 
   perform vault.create_secret(
     project_url,
@@ -6279,9 +6279,9 @@ begin
   );
 
   perform vault.create_secret(
-    bearer_token,
-    'fleetfill_service_role_key',
-    'FleetFill scheduled automation bearer token'
+    internal_automation_token,
+    'fleetfill_internal_automation_token',
+    'FleetFill scheduled automation internal bearer token'
   );
 
   perform cron.unschedule(jobid)
@@ -6297,7 +6297,7 @@ begin
         url := (select decrypted_secret from vault.decrypted_secrets where name = 'fleetfill_project_url') || '/functions/v1/scheduled-automation-tick',
         headers := jsonb_build_object(
           'Content-Type', 'application/json',
-          'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'fleetfill_service_role_key')
+          'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'fleetfill_internal_automation_token')
         ),
         body := jsonb_build_object('source', 'pg_cron')
       );
