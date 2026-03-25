@@ -11,6 +11,23 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Resolve-CloudAdminKey {
+  param([string]$ProjectRef)
+
+  $apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
+  $legacyServiceRoleKey = ($apiKeys | Where-Object { $_.name -eq "service_role" } | Select-Object -First 1).api_key
+  if (-not [string]::IsNullOrWhiteSpace($legacyServiceRoleKey)) {
+    return $legacyServiceRoleKey
+  }
+
+  $secretKey = ($apiKeys | Where-Object { $_.type -eq "secret" } | Select-Object -First 1).api_key
+  if (-not [string]::IsNullOrWhiteSpace($secretKey) -and $secretKey -notmatch '·') {
+    return $secretKey
+  }
+
+  throw "Could not resolve a usable cloud admin API key for $ProjectRef."
+}
+
 function Invoke-Checked {
   param(
     [Parameter(Mandatory = $true)]
@@ -52,11 +69,7 @@ foreach ($functionName in $deployableFunctions) {
   }
 }
 
-$apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
-$cloudSecretKey = ($apiKeys | Where-Object { $_.type -eq "secret" } | Select-Object -First 1).api_key
-if ([string]::IsNullOrWhiteSpace($cloudSecretKey)) {
-  throw "Could not resolve the cloud Supabase secret key for $ProjectRef."
-}
+$cloudSecretKey = Resolve-CloudAdminKey -ProjectRef $ProjectRef
 
 $internalAutomationToken = ""
 if (Test-Path $EnvFile) {
