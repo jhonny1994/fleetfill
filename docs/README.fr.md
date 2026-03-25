@@ -2,6 +2,11 @@
 
 Voici le point d’entrée principal en français pour la documentation active de FleetFill.
 
+## Mention de propriete
+
+- Cette documentation et ce depot sont proprietaires.
+- Aucun droit n'est accorde pour reutiliser, modifier, distribuer ou exploiter commercialement le code ou la documentation.
+
 Traductions :
 
 - [العربية](C:\Users\raouf\projects\fleetfill\docs\README.md)

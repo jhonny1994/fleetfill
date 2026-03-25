@@ -58,6 +58,7 @@ app.*.map.json
 /android/.kotlin/
 /android/app/google-services.json
 /android/app/*.jks
+/android/app/release-signing.local.properties
 
 .agents
 .vercel

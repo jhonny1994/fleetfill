@@ -2,6 +2,11 @@
 
 This is the main English entry point for the active FleetFill documentation set.
 
+## Proprietary Notice
+
+- These docs and this repository are proprietary.
+- No license is granted to reuse, modify, distribute, or commercially exploit the code or documentation.
+
 Translations:
 
 - [العربية](C:\Users\raouf\projects\fleetfill\docs\README.md)

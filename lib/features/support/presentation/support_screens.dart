@@ -292,12 +292,10 @@ class _SupportThreadScreenState extends ConsumerState<SupportThreadScreen> {
                           ),
                           child: Text(s.supportLinkedPaymentProofAction),
                         ),
-                      if (
-                        shouldShowSupportDisputeAction(
-                          request: request,
-                          isAdmin: widget.isAdmin,
-                        )
-                      )
+                      if (shouldShowSupportDisputeAction(
+                        request: request,
+                        isAdmin: widget.isAdmin,
+                      ))
                         OutlinedButton(
                           onPressed: () => context.push(
                             AppRoutePath.adminQueuesDispute(request.disputeId!),

@@ -88,6 +88,57 @@ where booking_status <> 'cancelled';
 
 create index if not exists route_revisions_route_effective_idx
 on public.route_revisions (route_id, effective_from desc);
+
+create index if not exists bookings_vehicle_id_idx
+on public.bookings (vehicle_id);
+
+create index if not exists disputes_opened_by_idx
+on public.disputes (opened_by);
+
+create index if not exists disputes_resolved_by_idx
+on public.disputes (resolved_by);
+
+create index if not exists oneoff_trips_destination_commune_id_idx
+on public.oneoff_trips (destination_commune_id);
+
+create index if not exists oneoff_trips_vehicle_id_idx
+on public.oneoff_trips (vehicle_id);
+
+create index if not exists payment_proofs_reviewed_by_idx
+on public.payment_proofs (reviewed_by);
+
+create index if not exists payouts_payout_account_id_idx
+on public.payouts (payout_account_id);
+
+create index if not exists payouts_processed_by_idx
+on public.payouts (processed_by);
+
+create index if not exists refunds_dispute_id_idx
+on public.refunds (dispute_id);
+
+create index if not exists refunds_processed_by_idx
+on public.refunds (processed_by);
+
+create index if not exists route_departure_instances_vehicle_id_idx
+on public.route_departure_instances (vehicle_id);
+
+create index if not exists route_revisions_created_by_idx
+on public.route_revisions (created_by);
+
+create index if not exists route_revisions_origin_commune_id_idx
+on public.route_revisions (origin_commune_id);
+
+create index if not exists route_revisions_destination_commune_id_idx
+on public.route_revisions (destination_commune_id);
+
+create index if not exists route_revisions_vehicle_id_idx
+on public.route_revisions (vehicle_id);
+
+create index if not exists routes_destination_commune_id_idx
+on public.routes (destination_commune_id);
+
+create index if not exists shipments_destination_commune_id_idx
+on public.shipments (destination_commune_id);
 -- <<< END 20260320120000_add_shipment_domain_constraints.sql
 
 -- >>> BEGIN 20260320120100_create_exact_lane_search_rpc.sql
@@ -6188,3 +6239,124 @@ begin
 end;
 $$;
 -- <<< END 20260321100000_close_release_gate_blockers.sql
+
+-- >>> BEGIN 20260325010000_add_hosted_scheduler_management.sql
+create schema if not exists extensions;
+
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+
+alter extension pg_net set schema extensions;
+
+create or replace function public.configure_scheduled_automation(
+  project_url text,
+  bearer_token text
+)
+returns void
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+begin
+  if coalesce(project_url, '') = '' then
+    raise exception 'project_url is required';
+  end if;
+
+  if coalesce(bearer_token, '') = '' then
+    raise exception 'bearer_token is required';
+  end if;
+
+  create extension if not exists pg_cron;
+  create extension if not exists pg_net;
+
+  delete from vault.secrets
+  where name in ('fleetfill_project_url', 'fleetfill_service_role_key');
+
+  perform vault.create_secret(
+    project_url,
+    'fleetfill_project_url',
+    'FleetFill scheduled automation project URL'
+  );
+
+  perform vault.create_secret(
+    bearer_token,
+    'fleetfill_service_role_key',
+    'FleetFill scheduled automation bearer token'
+  );
+
+  perform cron.unschedule(jobid)
+  from cron.job
+  where jobname = 'fleetfill-scheduled-automation-tick';
+
+  perform cron.schedule(
+    'fleetfill-scheduled-automation-tick',
+    '* * * * *',
+    $cron$
+    select
+      net.http_post(
+        url := (select decrypted_secret from vault.decrypted_secrets where name = 'fleetfill_project_url') || '/functions/v1/scheduled-automation-tick',
+        headers := jsonb_build_object(
+          'Content-Type', 'application/json',
+          'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'fleetfill_service_role_key')
+        ),
+        body := jsonb_build_object('source', 'pg_cron')
+      );
+    $cron$
+  );
+end;
+$$;
+
+revoke all on function public.configure_scheduled_automation(text, text) from public;
+grant execute on function public.configure_scheduled_automation(text, text) to service_role;
+
+create or replace function public.scheduled_automation_status()
+returns table (
+  jobname text,
+  schedule text,
+  active boolean
+)
+language sql
+security definer
+set search_path = public, extensions
+as $$
+  select
+    j.jobname::text,
+    j.schedule::text,
+    true as active
+  from cron.job as j
+  where j.jobname = 'fleetfill-scheduled-automation-tick';
+$$;
+
+revoke all on function public.scheduled_automation_status() from public;
+grant execute on function public.scheduled_automation_status() to service_role;
+-- <<< END 20260325010000_add_hosted_scheduler_management.sql
+
+create index if not exists payment_proofs_uploaded_by_idx
+on public.payment_proofs (uploaded_by);
+
+create index if not exists payment_proofs_upload_session_id_idx
+on public.payment_proofs (upload_session_id);
+
+create index if not exists support_requests_booking_id_idx
+on public.support_requests (booking_id);
+
+create index if not exists support_requests_shipment_id_idx
+on public.support_requests (shipment_id);
+
+create index if not exists support_requests_payment_proof_id_idx
+on public.support_requests (payment_proof_id);
+
+create index if not exists support_requests_dispute_id_idx
+on public.support_requests (dispute_id);
+
+create index if not exists support_messages_sender_profile_id_idx
+on public.support_messages (sender_profile_id);
+
+create index if not exists tracking_events_created_by_idx
+on public.tracking_events (created_by);
+
+create index if not exists dispute_evidence_uploaded_by_idx
+on public.dispute_evidence (uploaded_by);
+
+create index if not exists dispute_evidence_upload_session_id_idx
+on public.dispute_evidence (upload_session_id);

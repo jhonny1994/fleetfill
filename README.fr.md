@@ -4,7 +4,6 @@
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?style=flat-square" alt="GitHub Release"></a>
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/downloads/jhonny1994/fleetfill/total?style=flat-square" alt="GitHub Downloads"></a>
   <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/Console_Admin-Live-brightgreen?style=flat-square" alt="Console Admin"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/jhonny1994/fleetfill?style=flat-square" alt="License"></a>
 </p>
 
 <p align="center">La plateforme intelligente de fret routier pour l'Algérie.</p>
@@ -14,6 +13,12 @@
 </p>
 
 Aide les expéditeurs et les transporteurs à gérer le transport quotidien avec plus de confiance, plus de clarté sur les paiements et une meilleure organisation opérationnelle.
+
+## Mention de propriete
+
+- Ce depot est proprietaire et reste la propriete privee de son auteur.
+- Aucun droit ni licence n'est accorde pour utiliser, copier, modifier, redistribuer ou exploiter commercialement ce code source.
+- L'acces a ce depot ne donne aucun droit de reutilisation a des tiers.
 
 ## Pourquoi FleetFill
 
