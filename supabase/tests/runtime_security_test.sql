@@ -122,7 +122,7 @@ values
 select set_config('request.jwt.claim.role', 'service_role', true);
 select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 
-insert into public.profiles (id, role, full_name, phone_number, email, is_active, verification_status)
+insert into public.profiles (id, role, full_name, phone_number, email, is_active)
 values
   (
     '10000000-0000-4000-8000-000000000001',
@@ -130,8 +130,7 @@ values
     'Shipper One',
     '0550000001',
     'shipper1@example.com',
-    true,
-    'verified'
+    true
   ),
   (
     '10000000-0000-4000-8000-000000000002',
@@ -139,8 +138,7 @@ values
     'Shipper Two',
     '0550000002',
     'shipper2@example.com',
-    true,
-    'verified'
+    true
   ),
   (
     '10000000-0000-4000-8000-000000000003',
@@ -148,8 +146,7 @@ values
     'Carrier One',
     '0660000003',
     'carrier1@example.com',
-    true,
-    'verified'
+    true
   ),
   (
     '10000000-0000-4000-8000-000000000004',
@@ -157,9 +154,12 @@ values
     'Admin One',
     '0770000004',
     'admin1@example.com',
-    true,
-    'verified'
+    true
   );
+
+update public.carrier_verification_packets
+set status = 'verified', rejection_reason = null, updated_at = now()
+where carrier_id = '10000000-0000-4000-8000-000000000003';
 
 insert into public.admin_accounts (profile_id, admin_role, is_active, activated_at)
 values (

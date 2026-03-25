@@ -412,6 +412,38 @@ export type Database = {
           },
         ]
       }
+      carrier_verification_packets: {
+        Row: {
+          carrier_id: string
+          created_at: string
+          rejection_reason: string | null
+          status: Database["public"]["Enums"]["verification_status"]
+          updated_at: string
+        }
+        Insert: {
+          carrier_id: string
+          created_at?: string
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["verification_status"]
+          updated_at?: string
+        }
+        Update: {
+          carrier_id?: string
+          created_at?: string
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["verification_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "carrier_verification_packets_carrier_id_fkey"
+            columns: ["carrier_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       communes: {
         Row: {
           id: number
@@ -1357,8 +1389,6 @@ export type Database = {
           rating_count: number
           role: Database["public"]["Enums"]["app_role"]
           updated_at: string
-          verification_rejection_reason: string | null
-          verification_status: Database["public"]["Enums"]["verification_status"]
         }
         Insert: {
           avatar_url?: string | null
@@ -1374,8 +1404,6 @@ export type Database = {
           rating_count?: number
           role: Database["public"]["Enums"]["app_role"]
           updated_at?: string
-          verification_rejection_reason?: string | null
-          verification_status?: Database["public"]["Enums"]["verification_status"]
         }
         Update: {
           avatar_url?: string | null
@@ -1391,8 +1419,6 @@ export type Database = {
           rating_count?: number
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
-          verification_rejection_reason?: string | null
-          verification_status?: Database["public"]["Enums"]["verification_status"]
         }
         Relationships: []
       }
@@ -2718,8 +2744,6 @@ export type Database = {
           rating_count: number
           role: Database["public"]["Enums"]["app_role"]
           updated_at: string
-          verification_rejection_reason: string | null
-          verification_status: Database["public"]["Enums"]["verification_status"]
         }
         SetofOptions: {
           from: "*"
@@ -3159,6 +3183,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      configure_scheduled_automation: {
+        Args: { internal_automation_token: string; project_url: string }
+        Returns: undefined
+      }
       consume_rate_limit: {
         Args: {
           p_action_key: string
@@ -3520,8 +3548,6 @@ export type Database = {
           rating_count: number
           role: Database["public"]["Enums"]["app_role"]
           updated_at: string
-          verification_rejection_reason: string | null
-          verification_status: Database["public"]["Enums"]["verification_status"]
         }
         SetofOptions: {
           from: "*"
@@ -3876,12 +3902,12 @@ export type Database = {
         Args: { p_carrier_id: string }
         Returns: undefined
       }
-      refresh_verification_subject_status: {
-        Args: {
-          p_entity_id: string
-          p_entity_type: Database["public"]["Enums"]["verification_document_entity_type"]
-          p_owner_profile_id: string
-        }
+      refresh_carrier_verification_packet_status: {
+        Args: { p_carrier_id: string }
+        Returns: Database["public"]["Enums"]["verification_status"]
+      }
+      refresh_vehicle_verification_status: {
+        Args: { p_owner_profile_id: string; p_vehicle_id: string }
         Returns: Database["public"]["Enums"]["verification_status"]
       }
       register_user_device: {
@@ -4022,6 +4048,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      scheduled_automation_status: {
+        Args: never
+        Returns: {
+          active: boolean
+          jobname: string
+          schedule: string
+        }[]
       }
       search_exact_lane_capacity: {
         Args: {

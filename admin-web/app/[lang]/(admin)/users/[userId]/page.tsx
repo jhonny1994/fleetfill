@@ -34,8 +34,10 @@ export default async function UserDetailPage({
       facts={[
         { label: ui.labels.role, value: getEnumLabel(lang, "userRoles", detail.profile.role) },
         { label: ui.labels.accountState, value: getEnumLabel(lang, "activity", detail.profile.isActive ? "active" : "suspended") },
-        { label: ui.labels.verification, value: getUserVerificationLabel(lang, detail.profile.role, detail.profile.verificationStatus) },
         { label: ui.labels.preferredLocale, value: getEnumLabel(lang, "locale", detail.profile.preferredLocale) },
+        ...(detail.profile.role === "carrier"
+          ? [{ label: ui.labels.verification, value: getUserVerificationLabel(lang, detail.profile.role, detail.profile.verificationStatus) }]
+          : []),
       ]}
       main={
         <>
@@ -50,18 +52,18 @@ export default async function UserDetailPage({
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge label={getEnumLabel(lang, "userRoles", detail.profile.role)} tone="neutral" />
               <StatusBadge label={getEnumLabel(lang, "activity", detail.profile.isActive ? "active" : "suspended")} tone={detail.profile.isActive ? "success" : "danger"} />
-              <StatusBadge
-                label={getUserVerificationLabel(lang, detail.profile.role, detail.profile.verificationStatus)}
-                tone={
-                  detail.profile.role !== "carrier"
-                    ? "neutral"
-                    : detail.profile.verificationStatus === "verified"
-                    ? "success"
-                    : detail.profile.verificationStatus === "rejected"
-                      ? "danger"
-                      : "warning"
-                }
-              />
+              {detail.profile.role === "carrier" ? (
+                <StatusBadge
+                  label={getUserVerificationLabel(lang, detail.profile.role, detail.profile.verificationStatus)}
+                  tone={
+                    detail.profile.verificationStatus === "verified"
+                      ? "success"
+                      : detail.profile.verificationStatus === "rejected"
+                        ? "danger"
+                        : "warning"
+                  }
+                />
+              ) : null}
             </div>
             {detail.profile.role === "carrier" && detail.profile.verificationRejectionReason ? (
               <p className="rounded-[14px] border border-[var(--color-red-100)] bg-[var(--color-red-100)] px-4 py-3 text-sm text-[var(--color-red-700)]">

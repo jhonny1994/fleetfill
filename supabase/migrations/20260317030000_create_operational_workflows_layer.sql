@@ -4658,10 +4658,11 @@ begin
   return jsonb_build_object(
     'verification_packets', (
       select count(*)
-      from public.profiles as p
+      from public.carrier_verification_packets as cvp
+      inner join public.profiles as p on p.id = cvp.carrier_id
       where p.role = 'carrier'::public.app_role
         and p.is_active = true
-        and p.verification_status in ('pending', 'rejected')
+        and cvp.status in ('pending', 'rejected')
     ),
     'pending_verification_documents', (
       select count(*)

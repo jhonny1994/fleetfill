@@ -105,8 +105,7 @@ insert into public.profiles (
   phone_number,
   email,
   preferred_locale,
-  is_active,
-  verification_status
+  is_active
 )
 values
   (
@@ -116,8 +115,7 @@ values
     '0557000001',
     'support-shipper@example.com',
     'en',
-    true,
-    'verified'
+    true
   ),
   (
     (select other_shipper_id from pg_temp.fixture_ids),
@@ -126,8 +124,7 @@ values
     '0557000002',
     'support-other@example.com',
     'fr',
-    true,
-    'verified'
+    true
   ),
   (
     (select admin_id from pg_temp.fixture_ids),
@@ -136,8 +133,7 @@ values
     '0777000003',
     'support-admin@example.com',
     'ar',
-    true,
-    'verified'
+    true
   );
 
 insert into public.admin_accounts (profile_id, admin_role, is_active, activated_at)

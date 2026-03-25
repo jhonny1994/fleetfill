@@ -852,13 +852,13 @@ class _AdminVerificationQueueSectionState
                         leading: AppStatusChip(
                           label: verificationStatusLabel(
                             s,
-                            packet.profileStatus,
+                            packet.carrierStatus,
                           ),
                           tone:
-                              packet.profileStatus ==
+                              packet.carrierStatus ==
                                   AppVerificationState.rejected
                               ? AppStatusTone.danger
-                              : packet.profileStatus ==
+                              : packet.carrierStatus ==
                                     AppVerificationState.verified
                               ? AppStatusTone.success
                               : AppStatusTone.warning,
@@ -1490,7 +1490,7 @@ class AdminVerificationPacketScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.lg),
               _AdminDocumentGroup(
                 title: s.profileVerificationDocumentsTitle,
-                documents: packet.profileDocuments,
+                documents: packet.carrierDocuments,
               ),
               const SizedBox(height: AppSpacing.lg),
               ...packet.vehicles.map(
