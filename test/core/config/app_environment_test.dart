@@ -72,14 +72,17 @@ void main() {
       expect(key, 'legacy_anon_local');
     });
 
-    test('falls back to publishable key for local backends when anon is missing', () {
-      final key = AppEnvironmentConfig.resolveClientKeyForTesting(
-        supabaseUrl: 'http://localhost:54321',
-        publishableKey: 'sb_publishable_local',
-      );
+    test(
+      'falls back to publishable key for local backends when anon is missing',
+      () {
+        final key = AppEnvironmentConfig.resolveClientKeyForTesting(
+          supabaseUrl: 'http://localhost:54321',
+          publishableKey: 'sb_publishable_local',
+        );
 
-      expect(key, 'sb_publishable_local');
-    });
+        expect(key, 'sb_publishable_local');
+      },
+    );
 
     test('prefers publishable key for hosted backends', () {
       final key = AppEnvironmentConfig.resolveClientKeyForTesting(
@@ -91,14 +94,17 @@ void main() {
       expect(key, 'sb_publishable_prod');
     });
 
-    test('falls back to anon key for hosted backends when publishable is missing', () {
-      final key = AppEnvironmentConfig.resolveClientKeyForTesting(
-        supabaseUrl: 'https://fleetfill.supabase.co',
-        anonKey: 'legacy_anon_prod',
-      );
+    test(
+      'falls back to anon key for hosted backends when publishable is missing',
+      () {
+        final key = AppEnvironmentConfig.resolveClientKeyForTesting(
+          supabaseUrl: 'https://fleetfill.supabase.co',
+          anonKey: 'legacy_anon_prod',
+        );
 
-      expect(key, 'legacy_anon_prod');
-    });
+        expect(key, 'legacy_anon_prod');
+      },
+    );
   });
 
   group('AppEnvironmentConfig Google client ID resolution', () {

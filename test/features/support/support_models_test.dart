@@ -35,7 +35,9 @@ void main() {
     }
 
     test('marks unread user thread on first view', () {
-      final supportRequest = request(lastMessageAt: DateTime.utc(2026, 3, 24, 12));
+      final supportRequest = request(
+        lastMessageAt: DateTime.utc(2026, 3, 24, 12),
+      );
 
       expect(
         shouldMarkSupportThreadRead(
@@ -46,22 +48,27 @@ void main() {
       );
     });
 
-    test('does not re-mark when already marked at latest message timestamp', () {
-      final lastMessageAt = DateTime.utc(2026, 3, 24, 12);
-      final supportRequest = request(lastMessageAt: lastMessageAt);
+    test(
+      'does not re-mark when already marked at latest message timestamp',
+      () {
+        final lastMessageAt = DateTime.utc(2026, 3, 24, 12);
+        final supportRequest = request(lastMessageAt: lastMessageAt);
 
-      expect(
-        shouldMarkSupportThreadRead(
-          request: supportRequest,
-          isAdmin: false,
-          lastMarkedMessageAt: lastMessageAt,
-        ),
-        isFalse,
-      );
-    });
+        expect(
+          shouldMarkSupportThreadRead(
+            request: supportRequest,
+            isAdmin: false,
+            lastMarkedMessageAt: lastMessageAt,
+          ),
+          isFalse,
+        );
+      },
+    );
 
     test('re-marks when a newer unread reply arrives after the last mark', () {
-      final supportRequest = request(lastMessageAt: DateTime.utc(2026, 3, 24, 13));
+      final supportRequest = request(
+        lastMessageAt: DateTime.utc(2026, 3, 24, 13),
+      );
 
       expect(
         shouldMarkSupportThreadRead(
@@ -88,19 +95,22 @@ void main() {
       );
     });
 
-    test('shows dispute action for admin support threads with a linked dispute', () {
-      final supportRequest = request(
-        lastMessageAt: DateTime.utc(2026, 3, 24, 12),
-        disputeId: 'dispute-1',
-      );
+    test(
+      'shows dispute action for admin support threads with a linked dispute',
+      () {
+        final supportRequest = request(
+          lastMessageAt: DateTime.utc(2026, 3, 24, 12),
+          disputeId: 'dispute-1',
+        );
 
-      expect(
-        shouldShowSupportDisputeAction(
-          request: supportRequest,
-          isAdmin: true,
-        ),
-        isTrue,
-      );
-    });
+        expect(
+          shouldShowSupportDisputeAction(
+            request: supportRequest,
+            isAdmin: true,
+          ),
+          isTrue,
+        );
+      },
+    );
   });
 }

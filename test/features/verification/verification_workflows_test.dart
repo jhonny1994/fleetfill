@@ -164,17 +164,20 @@ void main() {
       );
     });
 
-    test('allows verified carriers without payout accounts into booking worklists', () {
-      final auth = carrierAuth(isCarrierVerified: true);
+    test(
+      'allows verified carriers without payout accounts into booking worklists',
+      () {
+        final auth = carrierAuth(isCarrierVerified: true);
 
-      final decision = AppRouteGuards.evaluate(
-        bootstrap: bootstrap(auth),
-        auth: auth,
-        location: AppRoutePath.carrierBookings,
-      );
+        final decision = AppRouteGuards.evaluate(
+          bootstrap: bootstrap(auth),
+          auth: auth,
+          location: AppRoutePath.carrierBookings,
+        );
 
-      expect(decision.target, AppRedirectTarget.none);
-    });
+        expect(decision.target, AppRedirectTarget.none);
+      },
+    );
   });
 
   group('Verification migration contracts', () {

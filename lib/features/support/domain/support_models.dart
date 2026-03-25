@@ -153,7 +153,9 @@ bool shouldMarkSupportThreadRead({
   required bool isAdmin,
   DateTime? lastMarkedMessageAt,
 }) {
-  final hasUnread = isAdmin ? request.hasUnreadForAdmin : request.hasUnreadForUser;
+  final hasUnread = isAdmin
+      ? request.hasUnreadForAdmin
+      : request.hasUnreadForUser;
   if (!hasUnread) {
     return false;
   }

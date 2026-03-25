@@ -18,22 +18,22 @@ if (releaseSigningPropertiesFile.exists()) {
 fun signingValue(name: String): String? =
     releaseSigningProperties.getProperty(name)?.takeIf { it.isNotBlank() }
 
-val releaseKeystorePath =
-    providers.gradleProperty("FLEETFILL_RELEASE_STORE_FILE")
-        .orElse(providers.environmentVariable("FLEETFILL_RELEASE_STORE_FILE"))
-        .orElse(signingValue("FLEETFILL_RELEASE_STORE_FILE") ?: "")
-val releaseKeystorePassword =
-    providers.gradleProperty("FLEETFILL_RELEASE_STORE_PASSWORD")
-        .orElse(providers.environmentVariable("FLEETFILL_RELEASE_STORE_PASSWORD"))
-        .orElse(signingValue("FLEETFILL_RELEASE_STORE_PASSWORD") ?: "")
-val releaseKeyAlias =
-    providers.gradleProperty("FLEETFILL_RELEASE_KEY_ALIAS")
-        .orElse(providers.environmentVariable("FLEETFILL_RELEASE_KEY_ALIAS"))
-        .orElse(signingValue("FLEETFILL_RELEASE_KEY_ALIAS") ?: "")
-val releaseKeyPassword =
-    providers.gradleProperty("FLEETFILL_RELEASE_KEY_PASSWORD")
-        .orElse(providers.environmentVariable("FLEETFILL_RELEASE_KEY_PASSWORD"))
-        .orElse(signingValue("FLEETFILL_RELEASE_KEY_PASSWORD") ?: "")
+fun resolveSigningValue(name: String): String? =
+    providers.gradleProperty(name).orNull
+        ?.takeIf { it.isNotBlank() }
+        ?: providers.environmentVariable(name).orNull
+            ?.takeIf { it.isNotBlank() }
+        ?: signingValue(name)
+
+val releaseKeystorePath = resolveSigningValue("FLEETFILL_RELEASE_STORE_FILE")
+val releaseKeystorePassword = resolveSigningValue("FLEETFILL_RELEASE_STORE_PASSWORD")
+val releaseKeyAlias = resolveSigningValue("FLEETFILL_RELEASE_KEY_ALIAS")
+val releaseKeyPassword = resolveSigningValue("FLEETFILL_RELEASE_KEY_PASSWORD")
+val hasReleaseSigning =
+    !releaseKeystorePath.isNullOrBlank() &&
+        !releaseKeystorePassword.isNullOrBlank() &&
+        !releaseKeyAlias.isNullOrBlank() &&
+        !releaseKeyPassword.isNullOrBlank()
 
 android {
     namespace = "com.carbodex.fleetfill"
@@ -51,17 +51,11 @@ android {
 
     signingConfigs {
         create("release") {
-            val hasReleaseSigning =
-                releaseKeystorePath.isPresent &&
-                    releaseKeystorePassword.isPresent &&
-                    releaseKeyAlias.isPresent &&
-                    releaseKeyPassword.isPresent
-
             if (hasReleaseSigning) {
-                storeFile = file(releaseKeystorePath.get())
-                storePassword = releaseKeystorePassword.get()
-                keyAlias = releaseKeyAlias.get()
-                keyPassword = releaseKeyPassword.get()
+                storeFile = file(releaseKeystorePath!!)
+                storePassword = releaseKeystorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
             }
         }
     }
@@ -79,11 +73,6 @@ android {
 
     buildTypes {
         release {
-            val hasReleaseSigning =
-                releaseKeystorePath.isPresent &&
-                    releaseKeystorePassword.isPresent &&
-                    releaseKeyAlias.isPresent &&
-                    releaseKeyPassword.isPresent
             signingConfig = if (hasReleaseSigning) {
                 signingConfigs.getByName("release")
             } else {
