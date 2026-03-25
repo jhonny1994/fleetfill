@@ -4,7 +4,6 @@
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?style=flat-square" alt="GitHub Release"></a>
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/downloads/jhonny1994/fleetfill/total?style=flat-square" alt="GitHub Downloads"></a>
   <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/Admin-Live-brightgreen?style=flat-square" alt="Admin Console"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/jhonny1994/fleetfill?style=flat-square" alt="License"></a>
 </p>
 
 <p align="center">Smart road freight operations for Algeria.</p>
@@ -14,6 +13,12 @@
 </p>
 
 Helps shippers and carriers manage everyday freight with more trust, clearer payment handling, and smoother operations than traditional back-and-forth coordination.
+
+## Proprietary Notice
+
+- This repository is proprietary and privately owned.
+- No license is granted to use, copy, modify, redistribute, or commercially exploit this source code.
+- Access to this repository does not grant third parties any reuse rights.
 
 ## Why FleetFill
 

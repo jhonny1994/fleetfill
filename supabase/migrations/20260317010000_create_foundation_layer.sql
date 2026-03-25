@@ -679,6 +679,51 @@ on public.verification_documents (entity_type, entity_id);
 create index if not exists verification_documents_status_idx
 on public.verification_documents (status);
 
+create index if not exists admin_accounts_invited_by_idx
+on public.admin_accounts (invited_by);
+
+create index if not exists admin_accounts_deactivated_by_idx
+on public.admin_accounts (deactivated_by);
+
+create index if not exists admin_invitations_invited_by_idx
+on public.admin_invitations (invited_by);
+
+create index if not exists admin_invitations_accepted_by_profile_id_idx
+on public.admin_invitations (accepted_by_profile_id);
+
+create index if not exists admin_invitations_revoked_by_idx
+on public.admin_invitations (revoked_by);
+
+create index if not exists carrier_reviews_shipper_id_idx
+on public.carrier_reviews (shipper_id);
+
+create index if not exists email_delivery_logs_profile_id_idx
+on public.email_delivery_logs (profile_id);
+
+create index if not exists email_delivery_logs_booking_id_idx
+on public.email_delivery_logs (booking_id);
+
+create index if not exists email_outbox_jobs_profile_id_idx
+on public.email_outbox_jobs (profile_id);
+
+create index if not exists email_outbox_jobs_booking_id_idx
+on public.email_outbox_jobs (booking_id);
+
+create index if not exists email_templates_updated_by_idx
+on public.email_templates (updated_by);
+
+create index if not exists financial_ledger_entries_created_by_idx
+on public.financial_ledger_entries (created_by);
+
+create index if not exists generated_documents_generated_by_idx
+on public.generated_documents (generated_by);
+
+create index if not exists platform_settings_updated_by_idx
+on public.platform_settings (updated_by);
+
+create index if not exists verification_documents_reviewed_by_idx
+on public.verification_documents (reviewed_by);
+
 create index if not exists routes_lane_lookup_idx
 on public.routes (origin_commune_id, destination_commune_id);
 
@@ -954,6 +999,12 @@ add column if not exists byte_size bigint,
 add column if not exists checksum_sha256 text,
 add column if not exists uploaded_by uuid references public.profiles (id),
 add column if not exists upload_session_id uuid references public.upload_sessions (id);
+
+create index if not exists verification_documents_uploaded_by_idx
+on public.verification_documents (uploaded_by);
+
+create index if not exists verification_documents_upload_session_id_idx
+on public.verification_documents (upload_session_id);
 
 alter table public.payment_proofs
 add column if not exists content_type text,

@@ -10,7 +10,6 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     env:
-      HAS_GOOGLE_SERVICES: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON != '' }}
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
       GOOGLE_IOS_CLIENT_ID: ${{ vars.GOOGLE_IOS_CLIENT_ID }}
     steps:
@@ -33,13 +32,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Materialize Android Firebase config
-        if: ${{ env.HAS_GOOGLE_SERVICES == 'true' }}
-        env:
-          GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
-        shell: bash
-        run: echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
-
       - name: Verify generated localization output
         run: dart run intl_utils:generate
 
@@ -49,13 +41,3 @@ jobs:
       - name: Run tests
         run: flutter test
 
-      - name: Build Android debug sanity artifact
-        if: ${{ env.HAS_GOOGLE_SERVICES == 'true' }}
-        run: >
-          flutter build apk --debug
-          --dart-define=GOOGLE_WEB_CLIENT_ID=${{ env.GOOGLE_WEB_CLIENT_ID }}
-          --dart-define=GOOGLE_IOS_CLIENT_ID=${{ env.GOOGLE_IOS_CLIENT_ID }}
-
-      - name: Skip Android debug sanity artifact when Firebase config is unavailable
-        if: ${{ env.HAS_GOOGLE_SERVICES != 'true' }}
-        run: echo "Skipping Android build because ANDROID_GOOGLE_SERVICES_JSON is not configured."

@@ -8,7 +8,6 @@
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?style=flat-square" alt="GitHub Release"></a>
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/downloads/jhonny1994/fleetfill/total?style=flat-square" alt="GitHub Downloads"></a>
   <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/لوحة_الإدارة-Live-brightgreen?style=flat-square" alt="Admin Console"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/jhonny1994/fleetfill?style=flat-square" alt="License"></a>
 </p>
 
 <p align="center">منصة الشحن الذكية للنقل البري داخل الجزائر.</p>
@@ -18,6 +17,12 @@
 </p>
 
 يساعد أصحاب الشحنات والناقلين على إدارة النقل اليومي بثقة أكبر، وضوح أكبر، وسير عمل أسهل من الطرق التقليدية.
+
+## إشعار الملكية والاستخدام
+
+- هذا المستودع مملوك بشكل خاص لصاحب المشروع.
+- لا يتم منح أي ترخيص لاستخدام الشفرة أو نسخها أو تعديلها أو إعادة توزيعها أو استغلالها تجاريا.
+- الاطلاع على الشفرة هنا لا يمنح أي حق لإعادة الاستخدام من طرف ثالث.
 
 ## لماذا FleetFill
 
