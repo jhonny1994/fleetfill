@@ -33,8 +33,13 @@ file_size_limit = "10MiB"
 
 [auth]
 enabled = true
-site_url = "http://localhost:3000"
-additional_redirect_urls = ["fleetfill://auth-callback"]
+site_url = "https://fleetfill.vercel.app"
+additional_redirect_urls = [
+  "fleetfill://auth-callback",
+  "http://localhost:3000/**",
+  "https://fleetfill.vercel.app/**",
+  "https://fleetfill-*-jhonny1994s-projects.vercel.app/**",
+]
 jwt_expiry = 3600
 
 [auth.email]

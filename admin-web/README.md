@@ -45,10 +45,11 @@ cp .env.example .env.local
 
 Then edit `.env.local` and restart `pnpm dev`.
 
-Vercel preview/production:
+Vercel production:
 
 - update environment variables in the Vercel project settings
 - redeploy the affected environment
+- or run [C:\Users\raouf\projects\fleetfill\tool\sync_admin_vercel_env.ps1](C:\Users\raouf\projects\fleetfill\tool\sync_admin_vercel_env.ps1) from the repo root
 
 ### How To Verify Runtime Targeting
 
@@ -80,6 +81,8 @@ supabase test db
 - Production should use the admin-only domain and production Supabase environment variables.
 - Do not expose `service_role` keys to the browser or to Next.js client bundles.
 - Sensitive admin mutations continue to run through the backend RPC layer.
+- Vercel Git integration is the primary production deploy path for `main`.
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_deploy.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_deploy.yml) is an optional manual CLI fallback, not the normal release path.
 
 ## CI/CD
 
@@ -89,7 +92,7 @@ GitHub Actions workflows:
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\supabase_validation.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\supabase_validation.yml)
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_deploy.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_deploy.yml)
 
-GitHub configuration expected for deployment:
+GitHub configuration expected for the optional manual CLI fallback:
 
 - secret `VERCEL_TOKEN`
 - variable `VERCEL_ORG_ID`
