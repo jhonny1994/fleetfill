@@ -246,7 +246,14 @@ class CarrierProfileScreen extends ConsumerWidget {
               ),
               ProfileSummaryRow(
                 label: s.carrierProfileVerificationLabel,
-                value: verificationStatusLabel(s, profile?.verificationStatus),
+                value: verificationStatusLabel(
+                  s,
+                  ref
+                      .watch(authSessionControllerProvider)
+                      .asData
+                      ?.value
+                      .carrierVerificationStatus,
+                ),
               ),
             ],
           ),

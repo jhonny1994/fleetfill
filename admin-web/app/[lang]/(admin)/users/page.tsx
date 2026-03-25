@@ -105,18 +105,20 @@ export default async function UsersPage({
                   <StatusBadge label={getEnumLabel(lang, "activity", user.isActive ? "active" : "suspended")} tone={user.isActive ? "success" : "danger"} />
                 </td>
                 <td>
-                  <StatusBadge
-                    label={getUserVerificationLabel(lang, user.role, user.verificationStatus)}
-                    tone={
-                      user.role !== "carrier"
-                        ? "neutral"
-                        : user.verificationStatus === "verified"
-                        ? "success"
-                        : user.verificationStatus === "rejected"
-                          ? "danger"
-                          : "warning"
-                    }
-                  />
+                  {user.role === "carrier" ? (
+                    <StatusBadge
+                      label={getUserVerificationLabel(lang, user.role, user.verificationStatus)}
+                      tone={
+                        user.verificationStatus === "verified"
+                          ? "success"
+                          : user.verificationStatus === "rejected"
+                            ? "danger"
+                            : "warning"
+                      }
+                    />
+                  ) : (
+                    <span className="text-sm text-[var(--color-ink-muted)]">-</span>
+                  )}
                 </td>
                 <td className="text-sm">
                   <div className="space-y-1">

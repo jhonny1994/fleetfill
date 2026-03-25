@@ -199,7 +199,7 @@ class CarrierHomeScreen extends ConsumerWidget {
                   label: s.carrierProfileVerificationLabel,
                   value: verificationStatusLabel(
                     s,
-                    auth?.profile?.verificationStatus,
+                    auth?.carrierVerificationStatus,
                   ),
                 ),
                 ProfileSummaryRow(
@@ -218,10 +218,9 @@ class CarrierHomeScreen extends ConsumerWidget {
             if (auth?.isCarrierVerified != true)
               AuthInfoBanner(
                 message:
-                    auth?.profile?.verificationRejectionReason?.isNotEmpty ==
-                        true
+                    auth?.carrierVerificationRejectionReason?.isNotEmpty == true
                     ? s.carrierVerificationRejectedBanner(
-                        auth!.profile!.verificationRejectionReason!,
+                        auth!.carrierVerificationRejectionReason!,
                       )
                     : s.carrierVerificationPendingBanner,
               ),

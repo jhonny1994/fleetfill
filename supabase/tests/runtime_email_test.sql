@@ -79,7 +79,7 @@ values
 select set_config('request.jwt.claim.role', 'service_role', true);
 select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 
-insert into public.profiles (id, role, full_name, phone_number, email, preferred_locale, is_active, verification_status)
+insert into public.profiles (id, role, full_name, phone_number, email, preferred_locale, is_active)
 values
   (
     '12000000-0000-4000-8000-000000000001',
@@ -88,8 +88,7 @@ values
     '0551000001',
     'mail-shipper@example.com',
     'fr',
-    true,
-    'verified'
+    true
   ),
   (
     '12000000-0000-4000-8000-000000000002',
@@ -98,8 +97,7 @@ values
     '0771000002',
     'mail-admin@example.com',
     'ar',
-    true,
-    'verified'
+    true
   );
 
 insert into public.admin_accounts (profile_id, admin_role, is_active, activated_at)

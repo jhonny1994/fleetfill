@@ -15,7 +15,7 @@ as $$
     'id', p.id,
     'full_name', p.full_name,
     'company_name', p.company_name,
-    'verification_status', p.verification_status,
+    'verification_status', coalesce(cvp.status, 'pending'::public.verification_status),
     'rating_average', p.rating_average,
     'rating_count', p.rating_count,
     'comments', coalesce(
@@ -41,6 +41,8 @@ as $$
     )
   )
   from public.profiles as p
+  left join public.carrier_verification_packets as cvp
+    on cvp.carrier_id = p.id
   where p.id = p_carrier_id
     and p.role = 'carrier'
     and p.is_active = true;
@@ -172,10 +174,9 @@ as $$
     );
 $$;
 
-create or replace function public.refresh_verification_subject_status(
+create or replace function public.refresh_vehicle_verification_status(
   p_owner_profile_id uuid,
-  p_entity_type public.verification_document_entity_type,
-  p_entity_id uuid
+  p_vehicle_id uuid
 )
 returns public.verification_status
 language plpgsql
@@ -186,52 +187,167 @@ declare
   v_target_status text := 'pending';
   v_target_reason text;
 begin
+  if not public.is_admin() and not public.is_service_role() then
+    raise exception 'Vehicle verification refresh requires privileged access';
+  end if;
+
   with effective_docs as (
     select *
     from public.current_effective_verification_documents(
       p_owner_profile_id,
-      p_entity_type,
-      p_entity_id
+      'vehicle',
+      p_vehicle_id
     )
+  ),
+  required_docs as (
+    select unnest(
+      array[
+        'truck_registration',
+        'truck_insurance',
+        'truck_technical_inspection'
+      ]::text[]
+    ) as document_type
   )
-  select case
-    when exists (
-      select 1 from effective_docs as ed where ed.status = 'rejected'
-    ) then 'rejected'
-    when exists (
-      select 1 from effective_docs as ed where ed.status = 'pending'
-    ) then 'pending'
-    when exists (select 1 from effective_docs) then 'verified'
-    else 'pending'
-  end,
-  (
-    select ed.rejection_reason
-    from effective_docs as ed
-    where ed.status = 'rejected'
-    order by ed.reviewed_at desc nulls last, ed.updated_at desc, ed.created_at desc
-    limit 1
-  )
+  select
+    case
+      when exists (
+        select 1 from effective_docs as ed where ed.status = 'rejected'
+      ) then 'rejected'
+      when exists (
+        select 1 from effective_docs as ed where ed.status = 'pending'
+      ) then 'pending'
+      when exists (
+        select 1
+        from required_docs as rd
+        where not exists (
+          select 1
+          from effective_docs as ed
+          where ed.document_type = rd.document_type
+        )
+      ) then 'pending'
+      when exists (select 1 from effective_docs) then 'verified'
+      else 'pending'
+    end,
+    (
+      select ed.rejection_reason
+      from effective_docs as ed
+      where ed.status = 'rejected'
+      order by ed.reviewed_at desc nulls last, ed.updated_at desc, ed.created_at desc
+      limit 1
+    )
   into v_target_status, v_target_reason;
 
-  if p_entity_type = 'profile' then
-    update public.profiles
-    set verification_status = v_target_status::public.verification_status,
-        verification_rejection_reason = case
-          when v_target_status = 'rejected' then v_target_reason
-          else null
-        end,
-        updated_at = now()
-    where id = p_entity_id;
-  else
-    update public.vehicles
-    set verification_status = v_target_status::public.verification_status,
-        verification_rejection_reason = case
-          when v_target_status = 'rejected' then v_target_reason
-          else null
-        end,
-        updated_at = now()
-    where id = p_entity_id;
+  update public.vehicles
+  set verification_status = v_target_status::public.verification_status,
+      verification_rejection_reason = case
+        when v_target_status = 'rejected' then v_target_reason
+        else null
+      end,
+      updated_at = now()
+  where id = p_vehicle_id
+    and carrier_id = p_owner_profile_id;
+
+  return v_target_status::public.verification_status;
+end;
+$$;
+
+create or replace function public.refresh_carrier_verification_packet_status(
+  p_carrier_id uuid
+)
+returns public.verification_status
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_target_status text := 'pending';
+  v_target_reason text;
+  v_documents_complete boolean := false;
+begin
+  if not public.is_admin() and not public.is_service_role() then
+    raise exception 'Carrier verification refresh requires privileged access';
   end if;
+
+  insert into public.carrier_verification_packets (carrier_id)
+  values (p_carrier_id)
+  on conflict (carrier_id) do nothing;
+
+  select public.required_verification_documents_complete(p_carrier_id)
+  into v_documents_complete;
+
+  with effective_profile_docs as (
+    select *
+    from public.current_effective_verification_documents(
+      p_carrier_id,
+      'profile',
+      p_carrier_id
+    )
+  ),
+  carrier_vehicles as (
+    select
+      v.id,
+      v.verification_status,
+      v.verification_rejection_reason,
+      v.updated_at
+    from public.vehicles as v
+    where v.carrier_id = p_carrier_id
+  ),
+  rejection_reasons as (
+    select
+      ed.rejection_reason as reason,
+      coalesce(ed.reviewed_at, ed.updated_at, ed.created_at) as ordering_at
+    from effective_profile_docs as ed
+    where ed.status = 'rejected'
+      and ed.rejection_reason is not null
+    union all
+    select
+      cv.verification_rejection_reason as reason,
+      cv.updated_at as ordering_at
+    from carrier_vehicles as cv
+    where cv.verification_status = 'rejected'
+      and cv.verification_rejection_reason is not null
+  )
+  select
+    case
+      when exists (
+        select 1
+        from effective_profile_docs as ed
+        where ed.status = 'rejected'
+      )
+      or exists (
+        select 1
+        from carrier_vehicles as cv
+        where cv.verification_status = 'rejected'
+      ) then 'rejected'
+      when not coalesce(v_documents_complete, false) then 'pending'
+      when exists (
+        select 1
+        from effective_profile_docs as ed
+        where ed.status = 'pending'
+      )
+      or exists (
+        select 1
+        from carrier_vehicles as cv
+        where cv.verification_status = 'pending'
+      ) then 'pending'
+      else 'verified'
+    end,
+    (
+      select rr.reason
+      from rejection_reasons as rr
+      order by rr.ordering_at desc nulls last
+      limit 1
+    )
+  into v_target_status, v_target_reason;
+
+  update public.carrier_verification_packets
+  set status = v_target_status::public.verification_status,
+      rejection_reason = case
+        when v_target_status = 'rejected' then v_target_reason
+        else null
+      end,
+      updated_at = now()
+  where carrier_id = p_carrier_id;
 
   return v_target_status::public.verification_status;
 end;
@@ -243,8 +359,11 @@ grant execute on function public.current_effective_verification_documents(uuid, 
 revoke all on function public.required_verification_documents_complete(uuid) from public, anon;
 grant execute on function public.required_verification_documents_complete(uuid) to authenticated, service_role;
 
-revoke all on function public.refresh_verification_subject_status(uuid, public.verification_document_entity_type, uuid) from public, anon;
-grant execute on function public.refresh_verification_subject_status(uuid, public.verification_document_entity_type, uuid) to authenticated, service_role;
+revoke all on function public.refresh_vehicle_verification_status(uuid, uuid) from public, anon;
+grant execute on function public.refresh_vehicle_verification_status(uuid, uuid) to authenticated, service_role;
+
+revoke all on function public.refresh_carrier_verification_packet_status(uuid) from public, anon;
+grant execute on function public.refresh_carrier_verification_packet_status(uuid) to authenticated, service_role;
 -- <<< END 20260318170000_create_verification_effective_document_helpers.sql
 
 -- >>> BEGIN 20260318170100_create_verification_admin_review_actions.sql
@@ -299,10 +418,15 @@ begin
   where id = p_document_id
   returning * into v_document;
 
-  perform public.refresh_verification_subject_status(
-    v_document.owner_profile_id,
-    v_document.entity_type,
-    v_document.entity_id
+  if v_document.entity_type = 'vehicle' then
+    perform public.refresh_vehicle_verification_status(
+      v_document.owner_profile_id,
+      v_document.entity_id
+    );
+  end if;
+
+  perform public.refresh_carrier_verification_packet_status(
+    v_document.owner_profile_id
   );
 
   if p_status = 'rejected' then
@@ -408,19 +532,14 @@ begin
 
   perform set_config('app.trusted_operation', 'true', true);
 
-  perform public.refresh_verification_subject_status(
+  perform public.refresh_vehicle_verification_status(
     p_carrier_id,
-    'profile',
-    p_carrier_id
-  );
-
-  perform public.refresh_verification_subject_status(
-    p_carrier_id,
-    'vehicle',
     v.id
   )
   from public.vehicles as v
   where v.carrier_id = p_carrier_id;
+
+  perform public.refresh_carrier_verification_packet_status(p_carrier_id);
 
   perform public.write_admin_audit_log(
     'verification_packet_approved',
@@ -676,11 +795,13 @@ set search_path = public
 as $$
   select exists (
     select 1
-    from public.profiles
-    where id = coalesce(p_profile_id, (select auth.uid()))
-      and role = 'carrier'::public.app_role
-      and is_active = true
-      and verification_status = 'verified'::public.verification_status
+    from public.profiles as p
+    join public.carrier_verification_packets as cvp
+      on cvp.carrier_id = p.id
+    where p.id = coalesce(p_profile_id, (select auth.uid()))
+      and p.role = 'carrier'::public.app_role
+      and p.is_active = true
+      and cvp.status = 'verified'::public.verification_status
   );
 $$;
 
@@ -1480,10 +1601,9 @@ begin
 end;
 $$;
 
-create or replace function public.refresh_verification_subject_status(
+create or replace function public.refresh_vehicle_verification_status(
   p_owner_profile_id uuid,
-  p_entity_type public.verification_document_entity_type,
-  p_entity_id uuid
+  p_vehicle_id uuid
 )
 returns public.verification_status
 language plpgsql
@@ -1493,84 +1613,160 @@ as $$
 declare
   v_target_status text := 'pending';
   v_target_reason text;
-  v_vehicle_docs_complete boolean := true;
 begin
   if not public.is_admin() and not public.is_service_role() then
-    raise exception 'Verification status refresh requires privileged access';
+    raise exception 'Vehicle verification refresh requires privileged access';
   end if;
 
   with effective_docs as (
     select *
     from public.current_effective_verification_documents(
       p_owner_profile_id,
-      p_entity_type,
-      p_entity_id
+      'vehicle',
+      p_vehicle_id
     )
+  ),
+  required_docs as (
+    select unnest(
+      array[
+        'truck_registration',
+        'truck_insurance',
+        'truck_technical_inspection'
+      ]::text[]
+    ) as document_type
   )
-  select case
-    when exists (
-      select 1 from effective_docs as ed where ed.status = 'rejected'
-    ) then 'rejected'
-    when exists (
-      select 1 from effective_docs as ed where ed.status = 'pending'
-    ) then 'pending'
-    when exists (select 1 from effective_docs) then 'verified'
-    else 'pending'
-  end,
-  (
-    select ed.rejection_reason
-    from effective_docs as ed
-    where ed.status = 'rejected'
-    order by ed.reviewed_at desc nulls last, ed.updated_at desc, ed.created_at desc
-    limit 1
-  )
+  select
+    case
+      when exists (
+        select 1 from effective_docs as ed where ed.status = 'rejected'
+      ) then 'rejected'
+      when exists (
+        select 1 from effective_docs as ed where ed.status = 'pending'
+      ) then 'pending'
+      when exists (
+        select 1
+        from required_docs as rd
+        where not exists (
+          select 1
+          from effective_docs as ed
+          where ed.document_type = rd.document_type
+        )
+      ) then 'pending'
+      when exists (select 1 from effective_docs) then 'verified'
+      else 'pending'
+    end,
+    (
+      select ed.rejection_reason
+      from effective_docs as ed
+      where ed.status = 'rejected'
+      order by ed.reviewed_at desc nulls last, ed.updated_at desc, ed.created_at desc
+      limit 1
+    )
   into v_target_status, v_target_reason;
 
-  if p_entity_type = 'vehicle' and v_target_status = 'verified' then
-    with effective_docs as (
-      select *
-      from public.current_effective_verification_documents(
-        p_owner_profile_id,
-        p_entity_type,
-        p_entity_id
-      )
+  update public.vehicles
+  set verification_status = v_target_status::public.verification_status,
+      verification_rejection_reason = case
+        when v_target_status = 'rejected' then v_target_reason
+        else null
+      end,
+      updated_at = now()
+  where id = p_vehicle_id
+    and carrier_id = p_owner_profile_id;
+
+  return v_target_status::public.verification_status;
+end;
+$$;
+
+create or replace function public.refresh_carrier_verification_packet_status(
+  p_carrier_id uuid
+)
+returns public.verification_status
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_target_status text := 'pending';
+  v_target_reason text;
+  v_documents_complete boolean := false;
+begin
+  if not public.is_admin() and not public.is_service_role() then
+    raise exception 'Carrier verification refresh requires privileged access';
+  end if;
+
+  insert into public.carrier_verification_packets (carrier_id)
+  values (p_carrier_id)
+  on conflict (carrier_id) do nothing;
+
+  select public.required_verification_documents_complete(p_carrier_id)
+  into v_documents_complete;
+
+  with effective_profile_docs as (
+    select *
+    from public.current_effective_verification_documents(
+      p_carrier_id,
+      'profile',
+      p_carrier_id
     )
+  ),
+  carrier_vehicles as (
     select
-      exists (
-        select 1 from effective_docs where document_type = 'truck_registration'
+      v.id,
+      v.verification_status,
+      v.verification_rejection_reason,
+      v.updated_at
+    from public.vehicles as v
+    where v.carrier_id = p_carrier_id
+  ),
+  rejection_reasons as (
+    select
+      ed.rejection_reason as reason,
+      coalesce(ed.reviewed_at, ed.updated_at, ed.created_at) as ordering_at
+    from effective_profile_docs as ed
+    where ed.status = 'rejected'
+      and ed.rejection_reason is not null
+    union all
+    select
+      cv.verification_rejection_reason as reason,
+      cv.updated_at as ordering_at
+    from carrier_vehicles as cv
+    where cv.verification_status = 'rejected'
+      and cv.verification_rejection_reason is not null
+  )
+  select
+    case
+      when exists (
+        select 1 from effective_profile_docs as ed where ed.status = 'rejected'
       )
-      and exists (
-        select 1 from effective_docs where document_type = 'truck_insurance'
+      or exists (
+        select 1 from carrier_vehicles as cv where cv.verification_status = 'rejected'
+      ) then 'rejected'
+      when not coalesce(v_documents_complete, false) then 'pending'
+      when exists (
+        select 1 from effective_profile_docs as ed where ed.status = 'pending'
       )
-      and exists (
-        select 1 from effective_docs where document_type = 'truck_technical_inspection'
-      )
-    into v_vehicle_docs_complete;
+      or exists (
+        select 1 from carrier_vehicles as cv where cv.verification_status = 'pending'
+      ) then 'pending'
+      else 'verified'
+    end,
+    (
+      select rr.reason
+      from rejection_reasons as rr
+      order by rr.ordering_at desc nulls last
+      limit 1
+    )
+  into v_target_status, v_target_reason;
 
-    if not coalesce(v_vehicle_docs_complete, false) then
-      v_target_status := 'pending';
-    end if;
-  end if;
-
-  if p_entity_type = 'profile' then
-    update public.profiles
-    set verification_status = v_target_status::public.verification_status,
-        verification_rejection_reason = case
-          when v_target_status = 'rejected' then v_target_reason
-          else null
-        end,
-        updated_at = now()
-    where id = p_entity_id;
-  else
-    update public.vehicles
-    set verification_status = v_target_status::public.verification_status,
-        verification_rejection_reason = case
-          when v_target_status = 'rejected' then v_target_reason
-          else null
-        end,
-        updated_at = now()
-    where id = p_entity_id;
-  end if;
+  update public.carrier_verification_packets
+  set status = v_target_status::public.verification_status,
+      rejection_reason = case
+        when v_target_status = 'rejected' then v_target_reason
+        else null
+      end,
+      updated_at = now()
+  where carrier_id = p_carrier_id;
 
   return v_target_status::public.verification_status;
 end;
@@ -1582,6 +1778,9 @@ grant execute on function public.current_effective_verification_documents(uuid, 
 revoke all on function public.required_verification_documents_complete(uuid) from public, anon;
 grant execute on function public.required_verification_documents_complete(uuid) to authenticated, service_role;
 
-revoke all on function public.refresh_verification_subject_status(uuid, public.verification_document_entity_type, uuid) from public, anon;
-grant execute on function public.refresh_verification_subject_status(uuid, public.verification_document_entity_type, uuid) to authenticated, service_role;
+revoke all on function public.refresh_vehicle_verification_status(uuid, uuid) from public, anon;
+grant execute on function public.refresh_vehicle_verification_status(uuid, uuid) to authenticated, service_role;
+
+revoke all on function public.refresh_carrier_verification_packet_status(uuid) from public, anon;
+grant execute on function public.refresh_carrier_verification_packet_status(uuid) to authenticated, service_role;
 -- <<< END 20260319120700_harden_verification_helper_access.sql

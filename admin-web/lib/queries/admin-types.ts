@@ -37,8 +37,8 @@ export type VerificationQueueItem = {
   carrierId: string;
   displayName: string;
   companyName: string | null;
-  profilePendingDocuments: number;
-  profileMissingDocuments: string[];
+  carrierPendingDocuments: number;
+  carrierMissingDocuments: string[];
   vehicleCount: number;
   pendingDocumentCount: number;
   latestRelevantUpdateAt: string | null;
@@ -99,7 +99,7 @@ export type AdminUserListItem = {
   phoneNumber: string | null;
   companyName: string | null;
   isActive: boolean;
-  verificationStatus: string;
+  verificationStatus: string | null;
   vehicleCount: number;
   bookingCount: number;
   updatedAt: string | null;
@@ -177,7 +177,7 @@ export type AdminUserDetail = {
     companyName: string | null;
     preferredLocale: string;
     isActive: boolean;
-    verificationStatus: string;
+    verificationStatus: string | null;
     verificationRejectionReason: string | null;
     ratingAverage: number | null;
     ratingCount: number;

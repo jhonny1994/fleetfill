@@ -59,6 +59,7 @@ class AuthRepository {
     final userId = user.id;
     final email = user.email?.trim();
     final profile = await _fetchCurrentProfile(userId);
+    final carrierVerification = await _fetchCarrierVerificationPacket(profile);
     final hasPayoutAccount = await _fetchHasPayoutAccount(profile);
 
     return AuthSnapshot(
@@ -70,7 +71,10 @@ class AuthRepository {
       isSuspended: profile != null && !profile.isActive,
       hasCompletedOnboarding: profile?.hasCompletedOnboarding ?? false,
       hasPhoneNumber: profile?.hasPhoneNumber ?? false,
-      isCarrierVerified: profile?.isCarrierVerified ?? false,
+      isCarrierVerified:
+          carrierVerification?.status == AppVerificationState.verified,
+      carrierVerificationStatus: carrierVerification?.status,
+      carrierVerificationRejectionReason: carrierVerification?.rejectionReason,
       hasPayoutAccount: hasPayoutAccount,
       hasRecentAdminStepUp: _hasRecentAdminStepUp(user),
       isPasswordRecovery: isPasswordRecovery,
@@ -319,6 +323,24 @@ class AuthRepository {
     return (response as List<dynamic>).isNotEmpty;
   }
 
+  Future<CarrierVerificationPacketView?> _fetchCarrierVerificationPacket(
+    AppProfile? profile,
+  ) async {
+    if (profile?.role != AppUserRole.carrier) {
+      return null;
+    }
+
+    final response = await _client
+        .from('carrier_verification_packets')
+        .select()
+        .eq('carrier_id', profile!.id)
+        .maybeSingle();
+
+    return response == null
+        ? null
+        : CarrierVerificationPacketView.fromJson(response);
+  }
+
   bool _hasRecentAdminStepUp(User user) {
     final rawValue = user.toJson()['last_sign_in_at'] as String?;
     final lastSignInAt = rawValue == null ? null : DateTime.tryParse(rawValue);
@@ -481,6 +503,26 @@ class CarrierPublicProfileView {
   final double? ratingAverage;
   final int ratingCount;
   final List<CarrierReviewComment> comments;
+}
+
+class CarrierVerificationPacketView {
+  const CarrierVerificationPacketView({
+    required this.carrierId,
+    required this.status,
+    required this.rejectionReason,
+  });
+
+  factory CarrierVerificationPacketView.fromJson(Map<String, dynamic> json) {
+    return CarrierVerificationPacketView(
+      carrierId: json['carrier_id'] as String,
+      status: AppVerificationState.fromDatabase(json['status']),
+      rejectionReason: (json['rejection_reason'] as String?)?.trim(),
+    );
+  }
+
+  final String carrierId;
+  final AppVerificationState status;
+  final String? rejectionReason;
 }
 
 class CarrierReviewComment {

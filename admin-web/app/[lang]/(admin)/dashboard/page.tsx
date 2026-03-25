@@ -79,8 +79,8 @@ export default async function DashboardPage({
           rows={previews.verification.map((item) => ({
             title: item.displayName,
             detail: `${item.pendingDocumentCount} ${dictionary.dashboard.pendingDocuments} • ${item.vehicleCount} ${dictionary.dashboard.vehicles}`,
-            meta: item.profileMissingDocuments[0]
-              ? getDocumentLabel(locale, item.profileMissingDocuments[0])
+            meta: item.carrierMissingDocuments[0]
+              ? getDocumentLabel(locale, item.carrierMissingDocuments[0])
               : dictionary.dashboard.readyForReview,
           }))}
         />

@@ -1173,7 +1173,7 @@ as List<int>?,
 /// @nodoc
 mixin _$VerificationReviewPacket {
 
- String get carrierId; String get displayName; String? get companyName; AppVerificationState get profileStatus; String? get profileRejectionReason; List<VerificationDocumentRecord> get profileDocuments; List<VehicleVerificationOverview> get vehicles;
+ String get carrierId; String get displayName; String? get companyName; AppVerificationState get carrierStatus; String? get carrierRejectionReason; List<VerificationDocumentRecord> get carrierDocuments; List<VehicleVerificationOverview> get vehicles;
 /// Create a copy of VerificationReviewPacket
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1184,16 +1184,16 @@ $VerificationReviewPacketCopyWith<VerificationReviewPacket> get copyWith => _$Ve
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is VerificationReviewPacket&&(identical(other.carrierId, carrierId) || other.carrierId == carrierId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.profileStatus, profileStatus) || other.profileStatus == profileStatus)&&(identical(other.profileRejectionReason, profileRejectionReason) || other.profileRejectionReason == profileRejectionReason)&&const DeepCollectionEquality().equals(other.profileDocuments, profileDocuments)&&const DeepCollectionEquality().equals(other.vehicles, vehicles));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VerificationReviewPacket&&(identical(other.carrierId, carrierId) || other.carrierId == carrierId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.carrierStatus, carrierStatus) || other.carrierStatus == carrierStatus)&&(identical(other.carrierRejectionReason, carrierRejectionReason) || other.carrierRejectionReason == carrierRejectionReason)&&const DeepCollectionEquality().equals(other.carrierDocuments, carrierDocuments)&&const DeepCollectionEquality().equals(other.vehicles, vehicles));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,carrierId,displayName,companyName,profileStatus,profileRejectionReason,const DeepCollectionEquality().hash(profileDocuments),const DeepCollectionEquality().hash(vehicles));
+int get hashCode => Object.hash(runtimeType,carrierId,displayName,companyName,carrierStatus,carrierRejectionReason,const DeepCollectionEquality().hash(carrierDocuments),const DeepCollectionEquality().hash(vehicles));
 
 @override
 String toString() {
-  return 'VerificationReviewPacket(carrierId: $carrierId, displayName: $displayName, companyName: $companyName, profileStatus: $profileStatus, profileRejectionReason: $profileRejectionReason, profileDocuments: $profileDocuments, vehicles: $vehicles)';
+  return 'VerificationReviewPacket(carrierId: $carrierId, displayName: $displayName, companyName: $companyName, carrierStatus: $carrierStatus, carrierRejectionReason: $carrierRejectionReason, carrierDocuments: $carrierDocuments, vehicles: $vehicles)';
 }
 
 
@@ -1204,7 +1204,7 @@ abstract mixin class $VerificationReviewPacketCopyWith<$Res>  {
   factory $VerificationReviewPacketCopyWith(VerificationReviewPacket value, $Res Function(VerificationReviewPacket) _then) = _$VerificationReviewPacketCopyWithImpl;
 @useResult
 $Res call({
- String carrierId, String displayName, String? companyName, AppVerificationState profileStatus, String? profileRejectionReason, List<VerificationDocumentRecord> profileDocuments, List<VehicleVerificationOverview> vehicles
+ String carrierId, String displayName, String? companyName, AppVerificationState carrierStatus, String? carrierRejectionReason, List<VerificationDocumentRecord> carrierDocuments, List<VehicleVerificationOverview> vehicles
 });
 
 
@@ -1221,14 +1221,14 @@ class _$VerificationReviewPacketCopyWithImpl<$Res>
 
 /// Create a copy of VerificationReviewPacket
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? carrierId = null,Object? displayName = null,Object? companyName = freezed,Object? profileStatus = null,Object? profileRejectionReason = freezed,Object? profileDocuments = null,Object? vehicles = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? carrierId = null,Object? displayName = null,Object? companyName = freezed,Object? carrierStatus = null,Object? carrierRejectionReason = freezed,Object? carrierDocuments = null,Object? vehicles = null,}) {
   return _then(_self.copyWith(
 carrierId: null == carrierId ? _self.carrierId : carrierId // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
-as String?,profileStatus: null == profileStatus ? _self.profileStatus : profileStatus // ignore: cast_nullable_to_non_nullable
-as AppVerificationState,profileRejectionReason: freezed == profileRejectionReason ? _self.profileRejectionReason : profileRejectionReason // ignore: cast_nullable_to_non_nullable
-as String?,profileDocuments: null == profileDocuments ? _self.profileDocuments : profileDocuments // ignore: cast_nullable_to_non_nullable
+as String?,carrierStatus: null == carrierStatus ? _self.carrierStatus : carrierStatus // ignore: cast_nullable_to_non_nullable
+as AppVerificationState,carrierRejectionReason: freezed == carrierRejectionReason ? _self.carrierRejectionReason : carrierRejectionReason // ignore: cast_nullable_to_non_nullable
+as String?,carrierDocuments: null == carrierDocuments ? _self.carrierDocuments : carrierDocuments // ignore: cast_nullable_to_non_nullable
 as List<VerificationDocumentRecord>,vehicles: null == vehicles ? _self.vehicles : vehicles // ignore: cast_nullable_to_non_nullable
 as List<VehicleVerificationOverview>,
   ));
@@ -1315,10 +1315,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String carrierId,  String displayName,  String? companyName,  AppVerificationState profileStatus,  String? profileRejectionReason,  List<VerificationDocumentRecord> profileDocuments,  List<VehicleVerificationOverview> vehicles)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String carrierId,  String displayName,  String? companyName,  AppVerificationState carrierStatus,  String? carrierRejectionReason,  List<VerificationDocumentRecord> carrierDocuments,  List<VehicleVerificationOverview> vehicles)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _VerificationReviewPacket() when $default != null:
-return $default(_that.carrierId,_that.displayName,_that.companyName,_that.profileStatus,_that.profileRejectionReason,_that.profileDocuments,_that.vehicles);case _:
+return $default(_that.carrierId,_that.displayName,_that.companyName,_that.carrierStatus,_that.carrierRejectionReason,_that.carrierDocuments,_that.vehicles);case _:
   return orElse();
 
 }
@@ -1336,10 +1336,10 @@ return $default(_that.carrierId,_that.displayName,_that.companyName,_that.profil
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String carrierId,  String displayName,  String? companyName,  AppVerificationState profileStatus,  String? profileRejectionReason,  List<VerificationDocumentRecord> profileDocuments,  List<VehicleVerificationOverview> vehicles)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String carrierId,  String displayName,  String? companyName,  AppVerificationState carrierStatus,  String? carrierRejectionReason,  List<VerificationDocumentRecord> carrierDocuments,  List<VehicleVerificationOverview> vehicles)  $default,) {final _that = this;
 switch (_that) {
 case _VerificationReviewPacket():
-return $default(_that.carrierId,_that.displayName,_that.companyName,_that.profileStatus,_that.profileRejectionReason,_that.profileDocuments,_that.vehicles);case _:
+return $default(_that.carrierId,_that.displayName,_that.companyName,_that.carrierStatus,_that.carrierRejectionReason,_that.carrierDocuments,_that.vehicles);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1356,10 +1356,10 @@ return $default(_that.carrierId,_that.displayName,_that.companyName,_that.profil
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String carrierId,  String displayName,  String? companyName,  AppVerificationState profileStatus,  String? profileRejectionReason,  List<VerificationDocumentRecord> profileDocuments,  List<VehicleVerificationOverview> vehicles)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String carrierId,  String displayName,  String? companyName,  AppVerificationState carrierStatus,  String? carrierRejectionReason,  List<VerificationDocumentRecord> carrierDocuments,  List<VehicleVerificationOverview> vehicles)?  $default,) {final _that = this;
 switch (_that) {
 case _VerificationReviewPacket() when $default != null:
-return $default(_that.carrierId,_that.displayName,_that.companyName,_that.profileStatus,_that.profileRejectionReason,_that.profileDocuments,_that.vehicles);case _:
+return $default(_that.carrierId,_that.displayName,_that.companyName,_that.carrierStatus,_that.carrierRejectionReason,_that.carrierDocuments,_that.vehicles);case _:
   return null;
 
 }
@@ -1371,19 +1371,19 @@ return $default(_that.carrierId,_that.displayName,_that.companyName,_that.profil
 
 
 class _VerificationReviewPacket extends VerificationReviewPacket {
-  const _VerificationReviewPacket({required this.carrierId, required this.displayName, required this.companyName, required this.profileStatus, required this.profileRejectionReason, required final  List<VerificationDocumentRecord> profileDocuments, required final  List<VehicleVerificationOverview> vehicles}): _profileDocuments = profileDocuments,_vehicles = vehicles,super._();
+  const _VerificationReviewPacket({required this.carrierId, required this.displayName, required this.companyName, required this.carrierStatus, required this.carrierRejectionReason, required final  List<VerificationDocumentRecord> carrierDocuments, required final  List<VehicleVerificationOverview> vehicles}): _carrierDocuments = carrierDocuments,_vehicles = vehicles,super._();
   
 
 @override final  String carrierId;
 @override final  String displayName;
 @override final  String? companyName;
-@override final  AppVerificationState profileStatus;
-@override final  String? profileRejectionReason;
- final  List<VerificationDocumentRecord> _profileDocuments;
-@override List<VerificationDocumentRecord> get profileDocuments {
-  if (_profileDocuments is EqualUnmodifiableListView) return _profileDocuments;
+@override final  AppVerificationState carrierStatus;
+@override final  String? carrierRejectionReason;
+ final  List<VerificationDocumentRecord> _carrierDocuments;
+@override List<VerificationDocumentRecord> get carrierDocuments {
+  if (_carrierDocuments is EqualUnmodifiableListView) return _carrierDocuments;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_profileDocuments);
+  return EqualUnmodifiableListView(_carrierDocuments);
 }
 
  final  List<VehicleVerificationOverview> _vehicles;
@@ -1404,16 +1404,16 @@ _$VerificationReviewPacketCopyWith<_VerificationReviewPacket> get copyWith => __
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VerificationReviewPacket&&(identical(other.carrierId, carrierId) || other.carrierId == carrierId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.profileStatus, profileStatus) || other.profileStatus == profileStatus)&&(identical(other.profileRejectionReason, profileRejectionReason) || other.profileRejectionReason == profileRejectionReason)&&const DeepCollectionEquality().equals(other._profileDocuments, _profileDocuments)&&const DeepCollectionEquality().equals(other._vehicles, _vehicles));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VerificationReviewPacket&&(identical(other.carrierId, carrierId) || other.carrierId == carrierId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.carrierStatus, carrierStatus) || other.carrierStatus == carrierStatus)&&(identical(other.carrierRejectionReason, carrierRejectionReason) || other.carrierRejectionReason == carrierRejectionReason)&&const DeepCollectionEquality().equals(other._carrierDocuments, _carrierDocuments)&&const DeepCollectionEquality().equals(other._vehicles, _vehicles));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,carrierId,displayName,companyName,profileStatus,profileRejectionReason,const DeepCollectionEquality().hash(_profileDocuments),const DeepCollectionEquality().hash(_vehicles));
+int get hashCode => Object.hash(runtimeType,carrierId,displayName,companyName,carrierStatus,carrierRejectionReason,const DeepCollectionEquality().hash(_carrierDocuments),const DeepCollectionEquality().hash(_vehicles));
 
 @override
 String toString() {
-  return 'VerificationReviewPacket(carrierId: $carrierId, displayName: $displayName, companyName: $companyName, profileStatus: $profileStatus, profileRejectionReason: $profileRejectionReason, profileDocuments: $profileDocuments, vehicles: $vehicles)';
+  return 'VerificationReviewPacket(carrierId: $carrierId, displayName: $displayName, companyName: $companyName, carrierStatus: $carrierStatus, carrierRejectionReason: $carrierRejectionReason, carrierDocuments: $carrierDocuments, vehicles: $vehicles)';
 }
 
 
@@ -1424,7 +1424,7 @@ abstract mixin class _$VerificationReviewPacketCopyWith<$Res> implements $Verifi
   factory _$VerificationReviewPacketCopyWith(_VerificationReviewPacket value, $Res Function(_VerificationReviewPacket) _then) = __$VerificationReviewPacketCopyWithImpl;
 @override @useResult
 $Res call({
- String carrierId, String displayName, String? companyName, AppVerificationState profileStatus, String? profileRejectionReason, List<VerificationDocumentRecord> profileDocuments, List<VehicleVerificationOverview> vehicles
+ String carrierId, String displayName, String? companyName, AppVerificationState carrierStatus, String? carrierRejectionReason, List<VerificationDocumentRecord> carrierDocuments, List<VehicleVerificationOverview> vehicles
 });
 
 
@@ -1441,14 +1441,14 @@ class __$VerificationReviewPacketCopyWithImpl<$Res>
 
 /// Create a copy of VerificationReviewPacket
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? carrierId = null,Object? displayName = null,Object? companyName = freezed,Object? profileStatus = null,Object? profileRejectionReason = freezed,Object? profileDocuments = null,Object? vehicles = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? carrierId = null,Object? displayName = null,Object? companyName = freezed,Object? carrierStatus = null,Object? carrierRejectionReason = freezed,Object? carrierDocuments = null,Object? vehicles = null,}) {
   return _then(_VerificationReviewPacket(
 carrierId: null == carrierId ? _self.carrierId : carrierId // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
-as String?,profileStatus: null == profileStatus ? _self.profileStatus : profileStatus // ignore: cast_nullable_to_non_nullable
-as AppVerificationState,profileRejectionReason: freezed == profileRejectionReason ? _self.profileRejectionReason : profileRejectionReason // ignore: cast_nullable_to_non_nullable
-as String?,profileDocuments: null == profileDocuments ? _self._profileDocuments : profileDocuments // ignore: cast_nullable_to_non_nullable
+as String?,carrierStatus: null == carrierStatus ? _self.carrierStatus : carrierStatus // ignore: cast_nullable_to_non_nullable
+as AppVerificationState,carrierRejectionReason: freezed == carrierRejectionReason ? _self.carrierRejectionReason : carrierRejectionReason // ignore: cast_nullable_to_non_nullable
+as String?,carrierDocuments: null == carrierDocuments ? _self._carrierDocuments : carrierDocuments // ignore: cast_nullable_to_non_nullable
 as List<VerificationDocumentRecord>,vehicles: null == vehicles ? _self._vehicles : vehicles // ignore: cast_nullable_to_non_nullable
 as List<VehicleVerificationOverview>,
   ));

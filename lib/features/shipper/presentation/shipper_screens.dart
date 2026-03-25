@@ -1594,7 +1594,8 @@ class _ShipmentEditorSheetState extends ConsumerState<_ShipmentEditorSheet> {
             final destinationCommunes =
                 destinationCommunesAsync?.asData?.value ??
                 const <AlgeriaCommune>[];
-            final isOriginCommunesLoading = originCommunesAsync?.isLoading == true;
+            final isOriginCommunesLoading =
+                originCommunesAsync?.isLoading == true;
             final isDestinationCommunesLoading =
                 destinationCommunesAsync?.isLoading == true;
 
@@ -2245,15 +2246,15 @@ class _CommunePickerField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         suffixIcon: isLoading
-          ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: Padding(
-                padding: EdgeInsets.all(12),
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            )
-          : null,
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              )
+            : null,
       ),
       items: communeOptions
           .map(
