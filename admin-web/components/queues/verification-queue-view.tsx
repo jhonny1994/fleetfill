@@ -32,12 +32,12 @@ function buildColumns(locale: string): ColumnDef<VerificationQueueItem>[] {
     cell: ({ row }) => <StatusBadge label={formatTemplate(ui.labels.queue === "طابور" ? "{count} قيد المراجعة" : ui.labels.queue === "File" ? "{count} en attente" : "{count} pending", { count: row.original.pendingDocumentCount })} tone="warning" />,
   },
   {
-    accessorKey: "profilePendingDocuments",
+    accessorKey: "carrierPendingDocuments",
     header: ui.labels.missingOrBlocked,
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
-        <p>{row.original.profileMissingDocuments.length > 0 ? row.original.profileMissingDocuments.map((item) => getDocumentLabel(locale, item)).join(", ") : ui.labels.profileDocsComplete}</p>
+        <p>{row.original.carrierMissingDocuments.length > 0 ? row.original.carrierMissingDocuments.map((item) => getDocumentLabel(locale, item)).join(", ") : ui.labels.profileDocsComplete}</p>
         <p className="text-xs text-[var(--color-ink-muted)]">
           {formatTemplate(ui.labels.vehiclesSummary, { count: row.original.vehicles.length })} •{" "}
           {row.original.vehicles

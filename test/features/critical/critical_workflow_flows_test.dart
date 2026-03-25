@@ -530,9 +530,9 @@ class _FakeFlowStore {
       carrierId: 'carrier-1',
       displayName: 'Carrier One',
       companyName: 'Carrier One',
-      profileStatus: AppVerificationState.pending,
-      profileRejectionReason: null,
-      profileDocuments: <VerificationDocumentRecord>[],
+      carrierStatus: AppVerificationState.pending,
+      carrierRejectionReason: null,
+      carrierDocuments: <VerificationDocumentRecord>[],
       vehicles: <VehicleVerificationOverview>[],
     ),
   ];

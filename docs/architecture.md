@@ -41,6 +41,14 @@ There is no separate product model for local, staging, or production. The same a
 - Audit logging is required for sensitive admin actions.
 - Rate limiting applies to high-risk user actions like proof uploads and disputes.
 
+## Verification Domain
+
+- Carrier verification is carrier-only and is stored in `public.carrier_verification_packets`.
+- Vehicle verification remains vehicle-only on `public.vehicles`.
+- Shippers are outside the carrier verification domain and must not appear in carrier verification queues or carrier verification UI.
+- Admin and mobile carrier gating read packet status from the carrier verification aggregate, not from shared profile fields.
+- Verification documents remain the evidence layer for carrier profile documents and vehicle documents, while packet status is the operational aggregate.
+
 ## Communications Architecture
 
 Two email systems exist by design:

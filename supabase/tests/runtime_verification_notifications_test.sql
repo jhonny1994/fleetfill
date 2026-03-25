@@ -46,8 +46,7 @@ insert into public.profiles (
   full_name,
   phone_number,
   email,
-  is_active,
-  verification_status
+  is_active
 )
 values
   (
@@ -56,8 +55,7 @@ values
     'Carrier Verify',
     '0661000001',
     'carrier-verify@example.com',
-    true,
-    'pending'
+    true
   ),
   (
     '81000000-0000-4000-8000-000000000002',
@@ -65,8 +63,7 @@ values
     'Carrier Approve',
     '0661000002',
     'carrier-approve@example.com',
-    true,
-    'pending'
+    true
   );
 
 insert into public.vehicles (

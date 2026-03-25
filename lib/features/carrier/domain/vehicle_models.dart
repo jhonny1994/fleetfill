@@ -195,9 +195,9 @@ abstract class VerificationReviewPacket with _$VerificationReviewPacket {
     required String carrierId,
     required String displayName,
     required String? companyName,
-    required AppVerificationState profileStatus,
-    required String? profileRejectionReason,
-    required List<VerificationDocumentRecord> profileDocuments,
+    required AppVerificationState carrierStatus,
+    required String? carrierRejectionReason,
+    required List<VerificationDocumentRecord> carrierDocuments,
     required List<VehicleVerificationOverview> vehicles,
   }) = _VerificationReviewPacket;
 
@@ -206,13 +206,13 @@ abstract class VerificationReviewPacket with _$VerificationReviewPacket {
   int get vehicleCount => vehicles.length;
 
   int get pendingDocumentCount => [
-    ...profileDocuments,
+    ...carrierDocuments,
     for (final vehicle in vehicles) ...vehicle.documents,
   ].where((document) => document.status == AppVerificationState.pending).length;
 
   DateTime? get latestRelevantUpdateAt {
     final candidates = <DateTime>[
-      for (final document in profileDocuments)
+      for (final document in carrierDocuments)
         if (document.updatedAt != null) document.updatedAt!,
       for (final vehicle in vehicles)
         if (vehicle.vehicle.updatedAt != null) vehicle.vehicle.updatedAt!,

@@ -4,6 +4,13 @@
 
 FleetFill is an operator-reviewed marketplace. Verification, payment proof review, dispute handling, payout release, and support all have explicit administrative oversight.
 
+Verification operating rules:
+
+- Carrier verification is reviewed through carrier packets only.
+- Vehicle document review feeds carrier operational eligibility through the packet aggregate.
+- Shippers do not have a carrier verification state and must not be surfaced in verification queues.
+- Reset-oriented deployments should validate carrier verification from a clean database state rather than preserving obsolete profile verification fields.
+
 ## Payments
 
 - Shippers pay through approved external rails.

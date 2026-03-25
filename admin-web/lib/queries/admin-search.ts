@@ -61,7 +61,7 @@ export async function fetchGlobalSearchGroups({
       .limit(5),
     supabase
       .from("profiles")
-      .select("id, email, full_name, company_name, role, verification_status")
+      .select("id, email, full_name, company_name, role")
       .neq("role", "admin")
       .or(withUuidFilter(trimmed, [`full_name.ilike.%${trimmed}%`, `company_name.ilike.%${trimmed}%`, `email.ilike.%${trimmed}%`, `phone_number.ilike.%${trimmed}%`]))
       .limit(5),
@@ -72,7 +72,7 @@ export async function fetchGlobalSearchGroups({
       .limit(5),
     supabase
       .from("profiles")
-      .select("id, email, full_name, company_name, verification_status")
+      .select("id, email, full_name, company_name")
       .eq("role", "carrier")
       .or(withUuidFilter(trimmed, [`full_name.ilike.%${trimmed}%`, `company_name.ilike.%${trimmed}%`, `email.ilike.%${trimmed}%`]))
       .limit(5),
@@ -109,6 +109,25 @@ export async function fetchGlobalSearchGroups({
   if (supportResult.error) throw supportResult.error;
   if (adminsResult.error) throw adminsResult.error;
 
+  const userCarrierIds = ((usersResult.data ?? []) as Array<{ id: string; role: string }>)
+    .filter((profile) => profile.role === "carrier")
+    .map((profile) => profile.id);
+  const verificationCarrierIds = ((carrierProfilesResult.data ?? []) as Array<{ id: string }>)
+    .map((profile) => profile.id);
+  const carrierPacketIds = [...new Set([...userCarrierIds, ...verificationCarrierIds])];
+  const { data: carrierPackets, error: carrierPacketsError } = carrierPacketIds.length
+    ? await supabase
+        .from("carrier_verification_packets")
+        .select("carrier_id, status")
+        .in("carrier_id", carrierPacketIds)
+    : { data: [], error: null };
+
+  if (carrierPacketsError) throw carrierPacketsError;
+
+  const carrierPacketMap = new Map<string, string>(
+    ((carrierPackets ?? []) as Array<{ carrier_id: string; status: string }>).map((packet) => [packet.carrier_id, packet.status]),
+  );
+
   const groups: GlobalSearchGroup[] = [];
 
   const bookingItems = (bookingsResult.data ?? []).map((booking) => ({
@@ -133,7 +152,10 @@ export async function fetchGlobalSearchGroups({
     id: profile.id,
     title: profile.company_name?.trim() || profile.full_name?.trim() || profile.email,
     subtitle: profile.email,
-    meta: `${getEnumLabel(locale, "userRoles", profile.role)} • ${getUserVerificationLabel(locale, profile.role, profile.verification_status)}`,
+    meta:
+      profile.role === "carrier"
+        ? `${getEnumLabel(locale, "userRoles", profile.role)} • ${getUserVerificationLabel(locale, profile.role, carrierPacketMap.get(profile.id) ?? "pending")}`
+        : getEnumLabel(locale, "userRoles", profile.role),
     href: buildAdminRoute(locale, "user", profile.id),
   }));
   if (userItems.length) groups.push({ kind: "user", label: "Users", items: userItems });
@@ -147,13 +169,20 @@ export async function fetchGlobalSearchGroups({
   }));
   if (paymentItems.length) groups.push({ kind: "payment", label: "Payment proofs", items: paymentItems });
 
-  const verificationItems = (carrierProfilesResult.data ?? []).map((profile) => ({
-    id: profile.id,
-    title: profile.company_name?.trim() || profile.full_name?.trim() || profile.email,
-    subtitle: profile.email,
-    meta: getUserVerificationLabel(locale, "carrier", profile.verification_status),
-    href: buildAdminRoute(locale, "verification", profile.id),
-  }));
+  const verificationItems = ((carrierProfilesResult.data ?? []) as Array<{
+    id: string;
+    email: string | null;
+    full_name: string | null;
+    company_name: string | null;
+  }>).map((profile) => {
+    return {
+      id: profile.id,
+      title: profile.company_name?.trim() || profile.full_name?.trim() || profile.email?.trim() || profile.id,
+      subtitle: profile.email ?? profile.id,
+      meta: getUserVerificationLabel(locale, "carrier", carrierPacketMap.get(profile.id) ?? "pending"),
+      href: buildAdminRoute(locale, "verification", profile.id),
+    };
+  });
   if (verificationItems.length) groups.push({ kind: "verification", label: "Verification packets", items: verificationItems });
 
   const disputeItems = (disputesResult.data ?? []).map((dispute) => ({

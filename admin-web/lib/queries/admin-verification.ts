@@ -53,7 +53,7 @@ export async function fetchVerificationDetail(carrierId: string): Promise<AdminV
   const supabase = await createSupabaseServerClient();
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("id, email, full_name, company_name, verification_status")
+    .select("id, email, full_name, company_name")
     .eq("id", carrierId)
     .eq("role", "carrier")
     .maybeSingle();
@@ -63,6 +63,16 @@ export async function fetchVerificationDetail(carrierId: string): Promise<AdminV
   }
   if (!profile) {
     return null;
+  }
+
+  const { data: packet, error: packetError } = await supabase
+    .from("carrier_verification_packets")
+    .select("status")
+    .eq("carrier_id", carrierId)
+    .maybeSingle();
+
+  if (packetError) {
+    throw packetError;
   }
 
   const { data: vehicles, error: vehicleError } = await supabase
@@ -118,7 +128,10 @@ export async function fetchVerificationDetail(carrierId: string): Promise<AdminV
     .limit(20);
 
   return {
-    profile: profile as ProfileRow,
+    profile: {
+      ...(profile as Omit<ProfileRow, "verification_status">),
+      verification_status: packet?.status ?? "pending",
+    },
     vehicles: vehicleRows,
     documents: documentList.map((document, index) => ({
       ...document,

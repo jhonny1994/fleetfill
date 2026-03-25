@@ -48,8 +48,6 @@ class AppProfile {
     required this.companyName,
     required this.avatarUrl,
     required this.isActive,
-    required this.verificationStatus,
-    required this.verificationRejectionReason,
     required this.ratingAverage,
     required this.ratingCount,
   });
@@ -65,11 +63,6 @@ class AppProfile {
       companyName: (json['company_name'] as String?)?.trim(),
       avatarUrl: (json['avatar_url'] as String?)?.trim(),
       isActive: json['is_active'] as bool? ?? true,
-      verificationStatus: AppVerificationState.fromDatabase(
-        json['verification_status'],
-      ),
-      verificationRejectionReason:
-          (json['verification_rejection_reason'] as String?)?.trim(),
       ratingAverage: (json['rating_average'] as num?)?.toDouble(),
       ratingCount: json['rating_count'] as int? ?? 0,
     );
@@ -84,16 +77,10 @@ class AppProfile {
   final String? companyName;
   final String? avatarUrl;
   final bool isActive;
-  final AppVerificationState verificationStatus;
-  final String? verificationRejectionReason;
   final double? ratingAverage;
   final int ratingCount;
 
   bool get hasPhoneNumber => (phoneNumber ?? '').trim().isNotEmpty;
-
-  bool get isCarrierVerified =>
-      role == AppUserRole.carrier &&
-      verificationStatus == AppVerificationState.verified;
 
   bool get hasCompletedOnboarding {
     final hasName = (fullName ?? '').trim().isNotEmpty;
@@ -120,6 +107,8 @@ class AuthSnapshot {
     this.hasCompletedOnboarding = false,
     this.hasPhoneNumber = false,
     this.isCarrierVerified = false,
+    this.carrierVerificationStatus,
+    this.carrierVerificationRejectionReason,
     this.hasPayoutAccount = false,
     this.hasRecentAdminStepUp = false,
     this.isPasswordRecovery = false,
@@ -135,6 +124,8 @@ class AuthSnapshot {
   final bool hasCompletedOnboarding;
   final bool hasPhoneNumber;
   final bool isCarrierVerified;
+  final AppVerificationState? carrierVerificationStatus;
+  final String? carrierVerificationRejectionReason;
   final bool hasPayoutAccount;
   final bool hasRecentAdminStepUp;
   final bool isPasswordRecovery;
@@ -152,6 +143,8 @@ class AuthSnapshot {
     bool? hasCompletedOnboarding,
     bool? hasPhoneNumber,
     bool? isCarrierVerified,
+    AppVerificationState? carrierVerificationStatus,
+    String? carrierVerificationRejectionReason,
     bool? hasPayoutAccount,
     bool? hasRecentAdminStepUp,
     bool? isPasswordRecovery,
@@ -170,6 +163,11 @@ class AuthSnapshot {
           hasCompletedOnboarding ?? this.hasCompletedOnboarding,
       hasPhoneNumber: hasPhoneNumber ?? this.hasPhoneNumber,
       isCarrierVerified: isCarrierVerified ?? this.isCarrierVerified,
+      carrierVerificationStatus:
+          carrierVerificationStatus ?? this.carrierVerificationStatus,
+      carrierVerificationRejectionReason:
+          carrierVerificationRejectionReason ??
+          this.carrierVerificationRejectionReason,
       hasPayoutAccount: hasPayoutAccount ?? this.hasPayoutAccount,
       hasRecentAdminStepUp: hasRecentAdminStepUp ?? this.hasRecentAdminStepUp,
       isPasswordRecovery: isPasswordRecovery ?? this.isPasswordRecovery,

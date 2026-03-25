@@ -175,8 +175,6 @@ create table if not exists public.profiles (
   avatar_url text,
   preferred_locale text not null default 'ar',
   is_active boolean not null default true,
-  verification_status public.verification_status not null default 'pending',
-  verification_rejection_reason text,
   rating_average numeric,
   rating_count integer not null default 0,
   created_at timestamptz not null default now(),
@@ -192,6 +190,14 @@ create table if not exists public.vehicles (
   capacity_volume_m3 numeric,
   verification_status public.verification_status not null default 'pending',
   verification_rejection_reason text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.carrier_verification_packets (
+  carrier_id uuid primary key references public.profiles (id) on delete cascade,
+  status public.verification_status not null default 'pending',
+  rejection_reason text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -638,9 +644,6 @@ on public.communes (wilaya_id);
 create index if not exists profiles_role_idx
 on public.profiles (role);
 
-create index if not exists profiles_verification_status_idx
-on public.profiles (verification_status);
-
 create index if not exists admin_accounts_role_active_idx
 on public.admin_accounts (admin_role, is_active);
 
@@ -660,6 +663,9 @@ on public.vehicles (carrier_id);
 
 create index if not exists vehicles_verification_status_idx
 on public.vehicles (verification_status);
+
+create index if not exists carrier_verification_packets_status_idx
+on public.carrier_verification_packets (status);
 
 create index if not exists payout_accounts_carrier_id_idx
 on public.payout_accounts (carrier_id);
@@ -1408,8 +1414,6 @@ begin
     end if;
 
     new.is_active := true;
-    new.verification_status := 'pending';
-    new.verification_rejection_reason := null;
     new.rating_average := null;
     new.rating_count := 0;
     new.email := lower(trim(new.email));
@@ -1418,11 +1422,29 @@ begin
 
   if new.role is distinct from old.role
     or new.is_active is distinct from old.is_active
-    or new.verification_status is distinct from old.verification_status
-    or new.verification_rejection_reason is distinct from old.verification_rejection_reason
     or new.rating_average is distinct from old.rating_average
     or new.rating_count is distinct from old.rating_count then
     raise exception 'Updating protected profile columns is not allowed';
+  end if;
+
+  return new;
+end;
+$$;
+
+create or replace function public.sync_carrier_verification_packet()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if new.role = 'carrier' then
+    insert into public.carrier_verification_packets (carrier_id)
+    values (new.id)
+    on conflict (carrier_id) do nothing;
+  else
+    delete from public.carrier_verification_packets
+    where carrier_id = new.id;
   end if;
 
   return new;
@@ -2156,8 +2178,7 @@ begin
     full_name,
     phone_number,
     email,
-    is_active,
-    verification_status
+    is_active
   )
   values (
     p_profile_id,
@@ -2165,8 +2186,7 @@ begin
     nullif(trim(coalesce(p_full_name, '')), ''),
     nullif(trim(coalesce(p_phone_number, '')), ''),
     v_email,
-    true,
-    'verified'
+    true
   )
   on conflict (id) do update
   set role = 'admin',
@@ -3055,6 +3075,7 @@ alter table public.wilayas enable row level security;
 alter table public.communes enable row level security;
 alter table public.profiles enable row level security;
 alter table public.vehicles enable row level security;
+alter table public.carrier_verification_packets enable row level security;
 alter table public.payout_accounts enable row level security;
 alter table public.platform_payment_accounts enable row level security;
 alter table public.verification_documents enable row level security;
@@ -3133,6 +3154,11 @@ with check (carrier_id = (select auth.uid()) or public.is_admin());
 drop policy if exists vehicles_delete_owner_or_admin on public.vehicles;
 create policy vehicles_delete_owner_or_admin
 on public.vehicles for delete to authenticated
+using (carrier_id = (select auth.uid()) or public.is_admin());
+
+drop policy if exists carrier_verification_packets_select_owner_or_admin on public.carrier_verification_packets;
+create policy carrier_verification_packets_select_owner_or_admin
+on public.carrier_verification_packets for select to authenticated
 using (carrier_id = (select auth.uid()) or public.is_admin());
 
 drop policy if exists payout_accounts_select_owner_or_admin on public.payout_accounts;
@@ -3518,6 +3544,11 @@ for each row execute function public.normalize_profile_columns();
 create or replace trigger profiles_protect_sensitive_columns
 before insert or update on public.profiles
 for each row execute function public.protect_profile_sensitive_columns();
+
+drop trigger if exists profiles_sync_carrier_verification_packet on public.profiles;
+create trigger profiles_sync_carrier_verification_packet
+after insert or update of role on public.profiles
+for each row execute function public.sync_carrier_verification_packet();
 
 create or replace trigger vehicles_protect_sensitive_columns
 before insert or update on public.vehicles

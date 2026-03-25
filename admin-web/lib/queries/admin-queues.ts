@@ -123,7 +123,13 @@ type ProfileRow = {
   email: string;
   full_name: string | null;
   company_name: string | null;
-  verification_status: string;
+  updated_at: string | null;
+};
+
+type CarrierVerificationPacketRow = {
+  carrier_id: string;
+  status: string;
+  rejection_reason: string | null;
   updated_at: string | null;
 };
 
@@ -154,13 +160,32 @@ export async function fetchVerificationQueue({
 } = {}): Promise<VerificationQueueItem[]> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
-  const { data: profiles, error: profileError } = await supabase
-    .from("profiles")
-    .select("id, email, full_name, company_name, verification_status, updated_at")
-    .eq("role", "carrier")
-    .in("verification_status", ["pending", "rejected"])
+  const { data: packets, error: packetError } = await supabase
+    .from("carrier_verification_packets")
+    .select("carrier_id, status, rejection_reason, updated_at")
+    .in("status", ["pending", "rejected"])
     .order("updated_at", { ascending: true })
     .limit(limit * 3);
+
+  if (packetError) {
+    throw packetError;
+  }
+
+  const packetRows = (packets ?? []) as CarrierVerificationPacketRow[];
+  if (packetRows.length === 0) {
+    return [];
+  }
+
+  const packetMap = new Map<string, CarrierVerificationPacketRow>(
+    packetRows.map((packet) => [packet.carrier_id, packet]),
+  );
+  const carrierIds = packetRows.map((packet) => packet.carrier_id);
+
+  const { data: profiles, error: profileError } = await supabase
+    .from("profiles")
+    .select("id, email, full_name, company_name, updated_at")
+    .eq("role", "carrier")
+    .in("id", carrierIds);
 
   if (profileError) {
     throw profileError;
@@ -170,8 +195,6 @@ export async function fetchVerificationQueue({
   if (profileRows.length === 0) {
     return [];
   }
-
-  const carrierIds = profileRows.map((profile) => profile.id);
   const { data: vehicles, error: vehicleError } = await supabase
     .from("vehicles")
     .select("id, carrier_id, plate_number, vehicle_type, updated_at")
@@ -217,15 +240,19 @@ export async function fetchVerificationQueue({
   }
 
   const normalized = query?.trim().toLowerCase();
-  const results = profileRows
-    .map((profile) => {
+  const results: VerificationQueueItem[] = [];
+  for (const profile of profileRows) {
+      const packet = packetMap.get(profile.id);
+      if (!packet) {
+        continue;
+      }
       const carrierVehicles = vehiclesByCarrier.get(profile.id) ?? [];
-      const profileDocuments = PROFILE_REQUIRED_DOCUMENTS.map((documentType) =>
+      const carrierDocuments = PROFILE_REQUIRED_DOCUMENTS.map((documentType) =>
         latestByEntityType.get(`profile:${profile.id}:${documentType}`),
       ).filter(Boolean) as VerificationDocumentRow[];
-      const profileMissingDocuments = PROFILE_REQUIRED_DOCUMENTS.filter(
+      const carrierMissingDocuments = PROFILE_REQUIRED_DOCUMENTS.filter(
         (documentType) =>
-          !profileDocuments.some(
+          !carrierDocuments.some(
             (document) => document.document_type === documentType && document.status === "verified",
           ),
       );
@@ -250,26 +277,29 @@ export async function fetchVerificationQueue({
       });
 
       const pendingDocumentCount =
-        profileDocuments.filter((document) => document.status === "pending").length +
+        carrierDocuments.filter((document) => document.status === "pending").length +
         vehicles.reduce((sum, vehicle) => sum + vehicle.pendingDocuments, 0);
       const latestRelevantUpdateAt = [profile.updated_at, ...carrierVehicles.map((vehicle) => vehicle.updated_at)]
         .filter(Boolean)
         .sort()
         .at(-1) ?? null;
 
-      return {
+      const item: VerificationQueueItem = {
         carrierId: profile.id,
         displayName: profile.company_name?.trim() || profile.full_name?.trim() || profile.email,
         companyName: profile.company_name,
-        profilePendingDocuments: profileDocuments.filter((document) => document.status === "pending").length,
-        profileMissingDocuments,
+        carrierPendingDocuments: carrierDocuments.filter((document) => document.status === "pending").length,
+        carrierMissingDocuments,
         vehicleCount: carrierVehicles.length,
         pendingDocumentCount,
         latestRelevantUpdateAt,
         vehicles,
-      } satisfies VerificationQueueItem;
-    })
-    .filter((item) => item.pendingDocumentCount > 0 || item.profileMissingDocuments.length > 0);
+      };
+
+      if (item.pendingDocumentCount > 0 || item.carrierMissingDocuments.length > 0) {
+        results.push(item);
+      }
+    }
 
   const filtered = !normalized
     ? results

@@ -52,12 +52,16 @@ type ProfileRow = {
   company_name: string | null;
   preferred_locale: string;
   is_active: boolean;
-  verification_status: string;
-  verification_rejection_reason: string | null;
   rating_average: number | null;
   rating_count: number;
   created_at: string | null;
   updated_at: string | null;
+};
+
+type CarrierVerificationPacketRow = {
+  carrier_id: string;
+  status: string;
+  rejection_reason: string | null;
 };
 
 type VehicleRow = {
@@ -170,7 +174,7 @@ export async function fetchUsers({
   let request = supabase
     .from("profiles")
     .select(
-      "id, role, full_name, phone_number, email, company_name, preferred_locale, is_active, verification_status, verification_rejection_reason, rating_average, rating_count, created_at, updated_at",
+      "id, role, full_name, phone_number, email, company_name, preferred_locale, is_active, rating_average, rating_count, created_at, updated_at",
     )
     .neq("role", "admin")
     .order("updated_at", { ascending: false })
@@ -193,7 +197,6 @@ export async function fetchUsers({
       return [];
     }
     request = request.eq("role", "carrier");
-    request = request.eq("verification_status", normalizedVerification);
   }
 
   if (query?.trim()) {
@@ -207,6 +210,9 @@ export async function fetchUsers({
 
   const profiles = (data ?? []) as ProfileRow[];
   const profileIds = profiles.map((profile) => profile.id);
+  const carrierIds = profiles
+    .filter((profile) => profile.role === "carrier")
+    .map((profile) => profile.id);
 
   const [vehiclesResult, bookingsResult] = await Promise.all([
     profileIds.length
@@ -226,6 +232,19 @@ export async function fetchUsers({
   if (vehiclesResult.error) throw vehiclesResult.error;
   if (bookingsResult.error) throw bookingsResult.error;
 
+  const { data: packets, error: packetError } = carrierIds.length
+    ? await supabase
+        .from("carrier_verification_packets")
+        .select("carrier_id, status, rejection_reason")
+        .in("carrier_id", carrierIds)
+    : { data: [], error: null };
+
+  if (packetError) throw packetError;
+
+  const packetMap = new Map<string, CarrierVerificationPacketRow>(
+    ((packets ?? []) as CarrierVerificationPacketRow[]).map((packet) => [packet.carrier_id, packet]),
+  );
+
   const vehicleCounts = new Map<string, number>();
   for (const vehicle of ((vehiclesResult.data ?? []) as Array<{ carrier_id: string }>)) {
     vehicleCounts.set(vehicle.carrier_id, (vehicleCounts.get(vehicle.carrier_id) ?? 0) + 1);
@@ -237,7 +256,12 @@ export async function fetchUsers({
     bookingCounts.set(booking.carrier_id, (bookingCounts.get(booking.carrier_id) ?? 0) + 1);
   }
 
-  return profiles.map((profile) => ({
+  const filteredProfiles =
+    normalizedVerification && isVerificationStatus(normalizedVerification)
+      ? profiles.filter((profile) => packetMap.get(profile.id)?.status === normalizedVerification)
+      : profiles;
+
+  return filteredProfiles.map((profile) => ({
     profileId: profile.id,
     displayName: resolveDisplayName(profile),
     role: profile.role,
@@ -245,7 +269,7 @@ export async function fetchUsers({
     phoneNumber: profile.phone_number,
     companyName: profile.company_name,
     isActive: profile.is_active,
-    verificationStatus: profile.verification_status,
+    verificationStatus: profile.role === "carrier" ? (packetMap.get(profile.id)?.status ?? "pending") : null,
     vehicleCount: vehicleCounts.get(profile.id) ?? 0,
     bookingCount: bookingCounts.get(profile.id) ?? 0,
     updatedAt: profile.updated_at,
@@ -258,7 +282,7 @@ export async function fetchUserDetail(userId: string): Promise<AdminUserDetail |
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select(
-      "id, role, email, full_name, phone_number, company_name, preferred_locale, is_active, verification_status, verification_rejection_reason, rating_average, rating_count, created_at, updated_at",
+      "id, role, email, full_name, phone_number, company_name, preferred_locale, is_active, rating_average, rating_count, created_at, updated_at",
     )
     .eq("id", userId)
     .neq("role", "admin")
@@ -266,6 +290,17 @@ export async function fetchUserDetail(userId: string): Promise<AdminUserDetail |
 
   if (profileError) throw profileError;
   if (!profile) return null;
+
+  const { data: packet, error: packetError } =
+    profile.role === "carrier"
+      ? await supabase
+          .from("carrier_verification_packets")
+          .select("carrier_id, status, rejection_reason")
+          .eq("carrier_id", userId)
+          .maybeSingle()
+      : { data: null, error: null };
+
+  if (packetError) throw packetError;
 
   const [vehiclesResult, shipmentsResult, bookingsAsShipperResult, bookingsAsCarrierResult, supportResult, documentsResult, payoutAccountsResult, auditLogsResult] =
     await Promise.all([
@@ -355,8 +390,8 @@ export async function fetchUserDetail(userId: string): Promise<AdminUserDetail |
       companyName: profile.company_name,
       preferredLocale: profile.preferred_locale,
       isActive: profile.is_active,
-      verificationStatus: profile.verification_status,
-      verificationRejectionReason: profile.verification_rejection_reason,
+      verificationStatus: profile.role === "carrier" ? packet?.status ?? "pending" : null,
+      verificationRejectionReason: profile.role === "carrier" ? packet?.rejection_reason ?? null : null,
       ratingAverage: profile.rating_average,
       ratingCount: profile.rating_count,
       createdAt: profile.created_at,

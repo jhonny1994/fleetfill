@@ -25,8 +25,14 @@ class VerificationAdminRepository {
   }) async {
     final normalizedLimit = limit < 1 ? _queuePageSize : limit;
     final windowSize = normalizedLimit * _queueWindowMultiplier;
-    final profileMaps = await _fetchCandidateProfiles(limit: windowSize);
-    final packets = await _hydratePackets(profileMaps);
+    final packetMaps = await _fetchCandidateCarrierPackets(limit: windowSize);
+    final packetsByCarrierId = {
+      for (final packet in packetMaps) packet['carrier_id'] as String: packet,
+    };
+    final profileMaps = await _fetchCarrierProfiles(
+      packetsByCarrierId.keys.toList(growable: false),
+    );
+    final packets = await _hydratePackets(profileMaps, packetsByCarrierId);
     packets.sort((a, b) {
       final pendingComparison = b.pendingDocumentCount.compareTo(
         a.pendingDocumentCount,
@@ -52,21 +58,25 @@ class VerificationAdminRepository {
   Future<VerificationReviewPacket?> fetchPendingReviewPacketByCarrierId(
     String carrierId,
   ) async {
-    final profilesResponse = await _client
-        .from('profiles')
+    final packetResponse = await _client
+        .from('carrier_verification_packets')
         .select()
-        .eq('id', carrierId)
-        .eq('role', 'carrier')
-        .or('verification_status.eq.pending,verification_status.eq.rejected')
-        .limit(1);
+        .eq('carrier_id', carrierId)
+        .or('status.eq.pending,status.eq.rejected')
+        .maybeSingle();
 
-    final profileMaps = (profilesResponse as List<dynamic>)
-        .cast<Map<String, dynamic>>();
+    if (packetResponse == null) {
+      return null;
+    }
+
+    final profileMaps = await _fetchCarrierProfiles(<String>[carrierId]);
     if (profileMaps.isEmpty) {
       return null;
     }
 
-    final packets = await _hydratePackets(profileMaps);
+    final packets = await _hydratePackets(profileMaps, {
+      carrierId: packetResponse,
+    });
     if (packets.isEmpty) {
       return null;
     }
@@ -135,22 +145,38 @@ class VerificationAdminRepository {
     return trimmed;
   }
 
-  Future<List<Map<String, dynamic>>> _fetchCandidateProfiles({
+  Future<List<Map<String, dynamic>>> _fetchCandidateCarrierPackets({
     required int limit,
   }) async {
     final response = await _client
-        .from('profiles')
+        .from('carrier_verification_packets')
         .select()
-        .eq('role', 'carrier')
-        .or('verification_status.eq.pending,verification_status.eq.rejected')
+        .or('status.eq.pending,status.eq.rejected')
         .order('updated_at', ascending: true)
         .limit(limit);
 
     return (response as List<dynamic>).cast<Map<String, dynamic>>();
   }
 
+  Future<List<Map<String, dynamic>>> _fetchCarrierProfiles(
+    List<String> carrierIds,
+  ) async {
+    if (carrierIds.isEmpty) {
+      return const <Map<String, dynamic>>[];
+    }
+
+    final response = await _client
+        .from('profiles')
+        .select()
+        .eq('role', 'carrier')
+        .inFilter('id', carrierIds);
+
+    return (response as List<dynamic>).cast<Map<String, dynamic>>();
+  }
+
   Future<List<VerificationReviewPacket>> _hydratePackets(
     List<Map<String, dynamic>> profileMaps,
+    Map<String, Map<String, dynamic>> packetsByCarrierId,
   ) async {
     if (profileMaps.isEmpty) {
       return const <VerificationReviewPacket>[];
@@ -185,6 +211,10 @@ class VerificationAdminRepository {
     return profileMaps
         .map((profile) {
           final carrierId = profile['id'] as String;
+          final packet = packetsByCarrierId[carrierId];
+          if (packet == null) {
+            return null;
+          }
           final companyName = (profile['company_name'] as String?)?.trim();
           final fullName = (profile['full_name'] as String?)?.trim();
           final carrierVehicles =
@@ -194,12 +224,12 @@ class VerificationAdminRepository {
             carrierId: carrierId,
             displayName: companyName ?? fullName ?? carrierId,
             companyName: companyName,
-            profileStatus: AppVerificationState.fromDatabase(
-              profile['verification_status'],
+            carrierStatus: AppVerificationState.fromDatabase(
+              packet['status'],
             ),
-            profileRejectionReason:
-                (profile['verification_rejection_reason'] as String?)?.trim(),
-            profileDocuments:
+            carrierRejectionReason: (packet['rejection_reason'] as String?)
+                ?.trim(),
+            carrierDocuments:
                 documentsByEntity['profile:$carrierId'] ??
                 const <VerificationDocumentRecord>[],
             vehicles: carrierVehicles
@@ -214,6 +244,7 @@ class VerificationAdminRepository {
                 .toList(growable: false),
           );
         })
+        .whereType<VerificationReviewPacket>()
         .toList(growable: false);
   }
 
