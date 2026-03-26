@@ -97,6 +97,8 @@ jobs:
           fi
           if [[ "${{ inputs.verify_after }}" == "true" ]]; then
             require_secret "VERCEL_TOKEN (GitHub secret)" "$VERCEL_TOKEN"
+            require_secret "VERCEL_ORG_ID (GitHub variable)" "$VERCEL_ORG_ID"
+            require_secret "VERCEL_PROJECT_ID (GitHub variable)" "$VERCEL_PROJECT_ID"
           fi
 
           if (( ${#missing[@]} > 0 )); then
