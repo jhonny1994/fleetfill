@@ -121,6 +121,9 @@ jobs:
         with:
           version: latest
 
+      - name: Link Supabase project
+        run: supabase link --project-ref rkvrdzwlynyionsnwfiu --workdir backend/supabase
+
       - name: Materialize rollout env
         shell: bash
         run: |
@@ -141,11 +144,11 @@ jobs:
 
       - name: Push database migrations and seed data
         if: inputs.push_db
-        run: supabase db push --linked --include-seed
+        run: supabase db push --linked --include-seed --workdir backend/supabase
 
       - name: Push Supabase config
         if: inputs.push_config
-        run: supabase config push --project-ref rkvrdzwlynyionsnwfiu --yes
+        run: supabase config push --project-ref rkvrdzwlynyionsnwfiu --workdir backend/supabase --yes
 
       - name: Sync Supabase cloud secrets
         if: inputs.sync_secrets
@@ -158,7 +161,7 @@ jobs:
         run: |
           for dir in backend/supabase/functions/*; do
             if [[ -f "$dir/index.ts" ]]; then
-              supabase functions deploy "$(basename "$dir")" --project-ref rkvrdzwlynyionsnwfiu
+              supabase functions deploy "$(basename "$dir")" --project-ref rkvrdzwlynyionsnwfiu --workdir backend/supabase
             fi
           done
 
