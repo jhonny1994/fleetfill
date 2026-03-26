@@ -7,7 +7,10 @@ import type { AppLocale } from "@/lib/i18n/config";
 import type { AdminDictionary } from "@/lib/i18n/dictionaries";
 import { cn } from "@/lib/utils";
 
-const navItems = (dictionary: AdminDictionary) =>
+const navItems = (
+  dictionary: AdminDictionary,
+  adminRole: "super_admin" | "ops_admin",
+) =>
   [
     ["dashboard", dictionary.shell.nav.dashboard],
     ["payments", dictionary.shell.nav.payments],
@@ -16,7 +19,7 @@ const navItems = (dictionary: AdminDictionary) =>
     ["payouts", dictionary.shell.nav.payouts],
     ["support", dictionary.shell.nav.support],
     ["users", dictionary.shell.nav.users],
-    ["admins", dictionary.shell.nav.admins],
+    ...(adminRole === "super_admin" ? ([["admins", dictionary.shell.nav.admins]] as const) : []),
     ["settings", dictionary.shell.nav.settings],
     ["audit-and-health", dictionary.shell.nav.auditAndHealth],
   ] as const;
@@ -24,18 +27,20 @@ const navItems = (dictionary: AdminDictionary) =>
 export function AdminSidebar({
   locale,
   dictionary,
+  adminRole,
   compact = false,
   className,
   onNavigate,
 }: {
   locale: AppLocale;
   dictionary: AdminDictionary;
+  adminRole: "super_admin" | "ops_admin";
   compact?: boolean;
   className?: string;
   onNavigate?: () => void;
 }) {
   const activeSegment = useSelectedLayoutSegment();
-  const items = navItems(dictionary);
+  const items = navItems(dictionary, adminRole);
 
   return (
     <aside
