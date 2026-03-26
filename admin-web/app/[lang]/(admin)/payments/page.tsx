@@ -1,23 +1,29 @@
+import { AdminQueueScopeTabs } from "@/components/queues/admin-queue-scope-tabs";
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { PaymentsQueueView } from "@/components/queues/payments-queue-view";
 import { fetchPaymentQueue } from "@/lib/queries/admin-queues";
+
+const paymentStatuses = ["pending", "verified", "rejected"] as const;
+type PaymentPageStatus = (typeof paymentStatuses)[number];
 
 export default async function PaymentsPage({
   params,
   searchParams,
 }: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; status?: string; view?: "open" | "history" | "all" }>;
 }) {
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const query = filters.q?.trim();
+  const view = filters.view ?? "open";
+  const rawStatus = filters.status?.trim();
+  const status = paymentStatuses.includes(rawStatus as PaymentPageStatus)
+    ? (rawStatus as PaymentPageStatus)
+    : undefined;
   const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const ui = getAdminUi(lang);
-<<<<<<< HEAD
-  const items = await fetchPaymentQueue({ query });
-=======
   const statuses: PaymentPageStatus[] = status
     ? [status]
     : view === "history"
@@ -31,7 +37,6 @@ export default async function PaymentsPage({
     fetchPaymentQueue({ query, statuses: ["verified", "rejected"] }),
     fetchPaymentQueue({ query, statuses: ["pending", "verified", "rejected"] }),
   ]);
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   const pathname = `/${lang}/payments`;
 
   return (
@@ -43,8 +48,6 @@ export default async function PaymentsPage({
           {dictionary.dashboard.body}
         </p>
       </section>
-<<<<<<< HEAD
-=======
       <AdminQueueScopeTabs
         pathname={pathname}
         locale={lang}
@@ -57,10 +60,16 @@ export default async function PaymentsPage({
           all: allItems.length,
         }}
       />
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
       <AdminFilterBar
         pathname={pathname}
         query={query}
+        status={status}
+        hiddenFields={[{ name: "view", value: view }]}
+        statusOptions={[
+          { value: "pending", label: getEnumLabel(lang, "verification", "pending") },
+          { value: "verified", label: getEnumLabel(lang, "verification", "verified") },
+          { value: "rejected", label: getEnumLabel(lang, "verification", "rejected") },
+        ]}
         locale={lang as "ar" | "fr" | "en"}
         labels={{
           searchPlaceholder: dictionary.shell.searchPlaceholder,

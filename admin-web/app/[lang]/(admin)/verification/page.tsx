@@ -1,23 +1,29 @@
+import { AdminQueueScopeTabs } from "@/components/queues/admin-queue-scope-tabs";
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { VerificationQueueView } from "@/components/queues/verification-queue-view";
 import { fetchVerificationQueue } from "@/lib/queries/admin-queues";
+
+const verificationStatuses = ["pending", "rejected", "verified"] as const;
+type VerificationPageStatus = (typeof verificationStatuses)[number];
 
 export default async function VerificationPage({
   params,
   searchParams,
 }: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; status?: string; view?: "open" | "history" | "all" }>;
 }) {
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const query = filters.q?.trim();
+  const view = filters.view ?? "open";
+  const rawStatus = filters.status?.trim();
+  const status = verificationStatuses.includes(rawStatus as VerificationPageStatus)
+    ? (rawStatus as VerificationPageStatus)
+    : undefined;
   const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const ui = getAdminUi(lang);
-<<<<<<< HEAD
-  const items = await fetchVerificationQueue({ query });
-=======
   const statuses: VerificationPageStatus[] = status
     ? [status]
     : view === "history"
@@ -31,7 +37,6 @@ export default async function VerificationPage({
     fetchVerificationQueue({ query, statuses: ["verified"] }),
     fetchVerificationQueue({ query, statuses: ["pending", "rejected", "verified"] }),
   ]);
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   const pathname = `/${lang}/verification`;
 
   return (
@@ -43,8 +48,6 @@ export default async function VerificationPage({
           {dictionary.shell.body}
         </p>
       </section>
-<<<<<<< HEAD
-=======
       <AdminQueueScopeTabs
         pathname={pathname}
         locale={lang}
@@ -57,10 +60,16 @@ export default async function VerificationPage({
           all: allItems.length,
         }}
       />
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
       <AdminFilterBar
         pathname={pathname}
         query={query}
+        status={status}
+        hiddenFields={[{ name: "view", value: view }]}
+        statusOptions={[
+          { value: "pending", label: getEnumLabel(lang, "verification", "pending") },
+          { value: "rejected", label: getEnumLabel(lang, "verification", "rejected") },
+          { value: "verified", label: getEnumLabel(lang, "verification", "verified") },
+        ]}
         locale={lang as "ar" | "fr" | "en"}
         labels={{
           searchPlaceholder: dictionary.shell.searchPlaceholder,

@@ -18,6 +18,7 @@ export type PaymentQueueItem = {
   trackingNumber: string;
   paymentReference: string;
   paymentRail: string;
+  status: string;
   submittedReference: string | null;
   submittedAmountDzd: number;
   shipperTotalDzd: number;
@@ -37,6 +38,7 @@ export type VerificationQueueItem = {
   carrierId: string;
   displayName: string;
   companyName: string | null;
+  status: string;
   carrierPendingDocuments: number;
   carrierMissingDocuments: string[];
   vehicleCount: number;

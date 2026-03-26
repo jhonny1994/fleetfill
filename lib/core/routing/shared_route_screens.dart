@@ -184,6 +184,8 @@ class ShipmentDetailScreen extends ConsumerWidget {
     final s = S.of(context);
     final shipmentAsync = ref.watch(shipmentDetailProvider(shipmentId));
     final communesAsync = ref.watch(communesProvider);
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    final shipperBookingsAsync = ref.watch(myShipperBookingsProvider);
 
     return AppPageScaffold(
       title: s.shipmentDetailPageTitle,
@@ -225,6 +227,14 @@ class ShipmentDetailScreen extends ConsumerWidget {
           final destinationCommune =
               communeMap[shipment.destinationCommuneId] ??
               destinationCommuneAsync.asData?.value;
+          final relatedBookings =
+              shipperBookingsAsync.asData?.value
+                  .where((booking) => booking.shipmentId == shipment.id)
+                  .toList(growable: false) ??
+              const <BookingRecord>[];
+          final relatedBooking = relatedBookings.isEmpty
+              ? null
+              : relatedBookings.first;
           return ListView(
             children: [
               AppSectionHeader(
@@ -268,6 +278,42 @@ class ShipmentDetailScreen extends ConsumerWidget {
                     ),
                 ],
               ),
+              if (auth?.role == AppUserRole.shipper &&
+                  auth?.userId == shipment.shipperId &&
+                  relatedBooking != null &&
+                  _canOpenShipperBookingWorkspace(relatedBooking)) ...[
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  children: [
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: () => context.push(
+                            AppRoutePath.shipperPaymentFlow,
+                            extra: relatedBooking.id,
+                          ),
+                          child: Text(
+                            _shipperPaymentActionLabel(s, relatedBooking),
+                          ),
+                        ),
+                      ),
+                    if (_canShipperCancelPendingBooking(relatedBooking)) ...[
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => unawaited(
+                            _cancelPendingBookingFromShipmentDetail(
+                              context,
+                              ref,
+                              relatedBooking,
+                            ),
+                          ),
+                          child: Text(s.cancelLabel),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
             ],
           );
         },
@@ -283,117 +329,11 @@ class BookingDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-<<<<<<< HEAD
-    final s = S.of(context);
-    final bookingAsync = ref.watch(bookingDetailProvider(bookingId));
-
-    return AppPageScaffold(
-      title: s.bookingDetailPageTitle,
-      child: AppAsyncStateView<BookingRecord?>(
-        value: bookingAsync,
-        onRetry: () => ref.invalidate(bookingDetailProvider(bookingId)),
-        data: (booking) {
-          if (booking == null) {
-            return const AppNotFoundState();
-          }
-          return RefreshIndicator(
-            onRefresh: () async {
-              ref.invalidate(bookingDetailProvider(bookingId));
-            },
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                AppSectionHeader(
-                  title: s.bookingDetailTitle(
-                    BidiFormatters.trackingId(bookingId),
-                  ),
-                  subtitle: s.bookingDetailDescription,
-                  showTitle: false,
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                ProfileSummaryCard(
-                  title: s.bookingReviewTitle,
-                  rows: [
-                    ProfileSummaryRow(
-                      label: s.bookingTrackingNumberLabel,
-                      value: BidiFormatters.latinIdentifier(
-                        booking.trackingNumber,
-                      ),
-                    ),
-                    ProfileSummaryRow(
-                      label: s.bookingPaymentReferenceLabel,
-                      value: BidiFormatters.latinIdentifier(
-                        booking.paymentReference,
-                      ),
-                    ),
-                    ProfileSummaryRow(
-                      label: s.routeStatusLabel,
-                      value: _bookingStatusLabel(s, booking.bookingStatus),
-                    ),
-                    ProfileSummaryRow(
-                      label: s.paymentFlowTitle,
-                      value: _paymentStatusLabel(s, booking.paymentStatus),
-                    ),
-                    ProfileSummaryRow(
-                      label: s.bookingTotalLabel,
-                      value: _sharedMoney(s, booking.shipperTotalDzd),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.md),
-                MoneySummaryCard(
-                  title: s.bookingPricingBreakdownAction,
-                  lines: [
-                    MoneySummaryLine(
-                      label: s.bookingBasePriceLabel,
-                      amount: _sharedMoney(s, booking.basePriceDzd),
-                    ),
-                    MoneySummaryLine(
-                      label: s.bookingPlatformFeeLabel,
-                      amount: _sharedMoney(s, booking.platformFeeDzd),
-                    ),
-                    MoneySummaryLine(
-                      label: s.bookingCarrierFeeLabel,
-                      amount: _sharedMoney(s, booking.carrierFeeDzd),
-                    ),
-                    MoneySummaryLine(
-                      label: s.bookingInsuranceFeeLabel,
-                      amount: _sharedMoney(s, booking.insuranceFeeDzd),
-                    ),
-                    MoneySummaryLine(
-                      label: s.bookingTaxFeeLabel,
-                      amount: _sharedMoney(s, booking.taxFeeDzd),
-                    ),
-                    MoneySummaryLine(
-                      label: s.bookingTotalLabel,
-                      amount: _sharedMoney(s, booking.shipperTotalDzd),
-                      emphasis: true,
-                    ),
-                  ],
-                ),
-                if (booking.paymentStatus == PaymentStatus.unpaid) ...[
-                  const SizedBox(height: AppSpacing.lg),
-                  FilledButton(
-                    onPressed: () => context.push(
-                      AppRoutePath.shipperPaymentFlow,
-                      extra: booking.id,
-                    ),
-                    child: Text(s.paymentFlowTitle),
-                  ),
-                ],
-              ],
-            ),
-          );
-        },
-      ),
-    );
-=======
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
     if (auth?.role == AppUserRole.shipper) {
       return PaymentFlowScreen(bookingId: bookingId);
     }
     return BookingTrackingScreen(bookingId: bookingId);
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   }
 }
 
@@ -1053,6 +993,60 @@ class BookingTrackingScreen extends ConsumerWidget {
       commentController.dispose();
     }
   }
+}
+
+Future<void> _cancelPendingBookingFromShipmentDetail(
+  BuildContext context,
+  WidgetRef ref,
+  BookingRecord booking,
+) async {
+  final confirmed = await _confirmBookingCancel(context);
+  if (confirmed != true || !context.mounted) {
+    return;
+  }
+
+  final s = S.of(context);
+  try {
+    await ref
+        .read(bookingWorkflowControllerProvider)
+        .shipperCancelPendingBooking(
+          bookingId: booking.id,
+          shipmentId: booking.shipmentId,
+        );
+    ref
+      ..invalidate(myShipperBookingsProvider)
+      ..invalidate(myShipperShipmentsProvider)
+      ..invalidate(bookingDetailProvider(booking.id))
+      ..invalidate(shipmentDetailProvider(booking.shipmentId));
+    if (!context.mounted) return;
+    AppFeedback.showSnackBar(context, s.bookingStatusCancelledLabel);
+    context.go(AppRoutePath.shipperSearch);
+  } on PostgrestException catch (error) {
+    if (context.mounted) {
+      AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    }
+  }
+}
+
+Future<bool?> _confirmBookingCancel(BuildContext context) {
+  final s = S.of(context);
+  return showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(s.bookingStatusCancelledLabel),
+      content: Text(s.paymentFlowDescription),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(s.cancelLabel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text(s.confirmLabel),
+        ),
+      ],
+    ),
+  );
 }
 
 class CarrierPublicProfileScreen extends ConsumerWidget {
@@ -1844,34 +1838,40 @@ class _SignedFilePreview extends StatelessWidget {
     if (_looksLikeImage(contentType, storagePath, signedUrl)) {
       return Card(
         clipBehavior: Clip.antiAlias,
-        child: InteractiveViewer(
-          minScale: 1,
-          maxScale: 4,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.surfaceContainerHighest,
-                  Theme.of(context).colorScheme.surfaceContainerLow,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+        child: LayoutBuilder(
+          builder: (context, constraints) => InteractiveViewer(
+            minScale: 1,
+            maxScale: 4,
+            child: Container(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).colorScheme.surfaceContainerHighest,
+                    Theme.of(context).colorScheme.surfaceContainerLow,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
-            ),
-            alignment: Alignment.center,
-            child: Image.network(
-              signedUrl,
-              fit: BoxFit.contain,
-              loadingBuilder: (context, child, progress) {
-                if (progress == null) {
-                  return child;
-                }
+              alignment: Alignment.center,
+              child: Image.network(
+                signedUrl,
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) {
+                    return child;
+                  }
 
-                return const Center(child: CircularProgressIndicator());
-              },
-              errorBuilder: (context, error, stackTrace) => _PreviewFallback(
-                message: s.documentPreviewUnavailableMessage,
+                  return const Center(child: CircularProgressIndicator());
+                },
+                errorBuilder: (context, error, stackTrace) => _PreviewFallback(
+                  message: s.documentPreviewUnavailableMessage,
+                ),
               ),
             ),
           ),
@@ -2341,8 +2341,6 @@ String _paymentStatusLabel(S s, PaymentStatus status) {
   };
 }
 
-<<<<<<< HEAD
-=======
 String _transferStatusLabel(S s, String status) {
   return switch (status) {
     'pending' => s.transferStatusPendingLabel,
@@ -2375,7 +2373,6 @@ String _shipperPaymentActionLabel(S s, BookingRecord booking) {
   };
 }
 
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
 String _generatedDocumentTypeLabel(S s, String? documentType) {
   return switch (documentType) {
     'payment_receipt' => s.generatedDocumentTypePaymentReceipt,

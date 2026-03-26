@@ -1572,7 +1572,8 @@ create or replace function public.build_upload_object_path(
   p_entity_id uuid,
   p_document_type text,
   p_version integer,
-  p_file_extension text
+  p_file_extension text,
+  p_session_id uuid default null
 )
 returns text
 language plpgsql
@@ -1581,18 +1582,20 @@ set search_path = public
 as $$
 declare
   v_extension text := lower(trim(coalesce(p_file_extension, 'bin')));
+  v_session_segment text := coalesce(replace(p_session_id::text, '-', ''), 'static');
 begin
   if p_bucket_id = 'payment-proofs' then
-    return format('%s/%s/upload.%s', p_entity_id, p_version, v_extension);
+    return format('%s/%s/%s/upload.%s', p_entity_id, p_version, v_session_segment, v_extension);
   end if;
 
   if p_bucket_id = 'verification-documents' then
     return format(
-      '%s/%s/%s/%s/upload.%s',
+      '%s/%s/%s/%s/%s/upload.%s',
       p_entity_type,
       p_entity_id,
       p_document_type,
       p_version,
+      v_session_segment,
       v_extension
     );
   end if;
@@ -1862,7 +1865,8 @@ begin
     p_entity_id,
     v_document_type,
     v_version,
-    p_file_extension
+    p_file_extension,
+    v_session_id
   );
 
   insert into public.upload_sessions (
@@ -2016,12 +2020,10 @@ begin
     from storage.objects as so
     where so.bucket_id = v_session.bucket_id
       and so.name = v_session.object_path
-      and coalesce((so.metadata->>'size')::bigint, -1) = v_session.byte_size
-      and lower(coalesce(so.metadata->>'mimetype', '')) = lower(v_session.content_type)
   ) into v_object_exists;
 
   if not v_object_exists then
-    raise exception 'Uploaded verification file is missing or metadata does not match the authorized session';
+    raise exception 'Uploaded verification file is missing for the authorized session';
   end if;
 
   if v_session.entity_type = 'profile' then
@@ -2075,6 +2077,35 @@ begin
   return v_result;
 end;
 $$;
+
+create or replace function public.validate_payout_account_inputs()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if new.account_type not in ('ccp'::public.payment_rail, 'bank'::public.payment_rail) then
+    raise exception 'Unsupported payout account type';
+  end if;
+
+  if new.account_type = 'bank'::public.payment_rail
+      and nullif(btrim(coalesce(new.bank_or_ccp_name, '')), '') is null then
+    raise exception 'Bank name is required for bank payout accounts';
+  end if;
+
+  if new.account_type = 'ccp'::public.payment_rail then
+    new.bank_or_ccp_name := null;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists payout_accounts_validate_inputs on public.payout_accounts;
+create trigger payout_accounts_validate_inputs
+before insert or update on public.payout_accounts
+for each row
+execute function public.validate_payout_account_inputs();
 -- <<< END 20260317150200_create_client_upload_and_finalize_rpc.sql
 
 -- >>> BEGIN 20260317150300_create_privileged_runtime_rpc.sql

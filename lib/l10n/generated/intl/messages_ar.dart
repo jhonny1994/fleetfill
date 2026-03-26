@@ -449,7 +449,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "appTitle": MessageLookupByLibrary.simpleMessage("FleetFill"),
     "authAccountCreatedMessage": MessageLookupByLibrary.simpleMessage(
-      "تم إنشاء حسابك بنجاح. سجّل دخولك للبدء.",
+      "تم إنشاء حسابك بنجاح.",
     ),
     "authAuthenticationRequiredMessage": MessageLookupByLibrary.simpleMessage(
       "سجّل دخولك أولًا لتتمكن من المتابعة.",
@@ -1337,8 +1337,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
       "اتبع خطوات الدفع وارفع الإثبات وتابع حالة المراجعة.",
     ),
-<<<<<<< HEAD
-=======
     "paymentFlowExactTransferGuidance": m16,
     "paymentFlowOpenAction": MessageLookupByLibrary.simpleMessage(
       "افتح تفاصيل الدفع",
@@ -1353,7 +1351,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentFlowSubmittedGuidance": MessageLookupByLibrary.simpleMessage(
       "تم استلام الإثبات. مراجعة الإدارة ما تزال جارية وسنبلغك فور تأمين الدفع أو الحاجة إلى تصحيح.",
     ),
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("الدفع"),
     "paymentInstructionsTitle": MessageLookupByLibrary.simpleMessage(
       "تعليمات الدفع",

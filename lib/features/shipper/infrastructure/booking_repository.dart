@@ -143,8 +143,6 @@ class BookingRepository {
     return BookingRecord.fromJson(response);
   }
 
-<<<<<<< HEAD
-=======
   Future<BookingPayoutRequestContext> fetchBookingPayoutRequestContext(
     String bookingId,
   ) async {
@@ -183,7 +181,6 @@ class BookingRepository {
     return fetchBookingPayoutRequestContext(bookingId);
   }
 
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   Future<void> submitCarrierReview({
     required String bookingId,
     required int score,

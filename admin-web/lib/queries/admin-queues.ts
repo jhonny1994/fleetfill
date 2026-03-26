@@ -16,11 +16,15 @@ const VEHICLE_REQUIRED_DOCUMENTS = [
   "truck_insurance",
   "truck_technical_inspection",
 ] as const;
+type PaymentProofStatus = "pending" | "verified" | "rejected";
+type VerificationPacketStatus = "pending" | "rejected" | "verified";
+type DisputeStatus = "open" | "resolved";
 
 type PaymentProofRow = {
   id: string;
   booking_id: string;
   payment_rail: string;
+  status: string;
   submitted_reference: string | null;
   submitted_amount_dzd: number;
   submitted_at: string;
@@ -36,19 +40,26 @@ type BookingRow = {
 
 export async function fetchPaymentQueue({
   query,
+  statuses,
   limit = 50,
 }: {
   query?: string;
+  statuses?: PaymentProofStatus[];
   limit?: number;
 } = {}): Promise<PaymentQueueItem[]> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
-  const { data: proofs, error: proofError } = await supabase
+  let proofRequest = supabase
     .from("payment_proofs")
-    .select("id, booking_id, payment_rail, submitted_reference, submitted_amount_dzd, submitted_at")
-    .eq("status", "pending")
-    .order("submitted_at", { ascending: true })
-    .limit(limit * 2);
+    .select("id, booking_id, payment_rail, status, submitted_reference, submitted_amount_dzd, submitted_at")
+    .order("submitted_at", { ascending: false })
+    .limit(limit * 3);
+
+  if (statuses != null && statuses.length > 0) {
+    proofRequest = proofRequest.in("status", statuses);
+  }
+
+  const { data: proofs, error: proofError } = await proofRequest;
 
   if (proofError) {
     throw proofError;
@@ -87,6 +98,7 @@ export async function fetchPaymentQueue({
         trackingNumber: booking.tracking_number,
         paymentReference: booking.payment_reference,
         paymentRail: proof.payment_rail,
+        status: proof.status,
         submittedReference: proof.submitted_reference,
         submittedAmountDzd: Number(proof.submitted_amount_dzd),
         shipperTotalDzd: Number(booking.shipper_total_dzd),
@@ -153,19 +165,26 @@ type VerificationDocumentRow = {
 
 export async function fetchVerificationQueue({
   query,
+  statuses,
   limit = 20,
 }: {
   query?: string;
+  statuses?: VerificationPacketStatus[];
   limit?: number;
 } = {}): Promise<VerificationQueueItem[]> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
-  const { data: packets, error: packetError } = await supabase
+  let packetRequest = supabase
     .from("carrier_verification_packets")
     .select("carrier_id, status, rejection_reason, updated_at")
-    .in("status", ["pending", "rejected"])
     .order("updated_at", { ascending: true })
     .limit(limit * 3);
+
+  if (statuses != null && statuses.length > 0) {
+    packetRequest = packetRequest.in("status", statuses);
+  }
+
+  const { data: packets, error: packetError } = await packetRequest;
 
   if (packetError) {
     throw packetError;
@@ -288,6 +307,7 @@ export async function fetchVerificationQueue({
         carrierId: profile.id,
         displayName: profile.company_name?.trim() || profile.full_name?.trim() || profile.email,
         companyName: profile.company_name,
+        status: packet.status,
         carrierPendingDocuments: carrierDocuments.filter((document) => document.status === "pending").length,
         carrierMissingDocuments,
         vehicleCount: carrierVehicles.length,
@@ -296,7 +316,11 @@ export async function fetchVerificationQueue({
         vehicles,
       };
 
-      if (item.pendingDocumentCount > 0 || item.carrierMissingDocuments.length > 0) {
+      if (
+        packet.status === "verified" ||
+        item.pendingDocumentCount > 0 ||
+        item.carrierMissingDocuments.length > 0
+      ) {
         results.push(item);
       }
     }
@@ -336,19 +360,26 @@ type DisputeRow = {
 
 export async function fetchDisputeQueue({
   query,
+  statuses,
   limit = 50,
 }: {
   query?: string;
+  statuses?: DisputeStatus[];
   limit?: number;
 } = {}): Promise<DisputeQueueItem[]> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
+  let disputeRequest = supabase
     .from("disputes")
     .select("id, booking_id, reason, status, created_at, updated_at")
-    .eq("status", "open")
     .order("created_at", { ascending: true })
     .limit(limit);
+
+  if (statuses != null && statuses.length > 0) {
+    disputeRequest = disputeRequest.in("status", statuses);
+  }
+
+  const { data, error } = await disputeRequest;
 
   if (error) {
     throw error;

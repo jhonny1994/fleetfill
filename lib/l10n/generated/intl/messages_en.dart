@@ -460,7 +460,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "appTitle": MessageLookupByLibrary.simpleMessage("FleetFill"),
     "authAccountCreatedMessage": MessageLookupByLibrary.simpleMessage(
-      "Your account was created. Continue by signing in.",
+      "Your account was created successfully.",
     ),
     "authAuthenticationRequiredMessage": MessageLookupByLibrary.simpleMessage(
       "Sign in to continue this action.",
@@ -1361,8 +1361,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentFlowDescription": MessageLookupByLibrary.simpleMessage(
       "Follow the payment steps, upload proof, and track the review status.",
     ),
-<<<<<<< HEAD
-=======
     "paymentFlowExactTransferGuidance": m16,
     "paymentFlowOpenAction": MessageLookupByLibrary.simpleMessage(
       "Open payment details",
@@ -1377,7 +1375,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentFlowSubmittedGuidance": MessageLookupByLibrary.simpleMessage(
       "Proof received. Admin review is pending. We\'ll notify you as soon as the payment is secured or needs correction.",
     ),
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
     "paymentFlowTitle": MessageLookupByLibrary.simpleMessage("Payment"),
     "paymentInstructionsTitle": MessageLookupByLibrary.simpleMessage(
       "Payment instructions",
