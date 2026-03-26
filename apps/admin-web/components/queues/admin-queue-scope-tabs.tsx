@@ -44,7 +44,7 @@ export function AdminQueueScopeTabs({
   const scopes: QueueScope[] = ["open", "history", "all"];
 
   return (
-    <div className="panel flex flex-wrap gap-2 p-3">
+    <div className="inline-flex flex-wrap gap-1 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-muted)] p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
       {scopes.map((scope) => {
         const isActive = scope === currentScope;
         return (
@@ -53,8 +53,8 @@ export function AdminQueueScopeTabs({
             href={buildHref(pathname, scope, query, status)}
             className={
               isActive
-                ? "rounded-full bg-[var(--color-ink-strong)] px-4 py-2 text-sm font-medium text-white"
-                : "rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-medium text-[var(--color-ink-strong)]"
+                ? "rounded-full border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white shadow-sm"
+                : "rounded-full border border-transparent bg-white/80 px-4 py-2 text-sm font-medium text-[var(--color-ink-strong)] transition hover:border-[var(--color-border-strong)] hover:bg-white"
             }
           >
             {scopeLabel(locale, scope)}
