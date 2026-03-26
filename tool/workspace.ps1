@@ -53,10 +53,10 @@ function Run-AdminValidate {
 }
 
 function Run-SupabaseValidate {
-  Invoke-Checked -Description "Supabase start" -Script { supabase start --workdir backend/supabase }
-  Invoke-Checked -Description "Supabase db reset" -Script { supabase db reset --workdir backend/supabase --yes }
-  Invoke-Checked -Description "Supabase db lint" -Script { supabase db lint --workdir backend/supabase }
-  Invoke-Checked -Description "Supabase db tests" -Script { supabase test db --workdir backend/supabase }
+  Invoke-Checked -Description "Supabase start" -Script { supabase start --workdir backend }
+  Invoke-Checked -Description "Supabase db reset" -Script { supabase db reset --workdir backend --yes }
+  Invoke-Checked -Description "Supabase db lint" -Script { supabase db lint --workdir backend }
+  Invoke-Checked -Description "Supabase db tests" -Script { supabase test db --workdir backend }
 }
 
 function Run-MobileInstall {
@@ -109,7 +109,7 @@ switch ($Action) {
     } finally {
       if ($Surface -eq "all" -or $Surface -eq "supabase") {
         try {
-          & supabase stop --workdir backend/supabase | Out-Null
+          & supabase stop --workdir backend | Out-Null
         } catch {
         }
       }

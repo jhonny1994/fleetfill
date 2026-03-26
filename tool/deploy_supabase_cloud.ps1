@@ -6,7 +6,7 @@ param(
   [string]$VercelScope = "jhonny1994s-projects",
   [string]$MobileDir = "apps/mobile",
   [string]$AdminWebDir = "apps/admin-web",
-  [string]$SupabaseDir = "backend/supabase",
+  [string]$SupabaseDir = "backend",
   [switch]$SkipLocalGate,
   [switch]$SkipScheduler,
   [switch]$SkipHostedVerify
@@ -62,13 +62,13 @@ Invoke-Checked -Description "Push Supabase migrations and seed data" -Script { s
 Invoke-Checked -Description "Push Supabase config" -Script { supabase config push --workdir $SupabaseDir --project-ref $ProjectRef --yes }
 Invoke-Checked -Description "Sync Supabase cloud secrets" -Script { powershell -NoProfile -ExecutionPolicy Bypass -File tool/sync_supabase_cloud_secrets.ps1 -ProjectRef $ProjectRef -EnvFile $EnvFile }
 
-$deployableFunctions = Get-ChildItem (Join-Path $SupabaseDir "functions") -Directory |
+$deployableFunctions = Get-ChildItem (Join-Path $SupabaseDir "supabase/functions") -Directory |
   Where-Object { Test-Path (Join-Path $_.FullName "index.ts") } |
   Select-Object -ExpandProperty Name
 
 foreach ($functionName in $deployableFunctions) {
   Invoke-Checked -Description "Deploy Supabase function $functionName" -Script {
-    supabase functions deploy $functionName --project-ref $ProjectRef
+    supabase functions deploy $functionName --project-ref $ProjectRef --workdir $SupabaseDir
   }
 }
 
