@@ -775,6 +775,69 @@ const payoutRequestLabels = {
   },
 } as const;
 
+const notificationTemplateLabels = {
+  ar: {
+    delivered_pending_review: "تم التسليم وبانتظار المراجعة",
+    generated_document_available: "المستند المُنشأ أصبح جاهزًا",
+    generated_document_ready: "المستند المُنشأ أصبح جاهزًا",
+    payment_secured: "تم تأمين الدفع",
+    payment_proof_received: "تم استلام إثبات الدفع",
+    payment_proof_submitted: "تم إرسال إثبات الدفع",
+    verification_packet_approved: "تم اعتماد ملف التحقق",
+    booking_milestone_updated: "تم تحديث مرحلة الحجز",
+    booking_milestone_updated_title: "تحديث في مرحلة الحجز",
+    generated_document_ready_title: "المستند الجاهز",
+    payment_secured_title: "تم تأمين الدفع",
+    payment_proof_submitted_title: "تم إرسال إثبات الدفع",
+    verification_packet_approved_title: "تم اعتماد ملف التحقق",
+  },
+  fr: {
+    delivered_pending_review: "Livré en attente de revue",
+    generated_document_available: "Document généré disponible",
+    generated_document_ready: "Document généré prêt",
+    payment_secured: "Paiement sécurisé",
+    payment_proof_received: "Preuve de paiement reçue",
+    payment_proof_submitted: "Preuve de paiement soumise",
+    verification_packet_approved: "Dossier de vérification approuvé",
+    booking_milestone_updated: "Étape du booking mise à jour",
+    booking_milestone_updated_title: "Mise à jour d'étape du booking",
+    generated_document_ready_title: "Document prêt",
+    payment_secured_title: "Paiement sécurisé",
+    payment_proof_submitted_title: "Preuve de paiement soumise",
+    verification_packet_approved_title: "Dossier de vérification approuvé",
+  },
+  en: {
+    delivered_pending_review: "Delivered pending review",
+    generated_document_available: "Generated document available",
+    generated_document_ready: "Generated document ready",
+    payment_secured: "Payment secured",
+    payment_proof_received: "Payment proof received",
+    payment_proof_submitted: "Payment proof submitted",
+    verification_packet_approved: "Verification packet approved",
+    booking_milestone_updated: "Booking milestone updated",
+    booking_milestone_updated_title: "Booking milestone updated",
+    generated_document_ready_title: "Generated document ready",
+    payment_secured_title: "Payment secured",
+    payment_proof_submitted_title: "Payment proof submitted",
+    verification_packet_approved_title: "Verification packet approved",
+  },
+} as const;
+
+const healthErrorLabels = {
+  ar: {
+    unknown_push_error: "تعذّر إرسال الإشعار بسبب إعدادات الدفع أو Firebase.",
+    firebase_service_account_invalid: "إعداد Firebase الخاص بالإشعارات غير صالح ويجب تحديثه.",
+  },
+  fr: {
+    unknown_push_error: "L'envoi push a échoué à cause de la configuration push ou Firebase.",
+    firebase_service_account_invalid: "La configuration Firebase des notifications push est invalide et doit être corrigée.",
+  },
+  en: {
+    unknown_push_error: "Push delivery failed because the push/Firebase configuration is invalid.",
+    firebase_service_account_invalid: "The Firebase push service account is invalid and needs to be corrected.",
+  },
+} as const;
+
 export function getTimelineEventLabel(locale: string | AppLocale, value: string | null | undefined) {
   if (!value) {
     return getAdminUi(locale).labels.none;
@@ -827,6 +890,34 @@ export function getAdminActionLabel(locale: string | AppLocale, value: string | 
     return getAdminUi(locale).labels.none;
   }
   return actionLabels[localeOf(locale)][value as keyof (typeof actionLabels)["en"]] ?? humanize(value);
+}
+
+export function getNotificationTemplateLabel(locale: string | AppLocale, value: string | null | undefined) {
+  if (!value) {
+    return getAdminUi(locale).labels.none;
+  }
+  const language = localeOf(locale);
+  return notificationTemplateLabels[language][value.toLowerCase() as keyof (typeof notificationTemplateLabels)["en"]] ?? humanize(value);
+}
+
+export function getAuditHealthErrorLabel(
+  locale: string | AppLocale,
+  errorCode: string | null | undefined,
+  errorMessage: string | null | undefined,
+) {
+  const language = localeOf(locale);
+  const normalizedCode = errorCode?.toLowerCase() ?? "";
+  const normalizedMessage = errorMessage?.toLowerCase() ?? "";
+
+  if (normalizedMessage.includes("firebase_service_account_json is not valid json")) {
+    return healthErrorLabels[language].firebase_service_account_invalid;
+  }
+
+  if (normalizedCode === "unknown_push_error") {
+    return healthErrorLabels[language].unknown_push_error;
+  }
+
+  return errorMessage ?? errorCode ?? getAdminUi(locale).labels.noProviderMessage;
 }
 
 export function getSupportMessageTitle(locale: string | AppLocale, sender: string | null | undefined) {
