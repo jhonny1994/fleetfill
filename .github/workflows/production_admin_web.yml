@@ -72,6 +72,12 @@ jobs:
           cache: pnpm
           cache-dependency-path: apps/admin-web/pnpm-lock.yaml
 
+      - name: Set up Supabase CLI
+        if: inputs.sync_env
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
