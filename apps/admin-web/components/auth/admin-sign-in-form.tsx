@@ -40,11 +40,24 @@ export function AdminSignInForm({
 
   async function onSubmit(values: SignInValues) {
     setAuthError(null);
+    let data: Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>["data"] | null = null;
+    let error: Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>["error"] | null = null;
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    });
+    try {
+      const result = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      });
+      data = result.data;
+      error = result.error;
+    } catch (caughtError) {
+      const message =
+        caughtError instanceof Error && /fetch/i.test(caughtError.message)
+          ? dictionary.auth.networkError
+          : dictionary.auth.unexpectedError;
+      setAuthError(message);
+      return;
+    }
 
     if (error) {
       setAuthError(error.message);
