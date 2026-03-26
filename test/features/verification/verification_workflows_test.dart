@@ -294,14 +294,11 @@ void main() {
       () {
         final securityMigration =
             File(
-              'supabase/migrations/20260317010000_create_foundation_layer.sql',
-            ).readAsStringSync() +
+              'supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
+            ).readAsStringSync().replaceAll('\r\n', '\n') +
             File(
               'supabase/migrations/20260317010000_create_foundation_layer.sql',
-            ).readAsStringSync() +
-            File(
-              'supabase/migrations/20260317010000_create_foundation_layer.sql',
-            ).readAsStringSync();
+            ).readAsStringSync().replaceAll('\r\n', '\n');
 
         expect(
           securityMigration.contains('payment_proofs_select_shipper_or_admin'),

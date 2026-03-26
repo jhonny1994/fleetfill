@@ -452,10 +452,10 @@ class S {
     );
   }
 
-  /// `تم إنشاء حسابك بنجاح. سجّل دخولك للبدء.`
+  /// `تم إنشاء حسابك بنجاح.`
   String get authAccountCreatedMessage {
     return Intl.message(
-      'تم إنشاء حسابك بنجاح. سجّل دخولك للبدء.',
+      'تم إنشاء حسابك بنجاح.',
       name: 'authAccountCreatedMessage',
       desc: '',
       args: [],
@@ -3393,6 +3393,16 @@ class S {
   /// `الدفع`
   String get paymentFlowTitle {
     return Intl.message('الدفع', name: 'paymentFlowTitle', desc: '', args: []);
+  }
+
+  /// `افتح تفاصيل الدفع`
+  String get paymentFlowOpenAction {
+    return Intl.message(
+      'افتح تفاصيل الدفع',
+      name: 'paymentFlowOpenAction',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `أضف الحسابات التي تستقبل عليها التحويلات وأدرها.`

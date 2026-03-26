@@ -182,6 +182,7 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
   Widget build(BuildContext context) {
     final s = S.of(context);
     final shipmentsAsync = ref.watch(myShipperShipmentsProvider);
+    final bookingsAsync = ref.watch(myShipperBookingsProvider);
     final locationDirectoryAsync = ref.watch(locationDirectoryProvider);
 
     return AppPageScaffold(
@@ -220,8 +221,6 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
             for (final commune in locationDirectoryAsync.requireValue.communes)
               commune.id: commune,
           };
-<<<<<<< HEAD
-=======
           final bookingByShipmentId = {
             for (final booking
                 in bookingsAsync.asData?.value ?? const <BookingRecord>[])
@@ -236,12 +235,12 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
                         booking.bookingStatus == BookingStatus.cancelled));
             return _scope == _OperationsListScope.active ? !isHistory : isHistory;
           }).toList(growable: false);
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
 
           return RefreshIndicator(
             onRefresh: () async {
               ref
                 ..invalidate(myShipperShipmentsProvider)
+                ..invalidate(myShipperBookingsProvider)
                 ..invalidate(locationDirectoryProvider);
             },
             child: ListView(
@@ -297,54 +296,23 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
                           ? 0
                           : AppSpacing.sm,
                     ),
-                    child: AppListCard(
-                      title: _shipmentLaneLabel(context, shipment, communeMap),
-                      subtitle: _shipmentSubtitle(context, shipment),
-                      leading: AppStatusChip(
-                        label: _shipmentStatusLabel(s, shipment.status),
-                        tone: shipment.status == ShipmentStatus.draft
-                            ? AppStatusTone.info
-                            : shipment.status == ShipmentStatus.booked
-                            ? AppStatusTone.success
-                            : AppStatusTone.warning,
+                    child: _ShipperShipmentListItem(
+                      shipment: shipment,
+                      booking: bookingByShipmentId[shipment.id],
+                      communeMap: communeMap,
+                      onOpenEditor: () =>
+                          _openShipmentEditor(context, shipment: shipment),
+                      onDeleteDraft: () => _deleteShipmentFromList(
+                        context,
+                        ref,
+                        shipment,
                       ),
-                      trailing: shipment.status == ShipmentStatus.draft
-                          ? PopupMenuButton<_ShipmentListAction>(
-                              tooltip: s.shipmentEditAction,
-                              onSelected: (action) {
-                                if (action == _ShipmentListAction.edit) {
-                                  _openShipmentEditor(
-                                    context,
-                                    shipment: shipment,
-                                  );
-                                  return;
-                                }
-                                unawaited(
-                                  _deleteShipmentFromList(
-                                    context,
-                                    ref,
-                                    shipment,
-                                  ),
-                                );
-                              },
-                              itemBuilder: (context) => [
-                                PopupMenuItem<_ShipmentListAction>(
-                                  value: _ShipmentListAction.edit,
-                                  child: Text(s.shipmentEditAction),
-                                ),
-                                PopupMenuItem<_ShipmentListAction>(
-                                  value: _ShipmentListAction.delete,
-                                  child: Text(s.shipmentDeleteAction),
-                                ),
-                              ],
-                            )
-                          : null,
-                      onTap: () => context.push(
-                        AppRoutePath.sharedShipmentDetail.replaceFirst(
-                          ':id',
-                          shipment.id,
-                        ),
-                      ),
+                      onCancelBooking: (booking) =>
+                          _cancelBookingFromShipmentList(
+                            context,
+                            ref,
+                            booking,
+                          ),
                     ),
                   );
                 }),
@@ -395,11 +363,39 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
       AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
     }
   }
+
+  Future<void> _cancelBookingFromShipmentList(
+    BuildContext context,
+    WidgetRef ref,
+    BookingRecord booking,
+  ) async {
+    final confirmed = await _confirmBookingCancel(context);
+    if (!context.mounted || confirmed != true) {
+      return;
+    }
+
+    final s = S.of(context);
+    try {
+      await ref
+          .read(bookingWorkflowControllerProvider)
+          .shipperCancelPendingBooking(
+            bookingId: booking.id,
+            shipmentId: booking.shipmentId,
+          );
+      if (!context.mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, s.bookingStatusCancelledLabel);
+    } on PostgrestException catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+    }
+  }
 }
 
 enum _ShipmentListAction { edit, delete }
-<<<<<<< HEAD
-=======
 enum _BookedShipmentAction { openPayment, cancel }
 
 class _ShipperShipmentListItem extends StatelessWidget {
@@ -508,7 +504,6 @@ class _ShipperShipmentListItem extends StatelessWidget {
     );
   }
 }
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
 
 class SearchTripsScreen extends ConsumerStatefulWidget {
   const SearchTripsScreen({super.key});
@@ -733,6 +728,7 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
           )
         >(
           context: context,
+          isScrollControlled: true,
           builder: (context) {
             var selectedSort = _sort;
             var includeRecurring = _includeRecurring;
@@ -740,81 +736,90 @@ class _SearchTripsScreenState extends ConsumerState<SearchTripsScreen> {
             final s = S.of(context);
             return StatefulBuilder(
               builder: (context, setModalState) => SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        s.searchTripsControlsAction,
-                        style: Theme.of(context).textTheme.titleMedium,
+                child: LayoutBuilder(
+                  builder: (context, constraints) => ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: constraints.maxHeight * 0.82,
+                    ),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            s.searchTripsControlsAction,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          RadioGroup<SearchSortOption>(
+                            groupValue: selectedSort,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setModalState(() => selectedSort = value);
+                              }
+                            },
+                            child: Column(
+                              children: SearchSortOption.values
+                                  .map(
+                                    (option) => RadioListTile<SearchSortOption>(
+                                      value: option,
+                                      dense: true,
+                                      contentPadding: EdgeInsets.zero,
+                                      title: Text(
+                                        switch (option) {
+                                          SearchSortOption.recommended =>
+                                            s.searchSortRecommendedLabel,
+                                          SearchSortOption.topRated =>
+                                            s.searchSortTopRatedLabel,
+                                          SearchSortOption.lowestPrice =>
+                                            s.searchSortLowestPriceLabel,
+                                          SearchSortOption.nearestDeparture =>
+                                            s.searchSortNearestDepartureLabel,
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                  .toList(growable: false),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          CheckboxListTile(
+                            value: includeRecurring,
+                            onChanged: (value) {
+                              final nextValue = value ?? true;
+                              if (!nextValue && !includeOneOff) {
+                                return;
+                              }
+                              setModalState(() => includeRecurring = nextValue);
+                            },
+                            title: Text(s.searchTripsRecurringLabel),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          CheckboxListTile(
+                            value: includeOneOff,
+                            onChanged: (value) {
+                              final nextValue = value ?? true;
+                              if (!nextValue && !includeRecurring) {
+                                return;
+                              }
+                              setModalState(() => includeOneOff = nextValue);
+                            },
+                            title: Text(s.searchTripsOneOffLabel),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          FilledButton(
+                            onPressed: () => Navigator.of(context).pop((
+                              selectedSort,
+                              includeRecurring,
+                              includeOneOff,
+                            )),
+                            child: Text(s.confirmLabel),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: AppSpacing.md),
-                      RadioGroup<SearchSortOption>(
-                        groupValue: selectedSort,
-                        onChanged: (value) {
-                          if (value != null) {
-                            setModalState(() => selectedSort = value);
-                          }
-                        },
-                        child: Column(
-                          children: SearchSortOption.values
-                              .map(
-                                (option) => RadioListTile<SearchSortOption>(
-                                  value: option,
-                                  dense: true,
-                                  contentPadding: EdgeInsets.zero,
-                                  title: Text(
-                                    switch (option) {
-                                      SearchSortOption.recommended =>
-                                        s.searchSortRecommendedLabel,
-                                      SearchSortOption.topRated =>
-                                        s.searchSortTopRatedLabel,
-                                      SearchSortOption.lowestPrice =>
-                                        s.searchSortLowestPriceLabel,
-                                      SearchSortOption.nearestDeparture =>
-                                        s.searchSortNearestDepartureLabel,
-                                    },
-                                  ),
-                                ),
-                              )
-                              .toList(growable: false),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      CheckboxListTile(
-                        value: includeRecurring,
-                        onChanged: (value) {
-                          final nextValue = value ?? true;
-                          if (!nextValue && !includeOneOff) {
-                            return;
-                          }
-                          setModalState(() => includeRecurring = nextValue);
-                        },
-                        title: Text(s.searchTripsRecurringLabel),
-                      ),
-                      CheckboxListTile(
-                        value: includeOneOff,
-                        onChanged: (value) {
-                          final nextValue = value ?? true;
-                          if (!nextValue && !includeRecurring) {
-                            return;
-                          }
-                          setModalState(() => includeOneOff = nextValue);
-                        },
-                        title: Text(s.searchTripsOneOffLabel),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      FilledButton(
-                        onPressed: () => Navigator.of(context).pop((
-                          selectedSort,
-                          includeRecurring,
-                          includeOneOff,
-                        )),
-                        child: Text(s.confirmLabel),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -1185,6 +1190,8 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
             settingsAsync.asData?.value,
           );
           final latestProof = proofsAsync.asData?.value.firstOrNull;
+          final canUploadProof =
+              latestProof == null || latestProof.status == 'rejected';
           return ListView(
             key: const PageStorageKey<String>('shipper-payment-flow-screen'),
             children: [
@@ -1300,20 +1307,33 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: _isUploading
-                          ? null
-                          : () => unawaited(_uploadProof(context, booking)),
-                      child: Text(
-                        latestProof == null || latestProof.status != 'rejected'
-                            ? s.paymentProofUploadAction
-                            : s.paymentProofResubmitAction,
+                  if (canUploadProof)
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _isUploading
+                            ? null
+                            : () => unawaited(_uploadProof(context, booking)),
+                        child: Text(
+                          latestProof?.status == 'rejected'
+                              ? s.paymentProofResubmitAction
+                              : s.paymentProofUploadAction,
+                        ),
                       ),
                     ),
-                  ),
-                  if (latestProof != null) ...[
+                  if (_canShipperCancelPendingBooking(booking)) ...[
                     const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _isUploading
+                            ? null
+                            : () => unawaited(_cancelBooking(booking)),
+                        child: Text(s.cancelLabel),
+                      ),
+                    ),
+                  ],
+                  if (latestProof != null) ...[
+                    if (canUploadProof || _canShipperCancelPendingBooking(booking))
+                      const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => context.push(
@@ -1629,6 +1649,39 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
       amountController.dispose();
       referenceController.dispose();
       if (mounted) setState(() => _isUploading = false);
+    }
+  }
+
+  Future<void> _cancelBooking(BookingRecord booking) async {
+    final confirmed = await _confirmBookingCancel(context);
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
+    try {
+      await ref
+          .read(bookingWorkflowControllerProvider)
+          .shipperCancelPendingBooking(
+            bookingId: booking.id,
+            shipmentId: booking.shipmentId,
+          );
+      ref
+        ..invalidate(myShipperBookingsProvider)
+        ..invalidate(myShipperShipmentsProvider)
+        ..invalidate(bookingDetailProvider(booking.id))
+        ..invalidate(shipmentDetailProvider(booking.shipmentId));
+      if (!mounted) return;
+      final s = S.of(context);
+      AppFeedback.showSnackBar(context, s.bookingStatusCancelledLabel);
+      context.go(AppRoutePath.shipperSearch);
+    } on PostgrestException catch (error) {
+      if (mounted) {
+        final s = S.of(context);
+        AppFeedback.showSnackBar(
+          context,
+          mapAppErrorMessage(s, error),
+        );
+      }
     }
   }
 }
@@ -2529,6 +2582,51 @@ Future<bool?> _confirmShipmentDelete(BuildContext context) {
       ),
     ),
   );
+}
+
+Future<bool?> _confirmBookingCancel(BuildContext context) {
+  final s = S.of(context);
+  return showDialog<bool>(
+    context: context,
+    builder: (context) => AppFocusTraversal.dialog(
+      child: AlertDialog(
+        title: Text(s.bookingStatusCancelledLabel),
+        content: Text(s.paymentFlowDescription),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(s.cancelLabel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(s.confirmLabel),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+bool _canOpenShipperBookingWorkspace(BookingRecord booking) {
+  return booking.bookingStatus != BookingStatus.cancelled;
+}
+
+bool _canShipperCancelPendingBooking(BookingRecord booking) {
+  return booking.bookingStatus == BookingStatus.pendingPayment &&
+      (booking.paymentStatus == PaymentStatus.unpaid ||
+          booking.paymentStatus == PaymentStatus.rejected);
+}
+
+String _shipperPaymentActionLabel(S s, BookingRecord booking) {
+  return switch (booking.paymentStatus) {
+    PaymentStatus.unpaid => s.paymentFlowTitle,
+    PaymentStatus.rejected => s.paymentProofResubmitAction,
+    PaymentStatus.proofSubmitted => s.paymentFlowOpenAction,
+    PaymentStatus.underVerification => s.paymentFlowOpenAction,
+    PaymentStatus.secured => s.paymentFlowOpenAction,
+    PaymentStatus.refunded => s.paymentFlowOpenAction,
+    PaymentStatus.releasedToCarrier => s.paymentFlowOpenAction,
+  };
 }
 
 String _shipmentSelectorLabel(

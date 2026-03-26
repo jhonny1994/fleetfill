@@ -1,10 +1,6 @@
 begin;
 
-<<<<<<< HEAD
-select plan(24);
-=======
 select plan(30);
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
 
 create or replace function pg_temp.set_claims(
   p_user_id uuid,
@@ -774,8 +770,6 @@ select is(
   'storage upload succeeds with a matching authorized upload session'
 );
 
-<<<<<<< HEAD
-=======
 select pg_temp.set_claims(
   '10000000-0000-4000-8000-000000000003',
   'authenticated',
@@ -818,7 +812,6 @@ select pg_temp.set_claims(
   'shipper1@example.com'
 );
 
->>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
 select ok(
   public.authorize_private_file_access('payment-proofs', 'payment-proofs/owned-proof.png'),
   'proof owner can authorize private file access'

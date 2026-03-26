@@ -15,6 +15,7 @@ export function AdminFilterBar({
   query,
   status,
   statusOptions = [],
+  hiddenFields = [],
   locale,
   labels,
 }: {
@@ -22,6 +23,7 @@ export function AdminFilterBar({
   query?: string;
   status?: string;
   statusOptions?: FilterOption[];
+  hiddenFields?: Array<{ name: string; value: string }>;
   locale: AppLocale;
   labels: {
     searchPlaceholder: string;
@@ -39,6 +41,9 @@ export function AdminFilterBar({
     <div className="space-y-3">
       <section className="panel toolbar-surface">
         <form className="toolbar-row" action={pathname} method="get">
+          {hiddenFields.map((field) => (
+            <input key={`${field.name}-${field.value}`} type="hidden" name={field.name} value={field.value} />
+          ))}
           <div className="toolbar-controls">
             <div className="min-w-0 flex-[1.6]">
               <CommandSearch

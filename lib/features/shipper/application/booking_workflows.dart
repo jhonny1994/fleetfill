@@ -70,6 +70,21 @@ class BookingWorkflowController {
     return booking;
   }
 
+  Future<BookingRecord> shipperCancelPendingBooking({
+    required String bookingId,
+    required String shipmentId,
+    String? note,
+  }) async {
+    final booking = await ref
+        .read(bookingRepositoryProvider)
+        .shipperCancelPendingBooking(
+          bookingId: bookingId,
+          note: note,
+        );
+    _invalidateBooking(booking.id, shipmentId);
+    return booking;
+  }
+
   Future<void> submitCarrierReview({
     required String bookingId,
     required int score,
