@@ -413,3 +413,66 @@ abstract class PayoutRecord with _$PayoutRecord {
     );
   }
 }
+
+class BookingPayoutRequestContext {
+  const BookingPayoutRequestContext({
+    required this.bookingId,
+    required this.bookingStatus,
+    required this.paymentStatus,
+    required this.graceWindowHours,
+    required this.isEligible,
+    required this.blockedReason,
+    required this.hasActivePayoutAccount,
+    required this.hasOpenDispute,
+    required this.requestId,
+    required this.requestStatus,
+    required this.requestNote,
+    required this.requestedAt,
+    required this.fulfilledAt,
+    required this.payoutId,
+    required this.payoutProcessedAt,
+  });
+
+  factory BookingPayoutRequestContext.fromJson(Map<String, dynamic> json) {
+    return BookingPayoutRequestContext(
+      bookingId: (json['booking_id'] as String?)?.trim() ?? '',
+      bookingStatus: BookingStatus.fromDatabase(json['booking_status']),
+      paymentStatus: PaymentStatus.fromDatabase(json['payment_status']),
+      graceWindowHours: (json['grace_window_hours'] as num?)?.toInt() ?? 24,
+      isEligible: json['is_eligible'] as bool? ?? false,
+      blockedReason: (json['blocked_reason'] as String?)?.trim(),
+      hasActivePayoutAccount:
+          json['has_active_payout_account'] as bool? ?? false,
+      hasOpenDispute: json['has_open_dispute'] as bool? ?? false,
+      requestId: (json['request_id'] as String?)?.trim(),
+      requestStatus: (json['request_status'] as String?)?.trim(),
+      requestNote: (json['request_note'] as String?)?.trim(),
+      requestedAt: DateTime.tryParse(json['requested_at'] as String? ?? ''),
+      fulfilledAt: DateTime.tryParse(json['fulfilled_at'] as String? ?? ''),
+      payoutId: (json['payout_id'] as String?)?.trim(),
+      payoutProcessedAt: DateTime.tryParse(
+        json['payout_processed_at'] as String? ?? '',
+      ),
+    );
+  }
+
+  final String bookingId;
+  final BookingStatus bookingStatus;
+  final PaymentStatus paymentStatus;
+  final int graceWindowHours;
+  final bool isEligible;
+  final String? blockedReason;
+  final bool hasActivePayoutAccount;
+  final bool hasOpenDispute;
+  final String? requestId;
+  final String? requestStatus;
+  final String? requestNote;
+  final DateTime? requestedAt;
+  final DateTime? fulfilledAt;
+  final String? payoutId;
+  final DateTime? payoutProcessedAt;
+
+  bool get hasRequestedPayout => requestStatus == 'requested';
+
+  bool get isFulfilled => requestStatus == 'fulfilled' || payoutId != null;
+}

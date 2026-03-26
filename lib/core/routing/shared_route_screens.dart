@@ -283,6 +283,7 @@ class BookingDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+<<<<<<< HEAD
     final s = S.of(context);
     final bookingAsync = ref.watch(bookingDetailProvider(bookingId));
 
@@ -386,6 +387,13 @@ class BookingDetailScreen extends ConsumerWidget {
         },
       ),
     );
+=======
+    final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    if (auth?.role == AppUserRole.shipper) {
+      return PaymentFlowScreen(bookingId: bookingId);
+    }
+    return BookingTrackingScreen(bookingId: bookingId);
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   }
 }
 
@@ -399,7 +407,16 @@ class BookingTrackingScreen extends ConsumerWidget {
     final s = S.of(context);
     final bookingAsync = ref.watch(bookingDetailProvider(bookingId));
     final eventsAsync = ref.watch(trackingEventsProvider(bookingId));
+    final documentsAsync = ref.watch(generatedDocumentsForBookingProvider(bookingId));
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
+    final payoutContextAsync =
+        auth?.role == AppUserRole.carrier
+            ? ref.watch(bookingPayoutRequestContextProvider(bookingId))
+            : null;
+    final bookingPayoutsAsync =
+        auth?.role == AppUserRole.carrier
+            ? ref.watch(payoutsForBookingProvider(bookingId))
+            : null;
 
     return AppPageScaffold(
       title: s.trackingDetailPageTitle,
@@ -416,12 +433,23 @@ class BookingTrackingScreen extends ConsumerWidget {
           final canShipperConfirm =
               auth?.role == AppUserRole.shipper &&
               auth?.userId == booking.shipperId;
+          final canOpenShipperWorkspace =
+              auth?.role == AppUserRole.shipper &&
+              auth?.userId == booking.shipperId &&
+              _canOpenShipperBookingWorkspace(booking);
+          final payoutContext = payoutContextAsync?.asData?.value;
 
           return RefreshIndicator(
             onRefresh: () async {
               ref
                 ..invalidate(bookingDetailProvider(bookingId))
-                ..invalidate(trackingEventsProvider(bookingId));
+                ..invalidate(trackingEventsProvider(bookingId))
+                ..invalidate(generatedDocumentsForBookingProvider(bookingId));
+              if (auth?.role == AppUserRole.carrier) {
+                ref
+                  ..invalidate(bookingPayoutRequestContextProvider(bookingId))
+                  ..invalidate(payoutsForBookingProvider(bookingId));
+              }
             },
             child: ListView(
               key: const PageStorageKey<String>('booking-tracking-screen'),
@@ -452,9 +480,34 @@ class BookingTrackingScreen extends ConsumerWidget {
                       label: s.paymentFlowTitle,
                       value: _paymentStatusLabel(s, booking.paymentStatus),
                     ),
+                    ProfileSummaryRow(
+                      label: s.bookingCarrierPayoutLabel,
+                      value: _sharedMoney(s, booking.carrierPayoutDzd),
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
+                _LifecycleStatusBanner(
+                  title: s.bookingNextActionTitle,
+                  message: _bookingNextActionMessage(
+                    s,
+                    booking,
+                    auth,
+                    payoutContext,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                if (canOpenShipperWorkspace) ...[
+                  FilledButton.icon(
+                    onPressed: () => context.push(
+                      AppRoutePath.shipperPaymentFlow,
+                      extra: booking.id,
+                    ),
+                    icon: const Icon(Icons.payments_outlined),
+                    label: Text(_shipperPaymentActionLabel(s, booking)),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
                 if (canCarrierAdvance &&
                     booking.bookingStatus == BookingStatus.confirmed) ...[
                   OutlinedButton(
@@ -519,6 +572,109 @@ class BookingTrackingScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.md),
                 ],
+                if (canCarrierAdvance) ...[
+                  _CarrierPayoutSection(
+                    booking: booking,
+                    payoutContextAsync: payoutContextAsync!,
+                    bookingPayoutsAsync: bookingPayoutsAsync!,
+                    onRequestPayout: () =>
+                        _requestPayout(context, ref, booking),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => context.push(AppRoutePath.sharedSupport),
+                        icon: const Icon(Icons.support_agent_rounded),
+                        label: Text(s.supportTitle),
+                      ),
+                    ),
+                    if (canShipperConfirm &&
+                        booking.bookingStatus ==
+                            BookingStatus.deliveredPendingReview) ...[
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () =>
+                              unawaited(_openDispute(context, ref, booking)),
+                          icon: const Icon(Icons.report_gmailerrorred_rounded),
+                          label: Text(s.bookingStatusDisputedLabel),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Text(
+                  s.generatedDocumentsTitle,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                documentsAsync.when(
+                  data: (documents) => documents.isEmpty
+                      ? AppStateMessage(
+                          icon: Icons.description_outlined,
+                          title: s.generatedDocumentsTitle,
+                          message: s.generatedDocumentsEmptyMessage,
+                        )
+                      : Column(
+                          children: documents
+                              .map(
+                                (document) => Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: AppSpacing.sm,
+                                  ),
+                                  child: AppListCard(
+                                    title: _generatedDocumentTypeLabel(
+                                      s,
+                                      document.documentType,
+                                    ),
+                                    subtitle: _generatedDocumentSubtitle(
+                                      context,
+                                      s,
+                                      document,
+                                    ),
+                                    leading: AppStatusChip(
+                                      label: _generatedDocumentStatusLabel(
+                                        s,
+                                        document,
+                                      ),
+                                      tone: _generatedDocumentStatusTone(
+                                        document,
+                                      ),
+                                    ),
+                                    trailing: document.isReady
+                                        ? const Icon(Icons.chevron_right_rounded)
+                                        : null,
+                                    onTap: document.isReady
+                                        ? () => context.push(
+                                            AppRoutePath
+                                                .sharedGeneratedDocumentViewer
+                                                .replaceFirst(
+                                                  ':id',
+                                                  document.id,
+                                                ),
+                                          )
+                                        : null,
+                                  ),
+                                ),
+                              )
+                              .toList(growable: false),
+                        ),
+                  loading: () => const AppLoadingState(),
+                  error: (error, stackTrace) => AppErrorState(
+                    error: AppError(
+                      code: 'booking_documents_failed',
+                      message: mapAppErrorMessage(s, error),
+                    ),
+                    onRetry: () => ref.invalidate(
+                      generatedDocumentsForBookingProvider(bookingId),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
                 Text(
                   s.trackingTimelineTitle,
                   style: Theme.of(context).textTheme.titleMedium,
@@ -530,32 +686,7 @@ class BookingTrackingScreen extends ConsumerWidget {
                           title: s.trackingTimelineTitle,
                           message: s.trackingTimelineEmptyMessage,
                         )
-                      : Column(
-                          children: events
-                              .map(
-                                (event) => Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: AppSpacing.sm,
-                                  ),
-                                  child: AppListCard(
-                                    title: _trackingEventLabel(
-                                      s,
-                                      event.eventType,
-                                    ),
-                                    subtitle: switch (_trackingEventNote(
-                                      s,
-                                      event.eventType,
-                                      event.note,
-                                    )) {
-                                      final note? =>
-                                        '${_sharedFormatDate(event.recordedAt)} • $note',
-                                      _ => _sharedFormatDate(event.recordedAt),
-                                    },
-                                  ),
-                                ),
-                              )
-                              .toList(growable: false),
-                        ),
+                      : _BookingLifecycleTimeline(events: events, s: s),
                   loading: () => const AppLoadingState(),
                   error: (error, stackTrace) => AppErrorState(
                     error: AppError(
@@ -603,7 +734,7 @@ class BookingTrackingScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.md),
             AuthTextField(
               controller: noteController,
-              label: s.adminVerificationRejectReasonHint,
+              label: s.carrierMilestoneNoteLabel,
             ),
             const SizedBox(height: AppSpacing.md),
             FilledButton(
@@ -660,6 +791,69 @@ class BookingTrackingScreen extends ConsumerWidget {
     }
   }
 
+  Future<void> _requestPayout(
+    BuildContext context,
+    WidgetRef ref,
+    BookingRecord booking,
+  ) async {
+    final s = S.of(context);
+    final noteController = TextEditingController();
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          left: AppSpacing.md,
+          right: AppSpacing.md,
+          top: AppSpacing.md,
+          bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.md,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              s.carrierPayoutRequestAction,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            AuthTextField(
+              controller: noteController,
+              label: s.carrierPayoutRequestNoteLabel,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(s.confirmLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (confirmed != true) {
+      noteController.dispose();
+      return;
+    }
+
+    try {
+      await ref
+          .read(bookingWorkflowControllerProvider)
+          .carrierRequestPayout(
+            bookingId: booking.id,
+            shipmentId: booking.shipmentId,
+            note: noteController.text,
+          );
+      if (!context.mounted) return;
+      AppFeedback.showSnackBar(context, s.carrierPayoutRequestSuccessMessage);
+    } on PostgrestException catch (error) {
+      if (context.mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
+      }
+    } finally {
+      noteController.dispose();
+    }
+  }
+
   Future<void> _openDispute(
     BuildContext context,
     WidgetRef ref,
@@ -691,12 +885,12 @@ class BookingTrackingScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.md),
               AuthTextField(
                 controller: reasonController,
-                label: s.paymentProofRejectionReasonLabel,
+                label: s.disputeReasonLabel,
               ),
               const SizedBox(height: AppSpacing.md),
               AuthTextField(
                 controller: descriptionController,
-                label: s.shipmentDescriptionLabel,
+                label: s.disputeDescriptionLabel,
               ),
               const SizedBox(height: AppSpacing.md),
               OutlinedButton.icon(
@@ -1794,6 +1988,332 @@ String _sharedMoney(S s, double amount) {
   return '${BidiFormatters.latinIdentifier(amount.toStringAsFixed(0))} ${s.priceCurrencyLabel}';
 }
 
+String _generatedDocumentSubtitle(
+  BuildContext context,
+  S s,
+  GeneratedDocumentRecord document,
+) {
+  final detail = switch (document.status) {
+    GeneratedDocumentStatus.pending => s.generatedDocumentPendingMessage,
+    GeneratedDocumentStatus.failed => s.generatedDocumentFailedMessage,
+    GeneratedDocumentStatus.ready =>
+      document.availableAt == null
+          ? s.verificationDocumentOpenPreparedMessage
+          : '${s.generatedDocumentAvailableAtLabel}: ${_sharedFormatDate(document.availableAt!)}',
+  };
+
+  return '${_generatedDocumentStatusLabel(s, document)} • $detail';
+}
+
+String _generatedDocumentStatusLabel(S s, GeneratedDocumentRecord document) {
+  return switch (document.status) {
+    GeneratedDocumentStatus.ready => s.statusReadyLabel,
+    GeneratedDocumentStatus.failed => s.generatedDocumentStatusFailedLabel,
+    GeneratedDocumentStatus.pending => s.generatedDocumentStatusPendingLabel,
+  };
+}
+
+AppStatusTone _generatedDocumentStatusTone(GeneratedDocumentRecord document) {
+  return switch (document.status) {
+    GeneratedDocumentStatus.ready => AppStatusTone.success,
+    GeneratedDocumentStatus.failed => AppStatusTone.danger,
+    GeneratedDocumentStatus.pending => AppStatusTone.warning,
+  };
+}
+
+class _LifecycleStatusBanner extends StatelessWidget {
+  const _LifecycleStatusBanner({
+    required this.title,
+    required this.message,
+  });
+
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: colorScheme.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: AppSpacing.xs),
+          Text(message, style: Theme.of(context).textTheme.bodyMedium),
+        ],
+      ),
+    );
+  }
+}
+
+class _CarrierPayoutSection extends StatelessWidget {
+  const _CarrierPayoutSection({
+    required this.booking,
+    required this.payoutContextAsync,
+    required this.bookingPayoutsAsync,
+    required this.onRequestPayout,
+  });
+
+  final BookingRecord booking;
+  final AsyncValue<BookingPayoutRequestContext> payoutContextAsync;
+  final AsyncValue<List<PayoutRecord>> bookingPayoutsAsync;
+  final VoidCallback onRequestPayout;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = S.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          s.carrierPayoutSectionTitle,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: AppSpacing.md),
+          payoutContextAsync.when(
+            data: (contextValue) => ProfileSummaryCard(
+              title: s.carrierPayoutSectionTitle,
+            rows: [
+              ProfileSummaryRow(
+                label: s.bookingCarrierPayoutLabel,
+                value: _sharedMoney(s, booking.carrierPayoutDzd),
+              ),
+                ProfileSummaryRow(
+                  label: s.routeStatusLabel,
+                  value: _carrierPayoutRequestStateLabel(s, contextValue),
+                ),
+                ProfileSummaryRow(
+                  label: s.carrierPayoutGraceWindowLabel,
+                  value: s.carrierPayoutGraceWindowValue(
+                    BidiFormatters.latinIdentifier(
+                      contextValue.graceWindowHours.toString(),
+                    ),
+                  ),
+                ),
+                if (contextValue.requestedAt != null)
+                  ProfileSummaryRow(
+                    label: s.carrierPayoutRequestedAtLabel,
+                    value: _sharedFormatDate(contextValue.requestedAt!),
+                  ),
+                if (contextValue.payoutProcessedAt != null)
+                  ProfileSummaryRow(
+                    label: s.carrierPayoutReleasedAtLabel,
+                    value: _sharedFormatDate(contextValue.payoutProcessedAt!),
+                  ),
+                if (_payoutRequestBlockedReasonLabel(s, contextValue.blockedReason)
+                    case final blocked?)
+                  ProfileSummaryRow(
+                  label: s.reasonLabel,
+                  value: blocked,
+                ),
+            ],
+          ),
+          loading: () => const AppLoadingState(),
+          error: (error, stackTrace) => AppErrorState(
+            error: AppError(
+              code: 'carrier_payout_context_failed',
+              message: mapAppErrorMessage(s, error),
+            ),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        payoutContextAsync.when(
+            data: (contextValue) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AuthInfoBanner(
+                  message: _carrierPayoutGuidanceMessage(s, contextValue),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                if (contextValue.isEligible && !contextValue.hasRequestedPayout)
+                  FilledButton.icon(
+                    onPressed: onRequestPayout,
+                  icon: const Icon(Icons.account_balance_wallet_outlined),
+                  label: Text(s.carrierPayoutRequestAction),
+                ),
+              if (contextValue.hasRequestedPayout)
+                AppStatusChip(
+                  label: s.carrierPayoutRequestedLabel,
+                  tone: AppStatusTone.warning,
+                ),
+              if (contextValue.isFulfilled) ...[
+                const SizedBox(height: AppSpacing.sm),
+                AppStatusChip(
+                  label: s.paymentStatusReleasedToCarrierLabel,
+                  tone: AppStatusTone.success,
+                ),
+              ],
+            ],
+          ),
+          loading: () => const SizedBox.shrink(),
+          error: (error, stackTrace) => const SizedBox.shrink(),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          s.carrierPayoutHistoryTitle,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        bookingPayoutsAsync.when(
+          data: (payouts) => payouts.isEmpty
+              ? AppStateMessage(
+                  icon: Icons.account_balance_wallet_outlined,
+                  title: s.carrierPayoutHistoryTitle,
+                  message: s.adminPayoutQueueEmptyMessage,
+                )
+              : Column(
+                  children: payouts
+                      .map(
+                        (payout) => Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                          child: AppListCard(
+                            title: _sharedMoney(s, payout.amountDzd),
+                            subtitle: payout.processedAt != null ||
+                                    payout.createdAt != null
+                                ? _sharedFormatDate(
+                                    payout.processedAt ?? payout.createdAt!,
+                                  )
+                                : '-',
+                            leading: AppStatusChip(
+                              label: _transferStatusLabel(s, payout.status),
+                              tone: AppStatusTone.success,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(growable: false),
+                ),
+          loading: () => const AppLoadingState(),
+          error: (error, stackTrace) => AppErrorState(
+            error: AppError(
+              code: 'carrier_payout_history_failed',
+              message: mapAppErrorMessage(s, error),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BookingLifecycleTimeline extends StatelessWidget {
+  const _BookingLifecycleTimeline({
+    required this.events,
+    required this.s,
+  });
+
+  final List<TrackingEventRecord> events;
+  final S s;
+
+  @override
+  Widget build(BuildContext context) {
+    final latestEventId = events.isEmpty ? null : events.first.id;
+    return Column(
+      children: events.asMap().entries.map((entry) {
+        final index = entry.key;
+        final event = entry.value;
+        final isLast = index == events.length - 1;
+        final isCurrent = event.id == latestEventId;
+        final note = _trackingEventNote(s, event.eventType, event.note);
+        final actorLabel = _trackingEventActorLabel(s, event.eventType, event.note);
+        final colorScheme = Theme.of(context).colorScheme;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 24,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: isCurrent
+                            ? colorScheme.tertiary
+                            : colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    if (!isLast)
+                      Container(
+                        width: 2,
+                        height: 52,
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        color: colorScheme.outlineVariant,
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    color: isCurrent
+                        ? colorScheme.tertiaryContainer
+                        : colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                    border: Border.all(
+                      color: isCurrent
+                          ? colorScheme.tertiary
+                          : colorScheme.outlineVariant,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Wrap(
+                        spacing: AppSpacing.xs,
+                        runSpacing: AppSpacing.xs,
+                        children: [
+                          if (isCurrent)
+                            AppStatusChip(
+                              label: s.bookingTimelineCurrentLabel,
+                            ),
+                          if (actorLabel != null)
+                            AppStatusChip(
+                              label: actorLabel,
+                            ),
+                        ],
+                      ),
+                      if (isCurrent || actorLabel != null)
+                        const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        _trackingEventLabel(s, event.eventType),
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        _sharedFormatDate(event.recordedAt),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      if (note != null) ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          note,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(growable: false),
+    );
+  }
+}
+
 String _bookingStatusLabel(S s, BookingStatus status) {
   return switch (status) {
     BookingStatus.pendingPayment => s.bookingStatusPendingPaymentLabel,
@@ -1821,6 +2341,41 @@ String _paymentStatusLabel(S s, PaymentStatus status) {
   };
 }
 
+<<<<<<< HEAD
+=======
+String _transferStatusLabel(S s, String status) {
+  return switch (status) {
+    'pending' => s.transferStatusPendingLabel,
+    'sent' => s.transferStatusSentLabel,
+    'failed' => s.transferStatusFailedLabel,
+    'cancelled' => s.transferStatusCancelledLabel,
+    _ => s.localizationUnknownLabel,
+  };
+}
+
+bool _canOpenShipperBookingWorkspace(BookingRecord booking) {
+  return booking.bookingStatus != BookingStatus.cancelled;
+}
+
+bool _canShipperCancelPendingBooking(BookingRecord booking) {
+  return booking.bookingStatus == BookingStatus.pendingPayment &&
+      (booking.paymentStatus == PaymentStatus.unpaid ||
+          booking.paymentStatus == PaymentStatus.rejected);
+}
+
+String _shipperPaymentActionLabel(S s, BookingRecord booking) {
+  return switch (booking.paymentStatus) {
+    PaymentStatus.unpaid => s.paymentFlowTitle,
+    PaymentStatus.rejected => s.paymentProofResubmitAction,
+    PaymentStatus.proofSubmitted => s.paymentFlowOpenAction,
+    PaymentStatus.underVerification => s.paymentFlowOpenAction,
+    PaymentStatus.secured => s.paymentFlowOpenAction,
+    PaymentStatus.refunded => s.paymentFlowOpenAction,
+    PaymentStatus.releasedToCarrier => s.paymentFlowOpenAction,
+  };
+}
+
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
 String _generatedDocumentTypeLabel(S s, String? documentType) {
   return switch (documentType) {
     'payment_receipt' => s.generatedDocumentTypePaymentReceipt,
@@ -1831,6 +2386,7 @@ String _generatedDocumentTypeLabel(S s, String? documentType) {
 
 String _trackingEventLabel(S s, String eventType) {
   return switch (eventType) {
+    'payment_proof_submitted' => s.paymentStatusProofSubmittedLabel,
     'payment_under_review' => s.trackingEventPaymentUnderReviewLabel,
     'confirmed' => s.trackingEventConfirmedLabel,
     'picked_up' => s.trackingEventPickedUpLabel,
@@ -1839,7 +2395,10 @@ String _trackingEventLabel(S s, String eventType) {
     'completed' => s.trackingEventCompletedLabel,
     'cancelled' => s.trackingEventCancelledLabel,
     'disputed' => s.trackingEventDisputedLabel,
-    _ => eventType,
+    'payout_requested' => s.trackingEventPayoutRequestedLabel,
+    'payout_released' => s.trackingEventPayoutReleasedLabel,
+    'refund_processed' => s.trackingEventRefundProcessedLabel,
+    _ => s.localizationUnknownLabel,
   };
 }
 
@@ -1855,4 +2414,126 @@ String? _trackingEventNote(S s, String eventType, String? note) {
   }
 
   return trimmed;
+}
+
+String? _trackingEventActorLabel(S s, String eventType, String? note) {
+  if (eventType == 'payment_proof_submitted') {
+    return s.bookingTimelineActorShipperLabel;
+  }
+  if (eventType == 'payment_under_review' ||
+      eventType == 'payout_released' ||
+      eventType == 'refund_processed') {
+    return s.bookingTimelineActorAdminLabel;
+  }
+  if (eventType == 'picked_up' ||
+      eventType == 'in_transit' ||
+      eventType == 'delivered_pending_review' ||
+      eventType == 'payout_requested') {
+    return s.bookingTimelineActorCarrierLabel;
+  }
+  if (eventType == 'confirmed' && note?.trim().isNotEmpty == true) {
+    return s.bookingTimelineActorSystemLabel;
+  }
+  if (eventType == 'completed' &&
+      note?.trim() ==
+          'Booking auto-completed after delivery review grace window.') {
+    return s.bookingTimelineActorSystemLabel;
+  }
+  if (eventType == 'completed') {
+    return s.bookingTimelineActorShipperLabel;
+  }
+  return null;
+}
+
+String _bookingNextActionMessage(
+  S s,
+  BookingRecord booking,
+  AuthSnapshot? auth,
+  BookingPayoutRequestContext? payoutContext,
+) {
+  if (auth?.role == AppUserRole.shipper) {
+    return switch (booking.paymentStatus) {
+      PaymentStatus.unpaid => s.shipperNextActionPayment,
+      PaymentStatus.rejected => s.shipperNextActionPayment,
+      PaymentStatus.proofSubmitted => s.shipperNextActionReview,
+      PaymentStatus.underVerification => s.shipperNextActionReview,
+      PaymentStatus.secured when booking.bookingStatus == BookingStatus.confirmed =>
+        s.carrierNextActionPickup,
+      PaymentStatus.secured
+          when booking.bookingStatus == BookingStatus.deliveredPendingReview =>
+        s.shipperNextActionConfirmDelivery,
+      PaymentStatus.releasedToCarrier => s.carrierNextActionReleased,
+      _ => _bookingStatusLabel(s, booking.bookingStatus),
+    };
+  }
+
+  if (auth?.role == AppUserRole.carrier) {
+    if (booking.bookingStatus == BookingStatus.confirmed) {
+      return s.carrierNextActionPickup;
+    }
+    if (booking.bookingStatus == BookingStatus.pickedUp) {
+      return s.carrierNextActionTransit;
+    }
+    if (booking.bookingStatus == BookingStatus.inTransit) {
+      return s.carrierNextActionDelivery;
+    }
+    if (payoutContext?.hasRequestedPayout == true) {
+      return s.carrierNextActionAwaitingAdminRelease;
+    }
+    if (payoutContext?.isEligible == true) {
+      return s.carrierNextActionPayoutRequest;
+    }
+    if (booking.paymentStatus == PaymentStatus.releasedToCarrier) {
+      return s.carrierNextActionReleased;
+    }
+  }
+
+  return _bookingStatusLabel(s, booking.bookingStatus);
+}
+
+String _carrierPayoutRequestStateLabel(
+  S s,
+  BookingPayoutRequestContext context,
+) {
+  if (context.isFulfilled) {
+    return s.paymentStatusReleasedToCarrierLabel;
+  }
+  if (context.hasRequestedPayout) {
+    return s.carrierPayoutRequestedLabel;
+  }
+  if (context.isEligible) {
+    return s.carrierPayoutEligibleNowLabel;
+  }
+  return _payoutRequestBlockedReasonLabel(s, context.blockedReason) ??
+      s.statusPendingLabel;
+}
+
+String _carrierPayoutGuidanceMessage(
+  S s,
+  BookingPayoutRequestContext context,
+) {
+  if (context.isFulfilled) {
+    return s.carrierPayoutReleasedGuidance;
+  }
+  if (context.hasRequestedPayout) {
+    return s.carrierPayoutRequestedGuidance;
+  }
+  if (context.isEligible) {
+    return s.carrierPayoutEligibleGuidance;
+  }
+  return _payoutRequestBlockedReasonLabel(s, context.blockedReason) ??
+      s.carrierPayoutPendingGuidance(
+        BidiFormatters.latinIdentifier(context.graceWindowHours.toString()),
+      );
+}
+
+String? _payoutRequestBlockedReasonLabel(S s, String? blockedReason) {
+  return switch (blockedReason) {
+    'booking_not_completed' => s.carrierPayoutBlockedReasonCompleted,
+    'payment_not_secured' => s.carrierPayoutBlockedReasonPayment,
+    'open_dispute' => s.carrierPayoutBlockedReasonDispute,
+    'payout_account_required' => s.carrierPayoutBlockedReasonAccount,
+    'payout_already_released' => s.carrierPayoutBlockedReasonReleased,
+    _ => null,
+  };
 }

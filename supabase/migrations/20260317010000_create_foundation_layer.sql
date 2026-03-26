@@ -107,6 +107,12 @@ exception
 end $$;
 
 do $$ begin
+  create type public.payout_request_status as enum ('requested', 'cancelled', 'fulfilled');
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$ begin
   create type public.email_delivery_status as enum (
     'queued',
     'sending',
@@ -465,6 +471,19 @@ create table if not exists public.payouts (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.payout_requests (
+  id uuid primary key default gen_random_uuid(),
+  booking_id uuid not null unique references public.bookings (id) on delete cascade,
+  carrier_id uuid not null references public.profiles (id),
+  status public.payout_request_status not null default 'requested',
+  note text,
+  requested_at timestamptz not null default now(),
+  cancelled_at timestamptz,
+  fulfilled_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.generated_documents (
   id uuid primary key default gen_random_uuid(),
   booking_id uuid references public.bookings (id) on delete cascade,
@@ -795,6 +814,12 @@ on public.refunds (booking_id);
 create index if not exists payouts_carrier_id_status_idx
 on public.payouts (carrier_id, status);
 
+create index if not exists payout_requests_carrier_id_status_idx
+on public.payout_requests (carrier_id, status);
+
+create index if not exists payout_requests_requested_at_idx
+on public.payout_requests (requested_at desc);
+
 create index if not exists generated_documents_booking_id_idx
 on public.generated_documents (booking_id);
 
@@ -829,6 +854,10 @@ for each row execute function public.set_updated_at();
 
 create or replace trigger payout_accounts_set_updated_at
 before update on public.payout_accounts
+for each row execute function public.set_updated_at();
+
+create or replace trigger payout_requests_set_updated_at
+before update on public.payout_requests
 for each row execute function public.set_updated_at();
 
 create or replace trigger platform_payment_accounts_set_updated_at
@@ -1907,7 +1936,7 @@ begin
   ) into v_object_exists;
 
   if not v_object_exists then
-    raise exception 'Uploaded proof file is missing or metadata does not match the authorized session';
+    raise exception 'Uploaded proof file is missing for the authorized session';
   end if;
 
   insert into public.payment_proofs (
@@ -3092,6 +3121,7 @@ alter table public.financial_ledger_entries enable row level security;
 alter table public.disputes enable row level security;
 alter table public.refunds enable row level security;
 alter table public.payouts enable row level security;
+alter table public.payout_requests enable row level security;
 alter table public.generated_documents enable row level security;
 alter table public.email_delivery_logs enable row level security;
 alter table public.email_outbox_jobs enable row level security;
@@ -3387,6 +3417,11 @@ using (public.booking_is_visible_to_current_user(booking_id) or public.is_admin(
 drop policy if exists payouts_select_participant_or_admin on public.payouts;
 create policy payouts_select_participant_or_admin
 on public.payouts for select to authenticated
+using (carrier_id = (select auth.uid()) or public.is_admin());
+
+drop policy if exists payout_requests_select_participant_or_admin on public.payout_requests;
+create policy payout_requests_select_participant_or_admin
+on public.payout_requests for select to authenticated
 using (carrier_id = (select auth.uid()) or public.is_admin());
 
 drop policy if exists generated_documents_select_participant_or_admin on public.generated_documents;

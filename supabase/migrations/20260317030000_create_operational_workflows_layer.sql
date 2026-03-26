@@ -1653,6 +1653,16 @@ as $$
     and is_public = true;
 $$;
 
+create or replace function public.current_payout_request_grace_window_hours()
+returns integer
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select public.current_delivery_review_grace_window_hours();
+$$;
+
 create or replace function public.append_tracking_event(
   p_booking_id uuid,
   p_event_type text,
@@ -1684,6 +1694,7 @@ begin
     'completed',
     'cancelled',
     'disputed',
+    'payout_requested',
     'refund_processed',
     'payout_released'
   ) then
@@ -2308,6 +2319,194 @@ begin
 end;
 $$;
 
+create or replace function public.booking_payout_request_block_reason(
+  p_booking public.bookings
+)
+returns text
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+begin
+  if p_booking.booking_status <> 'completed' then
+    return 'booking_not_completed';
+  end if;
+
+  if p_booking.payment_status <> 'secured' then
+    return 'payment_not_secured';
+  end if;
+
+  if exists (
+    select 1 from public.disputes
+    where booking_id = p_booking.id
+      and status = 'open'
+  ) then
+    return 'open_dispute';
+  end if;
+
+  if exists (
+    select 1 from public.payouts
+    where booking_id = p_booking.id
+  ) then
+    return 'payout_already_released';
+  end if;
+
+  if not exists (
+    select 1 from public.payout_accounts
+    where carrier_id = p_booking.carrier_id
+      and is_active = true
+  ) then
+    return 'payout_account_required';
+  end if;
+
+  return null;
+end;
+$$;
+
+create or replace function public.get_booking_payout_request_context(
+  p_booking_id uuid
+)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+declare
+  v_actor_id uuid := (select auth.uid());
+  v_booking public.bookings;
+  v_request public.payout_requests;
+  v_payout public.payouts;
+  v_blocked_reason text;
+begin
+  if v_actor_id is null and not public.is_service_role() then
+    raise exception 'authentication_required';
+  end if;
+
+  select *
+  into v_booking
+  from public.bookings
+  where id = p_booking_id
+    and (
+      public.is_admin()
+      or public.is_service_role()
+      or shipper_id = v_actor_id
+      or carrier_id = v_actor_id
+    );
+
+  if not found then
+    raise exception 'Booking not found';
+  end if;
+
+  select *
+  into v_request
+  from public.payout_requests
+  where booking_id = p_booking_id;
+
+  select *
+  into v_payout
+  from public.payouts
+  where booking_id = p_booking_id;
+
+  v_blocked_reason := public.booking_payout_request_block_reason(v_booking);
+
+  return jsonb_build_object(
+    'booking_id', v_booking.id,
+    'booking_status', v_booking.booking_status,
+    'payment_status', v_booking.payment_status,
+    'grace_window_hours', public.current_payout_request_grace_window_hours(),
+    'blocked_reason', v_blocked_reason,
+    'is_eligible', v_blocked_reason is null,
+    'has_active_payout_account', exists (
+      select 1
+      from public.payout_accounts
+      where carrier_id = v_booking.carrier_id
+        and is_active = true
+    ),
+    'has_open_dispute', exists (
+      select 1
+      from public.disputes
+      where booking_id = v_booking.id
+        and status = 'open'
+    ),
+    'request_id', v_request.id,
+    'request_status', v_request.status,
+    'request_note', v_request.note,
+    'requested_at', v_request.requested_at,
+    'fulfilled_at', v_request.fulfilled_at,
+    'payout_id', v_payout.id,
+    'payout_processed_at', v_payout.processed_at
+  );
+end;
+$$;
+
+create or replace function public.carrier_request_payout(
+  p_booking_id uuid,
+  p_note text default null
+)
+returns public.payout_requests
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_actor_id uuid := (select auth.uid());
+  v_booking public.bookings;
+  v_request public.payout_requests;
+  v_blocked_reason text;
+begin
+  if v_actor_id is null then
+    raise exception 'authentication_required';
+  end if;
+
+  select *
+  into v_booking
+  from public.bookings
+  where id = p_booking_id
+    and carrier_id = v_actor_id
+  for update;
+
+  if not found then
+    raise exception 'Booking not found';
+  end if;
+
+  v_blocked_reason := public.booking_payout_request_block_reason(v_booking);
+  if v_blocked_reason is not null then
+    raise exception 'Payout request is blocked: %', v_blocked_reason;
+  end if;
+
+  insert into public.payout_requests (
+    booking_id,
+    carrier_id,
+    status,
+    note,
+    requested_at,
+    cancelled_at,
+    fulfilled_at
+  ) values (
+    v_booking.id,
+    v_booking.carrier_id,
+    'requested',
+    left(nullif(trim(p_note), ''), 2000),
+    now(),
+    null,
+    null
+  )
+  on conflict (booking_id) do update
+  set carrier_id = excluded.carrier_id,
+      status = 'requested',
+      note = excluded.note,
+      requested_at = excluded.requested_at,
+      cancelled_at = null,
+      fulfilled_at = null,
+      updated_at = now()
+  returning * into v_request;
+
+  return v_request;
+end;
+$$;
+
 create or replace function public.admin_release_payout(
   p_booking_id uuid,
   p_external_reference text default null,
@@ -2322,6 +2521,7 @@ declare
   v_booking public.bookings;
   v_account public.payout_accounts;
   v_payout public.payouts;
+  v_request public.payout_requests;
 begin
   if not public.is_admin() and not public.is_service_role() then
     raise exception 'Payout release requires privileged access';
@@ -2359,6 +2559,12 @@ begin
   ) then
     raise exception 'Payout already exists for this booking';
   end if;
+
+  select *
+  into v_request
+  from public.payout_requests
+  where booking_id = p_booking_id
+  for update;
 
   select * into v_account
   from public.payout_accounts
@@ -2410,10 +2616,18 @@ begin
       updated_at = now()
   where id = v_booking.id;
 
+  if v_request.id is not null then
+    update public.payout_requests
+    set status = 'fulfilled',
+        fulfilled_at = now(),
+        updated_at = now()
+    where id = v_request.id;
+  end if;
+
   perform public.append_tracking_event(
     v_booking.id,
     'payout_released',
-    'internal',
+    'user_visible',
     p_note,
     (select auth.uid())
   );
@@ -2480,6 +2694,15 @@ grant execute on function public.admin_resolve_dispute_complete(uuid, text) to a
 
 revoke all on function public.admin_resolve_dispute_refund(uuid, numeric, text, text, text) from public, anon;
 grant execute on function public.admin_resolve_dispute_refund(uuid, numeric, text, text, text) to authenticated, service_role;
+
+revoke all on function public.booking_payout_request_block_reason(public.bookings) from public, anon;
+grant execute on function public.booking_payout_request_block_reason(public.bookings) to authenticated, service_role;
+
+revoke all on function public.get_booking_payout_request_context(uuid) from public, anon;
+grant execute on function public.get_booking_payout_request_context(uuid) to authenticated, service_role;
+
+revoke all on function public.carrier_request_payout(uuid, text) from public, anon;
+grant execute on function public.carrier_request_payout(uuid, text) to authenticated, service_role;
 
 revoke all on function public.admin_release_payout(uuid, text, text) from public, anon;
 grant execute on function public.admin_release_payout(uuid, text, text) to authenticated, service_role;
@@ -3924,7 +4147,8 @@ begin
 end;
 $$;
 
-create or replace function public.authorize_private_file_access(
+create or replace function public.authorize_private_file_access_for_user(
+  p_actor_id uuid,
   p_bucket_id text,
   p_object_path text
 )
@@ -3935,9 +4159,23 @@ security definer
 set search_path = public
 as $$
 begin
-  perform public.assert_rate_limit('signed_url_generation', 30, 60);
+  if p_actor_id is null then
+    return false;
+  end if;
 
-  if public.is_admin() then
+  perform public.assert_rate_limit_for_actor(
+    p_actor_id,
+    'signed_url_generation',
+    30,
+    60
+  );
+
+  if exists (
+    select 1
+    from public.profiles as p
+    where p.id = p_actor_id
+      and p.role = 'admin'
+  ) then
     return true;
   end if;
 
@@ -3947,7 +4185,7 @@ begin
       from public.payment_proofs as pp
       join public.bookings as b on b.id = pp.booking_id
       where pp.storage_path = p_object_path
-        and b.shipper_id = (select auth.uid())
+        and b.shipper_id = p_actor_id
     );
   end if;
 
@@ -3956,7 +4194,7 @@ begin
       select 1
       from public.verification_documents as vd
       where vd.storage_path = p_object_path
-        and vd.owner_profile_id = (select auth.uid())
+        and vd.owner_profile_id = p_actor_id
     );
   end if;
 
@@ -3966,7 +4204,7 @@ begin
       from public.generated_documents as gd
       join public.bookings as b on b.id = gd.booking_id
       where gd.storage_path = p_object_path
-        and (b.shipper_id = (select auth.uid()) or b.carrier_id = (select auth.uid()))
+        and (b.shipper_id = p_actor_id or b.carrier_id = p_actor_id)
     );
   end if;
 
@@ -3977,11 +4215,32 @@ begin
       join public.disputes as d on d.id = de.dispute_id
       join public.bookings as b on b.id = d.booking_id
       where de.storage_path = p_object_path
-        and (b.shipper_id = (select auth.uid()) or b.carrier_id = (select auth.uid()))
+        and (b.shipper_id = p_actor_id or b.carrier_id = p_actor_id)
     );
   end if;
 
   return false;
+end;
+$$;
+
+create or replace function public.authorize_private_file_access(
+  p_bucket_id text,
+  p_object_path text
+)
+returns boolean
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+declare
+  v_actor_id uuid := nullif(current_setting('request.jwt.claim.sub', true), '')::uuid;
+begin
+  return public.authorize_private_file_access_for_user(
+    v_actor_id,
+    p_bucket_id,
+    p_object_path
+  );
 end;
 $$;
 

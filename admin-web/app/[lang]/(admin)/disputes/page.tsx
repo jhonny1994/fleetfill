@@ -16,7 +16,23 @@ export default async function DisputesPage({
   const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const ui = getAdminUi(lang);
   const detailCopy = getAdminDetailCopy(lang);
+<<<<<<< HEAD
   const items = await fetchDisputeQueue({ query });
+=======
+  const statuses: DisputePageStatus[] = status
+    ? [status]
+    : view === "history"
+      ? ["resolved"]
+      : view === "all"
+        ? ["open", "resolved"]
+        : ["open"];
+  const [items, openItems, historyItems, allItems] = await Promise.all([
+    fetchDisputeQueue({ query, statuses }),
+    fetchDisputeQueue({ query, statuses: ["open"] }),
+    fetchDisputeQueue({ query, statuses: ["resolved"] }),
+    fetchDisputeQueue({ query, statuses: ["open", "resolved"] }),
+  ]);
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   const pathname = `/${lang}/disputes`;
 
   return (
@@ -28,6 +44,21 @@ export default async function DisputesPage({
           {detailCopy.disputes.description}
         </p>
       </section>
+<<<<<<< HEAD
+=======
+      <AdminQueueScopeTabs
+        pathname={pathname}
+        locale={lang}
+        currentScope={view}
+        query={query}
+        status={status}
+        counts={{
+          open: openItems.length,
+          history: historyItems.length,
+          all: allItems.length,
+        }}
+      />
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
       <AdminFilterBar
         pathname={pathname}
         query={query}

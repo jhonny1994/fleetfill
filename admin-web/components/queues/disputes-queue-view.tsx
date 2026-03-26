@@ -18,7 +18,7 @@ function buildColumns(locale: string): ColumnDef<DisputeQueueItem>[] {
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
-        <Link href={`/${locale}/disputes/${row.original.bookingId}`} className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
+        <Link href={`/${locale}/bookings/${row.original.bookingId}`} className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
           {row.original.trackingNumber ?? ui.labels.unknown}
         </Link>
         <p className="text-xs text-[var(--color-ink-muted)]">{formatCompactReference(row.original.bookingId)}</p>

@@ -176,12 +176,31 @@ class CarrierHomeScreen extends ConsumerWidget {
     final s = S.of(context);
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
     final vehicles = ref.watch(myVehiclesProvider);
+    final bookingsAsync = ref.watch(carrierBookingsProvider);
+    final bookings = bookingsAsync.asData?.value ?? const <BookingRecord>[];
+    final activeBookings = bookings
+        .where(
+          (booking) =>
+              booking.bookingStatus != BookingStatus.completed &&
+              booking.bookingStatus != BookingStatus.cancelled,
+        )
+        .toList(growable: false);
+    final payoutReadyCount = bookings
+        .where(
+          (booking) =>
+              booking.bookingStatus == BookingStatus.completed &&
+              booking.paymentStatus == PaymentStatus.secured,
+        )
+        .length;
+    final focusBooking = _highestPriorityCarrierBooking(bookings);
 
     return AppPageScaffold(
       title: s.carrierHomeTitle,
       child: RefreshIndicator(
         onRefresh: () async {
-          ref.invalidate(myVehiclesProvider);
+          ref
+            ..invalidate(myVehiclesProvider)
+            ..invalidate(carrierBookingsProvider);
         },
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -195,6 +214,12 @@ class CarrierHomeScreen extends ConsumerWidget {
             ProfileSummaryCard(
               title: s.carrierVerificationSummaryTitle,
               rows: [
+                ProfileSummaryRow(
+                  label: s.carrierBookingsTitle,
+                  value: BidiFormatters.latinIdentifier(
+                    activeBookings.length.toString(),
+                  ),
+                ),
                 ProfileSummaryRow(
                   label: s.carrierProfileVerificationLabel,
                   value: verificationStatusLabel(
@@ -212,6 +237,12 @@ class CarrierHomeScreen extends ConsumerWidget {
                       ? s.statusReadyLabel
                       : s.statusSetupRequiredLabel,
                 ),
+                ProfileSummaryRow(
+                  label: s.carrierPayoutEligibleNowLabel,
+                  value: BidiFormatters.latinIdentifier(
+                    payoutReadyCount.toString(),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
@@ -225,11 +256,51 @@ class CarrierHomeScreen extends ConsumerWidget {
                     : s.carrierVerificationPendingBanner,
               ),
             const SizedBox(height: AppSpacing.md),
+            Text(
+              s.bookingNextActionTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            if (focusBooking != null) ...[
+              _CarrierOperationalFocusCard(
+                title: focusBooking.trackingNumber,
+                stateLabel: _carrierBookingFocusLabel(s, focusBooking),
+                message: _carrierBookingFocusMessage(s, focusBooking),
+                tone: _carrierBookingFocusTone(focusBooking),
+                onPressed: () => context.push(
+                  AppRoutePath.sharedTrackingDetail.replaceFirst(
+                    ':id',
+                    focusBooking.id,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ] else
+              AppStateMessage(
+                icon: Icons.task_alt_rounded,
+                title: s.operationsActiveLabel,
+                message: s.carrierActiveBookingsEmptyMessage,
+              ),
+            const SizedBox(height: AppSpacing.md),
+            AppListCard(
+              title: s.carrierBookingsTitle,
+              subtitle: s.carrierHomeDescription,
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.go(AppRoutePath.carrierBookings),
+            ),
+            const SizedBox(height: AppSpacing.sm),
             AppListCard(
               title: s.vehiclesTitle,
               subtitle: s.carrierVehiclesShortcutDescription,
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => context.go(AppRoutePath.carrierVehicles()),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            AppListCard(
+              title: s.payoutAccountsTitle,
+              subtitle: s.carrierPayoutHistoryTitle,
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.go(AppRoutePath.carrierPayoutAccounts()),
             ),
             const SizedBox(height: AppSpacing.sm),
             AppListCard(
@@ -245,11 +316,21 @@ class CarrierHomeScreen extends ConsumerWidget {
   }
 }
 
-class CarrierBookingsScreen extends ConsumerWidget {
+enum _CarrierBookingsScope { active, history }
+
+class CarrierBookingsScreen extends ConsumerStatefulWidget {
   const CarrierBookingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CarrierBookingsScreen> createState() =>
+      _CarrierBookingsScreenState();
+}
+
+class _CarrierBookingsScreenState extends ConsumerState<CarrierBookingsScreen> {
+  _CarrierBookingsScope _scope = _CarrierBookingsScope.active;
+
+  @override
+  Widget build(BuildContext context) {
     final s = S.of(context);
     final bookingsAsync = ref.watch(carrierBookingsProvider);
 
@@ -259,37 +340,79 @@ class CarrierBookingsScreen extends ConsumerWidget {
         value: bookingsAsync,
         onRetry: () => ref.invalidate(carrierBookingsProvider),
         data: (bookings) {
-          if (bookings.isEmpty) {
-            return AppEmptyState(
-              title: s.carrierBookingsTitle,
-              message: s.carrierBookingsDescription,
-            );
-          }
+          final filteredBookings = bookings.where((booking) {
+            final isHistory =
+                booking.bookingStatus == BookingStatus.completed ||
+                booking.bookingStatus == BookingStatus.cancelled;
+            return _scope == _CarrierBookingsScope.active ? !isHistory : isHistory;
+          }).toList(growable: false);
 
           return RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(carrierBookingsProvider);
             },
-            child: ListView.separated(
+            child: ListView(
               key: const PageStorageKey<String>('carrier-bookings-list'),
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: bookings.length,
-              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (context, index) {
-                final booking = bookings[index];
-                return AppListCard(
-                  title: booking.trackingNumber,
-                  subtitle:
-                      '${_carrierBookingStatusLabel(s, booking.bookingStatus)} • ${BidiFormatters.latinIdentifier(booking.weightKg.toStringAsFixed(0))} kg',
-                  trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => context.push(
-                    AppRoutePath.sharedTrackingDetail.replaceFirst(
-                      ':id',
-                      booking.id,
+              children: [
+                SegmentedButton<_CarrierBookingsScope>(
+                  segments: [
+                    ButtonSegment<_CarrierBookingsScope>(
+                      value: _CarrierBookingsScope.active,
+                      label: Text(s.operationsActiveLabel),
+                      icon: const Icon(Icons.local_shipping_outlined),
                     ),
-                  ),
-                );
-              },
+                    ButtonSegment<_CarrierBookingsScope>(
+                      value: _CarrierBookingsScope.history,
+                      label: Text(s.operationsHistoryLabel),
+                      icon: const Icon(Icons.history_rounded),
+                    ),
+                  ],
+                  selected: {_scope},
+                  onSelectionChanged: (selection) {
+                    setState(() {
+                      _scope = selection.first;
+                    });
+                  },
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                if (filteredBookings.isEmpty)
+                  AppEmptyState(
+                    title: _scope == _CarrierBookingsScope.active
+                        ? s.operationsActiveLabel
+                        : s.operationsHistoryLabel,
+                    message: _scope == _CarrierBookingsScope.active
+                        ? s.carrierActiveBookingsEmptyMessage
+                        : s.carrierHistoryBookingsEmptyMessage,
+                  )
+                else
+                  ...filteredBookings.indexed.map((entry) {
+                    final index = entry.$1;
+                    final booking = entry.$2;
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: index == filteredBookings.length - 1
+                            ? 0
+                            : AppSpacing.sm,
+                      ),
+                      child: AppListCard(
+                        title: booking.trackingNumber,
+                        subtitle: _carrierBookingListSubtitle(s, booking),
+                        leading: AppStatusChip(
+                          label: _carrierBookingFocusLabel(s, booking),
+                          tone: _carrierBookingFocusTone(booking),
+                        ),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => context.push(
+                          AppRoutePath.sharedTrackingDetail.replaceFirst(
+                            ':id',
+                            booking.id,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+              ],
             ),
           );
         },
@@ -1064,5 +1187,152 @@ String _carrierBookingStatusLabel(S s, BookingStatus status) {
     BookingStatus.completed => s.bookingStatusCompletedLabel,
     BookingStatus.cancelled => s.bookingStatusCancelledLabel,
     BookingStatus.disputed => s.bookingStatusDisputedLabel,
+  };
+}
+
+String _carrierBookingSecondaryStatusLabel(S s, BookingRecord booking) {
+  if (booking.paymentStatus == PaymentStatus.releasedToCarrier) {
+    return s.paymentStatusReleasedToCarrierLabel;
+  }
+  if (booking.paymentStatus == PaymentStatus.secured &&
+      booking.bookingStatus == BookingStatus.completed) {
+    return s.carrierNextActionPayoutRequest;
+  }
+  return '${_carrierPaymentStatusLabel(s, booking.paymentStatus)} • ${BidiFormatters.latinIdentifier(booking.weightKg.toStringAsFixed(0))} kg';
+}
+
+BookingRecord? _highestPriorityCarrierBooking(List<BookingRecord> bookings) {
+  if (bookings.isEmpty) {
+    return null;
+  }
+  final ordered = [...bookings]
+    ..sort((a, b) => _carrierBookingPriority(a).compareTo(_carrierBookingPriority(b)));
+  return ordered.first;
+}
+
+int _carrierBookingPriority(BookingRecord booking) {
+  if (booking.bookingStatus == BookingStatus.confirmed) {
+    return 0;
+  }
+  if (booking.bookingStatus == BookingStatus.pickedUp) {
+    return 1;
+  }
+  if (booking.bookingStatus == BookingStatus.inTransit) {
+    return 2;
+  }
+  if (booking.bookingStatus == BookingStatus.deliveredPendingReview) {
+    return 3;
+  }
+  if (booking.paymentStatus == PaymentStatus.releasedToCarrier) {
+    return 5;
+  }
+  if (booking.bookingStatus == BookingStatus.completed &&
+      booking.paymentStatus == PaymentStatus.secured) {
+    return 4;
+  }
+  return 6;
+}
+
+String _carrierBookingFocusLabel(S s, BookingRecord booking) {
+  if (booking.paymentStatus == PaymentStatus.releasedToCarrier) {
+    return s.paymentStatusReleasedToCarrierLabel;
+  }
+  if (booking.bookingStatus == BookingStatus.completed &&
+      booking.paymentStatus == PaymentStatus.secured) {
+    return s.carrierPayoutEligibleNowLabel;
+  }
+  return _carrierBookingStatusLabel(s, booking.bookingStatus);
+}
+
+String _carrierBookingFocusMessage(S s, BookingRecord booking) {
+  if (booking.paymentStatus == PaymentStatus.releasedToCarrier) {
+    return s.carrierNextActionReleased;
+  }
+  if (booking.bookingStatus == BookingStatus.completed &&
+      booking.paymentStatus == PaymentStatus.secured) {
+    return s.carrierNextActionPayoutRequest;
+  }
+  return switch (booking.bookingStatus) {
+    BookingStatus.confirmed => s.carrierNextActionPickup,
+    BookingStatus.pickedUp => s.carrierNextActionTransit,
+    BookingStatus.inTransit => s.carrierNextActionDelivery,
+    BookingStatus.deliveredPendingReview => s.carrierNextActionAwaitingAdminRelease,
+    _ => _carrierBookingSecondaryStatusLabel(s, booking),
+  };
+}
+
+AppStatusTone _carrierBookingFocusTone(BookingRecord booking) {
+  if (booking.paymentStatus == PaymentStatus.releasedToCarrier) {
+    return AppStatusTone.success;
+  }
+  if (booking.bookingStatus == BookingStatus.completed &&
+      booking.paymentStatus == PaymentStatus.secured) {
+    return AppStatusTone.warning;
+  }
+  return switch (booking.bookingStatus) {
+    BookingStatus.confirmed => AppStatusTone.warning,
+    BookingStatus.pickedUp => AppStatusTone.info,
+    BookingStatus.inTransit => AppStatusTone.info,
+    BookingStatus.deliveredPendingReview => AppStatusTone.warning,
+    BookingStatus.disputed => AppStatusTone.danger,
+    BookingStatus.cancelled => AppStatusTone.neutral,
+    _ => AppStatusTone.neutral,
+  };
+}
+
+String _carrierBookingListSubtitle(S s, BookingRecord booking) {
+  return '${_carrierBookingFocusMessage(s, booking)}\n${_carrierBookingSecondaryStatusLabel(s, booking)}';
+}
+
+class _CarrierOperationalFocusCard extends StatelessWidget {
+  const _CarrierOperationalFocusCard({
+    required this.title,
+    required this.stateLabel,
+    required this.message,
+    required this.tone,
+    required this.onPressed,
+  });
+
+  final String title;
+  final String stateLabel;
+  final String message;
+  final AppStatusTone tone;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            AppStatusChip(label: stateLabel, tone: tone),
+            const SizedBox(height: AppSpacing.sm),
+            Text(message),
+            const SizedBox(height: AppSpacing.md),
+            FilledButton.icon(
+              onPressed: onPressed,
+              icon: const Icon(Icons.arrow_forward_rounded),
+              label: Text(S.of(context).trackingDetailPageTitle),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+String _carrierPaymentStatusLabel(S s, PaymentStatus status) {
+  return switch (status) {
+    PaymentStatus.unpaid => s.paymentStatusUnpaidLabel,
+    PaymentStatus.proofSubmitted => s.paymentStatusProofSubmittedLabel,
+    PaymentStatus.underVerification => s.paymentStatusUnderVerificationLabel,
+    PaymentStatus.secured => s.paymentStatusSecuredLabel,
+    PaymentStatus.rejected => s.paymentStatusRejectedLabel,
+    PaymentStatus.refunded => s.paymentStatusRefundedLabel,
+    PaymentStatus.releasedToCarrier => s.paymentStatusReleasedToCarrierLabel,
   };
 }

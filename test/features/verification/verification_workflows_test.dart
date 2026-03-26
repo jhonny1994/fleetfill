@@ -317,13 +317,13 @@ void main() {
         );
         expect(
           securityMigration.contains(
-            'Uploaded verification file is missing or metadata does not match the authorized session',
+            'Uploaded verification file is missing for the authorized session',
           ),
           isTrue,
         );
         expect(
           securityMigration.contains(
-            'Uploaded proof file is missing or metadata does not match the authorized session',
+            'Uploaded proof file is missing for the authorized session',
           ),
           isTrue,
         );

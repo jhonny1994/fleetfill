@@ -15,7 +15,23 @@ export default async function PaymentsPage({
   const query = filters.q?.trim();
   const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const ui = getAdminUi(lang);
+<<<<<<< HEAD
   const items = await fetchPaymentQueue({ query });
+=======
+  const statuses: PaymentPageStatus[] = status
+    ? [status]
+    : view === "history"
+      ? ["verified", "rejected"]
+      : view === "all"
+        ? ["pending", "verified", "rejected"]
+        : ["pending"];
+  const [items, openItems, historyItems, allItems] = await Promise.all([
+    fetchPaymentQueue({ query, statuses }),
+    fetchPaymentQueue({ query, statuses: ["pending"] }),
+    fetchPaymentQueue({ query, statuses: ["verified", "rejected"] }),
+    fetchPaymentQueue({ query, statuses: ["pending", "verified", "rejected"] }),
+  ]);
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   const pathname = `/${lang}/payments`;
 
   return (
@@ -27,6 +43,21 @@ export default async function PaymentsPage({
           {dictionary.dashboard.body}
         </p>
       </section>
+<<<<<<< HEAD
+=======
+      <AdminQueueScopeTabs
+        pathname={pathname}
+        locale={lang}
+        currentScope={view}
+        query={query}
+        status={status}
+        counts={{
+          open: openItems.length,
+          history: historyItems.length,
+          all: allItems.length,
+        }}
+      />
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
       <AdminFilterBar
         pathname={pathname}
         query={query}

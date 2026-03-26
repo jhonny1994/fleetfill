@@ -720,6 +720,22 @@
   "bookingPaymentReferenceLabel": "Référence de paiement",
   "bookingTrackingNumberLabel": "Numéro de suivi",
   "paymentInstructionsTitle": "Instructions de paiement",
+  "paymentFlowExactTransferGuidance": "Envoyez exactement {amount} DZD avec la référence de réservation {reference}, puis téléversez la preuve ici.",
+  "@paymentFlowExactTransferGuidance": {
+    "placeholders": {
+      "amount": {},
+      "reference": {}
+    }
+  },
+  "paymentFlowSubmittedGuidance": "Preuve reçue. La revue admin est en attente. Nous vous notifierons dès que le paiement sera sécurisé ou s'il faut corriger quelque chose.",
+  "paymentFlowRejectedGuidance": "Votre preuve précédente a été rejetée. Corrigez les détails de paiement ou téléversez une preuve plus claire pour continuer.",
+  "paymentFlowRejectedGuidanceWithReason": "Votre preuve précédente a été rejetée pour la raison suivante : {reason}. Corrigez-la puis renvoyez-la depuis cet écran.",
+  "@paymentFlowRejectedGuidanceWithReason": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "paymentFlowSecuredGuidance": "Le paiement est sécurisé pour cette réservation. Conservez cet écran pour les reçus, l'historique des preuves et les documents générés.",
   "adminPaymentProofQueueTitle": "Revue des preuves de paiement",
   "adminPaymentProofQueueEmptyMessage": "Aucune preuve de paiement à revoir pour le moment.",
   "paymentProofSectionTitle": "Preuve de paiement",
@@ -755,6 +771,7 @@
   "deliveryConfirmAction": "Confirmer la livraison",
   "deliveryConfirmedMessage": "Livraison confirmée.",
   "carrierMilestoneUpdatedMessage": "Étape de réservation mise à jour.",
+  "carrierMilestoneNoteLabel": "Note d'étape",
   "trackingEventPaymentUnderReviewLabel": "Paiement en vérification",
   "trackingEventConfirmedLabel": "Confirmée",
   "trackingEventPickedUpLabel": "Ramassée",
@@ -763,7 +780,67 @@
   "trackingEventCompletedLabel": "Terminée",
   "trackingEventCancelledLabel": "Annulée",
   "trackingEventDisputedLabel": "Contestée",
+  "trackingEventPayoutRequestedLabel": "Versement demandé",
+  "trackingEventPayoutReleasedLabel": "Versement libéré",
+  "trackingEventRefundProcessedLabel": "Remboursement traité",
   "trackingEventAutoCompletedNote": "Réservation terminée automatiquement après la fin de la fenêtre de revue de livraison.",
+  "bookingNextActionTitle": "Prochaine action",
+  "shipperNextActionPayment": "Envoyez ou renvoyez la preuve de paiement afin que FleetFill puisse sécuriser cette réservation.",
+  "shipperNextActionReview": "La preuve de paiement est en cours de revue. Aucune action n'est requise de votre part pour le moment.",
+  "shipperNextActionConfirmDelivery": "Confirmez la livraison si tout est bien arrivé, ou ouvrez un litige si quelque chose ne va pas.",
+  "carrierNextActionPickup": "Le ramassage est la prochaine étape opérationnelle pour cette réservation.",
+  "carrierNextActionTransit": "Passez la réservation en transit dès que le chargement est en route.",
+  "carrierNextActionDelivery": "Enregistrez la livraison dès que l'envoi est remis.",
+  "carrierNextActionPayoutRequest": "Cette réservation est éligible au versement. Demandez votre versement quand vous êtes prêt.",
+  "carrierNextActionAwaitingAdminRelease": "Le versement a été demandé et attend la libération par l'administration.",
+  "carrierNextActionReleased": "Cette réservation est réglée et le versement transporteur a été libéré.",
+  "carrierPayoutSectionTitle": "Versement transporteur",
+  "carrierPayoutGraceWindowLabel": "Politique de versement",
+  "carrierPayoutGraceWindowValue": "La demande s'ouvre après une fenêtre de grâce de {hours} heures une fois la réservation terminée.",
+  "@carrierPayoutGraceWindowValue": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "carrierPayoutRequestedAtLabel": "Demandé le",
+  "carrierPayoutReleasedAtLabel": "Versé le",
+  "carrierPayoutRequestNoteLabel": "Note de demande de versement",
+  "carrierPayoutRequestAction": "Demander le versement",
+  "carrierPayoutRequestedLabel": "Demandé",
+  "carrierPayoutEligibleNowLabel": "Éligible maintenant",
+  "carrierPayoutHistoryTitle": "Historique des versements",
+  "carrierPayoutEligibleGuidance": "Cette réservation est prête pour une demande de versement. Envoyez-la quand vous souhaitez que les opérations libèrent les fonds.",
+  "carrierPayoutRequestedGuidance": "Votre demande de versement est enregistrée. Les opérations admin vont la revoir puis la libérer vers votre compte de versement enregistré.",
+  "carrierPayoutReleasedGuidance": "Le versement a été libéré pour cette réservation. Consultez l'historique ci-dessous pour le dernier enregistrement.",
+  "carrierPayoutPendingGuidance": "Cette réservation est encore dans la fenêtre de politique de versement de {hours} heures ou attend un autre déblocage avant l'ouverture de la demande.",
+  "@carrierPayoutPendingGuidance": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "carrierPayoutRequestSuccessMessage": "Demande de versement envoyée.",
+  "carrierPayoutBlockedReasonCompleted": "La demande de versement ne s'ouvre qu'une fois la réservation terminée.",
+  "carrierPayoutBlockedReasonPayment": "La demande de versement reste bloquée tant que le paiement n'est pas sécurisé.",
+  "carrierPayoutBlockedReasonDispute": "Résolvez le litige ouvert avant de demander le versement.",
+  "carrierPayoutBlockedReasonAccount": "Ajoutez un compte de versement actif avant de demander le versement.",
+  "carrierPayoutBlockedReasonReleased": "Le versement a déjà été libéré pour cette réservation.",
+  "operationsActiveLabel": "Actif",
+  "operationsHistoryLabel": "Historique",
+  "bookingTimelineCurrentLabel": "État actuel",
+  "bookingTimelineActorShipperLabel": "Chargeur",
+  "bookingTimelineActorAdminLabel": "Admin",
+  "bookingTimelineActorCarrierLabel": "Transporteur",
+  "bookingTimelineActorSystemLabel": "Système",
+  "shipperActiveOperationsEmptyMessage": "Aucune expédition ou réservation active ne demande votre attention pour le moment.",
+  "shipperHistoryOperationsEmptyMessage": "L'historique des expéditions terminées et annulées apparaîtra ici.",
+  "carrierActiveBookingsEmptyMessage": "Aucune réservation active ne demande votre attention pour le moment.",
+  "carrierHistoryBookingsEmptyMessage": "L'historique des réservations terminées et annulées apparaîtra ici.",
+  "createdAtLabel": "Créé le",
+  "reasonLabel": "Motif",
+  "disputeReasonLabel": "Motif du litige",
+  "disputeDescriptionLabel": "Décrivez le problème",
+  "statusPendingLabel": "En attente",
+  "localizationUnknownLabel": "Mise à jour disponible",
   "adminDisputesQueueTitle": "Litiges",
   "adminDisputesQueueEmptyMessage": "Aucun litige n'attend de revue pour le moment.",
   "adminPayoutQueueTitle": "Versements",
@@ -793,6 +870,36 @@
   "legalDisputePolicyTitle": "Politique de litige",
   "legalDisputePolicyBody": "Les litiges doivent être ouverts pendant la fenêtre de revue de livraison. FleetFill examine l'expédition, la preuve de paiement, le suivi et les documents liés avant de résoudre le dossier. Le litige peut se terminer par une réservation finalisée, une annulation ou un remboursement.",
   "searchCarrierRatingLabel": "Note du transporteur",
+  "searchRecommendationBalancedMessage": "Meilleur équilibre entre timing, prix et réputation du transporteur.",
+  "searchRecommendationTopRatedMessage": "Les transporteurs les mieux notés d'abord pour maximiser la confiance.",
+  "searchRecommendationLowestPriceMessage": "Les totaux estimés les plus bas d'abord pour réduire le coût.",
+  "searchRecommendationNearestMessage": "Les départs les plus proches d'abord pour expédier plus vite.",
+  "searchRecommendationBalancedResult": "Recommandé pour l'équilibre : note {rating}, départ {departure}.",
+  "@searchRecommendationBalancedResult": {
+    "placeholders": {
+      "rating": {},
+      "departure": {}
+    }
+  },
+  "searchRecommendationTopRatedResult": "Option la mieux notée avec une note de {rating} sur {count} avis.",
+  "@searchRecommendationTopRatedResult": {
+    "placeholders": {
+      "rating": {},
+      "count": {}
+    }
+  },
+  "searchRecommendationLowestPriceResult": "Total estimé le plus bas à {amount} DZD pour cet axe.",
+  "@searchRecommendationLowestPriceResult": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "searchRecommendationNearestResult": "Le départ le plus proche est prévu le {departure}.",
+  "@searchRecommendationNearestResult": {
+    "placeholders": {
+      "departure": {}
+    }
+  },
   "searchResultTypeLabel": "Type de capacité",
   "ratingSubmitAction": "Envoyer un avis",
   "ratingCommentLabel": "Commentaire",
@@ -813,6 +920,10 @@
   "paymentStatusRejectedLabel": "Rejeté",
   "paymentStatusRefundedLabel": "Remboursé",
   "paymentStatusReleasedToCarrierLabel": "Versé au transporteur",
+  "transferStatusPendingLabel": "En attente",
+  "transferStatusSentLabel": "Envoyé",
+  "transferStatusFailedLabel": "Échoué",
+  "transferStatusCancelledLabel": "Annulé",
   "contactSupportAction": "Contacter le support",
   "goBackAction": "Retour",
   "openNotificationsAction": "Ouvrir les notifications",
