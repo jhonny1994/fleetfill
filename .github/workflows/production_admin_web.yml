@@ -36,9 +36,6 @@ jobs:
       VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-    defaults:
-      run:
-        working-directory: apps/admin-web
     steps:
       - name: Checkout target ref
         uses: actions/checkout@v4
@@ -86,13 +83,13 @@ jobs:
         run: npm install --global vercel@latest
 
       - name: Install dependencies
+        working-directory: apps/admin-web
         run: pnpm install --frozen-lockfile
 
       - name: Sync Vercel production env
         if: inputs.sync_env
         shell: pwsh
         run: ./tool/sync_admin_vercel_env.ps1 -ProjectDir .
-        working-directory: .
 
       - name: Pull production environment
         run: pnpm dlx vercel pull --yes --environment=production --cwd . --token=${{ env.VERCEL_TOKEN }}
