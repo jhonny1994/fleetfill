@@ -91,7 +91,7 @@ jobs:
       - name: Sync Vercel production env
         if: inputs.sync_env
         shell: pwsh
-        run: ./tool/sync_admin_vercel_env.ps1 -ProjectDir apps/admin-web
+        run: ./tool/sync_admin_vercel_env.ps1 -ProjectDir .
         working-directory: .
 
       - name: Pull production environment
