@@ -95,12 +95,12 @@ jobs:
         working-directory: .
 
       - name: Pull production environment
-        run: pnpm dlx vercel pull --yes --environment=production --token=${{ env.VERCEL_TOKEN }}
+        run: pnpm dlx vercel pull --yes --environment=production --cwd . --token=${{ env.VERCEL_TOKEN }}
 
       - name: Build production deployment
         if: inputs.build
-        run: pnpm dlx vercel build --prod --token=${{ env.VERCEL_TOKEN }}
+        run: pnpm dlx vercel build --prod --cwd . --token=${{ env.VERCEL_TOKEN }}
 
       - name: Deploy production
         if: inputs.deploy
-        run: pnpm dlx vercel deploy --prebuilt --prod --token=${{ env.VERCEL_TOKEN }}
+        run: pnpm dlx vercel deploy --prebuilt --prod --cwd . --token=${{ env.VERCEL_TOKEN }}
