@@ -49,6 +49,59 @@ function requiredString(value: unknown, field: string) {
   return value.trim()
 }
 
+function tryParseJsonCandidate(candidate: string): unknown {
+  const parsed = JSON.parse(candidate)
+  if (typeof parsed === 'string') {
+    return JSON.parse(parsed)
+  }
+
+  return parsed
+}
+
+function normalizeLooseJsonObject(candidate: string) {
+  return candidate.replace(/([{,]\s*)([A-Za-z_][A-Za-z0-9_]*)(\s*:)/g, '$1"$2"$3')
+}
+
+function parseFirebaseServiceAccountJson(rawJson: string) {
+  const candidates = new Set<string>([rawJson])
+
+  if (
+    (rawJson.startsWith('"') && rawJson.endsWith('"'))
+    || (rawJson.startsWith("'") && rawJson.endsWith("'"))
+  ) {
+    candidates.add(rawJson.slice(1, -1))
+  }
+
+  let lastError: unknown = null
+  for (const candidate of candidates) {
+    try {
+      return tryParseJsonCandidate(candidate)
+    } catch (error) {
+      lastError = error
+    }
+
+    const normalized = normalizeLooseJsonObject(candidate)
+    if (normalized !== candidate) {
+      try {
+        return tryParseJsonCandidate(normalized)
+      } catch (error) {
+        lastError = error
+      }
+    }
+
+    try {
+      const decoded = new TextDecoder().decode(Uint8Array.from(atob(candidate), (char) => char.charCodeAt(0)))
+      return tryParseJsonCandidate(decoded)
+    } catch (error) {
+      lastError = error
+    }
+  }
+
+  throw new Error(
+    `FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON: ${lastError instanceof Error ? lastError.message : 'unknown error'}`,
+  )
+}
+
 export function getFirebaseServiceAccount() {
   if (cachedServiceAccount != null) {
     return cachedServiceAccount
@@ -61,11 +114,9 @@ export function getFirebaseServiceAccount() {
 
   let parsed: unknown
   try {
-    parsed = JSON.parse(rawJson)
+    parsed = parseFirebaseServiceAccountJson(rawJson)
   } catch (error) {
-    throw new Error(
-      `FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON: ${error instanceof Error ? error.message : 'unknown error'}`,
-    )
+    throw error
   }
 
   if (parsed == null || typeof parsed !== 'object') {

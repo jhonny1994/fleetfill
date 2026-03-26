@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { EmailDeadLetterRetryAction, EmailDeliveryRetryAction } from "@/components/audit-health/email-retry-actions";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
@@ -12,6 +14,27 @@ export default async function AuditAndHealthPage({
   const { lang } = await params;
   const ui = getAdminUi(lang);
   const snapshot = await fetchAuditAndHealthSnapshot();
+  const latestAuditLogs = snapshot.auditLogs.slice(0, 6);
+  const latestEmailDeliveries = snapshot.emailDeliveries.slice(0, 6);
+  const latestDeadLetterEmails = snapshot.deadLetterEmails.slice(0, 4);
+  const latestDeadLetterPushes = snapshot.deadLetterPushes.slice(0, 4);
+
+  const resolveAuditHref = (targetType: string, targetId: string | null) => {
+    if (!targetId) return null;
+    if (targetType === "verification_packet") {
+      return `/${lang}/verification/${targetId}`;
+    }
+    if (targetType === "admin_account") {
+      return `/${lang}/admins/${targetId}`;
+    }
+    if (targetType === "support_request") {
+      return `/${lang}/support/${targetId}`;
+    }
+    if (targetType === "user_profile" || targetType === "profile") {
+      return `/${lang}/users/${targetId}`;
+    }
+    return null;
+  };
 
   return (
     <div className="space-y-4">
@@ -27,10 +50,13 @@ export default async function AuditAndHealthPage({
         <div className="space-y-2">
           <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.auditTrail}</h2>
           <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.auditTrailBody}</p>
+          <p className="text-xs uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">{ui.labels.latestActivity}</p>
         </div>
         <div className="space-y-3">
-          {snapshot.auditLogs.map((log) => (
-            <div key={log.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+          {latestAuditLogs.map((log) => {
+            const href = resolveAuditHref(log.targetType, log.targetId);
+            const content = (
+              <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4 transition hover:border-[var(--color-accent)] hover:bg-white/80">
               <div className="flex flex-wrap items-center gap-2">
                 <StatusBadge label={getAdminActionLabel(lang, log.action)} tone="neutral" />
                 <StatusBadge label={getEnumLabel(lang, "activity", log.outcome === "success" ? "active" : "inactive")} tone={log.outcome === "success" ? "success" : "danger"} />
@@ -43,7 +69,15 @@ export default async function AuditAndHealthPage({
                 {log.reason ?? ui.labels.noReasonProvided} • {formatDateTime(log.createdAt)}
               </p>
             </div>
-          ))}
+            );
+            return href ? (
+              <Link key={log.id} href={href} className="block">
+                {content}
+              </Link>
+            ) : (
+              <div key={log.id}>{content}</div>
+            );
+          })}
         </div>
       </section>
 
@@ -52,10 +86,13 @@ export default async function AuditAndHealthPage({
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.emailLogs}</h2>
             <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.emailLogsBody}</p>
+            <p className="text-xs uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">{ui.labels.latestActivity}</p>
           </div>
           <div className="space-y-3">
-            {snapshot.emailDeliveries.map((log) => (
-              <div key={log.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+            {latestEmailDeliveries.map((log) => {
+              const href = log.bookingId ? `/${lang}/bookings/${log.bookingId}` : null;
+              const content = (
+                <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4 transition hover:border-[var(--color-accent)] hover:bg-white/80">
                 <div className="flex flex-wrap items-center gap-2">
                   <StatusBadge
                     label={getEnumLabel(lang, "email", log.status)}
@@ -74,7 +111,15 @@ export default async function AuditAndHealthPage({
                 ) : null}
                 {log.status === "soft_failed" ? <div className="mt-3"><EmailDeliveryRetryAction deliveryLogId={log.id} locale={lang} /></div> : null}
               </div>
-            ))}
+              );
+              return href ? (
+                <Link key={log.id} href={href} className="block">
+                  {content}
+                </Link>
+              ) : (
+                <div key={log.id}>{content}</div>
+              );
+            })}
           </div>
         </section>
 
@@ -82,10 +127,13 @@ export default async function AuditAndHealthPage({
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.deadLetters}</h2>
             <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.deadLettersBody}</p>
+            <p className="text-xs uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">{ui.labels.latestActivity}</p>
           </div>
           <div className="space-y-3">
-            {snapshot.deadLetterEmails.map((job) => (
-              <div key={job.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+            {latestDeadLetterEmails.map((job) => {
+              const href = job.bookingId ? `/${lang}/bookings/${job.bookingId}` : null;
+              const content = (
+                <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4 transition hover:border-[var(--color-accent)] hover:bg-white/80">
                 <div className="flex flex-wrap items-center gap-2">
                   <StatusBadge label={getEnumLabel(lang, "email", "dead_letter")} tone="danger" />
                   <p className="text-sm font-medium text-[var(--color-ink-strong)]">{job.templateKey}</p>
@@ -103,9 +151,19 @@ export default async function AuditAndHealthPage({
                   <EmailDeadLetterRetryAction jobId={job.id} locale={lang} />
                 </div>
               </div>
-            ))}
-            {snapshot.deadLetterPushes.map((job) => (
-              <div key={job.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+              );
+              return href ? (
+                <Link key={job.id} href={href} className="block">
+                  {content}
+                </Link>
+              ) : (
+                <div key={job.id}>{content}</div>
+              );
+            })}
+            {latestDeadLetterPushes.map((job) => {
+              const href = `/${lang}/users/${job.profileId}`;
+              const content = (
+                <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4 transition hover:border-[var(--color-accent)] hover:bg-white/80">
                 <div className="flex flex-wrap items-center gap-2">
                   <StatusBadge label={getEnumLabel(lang, "email", "dead_letter")} tone="warning" />
                   <p className="text-sm font-medium text-[var(--color-ink-strong)]">{job.title}</p>
@@ -119,7 +177,13 @@ export default async function AuditAndHealthPage({
                   </p>
                 ) : null}
               </div>
-            ))}
+              );
+              return (
+                <Link key={job.id} href={href} className="block">
+                  {content}
+                </Link>
+              );
+            })}
           </div>
         </section>
       </section>
