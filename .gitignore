@@ -62,3 +62,5 @@ app.*.map.json
 
 .agents
 .vercel
+
+/tool/create_admin_account.ps1
