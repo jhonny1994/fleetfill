@@ -143,6 +143,47 @@ class BookingRepository {
     return BookingRecord.fromJson(response);
   }
 
+<<<<<<< HEAD
+=======
+  Future<BookingPayoutRequestContext> fetchBookingPayoutRequestContext(
+    String bookingId,
+  ) async {
+    final response = await _client.rpc<Map<String, dynamic>>(
+      'get_booking_payout_request_context',
+      params: {'p_booking_id': bookingId},
+    );
+    return BookingPayoutRequestContext.fromJson(response);
+  }
+
+  Future<BookingRecord> shipperCancelPendingBooking({
+    required String bookingId,
+    String? note,
+  }) async {
+    final response = await _client.rpc<Map<String, dynamic>>(
+      'shipper_cancel_pending_booking',
+      params: {
+        'p_booking_id': bookingId,
+        'p_note': note,
+      },
+    );
+    return BookingRecord.fromJson(response);
+  }
+
+  Future<BookingPayoutRequestContext> carrierRequestPayout({
+    required String bookingId,
+    String? note,
+  }) async {
+    await _client.rpc<Map<String, dynamic>>(
+      'carrier_request_payout',
+      params: {
+        'p_booking_id': bookingId,
+        'p_note': note,
+      },
+    );
+    return fetchBookingPayoutRequestContext(bookingId);
+  }
+
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   Future<void> submitCarrierReview({
     required String bookingId,
     required int score,

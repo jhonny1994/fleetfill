@@ -16,6 +16,7 @@ Verification operating rules:
 - Shippers pay through approved external rails.
 - Payment proof is reviewed before funds are treated as secured.
 - Carrier payout is released only after the booking is eligible.
+- Carriers can request payout after the grace period, but release remains an admin-reviewed action.
 - Payment approval, rejection, refund, and payout release require auditability and step-up where appropriate.
 
 ## Delivery And Disputes
@@ -77,6 +78,60 @@ Production readiness requires:
 - verified communications behavior
 - release traceability
 - manual device and operator rehearsal before promotion
+
+## Booking Operations Model
+
+- Queue pages are for current work; history views are for audit and follow-up.
+- Booking-linked queue items should route operators into the booking workspace first, with payment, dispute, and payout detail pages available as focused subviews.
+- Active and history separation must also exist in shipper and carrier booking surfaces so day-to-day work stays readable.
+- Unsupported or missing lifecycle locales fall back to Arabic across app, admin, and generated booking documents.
+
+## Operational UX Standards
+
+Operational flows should not stop at “the backend accepted the action.” They are only complete when the product clearly explains:
+
+- what just happened
+- whether the workflow is now waiting on shipper, carrier, admin, or system
+- whether the user should retry, wait, fix data, or contact support
+- whether a review window, grace period, or eligibility rule is now in effect
+
+These standards apply especially to:
+
+- payment proof submission and review
+- payout request and payout release
+- delivery confirmation and dispute opening
+- carrier verification and vehicle verification
+- generated receipts and business records
+- support request state changes
+
+## Queue And History Model
+
+Admin operational domains should prefer a consistent queue model:
+
+- `Open` for actionable work
+- `History` for resolved or reviewed work
+- `All` for broad investigation and lookup
+
+This same philosophy should carry into end-user surfaces where it improves readability:
+
+- active work
+- waiting work
+- history or archive
+
+## Archive And Record Retrieval
+
+FleetFill should preserve long-lived operational records without making users hunt for them.
+
+Important retained records include:
+
+- completed bookings and shipments
+- payment proofs and reviewed outcomes
+- disputes and resolutions
+- payout requests and payout releases
+- generated receipts and business documents
+- support threads with their outcome history
+
+History is not only for audit. It is part of day-two product trust.
 
 ## Compliance And Safety
 

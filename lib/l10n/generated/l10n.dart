@@ -6120,6 +6120,56 @@ class S {
     );
   }
 
+  /// `أرسل بالضبط {amount} دج باستخدام مرجع الحجز {reference}، ثم ارفع الإثبات هنا.`
+  String paymentFlowExactTransferGuidance(Object amount, Object reference) {
+    return Intl.message(
+      'أرسل بالضبط $amount دج باستخدام مرجع الحجز $reference، ثم ارفع الإثبات هنا.',
+      name: 'paymentFlowExactTransferGuidance',
+      desc: '',
+      args: [amount, reference],
+    );
+  }
+
+  /// `تم استلام الإثبات. مراجعة الإدارة ما تزال جارية وسنبلغك فور تأمين الدفع أو الحاجة إلى تصحيح.`
+  String get paymentFlowSubmittedGuidance {
+    return Intl.message(
+      'تم استلام الإثبات. مراجعة الإدارة ما تزال جارية وسنبلغك فور تأمين الدفع أو الحاجة إلى تصحيح.',
+      name: 'paymentFlowSubmittedGuidance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفض الإثبات السابق. صحح بيانات الدفع أو ارفع إثباتا أوضح للمتابعة.`
+  String get paymentFlowRejectedGuidance {
+    return Intl.message(
+      'تم رفض الإثبات السابق. صحح بيانات الدفع أو ارفع إثباتا أوضح للمتابعة.',
+      name: 'paymentFlowRejectedGuidance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفض الإثبات السابق بسبب: {reason}. صحح المشكلة ثم أعد الإرسال من هذه الشاشة.`
+  String paymentFlowRejectedGuidanceWithReason(Object reason) {
+    return Intl.message(
+      'تم رفض الإثبات السابق بسبب: $reason. صحح المشكلة ثم أعد الإرسال من هذه الشاشة.',
+      name: 'paymentFlowRejectedGuidanceWithReason',
+      desc: '',
+      args: [reason],
+    );
+  }
+
+  /// `تم تأمين الدفع لهذا الحجز. احتفظ بهذه الشاشة للوصول إلى الإيصالات وسجل الإثبات والمستندات المولدة.`
+  String get paymentFlowSecuredGuidance {
+    return Intl.message(
+      'تم تأمين الدفع لهذا الحجز. احتفظ بهذه الشاشة للوصول إلى الإيصالات وسجل الإثبات والمستندات المولدة.',
+      name: 'paymentFlowSecuredGuidance',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `مراجعة إثباتات الدفع`
   String get adminPaymentProofQueueTitle {
     return Intl.message(
@@ -6465,6 +6515,16 @@ class S {
     );
   }
 
+  /// `ملاحظة المرحلة`
+  String get carrierMilestoneNoteLabel {
+    return Intl.message(
+      'ملاحظة المرحلة',
+      name: 'carrierMilestoneNoteLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `الدفع قيد المراجعة`
   String get trackingEventPaymentUnderReviewLabel {
     return Intl.message(
@@ -6545,11 +6605,506 @@ class S {
     );
   }
 
+  /// `تم طلب المستحق`
+  String get trackingEventPayoutRequestedLabel {
+    return Intl.message(
+      'تم طلب المستحق',
+      name: 'trackingEventPayoutRequestedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم صرف مستحق الناقل`
+  String get trackingEventPayoutReleasedLabel {
+    return Intl.message(
+      'تم صرف مستحق الناقل',
+      name: 'trackingEventPayoutReleasedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت معالجة الاسترداد`
+  String get trackingEventRefundProcessedLabel {
+    return Intl.message(
+      'تمت معالجة الاسترداد',
+      name: 'trackingEventRefundProcessedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `اكتمل الحجز تلقائيا بعد انتهاء نافذة مراجعة التسليم.`
   String get trackingEventAutoCompletedNote {
     return Intl.message(
       'اكتمل الحجز تلقائيا بعد انتهاء نافذة مراجعة التسليم.',
       name: 'trackingEventAutoCompletedNote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإجراء التالي`
+  String get bookingNextActionTitle {
+    return Intl.message(
+      'الإجراء التالي',
+      name: 'bookingNextActionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أرسل أو أعد إرسال إثبات الدفع حتى تتمكن FleetFill من تأمين هذا الحجز.`
+  String get shipperNextActionPayment {
+    return Intl.message(
+      'أرسل أو أعد إرسال إثبات الدفع حتى تتمكن FleetFill من تأمين هذا الحجز.',
+      name: 'shipperNextActionPayment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إثبات الدفع قيد المراجعة حاليا. لا يلزمك أي إجراء الآن.`
+  String get shipperNextActionReview {
+    return Intl.message(
+      'إثبات الدفع قيد المراجعة حاليا. لا يلزمك أي إجراء الآن.',
+      name: 'shipperNextActionReview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أكد التسليم إذا وصل كل شيء كما هو متوقع، أو افتح نزاعا إذا كانت هناك مشكلة.`
+  String get shipperNextActionConfirmDelivery {
+    return Intl.message(
+      'أكد التسليم إذا وصل كل شيء كما هو متوقع، أو افتح نزاعا إذا كانت هناك مشكلة.',
+      name: 'shipperNextActionConfirmDelivery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الاستلام هو الخطوة التشغيلية التالية لهذا الحجز.`
+  String get carrierNextActionPickup {
+    return Intl.message(
+      'الاستلام هو الخطوة التشغيلية التالية لهذا الحجز.',
+      name: 'carrierNextActionPickup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حدّث الحجز إلى في الطريق بمجرد تحرك الشحنة.`
+  String get carrierNextActionTransit {
+    return Intl.message(
+      'حدّث الحجز إلى في الطريق بمجرد تحرك الشحنة.',
+      name: 'carrierNextActionTransit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سجل التسليم فور تسليم الشحنة للطرف المستلم.`
+  String get carrierNextActionDelivery {
+    return Intl.message(
+      'سجل التسليم فور تسليم الشحنة للطرف المستلم.',
+      name: 'carrierNextActionDelivery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أصبح هذا الحجز مؤهلا للمستحق. اطلب مستحقك عندما تكون جاهزا.`
+  String get carrierNextActionPayoutRequest {
+    return Intl.message(
+      'أصبح هذا الحجز مؤهلا للمستحق. اطلب مستحقك عندما تكون جاهزا.',
+      name: 'carrierNextActionPayoutRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم طلب المستحق وهو الآن بانتظار صرفه من الإدارة.`
+  String get carrierNextActionAwaitingAdminRelease {
+    return Intl.message(
+      'تم طلب المستحق وهو الآن بانتظار صرفه من الإدارة.',
+      name: 'carrierNextActionAwaitingAdminRelease',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت تسوية هذا الحجز وصُرف مستحق الناقل.`
+  String get carrierNextActionReleased {
+    return Intl.message(
+      'تمت تسوية هذا الحجز وصُرف مستحق الناقل.',
+      name: 'carrierNextActionReleased',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مستحق الناقل`
+  String get carrierPayoutSectionTitle {
+    return Intl.message(
+      'مستحق الناقل',
+      name: 'carrierPayoutSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سياسة المستحق`
+  String get carrierPayoutGraceWindowLabel {
+    return Intl.message(
+      'سياسة المستحق',
+      name: 'carrierPayoutGraceWindowLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يفتح طلب المستحق بعد نافذة سماح مدتها {hours} ساعة بمجرد اكتمال الحجز.`
+  String carrierPayoutGraceWindowValue(Object hours) {
+    return Intl.message(
+      'يفتح طلب المستحق بعد نافذة سماح مدتها $hours ساعة بمجرد اكتمال الحجز.',
+      name: 'carrierPayoutGraceWindowValue',
+      desc: '',
+      args: [hours],
+    );
+  }
+
+  /// `تاريخ الطلب`
+  String get carrierPayoutRequestedAtLabel {
+    return Intl.message(
+      'تاريخ الطلب',
+      name: 'carrierPayoutRequestedAtLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تاريخ الصرف`
+  String get carrierPayoutReleasedAtLabel {
+    return Intl.message(
+      'تاريخ الصرف',
+      name: 'carrierPayoutReleasedAtLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملاحظة طلب المستحق`
+  String get carrierPayoutRequestNoteLabel {
+    return Intl.message(
+      'ملاحظة طلب المستحق',
+      name: 'carrierPayoutRequestNoteLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلب المستحق`
+  String get carrierPayoutRequestAction {
+    return Intl.message(
+      'طلب المستحق',
+      name: 'carrierPayoutRequestAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم الطلب`
+  String get carrierPayoutRequestedLabel {
+    return Intl.message(
+      'تم الطلب',
+      name: 'carrierPayoutRequestedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مؤهل الآن`
+  String get carrierPayoutEligibleNowLabel {
+    return Intl.message(
+      'مؤهل الآن',
+      name: 'carrierPayoutEligibleNowLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سجل المستحقات`
+  String get carrierPayoutHistoryTitle {
+    return Intl.message(
+      'سجل المستحقات',
+      name: 'carrierPayoutHistoryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أصبح هذا الحجز جاهزا لطلب المستحق. أرسل الطلب عندما تريد من الإدارة صرف الأموال.`
+  String get carrierPayoutEligibleGuidance {
+    return Intl.message(
+      'أصبح هذا الحجز جاهزا لطلب المستحق. أرسل الطلب عندما تريد من الإدارة صرف الأموال.',
+      name: 'carrierPayoutEligibleGuidance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم تسجيل طلب المستحق. ستراجعه الإدارة وتصرفه إلى حساب التحويل المسجل لديك.`
+  String get carrierPayoutRequestedGuidance {
+    return Intl.message(
+      'تم تسجيل طلب المستحق. ستراجعه الإدارة وتصرفه إلى حساب التحويل المسجل لديك.',
+      name: 'carrierPayoutRequestedGuidance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم صرف المستحق لهذا الحجز. راجع السجل أدناه للاطلاع على آخر عملية صرف.`
+  String get carrierPayoutReleasedGuidance {
+    return Intl.message(
+      'تم صرف المستحق لهذا الحجز. راجع السجل أدناه للاطلاع على آخر عملية صرف.',
+      name: 'carrierPayoutReleasedGuidance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ما يزال هذا الحجز داخل نافذة سياسة المستحق البالغة {hours} ساعة أو بانتظار زوال مانع آخر قبل فتح الطلب.`
+  String carrierPayoutPendingGuidance(Object hours) {
+    return Intl.message(
+      'ما يزال هذا الحجز داخل نافذة سياسة المستحق البالغة $hours ساعة أو بانتظار زوال مانع آخر قبل فتح الطلب.',
+      name: 'carrierPayoutPendingGuidance',
+      desc: '',
+      args: [hours],
+    );
+  }
+
+  /// `تم إرسال طلب المستحق.`
+  String get carrierPayoutRequestSuccessMessage {
+    return Intl.message(
+      'تم إرسال طلب المستحق.',
+      name: 'carrierPayoutRequestSuccessMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا يفتح طلب المستحق إلا بعد وصول الحجز إلى حالة مكتمل.`
+  String get carrierPayoutBlockedReasonCompleted {
+    return Intl.message(
+      'لا يفتح طلب المستحق إلا بعد وصول الحجز إلى حالة مكتمل.',
+      name: 'carrierPayoutBlockedReasonCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يبقى طلب المستحق محجوبا حتى يصبح الدفع مؤمنا.`
+  String get carrierPayoutBlockedReasonPayment {
+    return Intl.message(
+      'يبقى طلب المستحق محجوبا حتى يصبح الدفع مؤمنا.',
+      name: 'carrierPayoutBlockedReasonPayment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حل النزاع المفتوح قبل طلب المستحق.`
+  String get carrierPayoutBlockedReasonDispute {
+    return Intl.message(
+      'حل النزاع المفتوح قبل طلب المستحق.',
+      name: 'carrierPayoutBlockedReasonDispute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أضف حساب تحويل نشطا قبل طلب المستحق.`
+  String get carrierPayoutBlockedReasonAccount {
+    return Intl.message(
+      'أضف حساب تحويل نشطا قبل طلب المستحق.',
+      name: 'carrierPayoutBlockedReasonAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم صرف المستحق لهذا الحجز بالفعل.`
+  String get carrierPayoutBlockedReasonReleased {
+    return Intl.message(
+      'تم صرف المستحق لهذا الحجز بالفعل.',
+      name: 'carrierPayoutBlockedReasonReleased',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `النشطة`
+  String get operationsActiveLabel {
+    return Intl.message(
+      'النشطة',
+      name: 'operationsActiveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السجل`
+  String get operationsHistoryLabel {
+    return Intl.message(
+      'السجل',
+      name: 'operationsHistoryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الحالة الحالية`
+  String get bookingTimelineCurrentLabel {
+    return Intl.message(
+      'الحالة الحالية',
+      name: 'bookingTimelineCurrentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الشاحن`
+  String get bookingTimelineActorShipperLabel {
+    return Intl.message(
+      'الشاحن',
+      name: 'bookingTimelineActorShipperLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الإدارة`
+  String get bookingTimelineActorAdminLabel {
+    return Intl.message(
+      'الإدارة',
+      name: 'bookingTimelineActorAdminLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الناقل`
+  String get bookingTimelineActorCarrierLabel {
+    return Intl.message(
+      'الناقل',
+      name: 'bookingTimelineActorCarrierLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `النظام`
+  String get bookingTimelineActorSystemLabel {
+    return Intl.message(
+      'النظام',
+      name: 'bookingTimelineActorSystemLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد شحنات أو حجوزات نشطة تحتاج إلى إجراء الآن.`
+  String get shipperActiveOperationsEmptyMessage {
+    return Intl.message(
+      'لا توجد شحنات أو حجوزات نشطة تحتاج إلى إجراء الآن.',
+      name: 'shipperActiveOperationsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سيظهر هنا سجل الشحنات المكتملة والملغاة.`
+  String get shipperHistoryOperationsEmptyMessage {
+    return Intl.message(
+      'سيظهر هنا سجل الشحنات المكتملة والملغاة.',
+      name: 'shipperHistoryOperationsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد حجوزات نشطة تحتاج إلى إجراء الآن.`
+  String get carrierActiveBookingsEmptyMessage {
+    return Intl.message(
+      'لا توجد حجوزات نشطة تحتاج إلى إجراء الآن.',
+      name: 'carrierActiveBookingsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سيظهر هنا سجل الحجوزات المكتملة والملغاة.`
+  String get carrierHistoryBookingsEmptyMessage {
+    return Intl.message(
+      'سيظهر هنا سجل الحجوزات المكتملة والملغاة.',
+      name: 'carrierHistoryBookingsEmptyMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تاريخ الإنشاء`
+  String get createdAtLabel {
+    return Intl.message(
+      'تاريخ الإنشاء',
+      name: 'createdAtLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `السبب`
+  String get reasonLabel {
+    return Intl.message('السبب', name: 'reasonLabel', desc: '', args: []);
+  }
+
+  /// `سبب النزاع`
+  String get disputeReasonLabel {
+    return Intl.message(
+      'سبب النزاع',
+      name: 'disputeReasonLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اشرح المشكلة`
+  String get disputeDescriptionLabel {
+    return Intl.message(
+      'اشرح المشكلة',
+      name: 'disputeDescriptionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `معلّق`
+  String get statusPendingLabel {
+    return Intl.message(
+      'معلّق',
+      name: 'statusPendingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تحديث متاح`
+  String get localizationUnknownLabel {
+    return Intl.message(
+      'تحديث متاح',
+      name: 'localizationUnknownLabel',
       desc: '',
       args: [],
     );
@@ -6795,6 +7350,86 @@ class S {
     );
   }
 
+  /// `أفضل توازن بين التوقيت والسعر وسمعة الناقل.`
+  String get searchRecommendationBalancedMessage {
+    return Intl.message(
+      'أفضل توازن بين التوقيت والسعر وسمعة الناقل.',
+      name: 'searchRecommendationBalancedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أفضل الناقلين تقييما أولا لتعزيز الثقة.`
+  String get searchRecommendationTopRatedMessage {
+    return Intl.message(
+      'أفضل الناقلين تقييما أولا لتعزيز الثقة.',
+      name: 'searchRecommendationTopRatedMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أقل إجمالي تقديري أولا لتقليل التكلفة.`
+  String get searchRecommendationLowestPriceMessage {
+    return Intl.message(
+      'أقل إجمالي تقديري أولا لتقليل التكلفة.',
+      name: 'searchRecommendationLowestPriceMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أقرب مواعيد الانطلاق أولا للتحرك أسرع.`
+  String get searchRecommendationNearestMessage {
+    return Intl.message(
+      'أقرب مواعيد الانطلاق أولا للتحرك أسرع.',
+      name: 'searchRecommendationNearestMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `موصى به للتوازن: التقييم {rating} والانطلاق {departure}.`
+  String searchRecommendationBalancedResult(Object rating, Object departure) {
+    return Intl.message(
+      'موصى به للتوازن: التقييم $rating والانطلاق $departure.',
+      name: 'searchRecommendationBalancedResult',
+      desc: '',
+      args: [rating, departure],
+    );
+  }
+
+  /// `الخيار الأعلى تقييما بدرجة {rating} من {count} مراجعات.`
+  String searchRecommendationTopRatedResult(Object rating, Object count) {
+    return Intl.message(
+      'الخيار الأعلى تقييما بدرجة $rating من $count مراجعات.',
+      name: 'searchRecommendationTopRatedResult',
+      desc: '',
+      args: [rating, count],
+    );
+  }
+
+  /// `أقل إجمالي تقديري هو {amount} دج لهذا المسار.`
+  String searchRecommendationLowestPriceResult(Object amount) {
+    return Intl.message(
+      'أقل إجمالي تقديري هو $amount دج لهذا المسار.',
+      name: 'searchRecommendationLowestPriceResult',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `أقرب انطلاق سيكون في {departure}.`
+  String searchRecommendationNearestResult(Object departure) {
+    return Intl.message(
+      'أقرب انطلاق سيكون في $departure.',
+      name: 'searchRecommendationNearestResult',
+      desc: '',
+      args: [departure],
+    );
+  }
+
   /// `نوع السعة`
   String get searchResultTypeLabel {
     return Intl.message(
@@ -6990,6 +7625,46 @@ class S {
     return Intl.message(
       'تم تحويله إلى الناقل',
       name: 'paymentStatusReleasedToCarrierLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `معلّق`
+  String get transferStatusPendingLabel {
+    return Intl.message(
+      'معلّق',
+      name: 'transferStatusPendingLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم الإرسال`
+  String get transferStatusSentLabel {
+    return Intl.message(
+      'تم الإرسال',
+      name: 'transferStatusSentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فشل`
+  String get transferStatusFailedLabel {
+    return Intl.message(
+      'فشل',
+      name: 'transferStatusFailedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملغى`
+  String get transferStatusCancelledLabel {
+    return Intl.message(
+      'ملغى',
+      name: 'transferStatusCancelledLabel',
       desc: '',
       args: [],
     );

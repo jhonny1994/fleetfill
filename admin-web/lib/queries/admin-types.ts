@@ -63,6 +63,8 @@ export type EligiblePayoutQueueItem = {
   carrierId: string;
   carrierName: string;
   carrierPayoutDzd: number;
+  payoutRequestStatus: string | null;
+  payoutRequestedAt: string | null;
   updatedAt: string | null;
   ageHours: number;
 };
@@ -326,6 +328,13 @@ export type BookingWorkspaceDetail = {
   paymentProofCount: number;
   disputeStatus: string | null;
   payoutStatus: string | null;
+  payoutRequestContext: {
+    blockedReason: string | null;
+    isEligible: boolean;
+    requestStatus: string | null;
+    requestedAt: string | null;
+    payoutProcessedAt: string | null;
+  } | null;
   trackingEvents: Array<{
     id: string;
     eventType: string;

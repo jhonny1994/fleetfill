@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatCurrencyDzd, formatDateTime, formatQueueAge } from "@/lib/formatting/formatters";
-import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminUi, getEnumLabel, getPayoutRequestLabel } from "@/lib/i18n/admin-ui";
 import type { EligiblePayoutQueueItem, ReleasedPayoutItem } from "@/lib/queries/admin-types";
 
 function buildEligibleColumns(locale: string): ColumnDef<EligiblePayoutQueueItem>[] {
@@ -18,7 +18,7 @@ function buildEligibleColumns(locale: string): ColumnDef<EligiblePayoutQueueItem
     enableSorting: true,
     cell: ({ row }) => (
       <div className="space-y-1">
-        <Link href={`/${locale}/payouts/${row.original.bookingId}`} className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
+        <Link href={`/${locale}/bookings/${row.original.bookingId}`} className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
           {row.original.trackingNumber}
         </Link>
         <p className="text-xs text-[var(--color-ink-muted)]">{formatCompactReference(row.original.bookingId)}</p>
@@ -52,6 +52,22 @@ function buildEligibleColumns(locale: string): ColumnDef<EligiblePayoutQueueItem
         <p className="text-xs text-[var(--color-ink-muted)]">{formatDateTime(row.original.updatedAt)}</p>
       </div>
     ),
+  },
+  {
+    accessorKey: "payoutRequestStatus",
+    header: ui.labels.state,
+    enableSorting: true,
+    cell: ({ row }) =>
+      row.original.payoutRequestStatus ? (
+        <div className="space-y-1">
+          <StatusBadge label={getPayoutRequestLabel(locale, row.original.payoutRequestStatus)} tone="warning" />
+          {row.original.payoutRequestedAt ? (
+            <p className="text-xs text-[var(--color-ink-muted)]">{formatDateTime(row.original.payoutRequestedAt)}</p>
+          ) : null}
+        </div>
+      ) : (
+        <StatusBadge label={getPayoutRequestLabel(locale, null)} tone="neutral" />
+      ),
   },
 ];
 }

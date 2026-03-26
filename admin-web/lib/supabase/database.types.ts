@@ -1223,6 +1223,60 @@ export type Database = {
           },
         ]
       }
+      payout_requests: {
+        Row: {
+          booking_id: string
+          cancelled_at: string | null
+          carrier_id: string
+          created_at: string
+          fulfilled_at: string | null
+          id: string
+          note: string | null
+          requested_at: string
+          status: Database["public"]["Enums"]["payout_request_status"]
+          updated_at: string
+        }
+        Insert: {
+          booking_id: string
+          cancelled_at?: string | null
+          carrier_id: string
+          created_at?: string
+          fulfilled_at?: string | null
+          id?: string
+          note?: string | null
+          requested_at?: string
+          status?: Database["public"]["Enums"]["payout_request_status"]
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string
+          cancelled_at?: string | null
+          carrier_id?: string
+          created_at?: string
+          fulfilled_at?: string | null
+          id?: string
+          note?: string | null
+          requested_at?: string
+          status?: Database["public"]["Enums"]["payout_request_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_requests_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payout_requests_carrier_id_fkey"
+            columns: ["carrier_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payouts: {
         Row: {
           amount_dzd: number
@@ -2896,6 +2950,10 @@ export type Database = {
         Args: { p_booking_id: string }
         Returns: boolean
       }
+      booking_payout_request_block_reason: {
+        Args: { p_booking: Database["public"]["Tables"]["bookings"]["Row"] }
+        Returns: string
+      }
       booking_status_transition_allowed: {
         Args: {
           p_new: Database["public"]["Enums"]["booking_status"]
@@ -2934,6 +2992,7 @@ export type Database = {
           p_entity_id: string
           p_entity_type: string
           p_file_extension: string
+          p_session_id?: string
           p_version: number
         }
         Returns: string
@@ -2981,6 +3040,27 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "bookings"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      carrier_request_payout: {
+        Args: { p_booking_id: string; p_note?: string }
+        Returns: {
+          booking_id: string
+          cancelled_at: string | null
+          carrier_id: string
+          created_at: string
+          fulfilled_at: string | null
+          id: string
+          note: string | null
+          requested_at: string
+          status: Database["public"]["Enums"]["payout_request_status"]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "payout_requests"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -3480,6 +3560,10 @@ export type Database = {
         Args: never
         Returns: number
       }
+      current_payout_request_grace_window_hours: {
+        Args: never
+        Returns: number
+      }
       current_user_id: { Args: never; Returns: string }
       current_user_role: {
         Args: never
@@ -3671,6 +3755,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      get_booking_payout_request_context: {
+        Args: { p_booking_id: string }
+        Returns: Json
       }
       get_client_settings: { Args: never; Returns: Json }
       get_profile_preferred_locale: {
@@ -4074,6 +4162,49 @@ export type Database = {
         Args: { p_shipment_id: string }
         Returns: boolean
       }
+      shipper_cancel_pending_booking: {
+        Args: { p_booking_id: string; p_note?: string }
+        Returns: {
+          base_price_dzd: number
+          booking_status: Database["public"]["Enums"]["booking_status"]
+          cancelled_at: string | null
+          carrier_fee_dzd: number
+          carrier_id: string
+          carrier_payout_dzd: number
+          completed_at: string | null
+          confirmed_at: string | null
+          created_at: string
+          delivered_at: string | null
+          delivery_confirmed_at: string | null
+          disputed_at: string | null
+          id: string
+          insurance_fee_dzd: number
+          insurance_rate: number | null
+          oneoff_trip_id: string | null
+          payment_reference: string
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          picked_up_at: string | null
+          platform_fee_dzd: number
+          price_per_kg_dzd: number
+          route_departure_date: string | null
+          route_id: string | null
+          shipment_id: string
+          shipper_id: string
+          shipper_total_dzd: number
+          tax_fee_dzd: number
+          tracking_number: string
+          updated_at: string
+          vehicle_id: string
+          volume_m3: number | null
+          weight_kg: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "bookings"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       shipper_confirm_delivery: {
         Args: { p_booking_id: string; p_note?: string }
         Returns: {
@@ -4284,6 +4415,7 @@ export type Database = {
         | "rejected"
         | "refunded"
         | "released_to_carrier"
+      payout_request_status: "requested" | "cancelled" | "fulfilled"
       platform_environment: "local" | "production"
       shipment_status: "draft" | "booked" | "cancelled"
       support_message_sender_type: "user" | "admin" | "system"
@@ -5014,6 +5146,7 @@ export const Constants = {
         "refunded",
         "released_to_carrier",
       ],
+      payout_request_status: ["requested", "cancelled", "fulfilled"],
       platform_environment: ["local", "production"],
       shipment_status: ["draft", "booked", "cancelled"],
       support_message_sender_type: ["user", "admin", "system"],

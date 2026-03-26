@@ -41,6 +41,14 @@ type TrackingEventRow = {
   recorded_at: string;
 };
 
+type PayoutRequestContextRow = {
+  blocked_reason: string | null;
+  is_eligible: boolean | null;
+  request_status: string | null;
+  requested_at: string | null;
+  payout_processed_at: string | null;
+};
+
 export async function fetchBookingWorkspaceDetail(bookingId: string): Promise<BookingWorkspaceDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
@@ -75,6 +83,11 @@ export async function fetchBookingWorkspaceDetail(bookingId: string): Promise<Bo
   if (disputeResult.error) throw disputeResult.error;
   if (payoutResult.error) throw payoutResult.error;
   if (trackingResult.error) throw trackingResult.error;
+  const { data: payoutRequestContext, error: payoutRequestContextError } = await supabase.rpc(
+    "get_booking_payout_request_context",
+    { p_booking_id: bookingId },
+  );
+  if (payoutRequestContextError) throw payoutRequestContextError;
 
   const shipment = shipmentResult.data as ShipmentRow | null;
   let shipmentContext: BookingWorkspaceDetail["shipment"] = null;
@@ -112,6 +125,15 @@ export async function fetchBookingWorkspaceDetail(bookingId: string): Promise<Bo
     paymentProofCount: proofsResult.count ?? 0,
     disputeStatus: (disputeResult.data as { status: string } | null)?.status ?? null,
     payoutStatus: (payoutResult.data as { status: string } | null)?.status ?? null,
+    payoutRequestContext: payoutRequestContext
+      ? {
+          blockedReason: (payoutRequestContext as PayoutRequestContextRow).blocked_reason,
+          isEligible: (payoutRequestContext as PayoutRequestContextRow).is_eligible ?? false,
+          requestStatus: (payoutRequestContext as PayoutRequestContextRow).request_status,
+          requestedAt: (payoutRequestContext as PayoutRequestContextRow).requested_at,
+          payoutProcessedAt: (payoutRequestContext as PayoutRequestContextRow).payout_processed_at,
+        }
+      : null,
     trackingEvents: ((trackingResult.data ?? []) as TrackingEventRow[]).map((row) => ({
       id: row.id,
       eventType: row.event_type,

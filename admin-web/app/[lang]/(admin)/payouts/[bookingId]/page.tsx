@@ -3,7 +3,14 @@ import { DetailWorkspace } from "@/components/detail/detail-workspace";
 import { PayoutReleaseActions } from "@/components/detail/payout-release-actions";
 import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { formatCompactReference, formatCurrencyDzd, formatDateTime } from "@/lib/formatting/formatters";
-import { formatTemplate, getAdminDetailCopy, getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import {
+  formatTemplate,
+  getAdminDetailCopy,
+  getAdminUi,
+  getEnumLabel,
+  getPayoutRequestBlockedReasonLabel,
+  getPayoutRequestLabel,
+} from "@/lib/i18n/admin-ui";
 import { fetchPayoutDetail } from "@/lib/queries/admin-payouts";
 
 export default async function PayoutDetailPage({
@@ -45,6 +52,17 @@ export default async function PayoutDetailPage({
             ) : (
               <p className="text-sm text-[var(--color-ink-muted)]">{ui.labels.noActivePayoutAccount}</p>
             )}
+            {detail.payoutRequestContext ? (
+              <div className="space-y-2 text-sm text-[var(--color-ink-muted)]">
+                <p>{getPayoutRequestLabel(lang, detail.payoutRequestContext.requestStatus)}</p>
+                {detail.payoutRequestContext.requestedAt ? (
+                  <p>{formatDateTime(detail.payoutRequestContext.requestedAt)}</p>
+                ) : null}
+                {detail.payoutRequestContext.blockedReason ? (
+                  <p>{getPayoutRequestBlockedReasonLabel(lang, detail.payoutRequestContext.blockedReason)}</p>
+                ) : null}
+              </div>
+            ) : null}
           </section>
           <TimelinePanel
             locale={lang}

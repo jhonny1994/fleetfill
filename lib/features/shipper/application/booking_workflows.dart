@@ -88,10 +88,28 @@ class BookingWorkflowController {
       ..invalidate(myNotificationsProvider);
   }
 
+  Future<BookingPayoutRequestContext> carrierRequestPayout({
+    required String bookingId,
+    required String shipmentId,
+    String? note,
+  }) async {
+    final context = await ref
+        .read(bookingRepositoryProvider)
+        .carrierRequestPayout(bookingId: bookingId, note: note);
+    _invalidateBooking(bookingId, shipmentId);
+    ref
+      ..invalidate(bookingPayoutRequestContextProvider(bookingId))
+      ..invalidate(payoutsForBookingProvider(bookingId))
+      ..invalidate(payoutsProvider);
+    return context;
+  }
+
   void _invalidateBooking(String bookingId, String shipmentId) {
     ref
       ..invalidate(bookingDetailProvider(bookingId))
       ..invalidate(trackingEventsProvider(bookingId))
+      ..invalidate(bookingPayoutRequestContextProvider(bookingId))
+      ..invalidate(payoutsForBookingProvider(bookingId))
       ..invalidate(myShipperShipmentsProvider)
       ..invalidate(shipmentDetailProvider(shipmentId))
       ..invalidate(carrierBookingsProvider);

@@ -639,6 +639,22 @@
   "bookingPaymentReferenceLabel": "Payment reference",
   "bookingTrackingNumberLabel": "Tracking number",
   "paymentInstructionsTitle": "Payment instructions",
+  "paymentFlowExactTransferGuidance": "Send exactly {amount} DZD using booking reference {reference}, then upload the proof here.",
+  "@paymentFlowExactTransferGuidance": {
+    "placeholders": {
+      "amount": {},
+      "reference": {}
+    }
+  },
+  "paymentFlowSubmittedGuidance": "Proof received. Admin review is pending. We'll notify you as soon as the payment is secured or needs correction.",
+  "paymentFlowRejectedGuidance": "Your previous proof was rejected. Correct the payment details or upload a clearer proof to continue.",
+  "paymentFlowRejectedGuidanceWithReason": "Your previous proof was rejected: {reason}. Correct it, then resubmit from this screen.",
+  "@paymentFlowRejectedGuidanceWithReason": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "paymentFlowSecuredGuidance": "Payment is secured for this booking. Keep this screen for receipts, proof history, and generated records.",
   "adminPaymentProofQueueTitle": "Payment proof review",
   "adminPaymentProofQueueEmptyMessage": "No payment proofs need review right now.",
   "paymentProofSectionTitle": "Payment proof",
@@ -674,6 +690,7 @@
   "deliveryConfirmAction": "Confirm delivery",
   "deliveryConfirmedMessage": "Delivery confirmed.",
   "carrierMilestoneUpdatedMessage": "Booking milestone updated.",
+  "carrierMilestoneNoteLabel": "Milestone note",
   "trackingEventPaymentUnderReviewLabel": "Payment under review",
   "trackingEventConfirmedLabel": "Confirmed",
   "trackingEventPickedUpLabel": "Picked up",
@@ -682,7 +699,67 @@
   "trackingEventCompletedLabel": "Completed",
   "trackingEventCancelledLabel": "Cancelled",
   "trackingEventDisputedLabel": "Disputed",
+  "trackingEventPayoutRequestedLabel": "Payout requested",
+  "trackingEventPayoutReleasedLabel": "Payout released",
+  "trackingEventRefundProcessedLabel": "Refund processed",
   "trackingEventAutoCompletedNote": "Automatically completed after the delivery review window ended.",
+  "bookingNextActionTitle": "Next action",
+  "shipperNextActionPayment": "Upload or resubmit payment proof so FleetFill can secure this booking.",
+  "shipperNextActionReview": "Payment proof is under review. No action is needed from you right now.",
+  "shipperNextActionConfirmDelivery": "Confirm delivery if everything arrived as expected, or open a dispute if something is wrong.",
+  "carrierNextActionPickup": "Pickup is the next operational step for this booking.",
+  "carrierNextActionTransit": "Mark the booking in transit once the load is on the way.",
+  "carrierNextActionDelivery": "Record delivery as soon as the shipment is handed over.",
+  "carrierNextActionPayoutRequest": "This booking is payout-eligible. Request your payout when you are ready.",
+  "carrierNextActionAwaitingAdminRelease": "Payout has been requested and is waiting for admin release.",
+  "carrierNextActionReleased": "This booking has been settled and the carrier payout was released.",
+  "carrierPayoutSectionTitle": "Carrier payout",
+  "carrierPayoutGraceWindowLabel": "Payout policy",
+  "carrierPayoutGraceWindowValue": "Request opens after a {hours}-hour grace window once the booking is completed.",
+  "@carrierPayoutGraceWindowValue": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "carrierPayoutRequestedAtLabel": "Requested at",
+  "carrierPayoutReleasedAtLabel": "Released at",
+  "carrierPayoutRequestNoteLabel": "Payout request note",
+  "carrierPayoutRequestAction": "Request payout",
+  "carrierPayoutRequestedLabel": "Requested",
+  "carrierPayoutEligibleNowLabel": "Eligible now",
+  "carrierPayoutHistoryTitle": "Payout history",
+  "carrierPayoutEligibleGuidance": "This booking is ready for payout request. Submit the request when you want operations to release the funds.",
+  "carrierPayoutRequestedGuidance": "Your payout request is on file. Admin operations will review and release it to your registered payout account.",
+  "carrierPayoutReleasedGuidance": "Payout has been released for this booking. Check the payout history below for the latest release record.",
+  "carrierPayoutPendingGuidance": "This booking is still inside the {hours}-hour payout policy window or waiting on another blocker before request opens.",
+  "@carrierPayoutPendingGuidance": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "carrierPayoutRequestSuccessMessage": "Payout request submitted.",
+  "carrierPayoutBlockedReasonCompleted": "Payout requests open only after the booking reaches completed state.",
+  "carrierPayoutBlockedReasonPayment": "Payout requests stay blocked until payment is secured.",
+  "carrierPayoutBlockedReasonDispute": "Resolve the open dispute before requesting payout.",
+  "carrierPayoutBlockedReasonAccount": "Add an active payout account before requesting payout.",
+  "carrierPayoutBlockedReasonReleased": "Payout has already been released for this booking.",
+  "operationsActiveLabel": "Active",
+  "operationsHistoryLabel": "History",
+  "bookingTimelineCurrentLabel": "Current",
+  "bookingTimelineActorShipperLabel": "Shipper",
+  "bookingTimelineActorAdminLabel": "Admin",
+  "bookingTimelineActorCarrierLabel": "Carrier",
+  "bookingTimelineActorSystemLabel": "System",
+  "shipperActiveOperationsEmptyMessage": "No active shipments or bookings need your attention right now.",
+  "shipperHistoryOperationsEmptyMessage": "Completed and cancelled shipment history will appear here.",
+  "carrierActiveBookingsEmptyMessage": "No active bookings need your attention right now.",
+  "carrierHistoryBookingsEmptyMessage": "Completed and cancelled booking history will appear here.",
+  "createdAtLabel": "Created",
+  "reasonLabel": "Reason",
+  "disputeReasonLabel": "Dispute reason",
+  "disputeDescriptionLabel": "Describe the issue",
+  "statusPendingLabel": "Pending",
+  "localizationUnknownLabel": "Update available",
   "adminDisputesQueueTitle": "Disputes",
   "adminDisputesQueueEmptyMessage": "No disputes are waiting for review right now.",
   "adminPayoutQueueTitle": "Payouts",
@@ -712,6 +789,36 @@
   "legalDisputePolicyTitle": "Dispute policy",
   "legalDisputePolicyBody": "Disputes must be opened during the delivery review window. FleetFill reviews shipment, payment proof, tracking, and related records before resolving the case. A dispute may end with a completed booking, a cancellation, or a refund.",
   "searchCarrierRatingLabel": "Carrier rating",
+  "searchRecommendationBalancedMessage": "Best balance of timing, price, and carrier reputation.",
+  "searchRecommendationTopRatedMessage": "Highest-rated carriers first to maximize trust.",
+  "searchRecommendationLowestPriceMessage": "Lowest estimated totals first to reduce spend.",
+  "searchRecommendationNearestMessage": "Closest upcoming departures first to move sooner.",
+  "searchRecommendationBalancedResult": "Recommended for balance: rating {rating}, departure {departure}.",
+  "@searchRecommendationBalancedResult": {
+    "placeholders": {
+      "rating": {},
+      "departure": {}
+    }
+  },
+  "searchRecommendationTopRatedResult": "Top-rated option with a {rating} score from {count} reviews.",
+  "@searchRecommendationTopRatedResult": {
+    "placeholders": {
+      "rating": {},
+      "count": {}
+    }
+  },
+  "searchRecommendationLowestPriceResult": "Lowest estimated total at {amount} DZD for this lane.",
+  "@searchRecommendationLowestPriceResult": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "searchRecommendationNearestResult": "Nearest departure leaves on {departure}.",
+  "@searchRecommendationNearestResult": {
+    "placeholders": {
+      "departure": {}
+    }
+  },
   "searchResultTypeLabel": "Capacity type",
   "ratingSubmitAction": "Submit review",
   "ratingCommentLabel": "Review comment",
@@ -732,6 +839,10 @@
   "paymentStatusRejectedLabel": "Rejected",
   "paymentStatusRefundedLabel": "Refunded",
   "paymentStatusReleasedToCarrierLabel": "Released to carrier",
+  "transferStatusPendingLabel": "Pending",
+  "transferStatusSentLabel": "Sent",
+  "transferStatusFailedLabel": "Failed",
+  "transferStatusCancelledLabel": "Cancelled",
   "adminDashboardBacklogHealthTitle": "Pending work",
   "adminDashboardAutomationTitle": "Time-sensitive tasks",
   "adminDashboardOverdueDeliveryReviewsLabel": "Overdue delivery reviews",

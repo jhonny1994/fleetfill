@@ -720,6 +720,22 @@
   "bookingPaymentReferenceLabel": "مرجع الدفع",
   "bookingTrackingNumberLabel": "رقم التتبع",
   "paymentInstructionsTitle": "تعليمات الدفع",
+  "paymentFlowExactTransferGuidance": "أرسل بالضبط {amount} دج باستخدام مرجع الحجز {reference}، ثم ارفع الإثبات هنا.",
+  "@paymentFlowExactTransferGuidance": {
+    "placeholders": {
+      "amount": {},
+      "reference": {}
+    }
+  },
+  "paymentFlowSubmittedGuidance": "تم استلام الإثبات. مراجعة الإدارة ما تزال جارية وسنبلغك فور تأمين الدفع أو الحاجة إلى تصحيح.",
+  "paymentFlowRejectedGuidance": "تم رفض الإثبات السابق. صحح بيانات الدفع أو ارفع إثباتا أوضح للمتابعة.",
+  "paymentFlowRejectedGuidanceWithReason": "تم رفض الإثبات السابق بسبب: {reason}. صحح المشكلة ثم أعد الإرسال من هذه الشاشة.",
+  "@paymentFlowRejectedGuidanceWithReason": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "paymentFlowSecuredGuidance": "تم تأمين الدفع لهذا الحجز. احتفظ بهذه الشاشة للوصول إلى الإيصالات وسجل الإثبات والمستندات المولدة.",
   "adminPaymentProofQueueTitle": "مراجعة إثباتات الدفع",
   "adminPaymentProofQueueEmptyMessage": "لا توجد إثباتات دفع تحتاج إلى مراجعة الآن.",
   "paymentProofSectionTitle": "إثبات الدفع",
@@ -755,6 +771,7 @@
   "deliveryConfirmAction": "تأكيد التسليم",
   "deliveryConfirmedMessage": "تم تأكيد التسليم.",
   "carrierMilestoneUpdatedMessage": "تم تحديث مرحلة الحجز.",
+  "carrierMilestoneNoteLabel": "ملاحظة المرحلة",
   "trackingEventPaymentUnderReviewLabel": "الدفع قيد المراجعة",
   "trackingEventConfirmedLabel": "مؤكد",
   "trackingEventPickedUpLabel": "تم الاستلام",
@@ -763,7 +780,67 @@
   "trackingEventCompletedLabel": "مكتمل",
   "trackingEventCancelledLabel": "ملغى",
   "trackingEventDisputedLabel": "متنازع عليه",
+  "trackingEventPayoutRequestedLabel": "تم طلب المستحق",
+  "trackingEventPayoutReleasedLabel": "تم صرف مستحق الناقل",
+  "trackingEventRefundProcessedLabel": "تمت معالجة الاسترداد",
   "trackingEventAutoCompletedNote": "اكتمل الحجز تلقائيا بعد انتهاء نافذة مراجعة التسليم.",
+  "bookingNextActionTitle": "الإجراء التالي",
+  "shipperNextActionPayment": "أرسل أو أعد إرسال إثبات الدفع حتى تتمكن FleetFill من تأمين هذا الحجز.",
+  "shipperNextActionReview": "إثبات الدفع قيد المراجعة حاليا. لا يلزمك أي إجراء الآن.",
+  "shipperNextActionConfirmDelivery": "أكد التسليم إذا وصل كل شيء كما هو متوقع، أو افتح نزاعا إذا كانت هناك مشكلة.",
+  "carrierNextActionPickup": "الاستلام هو الخطوة التشغيلية التالية لهذا الحجز.",
+  "carrierNextActionTransit": "حدّث الحجز إلى في الطريق بمجرد تحرك الشحنة.",
+  "carrierNextActionDelivery": "سجل التسليم فور تسليم الشحنة للطرف المستلم.",
+  "carrierNextActionPayoutRequest": "أصبح هذا الحجز مؤهلا للمستحق. اطلب مستحقك عندما تكون جاهزا.",
+  "carrierNextActionAwaitingAdminRelease": "تم طلب المستحق وهو الآن بانتظار صرفه من الإدارة.",
+  "carrierNextActionReleased": "تمت تسوية هذا الحجز وصُرف مستحق الناقل.",
+  "carrierPayoutSectionTitle": "مستحق الناقل",
+  "carrierPayoutGraceWindowLabel": "سياسة المستحق",
+  "carrierPayoutGraceWindowValue": "يفتح طلب المستحق بعد نافذة سماح مدتها {hours} ساعة بمجرد اكتمال الحجز.",
+  "@carrierPayoutGraceWindowValue": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "carrierPayoutRequestedAtLabel": "تاريخ الطلب",
+  "carrierPayoutReleasedAtLabel": "تاريخ الصرف",
+  "carrierPayoutRequestNoteLabel": "ملاحظة طلب المستحق",
+  "carrierPayoutRequestAction": "طلب المستحق",
+  "carrierPayoutRequestedLabel": "تم الطلب",
+  "carrierPayoutEligibleNowLabel": "مؤهل الآن",
+  "carrierPayoutHistoryTitle": "سجل المستحقات",
+  "carrierPayoutEligibleGuidance": "أصبح هذا الحجز جاهزا لطلب المستحق. أرسل الطلب عندما تريد من الإدارة صرف الأموال.",
+  "carrierPayoutRequestedGuidance": "تم تسجيل طلب المستحق. ستراجعه الإدارة وتصرفه إلى حساب التحويل المسجل لديك.",
+  "carrierPayoutReleasedGuidance": "تم صرف المستحق لهذا الحجز. راجع السجل أدناه للاطلاع على آخر عملية صرف.",
+  "carrierPayoutPendingGuidance": "ما يزال هذا الحجز داخل نافذة سياسة المستحق البالغة {hours} ساعة أو بانتظار زوال مانع آخر قبل فتح الطلب.",
+  "@carrierPayoutPendingGuidance": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "carrierPayoutRequestSuccessMessage": "تم إرسال طلب المستحق.",
+  "carrierPayoutBlockedReasonCompleted": "لا يفتح طلب المستحق إلا بعد وصول الحجز إلى حالة مكتمل.",
+  "carrierPayoutBlockedReasonPayment": "يبقى طلب المستحق محجوبا حتى يصبح الدفع مؤمنا.",
+  "carrierPayoutBlockedReasonDispute": "حل النزاع المفتوح قبل طلب المستحق.",
+  "carrierPayoutBlockedReasonAccount": "أضف حساب تحويل نشطا قبل طلب المستحق.",
+  "carrierPayoutBlockedReasonReleased": "تم صرف المستحق لهذا الحجز بالفعل.",
+  "operationsActiveLabel": "النشطة",
+  "operationsHistoryLabel": "السجل",
+  "bookingTimelineCurrentLabel": "الحالة الحالية",
+  "bookingTimelineActorShipperLabel": "الشاحن",
+  "bookingTimelineActorAdminLabel": "الإدارة",
+  "bookingTimelineActorCarrierLabel": "الناقل",
+  "bookingTimelineActorSystemLabel": "النظام",
+  "shipperActiveOperationsEmptyMessage": "لا توجد شحنات أو حجوزات نشطة تحتاج إلى إجراء الآن.",
+  "shipperHistoryOperationsEmptyMessage": "سيظهر هنا سجل الشحنات المكتملة والملغاة.",
+  "carrierActiveBookingsEmptyMessage": "لا توجد حجوزات نشطة تحتاج إلى إجراء الآن.",
+  "carrierHistoryBookingsEmptyMessage": "سيظهر هنا سجل الحجوزات المكتملة والملغاة.",
+  "createdAtLabel": "تاريخ الإنشاء",
+  "reasonLabel": "السبب",
+  "disputeReasonLabel": "سبب النزاع",
+  "disputeDescriptionLabel": "اشرح المشكلة",
+  "statusPendingLabel": "معلّق",
+  "localizationUnknownLabel": "تحديث متاح",
   "adminDisputesQueueTitle": "النزاعات",
   "adminDisputesQueueEmptyMessage": "لا توجد نزاعات بانتظار المراجعة الآن.",
   "adminPayoutQueueTitle": "التحويلات",
@@ -793,6 +870,36 @@
   "legalDisputePolicyTitle": "سياسة النزاعات",
   "legalDisputePolicyBody": "يجب فتح النزاعات خلال نافذة مراجعة التسليم. تراجع FleetFill الشحنة وإثبات الدفع والتتبع والمستندات المرتبطة قبل حسم الحالة. وقد ينتهي النزاع بإكمال الحجز أو إلغائه أو رد المبلغ.",
   "searchCarrierRatingLabel": "تقييم الناقل",
+  "searchRecommendationBalancedMessage": "أفضل توازن بين التوقيت والسعر وسمعة الناقل.",
+  "searchRecommendationTopRatedMessage": "أفضل الناقلين تقييما أولا لتعزيز الثقة.",
+  "searchRecommendationLowestPriceMessage": "أقل إجمالي تقديري أولا لتقليل التكلفة.",
+  "searchRecommendationNearestMessage": "أقرب مواعيد الانطلاق أولا للتحرك أسرع.",
+  "searchRecommendationBalancedResult": "موصى به للتوازن: التقييم {rating} والانطلاق {departure}.",
+  "@searchRecommendationBalancedResult": {
+    "placeholders": {
+      "rating": {},
+      "departure": {}
+    }
+  },
+  "searchRecommendationTopRatedResult": "الخيار الأعلى تقييما بدرجة {rating} من {count} مراجعات.",
+  "@searchRecommendationTopRatedResult": {
+    "placeholders": {
+      "rating": {},
+      "count": {}
+    }
+  },
+  "searchRecommendationLowestPriceResult": "أقل إجمالي تقديري هو {amount} دج لهذا المسار.",
+  "@searchRecommendationLowestPriceResult": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "searchRecommendationNearestResult": "أقرب انطلاق سيكون في {departure}.",
+  "@searchRecommendationNearestResult": {
+    "placeholders": {
+      "departure": {}
+    }
+  },
   "searchResultTypeLabel": "نوع السعة",
   "ratingSubmitAction": "إرسال التقييم",
   "ratingCommentLabel": "تعليق التقييم",
@@ -813,6 +920,10 @@
   "paymentStatusRejectedLabel": "مرفوض",
   "paymentStatusRefundedLabel": "تم رد المبلغ",
   "paymentStatusReleasedToCarrierLabel": "تم تحويله إلى الناقل",
+  "transferStatusPendingLabel": "معلّق",
+  "transferStatusSentLabel": "تم الإرسال",
+  "transferStatusFailedLabel": "فشل",
+  "transferStatusCancelledLabel": "ملغى",
   "contactSupportAction": "التواصل مع الدعم",
   "goBackAction": "رجوع",
   "openNotificationsAction": "فتح الإشعارات",

@@ -180,11 +180,12 @@ class DisputeRepository {
     return _mapDispute(response);
   }
 
-  Future<List<PayoutRecord>> fetchPayouts() async {
-    final response = await _client
-        .from('payouts')
-        .select()
-        .order('created_at', ascending: false);
+  Future<List<PayoutRecord>> fetchPayouts({String? bookingId}) async {
+    var query = _client.from('payouts').select();
+    if (bookingId != null) {
+      query = query.eq('booking_id', bookingId);
+    }
+    final response = await query.order('created_at', ascending: false);
     return (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
         .map(PayoutRecord.fromJson)

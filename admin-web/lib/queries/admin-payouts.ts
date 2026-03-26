@@ -40,6 +40,19 @@ type PayoutAccountRow = {
   is_verified: boolean;
 };
 
+type PayoutRequestRow = {
+  booking_id: string;
+  status: string;
+  requested_at: string | null;
+};
+
+type PayoutRequestContextRow = {
+  blocked_reason: string | null;
+  is_eligible: boolean | null;
+  request_status: string | null;
+  requested_at: string | null;
+};
+
 export async function fetchEligiblePayoutQueue({
   limit = 50,
 }: {
@@ -65,13 +78,17 @@ export async function fetchEligiblePayoutQueue({
   }
 
   const bookingIds = bookingRows.map((booking) => booking.id);
-  const [disputesResult, payoutsResult, carriersResult] = await Promise.all([
+  const [disputesResult, payoutsResult, carriersResult, payoutRequestsResult] = await Promise.all([
     supabase.from("disputes").select("booking_id").eq("status", "open").in("booking_id", bookingIds),
     supabase.from("payouts").select("booking_id").in("booking_id", bookingIds),
     supabase
       .from("profiles")
       .select("id, email, full_name, company_name")
       .in("id", [...new Set(bookingRows.map((booking) => booking.carrier_id))]),
+    supabase
+      .from("payout_requests")
+      .select("booking_id, status, requested_at")
+      .in("booking_id", bookingIds),
   ]);
 
   const blockedIds = new Set<string>();
@@ -85,9 +102,20 @@ export async function fetchEligiblePayoutQueue({
   const carrierMap = new Map(
     ((carriersResult.data ?? []) as ProfileRow[]).map((profile) => [profile.id, profile]),
   );
+  const payoutRequestMap = new Map(
+    (((payoutRequestsResult.data ?? []) as unknown[]) as PayoutRequestRow[]).map((request) => [
+      request.booking_id,
+      request,
+    ]),
+  );
 
   return bookingRows
     .filter((booking) => !blockedIds.has(booking.id))
+    .sort((left, right) => {
+      const leftRequested = payoutRequestMap.get(left.id)?.status === "requested" ? 1 : 0;
+      const rightRequested = payoutRequestMap.get(right.id)?.status === "requested" ? 1 : 0;
+      return rightRequested - leftRequested;
+    })
     .slice(0, limit)
     .map((booking) => ({
       bookingId: booking.id,
@@ -95,6 +123,8 @@ export async function fetchEligiblePayoutQueue({
       carrierId: booking.carrier_id,
       carrierName: resolveProfileDisplayName(carrierMap.get(booking.carrier_id)),
       carrierPayoutDzd: Number(booking.carrier_payout_dzd),
+      payoutRequestStatus: payoutRequestMap.get(booking.id)?.status ?? null,
+      payoutRequestedAt: payoutRequestMap.get(booking.id)?.requested_at ?? null,
       updatedAt: booking.updated_at,
       ageHours: diffHoursFromNow(booking.updated_at),
     }));
@@ -133,6 +163,12 @@ export type AdminPayoutDetail = {
   carrierName: string;
   activePayoutAccount: PayoutAccountRow | null;
   existingPayout: PayoutRow | null;
+  payoutRequestContext: {
+    blockedReason: string | null;
+    isEligible: boolean;
+    requestStatus: string | null;
+    requestedAt: string | null;
+  } | null;
 };
 
 export async function fetchPayoutDetail(bookingId: string): Promise<AdminPayoutDetail | null> {
@@ -151,7 +187,7 @@ export async function fetchPayoutDetail(bookingId: string): Promise<AdminPayoutD
     return null;
   }
 
-  const [{ data: carrier }, { data: payoutAccount }, { data: payouts }] = await Promise.all([
+  const [{ data: carrier }, { data: payoutAccount }, { data: payouts }, { data: payoutRequestContext, error: payoutRequestContextError }] = await Promise.all([
     supabase
       .from("profiles")
       .select("id, email, full_name, company_name")
@@ -170,12 +206,25 @@ export async function fetchPayoutDetail(bookingId: string): Promise<AdminPayoutD
       .eq("booking_id", bookingId)
       .order("created_at", { ascending: false })
       .limit(1),
+    supabase.rpc("get_booking_payout_request_context", { p_booking_id: bookingId }),
   ]);
+
+  if (payoutRequestContextError) {
+    throw payoutRequestContextError;
+  }
 
   return {
     booking: booking as BookingRow,
     carrierName: resolveProfileDisplayName(carrier as ProfileRow | null),
     activePayoutAccount: (payoutAccount as PayoutAccountRow | null) ?? null,
     existingPayout: ((payouts ?? []) as PayoutRow[])[0] ?? null,
+    payoutRequestContext: payoutRequestContext
+      ? {
+          blockedReason: (payoutRequestContext as PayoutRequestContextRow).blocked_reason,
+          isEligible: (payoutRequestContext as PayoutRequestContextRow).is_eligible ?? false,
+          requestStatus: (payoutRequestContext as PayoutRequestContextRow).request_status,
+          requestedAt: (payoutRequestContext as PayoutRequestContextRow).requested_at,
+        }
+      : null,
   };
 }

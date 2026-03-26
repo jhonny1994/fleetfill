@@ -1,6 +1,10 @@
 begin;
 
+<<<<<<< HEAD
 select plan(24);
+=======
+select plan(30);
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
 
 create or replace function pg_temp.set_claims(
   p_user_id uuid,
@@ -770,6 +774,51 @@ select is(
   'storage upload succeeds with a matching authorized upload session'
 );
 
+<<<<<<< HEAD
+=======
+select pg_temp.set_claims(
+  '10000000-0000-4000-8000-000000000003',
+  'authenticated',
+  'carrier1@example.com'
+);
+
+select is(
+  pg_temp.capture_error(
+    $$
+      select public.create_upload_session(
+        'verification_document',
+        'profile',
+        '10000000-0000-4000-8000-000000000003'::uuid,
+        'driver_identity_or_license',
+        'jpg',
+        'image/jpeg',
+        1234,
+        null
+      );
+
+      select public.create_upload_session(
+        'verification_document',
+        'profile',
+        '10000000-0000-4000-8000-000000000003'::uuid,
+        'driver_identity_or_license',
+        'jpg',
+        'image/jpeg',
+        1234,
+        null
+      );
+    $$
+  ),
+  null::text,
+  'repeated verification upload session creation is retry-safe before finalize'
+);
+
+select pg_temp.set_claims(
+  '10000000-0000-4000-8000-000000000001',
+  'authenticated',
+  'shipper1@example.com'
+);
+
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
 select ok(
   public.authorize_private_file_access('payment-proofs', 'payment-proofs/owned-proof.png'),
   'proof owner can authorize private file access'
@@ -1021,6 +1070,65 @@ select is(
   'dispute resolution rollback leaves the dispute open'
 );
 
+reset role;
+set local role authenticated;
+select pg_temp.set_claims(
+  '10000000-0000-4000-8000-000000000003',
+  'authenticated',
+  'carrier1@example.com'
+);
+
+select is(
+  pg_temp.capture_error(
+    $$
+      select public.carrier_request_payout(
+        '50000000-0000-4000-8000-000000000007',
+        'Carrier ready for payout'
+      )
+    $$
+  ),
+  null::text,
+  'carrier payout request succeeds for eligible completed bookings'
+);
+
+select is(
+  (
+    select status::text
+    from public.payout_requests
+    where booking_id = '50000000-0000-4000-8000-000000000007'
+  ),
+  'requested',
+  'carrier payout request persists a requested payout record'
+);
+
+select is(
+  (
+    select public.get_booking_payout_request_context(
+      '50000000-0000-4000-8000-000000000007'
+    )->>'request_status'
+  ),
+  'requested',
+  'payout request context exposes requested state to clients'
+);
+
+select is(
+  (
+    select public.get_booking_payout_request_context(
+      '50000000-0000-4000-8000-000000000007'
+    )->>'blocked_reason'
+  ),
+  null::text,
+  'eligible payout request context stays unblocked after request creation'
+);
+
+reset role;
+set local role authenticated;
+select pg_temp.set_claims(
+  '10000000-0000-4000-8000-000000000004',
+  'authenticated',
+  'admin1@example.com'
+);
+
 select is(
   pg_temp.capture_error(
     $$
@@ -1043,6 +1151,16 @@ select is(
   ),
   'released_to_carrier',
   'payout release updates the booking payment status'
+);
+
+select is(
+  (
+    select status::text
+    from public.payout_requests
+    where booking_id = '50000000-0000-4000-8000-000000000007'
+  ),
+  'fulfilled',
+  'payout release fulfills the carrier payout request'
 );
 
 select is(

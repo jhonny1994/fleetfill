@@ -15,7 +15,23 @@ export default async function VerificationPage({
   const query = filters.q?.trim();
   const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
   const ui = getAdminUi(lang);
+<<<<<<< HEAD
   const items = await fetchVerificationQueue({ query });
+=======
+  const statuses: VerificationPageStatus[] = status
+    ? [status]
+    : view === "history"
+      ? ["verified"]
+      : view === "all"
+        ? ["pending", "rejected", "verified"]
+        : ["pending", "rejected"];
+  const [items, openItems, historyItems, allItems] = await Promise.all([
+    fetchVerificationQueue({ query, statuses }),
+    fetchVerificationQueue({ query, statuses: ["pending", "rejected"] }),
+    fetchVerificationQueue({ query, statuses: ["verified"] }),
+    fetchVerificationQueue({ query, statuses: ["pending", "rejected", "verified"] }),
+  ]);
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
   const pathname = `/${lang}/verification`;
 
   return (
@@ -27,6 +43,21 @@ export default async function VerificationPage({
           {dictionary.shell.body}
         </p>
       </section>
+<<<<<<< HEAD
+=======
+      <AdminQueueScopeTabs
+        pathname={pathname}
+        locale={lang}
+        currentScope={view}
+        query={query}
+        status={status}
+        counts={{
+          open: openItems.length,
+          history: historyItems.length,
+          all: allItems.length,
+        }}
+      />
+>>>>>>> 7e581ab (Strengthen lifecycle workspaces and production integration)
       <AdminFilterBar
         pathname={pathname}
         query={query}
