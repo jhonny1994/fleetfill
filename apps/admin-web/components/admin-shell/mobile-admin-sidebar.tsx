@@ -11,9 +11,11 @@ import type { AdminDictionary } from "@/lib/i18n/dictionaries";
 export function MobileAdminSidebar({
   locale,
   dictionary,
+  adminRole,
 }: {
   locale: AppLocale;
   dictionary: AdminDictionary;
+  adminRole: "super_admin" | "ops_admin";
 }) {
   const [open, setOpen] = useState(false);
   const isRtl = locale === "ar";
@@ -73,6 +75,7 @@ export function MobileAdminSidebar({
             <AdminSidebar
               locale={locale}
               dictionary={dictionary}
+              adminRole={adminRole}
               className="min-h-0 flex-1 overflow-y-auto bg-transparent shadow-none"
               onNavigate={() => setOpen(false)}
             />
