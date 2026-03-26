@@ -337,24 +337,30 @@ class _SupportThreadScreenState extends ConsumerState<SupportThreadScreen> {
                         .toList(growable: false),
                   ),
                 const SizedBox(height: AppSpacing.md),
-                AuthCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      AuthTextField(
-                        controller: _replyController,
-                        label: s.supportReplyLabel,
-                        maxLines: 4,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      AuthSubmitButton(
-                        label: s.supportReplyAction,
-                        isLoading: _isSubmitting,
-                        onPressed: () => unawaited(_reply(context)),
-                      ),
-                    ],
+                if (request.canReply)
+                  AuthCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        AuthTextField(
+                          controller: _replyController,
+                          label: s.supportReplyLabel,
+                          maxLines: 4,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        AuthSubmitButton(
+                          label: s.supportReplyAction,
+                          isLoading: _isSubmitting,
+                          onPressed: () => unawaited(_reply(context)),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  AuthInfoBanner(
+                    message:
+                        '${_supportStatusLabel(s, request.status)}. ${request.lastMessagePreview ?? s.supportThreadNoMessagesMessage}',
                   ),
-                ),
               ],
             ),
           );

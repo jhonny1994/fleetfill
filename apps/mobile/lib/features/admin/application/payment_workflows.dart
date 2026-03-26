@@ -1,4 +1,5 @@
 import 'package:fleetfill/features/admin/admin.dart';
+import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:fleetfill/shared/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,8 +29,17 @@ class AdminPaymentWorkflowController {
         );
     ref
       ..invalidate(pendingPaymentProofsProvider)
+      ..invalidate(adminPaymentProofSearchResultsProvider)
       ..invalidate(adminOperationalSummaryProvider)
       ..invalidate(adminAutomationAlertsProvider)
+      ..invalidate(adminEligiblePayoutsProvider)
+      ..invalidate(bookingDetailProvider)
+      ..invalidate(trackingEventsProvider)
+      ..invalidate(paymentProofsForBookingProvider)
+      ..invalidate(generatedDocumentsForBookingProvider)
+      ..invalidate(myShipperBookingsProvider)
+      ..invalidate(carrierBookingsProvider)
+      ..invalidate(myNotificationsProvider)
       ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }
@@ -48,8 +58,17 @@ class AdminPaymentWorkflowController {
         );
     ref
       ..invalidate(pendingPaymentProofsProvider)
+      ..invalidate(adminPaymentProofSearchResultsProvider)
       ..invalidate(adminOperationalSummaryProvider)
       ..invalidate(adminAutomationAlertsProvider)
+      ..invalidate(adminEligiblePayoutsProvider)
+      ..invalidate(bookingDetailProvider)
+      ..invalidate(trackingEventsProvider)
+      ..invalidate(paymentProofsForBookingProvider)
+      ..invalidate(generatedDocumentsForBookingProvider)
+      ..invalidate(myShipperBookingsProvider)
+      ..invalidate(carrierBookingsProvider)
+      ..invalidate(myNotificationsProvider)
       ..invalidate(adminAuditLogsProvider)
       ..invalidate(verificationAuditProvider);
   }

@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fleetfill/core/auth/auth.dart';
 import 'package:fleetfill/core/config/config.dart';
+import 'package:fleetfill/core/localization/localization.dart';
 import 'package:fleetfill/core/routing/routing.dart';
 import 'package:fleetfill/features/notifications/application/notification_feed_controller.dart';
+import 'package:fleetfill/features/notifications/domain/notification_copy.dart';
 import 'package:fleetfill/features/notifications/infrastructure/infrastructure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,6 +46,7 @@ class _PushNotificationCoordinatorState
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
     final router = ref.watch(appRouterProvider);
     final locale = Localizations.localeOf(context);
+    final s = S.of(context);
     final pushService = ref.watch(pushNotificationServiceProvider);
     final messenger = ScaffoldMessenger.maybeOf(context);
 
@@ -55,15 +58,22 @@ class _PushNotificationCoordinatorState
         _foregroundMessageSubscription ??= FirebaseMessaging.onMessage.listen(
           (message) {
             ref.invalidate(myNotificationsProvider);
-            final title = message.notification?.title?.trim();
-            final body = message.notification?.body?.trim();
-            if (!mounted || title == null || title.isEmpty) {
+            final copy = localizedNotificationCopy(
+              s: s,
+              type: message.data['type']?.toString(),
+              data: message.data,
+              fallbackTitle: message.notification?.title,
+              fallbackBody: message.notification?.body,
+            );
+            final title = copy.title.trim();
+            final body = copy.body.trim();
+            if (!mounted || title.isEmpty) {
               return;
             }
             messenger?.showSnackBar(
               SnackBar(
                 content: Text(
-                  body == null || body.isEmpty ? title : '$title\n$body',
+                  body.isEmpty ? title : '$title\n$body',
                 ),
               ),
             );

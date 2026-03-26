@@ -34,6 +34,9 @@ class SupportWorkflowController {
         );
 
     ref
+      ..invalidate(adminOperationalSummaryProvider)
+      ..invalidate(adminSupportQueueProvider)
+      ..invalidate(adminFilteredSupportQueueProvider)
       ..invalidate(mySupportRequestsProvider)
       ..invalidate(supportThreadProvider(request.id))
       ..invalidate(myNotificationsProvider);
@@ -53,9 +56,7 @@ class SupportWorkflowController {
     ref
       ..invalidate(mySupportRequestsProvider)
       ..invalidate(adminSupportQueueProvider)
-      ..invalidate(
-        adminFilteredSupportQueueProvider((status: null, query: null)),
-      )
+      ..invalidate(adminFilteredSupportQueueProvider)
       ..invalidate(supportThreadProvider(requestId))
       ..invalidate(myNotificationsProvider);
   }
@@ -65,9 +66,7 @@ class SupportWorkflowController {
     ref
       ..invalidate(mySupportRequestsProvider)
       ..invalidate(adminSupportQueueProvider)
-      ..invalidate(
-        adminFilteredSupportQueueProvider((status: null, query: null)),
-      )
+      ..invalidate(adminFilteredSupportQueueProvider)
       ..invalidate(supportThreadProvider(requestId))
       ..invalidate(myNotificationsProvider);
   }

@@ -1643,9 +1643,11 @@ volatile
 security definer
 set search_path = public
 as $$
+declare
+  v_actor_id uuid := nullif(current_setting('request.jwt.claim.sub', true), '')::uuid;
 begin
   return public.authorize_private_file_access_for_user(
-    (select auth.uid()),
+    v_actor_id,
     p_bucket_id,
     p_object_path
   );
@@ -1664,6 +1666,10 @@ security definer
 set search_path = public
 as $$
 begin
+  if p_actor_id is null then
+    return false;
+  end if;
+
   perform public.assert_rate_limit_for_actor(
     p_actor_id,
     'signed_url_generation',
@@ -1705,6 +1711,17 @@ begin
       from public.generated_documents as gd
       join public.bookings as b on b.id = gd.booking_id
       where gd.storage_path = p_object_path
+        and (b.shipper_id = p_actor_id or b.carrier_id = p_actor_id)
+    );
+  end if;
+
+  if p_bucket_id = 'dispute-evidence' then
+    return exists (
+      select 1
+      from public.dispute_evidence as de
+      join public.disputes as d on d.id = de.dispute_id
+      join public.bookings as b on b.id = d.booking_id
+      where de.storage_path = p_object_path
         and (b.shipper_id = p_actor_id or b.carrier_id = p_actor_id)
     );
   end if;
@@ -1917,8 +1934,10 @@ set search_path = public
 as $$
 declare
   v_session public.upload_sessions;
+  v_booking public.bookings;
   v_result public.payment_proofs;
   v_object_exists boolean;
+  v_attempt integer := 0;
 begin
   select * into v_session
   from public.upload_sessions
@@ -1934,17 +1953,42 @@ begin
     raise exception 'Upload session is no longer valid';
   end if;
 
-  select exists (
-    select 1
-    from storage.objects as so
-    where so.bucket_id = v_session.bucket_id
-      and so.name = v_session.object_path
-      and coalesce((so.metadata->>'size')::bigint, -1) = v_session.byte_size
-      and lower(coalesce(so.metadata->>'mimetype', '')) = lower(v_session.content_type)
-  ) into v_object_exists;
+  select * into v_booking
+  from public.bookings
+  where id = v_session.entity_id
+    and shipper_id = (select auth.uid())
+  for update;
+
+  if not found then
+    raise exception 'You cannot upload proof for this booking';
+  end if;
+
+  if v_booking.booking_status <> 'pending_payment' then
+    raise exception 'Payment proof can only be submitted while payment is pending';
+  end if;
+
+  if v_booking.payment_status not in ('unpaid', 'rejected') then
+    raise exception 'Payment proof cannot be submitted for this booking state';
+  end if;
+
+  loop
+    select exists (
+      select 1
+      from storage.objects as so
+      where so.bucket_id = v_session.bucket_id
+        and so.name = v_session.object_path
+        and coalesce((so.metadata->>'size')::bigint, -1) = v_session.byte_size
+        and lower(coalesce(so.metadata->>'mimetype', '')) = lower(v_session.content_type)
+    ) into v_object_exists;
+
+    exit when v_object_exists or v_attempt >= 4;
+
+    v_attempt := v_attempt + 1;
+    perform pg_sleep(0.2);
+  end loop;
 
   if not v_object_exists then
-    raise exception 'Uploaded proof file is missing for the authorized session';
+    raise exception 'Uploaded proof file is missing for the authorized session or metadata does not match';
   end if;
 
   insert into public.payment_proofs (
@@ -1982,6 +2026,57 @@ begin
     v_session.id
   )
   returning * into v_result;
+
+  update public.bookings
+  set payment_status = 'under_verification',
+      booking_status = 'payment_under_review',
+      updated_at = now()
+  where id = v_booking.id;
+
+  insert into public.tracking_events (
+    booking_id,
+    event_type,
+    visibility,
+    note,
+    created_by,
+    recorded_at
+  ) values (
+    v_booking.id,
+    'payment_under_review',
+    'user_visible',
+    'Payment proof submitted and under review.',
+    (select auth.uid()),
+    now()
+  );
+
+  insert into public.notifications (profile_id, type, title, body, data)
+  values (
+    v_booking.shipper_id,
+    'payment_proof_submitted',
+    'payment_proof_submitted_title',
+    'payment_proof_submitted_body',
+    jsonb_build_object('booking_id', v_booking.id, 'payment_proof_id', v_result.id)
+  );
+
+  perform public.enqueue_transactional_email(
+    'payment_proof_received',
+    v_booking.shipper_id,
+    (
+      select lower(trim(email))
+      from public.profiles
+      where id = v_booking.shipper_id
+    ),
+    v_booking.id,
+    'payment_proof_received',
+    null,
+    jsonb_build_object(
+      'booking_id', v_booking.id,
+      'booking_reference', v_booking.tracking_number,
+      'payment_proof_id', v_result.id
+    ),
+    'payment_proof_received:' || v_result.id::text,
+    'high'
+  );
 
   update public.upload_sessions
   set status = 'finalized', finalized_at = now(), updated_at = now()

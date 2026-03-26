@@ -32,6 +32,7 @@ class BookingWorkflowController {
         );
 
     ref
+      ..invalidate(myShipperBookingsProvider)
       ..invalidate(myShipperShipmentsProvider)
       ..invalidate(shipmentDetailProvider(shipment.id))
       ..invalidate(bookingDetailProvider(booking.id));
@@ -125,6 +126,7 @@ class BookingWorkflowController {
       ..invalidate(trackingEventsProvider(bookingId))
       ..invalidate(bookingPayoutRequestContextProvider(bookingId))
       ..invalidate(payoutsForBookingProvider(bookingId))
+      ..invalidate(myShipperBookingsProvider)
       ..invalidate(myShipperShipmentsProvider)
       ..invalidate(shipmentDetailProvider(shipmentId))
       ..invalidate(carrierBookingsProvider);

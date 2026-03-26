@@ -900,11 +900,11 @@ immutable
 set search_path = public
 as $$
   select case p_old
-    when 'unpaid' then p_new in ('unpaid', 'proof_submitted')
+    when 'unpaid' then p_new in ('unpaid', 'proof_submitted', 'under_verification')
     when 'proof_submitted' then p_new in ('proof_submitted', 'under_verification')
     when 'under_verification' then p_new in ('under_verification', 'secured', 'rejected')
     when 'secured' then p_new in ('secured', 'refunded', 'released_to_carrier')
-    when 'rejected' then p_new in ('rejected', 'proof_submitted')
+    when 'rejected' then p_new in ('rejected', 'proof_submitted', 'under_verification')
     when 'refunded' then p_new = 'refunded'
     when 'released_to_carrier' then p_new = 'released_to_carrier'
   end;
@@ -3458,11 +3458,15 @@ begin
     raise exception 'Support request not found';
   end if;
 
+  if v_request.status in ('resolved', 'closed') then
+    raise exception 'Support request is closed';
+  end if;
+
   if public.is_admin() then
     perform public.require_recent_admin_step_up();
     v_sender_type := 'admin';
     v_next_status := case
-      when v_request.status in ('resolved', 'closed', 'waiting_for_user') then 'in_progress'
+      when v_request.status = 'waiting_for_user' then 'in_progress'
       else v_request.status
     end;
   elsif v_request.created_by = v_actor_id then
@@ -3473,7 +3477,7 @@ begin
     );
     v_sender_type := 'user';
     v_next_status := case
-      when v_request.status in ('resolved', 'closed', 'waiting_for_user') then 'open'
+      when v_request.status = 'waiting_for_user' then 'open'
       else v_request.status
     end;
   else

@@ -545,7 +545,7 @@ class AdminPayoutDetailScreen extends ConsumerWidget {
                   ),
                   ProfileSummaryRow(
                     label: s.paymentStatusSecuredLabel,
-                    value: item.booking.paymentStatus.name,
+                    value: _paymentStatusLabel(s, item.booking.paymentStatus),
                   ),
                 ],
               ),
@@ -1083,11 +1083,11 @@ class _AdminPayoutsQueueSectionState
                   .map(
                     (item) => Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      child: AppListCard(
-                        title: item.bookingId,
-                        subtitle:
-                            '${BidiFormatters.latinIdentifier(item.amountDzd.toStringAsFixed(0))} • ${item.status}',
-                      ),
+                        child: AppListCard(
+                          title: item.bookingId,
+                          subtitle:
+                            '${BidiFormatters.latinIdentifier(item.amountDzd.toStringAsFixed(0))} • ${_transferStatusLabel(s, item.status)}',
+                        ),
                     ),
                   )
                   .toList(growable: false),
@@ -2719,6 +2719,26 @@ String _paymentStatusLabel(S s, PaymentStatus status) {
   };
 }
 
+String _transferStatusLabel(S s, String status) {
+  return switch (status) {
+    'pending' => s.transferStatusPendingLabel,
+    'sent' => s.transferStatusSentLabel,
+    'failed' => s.transferStatusFailedLabel,
+    'cancelled' => s.transferStatusCancelledLabel,
+    _ => s.localizationUnknownLabel,
+  };
+}
+
+String _disputeStatusLabel(S s, String status) {
+  return switch (status) {
+    'open' => s.supportStatusOpenLabel,
+    'resolved' => s.supportStatusResolvedLabel,
+    'refunded' => s.paymentStatusRefundedLabel,
+    'closed' => s.supportStatusClosedLabel,
+    _ => s.localizationUnknownLabel,
+  };
+}
+
 String _supportStatusLabel(S s, SupportRequestStatus status) {
   return switch (status) {
     SupportRequestStatus.open => s.supportStatusOpenLabel,
@@ -3033,7 +3053,7 @@ class _DisputeResolutionSheetState
               ),
               ProfileSummaryRow(
                 label: s.routeStatusLabel,
-                value: widget.item.status,
+                value: _disputeStatusLabel(s, widget.item.status),
               ),
               ProfileSummaryRow(
                 label: s.disputeEvidenceTitle,
