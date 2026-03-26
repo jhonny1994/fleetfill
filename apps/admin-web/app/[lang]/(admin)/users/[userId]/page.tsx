@@ -25,6 +25,8 @@ export default async function UserDetailPage({
   }
 
   const displayName = detail.profile.companyName?.trim() || detail.profile.fullName?.trim() || detail.profile.email;
+  const isCarrier = detail.profile.role === "carrier";
+  const isShipper = detail.profile.role === "shipper";
 
   return (
     <DetailWorkspace
@@ -71,10 +73,18 @@ export default async function UserDetailPage({
               </p>
             ) : null}
             <div className="meta-grid">
-              <div className="meta-card">
-                <p className="meta-card-label">{detailCopy.users.vehicles}</p>
-                <p className="meta-card-value">{detail.vehicles.length}</p>
-              </div>
+              {isCarrier ? (
+                <div className="meta-card">
+                  <p className="meta-card-label">{detailCopy.users.vehicles}</p>
+                  <p className="meta-card-value">{detail.vehicles.length}</p>
+                </div>
+              ) : null}
+              {isShipper ? (
+                <div className="meta-card">
+                  <p className="meta-card-label">{detailCopy.users.recentShipments}</p>
+                  <p className="meta-card-value">{detail.shipments.length}</p>
+                </div>
+              ) : null}
               <div className="meta-card">
                 <p className="meta-card-label">{detailCopy.users.recentBookings}</p>
                 <p className="meta-card-value">{detail.bookings.length}</p>
@@ -83,88 +93,94 @@ export default async function UserDetailPage({
                 <p className="meta-card-label">{detailCopy.users.supportThreads}</p>
                 <p className="meta-card-value">{detail.supportRequests.length}</p>
               </div>
-              <div className="meta-card">
-                <p className="meta-card-label">{detailCopy.users.payoutAccounts}</p>
-                <p className="meta-card-value">{detail.payoutAccounts.length}</p>
-              </div>
+              {isCarrier ? (
+                <div className="meta-card">
+                  <p className="meta-card-label">{detailCopy.users.payoutAccounts}</p>
+                  <p className="meta-card-value">{detail.payoutAccounts.length}</p>
+                </div>
+              ) : null}
             </div>
           </section>
 
-          <section className="grid gap-4 xl:grid-cols-2">
-            <section className="panel space-y-3 p-5">
-              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.vehicles}</h2>
-              <div className="space-y-3">
-                {detail.vehicles.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noVehicles}</p>
-                ) : (
-                  detail.vehicles.slice(0, 3).map((vehicle) => (
-                    <div key={vehicle.id} className="section-card p-3.5">
-                      <p className="font-medium text-[var(--color-ink-strong)]">{vehicle.label}</p>
-                      <div className="mt-2">
-                        <StatusBadge
-                          label={getEnumLabel(lang, "verification", vehicle.verificationStatus)}
-                          tone={
-                            vehicle.verificationStatus === "verified"
-                              ? "success"
-                              : vehicle.verificationStatus === "rejected"
-                                ? "danger"
-                                : "warning"
-                          }
-                        />
+          {isCarrier ? (
+            <section className="grid gap-4 xl:grid-cols-2">
+              <section className="panel space-y-3 p-5">
+                <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.vehicles}</h2>
+                <div className="space-y-3">
+                  {detail.vehicles.length === 0 ? (
+                    <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noVehicles}</p>
+                  ) : (
+                    detail.vehicles.slice(0, 3).map((vehicle) => (
+                      <div key={vehicle.id} className="section-card p-3.5">
+                        <p className="font-medium text-[var(--color-ink-strong)]">{vehicle.label}</p>
+                        <div className="mt-2">
+                          <StatusBadge
+                            label={getEnumLabel(lang, "verification", vehicle.verificationStatus)}
+                            tone={
+                              vehicle.verificationStatus === "verified"
+                                ? "success"
+                                : vehicle.verificationStatus === "rejected"
+                                  ? "danger"
+                                  : "warning"
+                            }
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </section>
+                    ))
+                  )}
+                </div>
+              </section>
 
-            <section className="panel space-y-3 p-5">
-              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.payoutAccounts}</h2>
-              <div className="space-y-3">
-                {detail.payoutAccounts.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noPayoutAccounts}</p>
-                ) : (
-                  detail.payoutAccounts.slice(0, 3).map((account) => (
-                    <div key={account.id} className="section-card p-3.5">
-                      <p className="font-medium text-[var(--color-ink-strong)]">
-                        {account.accountType.toUpperCase()} • {account.identifier}
-                      </p>
-                      <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{account.institutionName ?? ui.labels.noInstitution}</p>
-                      <div className="mt-2 flex gap-2">
-                        <StatusBadge label={getEnumLabel(lang, "activity", account.isActive ? "active" : "inactive")} tone={account.isActive ? "success" : "danger"} />
-                        <StatusBadge label={account.isVerified ? getEnumLabel(lang, "verification", "verified") : getEnumLabel(lang, "verification", "pending")} tone={account.isVerified ? "success" : "warning"} />
+              <section className="panel space-y-3 p-5">
+                <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.payoutAccounts}</h2>
+                <div className="space-y-3">
+                  {detail.payoutAccounts.length === 0 ? (
+                    <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noPayoutAccounts}</p>
+                  ) : (
+                    detail.payoutAccounts.slice(0, 3).map((account) => (
+                      <div key={account.id} className="section-card p-3.5">
+                        <p className="font-medium text-[var(--color-ink-strong)]">
+                          {account.accountType.toUpperCase()} • {account.identifier}
+                        </p>
+                        <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{account.institutionName ?? ui.labels.noInstitution}</p>
+                        <div className="mt-2 flex gap-2">
+                          <StatusBadge label={getEnumLabel(lang, "activity", account.isActive ? "active" : "inactive")} tone={account.isActive ? "success" : "danger"} />
+                          <StatusBadge label={account.isVerified ? getEnumLabel(lang, "verification", "verified") : getEnumLabel(lang, "verification", "pending")} tone={account.isVerified ? "success" : "warning"} />
+                        </div>
                       </div>
-                    </div>
-                  ))
-                )}
-              </div>
+                    ))
+                  )}
+                </div>
+              </section>
             </section>
-          </section>
+          ) : null}
 
           <section className="grid gap-4 xl:grid-cols-2">
-            <section className="panel space-y-3 p-5">
-              <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentShipments}</h2>
-              <div className="space-y-3">
-                {detail.shipments.length === 0 ? (
-                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noShipments}</p>
-                ) : (
-                  detail.shipments.slice(0, 3).map((shipment) => (
-                    <div key={shipment.id} className="section-card p-3.5">
-                      <Link href={buildAdminRoute(lang, "shipment", shipment.id)} className="font-medium text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
-                        {shipment.description?.trim() || shipment.id}
-                      </Link>
-                      <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                        {shipment.originLabel} {"->"} {shipment.destinationLabel}
-                      </p>
-                      <div className="mt-2 flex items-center gap-2">
-                        <StatusBadge label={getEnumLabel(lang, "shipment", shipment.status)} tone="neutral" />
-                        <span className="text-xs text-[var(--color-ink-muted)]">{shipment.totalWeightKg} kg</span>
+            {isShipper ? (
+              <section className="panel space-y-3 p-5">
+                <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentShipments}</h2>
+                <div className="space-y-3">
+                  {detail.shipments.length === 0 ? (
+                    <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noShipments}</p>
+                  ) : (
+                    detail.shipments.slice(0, 3).map((shipment) => (
+                      <div key={shipment.id} className="section-card p-3.5">
+                        <Link href={buildAdminRoute(lang, "shipment", shipment.id)} className="font-medium text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
+                          {shipment.description?.trim() || shipment.id}
+                        </Link>
+                        <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
+                          {shipment.originLabel} {"->"} {shipment.destinationLabel}
+                        </p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <StatusBadge label={getEnumLabel(lang, "shipment", shipment.status)} tone="neutral" />
+                          <span className="text-xs text-[var(--color-ink-muted)]">{shipment.totalWeightKg} kg</span>
+                        </div>
                       </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </section>
+                    ))
+                  )}
+                </div>
+              </section>
+            ) : null}
 
             <section className="panel space-y-3 p-5">
               <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentBookings}</h2>
