@@ -58,6 +58,8 @@ jobs:
       PUSH_NOTIFICATIONS_PROVIDER: ${{ vars.PUSH_NOTIFICATIONS_PROVIDER }}
       FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
     steps:
       - name: Checkout target ref
         uses: actions/checkout@v4

@@ -111,7 +111,11 @@ function Get-VercelEnvPayload {
     [string]$ProjectDir
   )
 
-  $output = & vercel env ls $Environment --format json --scope $Scope --cwd $ProjectDir 2>&1
+  if ([string]::IsNullOrWhiteSpace($env:VERCEL_TOKEN)) {
+    throw "Missing VERCEL_TOKEN for hosted rollout verification."
+  }
+
+  $output = & vercel env ls $Environment --format json --scope $Scope --cwd $ProjectDir --token $env:VERCEL_TOKEN 2>&1
   Assert-CommandSucceeded -ExitCode $LASTEXITCODE -Message "Failed to list Vercel $Environment environment variables."
   return (($output -join "`n") -replace '^[^{]*', '') | ConvertFrom-Json
 }
