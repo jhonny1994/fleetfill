@@ -66,24 +66,45 @@ jobs:
       - name: Verify rollout configuration is present
         shell: bash
         run: |
-          test -n "$SUPABASE_ACCESS_TOKEN"
+          missing=()
+
+          require_secret() {
+            local name="$1"
+            local value="$2"
+            if [[ -z "$value" ]]; then
+              missing+=("$name")
+            fi
+          }
+
+          require_secret "SUPABASE_ACCESS_TOKEN (GitHub secret)" "$SUPABASE_ACCESS_TOKEN"
           if [[ "${{ inputs.push_config }}" == "true" ]]; then
-            test -n "$GOOGLE_WEB_CLIENT_ID"
-            test -n "$SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET"
+            require_secret "GOOGLE_WEB_CLIENT_ID (GitHub variable)" "$GOOGLE_WEB_CLIENT_ID"
+            require_secret "SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET (GitHub secret)" "$SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET"
           fi
           if [[ "${{ inputs.sync_secrets }}" == "true" ]]; then
-            test -n "$INTERNAL_AUTOMATION_TOKEN"
-            test -n "$TRANSACTIONAL_EMAIL_PROVIDER"
-            test -n "$TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT"
-            test -n "$TRANSACTIONAL_EMAIL_PROVIDER_API_KEY"
-            test -n "$TRANSACTIONAL_EMAIL_FROM_EMAIL"
-            test -n "$TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET"
-            test -n "$PUSH_NOTIFICATIONS_ENABLED"
-            test -n "$PUSH_NOTIFICATIONS_PROVIDER"
-            test -n "$FIREBASE_SERVICE_ACCOUNT_JSON"
+            require_secret "INTERNAL_AUTOMATION_TOKEN (GitHub secret)" "$INTERNAL_AUTOMATION_TOKEN"
+            require_secret "TRANSACTIONAL_EMAIL_PROVIDER (GitHub variable)" "$TRANSACTIONAL_EMAIL_PROVIDER"
+            require_secret "TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT (GitHub variable)" "$TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT"
+            require_secret "TRANSACTIONAL_EMAIL_PROVIDER_API_KEY (GitHub secret)" "$TRANSACTIONAL_EMAIL_PROVIDER_API_KEY"
+            require_secret "TRANSACTIONAL_EMAIL_FROM_EMAIL (GitHub variable)" "$TRANSACTIONAL_EMAIL_FROM_EMAIL"
+            require_secret "TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET (GitHub secret)" "$TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET"
+            require_secret "PUSH_NOTIFICATIONS_ENABLED (GitHub variable)" "$PUSH_NOTIFICATIONS_ENABLED"
+            require_secret "PUSH_NOTIFICATIONS_PROVIDER (GitHub variable)" "$PUSH_NOTIFICATIONS_PROVIDER"
+            require_secret "FIREBASE_SERVICE_ACCOUNT_JSON (GitHub secret)" "$FIREBASE_SERVICE_ACCOUNT_JSON"
           fi
           if [[ "${{ inputs.verify_after }}" == "true" ]]; then
-            test -n "$VERCEL_TOKEN"
+            require_secret "VERCEL_TOKEN (GitHub secret)" "$VERCEL_TOKEN"
+          fi
+
+          if (( ${#missing[@]} > 0 )); then
+            echo "Missing production rollout configuration:" >&2
+            for item in "${missing[@]}"; do
+              echo "  - $item" >&2
+            done
+            echo "" >&2
+            echo "Populate them in GitHub repo Settings > Secrets and variables > Actions," >&2
+            echo "or run tool/sync_github_production_config.ps1 locally to seed the standard values." >&2
+            exit 1
           fi
 
       - name: Set up Node.js
