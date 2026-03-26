@@ -9,6 +9,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+if ([string]::IsNullOrWhiteSpace($env:VERCEL_TOKEN)) {
+  throw "Missing VERCEL_TOKEN for Vercel environment sync."
+}
+
 $apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
 $anonKey = ($apiKeys | Where-Object { $_.name -eq "anon" }).api_key
 
@@ -24,12 +28,12 @@ $values = [ordered]@{
 
 foreach ($environment in $TargetEnvironments) {
   foreach ($entry in $values.GetEnumerator()) {
-    & vercel env rm $entry.Key $environment --yes --scope $Scope --cwd $ProjectDir | Out-Null
+    & vercel env rm $entry.Key $environment --yes --scope $Scope --cwd $ProjectDir --token $env:VERCEL_TOKEN | Out-Null
     if ($LASTEXITCODE -gt 1) {
       throw "Failed removing existing Vercel env var $($entry.Key) for $environment."
     }
 
-    & vercel env add $entry.Key $environment --value $entry.Value --yes --scope $Scope --cwd $ProjectDir | Out-Null
+    & vercel env add $entry.Key $environment --value $entry.Value --yes --scope $Scope --cwd $ProjectDir --token $env:VERCEL_TOKEN | Out-Null
     if ($LASTEXITCODE -ne 0) {
       throw "Failed setting Vercel env var $($entry.Key) for $environment."
     }
