@@ -28,7 +28,7 @@ The admin console covers:
 
 ## Technical Contract
 
-- `admin-web/` uses the same Supabase backend as the Flutter app.
+- `apps/admin-web/` uses the same Supabase backend as the Flutter app in `apps/mobile/`.
 - Business rules remain in the database and Edge Functions.
 - Admin UI should consume existing RPCs, tables, and queues rather than re-implementing backend logic in Next.js.
 

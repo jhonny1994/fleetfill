@@ -16,9 +16,9 @@ There is no separate product model for local, staging, or production. The same a
 
 ## Application Surfaces
 
-- Flutter app in `lib/` is the main shipper and carrier client.
-- Next.js admin console in `admin-web/` is the primary internal operations console.
-- Supabase in `supabase/` owns schema, RLS, RPCs, storage, and Edge Functions.
+- Flutter app in `apps/mobile/lib/` is the main shipper and carrier client.
+- Next.js admin console in `apps/admin-web/` is the primary internal operations console.
+- Supabase in `backend/supabase/` owns schema, RLS, RPCs, storage, and Edge Functions.
 
 ## Backend Boundaries
 

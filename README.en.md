@@ -107,6 +107,16 @@ Helps shippers and carriers manage everyday freight with more trust, clearer pay
 - notifications, email, and tracking under one workflow model
 - production-oriented release and validation posture
 
+## Repository Model
+
+FleetFill is maintained as one pragmatic product monorepo with three first-class surfaces:
+
+- mobile app
+- admin web
+- Supabase backend
+
+The three surfaces now live as sibling product roots inside the repository and should be treated as one product system.
+
 ## Built With
 
 <p align="center">

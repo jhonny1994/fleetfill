@@ -6,7 +6,7 @@ void main() {
   final source = File(
     '${root.path}/data/locations/wilayas-with-municipalities.json',
   );
-  final target = File('${root.path}/supabase/seeds/locations.sql');
+  final target = File('${root.path}/backend/supabase/seeds/locations.sql');
 
   final raw = jsonDecode(source.readAsStringSync()) as List<dynamic>;
   final buffer = StringBuffer()

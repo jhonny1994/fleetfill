@@ -16,24 +16,29 @@ migrate_working_dir/
 *.iml
 *.ipr
 *.iws
-.idea/
+**/.idea/
 
 # Local editor configuration
-.vscode/
+**/.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
-.dart_tool/
+**/.dart_tool/
+**/.metadata
 .flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
+**/.pub-cache/
+**/.pub/
+**/build/
+**/coverage/
+**/node_modules/
+**/.next/
+**/out/
+**/*.tsbuildinfo
 .env
 .env.*
 !.env.example
-firebase.json
+/apps/mobile/firebase.json
 .firebaserc
 assets/*firebase-adminsdk*.json
 assets/*service-account*.json
@@ -42,8 +47,9 @@ assets/*service-account*.json
 firebase-debug.log
 firebase-debug.*.log
 supabase-functions.log
-supabase/.branches/
-supabase/.temp/
+/backend/supabase/.branches/
+/backend/supabase/.temp/
+/tests/
 
 # Symbolication related
 app.*.symbols
@@ -52,15 +58,62 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-/android/.kotlin/
-/android/app/google-services.json
-/android/app/*.jks
-/android/app/release-signing.local.properties
+/apps/mobile/android/app/debug
+/apps/mobile/android/app/profile
+/apps/mobile/android/app/release
+/apps/mobile/android/.kotlin/
+/apps/mobile/android/app/google-services.json
+/apps/mobile/android/app/*.jks
+/apps/mobile/android/app/release-signing.local.properties
+/apps/mobile/android/.gradle/
+/apps/mobile/android/captures/
+/apps/mobile/android/gradlew
+/apps/mobile/android/gradlew.bat
+/apps/mobile/android/local.properties
+/apps/mobile/android/**/GeneratedPluginRegistrant.java
+/apps/mobile/android/.cxx/
+/apps/mobile/android/key.properties
+/apps/mobile/android/**/*.keystore
+/apps/mobile/android/**/*.jks
+
+# iOS / Xcode generated
+**/dgph
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+**/*sync/
+.sconsign.dblite
+.tags*
+**/.vagrant/
+**/DerivedData/
+Icon?
+**/Pods/
+**/.symlinks/
+/apps/mobile/ios/profile
+xcuserdata
+**/.generated/
+/apps/mobile/ios/Flutter/App.framework
+/apps/mobile/ios/Flutter/Flutter.framework
+/apps/mobile/ios/Flutter/Flutter.podspec
+/apps/mobile/ios/Flutter/Generated.xcconfig
+/apps/mobile/ios/Flutter/ephemeral/
+/apps/mobile/ios/Flutter/app.flx
+/apps/mobile/ios/Flutter/app.zip
+/apps/mobile/ios/Flutter/flutter_assets/
+/apps/mobile/ios/Flutter/flutter_export_environment.sh
+/apps/mobile/ios/ServiceDefinitions.json
+/apps/mobile/ios/Runner/GeneratedPluginRegistrant.*
+
+# Admin web generated / logs
+admin-web-start.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
 .agents
-.vercel
+**/.vercel/
 
 /tool/create_admin_account.ps1

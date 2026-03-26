@@ -107,6 +107,16 @@ Aide les expéditeurs et les transporteurs à gérer le transport quotidien avec
 - notifications, email et suivi dans un même modèle opérationnel
 - posture orientée production pour les releases et la validation
 
+## Modèle du dépôt
+
+FleetFill est maintenu comme un monorepo produit pragmatique avec trois surfaces principales :
+
+- application mobile
+- admin web
+- backend Supabase
+
+Les trois surfaces vivent maintenant comme des racines sœurs dans le dépôt et doivent être comprises comme un seul système produit.
+
 ## Construit avec
 
 <p align="center">

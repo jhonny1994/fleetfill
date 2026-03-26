@@ -6,5 +6,5 @@ This directory stores structured project data that is not narrative documentatio
 
 Keep generated outputs elsewhere:
 
-- Supabase seed SQL belongs in `supabase/seeds/`
+- Supabase seed SQL belongs in `backend/supabase/seeds/`
 - helper scripts for regenerating datasets belong in `tool/`

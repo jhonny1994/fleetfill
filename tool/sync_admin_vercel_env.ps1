@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-  [string]$ProjectDir = "admin-web",
+  [string]$ProjectDir = "apps/admin-web",
   [string]$ProjectRef = "rkvrdzwlynyionsnwfiu",
   [string[]]$TargetEnvironments = @("production"),
   [string]$SiteUrl = "https://fleetfill.vercel.app",
@@ -36,4 +36,4 @@ foreach ($environment in $TargetEnvironments) {
   }
 }
 
-Write-Host "Synchronized admin-web Vercel environment values."
+Write-Host "Synchronized apps/admin-web Vercel environment values."

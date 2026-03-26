@@ -1,53 +1,90 @@
 # Delivery
 
-## Current State
+## Production Delivery Model
 
-FleetFill is feature-advanced and locally verifiable across the main product surfaces. The remaining release risk is mostly hosted-environment and representative-device validation, not missing product fundamentals.
+FleetFill uses a split but intentional delivery path:
 
-## Verified In Repo Or Local Runtime
+- GitHub Actions owns continuous integration
+- Supabase production rollout is operator-triggered from GitHub Actions
+- admin-web production deploy is operator-triggered from GitHub Actions
+- Flutter mobile production artifacts are built from release tags
 
-- Flutter auth flow coverage is in place for confirm-email and password reset user journeys.
-- Supabase runtime SQL validation exists for security and email workflow contracts.
-- Local Supabase can now verify confirm-email behavior with Mailpit instead of auto-confirming silently.
-- Local transactional email can be queued, dispatched by the worker, and accepted by the provider.
-- Local scheduled automation can invoke the worker stack successfully.
-- Critical auth and routing tests pass.
+This is deliberate. It keeps automated quality gates unified while still letting operators choose exactly which production surface to promote.
 
-## Remaining Manual Or Environment-Specific Validation
+## CI Contract
 
-These items still need representative-device or hosted-environment execution:
+GitHub Actions now exposes one main validation workflow:
 
-- Profile the app on a representative Android device in profile mode.
-- Validate repeated jank and long-list behavior on the target device class.
-- Run TalkBack and large-text accessibility checks.
-- Run manual Arabic, French, and English localization QA.
-- Verify hosted Supabase Auth email delivery with real inboxes.
-- Deploy and verify hosted Edge Functions, the internal automation token, scheduler, and provider webhooks in Supabase cloud.
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml)
+
+It detects which surface changed, then runs only the needed quality jobs on pull requests and on pushes to `main`:
+
+- Flutter quality
+  - localization generation
+  - static analysis
+  - test suite
+- admin-web quality
+  - install
+  - lint
+  - typecheck
+  - tests
+  - production build
+- Supabase validation
+  - local Supabase startup
+  - database reset
+  - database lint
+  - runtime SQL test suite
+
+The local Supabase validation environment uses the loopback URL `http://127.0.0.1:54321` because GitHub Actions starts an isolated local Supabase stack for validation. This is never the hosted production project.
+
+## CD Contract
+
+Production delivery is split by surface:
+
+- Supabase backend
+  - promoted by [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml)
+  - operator can choose which parts to run:
+    - database push
+    - config push
+    - secret sync
+    - Edge Function deploy
+    - scheduler setup
+    - hosted verification
+- admin-web
+  - promoted by [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml)
+  - operator can choose env sync, build, and deploy separately
+- Flutter mobile
+  - released by [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
+  - produces signed Android artifacts on version tags or manual release dispatch
 
 ## Hosted Rollout Order
 
-Promote the hosted system in this order:
+Promote production in this order:
 
-- run the local verification gate from the current `main` state
-- run [C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1](C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1) from the repo root
-- push `main` so Vercel Git integration publishes the current `admin-web/` commit
-- verify hosted auth, internal scheduler/worker auth, transactional email, push, and admin operations against the real cloud project
+- merge validated work to `main`
+- let [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml) pass
+- run [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml) when backend or hosted config changed
+- run [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml) when admin-web should ship
+- run representative-device and hosted smoke validation before announcing release completeness
+
+## Remaining Manual Or Environment-Specific Validation
+
+These checks still require representative devices or real hosted services:
+
+- Profile the app on a representative Android device in profile mode
+- validate repeated jank and long-list behavior on target device classes
+- run TalkBack and large-text accessibility checks
+- run Arabic, French, and English manual localization QA
+- verify hosted Supabase Auth email delivery with real inboxes
+- confirm push, transactional email, and scheduler behavior in hosted infrastructure
 
 ## Release Gate
 
 Do not claim production-ready rollout until all of the following are true:
 
-- local automated and runtime checks pass
-- cloud backend is deployed from the current repo state
+- CI passed from the current `main` state
+- hosted backend rollout completed from the current `main` state
+- Vercel published the expected admin-web revision
 - auth email works in the hosted project
 - transactional email works in the hosted project
 - manual device and accessibility validation is complete
-
-## Validation Sources
-
-- Flutter tests
-- Supabase SQL runtime tests
-- local Supabase runtime rehearsal
-- admin-web type and lint verification
-- manual operator checks before promotion
-- hosted verification via [C:\Users\raouf\projects\fleetfill\tool\verify_hosted_rollout.ps1](C:\Users\raouf\projects\fleetfill\tool\verify_hosted_rollout.ps1)

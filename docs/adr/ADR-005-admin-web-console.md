@@ -32,7 +32,7 @@ The existing Flutter admin surface remains a temporary fallback for urgent inter
 
 ## Consequences
 
-- the repository gains a separate `admin-web/` app
+- the repository gains a separate `apps/admin-web/` app
 - Supabase remains the single business-rule boundary for mobile and admin
 - the admin web console must enforce admin-only access in both frontend guards and backend authorization
 - the mobile admin surface should not continue to grow into a full desktop substitute
