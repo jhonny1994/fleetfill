@@ -104,6 +104,18 @@ if ([string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken) -and (Test-Pa
   }
 }
 
+function Get-VercelEnvPayload {
+  param(
+    [string]$Environment,
+    [string]$Scope,
+    [string]$ProjectDir
+  )
+
+  $output = & vercel env ls $Environment --format json --scope $Scope --cwd $ProjectDir 2>&1
+  Assert-CommandSucceeded -ExitCode $LASTEXITCODE -Message "Failed to list Vercel $Environment environment variables."
+  return (($output -join "`n") -replace '^[^{]*', '') | ConvertFrom-Json
+}
+
 if ([string]::IsNullOrWhiteSpace($supabaseSecretKey) -or $supabaseSecretKey -match '·') {
   $supabaseSecretKey = Resolve-CloudAdminKey -ProjectRef $ProjectRef
 }
@@ -153,9 +165,7 @@ if (-not [string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken)) {
   }
 }
 
-$productionEnvJson = cmd /c "vercel env ls production --format json --scope $VercelScope --cwd $ProjectDir 2>&1"
-Assert-CommandSucceeded -ExitCode $LASTEXITCODE -Message "Failed to list Vercel production environment variables."
-$productionEnvPayload = (($productionEnvJson -join "`n") -replace '^[^{]*', '') | ConvertFrom-Json
+$productionEnvPayload = Get-VercelEnvPayload -Environment "production" -Scope $VercelScope -ProjectDir $ProjectDir
 $productionEnv = $productionEnvPayload.envs
 
 foreach ($requiredVar in @("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "NEXT_PUBLIC_SITE_URL")) {
@@ -165,9 +175,7 @@ foreach ($requiredVar in @("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANO
 }
 
 if ($RequirePreviewEnv) {
-  $previewEnvJson = cmd /c "vercel env ls preview --format json --scope $VercelScope --cwd $ProjectDir 2>&1"
-  Assert-CommandSucceeded -ExitCode $LASTEXITCODE -Message "Failed to list Vercel preview environment variables."
-  $previewEnvPayload = (($previewEnvJson -join "`n") -replace '^[^{]*', '') | ConvertFrom-Json
+  $previewEnvPayload = Get-VercelEnvPayload -Environment "preview" -Scope $VercelScope -ProjectDir $ProjectDir
   $previewEnv = $previewEnvPayload.envs
 
   foreach ($requiredVar in @("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "NEXT_PUBLIC_SITE_URL")) {
