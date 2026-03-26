@@ -2,24 +2,43 @@
 
 ## Production Release Model
 
-FleetFill currently uses:
+FleetFill release automation is intentionally simple:
 
-- GitHub Actions for validation and release automation
-- GitHub Releases for signed Flutter production artifacts
-- Vercel Git integration for admin-web deploys from `main`
-- Supabase cloud as the production backend
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml) validates repository quality
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml) promotes hosted backend changes
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml) publishes admin-web on demand
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml) builds signed Android release artifacts
 
-## GitHub Actions
+## Active GitHub Actions
 
-Active workflows:
-
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\flutter_quality.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\flutter_quality.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_quality.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\admin_web_quality.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\supabase_validation.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\supabase_validation.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\flutter_release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\flutter_release.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\release_candidate_verification.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release_candidate_verification.yml)
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml)
+  - surface-aware change detection
+  - Flutter quality
+  - admin-web quality
+  - Supabase local validation
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml)
+  - hosted Supabase rollout
+  - operator-selected rollout parts
+  - hosted verification
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml)
+  - Vercel env sync
+  - production build
+  - production deploy
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
+  - signed Android artifact generation
+  - GitHub release publication
 
 ## Required GitHub Secrets
+
+For Supabase production rollout:
+
+- `SUPABASE_ACCESS_TOKEN`
+- `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET`
+- `INTERNAL_AUTOMATION_TOKEN`
+- `TRANSACTIONAL_EMAIL_PROVIDER_API_KEY`
+- `TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET`
+- `FIREBASE_SERVICE_ACCOUNT_JSON`
+- `VERCEL_TOKEN`
 
 For signed Flutter releases:
 
@@ -31,13 +50,9 @@ For signed Flutter releases:
 
 Local developer note:
 
-- `android/app/google-services.json` may stay on a developer machine for local builds
-- it should remain ignored and untracked in git
-- CI should fail if tracked Firebase or service-account files reappear in the repository
-
-For hosted auth/provider validation:
-
-- `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET`
+- `apps/mobile/android/app/google-services.json` may stay on a developer machine for local builds
+- it must remain ignored and untracked in git
+- CI must fail if tracked Firebase or service-account files reappear
 
 ## Required GitHub Variables
 
@@ -45,17 +60,18 @@ For hosted auth/provider validation:
 - `GOOGLE_IOS_CLIENT_ID`
 - `PRODUCTION_SUPABASE_URL`
 - `PRODUCTION_SUPABASE_PUBLISHABLE_KEY`
+- `TRANSACTIONAL_EMAIL_PROVIDER`
+- `TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT`
+- `TRANSACTIONAL_EMAIL_FROM_EMAIL`
+- `PUSH_NOTIFICATIONS_ENABLED`
+- `PUSH_NOTIFICATIONS_PROVIDER`
+- `VERCEL_ORG_ID`
+- `VERCEL_ADMIN_WEB_PROJECT_ID`
 
-Optional manual Vercel CLI fallback:
-
-- secret `VERCEL_TOKEN`
-- variable `VERCEL_ORG_ID`
-- variable `VERCEL_ADMIN_WEB_PROJECT_ID`
-
-Repo-owned sync helper:
+## Repo-Owned Sync Helper
 
 - [C:\Users\raouf\projects\fleetfill\tool\sync_github_production_config.ps1](C:\Users\raouf\projects\fleetfill\tool\sync_github_production_config.ps1)
-  - syncs the production GitHub variables and secrets that can be derived from local config
+  - syncs GitHub production variables and secrets that can be derived from local config
   - can generate a local Android release keystore if one does not already exist
 
 ## Flutter Release Flow
@@ -63,7 +79,7 @@ Repo-owned sync helper:
 Signed Android artifacts are produced by:
 
 - pushing a version tag like `v1.0.0`
-- or manually dispatching [C:\Users\raouf\projects\fleetfill\.github\workflows\flutter_release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\flutter_release.yml)
+- or manually dispatching [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
 
 Published artifacts:
 
@@ -72,6 +88,7 @@ Published artifacts:
 
 ## Distribution Posture
 
-- GitHub Releases is the current production artifact channel
+- GitHub Releases is the current production artifact channel for Android builds
 - Google Play can replace that later without changing the core signing pipeline
+- admin-web production publication is now GitHub-controlled through the manual deploy workflow
 - secrets and signing material must stay in GitHub secrets, never in git

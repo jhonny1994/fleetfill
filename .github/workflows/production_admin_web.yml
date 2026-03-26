@@ -1,0 +1,93 @@
+name: Production Admin Web
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: Git ref to deploy
+        required: true
+        default: main
+      sync_env:
+        description: Sync production Vercel env before deploy
+        type: boolean
+        default: true
+      build:
+        description: Build admin-web with Vercel
+        type: boolean
+        default: true
+      deploy:
+        description: Publish production deploy
+        type: boolean
+        default: true
+
+concurrency:
+  group: production-admin-web
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    defaults:
+      run:
+        working-directory: apps/admin-web
+    steps:
+      - name: Checkout target ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.git_ref }}
+
+      - name: Validate requested deploy shape
+        shell: bash
+        run: |
+          if [[ "${{ inputs.deploy }}" == "true" && "${{ inputs.build }}" != "true" ]]; then
+            echo "Production deploy requires a production build in the same workflow run."
+            exit 1
+          fi
+
+      - name: Verify deploy configuration is present
+        shell: bash
+        run: |
+          test -n "$VERCEL_TOKEN"
+          test -n "$VERCEL_ORG_ID"
+          test -n "$VERCEL_PROJECT_ID"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: apps/admin-web/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync Vercel production env
+        if: inputs.sync_env
+        shell: pwsh
+        run: ./tool/sync_admin_vercel_env.ps1 -ProjectDir apps/admin-web
+        working-directory: .
+
+      - name: Pull production environment
+        run: pnpm dlx vercel pull --yes --environment=production --token=${{ env.VERCEL_TOKEN }}
+
+      - name: Build production deployment
+        if: inputs.build
+        run: pnpm dlx vercel build --prod --token=${{ env.VERCEL_TOKEN }}
+
+      - name: Deploy production
+        if: inputs.deploy
+        run: pnpm dlx vercel deploy --prebuilt --prod --token=${{ env.VERCEL_TOKEN }}

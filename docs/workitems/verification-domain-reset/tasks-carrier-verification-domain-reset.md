@@ -1,16 +1,16 @@
 ## Relevant Files
 
-- `supabase/migrations/20260317010000_create_foundation_layer.sql` - Consolidated foundation schema that currently places verification fields on `profiles`.
-- `supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql` - Verification RPCs and helper functions that currently refresh and expose profile-level verification state.
-- `admin-web/lib/queries/admin-queues.ts` - Admin verification queue query layer.
-- `admin-web/lib/queries/admin-verification.ts` - Admin verification detail query layer.
-- `admin-web/lib/queries/admin-users.ts` - Admin users listing and filtering logic.
-- `admin-web/lib/queries/admin-search.ts` - Admin search metadata that surfaces role and verification labels.
-- `admin-web/app/[lang]/(admin)/dashboard/page.tsx` - Dashboard verification preview card rendering.
-- `admin-web/app/[lang]/(admin)/users/page.tsx` - Admin users list verification display.
-- `admin-web/app/[lang]/(admin)/users/[userId]/page.tsx` - Admin user detail verification display.
-- `admin-web/app/[lang]/(admin)/verification/[carrierId]/page.tsx` - Carrier verification review screen.
-- `admin-web/lib/i18n/admin-ui.ts` - Shared admin localization and enum label helpers.
+- `backend/supabase/migrations/20260317010000_create_foundation_layer.sql` - Consolidated foundation schema that currently places verification fields on `profiles`.
+- `backend/supabase/migrations/20260317020000_create_verification_and_capacity_layer.sql` - Verification RPCs and helper functions that currently refresh and expose profile-level verification state.
+- `apps/admin-web/lib/queries/admin-queues.ts` - Admin verification queue query layer.
+- `apps/admin-web/lib/queries/admin-verification.ts` - Admin verification detail query layer.
+- `apps/admin-web/lib/queries/admin-users.ts` - Admin users listing and filtering logic.
+- `apps/admin-web/lib/queries/admin-search.ts` - Admin search metadata that surfaces role and verification labels.
+- `apps/admin-web/app/[lang]/(admin)/dashboard/page.tsx` - Dashboard verification preview card rendering.
+- `apps/admin-web/app/[lang]/(admin)/users/page.tsx` - Admin users list verification display.
+- `apps/admin-web/app/[lang]/(admin)/users/[userId]/page.tsx` - Admin user detail verification display.
+- `apps/admin-web/app/[lang]/(admin)/verification/[carrierId]/page.tsx` - Carrier verification review screen.
+- `apps/admin-web/lib/i18n/admin-ui.ts` - Shared admin localization and enum label helpers.
 - `lib/core/auth/auth_state.dart` - Flutter auth snapshot and profile model, currently carrying profile verification state.
 - `lib/core/auth/auth_repository.dart` - Flutter auth repository and public carrier profile reads.
 - `lib/core/routing/app_route_guards.dart` - Carrier gating logic based on verification.

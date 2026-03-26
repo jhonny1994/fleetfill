@@ -1,31 +1,58 @@
 # Tooling
 
-This folder contains active operational scripts for FleetFill.
+This folder is the execution layer of the FleetFill production system.
 
-## Active Production Scripts
+The repo now follows a clear three-layer model:
 
-- `deploy_supabase_cloud.ps1`
-  - pushes the hosted backend, syncs secrets, deploys Edge Functions, syncs Vercel env, and runs hosted verification
-- `verify_hosted_rollout.ps1`
-  - checks the live cloud function surface and the live admin site
-- `sync_github_production_config.ps1`
-  - syncs production GitHub variables and secrets from local project config
+1. GitHub Actions is the production control plane.
+2. `tool/` scripts are the repo-owned execution layer.
+3. local helpers exist for maintenance and fallback, but they are not the primary production buttons.
+
+## Production Executors
+
+These scripts are part of the official production path. GitHub Actions calls them or relies on the behavior they encode.
+
 - `sync_supabase_cloud_secrets.ps1`
-  - syncs the required Edge Function secrets from root `.env`, including `SB_SECRET_KEY` (sourced from local `SUPABASE_SECRET_KEY`) and the internal automation token used by scheduler and worker endpoints
-- `sync_admin_vercel_env.ps1`
-  - syncs the admin-web public runtime values into Vercel production
+  - syncs the required Supabase Edge Function secrets from root `.env`
 - `apply_supabase_scheduler.ps1`
-  - installs the hosted cron/scheduler SQL using the Supabase secret key for management RPC access and the internal automation token for scheduler auth
+  - installs or refreshes the hosted scheduler configuration
+- `verify_hosted_rollout.ps1`
+  - verifies the live hosted Supabase and admin-web surfaces
+- `sync_admin_vercel_env.ps1`
+  - synchronizes admin-web public runtime values into Vercel production
+
+These are implementation, not shadow ops.
+
+## Operator Helpers
+
+These scripts are still useful, but they are helper-level, not the canonical production entrypoint.
+
+- `workspace.ps1`
+  - lightweight local workspace runner for human operators
+  - validates `mobile`, `admin-web`, `supabase`, or `all`
+  - intentionally stays small and explicit instead of introducing a heavy monorepo framework
+- `deploy_supabase_cloud.ps1`
+  - local convenience wrapper around the Supabase production rollout steps
+  - useful for local operator execution and fallback
+  - no longer the primary production control surface now that GitHub Actions owns rollout selection
+- `sync_github_production_config.ps1`
+  - syncs GitHub production variables and secrets from local config
+  - useful when rotating or bootstrapping repository-level deployment configuration
 - `create_admin_account.ps1`
   - creates or reuses a hosted auth user, upserts the admin profile, and grants the requested admin role
+
+## Internal Helpers
+
+These support executors or maintenance flows and are not direct operator-facing release entrypoints.
+
 - `run_remote_sql.mjs`
-  - internal helper used by the scheduler setup
-
-## Support Scripts
-
+  - internal helper used by scheduler setup
 - `locations/generate_supabase_location_seed.dart`
 - `locations/import_locations.dart`
 
-## Rule
+## Production Rule
 
-Do not leave throwaway rollout experiments here. If a script is not part of the active delivery path, remove it or archive it before shipping.
+- Do not add throwaway rollout experiments here.
+- If a script is production-critical, document which workflow or operation depends on it.
+- If a script is only for local convenience, say so explicitly.
+- If a script is no longer part of the active delivery path, remove it or archive it before shipping.

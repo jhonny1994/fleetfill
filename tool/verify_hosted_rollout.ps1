@@ -2,7 +2,7 @@
 param(
   [string]$ProjectRef = "rkvrdzwlynyionsnwfiu",
   [string]$AdminSiteUrl = "https://fleetfill.vercel.app",
-  [string]$ProjectDir = "admin-web",
+  [string]$ProjectDir = "apps/admin-web",
   [string]$VercelScope = "jhonny1994s-projects",
   [string]$SecretKey = "",
   [string]$InternalAutomationToken = "",
@@ -177,4 +177,4 @@ if ($RequirePreviewEnv) {
   }
 }
 
-Write-Host "Hosted rollout verification passed for Supabase cloud and Vercel."
+Write-Host "Hosted rollout verification passed for backend/supabase and apps/admin-web."

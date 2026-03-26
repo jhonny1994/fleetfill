@@ -1,0 +1,178 @@
+name: FleetFill CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Detect Changed Surfaces
+    runs-on: ubuntu-latest
+    outputs:
+      flutter: ${{ steps.filter.outputs.flutter }}
+      admin_web: ${{ steps.filter.outputs.admin_web }}
+      supabase: ${{ steps.filter.outputs.supabase }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            flutter:
+              - 'apps/mobile/**'
+            admin_web:
+              - 'apps/admin-web/**'
+            supabase:
+              - 'backend/supabase/**'
+              - 'data/**'
+              - 'tool/deploy_supabase_cloud.ps1'
+              - 'tool/verify_hosted_rollout.ps1'
+              - 'tool/sync_supabase_cloud_secrets.ps1'
+              - 'tool/apply_supabase_scheduler.ps1'
+              - 'tool/locations/**'
+
+  flutter-quality:
+    name: Flutter Quality
+    needs: changes
+    if: needs.changes.outputs.flutter == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
+      GOOGLE_IOS_CLIENT_ID: ${{ vars.GOOGLE_IOS_CLIENT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify mobile secret-bearing files are not tracked
+        shell: bash
+        run: |
+          if git ls-files | grep -E '(^apps/mobile/android/app/google-services\.json$|firebase-adminsdk|service-account)'; then
+            echo "Tracked Firebase or service-account files are not allowed in git."
+            exit 1
+          fi
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        working-directory: apps/mobile
+        run: flutter pub get
+
+      - name: Verify generated localization output
+        working-directory: apps/mobile
+        run: dart run intl_utils:generate
+
+      - name: Analyze
+        working-directory: apps/mobile
+        run: dart analyze
+
+      - name: Run tests
+        working-directory: apps/mobile
+        run: flutter test
+
+  admin-web-quality:
+    name: Admin Web Quality
+    needs: changes
+    if: needs.changes.outputs.admin_web == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: apps/admin-web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: apps/admin-web/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  supabase-validation:
+    name: Supabase Validation
+    needs: changes
+    if: needs.changes.outputs.supabase == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_URL: http://127.0.0.1:54321
+      SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID != '' && vars.GOOGLE_WEB_CLIENT_ID || 'dummy-google-web-client-id.apps.googleusercontent.com' }}
+      GOOGLE_IOS_CLIENT_ID: ${{ vars.GOOGLE_IOS_CLIENT_ID != '' && vars.GOOGLE_IOS_CLIENT_ID || 'dummy-google-ios-client-id.apps.googleusercontent.com' }}
+      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID != '' && vars.GOOGLE_WEB_CLIENT_ID || 'dummy-google-web-client-id.apps.googleusercontent.com' }}
+      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET: ${{ secrets.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET != '' && secrets.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET || 'dummy-google-client-secret' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Materialize local Supabase env
+        shell: bash
+        run: |
+          cat > .env <<EOF
+          SUPABASE_URL=${SUPABASE_URL}
+          SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+          GOOGLE_WEB_CLIENT_ID=${GOOGLE_WEB_CLIENT_ID}
+          GOOGLE_IOS_CLIENT_ID=${GOOGLE_IOS_CLIENT_ID}
+          SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=${SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID}
+          SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=${SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET}
+          EOF
+
+      - name: Start local Supabase
+        run: supabase start
+
+      - name: Reset database
+        run: supabase db reset --yes
+
+      - name: Lint database
+        run: supabase db lint --debug
+
+      - name: Run full runtime database test suite
+        run: supabase test db
+
+      - name: Stop local Supabase
+        if: always()
+        run: supabase stop

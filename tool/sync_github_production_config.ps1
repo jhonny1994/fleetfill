@@ -2,10 +2,10 @@
 param(
   [string]$Repo = "jhonny1994/fleetfill",
   [string]$ProjectRef = "rkvrdzwlynyionsnwfiu",
-  [string]$GoogleServicesPath = "android/app/google-services.json",
-  [string]$VercelProjectFile = ".vercel/project.json",
-  [string]$KeystorePath = "android/app/upload-keystore.jks",
-  [string]$LocalSigningPropertiesPath = "android/app/release-signing.local.properties",
+  [string]$GoogleServicesPath = "apps/mobile/android/app/google-services.json",
+  [string]$VercelProjectFile = "apps/admin-web/.vercel/project.json",
+  [string]$KeystorePath = "apps/mobile/android/app/upload-keystore.jks",
+  [string]$LocalSigningPropertiesPath = "apps/mobile/android/app/release-signing.local.properties",
   [string]$KeystoreAlias = "fleetfill-upload",
   [string]$GoogleWebClientId = "",
   [string]$GoogleIosClientId = "",
@@ -206,4 +206,4 @@ if (-not [string]::IsNullOrWhiteSpace($envMap["SUPABASE_ACCESS_TOKEN"])) {
   Set-GhSecret -Name "SUPABASE_ACCESS_TOKEN" -Value $envMap["SUPABASE_ACCESS_TOKEN"]
 }
 
-Write-Host "Synchronized GitHub production config for $Repo."
+Write-Host "Synchronized GitHub production config for $Repo using apps/mobile and apps/admin-web."

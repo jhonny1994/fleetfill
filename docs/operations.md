@@ -1,5 +1,19 @@
 # Operations
 
+## Three-Layer Production System
+
+FleetFill production operations follow a three-layer model:
+
+- control plane
+  - GitHub Actions decides what runs and when
+  - operators choose which production surface to promote
+- execution plane
+  - repo-owned scripts in [C:\Users\raouf\projects\fleetfill\tool](C:\Users\raouf\projects\fleetfill\tool) perform the project-specific rollout work
+- hosted platforms
+  - Supabase, Vercel, and mobile distribution receive the promoted artifacts or configuration
+
+This split is intentional. It keeps production control centralized while preserving repo-owned rollout logic that would be brittle or duplicated if expanded directly into raw workflow YAML.
+
 ## Operational Model
 
 FleetFill is an operator-reviewed marketplace. Verification, payment proof review, dispute handling, payout release, and support all have explicit administrative oversight.
@@ -73,11 +87,46 @@ Operational credential split:
 Production readiness requires:
 
 - passing automated tests
-- verified local backend reset and SQL validation
+- verified local backend reset and SQL validation where backend changes exist
 - verified auth flow behavior
 - verified communications behavior
 - release traceability
 - manual device and operator rehearsal before promotion
+
+Official production entrypoints:
+
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml)
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml)
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml)
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
+
+The `tool/` scripts remain part of real production behavior, but they should be invoked through these documented paths unless a local maintenance or fallback situation requires otherwise.
+
+## Environment Ownership
+
+- root `.env`
+  - local operator truth for Supabase CLI, rollout scripts, secret sync, and scheduler setup
+  - should exist on trusted machines only
+- root `.env.example`
+  - shared contract for the backend and rollout variables expected by FleetFill operations
+- `apps/admin-web/.env.example`
+  - shared contract for admin-web public environment variables
+- `apps/admin-web/.env` and `apps/admin-web/.env.local`
+  - local admin-web development only
+  - do not treat them as the system of record for production
+- Flutter mobile runtime
+  - environment comes from `--dart-define`, CI secrets, and native platform config files
+  - there is no committed app env file
+- `backend/supabase/functions/.env`
+  - local Edge Function helper only
+  - should never be treated as production truth
+
+Production source of truth remains:
+
+- GitHub secrets and variables for workflow control
+- Supabase hosted project secrets for Edge Function runtime
+- Vercel project environment variables for admin-web production
+- local root `.env` only for trusted operator and local development flows
 
 ## Booking Operations Model
 
