@@ -67,17 +67,24 @@ jobs:
         shell: bash
         run: |
           test -n "$SUPABASE_ACCESS_TOKEN"
-          test -n "$GOOGLE_WEB_CLIENT_ID"
-          test -n "$SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET"
-          test -n "$INTERNAL_AUTOMATION_TOKEN"
-          test -n "$TRANSACTIONAL_EMAIL_PROVIDER"
-          test -n "$TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT"
-          test -n "$TRANSACTIONAL_EMAIL_PROVIDER_API_KEY"
-          test -n "$TRANSACTIONAL_EMAIL_FROM_EMAIL"
-          test -n "$TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET"
-          test -n "$PUSH_NOTIFICATIONS_ENABLED"
-          test -n "$PUSH_NOTIFICATIONS_PROVIDER"
-          test -n "$FIREBASE_SERVICE_ACCOUNT_JSON"
+          if [[ "${{ inputs.push_config }}" == "true" ]]; then
+            test -n "$GOOGLE_WEB_CLIENT_ID"
+            test -n "$SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET"
+          fi
+          if [[ "${{ inputs.sync_secrets }}" == "true" ]]; then
+            test -n "$INTERNAL_AUTOMATION_TOKEN"
+            test -n "$TRANSACTIONAL_EMAIL_PROVIDER"
+            test -n "$TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT"
+            test -n "$TRANSACTIONAL_EMAIL_PROVIDER_API_KEY"
+            test -n "$TRANSACTIONAL_EMAIL_FROM_EMAIL"
+            test -n "$TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET"
+            test -n "$PUSH_NOTIFICATIONS_ENABLED"
+            test -n "$PUSH_NOTIFICATIONS_PROVIDER"
+            test -n "$FIREBASE_SERVICE_ACCOUNT_JSON"
+          fi
+          if [[ "${{ inputs.verify_after }}" == "true" ]]; then
+            test -n "$VERCEL_TOKEN"
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -97,6 +104,7 @@ jobs:
         shell: bash
         run: |
           cat > .env <<EOF
+          SUPABASE_URL=https://rkvrdzwlynyionsnwfiu.supabase.co
           SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=${GOOGLE_WEB_CLIENT_ID}
           SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=${SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET}
           INTERNAL_AUTOMATION_TOKEN=${INTERNAL_AUTOMATION_TOKEN}
