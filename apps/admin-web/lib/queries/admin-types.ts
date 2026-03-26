@@ -105,6 +105,7 @@ export type AdminUserListItem = {
   isActive: boolean;
   verificationStatus: string | null;
   vehicleCount: number;
+  shipmentCount: number;
   bookingCount: number;
   updatedAt: string | null;
 };
@@ -303,6 +304,12 @@ export type AuditAndHealthSnapshot = {
   emailDeliveries: EmailDeliveryHealthItem[];
   deadLetterEmails: EmailDeadLetterItem[];
   deadLetterPushes: PushDeadLetterItem[];
+  totals: {
+    auditLogs: number;
+    emailDeliveries: number;
+    deadLetterEmails: number;
+    deadLetterPushes: number;
+  };
 };
 
 export type BookingWorkspaceDetail = {

@@ -123,7 +123,11 @@ export default async function UsersPage({
                 <td className="text-sm">
                   <div className="space-y-1">
                     <p>{user.bookingCount} {ui.pages.users.bookingsLabel}</p>
-                    <p className="text-xs text-[var(--color-ink-muted)]">{ui.labels.vehiclesSummary.replace("{count}", String(user.vehicleCount))}</p>
+                    <p className="text-xs text-[var(--color-ink-muted)]">
+                      {user.role === "carrier"
+                        ? ui.labels.vehiclesSummary.replace("{count}", String(user.vehicleCount))
+                        : `${user.shipmentCount} ${ui.pages.userDetail.recentShipments}`}
+                    </p>
                   </div>
                 </td>
                 <td className="text-sm text-[var(--color-ink-muted)]">{formatDateTime(user.updatedAt)}</td>

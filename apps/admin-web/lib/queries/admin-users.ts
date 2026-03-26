@@ -213,24 +213,38 @@ export async function fetchUsers({
   const carrierIds = profiles
     .filter((profile) => profile.role === "carrier")
     .map((profile) => profile.id);
+  const shipperIds = profiles
+    .filter((profile) => profile.role === "shipper")
+    .map((profile) => profile.id);
 
-  const [vehiclesResult, bookingsResult] = await Promise.all([
+  const [vehiclesResult, bookingsAsShipperResult, bookingsAsCarrierResult, shipmentsResult] = await Promise.all([
     profileIds.length
       ? supabase.from("vehicles").select("id, carrier_id").in("carrier_id", profileIds)
       : Promise.resolve({ data: [], error: null }),
-    profileIds.length
+    shipperIds.length
       ? supabase
           .from("bookings")
-          .select("id, shipper_id, carrier_id")
-          .or([
-            `shipper_id.in.(${profileIds.map((id) => `"${id}"`).join(",")})`,
-            `carrier_id.in.(${profileIds.map((id) => `"${id}"`).join(",")})`,
-          ].join(","))
+          .select("id, shipper_id")
+          .in("shipper_id", shipperIds)
+      : Promise.resolve({ data: [], error: null }),
+    carrierIds.length
+      ? supabase
+          .from("bookings")
+          .select("id, carrier_id")
+          .in("carrier_id", carrierIds)
+      : Promise.resolve({ data: [], error: null }),
+    shipperIds.length
+      ? supabase
+          .from("shipments")
+          .select("id, shipper_id")
+          .in("shipper_id", shipperIds)
       : Promise.resolve({ data: [], error: null }),
   ]);
 
   if (vehiclesResult.error) throw vehiclesResult.error;
-  if (bookingsResult.error) throw bookingsResult.error;
+  if (bookingsAsShipperResult.error) throw bookingsAsShipperResult.error;
+  if (bookingsAsCarrierResult.error) throw bookingsAsCarrierResult.error;
+  if (shipmentsResult.error) throw shipmentsResult.error;
 
   const { data: packets, error: packetError } = carrierIds.length
     ? await supabase
@@ -250,10 +264,19 @@ export async function fetchUsers({
     vehicleCounts.set(vehicle.carrier_id, (vehicleCounts.get(vehicle.carrier_id) ?? 0) + 1);
   }
 
-  const bookingCounts = new Map<string, number>();
-  for (const booking of ((bookingsResult.data ?? []) as Array<{ shipper_id: string; carrier_id: string }>)) {
-    bookingCounts.set(booking.shipper_id, (bookingCounts.get(booking.shipper_id) ?? 0) + 1);
-    bookingCounts.set(booking.carrier_id, (bookingCounts.get(booking.carrier_id) ?? 0) + 1);
+  const shipperBookingCounts = new Map<string, number>();
+  for (const booking of ((bookingsAsShipperResult.data ?? []) as Array<{ shipper_id: string }>)) {
+    shipperBookingCounts.set(booking.shipper_id, (shipperBookingCounts.get(booking.shipper_id) ?? 0) + 1);
+  }
+
+  const carrierBookingCounts = new Map<string, number>();
+  for (const booking of ((bookingsAsCarrierResult.data ?? []) as Array<{ carrier_id: string }>)) {
+    carrierBookingCounts.set(booking.carrier_id, (carrierBookingCounts.get(booking.carrier_id) ?? 0) + 1);
+  }
+
+  const shipmentCounts = new Map<string, number>();
+  for (const shipment of ((shipmentsResult.data ?? []) as Array<{ shipper_id: string }>)) {
+    shipmentCounts.set(shipment.shipper_id, (shipmentCounts.get(shipment.shipper_id) ?? 0) + 1);
   }
 
   const filteredProfiles =
@@ -271,7 +294,11 @@ export async function fetchUsers({
     isActive: profile.is_active,
     verificationStatus: profile.role === "carrier" ? (packetMap.get(profile.id)?.status ?? "pending") : null,
     vehicleCount: vehicleCounts.get(profile.id) ?? 0,
-    bookingCount: bookingCounts.get(profile.id) ?? 0,
+    shipmentCount: shipmentCounts.get(profile.id) ?? 0,
+    bookingCount:
+      profile.role === "carrier"
+        ? (carrierBookingCounts.get(profile.id) ?? 0)
+        : (shipperBookingCounts.get(profile.id) ?? 0),
     updatedAt: profile.updated_at,
   }));
 }
