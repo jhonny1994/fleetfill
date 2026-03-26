@@ -206,4 +206,40 @@ if (-not [string]::IsNullOrWhiteSpace($envMap["SUPABASE_ACCESS_TOKEN"])) {
   Set-GhSecret -Name "SUPABASE_ACCESS_TOKEN" -Value $envMap["SUPABASE_ACCESS_TOKEN"]
 }
 
+if (-not [string]::IsNullOrWhiteSpace($envMap["INTERNAL_AUTOMATION_TOKEN"])) {
+  Set-GhSecret -Name "INTERNAL_AUTOMATION_TOKEN" -Value $envMap["INTERNAL_AUTOMATION_TOKEN"]
+}
+
+if (-not [string]::IsNullOrWhiteSpace($envMap["TRANSACTIONAL_EMAIL_PROVIDER"])) {
+  Set-GhVariable -Name "TRANSACTIONAL_EMAIL_PROVIDER" -Value $envMap["TRANSACTIONAL_EMAIL_PROVIDER"]
+}
+
+if (-not [string]::IsNullOrWhiteSpace($envMap["TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT"])) {
+  Set-GhVariable -Name "TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT" -Value $envMap["TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT"]
+}
+
+if (-not [string]::IsNullOrWhiteSpace($envMap["TRANSACTIONAL_EMAIL_PROVIDER_API_KEY"])) {
+  Set-GhSecret -Name "TRANSACTIONAL_EMAIL_PROVIDER_API_KEY" -Value $envMap["TRANSACTIONAL_EMAIL_PROVIDER_API_KEY"]
+}
+
+if (-not [string]::IsNullOrWhiteSpace($envMap["TRANSACTIONAL_EMAIL_FROM_EMAIL"])) {
+  Set-GhVariable -Name "TRANSACTIONAL_EMAIL_FROM_EMAIL" -Value $envMap["TRANSACTIONAL_EMAIL_FROM_EMAIL"]
+}
+
+if (-not [string]::IsNullOrWhiteSpace($envMap["TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET"])) {
+  Set-GhSecret -Name "TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET" -Value $envMap["TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET"]
+}
+
+if (-not [string]::IsNullOrWhiteSpace($envMap["PUSH_NOTIFICATIONS_ENABLED"])) {
+  Set-GhVariable -Name "PUSH_NOTIFICATIONS_ENABLED" -Value $envMap["PUSH_NOTIFICATIONS_ENABLED"]
+}
+
+if (-not [string]::IsNullOrWhiteSpace($envMap["PUSH_NOTIFICATIONS_PROVIDER"])) {
+  Set-GhVariable -Name "PUSH_NOTIFICATIONS_PROVIDER" -Value $envMap["PUSH_NOTIFICATIONS_PROVIDER"]
+}
+
+if (-not [string]::IsNullOrWhiteSpace($envMap["FIREBASE_SERVICE_ACCOUNT_JSON"])) {
+  Set-GhSecret -Name "FIREBASE_SERVICE_ACCOUNT_JSON" -Value $envMap["FIREBASE_SERVICE_ACCOUNT_JSON"]
+}
+
 Write-Host "Synchronized GitHub production config for $Repo using apps/mobile and apps/admin-web."
