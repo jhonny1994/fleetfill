@@ -11,7 +11,7 @@ on:
         required: true
         default: main
       release_tag:
-        description: Release tag (example: v1.0.0)
+        description: "Release tag (example: v1.0.0)"
         required: true
       release_name:
         description: Optional release name
