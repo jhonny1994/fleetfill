@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fleetfill/core/core.dart';
+import 'package:fleetfill/features/notifications/domain/notification_copy.dart';
 import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -265,140 +266,17 @@ _NotificationContent _notificationContent(
   AppNotificationRecord notification,
 ) {
   final s = S.of(context);
-  return switch (notification.type) {
-    'booking_confirmed' => _NotificationContent(
-      title: s.notificationBookingConfirmedTitle,
-      body: s.notificationBookingConfirmedBody,
-    ),
-    'payment_proof_submitted' => _NotificationContent(
-      title: s.notificationPaymentProofSubmittedTitle,
-      body: s.notificationPaymentProofSubmittedBody,
-    ),
-    'payment_secured' => _NotificationContent(
-      title: s.notificationPaymentSecuredTitle,
-      body: s.notificationPaymentSecuredBody,
-    ),
-    'payment_rejected' => _NotificationContent(
-      title: s.notificationPaymentRejectedTitle,
-      body: s.notificationPaymentRejectedBody,
-    ),
-    'booking_milestone_updated' => _NotificationContent(
-      title: s.notificationBookingMilestoneUpdatedTitle,
-      body: s.notificationBookingMilestoneUpdatedBody(
-        _milestoneLabel(s, notification.data['milestone'] as String?),
-      ),
-    ),
-    'carrier_review_submitted' => _NotificationContent(
-      title: s.notificationCarrierReviewSubmittedTitle,
-      body: s.notificationCarrierReviewSubmittedBody,
-    ),
-    'dispute_opened' => _NotificationContent(
-      title: s.notificationDisputeOpenedTitle,
-      body: s.notificationDisputeOpenedBody,
-    ),
-    'dispute_resolved' => _NotificationContent(
-      title: s.notificationDisputeResolvedTitle,
-      body: s.notificationDisputeResolvedBody,
-    ),
-    'payout_released' => _NotificationContent(
-      title: s.notificationPayoutReleasedTitle,
-      body: s.notificationPayoutReleasedBody,
-    ),
-    'generated_document_ready' => _NotificationContent(
-      title: s.notificationGeneratedDocumentReadyTitle,
-      body: s.notificationGeneratedDocumentReadyBody(
-        _generatedDocumentTypeLabel(
-          s,
-          notification.data['document_type'] as String?,
-        ),
-      ),
-    ),
-    'verification_packet_approved' => _NotificationContent(
-      title: s.notificationVerificationPacketApprovedTitle,
-      body: s.notificationVerificationPacketApprovedBody,
-    ),
-    'verification_document_rejected' => _NotificationContent(
-      title: s.notificationVerificationDocumentRejectedTitle,
-      body: s.notificationVerificationDocumentRejectedBody(
-        _verificationDocumentTypeLabel(
-          s,
-          notification.data['document_type'] as String?,
-        ),
-        (notification.data['reason'] as String?)?.trim().isNotEmpty == true
-            ? (notification.data['reason'] as String).trim()
-            : s.verificationDocumentRejectedFallbackReason,
-      ),
-    ),
-    'support_request_created' => _NotificationContent(
-      title: s.notificationSupportRequestCreatedTitle,
-      body: s.notificationSupportRequestCreatedBody,
-    ),
-    'support_reply_received' => _NotificationContent(
-      title: s.notificationSupportReplyReceivedTitle,
-      body: s.notificationSupportReplyReceivedBody,
-    ),
-    'support_user_replied' => _NotificationContent(
-      title: s.notificationSupportUserRepliedTitle,
-      body: s.notificationSupportUserRepliedBody,
-    ),
-    'support_status_changed' => _NotificationContent(
-      title: s.notificationSupportStatusChangedTitle,
-      body: s.notificationSupportStatusChangedBody(
-        _supportStatusLabel(
-          s,
-          notification.data['status'] as String?,
-        ),
-      ),
-    ),
-    _ => _NotificationContent(
-      title: notification.title,
-      body: notification.body,
-    ),
-  };
-}
-
-String _generatedDocumentTypeLabel(S s, String? documentType) {
-  return switch (documentType) {
-    'payment_receipt' => s.generatedDocumentTypePaymentReceipt,
-    'payout_receipt' => s.generatedDocumentTypePayoutReceipt,
-    _ => s.generatedDocumentsTitle,
-  };
-}
-
-String _verificationDocumentTypeLabel(S s, String? documentType) {
-  return switch (documentType) {
-    'driver_identity_or_license' => s.verificationDocumentDriverIdentityLabel,
-    'truck_registration' => s.verificationDocumentTruckRegistrationLabel,
-    'truck_insurance' => s.verificationDocumentTruckInsuranceLabel,
-    'truck_technical_inspection' => s.verificationDocumentTruckInspectionLabel,
-    'transport_license' => s.verificationDocumentTransportLicenseLabel,
-    _ => s.verificationDocumentViewerTitle,
-  };
-}
-
-String _milestoneLabel(S s, String? milestone) {
-  return switch (milestone) {
-    'payment_under_review' => s.trackingEventPaymentUnderReviewLabel,
-    'confirmed' => s.trackingEventConfirmedLabel,
-    'picked_up' => s.trackingEventPickedUpLabel,
-    'in_transit' => s.trackingEventInTransitLabel,
-    'delivered_pending_review' => s.trackingEventDeliveredPendingReviewLabel,
-    'completed' => s.trackingEventCompletedLabel,
-    'cancelled' => s.trackingEventCancelledLabel,
-    'disputed' => s.trackingEventDisputedLabel,
-    _ => milestone ?? '',
-  };
-}
-
-String _supportStatusLabel(S s, String? status) {
-  return switch (status) {
-    'open' => s.supportStatusOpenLabel,
-    'in_progress' => s.supportStatusInProgressLabel,
-    'waiting_for_user' => s.supportStatusWaitingForUserLabel,
-    'resolved' => s.supportStatusResolvedLabel,
-    'closed' => s.supportStatusClosedLabel,
-    _ => s.supportStatusOpenLabel,
-  };
+  final content = localizedNotificationCopy(
+    s: s,
+    type: notification.type,
+    data: notification.data,
+    fallbackTitle: notification.title,
+    fallbackBody: notification.body,
+  );
+  return _NotificationContent(
+    title: content.title,
+    body: content.body,
+  );
 }
 
 String _formatNotificationDate(BuildContext context, DateTime value) {

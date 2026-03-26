@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:file_picker/file_picker.dart';
 import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/carrier/carrier.dart';
+import 'package:fleetfill/features/notifications/notifications.dart';
 import 'package:fleetfill/features/profile/profile.dart';
 import 'package:fleetfill/features/shipper/shipper.dart';
 import 'package:flutter/foundation.dart';
@@ -118,10 +119,12 @@ class ShipperHomeScreen extends ConsumerWidget {
                 title: _shipperHomeFocusTitle(s, focusBooking),
                 message: _shipperHomeFocusMessage(s, focusBooking),
                 tone: _shipperHomeFocusTone(focusBooking),
-                buttonLabel: _shipperPaymentActionLabel(s, focusBooking),
+                buttonLabel: _shipperWorkspaceActionLabel(s, focusBooking),
                 onPressed: () => context.push(
-                  AppRoutePath.shipperPaymentFlow,
-                  extra: focusBooking.id,
+                  AppRoutePath.sharedShipmentDetail.replaceFirst(
+                    ':id',
+                    focusBooking.shipmentId,
+                  ),
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
@@ -463,8 +466,10 @@ class _ShipperShipmentListItem extends StatelessWidget {
                   case _BookedShipmentAction.openPayment:
                     if (paymentFlowBooking != null) {
                       unawaited(context.push(
-                        AppRoutePath.shipperPaymentFlow,
-                        extra: paymentFlowBooking.id,
+                        AppRoutePath.sharedShipmentDetail.replaceFirst(
+                          ':id',
+                          shipment.id,
+                        ),
                       ));
                     }
                   case _BookedShipmentAction.cancel:
@@ -478,7 +483,7 @@ class _ShipperShipmentListItem extends StatelessWidget {
                   PopupMenuItem<_BookedShipmentAction>(
                     value: _BookedShipmentAction.openPayment,
                     child: Text(
-                      _shipperPaymentActionLabel(s, paymentFlowBooking),
+                      _shipperWorkspaceActionLabel(s, paymentFlowBooking),
                     ),
                   ),
                 if (cancellableBooking != null)
@@ -490,13 +495,6 @@ class _ShipperShipmentListItem extends StatelessWidget {
             )
           : null,
       onTap: () {
-        if (paymentFlowBooking != null) {
-          unawaited(context.push(
-            AppRoutePath.shipperPaymentFlow,
-            extra: paymentFlowBooking.id,
-          ));
-          return;
-        }
         unawaited(context.push(
           AppRoutePath.sharedShipmentDetail.replaceFirst(':id', shipment.id),
         ));
@@ -1153,9 +1151,14 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
 }
 
 class PaymentFlowScreen extends ConsumerStatefulWidget {
-  const PaymentFlowScreen({super.key, this.bookingId});
+  const PaymentFlowScreen({
+    super.key,
+    this.bookingId,
+    this.includePageScaffold = true,
+  });
 
   final String? bookingId;
+  final bool includePageScaffold;
 
   @override
   ConsumerState<PaymentFlowScreen> createState() => _PaymentFlowScreenState();
@@ -1169,336 +1172,351 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
     final s = S.of(context);
     final id = widget.bookingId;
     if (id == null) {
-      return AppPageScaffold(
-        title: s.paymentFlowTitle,
-        child: const AppNotFoundState(),
-      );
+      if (widget.includePageScaffold) {
+        return AppPageScaffold(
+          title: s.paymentFlowTitle,
+          child: const AppNotFoundState(),
+        );
+      }
+      return const AppNotFoundState();
     }
     final bookingAsync = ref.watch(bookingDetailProvider(id));
     final settingsAsync = ref.watch(clientSettingsProvider);
     final proofsAsync = ref.watch(paymentProofsForBookingProvider(id));
     final documentsAsync = ref.watch(generatedDocumentsForBookingProvider(id));
 
-    return AppPageScaffold(
-      title: s.paymentFlowTitle,
-      child: AppAsyncStateView<BookingRecord?>(
-        value: bookingAsync,
-        onRetry: () => ref.invalidate(bookingDetailProvider(id)),
-        data: (booking) {
-          if (booking == null) return const AppNotFoundState();
-          final paymentAccounts = _paymentAccountsFromSettings(
-            settingsAsync.asData?.value,
-          );
-          final latestProof = proofsAsync.asData?.value.firstOrNull;
-          final canUploadProof =
-              latestProof == null || latestProof.status == 'rejected';
-          return ListView(
-            key: const PageStorageKey<String>('shipper-payment-flow-screen'),
-            children: [
-              AppSectionHeader(
-                title: s.paymentFlowTitle,
-                subtitle: s.paymentFlowDescription,
-              ),
-              const SizedBox(height: AppSpacing.lg),
+    final content = AppAsyncStateView<BookingRecord?>(
+      value: bookingAsync,
+      onRetry: () => ref.invalidate(bookingDetailProvider(id)),
+      data: (booking) {
+        if (booking == null) return const AppNotFoundState();
+        final paymentAccounts = _paymentAccountsFromSettings(
+          settingsAsync.asData?.value,
+        );
+        final latestProof = proofsAsync.asData?.value.firstOrNull;
+        final canUploadProof =
+            latestProof == null || latestProof.status == 'rejected';
+        return ListView(
+          key: const PageStorageKey<String>('shipper-payment-flow-screen'),
+          children: [
+            AppSectionHeader(
+              title: s.paymentFlowTitle,
+              subtitle: s.paymentFlowDescription,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            ProfileSummaryCard(
+              title: s.bookingReviewTitle,
+              rows: [
+                ProfileSummaryRow(
+                  label: s.bookingPaymentReferenceLabel,
+                  value: BidiFormatters.latinIdentifier(
+                    booking.paymentReference,
+                  ),
+                ),
+                ProfileSummaryRow(
+                  label: s.bookingTrackingNumberLabel,
+                  value: BidiFormatters.latinIdentifier(
+                    booking.trackingNumber,
+                  ),
+                ),
+                ProfileSummaryRow(
+                  label: s.bookingTotalLabel,
+                  value: _money(
+                    s,
+                    BookingPricingQuote(
+                      pricePerKgDzd: booking.pricePerKgDzd,
+                      basePriceDzd: booking.basePriceDzd,
+                      platformFeeDzd: booking.platformFeeDzd,
+                      carrierFeeDzd: booking.carrierFeeDzd,
+                      insuranceRate: booking.insuranceRate,
+                      insuranceFeeDzd: booking.insuranceFeeDzd,
+                      taxFeeDzd: booking.taxFeeDzd,
+                      shipperTotalDzd: booking.shipperTotalDzd,
+                      carrierPayoutDzd: booking.carrierPayoutDzd,
+                    ).shipperTotalDzd,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            MoneySummaryCard(
+              title: s.bookingPricingBreakdownAction,
+              lines: [
+                MoneySummaryLine(
+                  label: s.bookingBasePriceLabel,
+                  amount: _money(s, booking.basePriceDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingPlatformFeeLabel,
+                  amount: _money(s, booking.platformFeeDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingCarrierFeeLabel,
+                  amount: _money(s, booking.carrierFeeDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingInsuranceFeeLabel,
+                  amount: _money(s, booking.insuranceFeeDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingTaxFeeLabel,
+                  amount: _money(s, booking.taxFeeDzd),
+                ),
+                MoneySummaryLine(
+                  label: s.bookingTotalLabel,
+                  amount: _money(s, booking.shipperTotalDzd),
+                  emphasis: true,
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            AuthInfoBanner(
+              message: _paymentFlowGuidanceMessage(s, booking, latestProof),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              s.paymentProofSectionTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            if (latestProof != null)
               ProfileSummaryCard(
-                title: s.bookingReviewTitle,
+                title: s.paymentProofLatestTitle,
                 rows: [
                   ProfileSummaryRow(
-                    label: s.bookingPaymentReferenceLabel,
-                    value: BidiFormatters.latinIdentifier(
-                      booking.paymentReference,
-                    ),
+                    label: s.paymentProofStatusLabel,
+                    value: _paymentProofStatusLabel(s, latestProof.status),
                   ),
                   ProfileSummaryRow(
-                    label: s.bookingTrackingNumberLabel,
-                    value: BidiFormatters.latinIdentifier(
-                      booking.trackingNumber,
-                    ),
+                    label: s.paymentProofAmountLabel,
+                    value: _money(s, latestProof.submittedAmountDzd),
                   ),
                   ProfileSummaryRow(
-                    label: s.bookingTotalLabel,
-                    value: _money(
-                      s,
-                      BookingPricingQuote(
-                        pricePerKgDzd: booking.pricePerKgDzd,
-                        basePriceDzd: booking.basePriceDzd,
-                        platformFeeDzd: booking.platformFeeDzd,
-                        carrierFeeDzd: booking.carrierFeeDzd,
-                        insuranceRate: booking.insuranceRate,
-                        insuranceFeeDzd: booking.insuranceFeeDzd,
-                        taxFeeDzd: booking.taxFeeDzd,
-                        shipperTotalDzd: booking.shipperTotalDzd,
-                        carrierPayoutDzd: booking.carrierPayoutDzd,
-                      ).shipperTotalDzd,
+                    label: s.paymentProofReferenceLabel,
+                    value: latestProof.submittedReference ?? '-',
+                  ),
+                  if ((latestProof.rejectionReason ?? '').isNotEmpty)
+                    ProfileSummaryRow(
+                      label: s.paymentProofRejectionReasonLabel,
+                      value: latestProof.rejectionReason!,
+                    ),
+                ],
+              )
+            else
+              AppStateMessage(
+                icon: Icons.receipt_long_outlined,
+                title: s.paymentProofLatestTitle,
+                message: s.paymentProofEmptyMessage,
+              ),
+            const SizedBox(height: AppSpacing.md),
+            if (booking.bookingStatus == BookingStatus.deliveredPendingReview) ...[
+              FilledButton(
+                onPressed: () => unawaited(_confirmDelivery(booking)),
+                child: Text(s.deliveryConfirmAction),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
+            Row(
+              children: [
+                if (canUploadProof)
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: _isUploading
+                          ? null
+                          : () => unawaited(_uploadProof(context, booking)),
+                      child: Text(
+                        latestProof?.status == 'rejected'
+                            ? s.paymentProofResubmitAction
+                            : s.paymentProofUploadAction,
+                      ),
+                    ),
+                  ),
+                if (_canShipperCancelPendingBooking(booking)) ...[
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: _isUploading
+                          ? null
+                          : () => unawaited(_cancelBooking(booking)),
+                      child: Text(s.cancelLabel),
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              MoneySummaryCard(
-                title: s.bookingPricingBreakdownAction,
-                lines: [
-                  MoneySummaryLine(
-                    label: s.bookingBasePriceLabel,
-                    amount: _money(s, booking.basePriceDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingPlatformFeeLabel,
-                    amount: _money(s, booking.platformFeeDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingCarrierFeeLabel,
-                    amount: _money(s, booking.carrierFeeDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingInsuranceFeeLabel,
-                    amount: _money(s, booking.insuranceFeeDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingTaxFeeLabel,
-                    amount: _money(s, booking.taxFeeDzd),
-                  ),
-                  MoneySummaryLine(
-                    label: s.bookingTotalLabel,
-                    amount: _money(s, booking.shipperTotalDzd),
-                    emphasis: true,
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AuthInfoBanner(
-                message: _paymentFlowGuidanceMessage(s, booking, latestProof),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                s.paymentProofSectionTitle,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              if (latestProof != null)
-                ProfileSummaryCard(
-                  title: s.paymentProofLatestTitle,
-                  rows: [
-                    ProfileSummaryRow(
-                      label: s.paymentProofStatusLabel,
-                      value: _paymentProofStatusLabel(s, latestProof.status),
-                    ),
-                    ProfileSummaryRow(
-                      label: s.paymentProofAmountLabel,
-                      value: _money(s, latestProof.submittedAmountDzd),
-                    ),
-                    ProfileSummaryRow(
-                      label: s.paymentProofReferenceLabel,
-                      value: latestProof.submittedReference ?? '-',
-                    ),
-                    if ((latestProof.rejectionReason ?? '').isNotEmpty)
-                      ProfileSummaryRow(
-                        label: s.paymentProofRejectionReasonLabel,
-                        value: latestProof.rejectionReason!,
-                      ),
-                  ],
-                )
-              else
-                AppStateMessage(
-                  icon: Icons.receipt_long_outlined,
-                  title: s.paymentProofLatestTitle,
-                  message: s.paymentProofEmptyMessage,
-                ),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  if (canUploadProof)
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _isUploading
-                            ? null
-                            : () => unawaited(_uploadProof(context, booking)),
-                        child: Text(
-                          latestProof?.status == 'rejected'
-                              ? s.paymentProofResubmitAction
-                              : s.paymentProofUploadAction,
-                        ),
-                      ),
-                    ),
-                  if (_canShipperCancelPendingBooking(booking)) ...[
+                if (latestProof != null) ...[
+                  if (canUploadProof || _canShipperCancelPendingBooking(booking))
                     const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _isUploading
-                            ? null
-                            : () => unawaited(_cancelBooking(booking)),
-                        child: Text(s.cancelLabel),
-                      ),
-                    ),
-                  ],
-                  if (latestProof != null) ...[
-                    if (canUploadProof || _canShipperCancelPendingBooking(booking))
-                      const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => context.push(
-                          AppRoutePath.sharedProofViewer.replaceFirst(
-                            ':id',
-                            latestProof.id,
-                          ),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => context.push(
+                        AppRoutePath.sharedProofViewer.replaceFirst(
+                          ':id',
+                          latestProof.id,
                         ),
-                        child: Text(s.documentViewerOpenAction),
                       ),
+                      child: Text(s.documentViewerOpenAction),
                     ),
-                  ],
+                  ),
                 ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              proofsAsync.when(
-                data: (proofs) => proofs.isEmpty
-                    ? const SizedBox.shrink()
-                    : Column(
-                        children: proofs
-                            .map(
-                              (proof) => Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: AppSpacing.sm,
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            proofsAsync.when(
+              data: (proofs) => proofs.isEmpty
+                  ? const SizedBox.shrink()
+                  : Column(
+                      children: proofs
+                          .map(
+                            (proof) => Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: AppSpacing.sm,
+                              ),
+                              child: AppListCard(
+                                title:
+                                    '${_paymentProofStatusLabel(s, proof.status)} • ${_money(s, proof.submittedAmountDzd)}',
+                                subtitle: _formatDateTime(
+                                  context,
+                                  proof.submittedAt,
                                 ),
-                                child: AppListCard(
-                                  title:
-                                      '${_paymentProofStatusLabel(s, proof.status)} • ${_money(s, proof.submittedAmountDzd)}',
-                                  subtitle: _formatDateTime(
-                                    context,
-                                    proof.submittedAt,
-                                  ),
-                                  onTap: () => context.push(
-                                    AppRoutePath.sharedProofViewer.replaceFirst(
-                                      ':id',
-                                      proof.id,
-                                    ),
+                                onTap: () => context.push(
+                                  AppRoutePath.sharedProofViewer.replaceFirst(
+                                    ':id',
+                                    proof.id,
                                   ),
                                 ),
                               ),
-                            )
-                            .toList(growable: false),
-                      ),
-                loading: () => const AppLoadingState(),
-                error: (error, stackTrace) => AppErrorState(
-                  error: AppError(
-                    code: 'payment_proofs_load_failed',
-                    message: mapAppErrorMessage(s, error),
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                s.paymentInstructionsTitle,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              ProfileSummaryCard(
-                title: s.paymentInstructionsTitle,
-                rows: [
-                  ProfileSummaryRow(
-                    label: s.bookingTotalLabel,
-                    value: _money(s, booking.shipperTotalDzd),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.bookingPaymentReferenceLabel,
-                    value: BidiFormatters.latinIdentifier(
-                      booking.paymentReference,
+                            ),
+                          )
+                          .toList(growable: false),
                     ),
-                  ),
-                  ProfileSummaryRow(
-                    label: s.paymentProofStatusLabel,
-                    value: latestProof == null
-                        ? s.paymentStatusUnpaidLabel
-                        : _paymentProofStatusLabel(s, latestProof.status),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              ...paymentAccounts.map(
-                (account) => Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: AppListCard(
-                    title: account.displayName,
-                    subtitle:
-                        '${account.accountIdentifier} • ${account.accountHolderName}',
-                  ),
+              loading: () => const AppLoadingState(),
+              error: (error, stackTrace) => AppErrorState(
+                error: AppError(
+                  code: 'payment_proofs_load_failed',
+                  message: mapAppErrorMessage(s, error),
                 ),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                s.generatedDocumentsTitle,
-                style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              s.paymentInstructionsTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            ProfileSummaryCard(
+              title: s.paymentInstructionsTitle,
+              rows: [
+                ProfileSummaryRow(
+                  label: s.bookingTotalLabel,
+                  value: _money(s, booking.shipperTotalDzd),
+                ),
+                ProfileSummaryRow(
+                  label: s.bookingPaymentReferenceLabel,
+                  value: BidiFormatters.latinIdentifier(
+                    booking.paymentReference,
+                  ),
+                ),
+                ProfileSummaryRow(
+                  label: s.paymentProofStatusLabel,
+                  value: latestProof == null
+                      ? s.paymentStatusUnpaidLabel
+                      : _paymentProofStatusLabel(s, latestProof.status),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            ...paymentAccounts.map(
+              (account) => Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: AppListCard(
+                  title: account.displayName,
+                  subtitle:
+                      '${account.accountIdentifier} • ${account.accountHolderName}',
+                ),
               ),
-              const SizedBox(height: AppSpacing.md),
-              Text(s.generatedDocumentsTapReadyHint),
-              const SizedBox(height: AppSpacing.sm),
-              documentsAsync.when(
-                data: (documents) => documents.isEmpty
-                    ? AppStateMessage(
-                        icon: Icons.description_outlined,
-                        title: s.generatedDocumentsTitle,
-                        message: s.generatedDocumentsEmptyMessage,
-                      )
-                    : Column(
-                        children: documents
-                            .map(
-                              (document) => Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: AppSpacing.sm,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              s.generatedDocumentsTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(s.generatedDocumentsTapReadyHint),
+            const SizedBox(height: AppSpacing.sm),
+            documentsAsync.when(
+              data: (documents) => documents.isEmpty
+                  ? AppStateMessage(
+                      icon: Icons.description_outlined,
+                      title: s.generatedDocumentsTitle,
+                      message: s.generatedDocumentsEmptyMessage,
+                    )
+                  : Column(
+                      children: documents
+                          .map(
+                            (document) => Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: AppSpacing.sm,
+                              ),
+                              child: AppListCard(
+                                title: _generatedDocumentTypeLabel(
+                                  s,
+                                  document.documentType,
                                 ),
-                                child: AppListCard(
-                                  title: _generatedDocumentTypeLabel(
-                                    s,
-                                    document.documentType,
-                                  ),
-                                  subtitle: _generatedDocumentSubtitle(
-                                    context,
+                                subtitle: _generatedDocumentSubtitle(
+                                  context,
+                                  s,
+                                  document,
+                                ),
+                                leading: AppStatusChip(
+                                  label: _generatedDocumentStatusLabel(
                                     s,
                                     document,
                                   ),
-                                  leading: AppStatusChip(
-                                    label: _generatedDocumentStatusLabel(
-                                      s,
-                                      document,
-                                    ),
-                                    tone: _generatedDocumentStatusTone(
-                                      document,
-                                    ),
+                                  tone: _generatedDocumentStatusTone(
+                                    document,
                                   ),
-                                  trailing: document.isReady
-                                      ? const Icon(Icons.chevron_right_rounded)
-                                      : document.isPending
-                                      ? const SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                      : const Icon(Icons.error_outline_rounded),
-                                  onTap: document.isReady
-                                      ? () => context.push(
-                                          AppRoutePath
-                                              .sharedGeneratedDocumentViewer
-                                              .replaceFirst(':id', document.id),
-                                        )
-                                      : null,
                                 ),
+                                trailing: document.isReady
+                                    ? const Icon(Icons.chevron_right_rounded)
+                                    : document.isPending
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : const Icon(Icons.error_outline_rounded),
+                                onTap: document.isReady
+                                    ? () => context.push(
+                                        AppRoutePath.sharedGeneratedDocumentViewer
+                                            .replaceFirst(':id', document.id),
+                                      )
+                                    : null,
                               ),
-                            )
-                            .toList(growable: false),
-                      ),
-                loading: () => const AppLoadingState(),
-                error: (error, stackTrace) => AppErrorState(
-                  error: AppError(
-                    code: 'generated_documents_load_failed',
-                    message: mapAppErrorMessage(s, error),
-                  ),
+                            ),
+                          )
+                          .toList(growable: false),
+                    ),
+              loading: () => const AppLoadingState(),
+              error: (error, stackTrace) => AppErrorState(
+                error: AppError(
+                  code: 'generated_documents_load_failed',
+                  message: mapAppErrorMessage(s, error),
                 ),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!widget.includePageScaffold) {
+      return content;
+    }
+
+    return AppPageScaffold(
+      title: s.paymentFlowTitle,
+      child: content,
     );
   }
 
@@ -1638,7 +1656,12 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
           );
       ref
         ..invalidate(paymentProofsForBookingProvider(booking.id))
-        ..invalidate(bookingDetailProvider(booking.id));
+        ..invalidate(bookingDetailProvider(booking.id))
+        ..invalidate(trackingEventsProvider(booking.id))
+        ..invalidate(myShipperBookingsProvider)
+        ..invalidate(myShipperShipmentsProvider)
+        ..invalidate(shipmentDetailProvider(booking.shipmentId))
+        ..invalidate(myNotificationsProvider);
       if (!mounted) return;
       AppFeedback.showSnackBar(this.context, s.paymentProofUploadedMessage);
     } on PostgrestException catch (error) {
@@ -1681,6 +1704,28 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
           context,
           mapAppErrorMessage(s, error),
         );
+      }
+    }
+  }
+
+  Future<void> _confirmDelivery(BookingRecord booking) async {
+    final s = S.of(context);
+    try {
+      await ref
+          .read(bookingWorkflowControllerProvider)
+          .shipperConfirmDelivery(
+            bookingId: booking.id,
+            shipmentId: booking.shipmentId,
+          );
+      ref
+        ..invalidate(myShipperBookingsProvider)
+        ..invalidate(bookingDetailProvider(booking.id))
+        ..invalidate(shipmentDetailProvider(booking.shipmentId));
+      if (!mounted) return;
+      AppFeedback.showSnackBar(context, s.deliveryConfirmedMessage);
+    } on PostgrestException catch (error) {
+      if (mounted) {
+        AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
       }
     }
   }
@@ -2617,15 +2662,18 @@ bool _canShipperCancelPendingBooking(BookingRecord booking) {
           booking.paymentStatus == PaymentStatus.rejected);
 }
 
-String _shipperPaymentActionLabel(S s, BookingRecord booking) {
+String _shipperWorkspaceActionLabel(S s, BookingRecord booking) {
+  if (booking.bookingStatus == BookingStatus.deliveredPendingReview) {
+    return s.deliveryConfirmAction;
+  }
   return switch (booking.paymentStatus) {
     PaymentStatus.unpaid => s.paymentFlowTitle,
     PaymentStatus.rejected => s.paymentProofResubmitAction,
     PaymentStatus.proofSubmitted => s.paymentFlowOpenAction,
     PaymentStatus.underVerification => s.paymentFlowOpenAction,
     PaymentStatus.secured => s.paymentFlowOpenAction,
-    PaymentStatus.refunded => s.paymentFlowOpenAction,
-    PaymentStatus.releasedToCarrier => s.paymentFlowOpenAction,
+    PaymentStatus.refunded => s.paymentStatusRefundedLabel,
+    PaymentStatus.releasedToCarrier => s.paymentStatusReleasedToCarrierLabel,
   };
 }
 

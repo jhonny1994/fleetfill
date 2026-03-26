@@ -111,6 +111,12 @@ abstract class SupportRequestRecord with _$SupportRequestRecord {
   bool get hasUnreadForAdmin =>
       lastMessageSenderType == SupportMessageSenderType.user &&
       (adminLastReadAt == null || lastMessageAt.isAfter(adminLastReadAt!));
+
+  bool get isTerminal =>
+      status == SupportRequestStatus.resolved ||
+      status == SupportRequestStatus.closed;
+
+  bool get canReply => !isTerminal;
 }
 
 @freezed

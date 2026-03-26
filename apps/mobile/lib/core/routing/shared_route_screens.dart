@@ -235,6 +235,19 @@ class ShipmentDetailScreen extends ConsumerWidget {
           final relatedBooking = relatedBookings.isEmpty
               ? null
               : relatedBookings.first;
+          final shipperBookingWorkspace =
+              auth?.role == AppUserRole.shipper &&
+                  auth?.userId == shipment.shipperId &&
+                  relatedBooking != null &&
+                  _canOpenShipperBookingWorkspace(relatedBooking)
+              ? relatedBooking
+              : null;
+          if (shipperBookingWorkspace != null) {
+            return PaymentFlowScreen(
+              bookingId: shipperBookingWorkspace.id,
+              includePageScaffold: false,
+            );
+          }
           return ListView(
             children: [
               AppSectionHeader(
@@ -278,10 +291,7 @@ class ShipmentDetailScreen extends ConsumerWidget {
                     ),
                 ],
               ),
-              if (auth?.role == AppUserRole.shipper &&
-                  auth?.userId == shipment.shipperId &&
-                  relatedBooking != null &&
-                  _canOpenShipperBookingWorkspace(relatedBooking)) ...[
+              if (shipperBookingWorkspace != null) ...[
                 const SizedBox(height: AppSpacing.lg),
                 Row(
                   children: [
@@ -289,14 +299,19 @@ class ShipmentDetailScreen extends ConsumerWidget {
                         child: FilledButton(
                           onPressed: () => context.push(
                             AppRoutePath.shipperPaymentFlow,
-                            extra: relatedBooking.id,
+                            extra: shipperBookingWorkspace.id,
                           ),
                           child: Text(
-                            _shipperPaymentActionLabel(s, relatedBooking),
+                            _shipperPaymentActionLabel(
+                              s,
+                              shipperBookingWorkspace,
+                            ),
                           ),
                         ),
                       ),
-                    if (_canShipperCancelPendingBooking(relatedBooking)) ...[
+                    if (_canShipperCancelPendingBooking(
+                      shipperBookingWorkspace,
+                    )) ...[
                       const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: OutlinedButton(
@@ -304,7 +319,7 @@ class ShipmentDetailScreen extends ConsumerWidget {
                             _cancelPendingBookingFromShipmentDetail(
                               context,
                               ref,
-                              relatedBooking,
+                              shipperBookingWorkspace,
                             ),
                           ),
                           child: Text(s.cancelLabel),
@@ -2368,8 +2383,8 @@ String _shipperPaymentActionLabel(S s, BookingRecord booking) {
     PaymentStatus.proofSubmitted => s.paymentFlowOpenAction,
     PaymentStatus.underVerification => s.paymentFlowOpenAction,
     PaymentStatus.secured => s.paymentFlowOpenAction,
-    PaymentStatus.refunded => s.paymentFlowOpenAction,
-    PaymentStatus.releasedToCarrier => s.paymentFlowOpenAction,
+    PaymentStatus.refunded => s.paymentStatusRefundedLabel,
+    PaymentStatus.releasedToCarrier => s.paymentStatusReleasedToCarrierLabel,
   };
 }
 

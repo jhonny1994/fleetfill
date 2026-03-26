@@ -117,3 +117,5 @@ yarn-error.log*
 **/.vercel/
 
 /tool/create_admin_account.ps1
+
+.vercel

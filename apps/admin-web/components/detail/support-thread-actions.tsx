@@ -24,6 +24,7 @@ export function SupportThreadActions({
   currentPriority: string;
 }) {
   const ui = getAdminUi(locale);
+  const isTerminal = currentStatus === "resolved" || currentStatus === "closed";
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingReply, setPendingReply] = useState<z.infer<typeof supportReplySchema> | null>(null);
@@ -78,16 +79,23 @@ export function SupportThreadActions({
 
   return (
     <div className="space-y-5">
-      <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.reply}</h3>
-        <form className="space-y-3" onSubmit={replyForm.handleSubmit((values) => setPendingReply(values))}>
-          <label className="grid gap-1 text-sm">
-            <span>{ui.actions.replyLabel}</span>
-            <textarea className="min-h-28 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...replyForm.register("message")} />
-          </label>
-          <button className="button-primary" type="submit">{ui.actions.reply}</button>
-        </form>
-      </section>
+      {!isTerminal ? (
+        <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
+          <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.reply}</h3>
+          <form className="space-y-3" onSubmit={replyForm.handleSubmit((values) => setPendingReply(values))}>
+            <label className="grid gap-1 text-sm">
+              <span>{ui.actions.replyLabel}</span>
+              <textarea className="min-h-28 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...replyForm.register("message")} />
+            </label>
+            <button className="button-primary" type="submit">{ui.actions.reply}</button>
+          </form>
+        </section>
+      ) : (
+        <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4 text-sm text-[var(--color-ink-muted)]">
+          <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.reply}</h3>
+          <p>{getEnumLabel(locale, "supportStatus", currentStatus)}</p>
+        </section>
+      )}
 
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
         <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.updateStatus}</h3>

@@ -46,9 +46,7 @@ class AdminOperationsWorkflowController {
         );
     ref
       ..invalidate(adminEmailLogsProvider)
-      ..invalidate(
-        adminFilteredEmailLogsProvider((status: null, query: null)),
-      )
+      ..invalidate(adminFilteredEmailLogsProvider)
       ..invalidate(adminDeadLetterEmailJobsProvider)
       ..invalidate(adminOperationalSummaryProvider)
       ..invalidate(adminAutomationAlertsProvider)
@@ -63,9 +61,7 @@ class AdminOperationsWorkflowController {
         );
     ref
       ..invalidate(adminEmailLogsProvider)
-      ..invalidate(
-        adminFilteredEmailLogsProvider((status: null, query: null)),
-      )
+      ..invalidate(adminFilteredEmailLogsProvider)
       ..invalidate(adminDeadLetterEmailJobsProvider)
       ..invalidate(adminOperationalSummaryProvider)
       ..invalidate(adminAutomationAlertsProvider)
@@ -101,9 +97,7 @@ class AdminOperationsWorkflowController {
     ref
       ..invalidate(adminOperationalSummaryProvider)
       ..invalidate(adminSupportQueueProvider)
-      ..invalidate(
-        adminFilteredSupportQueueProvider((status: null, query: null)),
-      )
+      ..invalidate(adminFilteredSupportQueueProvider)
       ..invalidate(supportThreadProvider(requestId))
       ..invalidate(mySupportRequestsProvider)
       ..invalidate(myNotificationsProvider)
@@ -125,9 +119,7 @@ class AdminOperationsWorkflowController {
     ref
       ..invalidate(adminOperationalSummaryProvider)
       ..invalidate(adminSupportQueueProvider)
-      ..invalidate(
-        adminFilteredSupportQueueProvider((status: null, query: null)),
-      )
+      ..invalidate(adminFilteredSupportQueueProvider)
       ..invalidate(supportThreadProvider(requestId))
       ..invalidate(mySupportRequestsProvider)
       ..invalidate(myNotificationsProvider)
@@ -146,9 +138,7 @@ class AdminOperationsWorkflowController {
         );
     ref
       ..invalidate(adminSupportQueueProvider)
-      ..invalidate(
-        adminFilteredSupportQueueProvider((status: null, query: null)),
-      )
+      ..invalidate(adminFilteredSupportQueueProvider)
       ..invalidate(supportThreadProvider(requestId))
       ..invalidate(adminAuditLogsProvider);
   }

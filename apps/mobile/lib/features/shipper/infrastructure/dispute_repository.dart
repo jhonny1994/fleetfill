@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fleetfill/core/config/config.dart';
+import 'package:fleetfill/core/supabase/direct_storage_upload.dart';
 import 'package:fleetfill/core/utils/app_logger.dart';
 import 'package:fleetfill/features/carrier/domain/vehicle_models.dart';
 import 'package:fleetfill/shared/models/models.dart';
@@ -103,22 +103,15 @@ class DisputeRepository {
     final bucketId = uploadSession['bucket_id'] as String;
     final objectPath = uploadSession['object_path'] as String;
     final sessionId = uploadSession['upload_session_id'] as String;
-    final storage = _client.storage.from(bucketId);
-    final fileOptions = FileOptions(contentType: draft.contentType);
-
-    if (draft.bytes != null) {
-      await storage.uploadBinary(
-        objectPath,
-        Uint8List.fromList(draft.bytes!),
-        fileOptions: fileOptions,
-      );
-    } else {
-      await storage.upload(
-        objectPath,
-        File(draft.path),
-        fileOptions: fileOptions,
-      );
-    }
+    await uploadToProjectStorage(
+      environment: environment,
+      client: _client,
+      bucketId: bucketId,
+      objectPath: objectPath,
+      contentType: draft.contentType,
+      bytes: draft.bytes != null ? Uint8List.fromList(draft.bytes!) : null,
+      filePath: draft.bytes == null ? draft.path : null,
+    );
 
     final response = await _client.rpc<Map<String, dynamic>>(
       'finalize_dispute_evidence',
