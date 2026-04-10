@@ -5,7 +5,7 @@ import { RefreshButton } from "@/components/queues/refresh-button";
 import { CommandSearch } from "@/components/shared/command-search";
 import type { AppLocale } from "@/lib/i18n/config";
 
-export type FilterOption = {
+type FilterOption = {
   value: string;
   label: string;
 };

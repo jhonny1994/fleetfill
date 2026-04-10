@@ -91,4 +91,3 @@ export function AdminSidebar({
   );
 }
 
-export { navItems };

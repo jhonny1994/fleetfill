@@ -4,22 +4,20 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export function EmailDeliveryRetryAction({
   deliveryLogId,
-  locale = "en",
 }: {
   deliveryLogId: string;
-  locale?: string;
 }) {
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
 
   async function retry() {
     setIsPending(true);
@@ -44,7 +42,6 @@ export function EmailDeliveryRetryAction({
       {error ? <p className="text-xs text-[var(--color-red-700)]">{error}</p> : null}
       <ConfirmDialog
         open={open}
-        locale={locale}
         title={ui.actions.retryEmailDeliveryTitle}
         body={ui.actions.retryEmailDeliveryBody}
         confirmLabel={ui.actions.retry}
@@ -58,17 +55,15 @@ export function EmailDeliveryRetryAction({
 
 export function EmailDeadLetterRetryAction({
   jobId,
-  locale = "en",
 }: {
   jobId: string;
-  locale?: string;
 }) {
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
 
   async function retry() {
     setIsPending(true);
@@ -93,7 +88,6 @@ export function EmailDeadLetterRetryAction({
       {error ? <p className="text-xs text-[var(--color-red-700)]">{error}</p> : null}
       <ConfirmDialog
         open={open}
-        locale={locale}
         title={ui.actions.retryDeadLetterTitle}
         body={ui.actions.retryDeadLetterBody}
         confirmLabel={ui.actions.retry}

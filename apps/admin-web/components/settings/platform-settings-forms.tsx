@@ -3,11 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { getAdminDetailCopy, getAdminUi } from "@/lib/i18n/admin-ui";
+import { getAdminDetailCopy } from "@/lib/i18n/admin-ui";
+import { localeEntries, resolveEnabledLocales, resolveFallbackLocale, type AppLocale } from "@/lib/i18n/config";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { PlatformSettingsSnapshot } from "@/lib/queries/admin-types";
 import type { Json } from "@/lib/supabase/database.types";
@@ -26,7 +29,7 @@ function SectionFrame({
 }: {
   title: string;
   body: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <section className="panel space-y-4 p-5">
@@ -59,11 +62,11 @@ export function PlatformSettingsForms({
   settings,
   isSuperAdmin,
 }: {
-  locale: string;
+  locale: AppLocale;
   settings: PlatformSettingsSnapshot;
   isSuperAdmin: boolean;
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const detailCopy = getAdminDetailCopy(locale);
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
@@ -308,7 +311,7 @@ export function PlatformSettingsForms({
             <fieldset className="space-y-2 text-sm">
               <legend className="mb-1 font-medium text-[var(--color-ink-base)]">{detailCopy.settings.enabledLocales}</legend>
               <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-                {(["ar", "fr", "en"] as const).map((localeCode) => (
+                {localeEntries.map(([localeCode]) => (
                   <label key={localeCode} className="admin-checkbox-row">
                     <input
                       type="checkbox"
@@ -318,10 +321,21 @@ export function PlatformSettingsForms({
                       className="admin-checkbox"
                       onChange={(event) => {
                         const current = localizationForm.getValues("enabledLocales");
+                        const nextEnabledLocales = resolveEnabledLocales(
+                          event.target.checked
+                            ? [...current, localeCode]
+                            : current.filter((value) => value !== localeCode),
+                        );
+                        const nextFallbackLocale = resolveFallbackLocale(
+                          localizationForm.getValues("fallbackLocale"),
+                          nextEnabledLocales,
+                        );
+
                         localizationForm.setValue(
                           "enabledLocales",
-                          event.target.checked ? [...current, localeCode] : current.filter((value) => value !== localeCode),
+                          nextEnabledLocales,
                         );
+                        localizationForm.setValue("fallbackLocale", nextFallbackLocale);
                       }}
                     />
                     <span>{ui.enums.locale[localeCode]}</span>
@@ -332,9 +346,11 @@ export function PlatformSettingsForms({
             <label className="grid gap-1 text-sm content-start">
               <span>{detailCopy.settings.fallbackLocale}</span>
               <select className="admin-field admin-select" disabled={disabled} {...localizationForm.register("fallbackLocale")}>
-                <option value="ar">{ui.enums.locale.ar}</option>
-                <option value="fr">{ui.enums.locale.fr}</option>
-                <option value="en">{ui.enums.locale.en}</option>
+                {localeEntries.map(([localeCode]) => (
+                  <option key={localeCode} value={localeCode} disabled={!enabledLocales.includes(localeCode)}>
+                    {ui.enums.locale[localeCode]}
+                  </option>
+                ))}
               </select>
             </label>
           </div>

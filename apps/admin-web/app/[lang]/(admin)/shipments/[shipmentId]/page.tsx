@@ -1,10 +1,13 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
 import { DetailWorkspace } from "@/components/detail/detail-workspace";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { buildAdminRoute } from "@/lib/admin-routes";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminDetailCopy, getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminDetailCopy, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchShipmentWorkspaceDetail } from "@/lib/queries/admin-operations";
 
 export default async function ShipmentDetailPage({
@@ -13,9 +16,10 @@ export default async function ShipmentDetailPage({
   params: Promise<{ lang: string; shipmentId: string }>;
 }) {
   const { lang, shipmentId } = await params;
+  const locale = resolveAppLocale(lang);
   const detail = await fetchShipmentWorkspaceDetail(shipmentId);
-  const ui = getAdminUi(lang);
-  const detailCopy = getAdminDetailCopy(lang);
+  const { ui } = asAdminMessages(await getMessages({ locale }));
+  const detailCopy = getAdminDetailCopy(locale);
 
   if (!detail) {
     return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{detailCopy.shipments.notFound}</div>;

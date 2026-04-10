@@ -1,0 +1,41 @@
+{
+  "dir": "./",
+  "ignore": {
+    "routes": [],
+    "folders": [
+      "app/**",
+      "components/**",
+      "i18n/**",
+      "lib/**",
+      "messages/**",
+      "scripts/**",
+      "tests/**",
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/.next/**",
+      "**/out/**",
+      "**/build/**",
+      "**/.git/**",
+      "**/coverage/**",
+      "**/.turbo/**",
+      "**/.cache/**",
+      "**/.vercel/**",
+      "**/.husky/**",
+      "**/.swc/**",
+      "**/generated/**",
+      "**/storybook-static/**",
+      "**/ios/**",
+      "**/android/**"
+    ],
+    "files": [],
+    "links": []
+  },
+  "extensions": [
+    ".ts",
+    ".tsx",
+    ".js",
+    ".jsx"
+  ],
+  "nestGlobalPrefix": "",
+  "extraRoutePatterns": []
+}

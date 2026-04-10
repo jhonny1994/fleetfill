@@ -7,12 +7,12 @@ import { AdminInvitationActions } from "@/components/admin-management/admin-invi
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { formatTemplate, getAdminRoleLabel, getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import type { AdminUi } from "@/lib/i18n/admin-ui";
+import { formatTemplate, getAdminRoleLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import type { AdminAccountListItem, AdminInvitationListItem } from "@/lib/queries/admin-types";
 
-function buildAccountColumns(locale: string): ColumnDef<AdminAccountListItem>[] {
-  const ui = getAdminUi(locale);
-
+function buildAccountColumns(locale: string, ui: AdminUi): ColumnDef<AdminAccountListItem>[] {
   return [
     {
       accessorKey: "displayName",
@@ -82,9 +82,7 @@ function buildAccountColumns(locale: string): ColumnDef<AdminAccountListItem>[] 
   ];
 }
 
-function buildInvitationColumns(locale: string): ColumnDef<AdminInvitationListItem>[] {
-  const ui = getAdminUi(locale);
-
+function buildInvitationColumns(locale: string, ui: AdminUi): ColumnDef<AdminInvitationListItem>[] {
   return [
     {
       accessorKey: "email",
@@ -143,7 +141,6 @@ function buildInvitationColumns(locale: string): ColumnDef<AdminInvitationListIt
       header: "",
       cell: ({ row }) => (
         <AdminInvitationActions
-          locale={locale}
           invitationId={row.original.id}
           status={row.original.status}
         />
@@ -161,7 +158,7 @@ export function AdminAccountsTable({
   accounts: AdminAccountListItem[];
   invitations: AdminInvitationListItem[];
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
 
   return (
     <>
@@ -173,7 +170,7 @@ export function AdminAccountsTable({
         </div>
         <AdminDataTable
           data={accounts}
-          columns={buildAccountColumns(locale)}
+          columns={buildAccountColumns(locale, ui)}
           emptyEyebrow={ui.pages.admins.eyebrow}
           emptyTitle={ui.pages.admins.title}
           emptyBody={ui.pages.admins.listBody}
@@ -187,7 +184,7 @@ export function AdminAccountsTable({
         </div>
         <AdminDataTable
           data={invitations}
-          columns={buildInvitationColumns(locale)}
+          columns={buildInvitationColumns(locale, ui)}
           emptyEyebrow={ui.pages.admins.eyebrow}
           emptyTitle={ui.pages.admins.invitations}
           emptyBody={ui.pages.admins.invitationHistoryBody}

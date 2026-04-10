@@ -1,16 +1,18 @@
+"use client";
+
 import Link from "next/link";
+
+import type { AdminUi } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 
 type QueueScope = "open" | "history" | "all";
 
-function scopeLabel(locale: string, scope: QueueScope) {
-  switch (locale) {
-    case "ar":
-      return scope === "open" ? "قيد المعالجة" : scope === "history" ? "السجل" : "الكل";
-    case "fr":
-      return scope === "open" ? "En cours" : scope === "history" ? "Historique" : "Tout";
-    default:
-      return scope === "open" ? "Open" : scope === "history" ? "History" : "All";
-  }
+function scopeLabel(labels: AdminUi["labels"], scope: QueueScope) {
+  return scope === "open"
+    ? labels.queueScopeOpen
+    : scope === "history"
+      ? labels.queueScopeHistory
+      : labels.queueScopeAll;
 }
 
 function buildHref(pathname: string, scope: QueueScope, query?: string, status?: string) {
@@ -28,20 +30,19 @@ function buildHref(pathname: string, scope: QueueScope, query?: string, status?:
 
 export function AdminQueueScopeTabs({
   pathname,
-  locale,
   currentScope,
   query,
   status,
   counts,
 }: {
   pathname: string;
-  locale: string;
   currentScope: QueueScope;
   query?: string;
   status?: string;
   counts?: Partial<Record<QueueScope, number>>;
 }) {
   const scopes: QueueScope[] = ["open", "history", "all"];
+  const ui = useAdminUi();
 
   return (
     <div className="queue-scope-tabs">
@@ -54,7 +55,7 @@ export function AdminQueueScopeTabs({
             aria-current={isActive ? "page" : undefined}
             className={isActive ? "queue-scope-tab queue-scope-tab-active" : "queue-scope-tab"}
           >
-            {scopeLabel(locale, scope)}
+            {scopeLabel(ui.labels, scope)}
             {counts?.[scope] != null ? ` (${counts[scope]})` : ""}
           </Link>
         );

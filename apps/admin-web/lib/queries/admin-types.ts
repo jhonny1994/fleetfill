@@ -1,3 +1,5 @@
+import type { AppLocale } from "@/lib/i18n/config";
+
 export type AdminOperationalSummary = {
   verificationPackets: number;
   pendingVerificationDocuments: number;
@@ -250,8 +252,8 @@ export type PlatformSettingsSnapshot = {
     adminEmailResendEnabled: boolean;
   };
   localization: {
-    fallbackLocale: "ar" | "fr" | "en";
-    enabledLocales: Array<"ar" | "fr" | "en">;
+    fallbackLocale: AppLocale;
+    enabledLocales: AppLocale[];
   };
   updatedAtByKey: Partial<
     Record<"app_runtime" | "booking_pricing" | "delivery_review" | "feature_flags" | "localization", string | null>
@@ -372,8 +374,19 @@ export type ShipmentWorkspaceDetail = {
   } | null;
 };
 
+type GlobalSearchKind =
+  | "booking"
+  | "shipment"
+  | "user"
+  | "admin"
+  | "payment"
+  | "verification"
+  | "dispute"
+  | "payout"
+  | "support";
+
 export type GlobalSearchGroup = {
-  kind: import("@/lib/admin-routes").SearchEntityKind;
+  kind: GlobalSearchKind;
   label: string;
   items: Array<{
     id: string;

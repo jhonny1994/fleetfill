@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { localeValues } from "@/lib/i18n/config";
 
 export const appRuntimeSettingsSchema = z.object({
   maintenanceMode: z.boolean(),
@@ -25,6 +26,6 @@ export const featureFlagsSettingsSchema = z.object({
 });
 
 export const localizationSettingsSchema = z.object({
-  fallbackLocale: z.enum(["ar", "fr", "en"]),
-  enabledLocales: z.array(z.enum(["ar", "fr", "en"])).min(1),
+  fallbackLocale: z.enum(localeValues),
+  enabledLocales: z.array(z.enum(localeValues)).min(1),
 });

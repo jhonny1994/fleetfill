@@ -1,7 +1,4 @@
-import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
-
-export type TimelineItem = {
+type TimelineItem = {
   id: string;
   title: string;
   detail: string;
@@ -9,20 +6,21 @@ export type TimelineItem = {
 };
 
 export function TimelinePanel({
-  locale = "en",
   title,
+  currentLabel,
+  emptyLabel,
   items,
 }: {
-  locale?: AppLocale | string;
-  title?: string;
+  title: string;
+  currentLabel: string;
+  emptyLabel: string;
   items: TimelineItem[];
 }) {
-  const ui = getAdminUi(locale);
   return (
     <section className="panel space-y-4 p-5">
-      <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{title ?? ui.labels.timeline}</h2>
+      <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{title}</h2>
       {items.length === 0 ? (
-        <p className="text-sm text-[var(--color-ink-muted)]">{ui.labels.noTimeline}</p>
+        <p className="text-sm text-[var(--color-ink-muted)]">{emptyLabel}</p>
       ) : (
         <ol className="space-y-4">
           {items.map((item, index) => (
@@ -47,7 +45,7 @@ export function TimelinePanel({
               <div className="space-y-1">
                 {index === 0 ? (
                   <span className="inline-flex rounded-full border border-[var(--color-accent)] px-2 py-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-strong)]">
-                    {ui.labels.current}
+                    {currentLabel}
                   </span>
                 ) : null}
                 <p className="font-medium text-[var(--color-ink-strong)]">{item.title}</p>

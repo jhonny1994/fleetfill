@@ -7,21 +7,18 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { paymentApproveSchema, paymentRejectSchema } from "@/lib/validation/review-actions";
 
 export function PaymentReviewActions({
-  locale,
   proofId,
   defaultAmount,
 }: {
-  locale: AppLocale | string;
   proofId: string;
   defaultAmount: number;
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [error, setError] = useState<string | null>(null);
@@ -121,7 +118,6 @@ export function PaymentReviewActions({
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
-        locale={locale}
         open={pendingApprove !== null}
         title={ui.actions.approveTitle}
         body={ui.actions.approveBody}
@@ -131,7 +127,6 @@ export function PaymentReviewActions({
         onConfirm={confirmApprove}
       />
       <ConfirmDialog
-        locale={locale}
         open={pendingReject !== null}
         title={ui.actions.rejectTitle}
         body={ui.actions.rejectBody}

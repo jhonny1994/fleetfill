@@ -1,6 +1,8 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchGlobalSearchGroups } from "@/lib/queries/admin-search";
 import { getAdminSession } from "@/lib/auth/get-admin-session";
 
@@ -12,10 +14,11 @@ export default async function SearchPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const [{ lang }, filters, session] = await Promise.all([params, searchParams, getAdminSession()]);
+  const locale = resolveAppLocale(lang);
   const query = filters.q?.trim();
-  const dictionary = await getDictionary(lang as "ar" | "fr" | "en");
+  const { dictionary } = asAdminMessages(await getMessages({ locale }));
   const groups = await fetchGlobalSearchGroups({
-    locale: lang,
+    locale,
     query,
     includeAdmins: session?.adminRole === "super_admin",
   });
@@ -32,7 +35,7 @@ export default async function SearchPage({
       </section>
 
       <section className="panel p-4">
-        <form className="flex flex-col gap-3 lg:flex-row" action={`/${lang}/search`} method="get">
+        <form className="flex flex-col gap-3 lg:flex-row" action={`/${locale}/search`} method="get">
           <input
             type="search"
             name="q"
@@ -44,7 +47,7 @@ export default async function SearchPage({
             <button className="button-primary" type="submit">
               {dictionary.search.submit}
             </button>
-            <Link className="button-secondary" href={`/${lang}/search`}>
+            <Link className="button-secondary" href={`/${locale}/search`}>
               {dictionary.search.reset}
             </Link>
           </div>

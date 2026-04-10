@@ -1,3 +1,4 @@
+import { getMessages } from "next-intl/server";
 import { ActionRail } from "@/components/detail/action-rail";
 import { DetailWorkspace } from "@/components/detail/detail-workspace";
 import { FilePreviewPanel } from "@/components/detail/file-preview-panel";
@@ -8,10 +9,11 @@ import {
   formatTemplate,
   getAdminActionLabel,
   getAdminDetailCopy,
-  getAdminUi,
   getDocumentLabel,
   getEnumLabel,
 } from "@/lib/i18n/admin-ui";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchVerificationDetail } from "@/lib/queries/admin-verification";
 
 export default async function VerificationDetailPage({
@@ -20,9 +22,10 @@ export default async function VerificationDetailPage({
   params: Promise<{ lang: string; carrierId: string }>;
 }) {
   const { lang, carrierId } = await params;
+  const locale = resolveAppLocale(lang);
   const detail = await fetchVerificationDetail(carrierId);
-  const ui = getAdminUi(lang);
-  const copy = getAdminDetailCopy(lang).verification;
+  const { ui } = asAdminMessages(await getMessages({ locale }));
+  const copy = getAdminDetailCopy(locale).verification;
 
   if (!detail) {
     return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.verification.notFound}</div>;
@@ -39,19 +42,21 @@ export default async function VerificationDetailPage({
       facts={[
         { label: ui.labels.carrier, value: carrierName },
         { label: copy.carrierIdLabel, value: detail.profile.id },
-        { label: copy.profileStateLabel, value: getEnumLabel(lang, "verification", detail.profile.verification_status) },
+        { label: copy.profileStateLabel, value: getEnumLabel(locale, "verification", detail.profile.verification_status) },
         { label: copy.packetDocumentsLabel, value: String(detail.documents.length) },
       ]}
       main={
         <>
           {previewDocument ? (
             <FilePreviewPanel
-              locale={lang}
               title={ui.pages.verification.preview}
-              label={getDocumentLabel(lang, previewDocument.document_type)}
+              label={getDocumentLabel(locale, previewDocument.document_type)}
               storagePath={previewDocument.storage_path}
               contentType={previewDocument.content_type}
               signedUrl={previewDocument.signedUrl}
+              previewUnavailableLabel={ui.labels.previewUnavailable}
+              openFileLabel={ui.labels.openFile}
+              noSignedPreviewLabel={ui.labels.noSignedPreview}
             />
           ) : null}
           <section className="panel space-y-4 p-5">
@@ -61,12 +66,12 @@ export default async function VerificationDetailPage({
                 <div key={document.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="space-y-1">
-                      <p className="font-medium text-[var(--color-ink-strong)]">{getDocumentLabel(lang, document.document_type)}</p>
-                      <p className="text-sm text-[var(--color-ink-muted)]">{getEnumLabel(lang, "verification", document.status)}</p>
+                      <p className="font-medium text-[var(--color-ink-strong)]">{getDocumentLabel(locale, document.document_type)}</p>
+                      <p className="text-sm text-[var(--color-ink-muted)]">{getEnumLabel(locale, "verification", document.status)}</p>
                     </div>
                     <p className="text-xs text-[var(--color-ink-muted)]">
                       {formatTemplate(copy.packetDocumentStatus, {
-                        entity: getEnumLabel(lang, "entity", document.entity_type),
+                        entity: getEnumLabel(locale, "entity", document.entity_type),
                         date: formatDateTime(document.created_at),
                       })}
                     </p>
@@ -76,10 +81,12 @@ export default async function VerificationDetailPage({
             </div>
           </section>
           <TimelinePanel
-            locale={lang}
+            title={ui.labels.timeline}
+            currentLabel={ui.labels.current}
+            emptyLabel={ui.labels.noTimeline}
             items={detail.auditLogs.map((log) => ({
               id: log.id,
-              title: getAdminActionLabel(lang, log.action),
+              title: getAdminActionLabel(locale, log.action),
               detail: log.reason ?? log.outcome,
               at: formatDateTime(log.created_at),
             }))}
@@ -88,16 +95,15 @@ export default async function VerificationDetailPage({
       }
       rail={
         <ActionRail
-          locale={lang}
           title={ui.pages.verification.actions}
           description={copy.packetActionsBody}
         >
           <VerificationReviewActions
-            locale={lang}
+            locale={locale}
             carrierId={detail.profile.id}
             documents={detail.documents.map((document) => ({
               id: document.id,
-              label: getDocumentLabel(lang, document.document_type),
+              label: getDocumentLabel(locale, document.document_type),
               status: document.status,
             }))}
           />
