@@ -4,20 +4,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export function AdminInvitationActions({
-  locale,
   invitationId,
   status,
 }: {
-  locale: AppLocale | string;
   invitationId: string;
   status: string;
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [open, setOpen] = useState(false);
@@ -51,7 +48,6 @@ export function AdminInvitationActions({
       </button>
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
       <ConfirmDialog
-        locale={locale}
         open={open}
         title={ui.actions.revokeTitle}
         body={ui.actions.revokeBody}

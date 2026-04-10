@@ -1,15 +1,19 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useRef } from "react";
 
-import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/shared/dialog";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 
 type ConfirmDialogProps = {
   open: boolean;
   title: string;
   body: string;
-  locale?: AppLocale | string;
   confirmLabel?: string;
   cancelLabel?: string;
   isPending?: boolean;
@@ -21,36 +25,41 @@ export function ConfirmDialog({
   open,
   title,
   body,
-  locale = "en",
   confirmLabel,
   cancelLabel,
   isPending = false,
   onCancel,
   onConfirm,
 }: ConfirmDialogProps) {
-  const ui = getAdminUi(locale);
-  const titleId = useId();
-  const bodyId = useId();
+  const ui = useAdminUi();
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
-  if (!open) {
-    return null;
-  }
+  useEffect(() => {
+    if (open && document.activeElement instanceof HTMLElement) {
+      previousActiveElementRef.current = document.activeElement;
+      return;
+    }
+
+    if (!open) {
+      previousActiveElementRef.current?.focus();
+    }
+  }, [open]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(23,38,49,0.35)] p-4">
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={bodyId}
-        className="panel max-w-md space-y-4 p-5"
+    <Dialog open={open} onOpenChange={(nextOpen) => (!nextOpen ? onCancel() : undefined)}>
+      <DialogContent
+        className="panel space-y-4 p-5"
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          previousActiveElementRef.current?.focus();
+        }}
       >
-        <h3 id={titleId} className="text-lg font-semibold text-[var(--color-ink-strong)]">
+        <DialogTitle>
           {title}
-        </h3>
-        <p id={bodyId} className="text-sm text-[var(--color-ink-muted)]">
+        </DialogTitle>
+        <DialogDescription>
           {body}
-        </p>
+        </DialogDescription>
         <div className="flex gap-3">
           <button className="button-secondary" type="button" onClick={onCancel} disabled={isPending}>
             {cancelLabel ?? ui.actions.cancel}
@@ -59,7 +68,7 @@ export function ConfirmDialog({
             {isPending ? ui.actions.working : (confirmLabel ?? ui.actions.confirm)}
           </button>
         </div>
-      </section>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

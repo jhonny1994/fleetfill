@@ -6,11 +6,12 @@ import Link from "next/link";
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatDateTime, formatQueueAge } from "@/lib/formatting/formatters";
-import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import type { AdminUi } from "@/lib/i18n/admin-ui";
+import { getEnumLabel } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import type { DisputeQueueItem } from "@/lib/queries/admin-types";
 
-function buildColumns(locale: string): ColumnDef<DisputeQueueItem>[] {
-  const ui = getAdminUi(locale);
+function buildColumns(locale: string, ui: AdminUi): ColumnDef<DisputeQueueItem>[] {
   return [
   {
     accessorKey: "trackingNumber",
@@ -57,14 +58,14 @@ function buildColumns(locale: string): ColumnDef<DisputeQueueItem>[] {
 }
 
 export function DisputesQueueView({ items, locale }: { items: DisputeQueueItem[]; locale: string }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   return (
     <AdminDataTable
       data={items}
-      columns={buildColumns(locale)}
+      columns={buildColumns(locale, ui)}
       emptyEyebrow={ui.pages.disputes.eyebrow}
-      emptyTitle={locale === "ar" ? "لا توجد نزاعات مفتوحة تحتاج إلى تدخل حالياً." : locale === "fr" ? "Aucun litige ouvert ne demande d'intervention pour le moment." : "No open disputes require attention."}
-      emptyBody={locale === "ar" ? "تغادر النزاعات التي تم حلها أو إغلاقها هذا الطابور تلقائياً." : locale === "fr" ? "Les litiges resolus et fermes quittent automatiquement cette file." : "Resolved and closed disputes leave this queue automatically."}
+      emptyTitle={ui.labels.noOpenDisputesWaiting}
+      emptyBody={ui.labels.noOpenDisputesWaitingBody}
     />
   );
 }

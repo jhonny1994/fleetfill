@@ -1,4 +1,11 @@
 import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
+import {
+  defaultLocale,
+  locales,
+  type AppLocale,
+  resolveEnabledLocales,
+  resolveFallbackLocale,
+} from "@/lib/i18n/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { PlatformSettingsSnapshot } from "@/lib/queries/admin-types";
 
@@ -7,6 +14,39 @@ type PlatformSettingRow = {
   value: Record<string, unknown>;
   updated_at: string | null;
 };
+
+type RuntimeLocalizationPolicy = {
+  fallbackLocale: AppLocale;
+  enabledLocales: AppLocale[];
+};
+
+function resolveRuntimeLocalizationPolicy(localization: Record<string, unknown> | undefined): RuntimeLocalizationPolicy {
+  const enabledLocales = resolveEnabledLocales(localization?.enabled_locales);
+  const fallbackLocale = resolveFallbackLocale(localization?.fallback_locale ?? defaultLocale, enabledLocales);
+
+  return {
+    fallbackLocale,
+    enabledLocales,
+  };
+}
+
+export async function fetchRuntimeLocalizationPolicy(): Promise<RuntimeLocalizationPolicy> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("platform_settings")
+    .select("value")
+    .eq("key", "localization")
+    .maybeSingle();
+
+  if (error) {
+    return {
+      fallbackLocale: defaultLocale,
+      enabledLocales: [...locales],
+    };
+  }
+
+  return resolveRuntimeLocalizationPolicy((data?.value ?? {}) as Record<string, unknown>);
+}
 
 export async function fetchPlatformSettingsSnapshot(): Promise<PlatformSettingsSnapshot> {
   await requireServerAdminSession();
@@ -26,6 +66,7 @@ export async function fetchPlatformSettingsSnapshot(): Promise<PlatformSettingsS
   const deliveryReview = rows.get("delivery_review")?.value ?? {};
   const featureFlags = rows.get("feature_flags")?.value ?? {};
   const localization = rows.get("localization")?.value ?? {};
+  const runtimeLocalization = resolveRuntimeLocalizationPolicy(localization);
 
   return {
     appRuntime: {
@@ -49,8 +90,8 @@ export async function fetchPlatformSettingsSnapshot(): Promise<PlatformSettingsS
       adminEmailResendEnabled: Boolean(featureFlags.admin_email_resend_enabled ?? true),
     },
     localization: {
-      fallbackLocale: ((localization.fallback_locale as "ar" | "fr" | "en" | undefined) ?? "ar"),
-      enabledLocales: ((localization.enabled_locales as Array<"ar" | "fr" | "en"> | undefined) ?? ["ar", "fr", "en"]),
+      fallbackLocale: runtimeLocalization.fallbackLocale,
+      enabledLocales: runtimeLocalization.enabledLocales,
     },
     updatedAtByKey: {
       app_runtime: rows.get("app_runtime")?.updated_at ?? null,

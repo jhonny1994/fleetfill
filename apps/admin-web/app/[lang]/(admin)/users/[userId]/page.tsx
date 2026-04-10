@@ -1,3 +1,4 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
 import { ActionRail } from "@/components/detail/action-rail";
@@ -7,7 +8,9 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { UserActivationActions } from "@/components/users/user-activation-actions";
 import { buildAdminRoute } from "@/lib/admin-routes";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminDetailCopy, getAdminUi, getDocumentLabel, getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
+import { getAdminDetailCopy, getDocumentLabel, getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchUserDetail } from "@/lib/queries/admin-users";
 
 export default async function UserDetailPage({
@@ -16,9 +19,10 @@ export default async function UserDetailPage({
   params: Promise<{ lang: string; userId: string }>;
 }) {
   const { lang, userId } = await params;
+  const locale = resolveAppLocale(lang);
   const detail = await fetchUserDetail(userId);
-  const ui = getAdminUi(lang);
-  const detailCopy = getAdminDetailCopy(lang);
+  const { ui } = asAdminMessages(await getMessages({ locale }));
+  const detailCopy = getAdminDetailCopy(locale);
 
   if (!detail) {
     return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.users.notFound}</div>;
@@ -249,7 +253,9 @@ export default async function UserDetailPage({
           </section>
 
           <TimelinePanel
-            locale={lang}
+            title={ui.labels.timeline}
+            currentLabel={ui.labels.current}
+            emptyLabel={ui.labels.noTimeline}
             items={detail.auditLogs.map((log) => ({
               id: log.id,
               title: log.action,
@@ -261,10 +267,9 @@ export default async function UserDetailPage({
       }
       rail={
         <ActionRail
-          locale={lang}
           title={detailCopy.users.controls}
         >
-          <UserActivationActions locale={lang} profileId={detail.profile.id} isActive={detail.profile.isActive} />
+          <UserActivationActions profileId={detail.profile.id} isActive={detail.profile.isActive} />
         </ActionRail>
       }
     />

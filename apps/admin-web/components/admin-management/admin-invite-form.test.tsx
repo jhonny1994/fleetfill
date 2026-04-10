@@ -1,8 +1,9 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { AdminInviteForm } from "@/components/admin-management/admin-invite-form";
+import { renderWithIntl } from "@/tests/render-with-intl";
 
 const rpcSpy = vi.fn().mockResolvedValue({
   data: {
@@ -32,7 +33,7 @@ describe("AdminInviteForm", () => {
   it("creates admin invitations through the backend rpc", async () => {
     const user = userEvent.setup();
 
-    render(<AdminInviteForm locale="en" />);
+    renderWithIntl(<AdminInviteForm locale="en" />);
 
     await user.type(screen.getByLabelText("Email"), "ops@fleetfill.dz");
     await user.click(screen.getByRole("button", { name: "Create invitation" }));

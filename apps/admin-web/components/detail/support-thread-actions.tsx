@@ -8,7 +8,8 @@ import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getEnumLabel } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { supportReplySchema, supportStatusSchema } from "@/lib/validation/review-actions";
 
@@ -23,7 +24,7 @@ export function SupportThreadActions({
   currentStatus: string;
   currentPriority: string;
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const isTerminal = currentStatus === "resolved" || currentStatus === "closed";
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
@@ -125,7 +126,6 @@ export function SupportThreadActions({
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
-        locale={locale}
         open={pendingReply !== null}
         title={ui.actions.sendReplyTitle}
         body={ui.actions.sendReplyBody}
@@ -135,7 +135,6 @@ export function SupportThreadActions({
         onConfirm={confirmReply}
       />
       <ConfirmDialog
-        locale={locale}
         open={pendingStatus !== null}
         title={ui.actions.updateStatusTitle}
         body={ui.actions.updateStatusBody}

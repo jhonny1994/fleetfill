@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const locales = ["ar", "fr", "en"] as const;
+import { defaultLocale, getLocaleDirection, isSupportedLocale, locales, resolvePreferredLocale } from "@/lib/i18n/config";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -19,8 +19,16 @@ export async function proxy(request: NextRequest) {
   );
 
   if (hasLocale) {
+    const localeSegment = pathname.split("/")[1] ?? defaultLocale;
+    const locale = isSupportedLocale(localeSegment) ? localeSegment : defaultLocale;
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-fleetfill-locale", locale);
+    requestHeaders.set("x-fleetfill-direction", getLocaleDirection(locale));
+
     let response = NextResponse.next({
-      request,
+      request: {
+        headers: requestHeaders,
+      },
     });
 
     const supabase = createServerClient(
@@ -33,8 +41,13 @@ export async function proxy(request: NextRequest) {
           },
           setAll(cookiesToSet) {
             cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+            const nextRequestHeaders = new Headers(request.headers);
+            nextRequestHeaders.set("x-fleetfill-locale", locale);
+            nextRequestHeaders.set("x-fleetfill-direction", getLocaleDirection(locale));
             response = NextResponse.next({
-              request,
+              request: {
+                headers: nextRequestHeaders,
+              },
             });
             cookiesToSet.forEach(({ name, value, options }) =>
               response.cookies.set(name, value, options),
@@ -49,7 +62,7 @@ export async function proxy(request: NextRequest) {
   }
 
   const url = request.nextUrl.clone();
-  url.pathname = `/ar${pathname}`;
+  url.pathname = `/${resolvePreferredLocale(request.headers.get("accept-language"))}${pathname}`;
   return NextResponse.redirect(url);
 }
 

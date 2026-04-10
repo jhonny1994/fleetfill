@@ -6,11 +6,12 @@ import Link from "next/link";
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatCurrencyDzd, formatDateTime, formatQueueAge } from "@/lib/formatting/formatters";
-import { getAdminUi, getEnumLabel, getPayoutRequestLabel } from "@/lib/i18n/admin-ui";
+import type { AdminUi } from "@/lib/i18n/admin-ui";
+import { getEnumLabel, getPayoutRequestLabel } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import type { EligiblePayoutQueueItem, ReleasedPayoutItem } from "@/lib/queries/admin-types";
 
-function buildEligibleColumns(locale: string): ColumnDef<EligiblePayoutQueueItem>[] {
-  const ui = getAdminUi(locale);
+function buildEligibleColumns(locale: string, ui: AdminUi): ColumnDef<EligiblePayoutQueueItem>[] {
   return [
   {
     accessorKey: "trackingNumber",
@@ -72,8 +73,7 @@ function buildEligibleColumns(locale: string): ColumnDef<EligiblePayoutQueueItem
 ];
 }
 
-function buildReleasedColumns(locale: string): ColumnDef<ReleasedPayoutItem>[] {
-  const ui = getAdminUi(locale);
+function buildReleasedColumns(locale: string, ui: AdminUi): ColumnDef<ReleasedPayoutItem>[] {
   return [
   {
     accessorKey: "bookingId",
@@ -111,7 +111,7 @@ export function PayoutsQueueView({
   released: ReleasedPayoutItem[];
   locale: string;
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   return (
     <div className="space-y-4">
       <section className="space-y-3">
@@ -120,14 +120,14 @@ export function PayoutsQueueView({
             <p className="eyebrow">{ui.pages.payouts.eyebrow}</p>
             <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{ui.pages.payouts.title}</h2>
           </div>
-          <StatusBadge label={`${eligible.length} ready`} tone={eligible.length > 0 ? "warning" : "success"} />
+          <StatusBadge label={ui.labels.payoutsReady.replace("{count}", String(eligible.length))} tone={eligible.length > 0 ? "warning" : "success"} />
         </div>
         <AdminDataTable
           data={eligible}
-          columns={buildEligibleColumns(locale)}
+          columns={buildEligibleColumns(locale, ui)}
           emptyEyebrow={ui.pages.payouts.eyebrow}
-          emptyTitle={ui.labels.queue === "طابور" ? "لا توجد تحويلات جاهزة حالياً." : ui.labels.queue === "File" ? "Aucun versement pret actuellement." : "No payouts are ready right now."}
-          emptyBody={ui.labels.queue === "طابور" ? "ستظهر هنا الحجوزات المكتملة والمضمونة من دون نزاعات مفتوحة عندما تصبح جاهزة للصرف." : ui.labels.queue === "File" ? "Les bookings termines et securises sans litige ouvert apparaitront ici quand ils seront eligibles." : "Completed, secured bookings without open disputes will appear here when they are eligible for release."}
+          emptyTitle={ui.labels.noEligiblePayoutsWaiting}
+          emptyBody={ui.labels.noEligiblePayoutsWaitingBody}
         />
       </section>
       <section className="space-y-3">
@@ -136,14 +136,14 @@ export function PayoutsQueueView({
             <p className="eyebrow">{ui.pages.payouts.eyebrow}</p>
             <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{ui.labels.latestActivity}</h2>
           </div>
-          <StatusBadge label={`${released.length} recent`} tone="neutral" />
+          <StatusBadge label={ui.labels.payoutsRecent.replace("{count}", String(released.length))} tone="neutral" />
         </div>
         <AdminDataTable
           data={released}
-          columns={buildReleasedColumns(locale)}
+          columns={buildReleasedColumns(locale, ui)}
           emptyEyebrow={ui.pages.payouts.eyebrow}
-          emptyTitle={ui.labels.queue === "طابور" ? "لم تُصرف أي تحويلات بعد." : ui.labels.queue === "File" ? "Aucun versement n'a encore ete traite." : "No payouts have been processed yet."}
-          emptyBody={ui.labels.queue === "طابور" ? "ستتجمع هنا التحويلات المصروفة لأغراض المتابعة وسجل التدقيق." : ui.labels.queue === "File" ? "Les versements emis s'accumuleront ici pour la visibilite operationnelle." : "Released payouts will accumulate here for operational visibility and audit trail entry points."}
+          emptyTitle={ui.labels.noReleasedPayoutsYet}
+          emptyBody={ui.labels.noReleasedPayoutsYetBody}
         />
       </section>
     </div>

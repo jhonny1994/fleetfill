@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { notFound } from "next/navigation";
+import { getMessages } from "next-intl/server";
+import { notFound, redirect } from "next/navigation";
 
-import { getDictionary } from "@/lib/i18n/dictionaries";
-import { getLocaleDirection, isSupportedLocale, type AppLocale } from "@/lib/i18n/config";
+import { isSupportedLocale, resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
+import { fetchRuntimeLocalizationPolicy } from "@/lib/queries/admin-settings";
 
 export async function generateMetadata({
   params,
@@ -16,7 +18,7 @@ export async function generateMetadata({
     return {};
   }
 
-  const dictionary = await getDictionary(lang);
+  const { dictionary } = asAdminMessages(await getMessages({ locale: lang }));
 
   return {
     title: dictionary.appTitle,
@@ -37,10 +39,16 @@ export default async function LocalizedLayout({
     notFound();
   }
 
-  const dictionary = await getDictionary(lang as AppLocale);
+  const localizationPolicy = await fetchRuntimeLocalizationPolicy();
+
+  if (!localizationPolicy.enabledLocales.includes(lang)) {
+    redirect(`/${localizationPolicy.fallbackLocale}`);
+  }
+
+  const { dictionary } = asAdminMessages(await getMessages({ locale: resolveAppLocale(lang) }));
 
   return (
-    <div className="admin-body min-h-screen" dir={getLocaleDirection(lang as AppLocale)} lang={lang}>
+    <div className="admin-body min-h-screen">
       <div className="mx-auto min-h-screen max-w-[1600px] px-4 py-4 lg:px-6">
         <div className="sr-only">{dictionary.appTitle}</div>
         {children}

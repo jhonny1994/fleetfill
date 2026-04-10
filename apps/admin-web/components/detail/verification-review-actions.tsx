@@ -8,7 +8,8 @@ import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getEnumLabel } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { verificationReviewSchema } from "@/lib/validation/review-actions";
 
@@ -27,7 +28,7 @@ export function VerificationReviewActions({
   carrierId: string;
   documents: DocumentOption[];
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingApproveAll, setPendingApproveAll] = useState(false);
@@ -120,7 +121,6 @@ export function VerificationReviewActions({
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
-        locale={locale}
         open={pendingApproveAll}
         title={ui.actions.approvePacketTitle}
         body={ui.actions.approvePacketConfirmBody}
@@ -130,7 +130,6 @@ export function VerificationReviewActions({
         onConfirm={confirmApproveAll}
       />
       <ConfirmDialog
-        locale={locale}
         open={pendingDocumentReview !== null}
         title={ui.actions.submitReviewTitle}
         body={ui.actions.submitReviewBody}

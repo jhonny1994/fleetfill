@@ -15,6 +15,23 @@ type SignInValues = {
   password: string;
 };
 
+function resolveAuthErrorMessage(
+  error: Awaited<ReturnType<ReturnType<typeof createSupabaseBrowserClient>["auth"]["signInWithPassword"]>>["error"],
+  dictionary: AdminDictionary,
+) {
+  const normalizedMessage = error?.message?.toLowerCase() ?? "";
+
+  if (
+    normalizedMessage.includes("invalid login credentials") ||
+    normalizedMessage.includes("email not confirmed") ||
+    normalizedMessage.includes("invalid credentials")
+  ) {
+    return dictionary.auth.invalidCredentials;
+  }
+
+  return dictionary.auth.unexpectedError;
+}
+
 export function AdminSignInForm({
   locale,
   dictionary,
@@ -60,7 +77,7 @@ export function AdminSignInForm({
     }
 
     if (error) {
-      setAuthError(error.message);
+      setAuthError(resolveAuthErrorMessage(error, dictionary));
       return;
     }
 
@@ -103,6 +120,11 @@ export function AdminSignInForm({
           className="w-full rounded-[22px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-ink-strong)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
           placeholder={dictionary.auth.emailPlaceholder}
           autoComplete="email"
+          dir="ltr"
+          inputMode="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           {...form.register("email")}
         />
         {form.formState.errors.email ? (
@@ -119,6 +141,8 @@ export function AdminSignInForm({
           className="w-full rounded-[22px] border border-[var(--color-border)] bg-white/85 px-4 py-3 text-sm text-[var(--color-ink-strong)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
           placeholder={dictionary.auth.passwordPlaceholder}
           autoComplete="current-password"
+          dir="ltr"
+          spellCheck={false}
           {...form.register("password")}
         />
         {form.formState.errors.password ? (

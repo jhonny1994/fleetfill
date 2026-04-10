@@ -1,8 +1,11 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminUi, getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
+import { getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchUsers } from "@/lib/queries/admin-users";
 
 export default async function UsersPage({
@@ -13,11 +16,12 @@ export default async function UsersPage({
   searchParams: Promise<{ q?: string; role?: string; activity?: string; verification?: string }>;
 }) {
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
+  const locale = resolveAppLocale(lang);
   const query = filters.q?.trim();
   const role = filters.role?.trim();
   const activity = filters.activity?.trim();
   const verification = filters.verification?.trim();
-  const ui = getAdminUi(lang);
+  const { ui } = asAdminMessages(await getMessages({ locale }));
   const users = await fetchUsers({ query, role, activity, verification });
 
   return (
@@ -31,7 +35,7 @@ export default async function UsersPage({
       </section>
 
       <section className="panel stacked-filter-surface p-5">
-        <form className="stacked-filter-form" action={`/${lang}/users`} method="get">
+        <form className="stacked-filter-form" action={`/${locale}/users`} method="get">
           <input
             type="search"
             name="q"
@@ -42,13 +46,13 @@ export default async function UsersPage({
           <div className="stacked-filter-secondary">
             <select aria-label={ui.labels.role} name="role" defaultValue={role ?? ""} className="admin-field admin-select">
               <option value="">{ui.labels.allRoles}</option>
-              <option value="shipper">{getEnumLabel(lang, "userRoles", "shipper")}</option>
-              <option value="carrier">{getEnumLabel(lang, "userRoles", "carrier")}</option>
+              <option value="shipper">{getEnumLabel(locale, "userRoles", "shipper")}</option>
+              <option value="carrier">{getEnumLabel(locale, "userRoles", "carrier")}</option>
             </select>
             <select aria-label={ui.labels.accountState} name="activity" defaultValue={activity ?? ""} className="admin-field admin-select">
               <option value="">{ui.labels.allAccountStates}</option>
-              <option value="active">{getEnumLabel(lang, "activity", "active")}</option>
-              <option value="inactive">{getEnumLabel(lang, "activity", "inactive")}</option>
+              <option value="active">{getEnumLabel(locale, "activity", "active")}</option>
+              <option value="inactive">{getEnumLabel(locale, "activity", "inactive")}</option>
             </select>
             <select
               aria-label={ui.labels.verification}
@@ -57,14 +61,14 @@ export default async function UsersPage({
               className="admin-field admin-select"
             >
               <option value="">{ui.labels.allVerificationStates}</option>
-              <option value="pending">{getEnumLabel(lang, "verification", "pending")}</option>
-              <option value="verified">{getEnumLabel(lang, "verification", "verified")}</option>
-              <option value="rejected">{getEnumLabel(lang, "verification", "rejected")}</option>
+              <option value="pending">{getEnumLabel(locale, "verification", "pending")}</option>
+              <option value="verified">{getEnumLabel(locale, "verification", "verified")}</option>
+              <option value="rejected">{getEnumLabel(locale, "verification", "rejected")}</option>
             </select>
             <button className="button-primary" type="submit">
               {ui.actions.confirm}
             </button>
-            <Link className="button-secondary" href={`/${lang}/users`}>
+            <Link className="button-secondary" href={`/${locale}/users`}>
               {ui.actions.cancel}
             </Link>
           </div>
@@ -90,7 +94,7 @@ export default async function UsersPage({
                 <td>
                   <div className="space-y-1">
                     <Link
-                      href={`/${lang}/users/${user.profileId}`}
+                      href={`/${locale}/users/${user.profileId}`}
                       className="font-semibold text-[var(--color-ink-strong)] underline-offset-4 hover:underline"
                     >
                       {user.displayName}
@@ -99,15 +103,15 @@ export default async function UsersPage({
                   </div>
                 </td>
                 <td>
-                  <StatusBadge label={getEnumLabel(lang, "userRoles", user.role)} tone="neutral" />
+                  <StatusBadge label={getEnumLabel(locale, "userRoles", user.role)} tone="neutral" />
                 </td>
                 <td>
-                  <StatusBadge label={getEnumLabel(lang, "activity", user.isActive ? "active" : "suspended")} tone={user.isActive ? "success" : "danger"} />
+                  <StatusBadge label={getEnumLabel(locale, "activity", user.isActive ? "active" : "suspended")} tone={user.isActive ? "success" : "danger"} />
                 </td>
                 <td>
                   {user.role === "carrier" ? (
                     <StatusBadge
-                      label={getUserVerificationLabel(lang, user.role, user.verificationStatus)}
+                      label={getUserVerificationLabel(locale, user.role, user.verificationStatus)}
                       tone={
                         user.verificationStatus === "verified"
                           ? "success"
@@ -132,7 +136,7 @@ export default async function UsersPage({
                 </td>
                 <td className="text-sm text-[var(--color-ink-muted)]">{formatDateTime(user.updatedAt)}</td>
                 <td>
-                  <Link className="button-secondary" href={`/${lang}/users/${user.profileId}`}>
+                  <Link className="button-secondary" href={`/${locale}/users/${user.profileId}`}>
                     {ui.actions.openDetail}
                   </Link>
                 </td>

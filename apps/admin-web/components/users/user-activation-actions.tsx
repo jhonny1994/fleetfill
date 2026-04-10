@@ -7,8 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const schema = z.object({
@@ -16,15 +15,13 @@ const schema = z.object({
 });
 
 export function UserActivationActions({
-  locale,
   profileId,
   isActive,
 }: {
-  locale: AppLocale | string;
   profileId: string;
   isActive: boolean;
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingValues, setPendingValues] = useState<z.infer<typeof schema> | null>(null);
@@ -81,7 +78,6 @@ export function UserActivationActions({
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
-        locale={locale}
         open={pendingValues !== null}
         title={isActive ? ui.actions.suspendTitle : ui.actions.reactivateTitle}
         body={isActive ? ui.actions.suspendConfirmBody : ui.actions.reactivateConfirmBody}

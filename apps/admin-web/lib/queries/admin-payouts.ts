@@ -158,7 +158,7 @@ export async function fetchRecentReleasedPayouts({
   }));
 }
 
-export type AdminPayoutDetail = {
+type AdminPayoutDetail = {
   booking: BookingRow;
   carrierName: string;
   activePayoutAccount: PayoutAccountRow | null;
