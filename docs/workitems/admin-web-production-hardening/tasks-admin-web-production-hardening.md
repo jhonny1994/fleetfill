@@ -46,9 +46,9 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ## Tasks
 
-- [ ] 0.0 Create feature branch
-  - [ ] 0.1 Create and checkout a new branch for this feature using the repo’s branch naming convention.
-  - [ ] 0.2 Confirm the branch name reflects the work item scope, e.g. `codex/admin-web-production-hardening`.
+- [x] 0.0 Create feature branch
+  - [x] 0.1 Create and checkout a new branch for this feature using the repo’s branch naming convention.
+  - [x] 0.2 Confirm the branch name reflects the work item scope, e.g. `codex/admin-web-production-hardening`.
 
 - [x] 1.0 Replace the custom admin-web localization foundation with a registry-driven `next-intl` architecture
   - [x] 1.1 Add `next-intl` and any required App Router integration dependencies to `apps/admin-web/package.json`.
@@ -82,25 +82,25 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 3.6 Verify focus trap, Escape handling, inert/background blocking, and focus restoration behavior are covered by tests or browser checks.
   - [x] 3.7 Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm dlx knip`, and `pnpm dlx pruny --all` in `apps/admin-web` before moving to phase `4.0`.
 
-- [ ] 4.0 Add Playwright browser coverage and CI validation for locale routing, shared shell behavior, and critical interaction flows
-  - [ ] 4.1 Add Playwright configuration, scripts, and browser test scaffolding under `apps/admin-web`.
-  - [ ] 4.2 Define a deterministic browser-test execution model, including how admin-web starts locally in CI and how tests target that running app.
-  - [ ] 4.3 Define a deterministic auth strategy for Playwright, such as seeded admin credentials, storage-state bootstrap, or server-side test-only session setup.
-  - [ ] 4.4 Define deterministic fixture data for queue/filter and destructive-action coverage so tests do not rely on drifting runtime state.
-  - [ ] 4.5 Create browser tests for first-visit locale negotiation and direct locale route loading.
-  - [ ] 4.6 Create browser tests for locale switching while preserving the current admin route.
-  - [ ] 4.7 Create browser tests for document-level `lang` and `dir` semantics, including Arabic RTL behavior.
-  - [ ] 4.8 Create browser tests for mobile drawer open/close behavior, keyboard focus management, and Escape dismissal.
-  - [ ] 4.9 Create browser tests for at least one destructive confirmation flow using the shared dialog primitive.
-  - [ ] 4.10 Create browser tests for at least one queue filter flow where state is reflected in the URL.
-  - [ ] 4.11 Wire Playwright into `.github/workflows/ci.yml` or the appropriate frontend validation path so these checks run in CI.
-  - [ ] 4.12 Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm dlx knip`, and `pnpm dlx pruny --all` in `apps/admin-web` before moving to phase `5.0`.
+- [x] 4.0 Add Playwright browser coverage and CI validation for locale routing, shared shell behavior, and critical interaction flows
+  - [x] 4.1 Add Playwright configuration, scripts, and browser test scaffolding under `apps/admin-web`.
+  - [x] 4.2 Define a deterministic browser-test execution model, including how admin-web starts locally in CI and how tests target that running app.
+  - [x] 4.3 Define a deterministic auth strategy for Playwright, such as seeded admin credentials, storage-state bootstrap, or server-side test-only session setup.
+  - [x] 4.4 Define deterministic fixture data for queue/filter and destructive-action coverage so tests do not rely on drifting runtime state.
+  - [x] 4.5 Create browser tests for first-visit locale negotiation and direct locale route loading.
+  - [x] 4.6 Create browser tests for locale switching while preserving the current admin route.
+  - [x] 4.7 Create browser tests for document-level `lang` and `dir` semantics, including Arabic RTL behavior.
+  - [x] 4.8 Create browser tests for mobile drawer open/close behavior, keyboard focus management, and Escape dismissal.
+  - [x] 4.9 Create browser tests for at least one destructive confirmation flow using the shared dialog primitive.
+  - [x] 4.10 Create browser tests for at least one queue filter flow where state is reflected in the URL.
+  - [x] 4.11 Wire Playwright into `.github/workflows/ci.yml` or the appropriate frontend validation path so these checks run in CI.
+  - [x] 4.12 Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm dlx knip`, and `pnpm dlx pruny --all` in `apps/admin-web` before moving to phase `5.0`.
 
-- [ ] 5.0 Complete production-hardening cleanup across admin-web shared composition, i18n checks, docs, and validation workflows
-  - [ ] 5.1 Review shared queue-page composition and continue consolidating repeated page scaffolding where it improves consistency and reusability.
-  - [ ] 5.2 Update `README.md` in `apps/admin-web` with the new i18n architecture, browser testing commands, and validation expectations.
-  - [ ] 5.3 Update any ADR or active docs that describe the admin web stack if the new standards need to be reflected in project documentation.
-  - [ ] 5.4 Run admin-web validation commands including lint, typecheck, unit/component tests, i18n audits, and Playwright tests.
-  - [ ] 5.5 Confirm the app still supports the current localized routes and operational shell flows after the migration.
-  - [ ] 5.6 Confirm no route or shared component still depends on the retired custom i18n APIs except intentionally retained migration shims, if any.
-  - [ ] 5.7 Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm dlx knip`, and `pnpm dlx pruny --all` in `apps/admin-web` as the final post-phase validation gate.
+- [x] 5.0 Complete production-hardening cleanup across admin-web shared composition, i18n checks, docs, and validation workflows
+  - [x] 5.1 Review shared queue-page composition and continue consolidating repeated page scaffolding where it improves consistency and reusability.
+  - [x] 5.2 Update `README.md` in `apps/admin-web` with the new i18n architecture, browser testing commands, and validation expectations.
+  - [x] 5.3 Update any ADR or active docs that describe the admin web stack if the new standards need to be reflected in project documentation.
+  - [x] 5.4 Run admin-web validation commands including lint, typecheck, unit/component tests, i18n audits, and Playwright tests.
+  - [x] 5.5 Confirm the app still supports the current localized routes and operational shell flows after the migration.
+  - [x] 5.6 Confirm no route or shared component still depends on the retired custom i18n APIs except intentionally retained migration shims, if any.
+  - [x] 5.7 Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm dlx knip`, and `pnpm dlx pruny --all` in `apps/admin-web` as the final post-phase validation gate.

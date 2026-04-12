@@ -2,10 +2,11 @@ import { requireServerAdminSession } from "@/lib/auth/require-server-admin-sessi
 import {
   defaultLocale,
   locales,
-  type AppLocale,
-  resolveEnabledLocales,
-  resolveFallbackLocale,
 } from "@/lib/i18n/config";
+import {
+  resolveRuntimeLocalizationPolicy,
+  type RuntimeLocalizationPolicy,
+} from "@/lib/i18n/runtime-localization-policy";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { PlatformSettingsSnapshot } from "@/lib/queries/admin-types";
 
@@ -14,21 +15,6 @@ type PlatformSettingRow = {
   value: Record<string, unknown>;
   updated_at: string | null;
 };
-
-type RuntimeLocalizationPolicy = {
-  fallbackLocale: AppLocale;
-  enabledLocales: AppLocale[];
-};
-
-function resolveRuntimeLocalizationPolicy(localization: Record<string, unknown> | undefined): RuntimeLocalizationPolicy {
-  const enabledLocales = resolveEnabledLocales(localization?.enabled_locales);
-  const fallbackLocale = resolveFallbackLocale(localization?.fallback_locale ?? defaultLocale, enabledLocales);
-
-  return {
-    fallbackLocale,
-    enabledLocales,
-  };
-}
 
 export async function fetchRuntimeLocalizationPolicy(): Promise<RuntimeLocalizationPolicy> {
   const supabase = await createSupabaseServerClient();

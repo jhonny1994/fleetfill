@@ -8,6 +8,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { formatDateTime } from "@/lib/formatting/formatters";
 import { getAdminDetailCopy } from "@/lib/i18n/admin-ui";
 import { localeEntries, resolveEnabledLocales, resolveFallbackLocale, type AppLocale } from "@/lib/i18n/config";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
@@ -25,10 +26,12 @@ import {
 function SectionFrame({
   title,
   body,
+  meta,
   children,
 }: {
   title: string;
   body: string;
+  meta?: string | null;
   children: ReactNode;
 }) {
   return (
@@ -36,6 +39,7 @@ function SectionFrame({
       <div className="section-header">
         <h3 className="text-[1.15rem] font-semibold text-[var(--color-ink-strong)]">{title}</h3>
         <p>{body}</p>
+        {meta ? <p className="text-xs text-[var(--color-ink-muted)]">{meta}</p> : null}
       </div>
       <div className="max-w-5xl">{children}</div>
     </section>
@@ -145,6 +149,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.runtimeTitle}
         body={detailCopy.settings.runtimeBody}
+        meta={settings.updatedAtByKey.app_runtime ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.app_runtime, locale)}` : null}
       >
         <form
           className="grid max-w-4xl gap-3 lg:grid-cols-2"
@@ -188,6 +193,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.pricingTitle}
         body={detailCopy.settings.pricingBody}
+        meta={settings.updatedAtByKey.booking_pricing ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.booking_pricing, locale)}` : null}
       >
         <form
           className="grid max-w-5xl gap-3 lg:grid-cols-2 xl:grid-cols-3"
@@ -241,6 +247,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.reviewTitle}
         body={detailCopy.settings.reviewBody}
+        meta={settings.updatedAtByKey.delivery_review ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.delivery_review, locale)}` : null}
       >
         <form
           className="grid max-w-xl gap-3 lg:grid-cols-[minmax(0,220px)_auto]"
@@ -267,6 +274,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.featureTitle}
         body={detailCopy.settings.featureBody}
+        meta={settings.updatedAtByKey.feature_flags ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.feature_flags, locale)}` : null}
       >
         <form
           className="space-y-3"
@@ -293,6 +301,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.localizationTitle}
         body={detailCopy.settings.localizationBody}
+        meta={settings.updatedAtByKey.localization ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.localization, locale)}` : null}
       >
         <form
           className="space-y-4"

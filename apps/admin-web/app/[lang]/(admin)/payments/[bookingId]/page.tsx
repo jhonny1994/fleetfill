@@ -5,7 +5,7 @@ import { FilePreviewPanel } from "@/components/detail/file-preview-panel";
 import { PaymentReviewActions } from "@/components/detail/payment-review-actions";
 import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { formatCurrencyDzd, formatDateTime } from "@/lib/formatting/formatters";
-import { formatTemplate, getAdminActionLabel, getAdminDetailCopy, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { formatTemplate, getAdminActionLabel, getAdminDetailCopy, getAuditOutcomeLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchPaymentDetail } from "@/lib/queries/admin-payments";
@@ -62,7 +62,7 @@ export default async function PaymentDetailPage({
               ...detail.auditLogs.map((log) => ({
                 id: log.id,
                 title: getAdminActionLabel(locale, log.action),
-                detail: log.reason ?? log.outcome,
+                detail: log.reason ?? getAuditOutcomeLabel(locale, log.outcome),
                 at: formatDateTime(log.created_at),
               })),
             ]}

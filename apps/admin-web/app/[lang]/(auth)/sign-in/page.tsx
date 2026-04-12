@@ -35,11 +35,15 @@ export default async function AdminSignInPage({
     <main className="flex min-h-[calc(100vh-2rem)] items-center justify-center">
       <section
         className={cn(
-          "panel flex max-w-5xl flex-col gap-8 overflow-hidden p-6 lg:p-8",
-          isRtl ? "lg:flex-row" : "lg:flex-row-reverse",
+          "panel flex max-w-5xl flex-col gap-8 overflow-hidden p-6 lg:flex-row lg:p-8",
         )}
       >
-        <div className={cn("space-y-5 lg:basis-[40%]", isRtl ? "text-right" : "text-left")}>
+        <div
+          className={cn(
+            "space-y-5 lg:basis-[40%]",
+            isRtl ? "text-right lg:order-2" : "text-left lg:order-1",
+          )}
+        >
           <p className="eyebrow">{dictionary.appTitle}</p>
           <h1 className="max-w-xl text-4xl font-semibold leading-tight text-[var(--color-ink-strong)]">
             {dictionary.auth.signInTitle}
@@ -51,7 +55,7 @@ export default async function AdminSignInPage({
         <div
           className={cn(
             "panel flex flex-col justify-between gap-6 bg-[var(--color-surface-strong)] p-6 lg:basis-[60%]",
-            isRtl ? "text-right" : "text-left",
+            isRtl ? "text-right lg:order-1" : "text-left lg:order-2",
           )}
         >
           <div className="flex size-14 items-center justify-center rounded-full bg-[var(--color-sand-100)] text-[var(--color-accent)]">

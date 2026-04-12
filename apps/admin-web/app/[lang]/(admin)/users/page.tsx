@@ -1,6 +1,7 @@
 import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
+import { PaginationSummary } from "@/components/shared/pagination-summary";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
 import { getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
@@ -13,16 +14,28 @@ export default async function UsersPage({
   searchParams,
 }: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ q?: string; role?: string; activity?: string; verification?: string }>;
+  searchParams: Promise<{ q?: string; role?: string; activity?: string; verification?: string; page?: string }>;
 }) {
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const locale = resolveAppLocale(lang);
-  const query = filters.q?.trim();
-  const role = filters.role?.trim();
-  const activity = filters.activity?.trim();
-  const verification = filters.verification?.trim();
-  const { ui } = asAdminMessages(await getMessages({ locale }));
-  const users = await fetchUsers({ query, role, activity, verification });
+  const query = filters.q?.trim() ?? "";
+  const role = filters.role?.trim() === "shipper" || filters.role?.trim() === "carrier" ? (filters.role.trim() as "shipper" | "carrier") : "all";
+  const activity =
+    filters.activity?.trim() === "active" || filters.activity?.trim() === "inactive"
+      ? (filters.activity.trim() as "active" | "inactive")
+      : "all";
+  const verification =
+    filters.verification?.trim() === "pending" || filters.verification?.trim() === "verified" || filters.verification?.trim() === "rejected"
+      ? (filters.verification.trim() as "pending" | "verified" | "rejected")
+      : "all";
+  const page = Math.max(1, Number(filters.page ?? "1") || 1);
+  const { ui, dictionary } = asAdminMessages(await getMessages({ locale }));
+  const snapshot = await fetchUsers({ q: query, role, activity, verification, page });
+  const search = new URLSearchParams();
+  if (snapshot.filters.q) search.set("q", snapshot.filters.q);
+  if (snapshot.filters.role !== "all") search.set("role", snapshot.filters.role);
+  if (snapshot.filters.activity !== "all") search.set("activity", snapshot.filters.activity);
+  if (snapshot.filters.verification !== "all") search.set("verification", snapshot.filters.verification);
 
   return (
     <div className="space-y-4">
@@ -39,28 +52,28 @@ export default async function UsersPage({
           <input
             type="search"
             name="q"
-            defaultValue={query}
+            defaultValue={snapshot.filters.q}
             placeholder={ui.pages.users.searchPlaceholder}
             className="admin-field stacked-filter-search"
           />
           <div className="stacked-filter-secondary">
-            <select aria-label={ui.labels.role} name="role" defaultValue={role ?? ""} className="admin-field admin-select">
-              <option value="">{ui.labels.allRoles}</option>
+            <select aria-label={ui.labels.role} name="role" defaultValue={snapshot.filters.role} className="admin-field admin-select">
+              <option value="all">{ui.labels.allRoles}</option>
               <option value="shipper">{getEnumLabel(locale, "userRoles", "shipper")}</option>
               <option value="carrier">{getEnumLabel(locale, "userRoles", "carrier")}</option>
             </select>
-            <select aria-label={ui.labels.accountState} name="activity" defaultValue={activity ?? ""} className="admin-field admin-select">
-              <option value="">{ui.labels.allAccountStates}</option>
+            <select aria-label={ui.labels.accountState} name="activity" defaultValue={snapshot.filters.activity} className="admin-field admin-select">
+              <option value="all">{ui.labels.allAccountStates}</option>
               <option value="active">{getEnumLabel(locale, "activity", "active")}</option>
               <option value="inactive">{getEnumLabel(locale, "activity", "inactive")}</option>
             </select>
             <select
               aria-label={ui.labels.verification}
               name="verification"
-              defaultValue={verification ?? ""}
+              defaultValue={snapshot.filters.verification}
               className="admin-field admin-select"
             >
-              <option value="">{ui.labels.allVerificationStates}</option>
+              <option value="all">{ui.labels.allVerificationStates}</option>
               <option value="pending">{getEnumLabel(locale, "verification", "pending")}</option>
               <option value="verified">{getEnumLabel(locale, "verification", "verified")}</option>
               <option value="rejected">{getEnumLabel(locale, "verification", "rejected")}</option>
@@ -69,7 +82,7 @@ export default async function UsersPage({
               {ui.actions.confirm}
             </button>
             <Link className="button-secondary" href={`/${locale}/users`}>
-              {ui.actions.cancel}
+              {dictionary.common.reset}
             </Link>
           </div>
         </form>
@@ -89,7 +102,7 @@ export default async function UsersPage({
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {snapshot.users.map((user) => (
               <tr key={user.profileId}>
                 <td>
                   <div className="space-y-1">
@@ -145,6 +158,17 @@ export default async function UsersPage({
           </tbody>
         </table>
       </div>
+      <PaginationSummary
+        pathname={`/${locale}/users`}
+        searchParams={search}
+        page={snapshot.page}
+        pageSize={snapshot.pageSize}
+        total={snapshot.totalUsers}
+        previousLabel={ui.pages.audit.previous}
+        nextLabel={ui.pages.audit.next}
+        pageLabel={ui.pages.audit.page}
+        totalLabel={ui.pages.audit.total}
+      />
     </div>
   );
 }

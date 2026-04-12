@@ -1,8 +1,9 @@
 "use client";
 
 import { Languages } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { buildLocalizedPath } from "@/lib/i18n/runtime-localization-policy";
 import { localeEntries, type AppLocale } from "@/lib/i18n/config";
 import type { AdminDictionary } from "@/lib/i18n/dictionaries";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
@@ -18,14 +19,18 @@ export function AdminLocaleSwitcher({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const ui = useAdminUi();
 
   function handleChange(nextLocale: string) {
-    const segments = (pathname ?? "/").split("/");
-    if (segments.length > 1) {
-      segments[1] = nextLocale;
-    }
-    router.push(segments.join("/") || `/${nextLocale}`);
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    const nextPath = buildLocalizedPath(
+      pathname ?? "/",
+      locale,
+      nextLocale as AppLocale,
+      searchParams.toString(),
+    );
+    router.push(`${nextPath}${hash}`);
   }
 
   return (

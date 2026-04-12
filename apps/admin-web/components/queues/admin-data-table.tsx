@@ -38,7 +38,11 @@ export function AdminDataTable<TData>({
   });
 
   if (data.length === 0) {
-    return <EmptyState eyebrow={emptyEyebrow} title={emptyTitle} body={emptyBody} />;
+    return (
+      <div className="table-shell p-4">
+        <EmptyState eyebrow={emptyEyebrow} title={emptyTitle} body={emptyBody} />
+      </div>
+    );
   }
 
   return (

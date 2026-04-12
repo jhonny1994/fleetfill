@@ -3,11 +3,11 @@ import Link from "next/link";
 import { StatusBadge } from "@/components/shared/status-badge";
 
 export function ActiveFiltersRow({
-  pathname,
+  clearHref,
   filters,
   clearAllLabel = "Clear all",
 }: {
-  pathname: string;
+  clearHref: string;
   filters: Array<{ key: string; label: string; value: string | null | undefined }>;
   clearAllLabel?: string;
 }) {
@@ -21,7 +21,7 @@ export function ActiveFiltersRow({
       {active.map((filter) => (
         <StatusBadge key={filter.key} label={`${filter.label}: ${filter.value}`} tone="neutral" />
       ))}
-      <Link className="text-sm font-medium text-[var(--color-accent-ink)] underline-offset-4 hover:underline" href={pathname}>
+      <Link className="text-sm font-medium text-[var(--color-accent-ink)] underline-offset-4 hover:underline" href={clearHref}>
         {clearAllLabel}
       </Link>
     </div>

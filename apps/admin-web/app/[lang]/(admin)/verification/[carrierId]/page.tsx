@@ -9,6 +9,7 @@ import {
   formatTemplate,
   getAdminActionLabel,
   getAdminDetailCopy,
+  getAuditOutcomeLabel,
   getDocumentLabel,
   getEnumLabel,
 } from "@/lib/i18n/admin-ui";
@@ -87,7 +88,7 @@ export default async function VerificationDetailPage({
             items={detail.auditLogs.map((log) => ({
               id: log.id,
               title: getAdminActionLabel(locale, log.action),
-              detail: log.reason ?? log.outcome,
+              detail: log.reason ?? getAuditOutcomeLabel(locale, log.outcome),
               at: formatDateTime(log.created_at),
             }))}
           />

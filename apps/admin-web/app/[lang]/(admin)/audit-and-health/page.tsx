@@ -6,7 +6,9 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
 import {
   getAdminActionLabel,
+  getAuditOutcomeLabel,
   getAuditHealthErrorLabel,
+  getAuditTargetTypeLabel,
   getEnumLabel,
   getNotificationTemplateLabel,
 } from "@/lib/i18n/admin-ui";
@@ -65,12 +67,12 @@ export default async function AuditAndHealthPage({
                 <div className="flex flex-wrap items-center gap-2">
                   <StatusBadge label={getAdminActionLabel(locale, log.action)} tone="neutral" />
                   <StatusBadge
-                    label={getEnumLabel(locale, "activity", log.outcome === "success" ? "active" : "inactive")}
+                    label={getAuditOutcomeLabel(locale, log.outcome)}
                     tone={log.outcome === "success" ? "success" : "danger"}
                   />
                 </div>
                 <p className="mt-2 text-sm text-[var(--color-ink-strong)]">
-                  {log.targetType}
+                  {getAuditTargetTypeLabel(locale, log.targetType)}
                   {log.targetId ? ` • ${log.targetId}` : ""}
                 </p>
                 <p className="mt-1 text-xs text-[var(--color-ink-muted)]">

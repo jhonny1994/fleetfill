@@ -109,6 +109,24 @@ export function getAdminActionLabel(locale: string | AppLocale, value: string | 
   return labels[value] ?? humanize(value);
 }
 
+export function getAuditTargetTypeLabel(locale: string | AppLocale, value: string | null | undefined) {
+  if (!value) {
+    return getAdminUi(locale).labels.none;
+  }
+
+  const labels = getAdminUi(locale).auditTargetTypeLabels as Record<string, string>;
+  return labels[value.toLowerCase()] ?? humanize(value);
+}
+
+export function getAuditOutcomeLabel(locale: string | AppLocale, value: string | null | undefined) {
+  if (!value) {
+    return getAdminUi(locale).labels.none;
+  }
+
+  const labels = getAdminUi(locale).auditOutcomeLabels as Record<string, string>;
+  return labels[value.toLowerCase()] ?? humanize(value);
+}
+
 export function getNotificationTemplateLabel(locale: string | AppLocale, value: string | null | undefined) {
   if (!value) {
     return getAdminUi(locale).labels.none;
@@ -142,6 +160,17 @@ export function getSupportMessageTitle(locale: string | AppLocale, sender: strin
   return formatTemplate(getAdminUi(locale).support.messageTitle, {
     sender: getEnumLabel(locale, "sender", sender),
   });
+}
+
+export function getSupportMessagePreview(locale: string | AppLocale, body: string | null | undefined) {
+  const supportCopy = getAdminUi(locale).support;
+  const preview = body?.replace(/\s+/g, " ").trim().slice(0, 140);
+
+  if (!preview) {
+    return supportCopy.emptyMessagePreview;
+  }
+
+  return formatTemplate(supportCopy.messagePreviewLabel, { preview });
 }
 
 export function getSupportUiCopy(locale: string | AppLocale) {

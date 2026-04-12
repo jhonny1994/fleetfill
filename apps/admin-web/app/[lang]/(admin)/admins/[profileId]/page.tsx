@@ -5,7 +5,7 @@ import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { AdminAccountActions } from "@/components/admin-management/admin-account-actions";
 import { AdminInvitationActions } from "@/components/admin-management/admin-invitation-actions";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminRoleLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminActionLabel, getAdminRoleLabel, getAuditOutcomeLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchAdminAccountDetail } from "@/lib/queries/admin-admins";
@@ -30,6 +30,8 @@ export default async function AdminDetailPage({
       eyebrow={ui.pages.admins.eyebrow}
       title={detail.account.displayName}
       description={detail.account.email}
+      backLink={{ href: `/${locale}/admins`, label: ui.pages.admins.title }}
+      relatedLinks={[{ href: `/${locale}/admins?q=${encodeURIComponent(detail.account.profileId)}`, label: ui.pages.admins.accountOverview }]}
       facts={[
         { label: ui.labels.role, value: getAdminRoleLabel(locale, detail.account.adminRole) },
         { label: ui.labels.state, value: getEnumLabel(locale, "activity", detail.account.isActive ? "active" : "inactive") },
@@ -65,8 +67,8 @@ export default async function AdminDetailPage({
             emptyLabel={ui.labels.noTimeline}
             items={detail.auditLogs.slice(0, 6).map((log) => ({
               id: log.id,
-              title: log.action,
-              detail: log.reason ?? log.outcome,
+              title: getAdminActionLabel(locale, log.action),
+              detail: log.reason ?? getAuditOutcomeLabel(locale, log.outcome),
               at: formatDateTime(log.createdAt),
             }))}
           />

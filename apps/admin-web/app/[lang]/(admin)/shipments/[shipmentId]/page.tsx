@@ -30,6 +30,11 @@ export default async function ShipmentDetailPage({
       eyebrow={detailCopy.shipments.eyebrow}
       title={detail.shipment.description?.trim() || detail.shipment.id}
       description={detailCopy.shipments.description}
+      backLink={{ href: `/${locale}/shipments`, label: detailCopy.shipments.eyebrow }}
+      relatedLinks={[
+        { href: buildAdminRoute(lang, "user", detail.shipment.shipperId), label: detailCopy.shipments.shipperProfile },
+        ...(detail.booking ? [{ href: buildAdminRoute(lang, "booking", detail.booking.id), label: detailCopy.shipments.linkedBooking }] : []),
+      ]}
       facts={[
         { label: ui.labels.state, value: getEnumLabel(lang, "shipment", detail.shipment.status) },
         { label: detailCopy.shipments.weightLabel, value: `${detail.shipment.totalWeightKg} kg` },

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { headers } from "next/headers";
 import { getMessages } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 
 import { isSupportedLocale, resolveAppLocale } from "@/lib/i18n/config";
+import { buildLocalizedPath } from "@/lib/i18n/runtime-localization-policy";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchRuntimeLocalizationPolicy } from "@/lib/queries/admin-settings";
 
@@ -42,7 +44,15 @@ export default async function LocalizedLayout({
   const localizationPolicy = await fetchRuntimeLocalizationPolicy();
 
   if (!localizationPolicy.enabledLocales.includes(lang)) {
-    redirect(`/${localizationPolicy.fallbackLocale}`);
+    const requestHeaders = await headers();
+    redirect(
+      buildLocalizedPath(
+        requestHeaders.get("x-fleetfill-pathname") ?? `/${lang}`,
+        lang,
+        localizationPolicy.fallbackLocale,
+        requestHeaders.get("x-fleetfill-search") ?? "",
+      ),
+    );
   }
 
   const { dictionary } = asAdminMessages(await getMessages({ locale: resolveAppLocale(lang) }));
