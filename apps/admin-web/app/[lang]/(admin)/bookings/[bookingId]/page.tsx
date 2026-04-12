@@ -42,6 +42,13 @@ export default async function BookingDetailPage({
       eyebrow={ui.pages.bookings.eyebrow}
       title={detail.booking.trackingNumber}
       description={detailCopy.bookings.description}
+      backLink={{ href: `/${locale}/bookings`, label: ui.pages.bookings.eyebrow }}
+      relatedLinks={[
+        { href: buildAdminRoute(locale, "shipment", detail.booking.shipmentId), label: ui.actions.shipmentDetail },
+        { href: buildAdminRoute(locale, "payment", detail.booking.id), label: ui.actions.paymentReview },
+        { href: buildAdminRoute(locale, "payout", detail.booking.id), label: ui.actions.payoutDetail },
+        { href: buildAdminRoute(locale, "dispute", detail.booking.id), label: ui.actions.disputeDetail },
+      ]}
       facts={[
         { label: detailCopy.bookings.bookingStateLabel, value: getEnumLabel(locale, "booking", detail.booking.bookingStatus) },
         { label: detailCopy.bookings.paymentStateLabel, value: getEnumLabel(locale, "payment", detail.booking.paymentStatus) },

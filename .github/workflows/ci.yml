@@ -90,12 +90,17 @@ jobs:
   admin-web-quality:
     name: Admin Web Quality
     needs: changes
-    if: needs.changes.outputs.admin_web == 'true'
+    if: needs.changes.outputs.admin_web == 'true' || needs.changes.outputs.supabase == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     defaults:
       run:
         working-directory: apps/admin-web
+    env:
+      GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID != '' && vars.GOOGLE_WEB_CLIENT_ID || 'dummy-google-web-client-id.apps.googleusercontent.com' }}
+      GOOGLE_IOS_CLIENT_ID: ${{ vars.GOOGLE_IOS_CLIENT_ID != '' && vars.GOOGLE_IOS_CLIENT_ID || 'dummy-google-ios-client-id.apps.googleusercontent.com' }}
+      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID != '' && vars.GOOGLE_WEB_CLIENT_ID || 'dummy-google-web-client-id.apps.googleusercontent.com' }}
+      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET: ${{ secrets.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET != '' && secrets.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET || 'dummy-google-client-secret' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -115,6 +120,44 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Materialize local Supabase env
+        shell: bash
+        working-directory: backend
+        run: |
+          cat > .env <<EOF
+          GOOGLE_WEB_CLIENT_ID=${GOOGLE_WEB_CLIENT_ID}
+          GOOGLE_IOS_CLIENT_ID=${GOOGLE_IOS_CLIENT_ID}
+          SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=${SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID}
+          SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=${SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET}
+          EOF
+
+      - name: Start local Supabase
+        shell: bash
+        working-directory: backend
+        run: supabase start
+
+      - name: Reset local Supabase database
+        shell: bash
+        working-directory: backend
+        run: supabase db reset --yes
+
+      - name: Export local Supabase runtime for admin-web
+        shell: bash
+        working-directory: backend
+        run: |
+          eval "$(supabase status -o env | grep '^[A-Z_]\+=')"
+          echo "NEXT_PUBLIC_SUPABASE_URL=${API_URL}" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}" >> "$GITHUB_ENV"
+          echo "SUPABASE_SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}" >> "$GITHUB_ENV"
+          echo "SUPABASE_SECRET_KEY=${SECRET_KEY}" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3005" >> "$GITHUB_ENV"
+          echo "PLAYWRIGHT_BASE_URL=http://127.0.0.1:3005" >> "$GITHUB_ENV"
+
       - name: Lint
         run: pnpm lint
 
@@ -126,6 +169,18 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Playwright
+        run: pnpm exec playwright test
+
+      - name: Stop local Supabase
+        if: always()
+        shell: bash
+        working-directory: backend
+        run: supabase stop
 
   supabase-validation:
     name: Supabase Validation

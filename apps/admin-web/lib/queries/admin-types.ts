@@ -14,6 +14,14 @@ export type AdminOperationalSummary = {
   overduePaymentResubmissions: number;
 };
 
+export type PaginatedListResult<T> = {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
 export type PaymentQueueItem = {
   proofId: string;
   bookingId: string;
@@ -112,6 +120,34 @@ export type AdminUserListItem = {
   updatedAt: string | null;
 };
 
+export type AdminUserRoleFilter = "all" | "shipper" | "carrier";
+
+export type AdminUserActivityFilter = "all" | "active" | "inactive";
+
+export type AdminUserVerificationFilter = "all" | "pending" | "rejected" | "verified";
+
+export type AdminUserRegistryFilters = {
+  q?: string;
+  role?: AdminUserRoleFilter;
+  activity?: AdminUserActivityFilter;
+  verification?: AdminUserVerificationFilter;
+  page?: number;
+  pageSize?: number;
+};
+
+export type AdminUserRegistrySnapshot = {
+  users: AdminUserListItem[];
+  page: number;
+  pageSize: number;
+  totalUsers: number;
+  filters: {
+    q: string;
+    role: AdminUserRoleFilter;
+    activity: AdminUserActivityFilter;
+    verification: AdminUserVerificationFilter;
+  };
+};
+
 export type AdminVehicleSummary = {
   id: string;
   label: string;
@@ -129,6 +165,17 @@ export type AdminShipmentSummary = {
   createdAt: string | null;
 };
 
+export type AdminShipmentListItem = AdminShipmentSummary & {
+  shipperId: string;
+  shipperDisplayName: string;
+  shipperName: string;
+  bookingId: string | null;
+  bookingTrackingNumber: string | null;
+  bookingStatus: string | null;
+  paymentStatus: string | null;
+  totalVolumeM3: number | null;
+};
+
 export type AdminBookingSummary = {
   id: string;
   shipmentId: string;
@@ -136,6 +183,23 @@ export type AdminBookingSummary = {
   bookingStatus: string;
   paymentStatus: string;
   createdAt: string | null;
+};
+
+export type AdminBookingListItem = AdminBookingSummary & {
+  shipperId: string;
+  carrierId: string | null;
+  shipperDisplayName: string;
+  carrierDisplayName: string | null;
+  shipperName: string;
+  carrierName: string | null;
+  paymentReference: string;
+  shipmentDescription: string | null;
+  originLabel: string;
+  destinationLabel: string;
+  shipperTotalDzd: number;
+  carrierPayoutDzd: number;
+  paymentProofCount: number;
+  disputeStatus: string | null;
 };
 
 export type AdminSupportSummary = {
@@ -228,6 +292,14 @@ export type AdminAccountDetail = {
   account: AdminAccountListItem;
   invitations: AdminInvitationListItem[];
   auditLogs: AdminAuditLogItem[];
+};
+
+export type GlobalSearchItem = {
+  id: string;
+  title: string;
+  subtitle: string;
+  meta: string;
+  href: string;
 };
 
 export type PlatformSettingsSnapshot = {
@@ -374,7 +446,7 @@ export type ShipmentWorkspaceDetail = {
   } | null;
 };
 
-type GlobalSearchKind =
+export type GlobalSearchKind =
   | "booking"
   | "shipment"
   | "user"
@@ -385,16 +457,63 @@ type GlobalSearchKind =
   | "payout"
   | "support";
 
+export type GlobalSearchKindFilter = GlobalSearchKind | "all";
+
 export type GlobalSearchGroup = {
   kind: GlobalSearchKind;
   label: string;
-  items: Array<{
-    id: string;
-    title: string;
-    subtitle: string;
-    meta: string;
-    href: string;
-  }>;
+  total: number;
+  items: GlobalSearchItem[];
+};
+
+export type GlobalSearchSummary = Record<GlobalSearchKind, number>;
+
+export type GlobalSearchSnapshot = {
+  query: string;
+  kind: GlobalSearchKindFilter;
+  page: number;
+  pageSize: number;
+  totalResults: number;
+  summary: GlobalSearchSummary;
+  groups: GlobalSearchGroup[];
+  selectedGroup: GlobalSearchGroup | null;
+};
+
+export type AdminAccountRoleFilter = "all" | "super_admin" | "ops_admin";
+
+export type AdminAccountStateFilter = "all" | "active" | "inactive";
+
+export type AdminRegistryFilters = {
+  q?: string;
+  role?: AdminAccountRoleFilter;
+  state?: AdminAccountStateFilter;
+  page?: number;
+  pageSize?: number;
+};
+
+export type AdminRegistrySummary = {
+  totalAccounts: number;
+  activeAccounts: number;
+  inactiveAccounts: number;
+  superAdmins: number;
+  opsAdmins: number;
+  totalInvitations: number;
+  pendingInvitations: number;
+};
+
+export type AdminRegistrySnapshot = {
+  accounts: AdminAccountListItem[];
+  invitations: AdminInvitationListItem[];
+  page: number;
+  pageSize: number;
+  totalAccounts: number;
+  totalInvitations: number;
+  summary: AdminRegistrySummary;
+  filters: {
+    q: string;
+    role: AdminAccountRoleFilter;
+    state: AdminAccountStateFilter;
+  };
 };
 
 type ProfileMap = {

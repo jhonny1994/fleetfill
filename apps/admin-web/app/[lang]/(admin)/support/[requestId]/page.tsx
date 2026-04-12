@@ -4,7 +4,7 @@ import { DetailWorkspace } from "@/components/detail/detail-workspace";
 import { SupportThreadActions } from "@/components/detail/support-thread-actions";
 import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { formatCompactReference, formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminDetailCopy, getEnumLabel, getSupportMessageTitle } from "@/lib/i18n/admin-ui";
+import { getAdminDetailCopy, getEnumLabel, getSupportMessagePreview, getSupportMessageTitle } from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchSupportDetail } from "@/lib/queries/admin-support";
@@ -58,7 +58,7 @@ export default async function SupportDetailPage({
             items={detail.messages.map((message) => ({
               id: message.id,
               title: getSupportMessageTitle(locale, message.sender_type),
-              detail: message.body.slice(0, 140),
+              detail: getSupportMessagePreview(locale, message.body),
               at: formatDateTime(message.created_at),
             }))}
           />

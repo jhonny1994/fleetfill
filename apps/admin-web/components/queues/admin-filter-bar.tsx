@@ -37,6 +37,9 @@ export function AdminFilterBar({
     refreshAriaLabel: string;
   };
 }) {
+  const preservedParams = new URLSearchParams(hiddenFields.map((field) => [field.name, field.value]));
+  const resetHref = preservedParams.size > 0 ? `${pathname}?${preservedParams.toString()}` : pathname;
+
   return (
     <div className="space-y-3">
       <section className="panel toolbar-surface">
@@ -77,7 +80,7 @@ export function AdminFilterBar({
               {labels.apply}
             </button>
             <div className="toolbar-utility">
-              <Link className="button-secondary" href={pathname}>
+              <Link className="button-secondary" href={resetHref}>
                 {labels.reset}
               </Link>
               <RefreshButton label={labels.refresh} ariaLabel={labels.refreshAriaLabel} />
@@ -86,7 +89,7 @@ export function AdminFilterBar({
         </form>
       </section>
       <ActiveFiltersRow
-        pathname={pathname}
+        clearHref={resetHref}
         clearAllLabel={labels.clearAll}
         filters={[
           { key: "query", label: labels.query, value: query },

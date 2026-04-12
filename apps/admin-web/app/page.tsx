@@ -1,11 +1,16 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { resolvePreferredLocale } from "@/lib/i18n/config";
+import { resolveEnabledLocaleForRequest } from "@/lib/i18n/runtime-localization-policy";
+import { fetchRuntimeLocalizationPolicy } from "@/lib/queries/admin-settings";
 
 export default async function RootPage() {
   const requestHeaders = await headers();
-  const locale = resolvePreferredLocale(requestHeaders.get("accept-language"));
+  const localizationPolicy = await fetchRuntimeLocalizationPolicy();
+  const locale = resolveEnabledLocaleForRequest(
+    requestHeaders.get("accept-language"),
+    localizationPolicy,
+  );
 
   redirect(`/${locale}/sign-in`);
 }

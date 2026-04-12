@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getMessages } from "next-intl/server";
 
-import { defaultLocale, getLocaleDirection, isSupportedLocale } from "@/lib/i18n/config";
+import { getLocaleDirection, resolveAppLocale } from "@/lib/i18n/config";
 import "./globals.css";
 
 export const metadata: Metadata = {};
@@ -12,8 +13,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
-  const lang = isSupportedLocale(locale) ? locale : defaultLocale;
+  const requestHeaders = await headers();
+  const lang = resolveAppLocale(requestHeaders.get("x-fleetfill-locale"));
+  const messages = await getMessages({ locale: lang });
   const dir = getLocaleDirection(lang);
 
   return (

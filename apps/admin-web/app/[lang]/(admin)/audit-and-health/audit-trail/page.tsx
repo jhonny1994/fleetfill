@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminActionLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminActionLabel, getAuditOutcomeLabel, getAuditTargetTypeLabel } from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchAdminAuditTrailPage } from "@/lib/queries/admin-audit-health";
@@ -48,12 +48,12 @@ export default async function AdminAuditTrailPage({
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge label={getAdminActionLabel(lang, log.action)} tone="neutral" />
               <StatusBadge
-                label={getEnumLabel(lang, "activity", log.outcome === "success" ? "active" : "inactive")}
+                label={getAuditOutcomeLabel(lang, log.outcome)}
                 tone={log.outcome === "success" ? "success" : "danger"}
               />
             </div>
             <p className="mt-2 text-sm text-[var(--color-ink-strong)]">
-              {log.targetType}
+              {getAuditTargetTypeLabel(lang, log.targetType)}
               {log.targetId ? ` • ${log.targetId}` : ""}
             </p>
             <p className="mt-1 text-xs text-[var(--color-ink-muted)]">

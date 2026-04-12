@@ -6,9 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start:e2e": "next start --hostname 127.0.0.1 --port 3005",
     "lint": "eslint .",
     "typecheck": "next typegen && node scripts/sync-next-generated-types.mjs && tsc --noEmit --incremental false",
     "test": "vitest run --pool=threads --maxWorkers=4",
+    "test:e2e": "node scripts/run-playwright.mjs",
+    "test:e2e:headed": "node scripts/run-playwright.mjs --headed",
+    "test:e2e:install": "playwright install --with-deps chromium",
     "i18n:scan-hardcoded": "node scripts/find-hardcoded-strings.mjs",
     "i18n:audit-keys": "node scripts/audit-i18n-keys.mjs"
   },
@@ -29,6 +33,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
