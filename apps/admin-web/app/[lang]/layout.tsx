@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { headers } from "next/headers";
+import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 
-import { isSupportedLocale, resolveAppLocale } from "@/lib/i18n/config";
+import { getLocaleDirection, isSupportedLocale, resolveAppLocale } from "@/lib/i18n/config";
 import { buildLocalizedPath } from "@/lib/i18n/runtime-localization-policy";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchRuntimeLocalizationPolicy } from "@/lib/queries/admin-settings";
+import { LocaleDocumentSync } from "@/components/shared/locale-document-sync";
 
 export async function generateMetadata({
   params,
@@ -55,14 +57,20 @@ export default async function LocalizedLayout({
     );
   }
 
-  const { dictionary } = asAdminMessages(await getMessages({ locale: resolveAppLocale(lang) }));
+  const resolvedLocale = resolveAppLocale(lang);
+  const dir = getLocaleDirection(resolvedLocale);
+  const messages = await getMessages({ locale: resolvedLocale });
+  const { dictionary } = asAdminMessages(messages);
 
   return (
-    <div className="admin-body min-h-screen">
-      <div className="mx-auto min-h-screen max-w-[1600px] px-4 py-4 lg:px-6">
-        <div className="sr-only">{dictionary.appTitle}</div>
-        {children}
+    <NextIntlClientProvider locale={resolvedLocale} messages={messages}>
+      <LocaleDocumentSync lang={resolvedLocale} dir={dir} />
+      <div className="admin-body min-h-screen" lang={resolvedLocale} dir={dir}>
+        <div className="mx-auto min-h-screen max-w-[1600px] px-4 py-4 lg:px-6">
+          <div className="sr-only">{dictionary.appTitle}</div>
+          {children}
+        </div>
       </div>
-    </div>
+    </NextIntlClientProvider>
   );
 }

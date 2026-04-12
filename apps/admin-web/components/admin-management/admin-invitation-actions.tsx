@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { getAdminActionErrorMessage } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -35,7 +36,7 @@ export function AdminInvitationActions({
     setIsPending(false);
     setOpen(false);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();

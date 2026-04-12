@@ -176,3 +176,67 @@ export function getSupportMessagePreview(locale: string | AppLocale, body: strin
 export function getSupportUiCopy(locale: string | AppLocale) {
   return getAdminUi(locale).support;
 }
+
+export function getAdminActionErrorMessage(
+  ui: AdminUi,
+  errorMessage: string | null | undefined,
+  errorCode?: string | null | undefined,
+) {
+  const normalizedCode = errorCode?.toLowerCase() ?? "";
+  const normalizedMessage = errorMessage?.toLowerCase() ?? "";
+  const labels = ui.actionErrors;
+
+  if (
+    normalizedMessage.includes("failed to fetch") ||
+    normalizedMessage.includes("network") ||
+    normalizedMessage.includes("fetcherror")
+  ) {
+    return labels.network;
+  }
+
+  if (normalizedMessage.includes("timeout") || normalizedMessage.includes("timed out")) {
+    return labels.timeout;
+  }
+
+  if (
+    normalizedCode === "403" ||
+    normalizedMessage.includes("permission denied") ||
+    normalizedMessage.includes("forbidden") ||
+    normalizedMessage.includes("not allowed") ||
+    normalizedMessage.includes("not authorized") ||
+    normalizedMessage.includes("unauthorized")
+  ) {
+    return labels.forbidden;
+  }
+
+  if (
+    normalizedCode === "404" ||
+    normalizedMessage.includes("not found") ||
+    normalizedMessage.includes("does not exist")
+  ) {
+    return labels.notFound;
+  }
+
+  if (
+    normalizedCode === "409" ||
+    normalizedMessage.includes("already exists") ||
+    normalizedMessage.includes("already been") ||
+    normalizedMessage.includes("already processed") ||
+    normalizedMessage.includes("conflict")
+  ) {
+    return labels.conflict;
+  }
+
+  if (
+    normalizedCode === "400" ||
+    normalizedCode === "422" ||
+    normalizedMessage.includes("invalid") ||
+    normalizedMessage.includes("required") ||
+    normalizedMessage.includes("constraint") ||
+    normalizedMessage.includes("violates")
+  ) {
+    return labels.validation;
+  }
+
+  return labels.generic;
+}

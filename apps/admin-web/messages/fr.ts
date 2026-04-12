@@ -287,6 +287,13 @@ const messages = {
         fallbackLocale: "Langue de repli",
         enabledLocales: "Langues actives",
         saveLocalizationPolicy: "Enregistrer la politique de localisation",
+        auditDescriptions: {
+          app_runtime: "Politique d'exploitation administrée pour la maintenance et les versions minimales prises en charge",
+          booking_pricing: "Politique tarifaire administrée pour les réservations",
+          delivery_review: "Fenêtre administrée de revue des livraisons",
+          feature_flags: "Flags d'exploitation administrés",
+          localization: "Politique de localisation administrée",
+        },
         superAdminOnly:
           "Les réglages d’exécution sont visibles pour les admins opérations, mais seuls les super admins peuvent les modifier.",
       },
@@ -412,6 +419,15 @@ const messages = {
     healthErrorLabels: {
       unknown_push_error: "L'envoi push a échoué à cause de la configuration push ou Firebase.",
       firebase_service_account_invalid: "La configuration Firebase des notifications push est invalide et doit être corrigée.",
+    },
+    actionErrors: {
+      generic: "Cette action admin n'a pas pu être exécutée pour le moment. Réessayez dans un instant.",
+      network: "L'action admin n'a pas pu joindre le service backend. Vérifiez la connectivité puis réessayez.",
+      timeout: "L'action admin a expiré avant la réponse du backend. Réessayez.",
+      forbidden: "Vous n'avez pas les droits nécessaires pour effectuer cette action admin.",
+      notFound: "L'enregistrement admin ciblé n'existe plus. Rechargez la page puis réessayez.",
+      conflict: "Cette action admin entre en conflit avec l'état le plus récent de l'enregistrement. Rechargez puis réessayez.",
+      validation: "Les données envoyées pour cette action admin sont invalides ou incomplètes. Vérifiez le formulaire puis réessayez.",
     },
   },
 } as const;

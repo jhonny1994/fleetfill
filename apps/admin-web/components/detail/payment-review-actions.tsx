@@ -2,11 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { getAdminActionErrorMessage } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { paymentApproveSchema, paymentRejectSchema } from "@/lib/validation/review-actions";
@@ -42,6 +43,14 @@ export function PaymentReviewActions({
     },
   });
 
+  useEffect(() => {
+    approveForm.reset({
+      verifiedAmountDzd: defaultAmount,
+      verifiedReference: "",
+      decisionNote: "",
+    });
+  }, [approveForm, defaultAmount]);
+
   async function confirmApprove() {
     if (!pendingApprove) return;
     setIsPending(true);
@@ -55,7 +64,7 @@ export function PaymentReviewActions({
     setIsPending(false);
     setPendingApprove(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
@@ -73,7 +82,7 @@ export function PaymentReviewActions({
     setIsPending(false);
     setPendingReject(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();

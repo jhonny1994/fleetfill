@@ -2,13 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import type { AppLocale } from "@/lib/i18n/config";
-import { getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminActionErrorMessage, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { adminActivationSchema, adminRoleChangeSchema } from "@/lib/validation/admin-management";
@@ -48,6 +48,20 @@ export function AdminAccountActions({
     },
   });
 
+  useEffect(() => {
+    roleForm.reset({
+      role: currentRole,
+      reason: "",
+    });
+  }, [currentRole, roleForm]);
+
+  useEffect(() => {
+    activationForm.reset({
+      isActive,
+      reason: "",
+    });
+  }, [activationForm, isActive]);
+
   async function confirmRoleChange() {
     if (!pendingRole) return;
     setIsPending(true);
@@ -60,7 +74,7 @@ export function AdminAccountActions({
     setIsPending(false);
     setPendingRole(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
@@ -78,7 +92,7 @@ export function AdminAccountActions({
     setIsPending(false);
     setPendingActivation(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
