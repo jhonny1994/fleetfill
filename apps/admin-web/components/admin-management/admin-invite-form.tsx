@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import type { AppLocale } from "@/lib/i18n/config";
-import { formatTemplate, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { formatTemplate, getAdminActionErrorMessage, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { adminInviteSchema } from "@/lib/validation/admin-management";
@@ -47,7 +47,7 @@ export function AdminInviteForm({ locale }: { locale: AppLocale | string }) {
     });
     setIsPending(false);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
 

@@ -287,6 +287,13 @@ const messages = {
         fallbackLocale: "Fallback locale",
         enabledLocales: "Enabled locales",
         saveLocalizationPolicy: "Save localization policy",
+        auditDescriptions: {
+          app_runtime: "Admin-controlled runtime policy for maintenance and minimum supported versions",
+          booking_pricing: "Admin-controlled booking pricing policy",
+          delivery_review: "Admin-controlled delivery review timing",
+          feature_flags: "Admin-controlled runtime feature flags",
+          localization: "Admin-controlled localization policy",
+        },
         superAdminOnly:
           "Runtime settings are visible to ops admins, but only super admins can change them.",
       },
@@ -412,6 +419,15 @@ const messages = {
     healthErrorLabels: {
       unknown_push_error: "Push delivery failed because the push/Firebase configuration is invalid.",
       firebase_service_account_invalid: "The Firebase push service account is invalid and needs to be corrected.",
+    },
+    actionErrors: {
+      generic: "This action could not be completed right now. Please try again in a moment.",
+      network: "The admin action could not reach the backend service. Check connectivity and try again.",
+      timeout: "The admin action timed out before the backend responded. Please retry.",
+      forbidden: "You do not have permission to perform this admin action.",
+      notFound: "The requested admin record was not found anymore. Refresh the page and try again.",
+      conflict: "This admin action conflicts with the latest record state. Refresh the page and try again.",
+      validation: "The submitted admin action data is invalid or incomplete. Review the form and try again.",
     },
   },
 } as const;

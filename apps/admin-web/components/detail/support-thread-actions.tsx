@@ -2,13 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import type { AppLocale } from "@/lib/i18n/config";
-import { getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminActionErrorMessage, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { supportReplySchema, supportStatusSchema } from "@/lib/validation/review-actions";
@@ -42,6 +42,13 @@ export function SupportThreadActions({
     defaultValues: { status: currentStatus as z.infer<typeof supportStatusSchema>["status"], priority: currentPriority as z.infer<typeof supportStatusSchema>["priority"] },
   });
 
+  useEffect(() => {
+    statusForm.reset({
+      status: currentStatus as z.infer<typeof supportStatusSchema>["status"],
+      priority: currentPriority as z.infer<typeof supportStatusSchema>["priority"],
+    });
+  }, [currentPriority, currentStatus, statusForm]);
+
   async function confirmReply() {
     if (!pendingReply) return;
     setIsPending(true);
@@ -53,7 +60,7 @@ export function SupportThreadActions({
     setIsPending(false);
     setPendingReply(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     replyForm.reset({ message: "" });
@@ -72,7 +79,7 @@ export function SupportThreadActions({
     setIsPending(false);
     setPendingStatus(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();

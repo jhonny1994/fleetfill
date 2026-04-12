@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { getAdminActionErrorMessage } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { disputeCompleteSchema, disputeRefundSchema } from "@/lib/validation/review-actions";
@@ -46,7 +47,7 @@ export function DisputeResolutionActions({ disputeId, locale: _locale }: { dispu
     setIsPending(false);
     setPendingComplete(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
@@ -66,7 +67,7 @@ export function DisputeResolutionActions({ disputeId, locale: _locale }: { dispu
     setIsPending(false);
     setPendingRefund(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();

@@ -2,14 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminDetailCopy } from "@/lib/i18n/admin-ui";
+import { getAdminActionErrorMessage, getAdminDetailCopy } from "@/lib/i18n/admin-ui";
 import { localeEntries, resolveEnabledLocales, resolveFallbackLocale, type AppLocale } from "@/lib/i18n/config";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -46,20 +46,7 @@ function SectionFrame({
   );
 }
 
-function getSettingAuditDescription(key: "app_runtime" | "booking_pricing" | "delivery_review" | "feature_flags" | "localization") {
-  switch (key) {
-    case "app_runtime":
-      return "Admin-controlled runtime policy for maintenance and minimum supported versions";
-    case "booking_pricing":
-      return "Admin-controlled booking pricing policy";
-    case "delivery_review":
-      return "Admin-controlled delivery review timing";
-    case "feature_flags":
-      return "Admin-controlled runtime feature flags";
-    case "localization":
-      return "Admin-controlled localization policy";
-  }
-}
+type SettingAuditKey = "app_runtime" | "booking_pricing" | "delivery_review" | "feature_flags" | "localization";
 
 export function PlatformSettingsForms({
   locale,
@@ -123,6 +110,30 @@ export function PlatformSettingsForms({
     name: "enabledLocales",
   });
 
+  useEffect(() => {
+    runtimeForm.reset(settings.appRuntime);
+  }, [runtimeForm, settings.appRuntime]);
+
+  useEffect(() => {
+    pricingForm.reset(settings.bookingPricing);
+  }, [pricingForm, settings.bookingPricing]);
+
+  useEffect(() => {
+    reviewForm.reset(settings.deliveryReview);
+  }, [reviewForm, settings.deliveryReview]);
+
+  useEffect(() => {
+    featureForm.reset(settings.featureFlags);
+  }, [featureForm, settings.featureFlags]);
+
+  useEffect(() => {
+    localizationForm.reset(settings.localization);
+  }, [localizationForm, settings.localization]);
+
+  function getSettingAuditDescription(key: SettingAuditKey) {
+    return detailCopy.settings.auditDescriptions[key];
+  }
+
   async function confirmSave() {
     if (!pendingConfig) return;
     setIsPending(true);
@@ -136,7 +147,7 @@ export function PlatformSettingsForms({
     setIsPending(false);
     setPendingConfig(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
