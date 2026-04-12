@@ -36,37 +36,6 @@ export function formatDateTime(
   }).format(date);
 }
 
-export function formatRelativeTime(
-  value: string | Date | null | undefined,
-  locale: AppLocale | string = "en",
-  emptyValue = "—",
-) {
-  if (!value) {
-    return emptyValue;
-  }
-
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return emptyValue;
-  }
-
-  const diffMs = date.getTime() - Date.now();
-  const diffMinutes = Math.round(diffMs / 60000);
-  const formatter = new Intl.RelativeTimeFormat(getIntlLocale(locale), { numeric: "auto" });
-
-  if (Math.abs(diffMinutes) < 60) {
-    return formatter.format(diffMinutes, "minute");
-  }
-
-  const diffHours = Math.round(diffMinutes / 60);
-  if (Math.abs(diffHours) < 24) {
-    return formatter.format(diffHours, "hour");
-  }
-
-  const diffDays = Math.round(diffHours / 24);
-  return formatter.format(diffDays, "day");
-}
-
 export function diffHoursFromNow(value: string | Date | null | undefined) {
   if (!value) {
     return 0;

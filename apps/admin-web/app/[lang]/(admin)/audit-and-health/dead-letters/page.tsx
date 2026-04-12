@@ -1,9 +1,12 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
 import { EmailDeadLetterRetryAction } from "@/components/audit-health/email-retry-actions";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminUi, getAuditHealthErrorLabel, getEnumLabel, getNotificationTemplateLabel } from "@/lib/i18n/admin-ui";
+import { getAuditHealthErrorLabel, getEnumLabel, getNotificationTemplateLabel } from "@/lib/i18n/admin-ui";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchDeadLetterHealthPage } from "@/lib/queries/admin-audit-health";
 
 function buildPageHref(lang: string, page: number) {
@@ -18,7 +21,8 @@ export default async function AdminDeadLettersPage({
   searchParams: Promise<{ page?: string }>;
 }) {
   const [{ lang }, query] = await Promise.all([params, searchParams]);
-  const ui = getAdminUi(lang);
+  const locale = resolveAppLocale(lang);
+  const { ui } = asAdminMessages(await getMessages({ locale }));
   const currentPage = Math.max(1, Number(query.page ?? "1") || 1);
   const snapshot = await fetchDeadLetterHealthPage(currentPage);
   const total = snapshot.totalDeadLetterEmails + snapshot.totalDeadLetterPushes;
@@ -26,13 +30,7 @@ export default async function AdminDeadLettersPage({
     1,
     Math.ceil(Math.max(snapshot.totalDeadLetterEmails, snapshot.totalDeadLetterPushes) / snapshot.pageSize),
   );
-  const backLabel = lang === "ar" ? "العودة إلى الملخص" : lang === "fr" ? "Retour au résumé" : "Back to summary";
-  const previousLabel = lang === "ar" ? "السابق" : lang === "fr" ? "Précédent" : "Previous";
-  const nextLabel = lang === "ar" ? "التالي" : lang === "fr" ? "Suivant" : "Next";
-  const pageLabel = lang === "ar" ? "الصفحة" : lang === "fr" ? "Page" : "Page";
-  const totalLabel = lang === "ar" ? "إجمالي" : lang === "fr" ? "au total" : "total";
-  const emailDeadLetterLabel = lang === "ar" ? "رسائل البريد الميتة" : lang === "fr" ? "Dead-letters email" : "Email dead letters";
-  const pushDeadLetterLabel = lang === "ar" ? "إشعارات الدفع الميتة" : lang === "fr" ? "Dead-letters push" : "Push dead letters";
+  const { backToSummary, previous, next, page, total: totalLabel, emailDeadLetters, pushDeadLetters } = ui.pages.audit;
 
   return (
     <div className="space-y-4">
@@ -44,13 +42,13 @@ export default async function AdminDeadLettersPage({
             <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.deadLettersBody}</p>
           </div>
           <Link className="button-secondary" href={`/${lang}/audit-and-health`}>
-            {backLabel}
+            {backToSummary}
           </Link>
         </div>
       </section>
 
       <section className="panel space-y-4 p-6">
-        <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{emailDeadLetterLabel}</h2>
+        <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{emailDeadLetters}</h2>
         {snapshot.deadLetterEmails.map((job) => {
           const card = (
             <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
@@ -70,7 +68,7 @@ export default async function AdminDeadLettersPage({
                 </p>
               ) : null}
               <div className="mt-3">
-                <EmailDeadLetterRetryAction jobId={job.id} locale={lang} />
+                    <EmailDeadLetterRetryAction jobId={job.id} />
               </div>
             </div>
           );
@@ -86,7 +84,7 @@ export default async function AdminDeadLettersPage({
 
         <div className="border-t border-[var(--color-border)] pt-4" />
 
-        <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{pushDeadLetterLabel}</h2>
+        <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{pushDeadLetters}</h2>
         {snapshot.deadLetterPushes.map((job) => (
           <Link key={job.id} href={`/${lang}/users/${job.profileId}`} className="block">
             <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
@@ -110,17 +108,17 @@ export default async function AdminDeadLettersPage({
 
         <div className="flex items-center justify-between gap-3 border-t border-[var(--color-border)] pt-4">
           <p className="text-sm text-[var(--color-ink-muted)]">
-            {pageLabel} {snapshot.page} / {totalPages} • {total} {totalLabel}
+            {page} {snapshot.page} / {totalPages} • {total} {totalLabel}
           </p>
           <div className="flex gap-2">
             {snapshot.page > 1 ? (
               <Link className="button-secondary" href={buildPageHref(lang, snapshot.page - 1)}>
-                {previousLabel}
+                {previous}
               </Link>
             ) : null}
             {snapshot.page < totalPages ? (
               <Link className="button-secondary" href={buildPageHref(lang, snapshot.page + 1)}>
-                {nextLabel}
+                {next}
               </Link>
             ) : null}
           </div>

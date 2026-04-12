@@ -1,6 +1,9 @@
+import { getMessages } from "next-intl/server";
 import { PlatformSettingsForms } from "@/components/settings/platform-settings-forms";
 import { getAdminSession } from "@/lib/auth/get-admin-session";
-import { getAdminDetailCopy, getAdminUi } from "@/lib/i18n/admin-ui";
+import { getAdminDetailCopy } from "@/lib/i18n/admin-ui";
+import { defaultLocale, parseSupportedLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchPlatformSettingsSnapshot } from "@/lib/queries/admin-settings";
 
 export default async function SettingsPage({
@@ -9,9 +12,14 @@ export default async function SettingsPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const [session, settings] = await Promise.all([getAdminSession(), fetchPlatformSettingsSnapshot()]);
-  const ui = getAdminUi(lang);
-  const detailCopy = getAdminDetailCopy(lang);
+  const locale = parseSupportedLocale(lang) ?? defaultLocale;
+  const [session, settings, messages] = await Promise.all([
+    getAdminSession(),
+    fetchPlatformSettingsSnapshot(),
+    getMessages({ locale }).then(asAdminMessages),
+  ]);
+  const { ui } = messages;
+  const detailCopy = getAdminDetailCopy(locale);
 
   return (
     <div className="space-y-4">
@@ -22,7 +30,7 @@ export default async function SettingsPage({
           {detailCopy.settings.description}
         </p>
       </section>
-      <PlatformSettingsForms locale={lang} settings={settings} isSuperAdmin={session?.adminRole === "super_admin"} />
+      <PlatformSettingsForms locale={locale} settings={settings} isSuperAdmin={session?.adminRole === "super_admin"} />
     </div>
   );
 }

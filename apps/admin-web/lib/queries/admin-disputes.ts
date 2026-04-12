@@ -29,7 +29,7 @@ type DisputeEvidenceRow = {
   created_at: string | null;
 };
 
-export type AdminDisputeDetail = {
+type AdminDisputeDetail = {
   dispute: DisputeRow;
   booking: BookingRow;
   evidence: Array<DisputeEvidenceRow & { signedUrl: string | null }>;

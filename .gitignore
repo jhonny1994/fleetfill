@@ -115,6 +115,9 @@ yarn-error.log*
 
 .agents
 **/.vercel/
+/apps/admin-web/.playwright/
+/apps/admin-web/playwright-report/
+/apps/admin-web/test-results/
 
 /tool/create_admin_account.ps1
 

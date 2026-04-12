@@ -31,11 +31,11 @@ type VerificationDocument = {
   created_at: string | null;
 };
 
-export type VerificationDocumentDetail = VerificationDocument & {
+type VerificationDocumentDetail = VerificationDocument & {
   signedUrl: string | null;
 };
 
-export type AdminVerificationDetail = {
+type AdminVerificationDetail = {
   profile: ProfileRow;
   vehicles: VehicleRow[];
   documents: VerificationDocumentDetail[];

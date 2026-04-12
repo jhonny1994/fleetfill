@@ -49,14 +49,18 @@ export async function fetchPaymentQueue({
 } = {}): Promise<PaymentQueueItem[]> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
+  const normalized = query?.trim().toLowerCase();
   let proofRequest = supabase
     .from("payment_proofs")
     .select("id, booking_id, payment_rail, status, submitted_reference, submitted_amount_dzd, submitted_at")
-    .order("submitted_at", { ascending: false })
-    .limit(limit * 3);
+    .order("submitted_at", { ascending: false });
 
   if (statuses != null && statuses.length > 0) {
     proofRequest = proofRequest.in("status", statuses);
+  }
+
+  if (!normalized) {
+    proofRequest = proofRequest.limit(limit * 3);
   }
 
   const { data: proofs, error: proofError } = await proofRequest;
@@ -84,7 +88,6 @@ export async function fetchPaymentQueue({
     ((bookings ?? []) as BookingRow[]).map((booking) => [booking.id, booking]),
   );
 
-  const normalized = query?.trim().toLowerCase();
   const results = proofRows
     .map((proof) => {
       const booking = bookingMap.get(proof.booking_id);
@@ -174,14 +177,18 @@ export async function fetchVerificationQueue({
 } = {}): Promise<VerificationQueueItem[]> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
+  const normalized = query?.trim().toLowerCase();
   let packetRequest = supabase
     .from("carrier_verification_packets")
     .select("carrier_id, status, rejection_reason, updated_at")
-    .order("updated_at", { ascending: true })
-    .limit(limit * 3);
+    .order("updated_at", { ascending: true });
 
   if (statuses != null && statuses.length > 0) {
     packetRequest = packetRequest.in("status", statuses);
+  }
+
+  if (!normalized) {
+    packetRequest = packetRequest.limit(limit * 3);
   }
 
   const { data: packets, error: packetError } = await packetRequest;
@@ -258,7 +265,6 @@ export async function fetchVerificationQueue({
     vehiclesByCarrier.set(vehicle.carrier_id, existing);
   }
 
-  const normalized = query?.trim().toLowerCase();
   const results: VerificationQueueItem[] = [];
   for (const profile of profileRows) {
       const packet = packetMap.get(profile.id);
@@ -369,14 +375,18 @@ export async function fetchDisputeQueue({
 } = {}): Promise<DisputeQueueItem[]> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
+  const normalized = query?.trim().toLowerCase();
   let disputeRequest = supabase
     .from("disputes")
     .select("id, booking_id, reason, status, created_at, updated_at")
-    .order("created_at", { ascending: true })
-    .limit(limit);
+    .order("created_at", { ascending: true });
 
   if (statuses != null && statuses.length > 0) {
     disputeRequest = disputeRequest.in("status", statuses);
+  }
+
+  if (!normalized) {
+    disputeRequest = disputeRequest.limit(limit);
   }
 
   const { data, error } = await disputeRequest;
@@ -408,7 +418,6 @@ export async function fetchDisputeQueue({
     evidenceCountByDispute.set(row.dispute_id, (evidenceCountByDispute.get(row.dispute_id) ?? 0) + 1);
   }
 
-  const normalized = query?.trim().toLowerCase();
   const results = disputeRows.map((dispute) => ({
     id: dispute.id,
     bookingId: dispute.booking_id,
@@ -422,12 +431,14 @@ export async function fetchDisputeQueue({
   }));
 
   if (!normalized) {
-    return results;
+    return results.slice(0, limit);
   }
 
-  return results.filter((item) =>
-    [item.bookingId, item.id, item.reason, item.trackingNumber ?? ""].join(" ").toLowerCase().includes(normalized),
-  );
+  return results
+    .filter((item) =>
+      [item.bookingId, item.id, item.reason, item.trackingNumber ?? ""].join(" ").toLowerCase().includes(normalized),
+    )
+    .slice(0, limit);
 }
 
 type SupportRow = {
@@ -455,21 +466,6 @@ function isUuidLike(value: string) {
   );
 }
 
-function buildSupportSearchFilter(query: string) {
-  const trimmed = query.trim();
-  const filters = [`subject.ilike.%${trimmed}%`];
-  if (isUuidLike(trimmed)) {
-    filters.push(
-      `created_by.eq.${trimmed}`,
-      `booking_id.eq.${trimmed}`,
-      `shipment_id.eq.${trimmed}`,
-      `payment_proof_id.eq.${trimmed}`,
-      `dispute_id.eq.${trimmed}`,
-    );
-  }
-  return filters.join(",");
-}
-
 export async function fetchSupportQueue({
   query,
   status,
@@ -494,7 +490,20 @@ export async function fetchSupportQueue({
 
   const normalizedQuery = query?.trim();
   if (normalizedQuery) {
-    request = request.or(buildSupportSearchFilter(normalizedQuery));
+    if (isUuidLike(normalizedQuery)) {
+      request = request.or(
+        [
+          `subject.ilike.%${normalizedQuery}%`,
+          `created_by.eq.${normalizedQuery}`,
+          `booking_id.eq.${normalizedQuery}`,
+          `shipment_id.eq.${normalizedQuery}`,
+          `payment_proof_id.eq.${normalizedQuery}`,
+          `dispute_id.eq.${normalizedQuery}`,
+        ].join(","),
+      );
+    } else {
+      request = request.ilike("subject", `%${normalizedQuery}%`);
+    }
   }
 
   const { data, error } = await request.order("last_message_at", { ascending: false }).limit(limit);

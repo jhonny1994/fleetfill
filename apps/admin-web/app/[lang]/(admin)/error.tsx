@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import { ErrorState } from "@/components/shared/error-state";
@@ -13,6 +14,10 @@ export default function AdminRouteError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   const pathname = usePathname();
   const segment = pathname?.split("/")[1] ?? defaultLocale;
   const locale = isSupportedLocale(segment) ? segment : defaultLocale;
@@ -20,7 +25,7 @@ export default function AdminRouteError({
 
   return (
     <div className="space-y-4">
-      <ErrorState title={copy.routeErrorTitle} body={error.message} />
+      <ErrorState title={copy.routeErrorTitle} body={copy.reloadPageHint} />
       <button className="button-primary" type="button" onClick={reset}>
         {copy.routeRetry}
       </button>

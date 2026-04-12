@@ -1,8 +1,11 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminUi, getAuditHealthErrorLabel, getEnumLabel, getNotificationTemplateLabel } from "@/lib/i18n/admin-ui";
+import { getAuditHealthErrorLabel, getEnumLabel, getNotificationTemplateLabel } from "@/lib/i18n/admin-ui";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchEmailDeliveryHealthPage } from "@/lib/queries/admin-audit-health";
 
 function buildPageHref(lang: string, page: number) {
@@ -17,15 +20,12 @@ export default async function AdminEmailDeliveriesPage({
   searchParams: Promise<{ page?: string }>;
 }) {
   const [{ lang }, query] = await Promise.all([params, searchParams]);
-  const ui = getAdminUi(lang);
+  const locale = resolveAppLocale(lang);
+  const { ui } = asAdminMessages(await getMessages({ locale }));
   const currentPage = Math.max(1, Number(query.page ?? "1") || 1);
   const snapshot = await fetchEmailDeliveryHealthPage(currentPage);
   const totalPages = Math.max(1, Math.ceil(snapshot.total / snapshot.pageSize));
-  const backLabel = lang === "ar" ? "العودة إلى الملخص" : lang === "fr" ? "Retour au résumé" : "Back to summary";
-  const previousLabel = lang === "ar" ? "السابق" : lang === "fr" ? "Précédent" : "Previous";
-  const nextLabel = lang === "ar" ? "التالي" : lang === "fr" ? "Suivant" : "Next";
-  const pageLabel = lang === "ar" ? "الصفحة" : lang === "fr" ? "Page" : "Page";
-  const totalLabel = lang === "ar" ? "إجمالي" : lang === "fr" ? "au total" : "total";
+  const { backToSummary, previous, next, page, total } = ui.pages.audit;
 
   return (
     <div className="space-y-4">
@@ -37,7 +37,7 @@ export default async function AdminEmailDeliveriesPage({
             <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.emailLogsBody}</p>
           </div>
           <Link className="button-secondary" href={`/${lang}/audit-and-health`}>
-            {backLabel}
+            {backToSummary}
           </Link>
         </div>
       </section>
@@ -78,17 +78,17 @@ export default async function AdminEmailDeliveriesPage({
 
         <div className="flex items-center justify-between gap-3 border-t border-[var(--color-border)] pt-4">
           <p className="text-sm text-[var(--color-ink-muted)]">
-            {pageLabel} {snapshot.page} / {totalPages} • {snapshot.total} {totalLabel}
+            {page} {snapshot.page} / {totalPages} • {snapshot.total} {total}
           </p>
           <div className="flex gap-2">
             {snapshot.page > 1 ? (
               <Link className="button-secondary" href={buildPageHref(lang, snapshot.page - 1)}>
-                {previousLabel}
+                {previous}
               </Link>
             ) : null}
             {snapshot.page < totalPages ? (
               <Link className="button-secondary" href={buildPageHref(lang, snapshot.page + 1)}>
-                {nextLabel}
+                {next}
               </Link>
             ) : null}
           </div>

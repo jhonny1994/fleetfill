@@ -6,11 +6,12 @@ import Link from "next/link";
 import { AdminDataTable } from "@/components/queues/admin-data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatDateTime } from "@/lib/formatting/formatters";
-import { formatTemplate, getAdminUi, getDocumentLabel } from "@/lib/i18n/admin-ui";
+import type { AdminUi } from "@/lib/i18n/admin-ui";
+import { formatTemplate, getDocumentLabel } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import type { VerificationQueueItem } from "@/lib/queries/admin-types";
 
-function buildColumns(locale: string): ColumnDef<VerificationQueueItem>[] {
-  const ui = getAdminUi(locale);
+function buildColumns(locale: string, ui: AdminUi): ColumnDef<VerificationQueueItem>[] {
   return [
   {
     accessorKey: "displayName",
@@ -29,7 +30,7 @@ function buildColumns(locale: string): ColumnDef<VerificationQueueItem>[] {
     accessorKey: "pendingDocumentCount",
     header: ui.labels.verification,
     enableSorting: true,
-    cell: ({ row }) => <StatusBadge label={formatTemplate(ui.labels.queue === "طابور" ? "{count} قيد المراجعة" : ui.labels.queue === "File" ? "{count} en attente" : "{count} pending", { count: row.original.pendingDocumentCount })} tone="warning" />,
+    cell: ({ row }) => <StatusBadge label={formatTemplate(ui.labels.pendingCount, { count: row.original.pendingDocumentCount })} tone="warning" />,
   },
   {
     accessorKey: "carrierPendingDocuments",
@@ -66,11 +67,11 @@ function buildColumns(locale: string): ColumnDef<VerificationQueueItem>[] {
 }
 
 export function VerificationQueueView({ items, locale }: { items: VerificationQueueItem[]; locale: string }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   return (
     <AdminDataTable
       data={items}
-      columns={buildColumns(locale)}
+      columns={buildColumns(locale, ui)}
       emptyEyebrow={ui.pages.verification.eyebrow}
       emptyTitle={ui.labels.noCarrierPacketsWaiting}
       emptyBody={ui.labels.noCarrierPacketsWaitingBody}

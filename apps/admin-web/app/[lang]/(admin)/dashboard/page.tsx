@@ -1,3 +1,4 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
 import { ExceptionAlerts } from "@/components/dashboard/exception-alerts";
@@ -5,7 +6,8 @@ import { QueueMetricStrip } from "@/components/dashboard/queue-metric-strip";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCompactReference, formatCurrencyDzd, formatQueueAge } from "@/lib/formatting/formatters";
 import { getDocumentLabel } from "@/lib/i18n/admin-ui";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import {
   buildDashboardAlerts,
   fetchAdminOperationalSummary,
@@ -17,8 +19,9 @@ export default async function DashboardPage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
-  const { lang: locale } = await params;
-  const dictionary = await getDictionary(locale as "ar" | "fr" | "en");
+  const { lang } = await params;
+  const locale = resolveAppLocale(lang);
+  const { dictionary } = asAdminMessages(await getMessages({ locale }));
   const [summary, previews] = await Promise.all([
     fetchAdminOperationalSummary(),
     fetchDashboardQueuePreviews(),

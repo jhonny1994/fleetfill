@@ -7,14 +7,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { getAdminActionErrorMessage } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { disputeCompleteSchema, disputeRefundSchema } from "@/lib/validation/review-actions";
 
-export function DisputeResolutionActions({ disputeId, locale }: { disputeId: string; locale: string }) {
+export function DisputeResolutionActions({ disputeId, locale: _locale }: { disputeId: string; locale: string }) {
+  void _locale;
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const [pendingComplete, setPendingComplete] = useState<z.infer<typeof disputeCompleteSchema> | null>(null);
   const [pendingRefund, setPendingRefund] = useState<z.infer<typeof disputeRefundSchema> | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -45,7 +47,7 @@ export function DisputeResolutionActions({ disputeId, locale }: { disputeId: str
     setIsPending(false);
     setPendingComplete(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
@@ -65,7 +67,7 @@ export function DisputeResolutionActions({ disputeId, locale }: { disputeId: str
     setIsPending(false);
     setPendingRefund(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();

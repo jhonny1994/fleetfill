@@ -1,3 +1,4 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
 import { ActionRail } from "@/components/detail/action-rail";
@@ -7,7 +8,9 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { UserActivationActions } from "@/components/users/user-activation-actions";
 import { buildAdminRoute } from "@/lib/admin-routes";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminDetailCopy, getAdminUi, getDocumentLabel, getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
+import { getAdminActionLabel, getAdminDetailCopy, getAuditOutcomeLabel, getDocumentLabel, getEnumLabel, getUserVerificationLabel } from "@/lib/i18n/admin-ui";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchUserDetail } from "@/lib/queries/admin-users";
 
 export default async function UserDetailPage({
@@ -16,9 +19,10 @@ export default async function UserDetailPage({
   params: Promise<{ lang: string; userId: string }>;
 }) {
   const { lang, userId } = await params;
+  const locale = resolveAppLocale(lang);
   const detail = await fetchUserDetail(userId);
-  const ui = getAdminUi(lang);
-  const detailCopy = getAdminDetailCopy(lang);
+  const { ui } = asAdminMessages(await getMessages({ locale }));
+  const detailCopy = getAdminDetailCopy(locale);
 
   if (!detail) {
     return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.users.notFound}</div>;
@@ -33,6 +37,12 @@ export default async function UserDetailPage({
       eyebrow={ui.pages.users.eyebrow}
       title={displayName}
       description={detailCopy.users.description}
+      backLink={{ href: `/${locale}/users`, label: ui.pages.users.title }}
+      relatedLinks={[
+        { href: `/${locale}/users?q=${encodeURIComponent(detail.profile.id)}`, label: ui.pages.users.title },
+        ...(isShipper ? [{ href: `/${locale}/shipments?q=${encodeURIComponent(detail.profile.id)}`, label: detailCopy.users.recentShipments }] : []),
+        { href: `/${locale}/bookings?q=${encodeURIComponent(detail.profile.id)}`, label: detailCopy.users.recentBookings },
+      ]}
       facts={[
         { label: ui.labels.role, value: getEnumLabel(lang, "userRoles", detail.profile.role) },
         { label: ui.labels.accountState, value: getEnumLabel(lang, "activity", detail.profile.isActive ? "active" : "suspended") },
@@ -107,9 +117,9 @@ export default async function UserDetailPage({
               <section className="panel space-y-3 p-5">
                 <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.vehicles}</h2>
                 <div className="space-y-3">
-                  {detail.vehicles.length === 0 ? (
-                    <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noVehicles}</p>
-                  ) : (
+                {detail.vehicles.length === 0 ? (
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noVehicles}</p>
+                ) : (
                     detail.vehicles.slice(0, 3).map((vehicle) => (
                       <div key={vehicle.id} className="section-card p-3.5">
                         <p className="font-medium text-[var(--color-ink-strong)]">{vehicle.label}</p>
@@ -128,15 +138,16 @@ export default async function UserDetailPage({
                       </div>
                     ))
                   )}
+                  {detail.vehicles.length > 3 ? <p className="text-xs text-[var(--color-ink-muted)]">+{detail.vehicles.length - 3}</p> : null}
                 </div>
               </section>
 
               <section className="panel space-y-3 p-5">
                 <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.payoutAccounts}</h2>
                 <div className="space-y-3">
-                  {detail.payoutAccounts.length === 0 ? (
-                    <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noPayoutAccounts}</p>
-                  ) : (
+                {detail.payoutAccounts.length === 0 ? (
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noPayoutAccounts}</p>
+                ) : (
                     detail.payoutAccounts.slice(0, 3).map((account) => (
                       <div key={account.id} className="section-card p-3.5">
                         <p className="font-medium text-[var(--color-ink-strong)]">
@@ -150,6 +161,7 @@ export default async function UserDetailPage({
                       </div>
                     ))
                   )}
+                  {detail.payoutAccounts.length > 3 ? <p className="text-xs text-[var(--color-ink-muted)]">+{detail.payoutAccounts.length - 3}</p> : null}
                 </div>
               </section>
             </section>
@@ -160,9 +172,9 @@ export default async function UserDetailPage({
               <section className="panel space-y-3 p-5">
                 <h2 className="text-[1.05rem] font-semibold text-[var(--color-ink-strong)]">{detailCopy.users.recentShipments}</h2>
                 <div className="space-y-3">
-                  {detail.shipments.length === 0 ? (
-                    <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noShipments}</p>
-                  ) : (
+                {detail.shipments.length === 0 ? (
+                  <p className="text-sm text-[var(--color-ink-muted)]">{detailCopy.users.noShipments}</p>
+                ) : (
                     detail.shipments.slice(0, 3).map((shipment) => (
                       <div key={shipment.id} className="section-card p-3.5">
                         <Link href={buildAdminRoute(lang, "shipment", shipment.id)} className="font-medium text-[var(--color-ink-strong)] underline-offset-4 hover:underline">
@@ -178,6 +190,11 @@ export default async function UserDetailPage({
                       </div>
                     ))
                   )}
+                  {detail.shipments.length > 3 ? (
+                    <Link href={`/${locale}/shipments?q=${encodeURIComponent(detail.profile.id)}`} className="inline-flex text-sm font-medium text-[var(--color-accent)] underline-offset-4 hover:underline">
+                      {ui.pages.audit.viewAll}
+                    </Link>
+                  ) : null}
                 </div>
               </section>
             ) : null}
@@ -198,8 +215,13 @@ export default async function UserDetailPage({
                         <StatusBadge label={getEnumLabel(lang, "payment", booking.paymentStatus)} tone={booking.paymentStatus === "secured" ? "success" : "warning"} />
                       </div>
                     </div>
-                  ))
-                )}
+                    ))
+                  )}
+                  {detail.bookings.length > 3 ? (
+                    <Link href={`/${locale}/bookings?q=${encodeURIComponent(detail.profile.id)}`} className="inline-flex text-sm font-medium text-[var(--color-accent)] underline-offset-4 hover:underline">
+                      {ui.pages.audit.viewAll}
+                    </Link>
+                  ) : null}
               </div>
             </section>
           </section>
@@ -249,11 +271,13 @@ export default async function UserDetailPage({
           </section>
 
           <TimelinePanel
-            locale={lang}
+            title={ui.labels.timeline}
+            currentLabel={ui.labels.current}
+            emptyLabel={ui.labels.noTimeline}
             items={detail.auditLogs.map((log) => ({
               id: log.id,
-              title: log.action,
-              detail: log.reason ?? log.outcome,
+              title: getAdminActionLabel(locale, log.action),
+              detail: log.reason ?? getAuditOutcomeLabel(locale, log.outcome),
               at: formatDateTime(log.createdAt),
             }))}
           />
@@ -261,10 +285,9 @@ export default async function UserDetailPage({
       }
       rail={
         <ActionRail
-          locale={lang}
           title={detailCopy.users.controls}
         >
-          <UserActivationActions locale={lang} profileId={detail.profile.id} isActive={detail.profile.isActive} />
+          <UserActivationActions profileId={detail.profile.id} isActive={detail.profile.isActive} />
         </ActionRail>
       }
     />

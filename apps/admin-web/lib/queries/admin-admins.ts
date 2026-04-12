@@ -5,6 +5,9 @@ import type {
   AdminAccountListItem,
   AdminAuditLogItem,
   AdminInvitationListItem,
+  AdminRegistryFilters,
+  AdminRegistrySnapshot,
+  AdminRegistrySummary,
 } from "@/lib/queries/admin-types";
 
 type AdminAccountRow = {
@@ -53,8 +56,39 @@ type AuditRow = {
   created_at: string | null;
 };
 
+type RegistryData = {
+  accounts: AdminAccountListItem[];
+  invitations: AdminInvitationListItem[];
+};
+
 function resolveDisplayName(name: string | null, email: string | null | undefined) {
   return name?.trim() || email?.trim() || "Unknown admin";
+}
+
+function normalizeQuery(value?: string) {
+  return value?.trim().toLowerCase() ?? "";
+}
+
+function matchesQuery(values: Array<string | null | undefined>, query: string) {
+  if (!query) {
+    return true;
+  }
+
+  return values.some((value) => value?.toLowerCase().includes(query));
+}
+
+function clampPage(page: number | undefined) {
+  return Number.isFinite(page) && (page ?? 1) > 0 ? Math.floor(page as number) : 1;
+}
+
+function clampPageSize(pageSize: number | undefined) {
+  const normalized = Number.isFinite(pageSize) ? Math.floor(pageSize as number) : 10;
+  return Math.min(25, Math.max(5, normalized || 10));
+}
+
+function pageRange(page: number, pageSize: number) {
+  const from = (page - 1) * pageSize;
+  return { from, to: from + pageSize - 1 };
 }
 
 function mapAuditLogs(rows: AuditRow[]): AdminAuditLogItem[] {
@@ -70,10 +104,7 @@ function mapAuditLogs(rows: AuditRow[]): AdminAuditLogItem[] {
   }));
 }
 
-export async function fetchAdminAccountsAndInvitations(): Promise<{
-  accounts: AdminAccountListItem[];
-  invitations: AdminInvitationListItem[];
-}> {
+async function fetchRegistryData(): Promise<RegistryData> {
   await requireServerSuperAdmin();
   const supabase = await createSupabaseServerClient();
   const [accountsResult, invitationsResult] = await Promise.all([
@@ -86,8 +117,7 @@ export async function fetchAdminAccountsAndInvitations(): Promise<{
     supabase
       .from("admin_invitations")
       .select("id, email, role, status, expires_at, invited_by, accepted_by_profile_id, created_at, updated_at")
-      .order("created_at", { ascending: false })
-      .limit(25),
+      .order("created_at", { ascending: false }),
   ]);
 
   if (accountsResult.error) throw accountsResult.error;
@@ -151,8 +181,95 @@ export async function fetchAdminAccountsAndInvitations(): Promise<{
   };
 }
 
+function filterAccounts(
+  accounts: AdminAccountListItem[],
+  filters: Required<Pick<AdminRegistryFilters, "q" | "role" | "state">>,
+) {
+  return accounts.filter((account) => {
+    const matchesRole = filters.role === "all" || account.adminRole === filters.role;
+    const matchesState = filters.state === "all" || (filters.state === "active" ? account.isActive : !account.isActive);
+    const matchesSearch = matchesQuery(
+      [
+        account.displayName,
+        account.email,
+        account.invitedByName,
+        account.adminRole,
+        account.isActive ? "active" : "inactive",
+      ],
+      filters.q,
+    );
+
+    return matchesRole && matchesState && matchesSearch;
+  });
+}
+
+function filterInvitations(invitations: AdminInvitationListItem[], query: string) {
+  return invitations.filter((invitation) =>
+    matchesQuery(
+      [
+        invitation.email,
+        invitation.role,
+        invitation.status,
+        invitation.invitedByName,
+        invitation.acceptedByName,
+      ],
+      query,
+    ),
+  );
+}
+
+function summarizeRegistry(accounts: AdminAccountListItem[], invitations: AdminInvitationListItem[]): AdminRegistrySummary {
+  const activeAccounts = accounts.filter((account) => account.isActive).length;
+  const inactiveAccounts = accounts.length - activeAccounts;
+  return {
+    totalAccounts: accounts.length,
+    activeAccounts,
+    inactiveAccounts,
+    superAdmins: accounts.filter((account) => account.adminRole === "super_admin").length,
+    opsAdmins: accounts.filter((account) => account.adminRole === "ops_admin").length,
+    totalInvitations: invitations.length,
+    pendingInvitations: invitations.filter((invitation) => invitation.status === "pending").length,
+  };
+}
+
+export async function fetchAdminRegistrySnapshot(filters: AdminRegistryFilters = {}): Promise<AdminRegistrySnapshot> {
+  const data = await fetchRegistryData();
+  const normalizedFilters = {
+    q: normalizeQuery(filters.q),
+    role: filters.role ?? "all",
+    state: filters.state ?? "all",
+  } satisfies Required<Pick<AdminRegistryFilters, "q" | "role" | "state">>;
+  const pageSize = clampPageSize(filters.pageSize);
+  const page = clampPage(filters.page);
+  const filteredAccounts = filterAccounts(data.accounts, normalizedFilters);
+  const filteredInvitations = filterInvitations(data.invitations, normalizedFilters.q);
+  const { from, to } = pageRange(page, pageSize);
+  const pagedAccounts = filteredAccounts.slice(from, to + 1);
+
+  return {
+    accounts: pagedAccounts,
+    invitations: filteredInvitations.slice(0, 25),
+    page,
+    pageSize,
+    totalAccounts: filteredAccounts.length,
+    totalInvitations: filteredInvitations.length,
+    summary: summarizeRegistry(filteredAccounts, filteredInvitations),
+    filters: normalizedFilters,
+  };
+}
+
+async function fetchAdminAccountsAndInvitations(): Promise<{
+  accounts: AdminAccountListItem[];
+  invitations: AdminInvitationListItem[];
+}> {
+  const data = await fetchRegistryData();
+  return {
+    accounts: data.accounts,
+    invitations: data.invitations,
+  };
+}
+
 export async function fetchAdminAccountDetail(profileId: string): Promise<AdminAccountDetail | null> {
-  await requireServerSuperAdmin();
   const { accounts, invitations } = await fetchAdminAccountsAndInvitations();
   const account = accounts.find((item) => item.profileId === profileId);
   if (!account) return null;
