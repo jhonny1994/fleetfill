@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import { defaultLocale, isSupportedLocale } from "@/lib/i18n/config";
@@ -12,6 +13,10 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   const pathname = usePathname();
   const segment = pathname?.split("/")[1] ?? defaultLocale;
   const locale = isSupportedLocale(segment) ? segment : defaultLocale;
@@ -27,7 +32,7 @@ export default function GlobalError({
               {copy.globalErrorTitle}
             </h1>
             <p className="text-sm text-[var(--color-ink-muted)]">
-              {error.message || copy.reloadPageHint}
+              {copy.reloadPageHint}
             </p>
             <button className="button-primary mx-auto" onClick={reset} type="button">
               {copy.tryAgain}

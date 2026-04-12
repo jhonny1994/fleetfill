@@ -1,3 +1,4 @@
+import { getMessages } from "next-intl/server";
 import Link from "next/link";
 
 import { EmailDeadLetterRetryAction, EmailDeliveryRetryAction } from "@/components/audit-health/email-retry-actions";
@@ -5,11 +6,14 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
 import {
   getAdminActionLabel,
-  getAdminUi,
+  getAuditOutcomeLabel,
   getAuditHealthErrorLabel,
+  getAuditTargetTypeLabel,
   getEnumLabel,
   getNotificationTemplateLabel,
 } from "@/lib/i18n/admin-ui";
+import { resolveAppLocale } from "@/lib/i18n/config";
+import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchAuditAndHealthSnapshot } from "@/lib/queries/admin-audit-health";
 
 export default async function AuditAndHealthPage({
@@ -18,20 +22,21 @@ export default async function AuditAndHealthPage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const ui = getAdminUi(lang);
+  const locale = resolveAppLocale(lang);
+  const { ui } = asAdminMessages(await getMessages({ locale }));
   const snapshot = await fetchAuditAndHealthSnapshot();
   const latestAuditLogs = snapshot.auditLogs.slice(0, 6);
   const latestEmailDeliveries = snapshot.emailDeliveries.slice(0, 6);
   const latestDeadLetterEmails = snapshot.deadLetterEmails.slice(0, 4);
   const latestDeadLetterPushes = snapshot.deadLetterPushes.slice(0, 4);
-  const viewAllLabel = lang === "ar" ? "عرض الكل" : lang === "fr" ? "Voir tout" : "View all";
+  const viewAllLabel = ui.pages.audit.viewAll;
 
   const resolveAuditHref = (targetType: string, targetId: string | null) => {
     if (!targetId) return null;
-    if (targetType === "verification_packet") return `/${lang}/verification/${targetId}`;
-    if (targetType === "admin_account") return `/${lang}/admins/${targetId}`;
-    if (targetType === "support_request") return `/${lang}/support/${targetId}`;
-    if (targetType === "user_profile" || targetType === "profile") return `/${lang}/users/${targetId}`;
+    if (targetType === "verification_packet") return `/${locale}/verification/${targetId}`;
+    if (targetType === "admin_account") return `/${locale}/admins/${targetId}`;
+    if (targetType === "support_request") return `/${locale}/support/${targetId}`;
+    if (targetType === "user_profile" || targetType === "profile") return `/${locale}/users/${targetId}`;
     return null;
   };
 
@@ -47,7 +52,7 @@ export default async function AuditAndHealthPage({
         <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.auditTrail}</h2>
-            <Link className="button-secondary" href={`/${lang}/audit-and-health/audit-trail`}>
+            <Link className="button-secondary" href={`/${locale}/audit-and-health/audit-trail`}>
               {viewAllLabel} ({snapshot.totals.auditLogs})
             </Link>
           </div>
@@ -60,14 +65,14 @@ export default async function AuditAndHealthPage({
             const content = (
               <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4 transition hover:border-[var(--color-accent)] hover:bg-white/80">
                 <div className="flex flex-wrap items-center gap-2">
-                  <StatusBadge label={getAdminActionLabel(lang, log.action)} tone="neutral" />
+                  <StatusBadge label={getAdminActionLabel(locale, log.action)} tone="neutral" />
                   <StatusBadge
-                    label={getEnumLabel(lang, "activity", log.outcome === "success" ? "active" : "inactive")}
+                    label={getAuditOutcomeLabel(locale, log.outcome)}
                     tone={log.outcome === "success" ? "success" : "danger"}
                   />
                 </div>
                 <p className="mt-2 text-sm text-[var(--color-ink-strong)]">
-                  {log.targetType}
+                  {getAuditTargetTypeLabel(locale, log.targetType)}
                   {log.targetId ? ` • ${log.targetId}` : ""}
                 </p>
                 <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
@@ -92,7 +97,7 @@ export default async function AuditAndHealthPage({
           <div className="space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.emailLogs}</h2>
-              <Link className="button-secondary" href={`/${lang}/audit-and-health/email-deliveries`}>
+              <Link className="button-secondary" href={`/${locale}/audit-and-health/email-deliveries`}>
                 {viewAllLabel} ({snapshot.totals.emailDeliveries})
               </Link>
             </div>
@@ -106,11 +111,11 @@ export default async function AuditAndHealthPage({
                 <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4 transition hover:border-[var(--color-accent)] hover:bg-white/80">
                   <div className="flex flex-wrap items-center gap-2">
                     <StatusBadge
-                      label={getEnumLabel(lang, "email", log.status)}
+                      label={getEnumLabel(locale, "email", log.status)}
                       tone={log.status === "delivered" ? "success" : log.status === "soft_failed" ? "warning" : "danger"}
                     />
                     <p className="text-sm font-medium text-[var(--color-ink-strong)]">
-                      {getNotificationTemplateLabel(lang, log.templateKey)}
+                      {getNotificationTemplateLabel(locale, log.templateKey)}
                     </p>
                   </div>
                   <p className="mt-2 text-sm text-[var(--color-ink-muted)]">{log.recipientEmail}</p>
@@ -119,12 +124,12 @@ export default async function AuditAndHealthPage({
                   </p>
                   {log.errorCode || log.errorMessage ? (
                     <p className="mt-2 text-xs text-[var(--color-red-700)]">
-                      {getAuditHealthErrorLabel(lang, log.errorCode, log.errorMessage)}
+                      {getAuditHealthErrorLabel(locale, log.errorCode, log.errorMessage)}
                     </p>
                   ) : null}
                   {log.status === "soft_failed" ? (
                     <div className="mt-3">
-                      <EmailDeliveryRetryAction deliveryLogId={log.id} locale={lang} />
+                      <EmailDeliveryRetryAction deliveryLogId={log.id} />
                     </div>
                   ) : null}
                 </div>
@@ -145,7 +150,7 @@ export default async function AuditAndHealthPage({
           <div className="space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.deadLetters}</h2>
-              <Link className="button-secondary" href={`/${lang}/audit-and-health/dead-letters`}>
+              <Link className="button-secondary" href={`/${locale}/audit-and-health/dead-letters`}>
                 {viewAllLabel} ({snapshot.totals.deadLetterEmails + snapshot.totals.deadLetterPushes})
               </Link>
             </div>
@@ -158,9 +163,9 @@ export default async function AuditAndHealthPage({
               const content = (
                 <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4 transition hover:border-[var(--color-accent)] hover:bg-white/80">
                   <div className="flex flex-wrap items-center gap-2">
-                    <StatusBadge label={getEnumLabel(lang, "email", "dead_letter")} tone="danger" />
+                    <StatusBadge label={getEnumLabel(locale, "email", "dead_letter")} tone="danger" />
                     <p className="text-sm font-medium text-[var(--color-ink-strong)]">
-                      {getNotificationTemplateLabel(lang, job.templateKey)}
+                      {getNotificationTemplateLabel(locale, job.templateKey)}
                     </p>
                   </div>
                   <p className="mt-2 text-sm text-[var(--color-ink-muted)]">{job.recipientEmail}</p>
@@ -169,11 +174,11 @@ export default async function AuditAndHealthPage({
                   </p>
                   {job.lastErrorCode || job.lastErrorMessage ? (
                     <p className="mt-2 text-xs text-[var(--color-red-700)]">
-                      {getAuditHealthErrorLabel(lang, job.lastErrorCode, job.lastErrorMessage)}
+                      {getAuditHealthErrorLabel(locale, job.lastErrorCode, job.lastErrorMessage)}
                     </p>
                   ) : null}
                   <div className="mt-3">
-                    <EmailDeadLetterRetryAction jobId={job.id} locale={lang} />
+                    <EmailDeadLetterRetryAction jobId={job.id} />
                   </div>
                 </div>
               );
@@ -187,20 +192,20 @@ export default async function AuditAndHealthPage({
               );
             })}
             {latestDeadLetterPushes.map((job) => (
-              <Link key={job.id} href={`/${lang}/users/${job.profileId}`} className="block">
+              <Link key={job.id} href={`/${locale}/users/${job.profileId}`} className="block">
                 <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4 transition hover:border-[var(--color-accent)] hover:bg-white/80">
                   <div className="flex flex-wrap items-center gap-2">
-                    <StatusBadge label={getEnumLabel(lang, "email", "dead_letter")} tone="warning" />
+                    <StatusBadge label={getEnumLabel(locale, "email", "dead_letter")} tone="warning" />
                     <p className="text-sm font-medium text-[var(--color-ink-strong)]">
-                      {getNotificationTemplateLabel(lang, job.title)}
+                      {getNotificationTemplateLabel(locale, job.title)}
                     </p>
                   </div>
                   <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                    {getNotificationTemplateLabel(lang, job.eventKey)} • {job.attemptCount}/{job.maxAttempts}
+                    {getNotificationTemplateLabel(locale, job.eventKey)} • {job.attemptCount}/{job.maxAttempts}
                   </p>
                   {job.lastErrorCode || job.lastErrorMessage ? (
                     <p className="mt-2 text-xs text-[var(--color-red-700)]">
-                      {getAuditHealthErrorLabel(lang, job.lastErrorCode, job.lastErrorMessage)}
+                      {getAuditHealthErrorLabel(locale, job.lastErrorCode, job.lastErrorMessage)}
                     </p>
                   ) : null}
                 </div>

@@ -2,13 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { getAdminActionErrorMessage, getEnumLabel } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { verificationReviewSchema } from "@/lib/validation/review-actions";
 
@@ -27,7 +28,7 @@ export function VerificationReviewActions({
   carrierId: string;
   documents: DocumentOption[];
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingApproveAll, setPendingApproveAll] = useState(false);
@@ -44,6 +45,14 @@ export function VerificationReviewActions({
     },
   });
 
+  useEffect(() => {
+    form.reset({
+      documentId: documents[0]?.id ?? "",
+      status: "verified",
+      reason: "",
+    });
+  }, [documents, form]);
+
   async function confirmApproveAll() {
     setIsPending(true);
     setError(null);
@@ -53,7 +62,7 @@ export function VerificationReviewActions({
     setIsPending(false);
     setPendingApproveAll(false);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
@@ -71,7 +80,7 @@ export function VerificationReviewActions({
     setIsPending(false);
     setPendingDocumentReview(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
@@ -120,7 +129,6 @@ export function VerificationReviewActions({
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
 
       <ConfirmDialog
-        locale={locale}
         open={pendingApproveAll}
         title={ui.actions.approvePacketTitle}
         body={ui.actions.approvePacketConfirmBody}
@@ -130,7 +138,6 @@ export function VerificationReviewActions({
         onConfirm={confirmApproveAll}
       />
       <ConfirmDialog
-        locale={locale}
         open={pendingDocumentReview !== null}
         title={ui.actions.submitReviewTitle}
         body={ui.actions.submitReviewBody}

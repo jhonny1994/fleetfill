@@ -55,9 +55,17 @@ describe("AdminFilterBar", () => {
   });
 
   it("renders reset actions against the canonical queue path", () => {
-    render(<AdminFilterBar pathname="/ar/payments" query="trk" locale="ar" labels={labels} />);
+    render(
+      <AdminFilterBar
+        pathname="/ar/payments"
+        query="trk"
+        locale="ar"
+        labels={labels}
+        hiddenFields={[{ name: "view", value: "history" }]}
+      />,
+    );
 
-    expect(screen.getByRole("link", { name: "Reset" })).toHaveAttribute("href", "/ar/payments");
-    expect(screen.getByRole("link", { name: "Clear all" })).toHaveAttribute("href", "/ar/payments");
+    expect(screen.getByRole("link", { name: "Reset" })).toHaveAttribute("href", "/ar/payments?view=history");
+    expect(screen.getByRole("link", { name: "Clear all" })).toHaveAttribute("href", "/ar/payments?view=history");
   });
 });

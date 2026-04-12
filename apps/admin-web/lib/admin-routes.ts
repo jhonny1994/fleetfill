@@ -1,6 +1,6 @@
 import type { AppLocale } from "@/lib/i18n/config";
 
-export type SearchEntityKind =
+type SearchEntityKind =
   | "booking"
   | "shipment"
   | "user"

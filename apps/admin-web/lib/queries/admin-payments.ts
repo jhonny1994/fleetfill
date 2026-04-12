@@ -42,7 +42,7 @@ type AuditLog = {
   created_at: string | null;
 };
 
-export type AdminPaymentDetail = {
+type AdminPaymentDetail = {
   booking: BookingDetail;
   latestProof: PaymentProofDetail | null;
   proofHistory: PaymentProofDetail[];

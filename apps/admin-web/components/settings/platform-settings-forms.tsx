@@ -2,12 +2,16 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { getAdminDetailCopy, getAdminUi } from "@/lib/i18n/admin-ui";
+import { formatDateTime } from "@/lib/formatting/formatters";
+import { getAdminActionErrorMessage, getAdminDetailCopy } from "@/lib/i18n/admin-ui";
+import { localeEntries, resolveEnabledLocales, resolveFallbackLocale, type AppLocale } from "@/lib/i18n/config";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { PlatformSettingsSnapshot } from "@/lib/queries/admin-types";
 import type { Json } from "@/lib/supabase/database.types";
@@ -22,48 +26,38 @@ import {
 function SectionFrame({
   title,
   body,
+  meta,
   children,
 }: {
   title: string;
   body: string;
-  children: React.ReactNode;
+  meta?: string | null;
+  children: ReactNode;
 }) {
   return (
     <section className="panel space-y-4 p-5">
       <div className="section-header">
         <h3 className="text-[1.15rem] font-semibold text-[var(--color-ink-strong)]">{title}</h3>
         <p>{body}</p>
+        {meta ? <p className="text-xs text-[var(--color-ink-muted)]">{meta}</p> : null}
       </div>
       <div className="max-w-5xl">{children}</div>
     </section>
   );
 }
 
-function getSettingAuditDescription(key: "app_runtime" | "booking_pricing" | "delivery_review" | "feature_flags" | "localization") {
-  switch (key) {
-    case "app_runtime":
-      return "Admin-controlled runtime policy for maintenance and minimum supported versions";
-    case "booking_pricing":
-      return "Admin-controlled booking pricing policy";
-    case "delivery_review":
-      return "Admin-controlled delivery review timing";
-    case "feature_flags":
-      return "Admin-controlled runtime feature flags";
-    case "localization":
-      return "Admin-controlled localization policy";
-  }
-}
+type SettingAuditKey = "app_runtime" | "booking_pricing" | "delivery_review" | "feature_flags" | "localization";
 
 export function PlatformSettingsForms({
   locale,
   settings,
   isSuperAdmin,
 }: {
-  locale: string;
+  locale: AppLocale;
   settings: PlatformSettingsSnapshot;
   isSuperAdmin: boolean;
 }) {
-  const ui = getAdminUi(locale);
+  const ui = useAdminUi();
   const detailCopy = getAdminDetailCopy(locale);
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
@@ -116,6 +110,30 @@ export function PlatformSettingsForms({
     name: "enabledLocales",
   });
 
+  useEffect(() => {
+    runtimeForm.reset(settings.appRuntime);
+  }, [runtimeForm, settings.appRuntime]);
+
+  useEffect(() => {
+    pricingForm.reset(settings.bookingPricing);
+  }, [pricingForm, settings.bookingPricing]);
+
+  useEffect(() => {
+    reviewForm.reset(settings.deliveryReview);
+  }, [reviewForm, settings.deliveryReview]);
+
+  useEffect(() => {
+    featureForm.reset(settings.featureFlags);
+  }, [featureForm, settings.featureFlags]);
+
+  useEffect(() => {
+    localizationForm.reset(settings.localization);
+  }, [localizationForm, settings.localization]);
+
+  function getSettingAuditDescription(key: SettingAuditKey) {
+    return detailCopy.settings.auditDescriptions[key];
+  }
+
   async function confirmSave() {
     if (!pendingConfig) return;
     setIsPending(true);
@@ -129,7 +147,7 @@ export function PlatformSettingsForms({
     setIsPending(false);
     setPendingConfig(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
@@ -142,6 +160,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.runtimeTitle}
         body={detailCopy.settings.runtimeBody}
+        meta={settings.updatedAtByKey.app_runtime ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.app_runtime, locale)}` : null}
       >
         <form
           className="grid max-w-4xl gap-3 lg:grid-cols-2"
@@ -185,6 +204,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.pricingTitle}
         body={detailCopy.settings.pricingBody}
+        meta={settings.updatedAtByKey.booking_pricing ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.booking_pricing, locale)}` : null}
       >
         <form
           className="grid max-w-5xl gap-3 lg:grid-cols-2 xl:grid-cols-3"
@@ -238,6 +258,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.reviewTitle}
         body={detailCopy.settings.reviewBody}
+        meta={settings.updatedAtByKey.delivery_review ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.delivery_review, locale)}` : null}
       >
         <form
           className="grid max-w-xl gap-3 lg:grid-cols-[minmax(0,220px)_auto]"
@@ -264,6 +285,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.featureTitle}
         body={detailCopy.settings.featureBody}
+        meta={settings.updatedAtByKey.feature_flags ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.feature_flags, locale)}` : null}
       >
         <form
           className="space-y-3"
@@ -290,6 +312,7 @@ export function PlatformSettingsForms({
       <SectionFrame
         title={detailCopy.settings.localizationTitle}
         body={detailCopy.settings.localizationBody}
+        meta={settings.updatedAtByKey.localization ? `${ui.labels.updated}: ${formatDateTime(settings.updatedAtByKey.localization, locale)}` : null}
       >
         <form
           className="space-y-4"
@@ -308,7 +331,7 @@ export function PlatformSettingsForms({
             <fieldset className="space-y-2 text-sm">
               <legend className="mb-1 font-medium text-[var(--color-ink-base)]">{detailCopy.settings.enabledLocales}</legend>
               <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-                {(["ar", "fr", "en"] as const).map((localeCode) => (
+                {localeEntries.map(([localeCode]) => (
                   <label key={localeCode} className="admin-checkbox-row">
                     <input
                       type="checkbox"
@@ -318,10 +341,21 @@ export function PlatformSettingsForms({
                       className="admin-checkbox"
                       onChange={(event) => {
                         const current = localizationForm.getValues("enabledLocales");
+                        const nextEnabledLocales = resolveEnabledLocales(
+                          event.target.checked
+                            ? [...current, localeCode]
+                            : current.filter((value) => value !== localeCode),
+                        );
+                        const nextFallbackLocale = resolveFallbackLocale(
+                          localizationForm.getValues("fallbackLocale"),
+                          nextEnabledLocales,
+                        );
+
                         localizationForm.setValue(
                           "enabledLocales",
-                          event.target.checked ? [...current, localeCode] : current.filter((value) => value !== localeCode),
+                          nextEnabledLocales,
                         );
+                        localizationForm.setValue("fallbackLocale", nextFallbackLocale);
                       }}
                     />
                     <span>{ui.enums.locale[localeCode]}</span>
@@ -332,9 +366,11 @@ export function PlatformSettingsForms({
             <label className="grid gap-1 text-sm content-start">
               <span>{detailCopy.settings.fallbackLocale}</span>
               <select className="admin-field admin-select" disabled={disabled} {...localizationForm.register("fallbackLocale")}>
-                <option value="ar">{ui.enums.locale.ar}</option>
-                <option value="fr">{ui.enums.locale.fr}</option>
-                <option value="en">{ui.enums.locale.en}</option>
+                {localeEntries.map(([localeCode]) => (
+                  <option key={localeCode} value={localeCode} disabled={!enabledLocales.includes(localeCode)}>
+                    {ui.enums.locale[localeCode]}
+                  </option>
+                ))}
               </select>
             </label>
           </div>

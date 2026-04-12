@@ -7,13 +7,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import type { AppLocale } from "@/lib/i18n/config";
-import { getAdminUi } from "@/lib/i18n/admin-ui";
+import { getAdminActionErrorMessage } from "@/lib/i18n/admin-ui";
+import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { payoutReleaseSchema } from "@/lib/validation/review-actions";
 
-export function PayoutReleaseActions({ locale, bookingId }: { locale: AppLocale | string; bookingId: string }) {
-  const ui = getAdminUi(locale);
+export function PayoutReleaseActions({ bookingId }: { bookingId: string }) {
+  const ui = useAdminUi();
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingValues, setPendingValues] = useState<z.infer<typeof payoutReleaseSchema> | null>(null);
@@ -39,7 +39,7 @@ export function PayoutReleaseActions({ locale, bookingId }: { locale: AppLocale 
     setIsPending(false);
     setPendingValues(null);
     if (rpcError) {
-      setError(rpcError.message);
+      setError(getAdminActionErrorMessage(ui, rpcError.message, rpcError.code));
       return;
     }
     router.refresh();
@@ -50,7 +50,7 @@ export function PayoutReleaseActions({ locale, bookingId }: { locale: AppLocale 
       <form className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4" onSubmit={form.handleSubmit((values) => setPendingValues(values))}>
         <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.releasePayout}</h3>
         <label className="grid gap-1 text-sm">
-          <span>{ui.labels.reason === "السبب" ? "المرجع الخارجي" : ui.labels.reason === "Raison" ? "Reference externe" : "External reference"}</span>
+          <span>{ui.detail.payouts.externalReferenceLabel}</span>
           <input className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("externalReference")} />
         </label>
         <label className="grid gap-1 text-sm">
@@ -61,7 +61,6 @@ export function PayoutReleaseActions({ locale, bookingId }: { locale: AppLocale 
       </form>
       {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
       <ConfirmDialog
-        locale={locale}
         open={pendingValues !== null}
         title={ui.actions.releasePayout}
         body={ui.actions.releasePayout}

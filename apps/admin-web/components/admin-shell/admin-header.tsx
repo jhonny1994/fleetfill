@@ -12,12 +12,14 @@ export function AdminHeader({
   fullName,
   roleLabel,
   dictionary,
+  enabledLocales,
   navigationTrigger,
 }: {
   locale: AppLocale;
   fullName: string;
   roleLabel: string;
   dictionary: AdminDictionary;
+  enabledLocales?: AppLocale[];
   navigationTrigger?: ReactNode;
 }) {
   return (
@@ -27,7 +29,7 @@ export function AdminHeader({
         <CommandSearch locale={locale} placeholder={dictionary.shell.searchPlaceholder} shortcutLabel="/" />
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <AdminLocaleSwitcher locale={locale} dictionary={dictionary} />
+        <AdminLocaleSwitcher locale={locale} dictionary={dictionary} availableLocales={enabledLocales} />
         <button
           type="button"
           className="admin-toolbar-icon"

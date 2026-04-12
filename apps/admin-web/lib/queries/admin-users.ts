@@ -1,4 +1,5 @@
 import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
+import { pageRange, totalPages } from "@/lib/pagination";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AdminAuditLogItem,
@@ -8,7 +9,8 @@ import type {
   AdminShipmentSummary,
   AdminSupportSummary,
   AdminUserDetail,
-  AdminUserListItem,
+  AdminUserRegistryFilters,
+  AdminUserRegistrySnapshot,
   AdminVehicleSummary,
 } from "@/lib/queries/admin-types";
 
@@ -17,14 +19,9 @@ function isUuidLike(value: string) {
 }
 
 const userRoles = ["shipper", "carrier", "admin"] as const;
-const verificationStatuses = ["pending", "rejected", "verified"] as const;
 
 function isUserRole(value: string): value is (typeof userRoles)[number] {
   return userRoles.includes(value as (typeof userRoles)[number]);
-}
-
-function isVerificationStatus(value: string): value is (typeof verificationStatuses)[number] {
-  return verificationStatuses.includes(value as (typeof verificationStatuses)[number]);
 }
 
 function buildProfileSearchFilter(query: string) {
@@ -41,6 +38,19 @@ function buildProfileSearchFilter(query: string) {
   }
 
   return filters.join(",");
+}
+
+function normalizeQuery(value?: string) {
+  return value?.trim() ?? "";
+}
+
+function clampPage(page: number | undefined) {
+  return Number.isFinite(page) && (page ?? 1) > 0 ? Math.floor(page as number) : 1;
+}
+
+function clampPageSize(pageSize: number | undefined) {
+  const normalized = Number.isFinite(pageSize) ? Math.floor(pageSize as number) : 25;
+  return Math.min(50, Math.max(10, normalized || 25));
 }
 
 type ProfileRow = {
@@ -156,88 +166,121 @@ function mapAuditLogs(rows: AuditRow[]): AdminAuditLogItem[] {
   }));
 }
 
-export async function fetchUsers({
-  query,
-  role,
-  activity,
-  verification,
-  limit = 50,
-}: {
-  query?: string;
-  role?: string;
-  activity?: string;
-  verification?: string;
-  limit?: number;
-} = {}): Promise<AdminUserListItem[]> {
+function normalizeUserFilters(filters: AdminUserRegistryFilters) {
+  return {
+    q: normalizeQuery(filters.q),
+    role: filters.role ?? "all",
+    activity: filters.activity ?? "all",
+    verification: filters.verification ?? "all",
+    page: clampPage(filters.page),
+    pageSize: clampPageSize(filters.pageSize),
+  } as const;
+}
+
+export async function fetchUsers(filters: AdminUserRegistryFilters = {}): Promise<AdminUserRegistrySnapshot> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
-  let request = supabase
+  const normalized = normalizeUserFilters(filters);
+
+  let countRequest = supabase.from("profiles").select("id", { count: "exact", head: true }).neq("role", "admin");
+  let pageRequest = supabase
     .from("profiles")
     .select(
       "id, role, full_name, phone_number, email, company_name, preferred_locale, is_active, rating_average, rating_count, created_at, updated_at",
     )
     .neq("role", "admin")
-    .order("updated_at", { ascending: false })
-    .limit(limit);
+    .order("updated_at", { ascending: false });
 
-  const normalizedRole = role?.trim();
-  if (normalizedRole && isUserRole(normalizedRole)) {
-    request = request.eq("role", normalizedRole);
+  if (normalized.role !== "all" && isUserRole(normalized.role)) {
+    countRequest = countRequest.eq("role", normalized.role);
+    pageRequest = pageRequest.eq("role", normalized.role);
   }
 
-  if (activity === "active") {
-    request = request.eq("is_active", true);
-  } else if (activity === "inactive") {
-    request = request.eq("is_active", false);
+  if (normalized.activity === "active") {
+    countRequest = countRequest.eq("is_active", true);
+    pageRequest = pageRequest.eq("is_active", true);
+  } else if (normalized.activity === "inactive") {
+    countRequest = countRequest.eq("is_active", false);
+    pageRequest = pageRequest.eq("is_active", false);
   }
 
-  const normalizedVerification = verification?.trim();
-  if (normalizedVerification && isVerificationStatus(normalizedVerification)) {
-    if (normalizedRole && normalizedRole !== "carrier") {
-      return [];
+  if (normalized.q) {
+    const searchFilter = buildProfileSearchFilter(normalized.q);
+    countRequest = countRequest.or(searchFilter);
+    pageRequest = pageRequest.or(searchFilter);
+  }
+
+  if (normalized.verification !== "all") {
+    if (normalized.role !== "all" && normalized.role !== "carrier") {
+      return {
+        users: [],
+        page: 1,
+        pageSize: normalized.pageSize,
+        totalUsers: 0,
+        filters: normalized,
+      };
     }
-    request = request.eq("role", "carrier");
+
+    countRequest = countRequest.eq("role", "carrier");
+    pageRequest = pageRequest.eq("role", "carrier");
+
+    const { data: matchingPackets, error: matchingPacketsError } = await supabase
+      .from("carrier_verification_packets")
+      .select("carrier_id")
+      .eq("status", normalized.verification);
+
+    if (matchingPacketsError) throw matchingPacketsError;
+
+    const carrierIds = [...new Set(((matchingPackets ?? []) as Array<{ carrier_id: string }>).map((row) => row.carrier_id))];
+    if (carrierIds.length === 0) {
+      return {
+        users: [],
+        page: 1,
+        pageSize: normalized.pageSize,
+        totalUsers: 0,
+        filters: normalized,
+      };
+    }
+
+    countRequest = countRequest.in("id", carrierIds);
+    pageRequest = pageRequest.in("id", carrierIds);
   }
 
-  if (query?.trim()) {
-    request = request.or(buildProfileSearchFilter(query));
+  const countResult = await countRequest;
+  if (countResult.error) throw countResult.error;
+
+  const safePage = Math.min(normalized.page, totalPages(countResult.count ?? 0, normalized.pageSize));
+  const { from, to } = pageRange(safePage, normalized.pageSize);
+  const pageResult = await pageRequest.range(from, to);
+  if (pageResult.error) throw pageResult.error;
+
+  const profiles = (pageResult.data ?? []) as ProfileRow[];
+  if (profiles.length === 0) {
+    return {
+      users: [],
+      page: safePage,
+      pageSize: normalized.pageSize,
+      totalUsers: countResult.count ?? 0,
+      filters: normalized,
+    };
   }
 
-  const { data, error } = await request;
-  if (error) {
-    throw error;
-  }
-
-  const profiles = (data ?? []) as ProfileRow[];
   const profileIds = profiles.map((profile) => profile.id);
-  const carrierIds = profiles
-    .filter((profile) => profile.role === "carrier")
-    .map((profile) => profile.id);
-  const shipperIds = profiles
-    .filter((profile) => profile.role === "shipper")
-    .map((profile) => profile.id);
+  const carrierIds = profiles.filter((profile) => profile.role === "carrier").map((profile) => profile.id);
+  const shipperIds = profiles.filter((profile) => profile.role === "shipper").map((profile) => profile.id);
 
   const [vehiclesResult, bookingsAsShipperResult, bookingsAsCarrierResult, shipmentsResult] = await Promise.all([
     profileIds.length
       ? supabase.from("vehicles").select("id, carrier_id").in("carrier_id", profileIds)
       : Promise.resolve({ data: [], error: null }),
     shipperIds.length
-      ? supabase
-          .from("bookings")
-          .select("id, shipper_id")
-          .in("shipper_id", shipperIds)
+      ? supabase.from("bookings").select("id, shipper_id").in("shipper_id", shipperIds)
       : Promise.resolve({ data: [], error: null }),
     carrierIds.length
-      ? supabase
-          .from("bookings")
-          .select("id, carrier_id")
-          .in("carrier_id", carrierIds)
+      ? supabase.from("bookings").select("id, carrier_id").in("carrier_id", carrierIds)
       : Promise.resolve({ data: [], error: null }),
     shipperIds.length
-      ? supabase
-          .from("shipments")
-          .select("id, shipper_id")
-          .in("shipper_id", shipperIds)
+      ? supabase.from("shipments").select("id, shipper_id").in("shipper_id", shipperIds)
       : Promise.resolve({ data: [], error: null }),
   ]);
 
@@ -279,28 +322,29 @@ export async function fetchUsers({
     shipmentCounts.set(shipment.shipper_id, (shipmentCounts.get(shipment.shipper_id) ?? 0) + 1);
   }
 
-  const filteredProfiles =
-    normalizedVerification && isVerificationStatus(normalizedVerification)
-      ? profiles.filter((profile) => packetMap.get(profile.id)?.status === normalizedVerification)
-      : profiles;
-
-  return filteredProfiles.map((profile) => ({
-    profileId: profile.id,
-    displayName: resolveDisplayName(profile),
-    role: profile.role,
-    email: profile.email,
-    phoneNumber: profile.phone_number,
-    companyName: profile.company_name,
-    isActive: profile.is_active,
-    verificationStatus: profile.role === "carrier" ? (packetMap.get(profile.id)?.status ?? "pending") : null,
-    vehicleCount: vehicleCounts.get(profile.id) ?? 0,
-    shipmentCount: shipmentCounts.get(profile.id) ?? 0,
-    bookingCount:
-      profile.role === "carrier"
-        ? (carrierBookingCounts.get(profile.id) ?? 0)
-        : (shipperBookingCounts.get(profile.id) ?? 0),
-    updatedAt: profile.updated_at,
-  }));
+  return {
+    users: profiles.map((profile) => ({
+      profileId: profile.id,
+      displayName: resolveDisplayName(profile),
+      role: profile.role,
+      email: profile.email,
+      phoneNumber: profile.phone_number,
+      companyName: profile.company_name,
+      isActive: profile.is_active,
+      verificationStatus: profile.role === "carrier" ? (packetMap.get(profile.id)?.status ?? "pending") : null,
+      vehicleCount: vehicleCounts.get(profile.id) ?? 0,
+      shipmentCount: shipmentCounts.get(profile.id) ?? 0,
+      bookingCount:
+        profile.role === "carrier"
+          ? (carrierBookingCounts.get(profile.id) ?? 0)
+          : (shipperBookingCounts.get(profile.id) ?? 0),
+      updatedAt: profile.updated_at,
+    })),
+    page: safePage,
+    pageSize: normalized.pageSize,
+    totalUsers: countResult.count ?? 0,
+    filters: normalized,
+  };
 }
 
 export async function fetchUserDetail(userId: string): Promise<AdminUserDetail | null> {

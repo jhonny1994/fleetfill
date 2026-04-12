@@ -1,8 +1,9 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { PaymentReviewActions } from "@/components/detail/payment-review-actions";
+import { renderWithIntl } from "@/tests/render-with-intl";
 
 const refreshSpy = vi.fn();
 const rpcSpy = vi.fn().mockResolvedValue({ error: null });
@@ -23,10 +24,10 @@ describe("PaymentReviewActions", () => {
   it("submits the approve flow through the payment RPC", async () => {
     const user = userEvent.setup();
 
-    render(<PaymentReviewActions locale="en" proofId="proof-1" defaultAmount={12000} />);
+    renderWithIntl(<PaymentReviewActions proofId="proof-1" defaultAmount={12000} />);
 
     await user.click(screen.getByRole("button", { name: "Approve proof" }));
-    await user.click(screen.getAllByRole("button", { name: "Approve proof" })[1]);
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Approve proof" }));
 
     await waitFor(() =>
       expect(rpcSpy).toHaveBeenCalledWith("admin_approve_payment_proof", {

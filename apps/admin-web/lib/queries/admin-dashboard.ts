@@ -44,7 +44,7 @@ export async function fetchAdminOperationalSummary() {
   return mapSummary((data ?? null) as Record<string, unknown> | null);
 }
 
-export type DashboardQueuePreviews = {
+type DashboardQueuePreviews = {
   payments: PaymentQueueItem[];
   verification: VerificationQueueItem[];
   disputes: DisputeQueueItem[];
@@ -64,7 +64,7 @@ export async function fetchDashboardQueuePreviews(): Promise<DashboardQueuePrevi
   return { payments, verification, disputes, payouts, support };
 }
 
-export type DashboardAlert = {
+type DashboardAlert = {
   id: string;
   tone: "danger" | "warning";
   title: string;

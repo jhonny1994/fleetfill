@@ -5,14 +5,20 @@ Internal desktop-first operations console for FleetFill.
 ## Stack
 
 - Next.js App Router
+- React 19
 - TypeScript
 - Tailwind CSS
-- TanStack Query
+- `next-intl` with locale-prefixed routing
 - TanStack Table
-- Supabase SSR
+- Supabase SSR/Auth + Postgres RPCs
+- Radix-based internal dialog and drawer primitives
+- Vitest for unit/component tests
+- Playwright for browser coverage
 - pnpm
 
 ## Local Development
+
+Install dependencies and run the app:
 
 ```bash
 pnpm install
@@ -27,17 +33,15 @@ http://localhost:3000
 
 ## Environment
 
-Copy [`.env.example`](C:\Users\raouf\projects\fleetfill\apps\admin-web\.env.example) into `.env.local` and set:
+Copy [`.env.example`](C:/Users/raouf/projects/fleetfill/apps/admin-web/.env.example) to `.env.local` and set:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_SITE_URL`
 
-Use the local Supabase browser URL for web development, typically `http://127.0.0.1:54321`.
+For local development, `NEXT_PUBLIC_SUPABASE_URL` is typically `http://127.0.0.1:54321`.
 
-### How To Update Environment Values
-
-Local:
+Update local env:
 
 ```bash
 cp .env.example .env.local
@@ -45,19 +49,30 @@ cp .env.example .env.local
 
 Then edit `.env.local` and restart `pnpm dev`.
 
-Vercel production:
+For Vercel production:
 
 - update environment variables in the Vercel project settings
 - redeploy the affected environment
-- or run [C:\Users\raouf\projects\fleetfill\tool\sync_admin_vercel_env.ps1](C:\Users\raouf\projects\fleetfill\tool\sync_admin_vercel_env.ps1) from the repo root
+- or run [sync_admin_vercel_env.ps1](C:/Users/raouf/projects/fleetfill/tool/sync_admin_vercel_env.ps1) from the repo root
 
-### How To Verify Runtime Targeting
+## Localization
 
-- verify `NEXT_PUBLIC_SITE_URL` matches the expected host
-- confirm auth and data point to the intended Supabase project
-- for preview/prod, verify the deployed URL and the Vercel environment page agree
+The app uses a registry-driven `next-intl` setup:
 
-## Verification Commands
+- supported locales are defined in [config.ts](C:/Users/raouf/projects/fleetfill/apps/admin-web/lib/i18n/config.ts)
+- locale messages live in [messages](C:/Users/raouf/projects/fleetfill/apps/admin-web/messages)
+- locale negotiation happens in [proxy.ts](C:/Users/raouf/projects/fleetfill/apps/admin-web/proxy.ts)
+- runtime platform settings can enable or disable supported locales without changing code
+
+Locale growth rule:
+
+- add one locale entry to the registry
+- add one locale message file
+- keep runtime settings within the supported locale registry
+
+## Validation
+
+Primary quality gate in `apps/admin-web`:
 
 ```bash
 pnpm lint
@@ -66,49 +81,66 @@ pnpm test
 pnpm build
 pnpm i18n:audit-keys
 pnpm i18n:scan-hardcoded
+pnpm dlx knip
+pnpm dlx pruny --all
 ```
 
-From the repo root, backend validation remains:
+## Browser Testing
+
+Playwright coverage lives under [tests/e2e](C:/Users/raouf/projects/fleetfill/apps/admin-web/tests/e2e).
+
+Install the browser once:
 
 ```bash
-supabase db lint --workdir backend/supabase
-supabase test db --workdir backend/supabase
+pnpm test:e2e:install
 ```
 
-## Vercel Notes
+Before running browser tests locally, start the local Supabase stack from the repo root or `backend`:
 
-- Preview deployments are a Vercel delivery channel, not a separate FleetFill runtime mode.
-- Production should use the admin-only domain and production Supabase environment variables.
-- Do not expose `service_role` keys to the browser or to Next.js client bundles.
-- Sensitive admin mutations continue to run through the backend RPC layer.
-- GitHub Actions controls the official admin-web production deploy path.
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml) is the canonical production workflow.
+```bash
+supabase start --workdir backend
+supabase db reset --workdir backend --yes
+```
+
+Then run:
+
+```bash
+pnpm test:e2e
+```
+
+The Playwright harness seeds deterministic admin fixtures and builds the app against the local Supabase runtime automatically.
 
 ## CI/CD
 
 GitHub Actions workflows:
 
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml)
+- [ci.yml](C:/Users/raouf/projects/fleetfill/.github/workflows/ci.yml)
+- [production_admin_web.yml](C:/Users/raouf/projects/fleetfill/.github/workflows/production_admin_web.yml)
+- [production_supabase.yml](C:/Users/raouf/projects/fleetfill/.github/workflows/production_supabase.yml)
 
-GitHub configuration expected for the optional manual CLI fallback:
+The admin-web CI path now covers:
 
-- secret `VERCEL_TOKEN`
-- variable `VERCEL_ORG_ID`
-- variable `VERCEL_ADMIN_WEB_PROJECT_ID`
+- lint
+- typecheck
+- unit/component tests
+- production build
+- dead-code scans
+- Playwright browser tests against local Supabase
 
-Vercel runtime variables expected by the app:
+## Deployment Notes
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `NEXT_PUBLIC_SITE_URL`
+- Preview deployments are a Vercel delivery channel, not a separate FleetFill runtime mode.
+- Production should use the admin-only domain and production Supabase environment variables.
+- Never expose `service_role` keys to the browser or client bundles.
+- Sensitive admin mutations continue to run through the backend RPC layer.
+- [production_admin_web.yml](C:/Users/raouf/projects/fleetfill/.github/workflows/production_admin_web.yml) is the canonical production workflow.
 
 ## Browser QA Focus
 
 Before calling a deployment ready, verify:
 
-- locale switching changes the URL and keeps you on the same admin route
-- Arabic layout keeps drawer/sidebar alignment and icon direction correct
-- dashboard, queues, and detail workspaces remain readable on laptop and emergency mobile browser widths
-- auth, search, and one primary action per queue still work after env changes
+- locale switching keeps the current admin route
+- Arabic routes apply correct RTL semantics and mirrored shell behavior
+- auth still works in every supported locale
+- at least one queue filter flow keeps URL state
+- at least one destructive confirmation flow behaves modally

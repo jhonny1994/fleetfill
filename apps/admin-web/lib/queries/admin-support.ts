@@ -22,7 +22,7 @@ type SupportMessageRow = {
   created_at: string;
 };
 
-export type AdminSupportDetail = {
+type AdminSupportDetail = {
   request: SupportRequestRow;
   messages: SupportMessageRow[];
 };
