@@ -6,7 +6,7 @@ void main() {
     test('uses subject text search for normal free-text queries', () {
       expect(
         buildAdminSupportSearchFilter('payment issue'),
-        'subject.ilike.%payment issue%',
+        'subject.ilike."*payment issue*"',
       );
     });
 
@@ -16,13 +16,20 @@ void main() {
       expect(
         buildAdminSupportSearchFilter(id),
         allOf([
-          contains('subject.ilike.%$id%'),
+          contains('subject.ilike."*$id*"'),
           contains('created_by.eq.$id'),
           contains('booking_id.eq.$id'),
           contains('shipment_id.eq.$id'),
           contains('payment_proof_id.eq.$id'),
           contains('dispute_id.eq.$id'),
         ]),
+      );
+    });
+
+    test('escapes reserved characters in free-text queries', () {
+      expect(
+        buildAdminSupportSearchFilter('foo,bar)"a*b'),
+        r'subject.ilike."*foo,bar)\"a\*b*"',
       );
     });
   });

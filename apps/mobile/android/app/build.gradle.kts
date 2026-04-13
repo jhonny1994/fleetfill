@@ -34,6 +34,15 @@ val hasReleaseSigning =
         !releaseKeystorePassword.isNullOrBlank() &&
         !releaseKeyAlias.isNullOrBlank() &&
         !releaseKeyPassword.isNullOrBlank()
+val isReleaseBuildRequested = gradle.startParameter.taskNames.any {
+    it.contains("Release", ignoreCase = true)
+}
+
+if (isReleaseBuildRequested && !hasReleaseSigning) {
+    throw GradleException(
+        "Release signing is required for release builds. Set FLEETFILL_RELEASE_STORE_FILE, FLEETFILL_RELEASE_STORE_PASSWORD, FLEETFILL_RELEASE_KEY_ALIAS, and FLEETFILL_RELEASE_KEY_PASSWORD.",
+    )
+}
 
 android {
     namespace = "com.carbodex.fleetfill"
@@ -73,11 +82,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (hasReleaseSigning) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
-            }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

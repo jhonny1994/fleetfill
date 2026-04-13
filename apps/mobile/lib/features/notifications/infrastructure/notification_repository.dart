@@ -33,16 +33,17 @@ class NotificationRepository {
         .from('notifications')
         .select()
         .order('created_at', ascending: false)
-        .range(normalizedOffset, normalizedOffset + normalizedLimit - 1);
-    final items = (response as List<dynamic>)
+        .range(normalizedOffset, normalizedOffset + normalizedLimit);
+    final responseItems = (response as List<dynamic>)
         .cast<Map<String, dynamic>>()
         .map(AppNotificationRecord.fromJson)
         .toList(growable: false);
+    final items = responseItems.take(normalizedLimit).toList(growable: false);
     return NotificationPage(
       items: items,
       offset: normalizedOffset,
       limit: normalizedLimit,
-      hasMore: items.length >= normalizedLimit,
+      hasMore: responseItems.length > normalizedLimit,
     );
   }
 

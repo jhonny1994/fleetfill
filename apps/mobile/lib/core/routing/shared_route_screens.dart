@@ -295,20 +295,21 @@ class ShipmentDetailScreen extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.lg),
                 Row(
                   children: [
-                      Expanded(
-                        child: FilledButton(
-                          onPressed: () => context.push(
-                            AppRoutePath.shipperPaymentFlow,
-                            extra: shipperBookingWorkspace.id,
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: () => context.push(
+                          AppRoutePath.shipperPaymentFlowForBooking(
+                            shipperBookingWorkspace.id,
                           ),
-                          child: Text(
-                            _shipperPaymentActionLabel(
-                              s,
-                              shipperBookingWorkspace,
-                            ),
+                        ),
+                        child: Text(
+                          _shipperPaymentActionLabel(
+                            s,
+                            shipperBookingWorkspace,
                           ),
                         ),
                       ),
+                    ),
                     if (_canShipperCancelPendingBooking(
                       shipperBookingWorkspace,
                     )) ...[
@@ -362,16 +363,16 @@ class BookingTrackingScreen extends ConsumerWidget {
     final s = S.of(context);
     final bookingAsync = ref.watch(bookingDetailProvider(bookingId));
     final eventsAsync = ref.watch(trackingEventsProvider(bookingId));
-    final documentsAsync = ref.watch(generatedDocumentsForBookingProvider(bookingId));
+    final documentsAsync = ref.watch(
+      generatedDocumentsForBookingProvider(bookingId),
+    );
     final auth = ref.watch(authSessionControllerProvider).asData?.value;
-    final payoutContextAsync =
-        auth?.role == AppUserRole.carrier
-            ? ref.watch(bookingPayoutRequestContextProvider(bookingId))
-            : null;
-    final bookingPayoutsAsync =
-        auth?.role == AppUserRole.carrier
-            ? ref.watch(payoutsForBookingProvider(bookingId))
-            : null;
+    final payoutContextAsync = auth?.role == AppUserRole.carrier
+        ? ref.watch(bookingPayoutRequestContextProvider(bookingId))
+        : null;
+    final bookingPayoutsAsync = auth?.role == AppUserRole.carrier
+        ? ref.watch(payoutsForBookingProvider(bookingId))
+        : null;
 
     return AppPageScaffold(
       title: s.trackingDetailPageTitle,
@@ -455,8 +456,7 @@ class BookingTrackingScreen extends ConsumerWidget {
                 if (canOpenShipperWorkspace) ...[
                   FilledButton.icon(
                     onPressed: () => context.push(
-                      AppRoutePath.shipperPaymentFlow,
-                      extra: booking.id,
+                      AppRoutePath.shipperPaymentFlowForBooking(booking.id),
                     ),
                     icon: const Icon(Icons.payments_outlined),
                     label: Text(_shipperPaymentActionLabel(s, booking)),
@@ -541,7 +541,8 @@ class BookingTrackingScreen extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: () => context.push(AppRoutePath.sharedSupport),
+                        onPressed: () =>
+                            context.push(AppRoutePath.sharedSupport),
                         icon: const Icon(Icons.support_agent_rounded),
                         label: Text(s.supportTitle),
                       ),
@@ -601,7 +602,9 @@ class BookingTrackingScreen extends ConsumerWidget {
                                       ),
                                     ),
                                     trailing: document.isReady
-                                        ? const Icon(Icons.chevron_right_rounded)
+                                        ? const Icon(
+                                            Icons.chevron_right_rounded,
+                                          )
                                         : null,
                                     onTap: document.isReady
                                         ? () => context.push(
@@ -2091,39 +2094,42 @@ class _CarrierPayoutSection extends StatelessWidget {
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: AppSpacing.md),
-          payoutContextAsync.when(
-            data: (contextValue) => ProfileSummaryCard(
-              title: s.carrierPayoutSectionTitle,
+        payoutContextAsync.when(
+          data: (contextValue) => ProfileSummaryCard(
+            title: s.carrierPayoutSectionTitle,
             rows: [
               ProfileSummaryRow(
                 label: s.bookingCarrierPayoutLabel,
                 value: _sharedMoney(s, booking.carrierPayoutDzd),
               ),
-                ProfileSummaryRow(
-                  label: s.routeStatusLabel,
-                  value: _carrierPayoutRequestStateLabel(s, contextValue),
-                ),
-                ProfileSummaryRow(
-                  label: s.carrierPayoutGraceWindowLabel,
-                  value: s.carrierPayoutGraceWindowValue(
-                    BidiFormatters.latinIdentifier(
-                      contextValue.graceWindowHours.toString(),
-                    ),
+              ProfileSummaryRow(
+                label: s.routeStatusLabel,
+                value: _carrierPayoutRequestStateLabel(s, contextValue),
+              ),
+              ProfileSummaryRow(
+                label: s.carrierPayoutGraceWindowLabel,
+                value: s.carrierPayoutGraceWindowValue(
+                  BidiFormatters.latinIdentifier(
+                    contextValue.graceWindowHours.toString(),
                   ),
                 ),
-                if (contextValue.requestedAt != null)
-                  ProfileSummaryRow(
-                    label: s.carrierPayoutRequestedAtLabel,
-                    value: _sharedFormatDate(contextValue.requestedAt!),
-                  ),
-                if (contextValue.payoutProcessedAt != null)
-                  ProfileSummaryRow(
-                    label: s.carrierPayoutReleasedAtLabel,
-                    value: _sharedFormatDate(contextValue.payoutProcessedAt!),
-                  ),
-                if (_payoutRequestBlockedReasonLabel(s, contextValue.blockedReason)
-                    case final blocked?)
-                  ProfileSummaryRow(
+              ),
+              if (contextValue.requestedAt != null)
+                ProfileSummaryRow(
+                  label: s.carrierPayoutRequestedAtLabel,
+                  value: _sharedFormatDate(contextValue.requestedAt!),
+                ),
+              if (contextValue.payoutProcessedAt != null)
+                ProfileSummaryRow(
+                  label: s.carrierPayoutReleasedAtLabel,
+                  value: _sharedFormatDate(contextValue.payoutProcessedAt!),
+                ),
+              if (_payoutRequestBlockedReasonLabel(
+                    s,
+                    contextValue.blockedReason,
+                  )
+                  case final blocked?)
+                ProfileSummaryRow(
                   label: s.reasonLabel,
                   value: blocked,
                 ),
@@ -2139,16 +2145,16 @@ class _CarrierPayoutSection extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         payoutContextAsync.when(
-            data: (contextValue) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AuthInfoBanner(
-                  message: _carrierPayoutGuidanceMessage(s, contextValue),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                if (contextValue.isEligible && !contextValue.hasRequestedPayout)
-                  FilledButton.icon(
-                    onPressed: onRequestPayout,
+          data: (contextValue) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AuthInfoBanner(
+                message: _carrierPayoutGuidanceMessage(s, contextValue),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              if (contextValue.isEligible && !contextValue.hasRequestedPayout)
+                FilledButton.icon(
+                  onPressed: onRequestPayout,
                   icon: const Icon(Icons.account_balance_wallet_outlined),
                   label: Text(s.carrierPayoutRequestAction),
                 ),
@@ -2189,7 +2195,8 @@ class _CarrierPayoutSection extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                           child: AppListCard(
                             title: _sharedMoney(s, payout.amountDzd),
-                            subtitle: payout.processedAt != null ||
+                            subtitle:
+                                payout.processedAt != null ||
                                     payout.createdAt != null
                                 ? _sharedFormatDate(
                                     payout.processedAt ?? payout.createdAt!,
@@ -2230,101 +2237,109 @@ class _BookingLifecycleTimeline extends StatelessWidget {
   Widget build(BuildContext context) {
     final latestEventId = events.isEmpty ? null : events.first.id;
     return Column(
-      children: events.asMap().entries.map((entry) {
-        final index = entry.key;
-        final event = entry.value;
-        final isLast = index == events.length - 1;
-        final isCurrent = event.id == latestEventId;
-        final note = _trackingEventNote(s, event.eventType, event.note);
-        final actorLabel = _trackingEventActorLabel(s, event.eventType, event.note);
-        final colorScheme = Theme.of(context).colorScheme;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.md),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 24,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
+      children: events
+          .asMap()
+          .entries
+          .map((entry) {
+            final index = entry.key;
+            final event = entry.value;
+            final isLast = index == events.length - 1;
+            final isCurrent = event.id == latestEventId;
+            final note = _trackingEventNote(s, event.eventType, event.note);
+            final actorLabel = _trackingEventActorLabel(
+              s,
+              event.eventType,
+              event.note,
+            );
+            final colorScheme = Theme.of(context).colorScheme;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 24,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: isCurrent
+                                ? colorScheme.tertiary
+                                : colorScheme.primary,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        if (!isLast)
+                          Container(
+                            width: 2,
+                            height: 52,
+                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            color: colorScheme.outlineVariant,
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
                         color: isCurrent
-                            ? colorScheme.tertiary
-                            : colorScheme.primary,
-                        shape: BoxShape.circle,
+                            ? colorScheme.tertiaryContainer
+                            : colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
+                        border: Border.all(
+                          color: isCurrent
+                              ? colorScheme.tertiary
+                              : colorScheme.outlineVariant,
+                        ),
                       ),
-                    ),
-                    if (!isLast)
-                      Container(
-                        width: 2,
-                        height: 52,
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        color: colorScheme.outlineVariant,
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: isCurrent
-                        ? colorScheme.tertiaryContainer
-                        : colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(AppRadius.lg),
-                    border: Border.all(
-                      color: isCurrent
-                          ? colorScheme.tertiary
-                          : colorScheme.outlineVariant,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        spacing: AppSpacing.xs,
-                        runSpacing: AppSpacing.xs,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (isCurrent)
-                            AppStatusChip(
-                              label: s.bookingTimelineCurrentLabel,
+                          Wrap(
+                            spacing: AppSpacing.xs,
+                            runSpacing: AppSpacing.xs,
+                            children: [
+                              if (isCurrent)
+                                AppStatusChip(
+                                  label: s.bookingTimelineCurrentLabel,
+                                ),
+                              if (actorLabel != null)
+                                AppStatusChip(
+                                  label: actorLabel,
+                                ),
+                            ],
+                          ),
+                          if (isCurrent || actorLabel != null)
+                            const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            _trackingEventLabel(s, event.eventType),
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            _sharedFormatDate(event.recordedAt),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          if (note != null) ...[
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              note,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                          if (actorLabel != null)
-                            AppStatusChip(
-                              label: actorLabel,
-                            ),
+                          ],
                         ],
                       ),
-                      if (isCurrent || actorLabel != null)
-                        const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        _trackingEventLabel(s, event.eventType),
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        _sharedFormatDate(event.recordedAt),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      if (note != null) ...[
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          note,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        );
-      }).toList(growable: false),
+            );
+          })
+          .toList(growable: false),
     );
   }
 }
@@ -2469,7 +2484,8 @@ String _bookingNextActionMessage(
       PaymentStatus.rejected => s.shipperNextActionPayment,
       PaymentStatus.proofSubmitted => s.shipperNextActionReview,
       PaymentStatus.underVerification => s.shipperNextActionReview,
-      PaymentStatus.secured when booking.bookingStatus == BookingStatus.confirmed =>
+      PaymentStatus.secured
+          when booking.bookingStatus == BookingStatus.confirmed =>
         s.carrierNextActionPickup,
       PaymentStatus.secured
           when booking.bookingStatus == BookingStatus.deliveredPendingReview =>

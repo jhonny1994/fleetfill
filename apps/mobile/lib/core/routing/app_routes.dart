@@ -123,6 +123,10 @@ abstract final class AppRoutePath {
   static const shipperProfile = '/shipper/profile';
   static const shipperBookingReview = '/shipper/search/booking-review';
   static const shipperPaymentFlow = '/shipper/search/payment-flow';
+  static String shipperPaymentFlowForBooking(String bookingId) => Uri(
+    path: shipperPaymentFlow,
+    queryParameters: <String, String>{'bookingId': bookingId},
+  ).toString();
   static String shipperProfileEdit() => '$shipperProfile/edit';
 
   static const carrierHome = '/carrier/home';

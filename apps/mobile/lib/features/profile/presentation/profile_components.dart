@@ -88,6 +88,7 @@ class ProfileDetailsFormFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final requiresPhone = role != AppUserRole.admin;
     final isCarrier = role == AppUserRole.carrier;
 
     String? nameValidator(String? value) {
@@ -114,7 +115,7 @@ class ProfileDetailsFormFields extends StatelessWidget {
 
     String? algerianPhoneValidator(String? value) {
       final normalized = InputSanitizers.normalizeAlgerianPhoneNumber(value);
-      if (normalized == null) {
+      if (normalized == null && requiresPhone) {
         return s.profileInvalidAlgerianPhoneMessage;
       }
       return null;

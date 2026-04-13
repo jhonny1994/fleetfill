@@ -59,6 +59,46 @@ void main() {
     expect(find.text('fr|dark'), findsOneWidget);
   });
 
+  test('shouldShowBootstrapFailure returns true for failed bootstrap data', () {
+    expect(
+      shouldShowBootstrapFailure(
+        AsyncData<AppBootstrapState>(
+          AppBootstrapState(
+            status: BootstrapStateStatus.failed,
+            environment: const AppEnvironmentConfig(
+              supabaseUrl: 'http://127.0.0.1:54321',
+            ),
+            clientSettings: const ClientSettings(
+              bookingPricing: BookingPricingSettings(
+                platformFeeRate: 0.05,
+                carrierFeeRate: 0.02,
+                insuranceRate: 0.01,
+                insuranceMinFeeDzd: 100,
+                taxRate: 0,
+                paymentResubmissionDeadlineHours: 24,
+              ),
+              deliveryReview: DeliveryReviewSettings(graceWindowHours: 24),
+              appRuntime: AppRuntimeSettings(
+                maintenanceMode: false,
+                forceUpdateRequired: false,
+                minimumSupportedAndroidVersion: 1,
+                minimumSupportedIosVersion: 1,
+              ),
+              localization: LocalizationSettings(
+                fallbackLocale: 'ar',
+                enabledLocaleCodes: ['ar', 'fr', 'en'],
+              ),
+              paymentAccounts: <PlatformPaymentAccountSettings>[],
+            ),
+            auth: const AuthSnapshot(status: AuthStatus.unauthenticated),
+            error: Exception('bootstrap failed'),
+          ),
+        ),
+      ),
+      isTrue,
+    );
+  });
+
   testWidgets(
     'shipper journey keeps shipment, search, booking, and proof states aligned',
     (

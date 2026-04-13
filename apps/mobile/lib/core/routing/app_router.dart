@@ -252,14 +252,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: 'booking-review',
                     name: AppRouteName.shipperBookingReview.name,
                     builder: (context, state) => BookingReviewScreen(
-                      selection: state.extra as BookingReviewSelection?,
+                      selection: BookingReviewSelection.fromRoutePayload(
+                        state.uri.queryParameters['selection'],
+                      ),
                     ),
                   ),
                   GoRoute(
                     path: 'payment-flow',
                     name: AppRouteName.shipperPaymentFlow.name,
                     builder: (context, state) => PaymentFlowScreen(
-                      bookingId: state.extra as String?,
+                      bookingId: state.uri.queryParameters['bookingId'],
                     ),
                   ),
                 ],
