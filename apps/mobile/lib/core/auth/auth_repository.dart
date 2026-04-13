@@ -9,7 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const authRedirectUri = 'com.carbodex.fleetfill://auth-callback';
+const fleetFillPublicSiteOrigin = 'https://fleetfill.vercel.app';
+const mobileAuthCallbackPath = '/auth/mobile-callback';
+const hostedAuthRedirectUri = '$fleetFillPublicSiteOrigin$mobileAuthCallbackPath';
+const localAuthRedirectUri = 'com.carbodex.fleetfill://auth-callback';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final environment = ref.watch(appEnvironmentConfigProvider);
@@ -29,6 +32,8 @@ class AuthRepository {
   final NativeGoogleAuthClient googleAuthClient;
 
   SupabaseClient get _client => Supabase.instance.client;
+  String get authRedirectUri =>
+      environment.isLocalBackend ? localAuthRedirectUri : hostedAuthRedirectUri;
 
   Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
 
