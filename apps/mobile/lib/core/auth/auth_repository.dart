@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const authRedirectUri = 'fleetfill://auth-callback';
+const authRedirectUri = 'com.carbodex.fleetfill://auth-callback';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final environment = ref.watch(appEnvironmentConfigProvider);

@@ -29,6 +29,7 @@ final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
 final appEnvironmentConfigProvider = Provider<AppEnvironmentConfig>((ref) {
   throw UnimplementedError('appEnvironmentConfigProvider must be overridden');
 });
+final supabaseInitializedProvider = Provider<bool>((ref) => false);
 
 final appLoggerProvider = Provider<AppLogger>((ref) => const DebugAppLogger());
 final crashReporterProvider = Provider<CrashReporter>(
@@ -84,8 +85,7 @@ Future<PreparedAppDependencies> prepareAppDependencies() async {
 }
 
 Future<bool> _initializeSupabase(AppEnvironmentConfig environment) async {
-  if (!environment.hasSupabaseConfig ||
-      AppBootstrapController.supabaseInitialized) {
+  if (!environment.hasSupabaseConfig) {
     return false;
   }
 
@@ -93,7 +93,6 @@ Future<bool> _initializeSupabase(AppEnvironmentConfig environment) async {
     url: environment.supabaseUrl,
     anonKey: environment.supabaseAnonKey,
   );
-  AppBootstrapController.supabaseInitialized = true;
   return true;
 }
 
@@ -107,12 +106,12 @@ Future<ClientSettings> _fetchClientSettings() async {
 Future<({AppEnvironmentConfig environment, ClientSettings clientSettings})>
 _resolveRuntimeEnvironment(
   AppEnvironmentConfig environment,
+  bool supabaseInitialized,
 ) async {
   final fallbackClientSettings = ClientSettings.fromJson(
     const <String, dynamic>{},
   );
-  if (!environment.hasSupabaseConfig ||
-      !AppBootstrapController.supabaseInitialized) {
+  if (!environment.hasSupabaseConfig || !supabaseInitialized) {
     return (
       environment: environment,
       clientSettings: fallbackClientSettings,
@@ -171,11 +170,10 @@ class AppBootstrapState {
 
 @riverpod
 class AppBootstrapController extends _$AppBootstrapController {
-  static bool supabaseInitialized = false;
-
   @override
   Future<AppBootstrapState> build() async {
     final configuredEnvironment = ref.watch(appEnvironmentConfigProvider);
+    final supabaseInitialized = ref.watch(supabaseInitializedProvider);
     final logger = ref.watch(appLoggerProvider);
     final localAndroidNetworkTarget =
         AppEnvironmentConfig.resolveLocalAndroidNetworkTargetForTesting();
@@ -192,6 +190,7 @@ class AppBootstrapController extends _$AppBootstrapController {
       );
       final runtime = await _resolveRuntimeEnvironment(
         configuredEnvironment,
+        supabaseInitialized,
       );
       final auth = await ref
           .read(authRepositoryProvider)

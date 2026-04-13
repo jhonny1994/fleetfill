@@ -59,7 +59,8 @@ class ShipperHomeScreen extends ConsumerWidget {
     final shipmentsAsync = ref.watch(myShipperShipmentsProvider);
     final bookingsAsync = ref.watch(myShipperBookingsProvider);
     final bookings = bookingsAsync.asData?.value ?? const <BookingRecord>[];
-    final shipments = shipmentsAsync.asData?.value ?? const <ShipmentDraftRecord>[];
+    final shipments =
+        shipmentsAsync.asData?.value ?? const <ShipmentDraftRecord>[];
     final activeBookings = bookings
         .where(
           (booking) =>
@@ -229,15 +230,19 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
                 in bookingsAsync.asData?.value ?? const <BookingRecord>[])
               booking.shipmentId: booking,
           };
-          final filteredShipments = shipments.where((shipment) {
-            final booking = bookingByShipmentId[shipment.id];
-            final isHistory =
-                shipment.status == ShipmentStatus.cancelled ||
-                (booking != null &&
-                    (booking.bookingStatus == BookingStatus.completed ||
-                        booking.bookingStatus == BookingStatus.cancelled));
-            return _scope == _OperationsListScope.active ? !isHistory : isHistory;
-          }).toList(growable: false);
+          final filteredShipments = shipments
+              .where((shipment) {
+                final booking = bookingByShipmentId[shipment.id];
+                final isHistory =
+                    shipment.status == ShipmentStatus.cancelled ||
+                    (booking != null &&
+                        (booking.bookingStatus == BookingStatus.completed ||
+                            booking.bookingStatus == BookingStatus.cancelled));
+                return _scope == _OperationsListScope.active
+                    ? !isHistory
+                    : isHistory;
+              })
+              .toList(growable: false);
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -291,40 +296,40 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
                   )
                 else
                   ...filteredShipments.indexed.map((entry) {
-                  final index = entry.$1;
-                  final shipment = entry.$2;
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: index == filteredShipments.length - 1
-                          ? 0
-                          : AppSpacing.sm,
-                    ),
-                    child: _ShipperShipmentListItem(
-                      shipment: shipment,
-                      booking: bookingByShipmentId[shipment.id],
-                      communeMap: communeMap,
-                      onOpenEditor: () =>
-                          _openShipmentEditor(context, shipment: shipment),
-                      onDeleteDraft: () => _deleteShipmentFromList(
-                        context,
-                        ref,
-                        shipment,
+                    final index = entry.$1;
+                    final shipment = entry.$2;
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: index == filteredShipments.length - 1
+                            ? 0
+                            : AppSpacing.sm,
                       ),
-                      onCancelBooking: (booking) =>
-                          _cancelBookingFromShipmentList(
-                            context,
-                            ref,
-                            booking,
-                          ),
-                    ),
-                  );
-                }),
+                      child: _ShipperShipmentListItem(
+                        shipment: shipment,
+                        booking: bookingByShipmentId[shipment.id],
+                        communeMap: communeMap,
+                        onOpenEditor: () =>
+                            _openShipmentEditor(context, shipment: shipment),
+                        onDeleteDraft: () => _deleteShipmentFromList(
+                          context,
+                          ref,
+                          shipment,
+                        ),
+                        onCancelBooking: (booking) =>
+                            _cancelBookingFromShipmentList(
+                              context,
+                              ref,
+                              booking,
+                            ),
+                      ),
+                    );
+                  }),
               ],
             ),
           );
         },
       ),
-      );
+    );
   }
 
   void _openShipmentEditor(
@@ -399,6 +404,7 @@ class _MyShipmentsScreenState extends ConsumerState<MyShipmentsScreen> {
 }
 
 enum _ShipmentListAction { edit, delete }
+
 enum _BookedShipmentAction { openPayment, cancel }
 
 class _ShipperShipmentListItem extends StatelessWidget {
@@ -465,12 +471,14 @@ class _ShipperShipmentListItem extends StatelessWidget {
                 switch (action) {
                   case _BookedShipmentAction.openPayment:
                     if (paymentFlowBooking != null) {
-                      unawaited(context.push(
-                        AppRoutePath.sharedShipmentDetail.replaceFirst(
-                          ':id',
-                          shipment.id,
+                      unawaited(
+                        context.push(
+                          AppRoutePath.sharedShipmentDetail.replaceFirst(
+                            ':id',
+                            shipment.id,
+                          ),
                         ),
-                      ));
+                      );
                     }
                   case _BookedShipmentAction.cancel:
                     if (cancellableBooking != null) {
@@ -495,9 +503,11 @@ class _ShipperShipmentListItem extends StatelessWidget {
             )
           : null,
       onTap: () {
-        unawaited(context.push(
-          AppRoutePath.sharedShipmentDetail.replaceFirst(':id', shipment.id),
-        ));
+        unawaited(
+          context.push(
+            AppRoutePath.sharedShipmentDetail.replaceFirst(':id', shipment.id),
+          ),
+        );
       },
     );
   }
@@ -1139,7 +1149,7 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
           );
       if (!context.mounted) return;
       AppFeedback.showSnackBar(context, s.bookingCreatedMessage);
-      context.go(AppRoutePath.shipperPaymentFlow, extra: booking.id);
+      context.go(AppRoutePath.shipperPaymentFlowForBooking(booking.id));
     } on PostgrestException catch (error) {
       if (context.mounted) {
         AppFeedback.showSnackBar(context, mapAppErrorMessage(s, error));
@@ -1309,7 +1319,8 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                 message: s.paymentProofEmptyMessage,
               ),
             const SizedBox(height: AppSpacing.md),
-            if (booking.bookingStatus == BookingStatus.deliveredPendingReview) ...[
+            if (booking.bookingStatus ==
+                BookingStatus.deliveredPendingReview) ...[
               FilledButton(
                 onPressed: () => unawaited(_confirmDelivery(booking)),
                 child: Text(s.deliveryConfirmAction),
@@ -1343,7 +1354,8 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                   ),
                 ],
                 if (latestProof != null) ...[
-                  if (canUploadProof || _canShipperCancelPendingBooking(booking))
+                  if (canUploadProof ||
+                      _canShipperCancelPendingBooking(booking))
                     const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: OutlinedButton(
@@ -1488,7 +1500,8 @@ class _PaymentFlowScreenState extends ConsumerState<PaymentFlowScreen> {
                                     : const Icon(Icons.error_outline_rounded),
                                 onTap: document.isReady
                                     ? () => context.push(
-                                        AppRoutePath.sharedGeneratedDocumentViewer
+                                        AppRoutePath
+                                            .sharedGeneratedDocumentViewer
                                             .replaceFirst(':id', document.id),
                                       )
                                     : null,
@@ -2260,12 +2273,16 @@ class _SearchResultsSection extends StatelessWidget {
               ),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => context.push(
-                AppRoutePath.shipperBookingReview,
-                extra: BookingReviewSelection(
-                  shipment: shipment,
-                  result: result,
-                  requestedDate: result.departureDate,
-                ),
+                Uri(
+                  path: AppRoutePath.shipperBookingReview,
+                  queryParameters: <String, String>{
+                    'selection': BookingReviewSelection(
+                      shipment: shipment,
+                      result: result,
+                      requestedDate: result.departureDate,
+                    ).toRoutePayload(),
+                  },
+                ).toString(),
               ),
             );
           },
@@ -2448,7 +2465,10 @@ BookingRecord? _highestPriorityShipperBooking(List<BookingRecord> bookings) {
     return null;
   }
   final ordered = [...bookings]
-    ..sort((a, b) => _shipperBookingPriority(a).compareTo(_shipperBookingPriority(b)));
+    ..sort(
+      (a, b) =>
+          _shipperBookingPriority(a).compareTo(_shipperBookingPriority(b)),
+    );
   return ordered.first;
 }
 
@@ -2548,22 +2568,22 @@ String _searchResultReasonLine(
   ShipmentSearchResult result,
 ) {
   return switch (sort) {
-    SearchSortOption.recommended =>
-      s.searchRecommendationBalancedResult(
-        BidiFormatters.latinIdentifier(result.ratingAverage.toStringAsFixed(1)),
-        _formatDate(result.departureDate),
+    SearchSortOption.recommended => s.searchRecommendationBalancedResult(
+      BidiFormatters.latinIdentifier(result.ratingAverage.toStringAsFixed(1)),
+      _formatDate(result.departureDate),
+    ),
+    SearchSortOption.topRated => s.searchRecommendationTopRatedResult(
+      BidiFormatters.latinIdentifier(result.ratingAverage.toStringAsFixed(1)),
+      BidiFormatters.latinIdentifier(result.ratingCount.toString()),
+    ),
+    SearchSortOption.lowestPrice => s.searchRecommendationLowestPriceResult(
+      BidiFormatters.latinIdentifier(
+        result.estimatedTotalDzd.toStringAsFixed(0),
       ),
-    SearchSortOption.topRated =>
-      s.searchRecommendationTopRatedResult(
-        BidiFormatters.latinIdentifier(result.ratingAverage.toStringAsFixed(1)),
-        BidiFormatters.latinIdentifier(result.ratingCount.toString()),
-      ),
-    SearchSortOption.lowestPrice =>
-      s.searchRecommendationLowestPriceResult(
-        BidiFormatters.latinIdentifier(result.estimatedTotalDzd.toStringAsFixed(0)),
-      ),
-    SearchSortOption.nearestDeparture =>
-      s.searchRecommendationNearestResult(_formatDate(result.departureDate)),
+    ),
+    SearchSortOption.nearestDeparture => s.searchRecommendationNearestResult(
+      _formatDate(result.departureDate),
+    ),
   };
 }
 

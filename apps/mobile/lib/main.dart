@@ -33,10 +33,21 @@ Future<void> main() async {
         initialLocaleProvider.overrideWithValue(dependencies.initialLocale),
         appLoggerProvider.overrideWithValue(dependencies.logger),
         crashReporterProvider.overrideWithValue(dependencies.crashReporter),
+        supabaseInitializedProvider.overrideWithValue(
+          dependencies.supabaseInitialized,
+        ),
       ],
       child: const FleetFillApp(),
     ),
   );
+}
+
+bool shouldShowBootstrapFailure(AsyncValue<AppBootstrapState> bootstrap) {
+  if (bootstrap.hasError && !bootstrap.hasValue) {
+    return true;
+  }
+
+  return bootstrap.asData?.value.status == BootstrapStateStatus.failed;
 }
 
 class FleetFillApp extends ConsumerWidget {
@@ -103,8 +114,10 @@ class FleetFillApp extends ConsumerWidget {
     Widget? child,
     AsyncValue<AppBootstrapState> bootstrap,
   ) {
-    if (bootstrap.hasError && !bootstrap.hasValue) {
-      final bootstrapError = bootstrap.error;
+    if (shouldShowBootstrapFailure(bootstrap)) {
+      final bootstrapError = bootstrap.asData?.value.error ?? bootstrap.error;
+      final bootstrapStackTrace =
+          bootstrap.asData?.value.stackTrace ?? bootstrap.stackTrace;
       final message = bootstrapError is AppBootstrapLocalBackendException
           ? S.of(context).localBackendUnavailableMessage
           : S.of(context).routeErrorMessage;
@@ -114,7 +127,7 @@ class FleetFillApp extends ConsumerWidget {
           code: 'bootstrap_failed',
           message: message,
           technicalDetails: BidiFormatters.latinIdentifier(
-            bootstrap.stackTrace?.toString() ?? bootstrapError.toString(),
+            bootstrapStackTrace?.toString() ?? bootstrapError.toString(),
           ),
         ),
         onRetry: () => unawaited(

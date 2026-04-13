@@ -20,9 +20,9 @@ class AuthSessionController extends AsyncNotifier<AuthSnapshot> {
   @override
   Future<AuthSnapshot> build() async {
     final repository = ref.watch(authRepositoryProvider);
+    final supabaseInitialized = ref.watch(supabaseInitializedProvider);
 
-    if (!repository.environment.hasSupabaseConfig ||
-        !AppBootstrapController.supabaseInitialized) {
+    if (!repository.environment.hasSupabaseConfig || !supabaseInitialized) {
       return repository.buildSnapshot(
         isPasswordRecovery: _passwordRecoveryActive,
         isSessionExpired: _sessionExpired,

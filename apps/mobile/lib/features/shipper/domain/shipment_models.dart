@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'shipment_models.freezed.dart';
@@ -50,6 +52,21 @@ abstract class ShipmentDraftRecord with _$ShipmentDraftRecord {
       createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
       updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'id': id,
+      'shipper_id': shipperId,
+      'origin_commune_id': originCommuneId,
+      'destination_commune_id': destinationCommuneId,
+      'total_weight_kg': totalWeightKg,
+      'total_volume_m3': totalVolumeM3,
+      'description': details,
+      'status': status.databaseValue,
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
+    };
   }
 }
 
@@ -153,6 +170,29 @@ abstract class ShipmentSearchResult with _$ShipmentSearchResult {
       dayDistance: (json['day_distance'] as num?)?.toInt() ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'source_id': sourceId,
+      'source_type': sourceType,
+      'carrier_id': carrierId,
+      'carrier_name': carrierName,
+      'vehicle_id': vehicleId,
+      'origin_commune_id': originCommuneId,
+      'destination_commune_id': destinationCommuneId,
+      'departure_at': departureAt.toIso8601String(),
+      'departure_date': departureDate.toIso8601String(),
+      'total_capacity_kg': totalCapacityKg,
+      'total_capacity_volume_m3': totalCapacityVolumeM3,
+      'remaining_capacity_kg': remainingCapacityKg,
+      'remaining_volume_m3': remainingVolumeM3,
+      'price_per_kg_dzd': pricePerKgDzd,
+      'estimated_total_dzd': estimatedTotalDzd,
+      'rating_average': ratingAverage,
+      'rating_count': ratingCount,
+      'day_distance': dayDistance,
+    };
+  }
 }
 
 @freezed
@@ -193,4 +233,47 @@ abstract class BookingReviewSelection with _$BookingReviewSelection {
   }) = _BookingReviewSelection;
 
   const BookingReviewSelection._();
+
+  factory BookingReviewSelection.fromJson(Map<String, dynamic> json) {
+    return BookingReviewSelection(
+      shipment: ShipmentDraftRecord.fromJson(
+        json['shipment'] as Map<String, dynamic>,
+      ),
+      result: ShipmentSearchResult.fromJson(
+        json['result'] as Map<String, dynamic>,
+      ),
+      requestedDate: DateTime.parse(json['requested_date'] as String),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'shipment': shipment.toJson(),
+      'result': result.toJson(),
+      'requested_date': requestedDate.toIso8601String(),
+    };
+  }
+
+  String toRoutePayload() {
+    return base64Url.encode(utf8.encode(jsonEncode(toJson())));
+  }
+
+  static BookingReviewSelection? fromRoutePayload(String? payload) {
+    final trimmedPayload = payload?.trim() ?? '';
+    if (trimmedPayload.isEmpty) {
+      return null;
+    }
+
+    try {
+      final normalizedPayload = base64Url.normalize(trimmedPayload);
+      final decodedJson = utf8.decode(base64Url.decode(normalizedPayload));
+      final decodedMap = jsonDecode(decodedJson);
+      if (decodedMap is! Map<String, dynamic>) {
+        return null;
+      }
+      return BookingReviewSelection.fromJson(decodedMap);
+    } on FormatException {
+      return null;
+    }
+  }
 }

@@ -196,8 +196,9 @@ class SupportRepository {
 
 String buildAdminSupportSearchFilter(String query) {
   final trimmedQuery = query.trim();
+  final subjectPattern = '"*${_escapePostgrestLikeLiteral(trimmedQuery)}*"';
   final filters = <String>[
-    'subject.ilike.%$trimmedQuery%',
+    'subject.ilike.$subjectPattern',
   ];
 
   if (_isUuidLike(trimmedQuery)) {
@@ -211,6 +212,13 @@ String buildAdminSupportSearchFilter(String query) {
   }
 
   return filters.join(',');
+}
+
+String _escapePostgrestLikeLiteral(String value) {
+  return value
+      .replaceAll(r'\', r'\\')
+      .replaceAll('"', r'\"')
+      .replaceAll('*', r'\*');
 }
 
 bool _isUuidLike(String value) {

@@ -87,4 +87,41 @@ void main() {
     await tester.pump();
     expect(find.text('Enter a valid Algerian phone number.'), findsOneWidget);
   });
+
+  testWidgets('ProfileDetailsFormFields allows admins to omit phone numbers', (
+    tester,
+  ) async {
+    final formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController(text: 'Admin User');
+
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        supportedLocales: S.delegate.supportedLocales,
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: Scaffold(
+          body: Form(
+            key: formKey,
+            child: ProfileDetailsFormFields(
+              role: AppUserRole.admin,
+              nameController: nameController,
+              companyController: TextEditingController(),
+              phoneController: TextEditingController(),
+              isSubmitting: false,
+              onSubmit: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(formKey.currentState!.validate(), isTrue);
+    await tester.pump();
+    expect(find.text('Enter a valid Algerian phone number.'), findsNothing);
+  });
 }

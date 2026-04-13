@@ -58,6 +58,42 @@ void main() {
       expect(loadedState.hasMore, isFalse);
       expect(loadedState.items.last.id, 'notification-54');
     });
+
+    test(
+      'notification feed controller stops at exact page boundaries',
+      () async {
+        final repository = _FakeNotificationRepository(
+          notifications: List.generate(
+            50,
+            (index) => AppNotificationRecord(
+              id: 'notification-$index',
+              type: 'booking_confirmed',
+              title: 'Notification $index',
+              body: 'Body $index',
+              data: const <String, dynamic>{},
+              isRead: index.isEven,
+              createdAt: DateTime.utc(2026, 3, 21).subtract(
+                Duration(minutes: index),
+              ),
+              readAt: index.isEven ? DateTime.utc(2026, 3, 21) : null,
+            ),
+          ),
+        );
+        final container = ProviderContainer(
+          overrides: [
+            notificationRepositoryProvider.overrideWithValue(repository),
+          ],
+        );
+        addTearDown(container.dispose);
+
+        final initialState = await container.read(
+          myNotificationsProvider.future,
+        );
+
+        expect(initialState.items, hasLength(50));
+        expect(initialState.hasMore, isFalse);
+      },
+    );
   });
 }
 
