@@ -240,7 +240,28 @@ jobs:
         run: supabase db lint --debug
 
       - name: Run full runtime database test suite
+        id: runtime-db-tests
         run: supabase test db
+
+      - name: Capture Supabase diagnostics on failure
+        if: failure() && steps.runtime-db-tests.conclusion == 'failure'
+        shell: bash
+        run: |
+          echo "::group::Docker containers"
+          docker ps -a
+          echo "::endgroup::"
+
+          echo "::group::Supabase status"
+          supabase status || true
+          echo "::endgroup::"
+
+          echo "::group::Postgres container logs"
+          docker logs supabase_db_fleetfill --tail 400 || true
+          echo "::endgroup::"
+
+          echo "::group::Postgres container inspect"
+          docker inspect supabase_db_fleetfill || true
+          echo "::endgroup::"
 
       - name: Stop local Supabase
         if: always()
