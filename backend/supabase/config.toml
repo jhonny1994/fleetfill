@@ -35,8 +35,10 @@ file_size_limit = "10MiB"
 enabled = true
 site_url = "https://fleetfill.vercel.app"
 additional_redirect_urls = [
-  "fleetfill://auth-callback",
+  "com.carbodex.fleetfill://auth-callback",
   "http://localhost:3000/**",
+  "http://127.0.0.1:3005/**",
+  "https://fleetfill.vercel.app/auth/mobile-callback",
   "https://fleetfill.vercel.app/**",
   "https://fleetfill-*-jhonny1994s-projects.vercel.app/**",
 ]
@@ -65,9 +67,6 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.signed-file-url]
-verify_jwt = false
-
-[functions.signed-upload-url]
 verify_jwt = false
 
 [functions.generated-document-worker]

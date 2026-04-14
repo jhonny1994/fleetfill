@@ -54,6 +54,7 @@ For Vercel production:
 - update environment variables in the Vercel project settings
 - redeploy the affected environment
 - or run [sync_admin_vercel_env.ps1](C:/Users/raouf/projects/fleetfill/tool/sync_admin_vercel_env.ps1) from the repo root
+- production `NEXT_PUBLIC_SITE_URL` should stay `https://fleetfill.vercel.app`
 
 ## Localization
 
@@ -109,6 +110,7 @@ pnpm test:e2e
 ```
 
 The Playwright harness seeds deterministic admin fixtures and builds the app against the local Supabase runtime automatically.
+It runs the app on `http://127.0.0.1:3005`, which is a test-only host and not the production site contract.
 
 ## CI/CD
 

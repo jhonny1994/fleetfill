@@ -4,8 +4,9 @@ This is the main English entry point for the active FleetFill documentation set.
 
 ## Proprietary Notice
 
-- These docs and this repository are proprietary.
-- No license is granted to reuse, modify, distribute, or commercially exploit the code or documentation.
+- These docs and this repository are publicly visible for evaluation and product review only.
+- The docs, source code, and related materials remain proprietary.
+- No license is granted to reuse, modify, distribute, or commercially exploit the code or documentation without prior written permission.
 
 Translations:
 

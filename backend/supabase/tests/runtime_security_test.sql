@@ -862,18 +862,13 @@ select pg_temp.set_claims(
   'shipper1@example.com'
 );
 
-select is(
-  pg_temp.capture_error(
-    $$
-      select public.create_generated_document_record(
-        '50000000-0000-4000-8000-000000000002',
-        'payment_receipt',
-        'generated/50000000-0000-4000-8000-000000000002/payment-receipt-v1.pdf'
-      )
-    $$
+select ok(
+  not has_function_privilege(
+    current_user,
+    'public.create_generated_document_record(uuid, text, text)',
+    'EXECUTE'
   ),
-  'permission denied for function create_generated_document_record',
-  'regular authenticated users cannot create generated document records'
+  'regular authenticated users cannot execute generated document creation'
 );
 
 reset role;

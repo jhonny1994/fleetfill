@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.carbodex.fleetfill",
+      "sha256_cert_fingerprints": [
+        "D4:69:36:E0:A5:47:C6:28:3C:7E:4C:5D:CE:1E:34:05:04:EE:B3:92:90:E8:61:C0:BB:2D:8E:B4:EA:A8:5E:DA"
+      ]
+    }
+  }
+]

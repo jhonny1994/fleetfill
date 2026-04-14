@@ -16,9 +16,10 @@ Aide les expéditeurs et les transporteurs à gérer le transport quotidien avec
 
 ## Mention de propriete
 
-- Ce depot est proprietaire et reste la propriete privee de son auteur.
-- Aucun droit ni licence n'est accorde pour utiliser, copier, modifier, redistribuer ou exploiter commercialement ce code source.
-- L'acces a ce depot ne donne aucun droit de reutilisation a des tiers.
+- Ce depot est visible publiquement pour l'evaluation du produit, la due diligence et l'acces aux releases officielles de FleetFill.
+- Le depot, le code source, la documentation et les assets restent proprietaires et prives.
+- Aucun droit ni licence n'est accorde pour utiliser, copier, modifier, redistribuer ou exploiter commercialement ce code ou ces contenus.
+- Voir [PROPRIETARY-NOTICE.md](C:/Users/raouf/projects/fleetfill/PROPRIETARY-NOTICE.md) pour la formulation complete.
 
 ## Pourquoi FleetFill
 

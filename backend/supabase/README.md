@@ -48,7 +48,8 @@ Run it locally with:
   - configure `[auth.external.google]` in `backend/supabase/config.toml`
   - keep the Google client ID and secret in root `.env` variables via `env(...)`
   - local callback URI should be `http://127.0.0.1:54321/auth/v1/callback`
-  - mobile deep link callback remains allowed through `additional_redirect_urls = ["fleetfill://auth-callback"]`
+  - production mobile auth should redirect to `https://fleetfill.vercel.app/auth/mobile-callback`
+  - local mobile development may keep `com.carbodex.fleetfill://auth-callback` as the custom-scheme fallback
 
 Example root `.env` entries:
 

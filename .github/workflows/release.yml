@@ -1,0 +1,128 @@
+name: FleetFill Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: Git ref to release
+        required: true
+        default: main
+      release_backend:
+        description: Promote the Supabase backend
+        type: boolean
+        default: true
+      release_admin_web:
+        description: Promote admin-web after backend
+        type: boolean
+        default: true
+      release_mobile:
+        description: Build and publish the mobile release after backend/admin-web
+        type: boolean
+        default: true
+      release_tag:
+        description: Mobile release tag when releasing the app
+        required: false
+      release_name:
+        description: Optional mobile release name
+        required: false
+      prerelease:
+        description: Mark the mobile release as prerelease
+        type: boolean
+        default: false
+      draft:
+        description: Create the mobile release as draft
+        type: boolean
+        default: false
+      validate_only:
+        description: Validate the coordinated release contract without deploying or publishing
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fleetfill-release
+  cancel-in-progress: false
+
+jobs:
+  validate_release_request:
+    name: Validate Release Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target ref
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.git_ref }}
+
+      - name: Validate selected release surfaces
+        shell: bash
+        run: |
+          if [[ "${{ inputs.release_backend }}" != "true" && "${{ inputs.release_admin_web }}" != "true" && "${{ inputs.release_mobile }}" != "true" ]]; then
+            echo "Select at least one product surface to release."
+            exit 1
+          fi
+
+      - name: Validate requested mobile release tag
+        if: inputs.release_mobile
+        shell: bash
+        run: |
+          if [[ -z "${{ inputs.release_tag }}" ]]; then
+            echo "release_tag is required when release_mobile is enabled."
+            exit 1
+          fi
+
+          mobile_version="$(sed -n 's/^version: //p' apps/mobile/pubspec.yaml | head -n 1)"
+          if [[ -z "$mobile_version" ]]; then
+            echo "Could not resolve the mobile version from apps/mobile/pubspec.yaml."
+            exit 1
+          fi
+
+          expected_tag="v${mobile_version}"
+          if [[ "${{ inputs.release_tag }}" != "$expected_tag" ]]; then
+            echo "Mobile release tag must match apps/mobile/pubspec.yaml."
+            echo "Expected: $expected_tag"
+            echo "Received: ${{ inputs.release_tag }}"
+            exit 1
+          fi
+
+  supabase:
+    needs: [validate_release_request]
+    if: inputs.release_backend
+    uses: ./.github/workflows/production_supabase.yml
+    with:
+      git_ref: ${{ inputs.git_ref }}
+      push_db: ${{ !inputs.validate_only }}
+      push_config: ${{ !inputs.validate_only }}
+      sync_secrets: ${{ !inputs.validate_only }}
+      deploy_functions: ${{ !inputs.validate_only }}
+      configure_scheduler: ${{ !inputs.validate_only }}
+      verify_after: ${{ !inputs.validate_only }}
+    secrets: inherit
+
+  admin_web:
+    if: ${{ always() && inputs.release_admin_web && (needs.validate_release_request.result == 'success') && (needs.supabase.result == 'success' || needs.supabase.result == 'skipped') }}
+    needs: [validate_release_request, supabase]
+    uses: ./.github/workflows/production_admin_web.yml
+    with:
+      git_ref: ${{ inputs.git_ref }}
+      sync_env: ${{ !inputs.validate_only }}
+      build: ${{ !inputs.validate_only }}
+      deploy: ${{ !inputs.validate_only }}
+    secrets: inherit
+
+  mobile:
+    if: ${{ always() && inputs.release_mobile && (needs.validate_release_request.result == 'success') && (needs.supabase.result == 'success' || needs.supabase.result == 'skipped') && (needs.admin_web.result == 'success' || needs.admin_web.result == 'skipped') }}
+    needs: [validate_release_request, supabase, admin_web]
+    uses: ./.github/workflows/production_flutter.yml
+    with:
+      git_ref: ${{ inputs.git_ref }}
+      release_tag: ${{ inputs.release_tag }}
+      release_name: ${{ inputs.release_name }}
+      build_appbundle: ${{ !inputs.validate_only }}
+      build_apk: ${{ !inputs.validate_only }}
+      publish_release: ${{ !inputs.validate_only }}
+      prerelease: ${{ inputs.prerelease }}
+      draft: ${{ inputs.draft }}
+      validate_only: ${{ inputs.validate_only }}
+    secrets: inherit

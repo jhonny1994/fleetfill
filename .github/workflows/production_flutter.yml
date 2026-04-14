@@ -36,6 +36,45 @@ on:
         description: Create release as draft
         type: boolean
         default: false
+      validate_only:
+        description: Validate the mobile release contract without building or publishing
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      git_ref:
+        required: true
+        type: string
+      release_tag:
+        required: true
+        type: string
+      release_name:
+        required: false
+        type: string
+      build_appbundle:
+        required: false
+        type: boolean
+        default: true
+      build_apk:
+        required: false
+        type: boolean
+        default: true
+      publish_release:
+        required: false
+        type: boolean
+        default: true
+      prerelease:
+        required: false
+        type: boolean
+        default: false
+      draft:
+        required: false
+        type: boolean
+        default: false
+      validate_only:
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -48,6 +87,7 @@ jobs:
   android-release:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    environment: Production
     env:
       SUPABASE_URL: ${{ vars.PRODUCTION_SUPABASE_URL }}
       SUPABASE_PUBLISHABLE_KEY: ${{ vars.PRODUCTION_SUPABASE_PUBLISHABLE_KEY }}
@@ -57,16 +97,36 @@ jobs:
       FLEETFILL_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}
       FLEETFILL_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
       FLEETFILL_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
+    outputs:
+      performed_work: ${{ steps.plan.outputs.performed_work }}
     steps:
       - name: Checkout target ref
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.git_ref || github.ref }}
+          ref: ${{ github.event_name == 'push' && github.ref || inputs.git_ref }}
 
-      - name: Validate requested release shape
-        if: github.event_name == 'workflow_dispatch'
+      - name: Resolve release intent
+        id: plan
         shell: bash
         run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "push" || "${{ inputs.validate_only }}" != "true" ]]; then
+            echo "performed_work=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "performed_work=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate requested release shape
+        if: github.event_name != 'push'
+        shell: bash
+        run: |
+          if [[ "${{ inputs.validate_only }}" == "true" ]]; then
+            if [[ "${{ inputs.publish_release }}" == "true" ]]; then
+              echo "validate_only mode cannot publish a GitHub release."
+              exit 1
+            fi
+            exit 0
+          fi
+
           if [[ "${{ inputs.build_appbundle }}" != "true" && "${{ inputs.build_apk }}" != "true" ]]; then
             echo "Select at least one artifact to build."
             exit 1
@@ -76,7 +136,36 @@ jobs:
             exit 1
           fi
 
+      - name: Validate release tag matches mobile version
+        shell: bash
+        run: |
+          mobile_version="$(sed -n 's/^version: //p' apps/mobile/pubspec.yaml | head -n 1)"
+          if [[ -z "$mobile_version" ]]; then
+            echo "Could not resolve the mobile version from apps/mobile/pubspec.yaml."
+            exit 1
+          fi
+
+          expected_tag="v${mobile_version}"
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            requested_tag="${GITHUB_REF_NAME}"
+          else
+            requested_tag="${{ inputs.release_tag }}"
+          fi
+
+          if [[ -z "$requested_tag" ]]; then
+            echo "No mobile release tag was provided."
+            exit 1
+          fi
+
+          if [[ "$requested_tag" != "$expected_tag" ]]; then
+            echo "Release tag must match apps/mobile/pubspec.yaml."
+            echo "Expected: $expected_tag"
+            echo "Received: $requested_tag"
+            exit 1
+          fi
+
       - name: Verify release configuration is present
+        if: steps.plan.outputs.performed_work == 'true'
         shell: bash
         run: |
           test -n "${SUPABASE_URL}"
@@ -87,21 +176,25 @@ jobs:
           test -n "${FLEETFILL_RELEASE_KEY_PASSWORD}"
 
       - name: Set up Java
-        uses: actions/setup-java@v4
+        if: steps.plan.outputs.performed_work == 'true'
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
 
       - name: Set up Flutter
+        if: steps.plan.outputs.performed_work == 'true'
         uses: subosito/flutter-action@v2
         with:
           channel: stable
 
       - name: Install dependencies
+        if: steps.plan.outputs.performed_work == 'true'
         working-directory: apps/mobile
         run: flutter pub get
 
       - name: Materialize Android Firebase config
+        if: steps.plan.outputs.performed_work == 'true'
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
         shell: bash
@@ -111,6 +204,7 @@ jobs:
           echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
 
       - name: Materialize Android signing keystore
+        if: steps.plan.outputs.performed_work == 'true'
         env:
           ANDROID_RELEASE_KEYSTORE_BASE64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}
         shell: bash
@@ -120,7 +214,7 @@ jobs:
           echo "$ANDROID_RELEASE_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
 
       - name: Build signed Android app bundle
-        if: github.event_name != 'workflow_dispatch' || inputs.build_appbundle
+        if: steps.plan.outputs.performed_work == 'true' && (github.event_name == 'push' || inputs.build_appbundle)
         working-directory: apps/mobile
         run: >
           flutter build appbundle --release
@@ -133,7 +227,7 @@ jobs:
           --dart-define=FORCE_UPDATE_REQUIRED=false
 
       - name: Build signed Android APK
-        if: github.event_name != 'workflow_dispatch' || inputs.build_apk
+        if: steps.plan.outputs.performed_work == 'true' && (github.event_name == 'push' || inputs.build_apk)
         working-directory: apps/mobile
         run: >
           flutter build apk --release
@@ -149,7 +243,7 @@ jobs:
         id: release_meta
         shell: bash
         run: |
-          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+          if [[ "${GITHUB_EVENT_NAME}" != "push" ]]; then
             echo "tag=${{ inputs.release_tag }}" >> "$GITHUB_OUTPUT"
             if [[ -n "${{ inputs.release_name }}" ]]; then
               echo "name=${{ inputs.release_name }}" >> "$GITHUB_OUTPUT"
@@ -167,13 +261,19 @@ jobs:
 
       - name: Resolve artifact list
         id: artifacts
+        if: steps.plan.outputs.performed_work == 'true'
         shell: bash
         run: |
           files=()
-          if [[ "${GITHUB_EVENT_NAME}" != "workflow_dispatch" || "${{ inputs.build_appbundle }}" == "true" ]]; then
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            files+=("apps/mobile/build/app/outputs/bundle/release/app-release.aab")
+          elif [[ "${{ inputs.validate_only }}" != "true" && "${{ inputs.build_appbundle }}" == "true" ]]; then
             files+=("apps/mobile/build/app/outputs/bundle/release/app-release.aab")
           fi
-          if [[ "${GITHUB_EVENT_NAME}" != "workflow_dispatch" || "${{ inputs.build_apk }}" == "true" ]]; then
+
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            files+=("apps/mobile/build/app/outputs/flutter-apk/app-release.apk")
+          elif [[ "${{ inputs.validate_only }}" != "true" && "${{ inputs.build_apk }}" == "true" ]]; then
             files+=("apps/mobile/build/app/outputs/flutter-apk/app-release.apk")
           fi
           {
@@ -183,8 +283,8 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub release
-        if: github.event_name != 'workflow_dispatch' || inputs.publish_release
-        uses: softprops/action-gh-release@v2
+        if: steps.plan.outputs.performed_work == 'true' && (github.event_name == 'push' || inputs.publish_release)
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.release_meta.outputs.tag }}
           name: ${{ steps.release_meta.outputs.name }}
@@ -193,3 +293,7 @@ jobs:
           prerelease: ${{ steps.release_meta.outputs.prerelease == 'true' }}
           generate_release_notes: true
           files: ${{ steps.artifacts.outputs.files }}
+
+      - name: Complete no-op validation
+        if: steps.plan.outputs.performed_work != 'true'
+        run: echo "validate_only mode completed without building or publishing mobile artifacts."

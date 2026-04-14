@@ -4,8 +4,9 @@ Voici le point d’entrée principal en français pour la documentation active d
 
 ## Mention de propriete
 
-- Cette documentation et ce depot sont proprietaires.
-- Aucun droit n'est accorde pour reutiliser, modifier, distribuer ou exploiter commercialement le code ou la documentation.
+- Cette documentation et ce depot sont visibles publiquement uniquement pour l'evaluation et la revue du produit.
+- La documentation, le code source et les contenus associes restent proprietaires.
+- Aucun droit n'est accorde pour reutiliser, modifier, distribuer ou exploiter commercialement le code ou la documentation sans autorisation ecrite prealable.
 
 Traductions :
 

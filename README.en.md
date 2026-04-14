@@ -16,9 +16,10 @@ Helps shippers and carriers manage everyday freight with more trust, clearer pay
 
 ## Proprietary Notice
 
-- This repository is proprietary and privately owned.
-- No license is granted to use, copy, modify, redistribute, or commercially exploit this source code.
-- Access to this repository does not grant third parties any reuse rights.
+- This repository is publicly visible for product evaluation, due diligence, and access to official FleetFill releases.
+- The repository, source code, documentation, and assets remain proprietary and privately owned.
+- No license is granted to use, copy, modify, redistribute, or commercially exploit this source code or related materials.
+- See [PROPRIETARY-NOTICE.md](C:/Users/raouf/projects/fleetfill/PROPRIETARY-NOTICE.md) for the full notice.
 
 ## Why FleetFill
 

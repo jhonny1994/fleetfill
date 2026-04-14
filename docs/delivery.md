@@ -10,6 +10,7 @@ FleetFill uses a split but intentional delivery path:
 - Flutter mobile production artifacts are built from release tags
 
 This is deliberate. It keeps automated quality gates unified while still letting operators choose exactly which production surface to promote.
+The active migration direction is one root orchestration workflow calling the surface workflows as reusable building blocks, while preserving the existing operator entrypoints and mobile tag-driven releases.
 
 ## CI Contract
 
@@ -37,6 +38,14 @@ It detects which surface changed, then runs only the needed quality jobs on pull
 
 The local Supabase validation environment uses the loopback URL `http://127.0.0.1:54321` because GitHub Actions starts an isolated local Supabase stack for validation. This is never the hosted production project.
 
+## GitHub Governance Contract
+
+- `main` is protected
+- pull requests require one approval before merge
+- the required CI checks are `System Contracts`, `Detect Changed Surfaces`, `Flutter Quality`, `Admin Web Quality`, and `Supabase Validation`
+- stale reviews are dismissed on new pushes and conversation resolution is required before merge
+- production release jobs are bound to the GitHub `Production` environment so release execution and release approval stay aligned
+
 ## CD Contract
 
 Production delivery is split by surface:
@@ -56,6 +65,11 @@ Production delivery is split by surface:
 - Flutter mobile
   - released by [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
   - produces signed Android artifacts on version tags or manual release dispatch
+- Whole product
+  - orchestrated by [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml)
+  - calls backend, admin-web, and mobile releases in order without replacing the existing surface workflows
+  - validates that at least one surface is selected and that any mobile release tag matches `apps/mobile/pubspec.yaml`
+  - supports `validate_only` for a no-deploy rehearsal of the coordinated release path
 
 ## Hosted Rollout Order
 
@@ -65,7 +79,10 @@ Promote production in this order:
 - let [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml) pass
 - run [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml) when backend or hosted config changed
 - run [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml) when admin-web should ship
+- prefer [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml) when shipping the coordinated product as one release event
+- use the same root workflow with `validate_only=true` before the first coordinated production run or after major workflow changes
 - run representative-device and hosted smoke validation before announcing release completeness
+- keep the custom mobile auth scheme only as a temporary fallback until real-device App Links validation is complete
 
 ## Remaining Manual Or Environment-Specific Validation
 
