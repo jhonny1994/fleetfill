@@ -10,8 +10,10 @@ import {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const bypassLocalizedRouting = pathname === "/auth/mobile-callback";
 
   if (
+    bypassLocalizedRouting ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.includes(".")

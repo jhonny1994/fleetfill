@@ -5,17 +5,30 @@
 FleetFill release automation is intentionally simple:
 
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml) validates repository quality
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml) orchestrates coordinated whole-product releases
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml) promotes hosted backend changes
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml) publishes admin-web on demand
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml) builds signed Android release artifacts
+
+## Governance
+
+- `main` is protected with required pull requests, one approval, stale-review dismissal, linear history, and required conversation resolution
+- the required checks are `System Contracts`, `Detect Changed Surfaces`, `Flutter Quality`, `Admin Web Quality`, and `Supabase Validation`
+- the production rollout jobs use the GitHub `Production` environment
+- the `Production` environment currently requires reviewer approval from `jhonny1994`
 
 ## Active GitHub Actions
 
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml)
   - surface-aware change detection
+  - cross-surface system contract validation
   - Flutter quality
   - admin-web quality
   - Supabase local validation
+- [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml)
+  - coordinated backend -> admin-web -> mobile release orchestration
+  - keeps the existing surface workflows as reusable rollout units
+  - supports a `validate_only` no-deploy rehearsal mode for contract validation
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml)
   - hosted Supabase rollout
   - operator-selected rollout parts
@@ -27,6 +40,7 @@ FleetFill release automation is intentionally simple:
 - [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
   - signed Android artifact generation
   - GitHub release publication
+  - version tag must match `apps/mobile/pubspec.yaml`
 
 ## Required GitHub Secrets
 
@@ -74,12 +88,36 @@ Local developer note:
   - syncs GitHub production variables and secrets that can be derived from local config
   - can generate a local Android release keystore if one does not already exist
 
+## Contract Validation Ownership
+
+- [C:\Users\raouf\projects\fleetfill\tool\validate_system_contracts.ps1](C:\Users\raouf\projects\fleetfill\tool\validate_system_contracts.ps1) is the repo-owned guardrail for cross-surface truths
+- when auth, locale, host, workflow, or release contracts change, update the validator in the same change
+- do not weaken the validator to bypass a migration; land the new contract and the new enforcement together
+
 ## Flutter Release Flow
 
 Signed Android artifacts are produced by:
 
 - pushing a version tag like `v1.0.0`
 - or manually dispatching [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
+- or calling the same reusable mobile workflow through [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml) for a coordinated system release
+- the requested tag must equal the current mobile version in `apps/mobile/pubspec.yaml`
+
+Auth callback posture for Android releases:
+
+- Verified Android App Links on `https://fleetfill.vercel.app/auth/mobile-callback` are the production truth
+- `com.carbodex.fleetfill://auth-callback` remains a temporary local-development and rollback fallback during migration
+- remove the custom-scheme fallback only after real-device signup confirmation, password reset, and recovery re-entry flows are verified through App Links and rollback confidence is documented
+
+Production environment gate:
+
+- the production release workflows are bound to the GitHub `Production` environment
+- any reviewers or approval rules configured on that environment gate backend, admin-web, and mobile promotion consistently
+
+Safe orchestration rehearsal:
+
+- dispatch [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml) with `validate_only=true` to validate the coordinated release contract without deploying or publishing artifacts
+- this mode is the preferred way to rehearse the new root release flow before using it as the primary ship path
 
 Published artifacts:
 

@@ -31,6 +31,35 @@ on:
         description: Run hosted verification after rollout
         type: boolean
         default: true
+  workflow_call:
+    inputs:
+      git_ref:
+        required: true
+        type: string
+      push_db:
+        required: false
+        type: boolean
+        default: true
+      push_config:
+        required: false
+        type: boolean
+        default: true
+      sync_secrets:
+        required: false
+        type: boolean
+        default: true
+      deploy_functions:
+        required: false
+        type: boolean
+        default: true
+      configure_scheduler:
+        required: false
+        type: boolean
+        default: true
+      verify_after:
+        required: false
+        type: boolean
+        default: true
 
 concurrency:
   group: production-supabase
@@ -43,6 +72,7 @@ jobs:
   rollout:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    environment: Production
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
@@ -60,13 +90,26 @@ jobs:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
+    outputs:
+      performed_work: ${{ steps.plan.outputs.performed_work }}
     steps:
       - name: Checkout target ref
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.git_ref }}
 
+      - name: Resolve rollout intent
+        id: plan
+        shell: bash
+        run: |
+          if [[ "${{ inputs.push_db }}" == "true" || "${{ inputs.push_config }}" == "true" || "${{ inputs.sync_secrets }}" == "true" || "${{ inputs.deploy_functions }}" == "true" || "${{ inputs.configure_scheduler }}" == "true" || "${{ inputs.verify_after }}" == "true" ]]; then
+            echo "performed_work=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "performed_work=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Verify rollout configuration is present
+        if: steps.plan.outputs.performed_work == 'true'
         shell: bash
         run: |
           missing=()
@@ -113,23 +156,27 @@ jobs:
           fi
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        if: steps.plan.outputs.performed_work == 'true'
+        uses: actions/setup-node@v6
         with:
           node-version: 22
 
       - name: Install Vercel CLI
-        if: inputs.verify_after
+        if: steps.plan.outputs.performed_work == 'true' && inputs.verify_after
         run: npm install --global vercel@latest
 
       - name: Set up Supabase CLI
+        if: steps.plan.outputs.performed_work == 'true'
         uses: supabase/setup-cli@v1
         with:
           version: latest
 
       - name: Link Supabase project
+        if: steps.plan.outputs.performed_work == 'true'
         run: supabase link --project-ref rkvrdzwlynyionsnwfiu --workdir backend
 
       - name: Materialize rollout env
+        if: steps.plan.outputs.performed_work == 'true'
         shell: bash
         run: |
           cat > .env <<EOF
@@ -148,20 +195,20 @@ jobs:
           EOF
 
       - name: Push database migrations and seed data
-        if: inputs.push_db
+        if: steps.plan.outputs.performed_work == 'true' && inputs.push_db
         run: supabase db push --linked --include-seed --workdir backend
 
       - name: Push Supabase config
-        if: inputs.push_config
+        if: steps.plan.outputs.performed_work == 'true' && inputs.push_config
         run: supabase config push --project-ref rkvrdzwlynyionsnwfiu --workdir backend --yes
 
       - name: Sync Supabase cloud secrets
-        if: inputs.sync_secrets
+        if: steps.plan.outputs.performed_work == 'true' && inputs.sync_secrets
         shell: pwsh
         run: ./tool/sync_supabase_cloud_secrets.ps1
 
       - name: Deploy Edge Functions
-        if: inputs.deploy_functions
+        if: steps.plan.outputs.performed_work == 'true' && inputs.deploy_functions
         shell: bash
         run: |
           for dir in backend/supabase/functions/*; do
@@ -171,11 +218,15 @@ jobs:
           done
 
       - name: Configure hosted scheduler
-        if: inputs.configure_scheduler
+        if: steps.plan.outputs.performed_work == 'true' && inputs.configure_scheduler
         shell: pwsh
         run: ./tool/apply_supabase_scheduler.ps1 -EnvFile .env
 
       - name: Verify hosted rollout
-        if: inputs.verify_after
+        if: steps.plan.outputs.performed_work == 'true' && inputs.verify_after
         shell: pwsh
         run: ./tool/verify_hosted_rollout.ps1
+
+      - name: Complete no-op validation
+        if: steps.plan.outputs.performed_work != 'true'
+        run: echo "No Supabase rollout actions were selected; reusable workflow validated inputs only."
