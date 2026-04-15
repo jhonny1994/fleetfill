@@ -9,6 +9,7 @@ param(
   [string]$KeystoreAlias = "fleetfill-upload",
   [string]$GoogleWebClientId = "",
   [string]$GoogleIosClientId = "",
+  [string]$SentryDsn = "",
   [switch]$GenerateKeystoreIfMissing
 )
 
@@ -122,6 +123,12 @@ $resolvedGoogleIosClientId = if (-not [string]::IsNullOrWhiteSpace($GoogleIosCli
 if ([string]::IsNullOrWhiteSpace($resolvedGoogleWebClientId)) {
   throw "Could not resolve GOOGLE_WEB_CLIENT_ID from $GoogleServicesPath."
 }
+
+function Remove-GhVariable {
+  param([string]$Name)
+
+  & gh variable delete $Name --repo $Repo 2>$null | Out-Null
+}
 $apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
 $publishableKey = ($apiKeys | Where-Object { $_.type -eq "publishable" } | Select-Object -First 1).api_key
 
@@ -132,6 +139,11 @@ if ([string]::IsNullOrWhiteSpace($publishableKey)) {
 $vercelProject = Get-Content $VercelProjectFile -Raw | ConvertFrom-Json
 $vercelAuth = Get-Content "$env:APPDATA\com.vercel.cli\Data\auth.json" -Raw | ConvertFrom-Json
 $envMap = Get-EnvMap -Path ".env"
+$resolvedSentryDsn = if (-not [string]::IsNullOrWhiteSpace($SentryDsn)) {
+  $SentryDsn
+} else {
+  $envMap["SENTRY_DSN"]
+}
 $localSigningMap = Get-EnvMap -Path $LocalSigningPropertiesPath
 $storePassword = $localSigningMap["FLEETFILL_RELEASE_STORE_PASSWORD"]
 $keyPassword = $localSigningMap["FLEETFILL_RELEASE_KEY_PASSWORD"]
@@ -176,8 +188,13 @@ if ((-not (Test-Path $KeystorePath)) -and $GenerateKeystoreIfMissing) {
   Write-Host "Using existing local Android release keystore."
 }
 
-Set-GhVariable -Name "PRODUCTION_SUPABASE_URL" -Value "https://$ProjectRef.supabase.co"
-Set-GhVariable -Name "PRODUCTION_SUPABASE_PUBLISHABLE_KEY" -Value $publishableKey
+Set-GhVariable -Name "SUPABASE_URL" -Value "https://$ProjectRef.supabase.co"
+Set-GhVariable -Name "SUPABASE_PUBLISHABLE_KEY" -Value $publishableKey
+if (-not [string]::IsNullOrWhiteSpace($resolvedSentryDsn)) {
+  Set-GhVariable -Name "SENTRY_DSN" -Value $resolvedSentryDsn
+}
+Remove-GhVariable -Name "PRODUCTION_SUPABASE_URL"
+Remove-GhVariable -Name "PRODUCTION_SUPABASE_PUBLISHABLE_KEY"
 Set-GhVariable -Name "GOOGLE_WEB_CLIENT_ID" -Value $resolvedGoogleWebClientId
 if (-not [string]::IsNullOrWhiteSpace($resolvedGoogleIosClientId)) {
   Set-GhVariable -Name "GOOGLE_IOS_CLIENT_ID" -Value $resolvedGoogleIosClientId

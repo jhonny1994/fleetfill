@@ -2,15 +2,34 @@ import 'dart:async';
 
 import 'package:fleetfill/core/core.dart';
 import 'package:fleetfill/features/notifications/notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final environmentConfig = AppEnvironmentConfig.fromDefines();
+  if (environmentConfig.crashReportingEnabled &&
+      environmentConfig.hasSentryDsn) {
+    await SentryFlutter.init(
+      (options) => options
+        ..dsn = environmentConfig.sentryDsn
+        ..environment = kReleaseMode ? 'production' : 'development'
+        ..sendDefaultPii = false,
+      appRunner: _runFleetFillApp,
+    );
+    return;
+  }
+
+  await _runFleetFillApp();
+}
+
+Future<void> _runFleetFillApp() async {
   final dependencies = await prepareAppDependencies();
   installGlobalErrorHandlers(
     logger: dependencies.logger,

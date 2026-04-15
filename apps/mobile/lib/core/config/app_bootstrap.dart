@@ -63,7 +63,10 @@ Future<PreparedAppDependencies> prepareAppDependencies() async {
   const secureStorage = FlutterSecureStorage();
   final environmentConfig = AppEnvironmentConfig.fromDefines();
   const logger = DebugAppLogger();
-  final crashReporter = environmentConfig.crashReportingEnabled
+  final crashReporter =
+      environmentConfig.crashReportingEnabled && environmentConfig.hasSentryDsn
+      ? const SentryCrashReporter(logger: logger)
+      : environmentConfig.crashReportingEnabled
       ? const DeferredCrashReporter(logger: logger)
       : const NoopCrashReporter(logger: logger);
   final supabaseInitialized = await _initializeSupabase(environmentConfig);

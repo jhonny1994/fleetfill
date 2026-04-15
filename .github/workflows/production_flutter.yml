@@ -89,8 +89,9 @@ jobs:
     timeout-minutes: 40
     environment: Production
     env:
-      SUPABASE_URL: ${{ vars.PRODUCTION_SUPABASE_URL }}
-      SUPABASE_PUBLISHABLE_KEY: ${{ vars.PRODUCTION_SUPABASE_PUBLISHABLE_KEY }}
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      SENTRY_DSN: ${{ vars.SENTRY_DSN }}
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
       GOOGLE_IOS_CLIENT_ID: ${{ vars.GOOGLE_IOS_CLIENT_ID }}
       FLEETFILL_RELEASE_STORE_FILE: upload-keystore.jks
@@ -170,6 +171,7 @@ jobs:
         run: |
           test -n "${SUPABASE_URL}"
           test -n "${SUPABASE_PUBLISHABLE_KEY}"
+          test -n "${SENTRY_DSN}"
           test -n "${GOOGLE_WEB_CLIENT_ID}"
           test -n "${FLEETFILL_RELEASE_STORE_PASSWORD}"
           test -n "${FLEETFILL_RELEASE_KEY_ALIAS}"
@@ -220,6 +222,7 @@ jobs:
           flutter build appbundle --release
           --dart-define=SUPABASE_URL=${{ env.SUPABASE_URL }}
           --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ env.SUPABASE_PUBLISHABLE_KEY }}
+          --dart-define=SENTRY_DSN=${{ env.SENTRY_DSN }}
           --dart-define=GOOGLE_WEB_CLIENT_ID=${{ env.GOOGLE_WEB_CLIENT_ID }}
           --dart-define=GOOGLE_IOS_CLIENT_ID=${{ env.GOOGLE_IOS_CLIENT_ID }}
           --dart-define=CRASH_REPORTING_ENABLED=true
@@ -233,6 +236,7 @@ jobs:
           flutter build apk --release
           --dart-define=SUPABASE_URL=${{ env.SUPABASE_URL }}
           --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ env.SUPABASE_PUBLISHABLE_KEY }}
+          --dart-define=SENTRY_DSN=${{ env.SENTRY_DSN }}
           --dart-define=GOOGLE_WEB_CLIENT_ID=${{ env.GOOGLE_WEB_CLIENT_ID }}
           --dart-define=GOOGLE_IOS_CLIENT_ID=${{ env.GOOGLE_IOS_CLIENT_ID }}
           --dart-define=CRASH_REPORTING_ENABLED=true
