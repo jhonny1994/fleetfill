@@ -70,10 +70,11 @@ Local developer note:
 
 ## Required GitHub Variables
 
+- `SUPABASE_URL`
+- `SUPABASE_PUBLISHABLE_KEY`
+- `SENTRY_DSN`
 - `GOOGLE_WEB_CLIENT_ID`
 - `GOOGLE_IOS_CLIENT_ID`
-- `PRODUCTION_SUPABASE_URL`
-- `PRODUCTION_SUPABASE_PUBLISHABLE_KEY`
 - `TRANSACTIONAL_EMAIL_PROVIDER`
 - `TRANSACTIONAL_EMAIL_PROVIDER_ENDPOINT`
 - `TRANSACTIONAL_EMAIL_FROM_EMAIL`
@@ -86,6 +87,7 @@ Local developer note:
 
 - [C:\Users\raouf\projects\fleetfill\tool\sync_github_production_config.ps1](C:\Users\raouf\projects\fleetfill\tool\sync_github_production_config.ps1)
   - syncs GitHub production variables and secrets that can be derived from local config
+  - keeps GitHub variable names aligned with the runtime contract used by Flutter builds
   - can generate a local Android release keystore if one does not already exist
 
 ## Contract Validation Ownership
@@ -130,3 +132,4 @@ Published artifacts:
 - Google Play can replace that later without changing the core signing pipeline
 - admin-web production publication is now GitHub-controlled through the manual deploy workflow
 - secrets and signing material must stay in GitHub secrets, never in git
+- Sentry DSNs are treated as runtime configuration, not hardcoded source constants

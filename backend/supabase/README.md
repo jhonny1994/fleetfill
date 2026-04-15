@@ -59,6 +59,7 @@ Example root `.env` entries:
 - `SUPABASE_SECRET_KEY=...`
 - `INTERNAL_AUTOMATION_TOKEN=...`
 - `SUPABASE_DB_URL=...` (needed only when applying repo-owned scheduler SQL directly to the hosted database)
+- `SENTRY_DSN=...`
 - `MAINTENANCE_MODE=false`
 - `FORCE_UPDATE_REQUIRED=false`
 - `CRASH_REPORTING_ENABLED=false`
@@ -83,7 +84,7 @@ Notes:
 - `SUPABASE_SECRET_KEY` is the repo-facing privileged hosted backend credential for service clients and rollout tooling; hosted Edge Functions receive the same value through `SB_SECRET_KEY` because Supabase blocks custom secrets that start with `SUPABASE_`.
 - Recommended ownership split:
   - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`, plus optional hosted rollout secrets like `SUPABASE_DB_URL`
-  - Flutter `--dart-define` or editor launch config: app runtime values such as `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, and `GOOGLE_WEB_CLIENT_ID`
+  - Flutter `--dart-define` or editor launch config: app runtime values such as `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, `SENTRY_DSN`, and Google client IDs
   - GitHub Actions: repository variables for non-secret client IDs and repository secrets for secrets such as `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET`
 - Android local runtime should use two explicit launch paths:
   - emulator: `SUPABASE_URL=http://127.0.0.1:54321` with `LOCAL_ANDROID_NETWORK_TARGET=emulator`, so the app rewrites loopback to `10.0.2.2`

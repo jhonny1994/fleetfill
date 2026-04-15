@@ -3,8 +3,11 @@ import 'dart:ui';
 
 import 'package:fleetfill/core/utils/app_logger.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 abstract class CrashReporter {
+  bool get reliesOnGlobalErrorHooks => false;
+
   Future<void> recordFlutterError(FlutterErrorDetails details);
 
   Future<void> recordError(
@@ -18,6 +21,9 @@ class NoopCrashReporter implements CrashReporter {
   const NoopCrashReporter({this.logger});
 
   final AppLogger? logger;
+
+  @override
+  bool get reliesOnGlobalErrorHooks => false;
 
   @override
   Future<void> recordError(
@@ -42,6 +48,9 @@ class DeferredCrashReporter implements CrashReporter {
   final AppLogger logger;
 
   @override
+  bool get reliesOnGlobalErrorHooks => false;
+
+  @override
   Future<void> recordError(
     Object error,
     StackTrace stackTrace, {
@@ -64,17 +73,74 @@ class DeferredCrashReporter implements CrashReporter {
   }
 }
 
+class SentryCrashReporter implements CrashReporter {
+  const SentryCrashReporter({required this.logger});
+
+  final AppLogger logger;
+
+  @override
+  bool get reliesOnGlobalErrorHooks => true;
+
+  @override
+  Future<void> recordError(
+    Object error,
+    StackTrace stackTrace, {
+    String? reason,
+  }) async {
+    final hintItems = <String, Object?>{};
+    if (reason != null) {
+      hintItems['reason'] = reason;
+    }
+
+    logger.error(
+      'Sending captured error to Sentry${reason == null ? '' : ' ($reason)'}',
+      error: error,
+      stackTrace: stackTrace,
+    );
+
+    await Sentry.captureException(
+      error,
+      stackTrace: stackTrace,
+      hint: Hint.withMap(hintItems),
+    );
+  }
+
+  @override
+  Future<void> recordFlutterError(FlutterErrorDetails details) async {
+    logger.error(
+      'Sending Flutter error to Sentry',
+      error: details.exception,
+      stackTrace: details.stack,
+    );
+
+    await Sentry.captureException(
+      details.exception,
+      stackTrace: details.stack,
+      hint: Hint.withMap(<String, Object?>{
+        'context': details.context?.toDescription(),
+        'library': details.library,
+      }),
+    );
+  }
+}
+
 void installGlobalErrorHandlers({
   required AppLogger logger,
   required CrashReporter crashReporter,
 }) {
+  final previousFlutterErrorHandler = FlutterError.onError;
+  final previousPlatformErrorHandler = PlatformDispatcher.instance.onError;
+
   FlutterError.onError = (details) {
     logger.error(
       'Flutter framework error',
       error: details.exception,
       stackTrace: details.stack,
     );
-    unawaited(crashReporter.recordFlutterError(details));
+    if (!crashReporter.reliesOnGlobalErrorHooks) {
+      unawaited(crashReporter.recordFlutterError(details));
+    }
+    previousFlutterErrorHandler?.call(details);
   };
 
   PlatformDispatcher.instance.onError = (error, stackTrace) {
@@ -83,13 +149,16 @@ void installGlobalErrorHandlers({
       error: error,
       stackTrace: stackTrace,
     );
-    unawaited(
-      crashReporter.recordError(
-        error,
-        stackTrace,
-        reason: 'PlatformDispatcher.onError',
-      ),
-    );
+    if (!crashReporter.reliesOnGlobalErrorHooks) {
+      unawaited(
+        crashReporter.recordError(
+          error,
+          stackTrace,
+          reason: 'PlatformDispatcher.onError',
+        ),
+      );
+    }
+    previousPlatformErrorHandler?.call(error, stackTrace);
     return true;
   };
 }

@@ -19,6 +19,7 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     @Default('') String firebaseIosAppId,
     @Default('') String googleWebClientId,
     @Default('') String googleIosClientId,
+    @Default('') String sentryDsn,
     @Default(false) bool maintenanceMode,
     @Default(false) bool forceUpdateRequired,
     @Default(false) bool crashReportingEnabled,
@@ -30,59 +31,35 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
 
   factory AppEnvironmentConfig.fromDefines() {
     final supabaseUrl = _normalizeSupabaseUrl(
-      _firstNonEmpty([
-        const String.fromEnvironment('SUPABASE_URL'),
-        const String.fromEnvironment('APP_SUPABASE_URL'),
-      ]),
+      const String.fromEnvironment('SUPABASE_URL'),
     );
-    final publishableKey = _firstNonEmpty([
-      const String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY'),
-      const String.fromEnvironment('APP_SUPABASE_PUBLISHABLE_KEY'),
-    ]);
-    final anonKey = _firstNonEmpty([
-      const String.fromEnvironment('SUPABASE_ANON_KEY'),
-      const String.fromEnvironment('APP_SUPABASE_ANON_KEY'),
-    ]);
+    const publishableKey = String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
+    const anonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+    const sentryDsn = String.fromEnvironment('SENTRY_DSN');
+    const firebaseApiKey = String.fromEnvironment('FIREBASE_API_KEY');
+    const firebaseMessagingSenderId = String.fromEnvironment(
+      'FIREBASE_MESSAGING_SENDER_ID',
+    );
+    const firebaseProjectId = String.fromEnvironment('FIREBASE_PROJECT_ID');
+    const firebaseStorageBucket = String.fromEnvironment(
+      'FIREBASE_STORAGE_BUCKET',
+    );
+    const firebaseAndroidAppId = String.fromEnvironment(
+      'FIREBASE_ANDROID_APP_ID',
+    );
+    const firebaseIosAppId = String.fromEnvironment('FIREBASE_IOS_APP_ID');
+    const googleIosClientId = String.fromEnvironment('GOOGLE_IOS_CLIENT_ID');
 
-    return AppEnvironmentConfig(
+    var config = AppEnvironmentConfig(
       supabaseUrl: supabaseUrl,
       supabaseAnonKey: _resolveClientKey(
         supabaseUrl: supabaseUrl,
         publishableKey: publishableKey,
         anonKey: anonKey,
       ),
-      firebaseApiKey: _firstNonEmpty([
-        const String.fromEnvironment('FIREBASE_API_KEY'),
-        const String.fromEnvironment('APP_FIREBASE_API_KEY'),
-      ]),
-      firebaseMessagingSenderId: _firstNonEmpty([
-        const String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID'),
-        const String.fromEnvironment('APP_FIREBASE_MESSAGING_SENDER_ID'),
-      ]),
-      firebaseProjectId: _firstNonEmpty([
-        const String.fromEnvironment('FIREBASE_PROJECT_ID'),
-        const String.fromEnvironment('APP_FIREBASE_PROJECT_ID'),
-      ]),
-      firebaseStorageBucket: _firstNonEmpty([
-        const String.fromEnvironment('FIREBASE_STORAGE_BUCKET'),
-        const String.fromEnvironment('APP_FIREBASE_STORAGE_BUCKET'),
-      ]),
-      firebaseAndroidAppId: _firstNonEmpty([
-        const String.fromEnvironment('FIREBASE_ANDROID_APP_ID'),
-        const String.fromEnvironment('APP_FIREBASE_ANDROID_APP_ID'),
-      ]),
-      firebaseIosAppId: _firstNonEmpty([
-        const String.fromEnvironment('FIREBASE_IOS_APP_ID'),
-        const String.fromEnvironment('APP_FIREBASE_IOS_APP_ID'),
-      ]),
       googleWebClientId: _firstNonEmpty([
         const String.fromEnvironment('GOOGLE_WEB_CLIENT_ID'),
-        const String.fromEnvironment('APP_GOOGLE_WEB_CLIENT_ID'),
         const String.fromEnvironment('SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID'),
-      ]),
-      googleIosClientId: _firstNonEmpty([
-        const String.fromEnvironment('GOOGLE_IOS_CLIENT_ID'),
-        const String.fromEnvironment('APP_GOOGLE_IOS_CLIENT_ID'),
       ]),
       maintenanceMode: _parseBool(
         const String.fromEnvironment('MAINTENANCE_MODE'),
@@ -90,20 +67,62 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
       forceUpdateRequired: _parseBool(
         const String.fromEnvironment('FORCE_UPDATE_REQUIRED'),
       ),
-      crashReportingEnabled: _parseBool(
-        const String.fromEnvironment('CRASH_REPORTING_ENABLED'),
-      ),
+      crashReportingEnabled:
+          _parseOptionalBool(
+            const String.fromEnvironment('CRASH_REPORTING_ENABLED'),
+          ) ??
+          (kReleaseMode && sentryDsn.isNotEmpty),
     );
+
+    if (firebaseApiKey.isNotEmpty) {
+      config = config.copyWith(firebaseApiKey: firebaseApiKey);
+    }
+    if (firebaseMessagingSenderId.isNotEmpty) {
+      config = config.copyWith(
+        firebaseMessagingSenderId: firebaseMessagingSenderId,
+      );
+    }
+    if (firebaseProjectId.isNotEmpty) {
+      config = config.copyWith(firebaseProjectId: firebaseProjectId);
+    }
+    if (firebaseStorageBucket.isNotEmpty) {
+      config = config.copyWith(firebaseStorageBucket: firebaseStorageBucket);
+    }
+    if (firebaseAndroidAppId.isNotEmpty) {
+      config = config.copyWith(firebaseAndroidAppId: firebaseAndroidAppId);
+    }
+    if (firebaseIosAppId.isNotEmpty) {
+      config = config.copyWith(firebaseIosAppId: firebaseIosAppId);
+    }
+    if (googleIosClientId.isNotEmpty) {
+      config = config.copyWith(googleIosClientId: googleIosClientId);
+    }
+    if (sentryDsn.isNotEmpty) {
+      config = config.copyWith(sentryDsn: sentryDsn);
+    }
+
+    return config;
   }
 
   bool get hasSupabaseConfig =>
       supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
+
+  bool get hasSentryDsn => sentryDsn.trim().isNotEmpty;
 
   bool get isLocalBackend => _isLocalBackendUrl(supabaseUrl);
 
   String get supabaseTargetKind => isLocalBackend ? 'local' : 'hosted';
 
   static bool _parseBool(String value) => value.toLowerCase() == 'true';
+
+  static bool? _parseOptionalBool(String value) {
+    final trimmed = value.trim().toLowerCase();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+
+    return trimmed == 'true';
+  }
 
   static String resolveClientKeyForTesting({
     required String supabaseUrl,

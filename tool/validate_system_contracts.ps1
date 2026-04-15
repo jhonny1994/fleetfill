@@ -42,7 +42,8 @@ $mobileVersion = $mobileVersionMatch.Groups[1].Value
 $mobileAuth = Get-FileText "apps/mobile/lib/core/auth/auth_repository.dart"
 Assert-Contains $mobileAuth "const fleetFillPublicSiteOrigin = 'https://fleetfill.vercel.app';" "Mobile auth contract is missing the canonical public origin."
 Assert-Contains $mobileAuth "const mobileAuthCallbackPath = '/auth/mobile-callback';" "Mobile auth contract is missing the canonical callback path."
-Assert-Contains $mobileAuth "const hostedAuthRedirectUri = '`$fleetFillPublicSiteOrigin`$mobileAuthCallbackPath';" "Mobile auth contract is missing the hosted callback URI."
+Assert-Contains $mobileAuth "const hostedAuthRedirectUri =" "Mobile auth contract is missing the hosted callback URI."
+Assert-Contains $mobileAuth "'`$fleetFillPublicSiteOrigin`$mobileAuthCallbackPath';" "Mobile auth contract is missing the hosted callback URI."
 Assert-Contains $mobileAuth "const localAuthRedirectUri = 'com.carbodex.fleetfill://auth-callback';" "Mobile auth contract is missing the local custom-scheme fallback."
 
 $supabaseConfig = Get-FileText "backend/supabase/config.toml"
@@ -85,6 +86,9 @@ Assert-Contains $releaseWorkflow "validate_only:" "Root release workflow is miss
 
 $flutterReleaseWorkflow = Get-FileText ".github/workflows/production_flutter.yml"
 Assert-Contains $flutterReleaseWorkflow "environment: Production" "Production Flutter workflow is not bound to the Production environment."
+Assert-Contains $flutterReleaseWorkflow 'vars.SUPABASE_URL' "Production Flutter workflow is not using the canonical SUPABASE_URL GitHub variable."
+Assert-Contains $flutterReleaseWorkflow 'vars.SUPABASE_PUBLISHABLE_KEY' "Production Flutter workflow is not using the canonical SUPABASE_PUBLISHABLE_KEY GitHub variable."
+Assert-Contains $flutterReleaseWorkflow 'vars.SENTRY_DSN' "Production Flutter workflow is not using the canonical SENTRY_DSN GitHub variable."
 Assert-Contains $flutterReleaseWorkflow 'mobile_version="$(sed -n ''s/^version: //p'' apps/mobile/pubspec.yaml | head -n 1)"' "Production Flutter workflow is missing the mobile pubspec version lookup."
 Assert-Contains $flutterReleaseWorkflow 'expected_tag="v${mobile_version}"' "Production Flutter workflow is missing the pubspec-to-tag enforcement."
 Assert-Contains $flutterReleaseWorkflow "validate_only:" "Production Flutter workflow is missing the validate_only rehearsal input."
@@ -154,5 +158,32 @@ Assert-Contains $docsReleases "coordinated backend -> admin-web -> mobile releas
 Assert-Contains $docsReleases "Production environment" "Release docs are missing the Production environment approval-gate contract."
 Assert-Contains $docsReleases "Verified Android App Links" "Release docs are missing the Android App Links release posture."
 Assert-Contains $docsReleases "validate_only" "Release docs are missing the no-deploy release rehearsal contract."
+Assert-Contains $docsReleases '`SUPABASE_URL`' "Release docs are missing the canonical SUPABASE_URL GitHub variable."
+Assert-Contains $docsReleases '`SUPABASE_PUBLISHABLE_KEY`' "Release docs are missing the canonical SUPABASE_PUBLISHABLE_KEY GitHub variable."
+Assert-Contains $docsReleases '`SENTRY_DSN`' "Release docs are missing the canonical SENTRY_DSN GitHub variable."
+
+$appEnvironment = Get-FileText "apps/mobile/lib/core/config/app_environment.dart"
+foreach ($legacyName in @(
+  "APP_SUPABASE_URL",
+  "APP_SUPABASE_PUBLISHABLE_KEY",
+  "APP_SUPABASE_ANON_KEY",
+  "APP_SENTRY_DSN",
+  "APP_FIREBASE_API_KEY",
+  "APP_FIREBASE_MESSAGING_SENDER_ID",
+  "APP_FIREBASE_PROJECT_ID",
+  "APP_FIREBASE_STORAGE_BUCKET",
+  "APP_FIREBASE_ANDROID_APP_ID",
+  "APP_FIREBASE_IOS_APP_ID",
+  "APP_GOOGLE_WEB_CLIENT_ID",
+  "APP_GOOGLE_IOS_CLIENT_ID"
+)) {
+  if ($appEnvironment.Contains($legacyName)) {
+    throw "Mobile app environment still references legacy alias '$legacyName'."
+  }
+}
+
+if ($appEnvironment.Contains("ingest.de.sentry.io")) {
+  throw "Mobile app environment still contains a hardcoded Sentry DSN."
+}
 
 Write-Host "System contract validation passed."
