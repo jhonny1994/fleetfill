@@ -142,6 +142,10 @@ jobs:
             require_secret "VERCEL_TOKEN (GitHub secret)" "$VERCEL_TOKEN"
             require_secret "VERCEL_ORG_ID (GitHub variable)" "$VERCEL_ORG_ID"
             require_secret "VERCEL_PROJECT_ID (GitHub variable)" "$VERCEL_PROJECT_ID"
+            if [[ "$VERCEL_TOKEN" == vca_* ]]; then
+              echo "VERCEL_TOKEN must be a long-lived Vercel dashboard token, not a short-lived CLI session token (vca_*)." >&2
+              exit 1
+            fi
           fi
 
           if (( ${#missing[@]} > 0 )); then

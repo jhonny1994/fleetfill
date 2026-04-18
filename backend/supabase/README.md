@@ -75,6 +75,7 @@ Example root `.env` entries:
 - `TRANSACTIONAL_EMAIL_FROM_NAME=FleetFill`
 - `TRANSACTIONAL_EMAIL_MOCK_MODE=false`
 - `TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET=...`
+- `VERCEL_TOKEN=...` (must be a long-lived Vercel dashboard token for the correct team scope)
 - `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=your-google-web-client-id`
 - `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=your-google-client-secret`
 
@@ -84,6 +85,7 @@ Notes:
 - `SUPABASE_SECRET_KEY` is the repo-facing privileged hosted backend credential for service clients and rollout tooling; hosted Edge Functions receive the same value through `SB_SECRET_KEY` because Supabase blocks custom secrets that start with `SUPABASE_`.
 - Recommended ownership split:
   - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`, plus optional hosted rollout secrets like `SUPABASE_DB_URL`
+    - include `VERCEL_TOKEN` here only if you want repo tooling to sync the GitHub `VERCEL_TOKEN` secret; do not use a short-lived CLI session token (`vca_*`)
   - Flutter `--dart-define` or editor launch config: app runtime values such as `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, `SENTRY_DSN`, and Google client IDs
   - GitHub Actions: repository variables for non-secret client IDs and repository secrets for secrets such as `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET`
 - Android local runtime should use two explicit launch paths:

@@ -10,6 +10,7 @@ param(
   [string]$GoogleWebClientId = "",
   [string]$GoogleIosClientId = "",
   [string]$SentryDsn = "",
+  [string]$VercelToken = "",
   [switch]$GenerateKeystoreIfMissing
 )
 
@@ -51,6 +52,31 @@ function Set-GhSecret {
   } finally {
     Remove-Item $tmp -Force -ErrorAction SilentlyContinue
   }
+}
+
+function Resolve-VercelCiToken {
+  param(
+    [string]$ExplicitToken,
+    [hashtable]$EnvMap
+  )
+
+  $candidate = if (-not [string]::IsNullOrWhiteSpace($ExplicitToken)) {
+    $ExplicitToken.Trim()
+  } elseif ($EnvMap.ContainsKey("VERCEL_TOKEN")) {
+    [string]$EnvMap["VERCEL_TOKEN"]
+  } else {
+    ""
+  }
+
+  if ([string]::IsNullOrWhiteSpace($candidate)) {
+    throw "Missing VERCEL_TOKEN. Provide a long-lived Vercel access token explicitly or add VERCEL_TOKEN to the root .env file."
+  }
+
+  if ($candidate.StartsWith("vca_")) {
+    throw "VERCEL_TOKEN must be a long-lived Vercel token for CI, not a short-lived CLI session token (vca_*). Create it in the Vercel dashboard and store it in root .env or pass -VercelToken."
+  }
+
+  return $candidate
 }
 
 function Get-EnvMap {
@@ -137,8 +163,8 @@ if ([string]::IsNullOrWhiteSpace($publishableKey)) {
 }
 
 $vercelProject = Get-Content $VercelProjectFile -Raw | ConvertFrom-Json
-$vercelAuth = Get-Content "$env:APPDATA\com.vercel.cli\Data\auth.json" -Raw | ConvertFrom-Json
 $envMap = Get-EnvMap -Path ".env"
+$resolvedVercelToken = Resolve-VercelCiToken -ExplicitToken $VercelToken -EnvMap $envMap
 $resolvedSentryDsn = if (-not [string]::IsNullOrWhiteSpace($SentryDsn)) {
   $SentryDsn
 } else {
@@ -203,7 +229,7 @@ Set-GhVariable -Name "VERCEL_ORG_ID" -Value $vercelProject.orgId
 Set-GhVariable -Name "VERCEL_ADMIN_WEB_PROJECT_ID" -Value $vercelProject.projectId
 
 Set-GhSecret -Name "ANDROID_GOOGLE_SERVICES_JSON" -Value (Get-Content $GoogleServicesPath -Raw)
-Set-GhSecret -Name "VERCEL_TOKEN" -Value $vercelAuth.token
+Set-GhSecret -Name "VERCEL_TOKEN" -Value $resolvedVercelToken
 
 if (Test-Path $KeystorePath) {
   $keystoreBase64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path $KeystorePath)))

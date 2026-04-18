@@ -95,9 +95,11 @@ Assert-Contains $flutterReleaseWorkflow "validate_only:" "Production Flutter wor
 
 $adminReleaseWorkflow = Get-FileText ".github/workflows/production_admin_web.yml"
 Assert-Contains $adminReleaseWorkflow "environment: Production" "Production admin-web workflow is not bound to the Production environment."
+Assert-Contains $adminReleaseWorkflow 'short-lived CLI session token (vca_*)' "Production admin-web workflow is missing the Vercel session-token guardrail."
 
 $supabaseReleaseWorkflow = Get-FileText ".github/workflows/production_supabase.yml"
 Assert-Contains $supabaseReleaseWorkflow "environment: Production" "Production Supabase workflow is not bound to the Production environment."
+Assert-Contains $supabaseReleaseWorkflow 'short-lived CLI session token (vca_*)' "Production Supabase workflow is missing the Vercel session-token guardrail."
 
 $ciWorkflow = Get-FileText ".github/workflows/ci.yml"
 Assert-Contains $ciWorkflow "actions/checkout@v6" "CI workflow is not pinned to the current checkout major."
@@ -161,6 +163,8 @@ Assert-Contains $docsReleases "validate_only" "Release docs are missing the no-d
 Assert-Contains $docsReleases '`SUPABASE_URL`' "Release docs are missing the canonical SUPABASE_URL GitHub variable."
 Assert-Contains $docsReleases '`SUPABASE_PUBLISHABLE_KEY`' "Release docs are missing the canonical SUPABASE_PUBLISHABLE_KEY GitHub variable."
 Assert-Contains $docsReleases '`SENTRY_DSN`' "Release docs are missing the canonical SENTRY_DSN GitHub variable."
+Assert-Contains $docsReleases '`VERCEL_TOKEN`' "Release docs are missing the Vercel token contract."
+Assert-Contains $docsReleases 'short-lived CLI session tokens (`vca_*`)' "Release docs are missing the Vercel session-token warning."
 
 $appEnvironment = Get-FileText "apps/mobile/lib/core/config/app_environment.dart"
 foreach ($legacyName in @(

@@ -89,6 +89,7 @@ Local developer note:
   - syncs GitHub production variables and secrets that can be derived from local config
   - keeps GitHub variable names aligned with the runtime contract used by Flutter builds
   - can generate a local Android release keystore if one does not already exist
+  - requires `VERCEL_TOKEN` to be a long-lived Vercel dashboard token, not a short-lived CLI session token
 
 ## Contract Validation Ownership
 
@@ -133,3 +134,4 @@ Published artifacts:
 - admin-web production publication is now GitHub-controlled through the manual deploy workflow
 - secrets and signing material must stay in GitHub secrets, never in git
 - Sentry DSNs are treated as runtime configuration, not hardcoded source constants
+- `VERCEL_TOKEN` must be created in the Vercel dashboard for the correct team scope; short-lived CLI session tokens (`vca_*`) are not valid for GitHub Actions
