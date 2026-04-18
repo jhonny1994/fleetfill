@@ -4,13 +4,21 @@ param(
   [string]$ProjectRef = "rkvrdzwlynyionsnwfiu",
   [string[]]$TargetEnvironments = @("production"),
   [string]$SiteUrl = "https://fleetfill.vercel.app",
-  [string]$Scope = "jhonny1994s-projects"
+  [string]$Scope = ""
 )
 
 $ErrorActionPreference = "Stop"
 
 if ([string]::IsNullOrWhiteSpace($env:VERCEL_TOKEN)) {
   throw "Missing VERCEL_TOKEN for Vercel environment sync."
+}
+
+$resolvedScope = if (-not [string]::IsNullOrWhiteSpace($Scope)) {
+  $Scope
+} elseif (-not [string]::IsNullOrWhiteSpace($env:VERCEL_ORG_ID)) {
+  $env:VERCEL_ORG_ID
+} else {
+  ""
 }
 
 $apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
@@ -28,12 +36,22 @@ $values = [ordered]@{
 
 foreach ($environment in $TargetEnvironments) {
   foreach ($entry in $values.GetEnumerator()) {
-    & vercel env rm $entry.Key $environment --yes --scope $Scope --cwd $ProjectDir --token $env:VERCEL_TOKEN | Out-Null
+    $rmArgs = @("env", "rm", $entry.Key, $environment, "--yes", "--cwd", $ProjectDir, "--token", $env:VERCEL_TOKEN)
+    if (-not [string]::IsNullOrWhiteSpace($resolvedScope)) {
+      $rmArgs += @("--scope", $resolvedScope)
+    }
+
+    & vercel @rmArgs | Out-Null
     if ($LASTEXITCODE -gt 1) {
       throw "Failed removing existing Vercel env var $($entry.Key) for $environment."
     }
 
-    & vercel env add $entry.Key $environment --value $entry.Value --yes --scope $Scope --cwd $ProjectDir --token $env:VERCEL_TOKEN | Out-Null
+    $addArgs = @("env", "add", $entry.Key, $environment, "--value", $entry.Value, "--yes", "--cwd", $ProjectDir, "--token", $env:VERCEL_TOKEN)
+    if (-not [string]::IsNullOrWhiteSpace($resolvedScope)) {
+      $addArgs += @("--scope", $resolvedScope)
+    }
+
+    & vercel @addArgs | Out-Null
     if ($LASTEXITCODE -ne 0) {
       throw "Failed setting Vercel env var $($entry.Key) for $environment."
     }
