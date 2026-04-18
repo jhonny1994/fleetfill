@@ -46,7 +46,7 @@ The repo is a pragmatic product monorepo with sibling product surfaces, not a Fl
 - `tool/`
   - production executors, operator helpers, and internal helpers
   - execution layer behind the documented production workflows
-  - includes the lightweight local workspace runner in [C:\Users\raouf\projects\fleetfill\tool\workspace.ps1](C:\Users\raouf\projects\fleetfill\tool\workspace.ps1)
+  - includes the lightweight local workspace runner in [tool/workspace.ps1](../tool/workspace.ps1)
 - `data/`
   - canonical non-secret source data such as location inputs
 - `apps/mobile/assets/`

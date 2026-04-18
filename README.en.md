@@ -2,123 +2,75 @@
 
 <p align="center">
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?style=flat-square" alt="GitHub Release"></a>
-  <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/downloads/jhonny1994/fleetfill/total?style=flat-square" alt="GitHub Downloads"></a>
+  <a href="https://github.com/jhonny1994/fleetfill/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jhonny1994/fleetfill/ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
   <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/Admin-Live-brightgreen?style=flat-square" alt="Admin Console"></a>
 </p>
 
-<p align="center">Smart road freight operations for Algeria.</p>
+<p align="center"><strong>Smart road freight operations for Algeria.</strong></p>
+
+<p align="center">
+  FleetFill brings shippers, carriers, and operations teams onto one product system for booking, payment-proof review, shipment tracking, carrier verification, disputes, and payout follow-through.
+</p>
 
 <p align="center">
   <a href="README.md">العربية</a> · <a href="README.fr.md">Français</a>
 </p>
 
-Helps shippers and carriers manage everyday freight with more trust, clearer payment handling, and smoother operations than traditional back-and-forth coordination.
+## Why It Matters
 
-## Proprietary Notice
+- Better matching between freight demand and available truck capacity
+- Clearer payment handling before operational commitment
+- Real shipment lifecycle tracking instead of informal status chasing
+- Structured support, dispute, and payout workflows
+- Arabic, French, and English support built into the product
 
-- This repository is publicly visible for product evaluation, due diligence, and access to official FleetFill releases.
-- The repository, source code, documentation, and assets remain proprietary and privately owned.
-- No license is granted to use, copy, modify, redistribute, or commercially exploit this source code or related materials.
-- See [PROPRIETARY-NOTICE.md](C:/Users/raouf/projects/fleetfill/PROPRIETARY-NOTICE.md) for the full notice.
+## Live Product Surfaces
 
-## Why FleetFill
+- Android app releases: [GitHub Releases](https://github.com/jhonny1994/fleetfill/releases)
+- Admin operations console: [fleetfill.vercel.app](https://fleetfill.vercel.app)
 
-- precise trip and capacity matching
-- clear pricing before commitment
-- payment-proof review before confirmation
-- shipment tracking through real operational milestones
-- structured disputes, refunds, and payouts
-- Arabic, French, and English support
+## What Is In This Repository
 
-## For Shippers
+FleetFill is a product monorepo with three first-class surfaces:
 
-- create shipments quickly
-- find the right carrier by lane and date
-- upload payment proof and track review status
-- follow shipment progress step by step
-- open support requests or disputes when needed
+- `apps/mobile`
+  - Flutter mobile application for shippers and carriers
+- `apps/admin-web`
+  - Next.js internal operations console
+- `backend/supabase`
+  - Supabase schema, RLS, RPCs, seeds, and Edge Functions
 
-## For Carriers
+## Production Posture
 
-- publish recurring and one-off trips
-- manage vehicles and verification documents
-- receive bookings in a structured flow
-- update transport and delivery milestones
-- manage payout details and operational follow-up
+- protected `main` branch with required checks and review
+- unified CI for mobile, admin-web, and backend validation
+- production release workflows for backend, web, and mobile
+- coordinated whole-product release orchestration through GitHub Actions
 
-## For Operations Teams
+Start here for the engineering view:
 
-- internal admin console for payment review
-- carrier verification workflows
-- dispute and payout handling
-- support, audit, and system health visibility
+- [Documentation index](docs/README.en.md)
+- [Architecture](docs/architecture.md)
+- [Delivery model](docs/delivery.md)
+- [Release operations](docs/releases.md)
 
-## Download
-
-<p align="center">
-  <a href="https://github.com/jhonny1994/fleetfill/releases/latest"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?label=Download%20APK&style=for-the-badge&logo=android&logoColor=white&color=3DDC84" alt="Download APK"></a>
-</p>
-
-<p align="center">Get the latest signed build from <a href="https://github.com/jhonny1994/fleetfill/releases">GitHub Releases</a>.</p>
-
-## Admin Console
-
-<p align="center">
-  <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/Admin_Console-Live-brightgreen?style=for-the-badge&logo=vercel&logoColor=white" alt="Admin Console"></a>
-</p>
-
-<p align="center">Internal operations console for payment review, carrier verification, dispute management, and system health monitoring.</p>
-
-## Screenshots
-
-### Shipper Experience
+## Product Snapshots
 
 <div align="center">
 
-| Create Shipment | Find Carrier | Track Shipment |
-|:--------------:|:------------:|:--------------:|
-| ![Create Shipment](docs/assets/screenshots/mobile/shipper_create.png) | ![Find Carrier](docs/assets/screenshots/mobile/shipper_search.png) | ![Track Shipment](docs/assets/screenshots/mobile/shipper_track.png) |
+| Mobile | Admin |
+|:------:|:-----:|
+| ![Shipper mobile experience](docs/assets/screenshots/mobile/shipper_track.png) | ![Admin console](docs/assets/screenshots/admin/payments.png) |
 
 </div>
 
-### Carrier Experience
+## Repository Access And Reuse
 
-<div align="center">
+This repository is publicly visible for product evaluation, due diligence, and access to official FleetFill releases. The source code, documentation, and assets remain proprietary. No license is granted to reuse, modify, redistribute, or commercially exploit this repository or its contents.
 
-| Publish Trip | Manage Bookings | Update Delivery |
-|:----------:|:---------------:|:--------------:|
-| ![Publish Trip](docs/assets/screenshots/mobile/carrier_trip.png) | ![Manage Bookings](docs/assets/screenshots/mobile/carrier_bookings.png) | ![Update Delivery](docs/assets/screenshots/mobile/carrier_delivery.png) |
+See [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md) for the full notice.
 
-</div>
-
-### Admin Console
-
-<div align="center">
-
-| Payment Review | Carrier Verification | Dispute Management |
-|:--------------:|:--------------------:|:------------------:|
-| ![Payment Review](docs/assets/screenshots/admin/payments.png) | ![Carrier Verification](docs/assets/screenshots/admin/carrier_verify.png) | ![Dispute Management](docs/assets/screenshots/admin/disputes.png) |
-
-</div>
-
-## Core Product Strengths
-
-- Arabic-first product posture for the Algerian market
-- one operating system across app and admin
-- notifications, email, and tracking under one workflow model
-- production-oriented release and validation posture
-
-## Repository Model
-
-FleetFill is maintained as one pragmatic product monorepo with three first-class surfaces:
-
-- mobile app
-- admin web
-- Supabase backend
-
-The three surfaces now live as sibling product roots inside the repository and should be treated as one product system.
-
-## Built With
+## Technology
 
 <p align="center">
   <img src="https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=flutter&logoColor=white" alt="Flutter">
@@ -126,8 +78,3 @@ The three surfaces now live as sibling product roots inside the repository and s
   <img src="https://img.shields.io/badge/Next.js-000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
   <img src="https://img.shields.io/badge/Vercel-000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel">
 </p>
-
-## More
-
-- technical and operational docs: [docs/README.md](docs/README.md)
-- signed releases and publishing path: [docs/releases.md](docs/releases.md)

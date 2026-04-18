@@ -33,7 +33,7 @@ http://localhost:3000
 
 ## Environment
 
-Copy [`.env.example`](C:/Users/raouf/projects/fleetfill/apps/admin-web/.env.example) to `.env.local` and set:
+Copy [`.env.example`](.env.example) to `.env.local` and set:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -53,16 +53,16 @@ For Vercel production:
 
 - update environment variables in the Vercel project settings
 - redeploy the affected environment
-- or run [sync_admin_vercel_env.ps1](C:/Users/raouf/projects/fleetfill/tool/sync_admin_vercel_env.ps1) from the repo root
+- or run [sync_admin_vercel_env.ps1](../../tool/sync_admin_vercel_env.ps1) from the repo root
 - production `NEXT_PUBLIC_SITE_URL` should stay `https://fleetfill.vercel.app`
 
 ## Localization
 
 The app uses a registry-driven `next-intl` setup:
 
-- supported locales are defined in [config.ts](C:/Users/raouf/projects/fleetfill/apps/admin-web/lib/i18n/config.ts)
-- locale messages live in [messages](C:/Users/raouf/projects/fleetfill/apps/admin-web/messages)
-- locale negotiation happens in [proxy.ts](C:/Users/raouf/projects/fleetfill/apps/admin-web/proxy.ts)
+- supported locales are defined in [config.ts](lib/i18n/config.ts)
+- locale messages live in [messages](messages)
+- locale negotiation happens in [proxy.ts](proxy.ts)
 - runtime platform settings can enable or disable supported locales without changing code
 
 Locale growth rule:
@@ -88,7 +88,7 @@ pnpm dlx pruny --all
 
 ## Browser Testing
 
-Playwright coverage lives under [tests/e2e](C:/Users/raouf/projects/fleetfill/apps/admin-web/tests/e2e).
+Playwright coverage lives under [tests/e2e](tests/e2e).
 
 Install the browser once:
 
@@ -116,9 +116,9 @@ It runs the app on `http://127.0.0.1:3005`, which is a test-only host and not th
 
 GitHub Actions workflows:
 
-- [ci.yml](C:/Users/raouf/projects/fleetfill/.github/workflows/ci.yml)
-- [production_admin_web.yml](C:/Users/raouf/projects/fleetfill/.github/workflows/production_admin_web.yml)
-- [production_supabase.yml](C:/Users/raouf/projects/fleetfill/.github/workflows/production_supabase.yml)
+- [ci.yml](../../.github/workflows/ci.yml)
+- [production_admin_web.yml](../../.github/workflows/production_admin_web.yml)
+- [production_supabase.yml](../../.github/workflows/production_supabase.yml)
 
 The admin-web CI path now covers:
 
@@ -135,7 +135,7 @@ The admin-web CI path now covers:
 - Production should use the admin-only domain and production Supabase environment variables.
 - Never expose `service_role` keys to the browser or client bundles.
 - Sensitive admin mutations continue to run through the backend RPC layer.
-- [production_admin_web.yml](C:/Users/raouf/projects/fleetfill/.github/workflows/production_admin_web.yml) is the canonical production workflow.
+- [production_admin_web.yml](../../.github/workflows/production_admin_web.yml) is the canonical production workflow.
 
 ## Browser QA Focus
 

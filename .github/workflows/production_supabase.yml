@@ -1,4 +1,8 @@
 name: Production Supabase
+run-name: >-
+  Supabase rollout (${{
+    inputs.git_ref
+  }})
 
 on:
   workflow_dispatch:
@@ -68,8 +72,13 @@ concurrency:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   rollout:
+    name: Roll Out Supabase
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: Production
@@ -100,7 +109,6 @@ jobs:
 
       - name: Resolve rollout intent
         id: plan
-        shell: bash
         run: |
           if [[ "${{ inputs.push_db }}" == "true" || "${{ inputs.push_config }}" == "true" || "${{ inputs.sync_secrets }}" == "true" || "${{ inputs.deploy_functions }}" == "true" || "${{ inputs.configure_scheduler }}" == "true" || "${{ inputs.verify_after }}" == "true" ]]; then
             echo "performed_work=true" >> "$GITHUB_OUTPUT"
@@ -110,7 +118,6 @@ jobs:
 
       - name: Verify rollout configuration is present
         if: steps.plan.outputs.performed_work == 'true'
-        shell: bash
         run: |
           missing=()
 
@@ -181,7 +188,6 @@ jobs:
 
       - name: Materialize rollout env
         if: steps.plan.outputs.performed_work == 'true'
-        shell: bash
         run: |
           cat > .env <<EOF
           SUPABASE_URL=https://rkvrdzwlynyionsnwfiu.supabase.co
@@ -213,7 +219,6 @@ jobs:
 
       - name: Deploy Edge Functions
         if: steps.plan.outputs.performed_work == 'true' && inputs.deploy_functions
-        shell: bash
         run: |
           for dir in backend/supabase/functions/*; do
             if [[ -f "$dir/index.ts" ]]; then

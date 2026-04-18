@@ -16,7 +16,7 @@ The active migration direction is one root orchestration workflow calling the su
 
 GitHub Actions now exposes one main validation workflow:
 
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml)
+- [ci.yml](../.github/workflows/ci.yml)
 
 It detects which surface changed, then runs only the needed quality jobs on pull requests and on pushes to `main`:
 
@@ -51,7 +51,7 @@ The local Supabase validation environment uses the loopback URL `http://127.0.0.
 Production delivery is split by surface:
 
 - Supabase backend
-  - promoted by [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml)
+  - promoted by [production_supabase.yml](../.github/workflows/production_supabase.yml)
   - operator can choose which parts to run:
     - database push
     - config push
@@ -60,13 +60,13 @@ Production delivery is split by surface:
     - scheduler setup
     - hosted verification
 - admin-web
-  - promoted by [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml)
+  - promoted by [production_admin_web.yml](../.github/workflows/production_admin_web.yml)
   - operator can choose env sync, build, and deploy separately
 - Flutter mobile
-  - released by [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
+  - released by [production_flutter.yml](../.github/workflows/production_flutter.yml)
   - produces signed Android artifacts on version tags or manual release dispatch
 - Whole product
-  - orchestrated by [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml)
+  - orchestrated by [release.yml](../.github/workflows/release.yml)
   - calls backend, admin-web, and mobile releases in order without replacing the existing surface workflows
   - validates that at least one surface is selected and that any mobile release tag matches `apps/mobile/pubspec.yaml`
   - supports `validate_only` for a no-deploy rehearsal of the coordinated release path
@@ -76,10 +76,10 @@ Production delivery is split by surface:
 Promote production in this order:
 
 - merge validated work to `main`
-- let [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml) pass
-- run [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml) when backend or hosted config changed
-- run [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml) when admin-web should ship
-- prefer [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml) when shipping the coordinated product as one release event
+- let [ci.yml](../.github/workflows/ci.yml) pass
+- run [production_supabase.yml](../.github/workflows/production_supabase.yml) when backend or hosted config changed
+- run [production_admin_web.yml](../.github/workflows/production_admin_web.yml) when admin-web should ship
+- prefer [release.yml](../.github/workflows/release.yml) when shipping the coordinated product as one release event
 - use the same root workflow with `validate_only=true` before the first coordinated production run or after major workflow changes
 - run representative-device and hosted smoke validation before announcing release completeness
 - keep the custom mobile auth scheme only as a temporary fallback until real-device App Links validation is complete

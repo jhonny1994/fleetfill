@@ -1,4 +1,8 @@
 name: FleetFill Release
+run-name: >-
+  FleetFill release (${{
+    inputs.git_ref
+  }})
 
 on:
   workflow_dispatch:
@@ -44,6 +48,10 @@ permissions:
 concurrency:
   group: fleetfill-release
   cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   validate_release_request:

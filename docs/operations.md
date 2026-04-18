@@ -8,7 +8,7 @@ FleetFill production operations follow a three-layer model:
   - GitHub Actions decides what runs and when
   - operators choose which production surface to promote
 - execution plane
-  - repo-owned scripts in [C:\Users\raouf\projects\fleetfill\tool](C:\Users\raouf\projects\fleetfill\tool) perform the project-specific rollout work
+  - repo-owned scripts in [tool/](../tool) perform the project-specific rollout work
 - hosted platforms
   - Supabase, Vercel, and mobile distribution receive the promoted artifacts or configuration
 
@@ -95,10 +95,10 @@ Production readiness requires:
 
 Official production entrypoints:
 
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml)
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
+- [ci.yml](../.github/workflows/ci.yml)
+- [production_supabase.yml](../.github/workflows/production_supabase.yml)
+- [production_admin_web.yml](../.github/workflows/production_admin_web.yml)
+- [production_flutter.yml](../.github/workflows/production_flutter.yml)
 
 The `tool/` scripts remain part of real production behavior, but they should be invoked through these documented paths unless a local maintenance or fallback situation requires otherwise.
 

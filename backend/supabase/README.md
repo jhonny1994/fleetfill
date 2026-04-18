@@ -24,7 +24,7 @@ Rules:
 - target best practice is deterministic local seeding through `backend/supabase/seed.sql` or `backend/supabase/seeds/`
 - FleetFill seeds locations from `backend/supabase/seeds/locations.sql`, generated from the canonical JSON in `data/locations/wilayas-with-municipalities.json`
 - local resets automatically seed locations because `backend/supabase/config.toml` includes both `./seed.sql` and `./seeds/locations.sql` under `[db.seed]`
-- hosted rollouts should apply the same deterministic seed with `supabase db push --linked --include-seed`; this is now the default behavior in [C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1](C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1)
+- hosted rollouts should apply the same deterministic seed with `supabase db push --linked --include-seed`; this is now the default behavior in [deploy_supabase_cloud.ps1](../../tool/deploy_supabase_cloud.ps1)
 - regenerate the SQL seed with:
   - `dart run tool/locations/generate_supabase_location_seed.dart`
 - the importer below remains available as maintenance tooling, not the primary local bootstrap path
@@ -158,7 +158,7 @@ Production-grade alignment notes:
 - preferred pattern: `pg_cron` triggers one Edge Function worker every minute
 - repo-managed scheduler setup now lives in `backend/supabase/scripts/configure_scheduled_automation.sql`
 - scheduler-to-function and worker-to-worker authorization should use `INTERNAL_AUTOMATION_TOKEN`, not raw service-role bearer reuse
-- production rollout can apply it from the repo root with [C:\Users\raouf\projects\fleetfill\tool\apply_supabase_scheduler.ps1](C:\Users\raouf\projects\fleetfill\tool\apply_supabase_scheduler.ps1) when `SUPABASE_DB_URL` is present in root `.env`
+- production rollout can apply it from the repo root with [apply_supabase_scheduler.ps1](../../tool/apply_supabase_scheduler.ps1) when `SUPABASE_DB_URL` is present in root `.env`
 - initial worker scope:
   - email outbox draining
   - delivery grace-window expiry
@@ -168,7 +168,7 @@ Production-grade alignment notes:
 
 ## Hosted Rollout Helpers
 
-- [C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1](C:\Users\raouf\projects\fleetfill\tool\deploy_supabase_cloud.ps1)
+- [deploy_supabase_cloud.ps1](../../tool/deploy_supabase_cloud.ps1)
   - runs the local validation gate
   - pushes cloud migrations and config
   - syncs function secrets
@@ -176,7 +176,7 @@ Production-grade alignment notes:
   - installs the scheduler when `SUPABASE_DB_URL` is available
   - syncs Vercel admin env values
   - runs hosted verification
-- [C:\Users\raouf\projects\fleetfill\tool\verify_hosted_rollout.ps1](C:\Users\raouf\projects\fleetfill\tool\verify_hosted_rollout.ps1)
+- [verify_hosted_rollout.ps1](../../tool/verify_hosted_rollout.ps1)
   - verifies live function inventory and auth boundaries
   - checks Vercel production env values
   - checks the live admin sign-in route
