@@ -1,4 +1,8 @@
 name: Production Admin Web
+run-name: >-
+  Admin Web deploy (${{
+    inputs.git_ref || github.ref_name
+  }})
 
 on:
   workflow_dispatch:
@@ -44,8 +48,13 @@ concurrency:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   deploy:
+    name: Deploy Admin Web
     runs-on: ubuntu-latest
     timeout-minutes: 25
     environment: Production
@@ -64,7 +73,6 @@ jobs:
 
       - name: Resolve deploy intent
         id: plan
-        shell: bash
         run: |
           if [[ "${{ inputs.sync_env }}" == "true" || "${{ inputs.build }}" == "true" || "${{ inputs.deploy }}" == "true" ]]; then
             echo "performed_work=true" >> "$GITHUB_OUTPUT"
@@ -73,7 +81,6 @@ jobs:
           fi
 
       - name: Validate requested deploy shape
-        shell: bash
         run: |
           if [[ "${{ inputs.deploy }}" == "true" && "${{ inputs.build }}" != "true" ]]; then
             echo "Production deploy requires a production build in the same workflow run."
@@ -82,18 +89,37 @@ jobs:
 
       - name: Verify deploy configuration is present
         if: steps.plan.outputs.performed_work == 'true'
-        shell: bash
         run: |
-          test -n "$VERCEL_TOKEN"
-          test -n "$VERCEL_ORG_ID"
-          test -n "$VERCEL_PROJECT_ID"
+          missing=()
+
+          require_value() {
+            local name="$1"
+            local value="$2"
+            if [[ -z "$value" ]]; then
+              missing+=("$name")
+            fi
+          }
+
+          require_value "VERCEL_TOKEN (GitHub secret or Production environment secret)" "$VERCEL_TOKEN"
+          require_value "VERCEL_ORG_ID (GitHub variable)" "$VERCEL_ORG_ID"
+          require_value "VERCEL_ADMIN_WEB_PROJECT_ID (GitHub variable)" "$VERCEL_PROJECT_ID"
           if [[ "$VERCEL_TOKEN" == vca_* ]]; then
             echo "GitHub secret VERCEL_TOKEN is a short-lived CLI session token (vca_*)." >&2
             echo "Replace it with a long-lived Vercel dashboard token before running Production Admin Web." >&2
             exit 1
           fi
           if [[ "${{ inputs.sync_env }}" == "true" ]]; then
-            test -n "$SUPABASE_ACCESS_TOKEN"
+            require_value "SUPABASE_ACCESS_TOKEN (GitHub secret)" "$SUPABASE_ACCESS_TOKEN"
+          fi
+
+          if (( ${#missing[@]} > 0 )); then
+            echo "Missing production admin-web deploy configuration:" >&2
+            for item in "${missing[@]}"; do
+              echo "  - $item" >&2
+            done
+            echo "" >&2
+            echo "Populate them in GitHub Settings > Secrets and variables > Actions before rerunning this workflow." >&2
+            exit 1
           fi
 
       - name: Set up pnpm

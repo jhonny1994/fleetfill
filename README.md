@@ -6,26 +6,21 @@
 
 <p align="center">
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?style=flat-square" alt="GitHub Release"></a>
-  <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/downloads/jhonny1994/fleetfill/total?style=flat-square" alt="GitHub Downloads"></a>
+  <a href="https://github.com/jhonny1994/fleetfill/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jhonny1994/fleetfill/ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
   <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/لوحة_التحكم-Live-brightgreen?style=flat-square" alt="لوحة التحكم"></a>
 </p>
 
-<p align="center">المنصة الذكية لإدارة عمليات الشحن البرّي في الجزائر.</p>
+<p align="center"><strong>المنصة الذكية لإدارة عمليات الشحن البرّي في الجزائر.</strong></p>
+
+<p align="center">
+  يجمع FleetFill الشاحنين والناقلين وفِرق التشغيل داخل منظومة واحدة للحجز، ومراجعة إثبات الدفع، وتتبع الشحنات، والتحقق من الناقلين، وإدارة النزاعات، ومتابعة المستحقات.
+</p>
 
 <p align="center">
   <a href="README.en.md">English</a> · <a href="README.fr.md">Français</a>
 </p>
 
-تُمكِّن الشاحنين والناقلين من إدارة عمليات النقل اليومية بمزيدٍ من الموثوقية، والشفافية في التعاملات المالية، وانسيابية تشغيلية تتجاوز أساليب التنسيق التقليدية.
-
-## إشعار الملكية
-
-- هذا المستودع ظاهر للعامة لأغراض العرض والتقييم والوصول إلى الإصدارات المنشورة.
-- يبقى المستودع والشفرة المصدرية والوثائق ملكية خاصة محفوظة لصاحب المشروع.
-- لا يُمنح أيّ ترخيص لاستخدام الشيفرة المصدرية أو نسخها أو تعديلها أو إعادة توزيعها أو استغلالها تجاريًّا أو إعادة استخدامها دون إذنٍ خطيٍّ مسبق.
-- راجع [PROPRIETARY-NOTICE.md](C:/Users/raouf/projects/fleetfill/PROPRIETARY-NOTICE.md) للصياغة الكاملة.
-
-## لماذا FleetFill؟
+## لماذا يهم؟
 
 - مُطابقة دقيقة بين الرحلات والسعات المتاحة
 - شفافية كاملة في الأسعار قبل تأكيد الحجز
@@ -34,93 +29,51 @@
 - إدارة مُهيكلة للنزاعات والمبالغ المستردّة والمستحقات
 - واجهة ثلاثية اللغات: العربية والفرنسية والإنجليزية
 
-## للشاحنين
+## الأسطح الحيّة
 
-- إنشاء شحنات بسرعة وسهولة
-- العثور على الناقل المناسب حسب خط السير والتاريخ
-- رفع إثبات الدفع ومتابعة حالة المراجعة
-- تتبُّع مراحل الشحنة خطوة بخطوة
-- فتح طلبات دعم أو نزاعات عند الحاجة
+- إصدارات أندرويد الرسمية: [GitHub Releases](https://github.com/jhonny1994/fleetfill/releases)
+- لوحة التشغيل الإدارية: [fleetfill.vercel.app](https://fleetfill.vercel.app)
 
-## للناقلين
+## ماذا يوجد داخل المستودع؟
 
-- نشر رحلات دورية أو رحلات فردية
-- إدارة أسطول المركبات ووثائق التحقُّق
-- استقبال الحجوزات ضمن تدفُّق عمل مُنظَّم
-- تحديث مراحل النقل والتسليم أولًا بأول
-- إدارة بيانات الدفع والمتابعة التشغيلية
+يُدار FleetFill بوصفه مستودعًا أحاديًّا عمليًّا بثلاثة أسطح رئيسية:
 
-## لفِرَق التشغيل
+- `apps/mobile`
+  - تطبيق Flutter للشاحنين والناقلين
+- `apps/admin-web`
+  - لوحة تشغيل داخلية مبنية بـ Next.js
+- `backend/supabase`
+  - قاعدة البيانات، والسياسات، وواجهات RPC، وEdge Functions
 
-- لوحة تحكم داخلية لمراجعة المدفوعات
-- مسارات عمل للتحقُّق من الناقلين
-- إدارة النزاعات وصرف المستحقات
-- أدوات الدعم الفني والتدقيق ومراقبة سلامة النظام
+## الجاهزية الإنتاجية
 
-## تحميل التطبيق
+- فرع `main` محمي ويتطلب مراجعة وفحوصات إلزامية
+- مسار CI موحَّد لتطبيق الهاتف ولوحة الإدارة والخلفية
+- مسارات نشر منفصلة للإدارة، والخلفية، والإصدارات المحمولة
+- مسار تنسيق شامل للإطلاق عبر GitHub Actions
 
-<p align="center">
-  <a href="https://github.com/jhonny1994/fleetfill/releases/latest"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?label=تحميل%20APK&style=for-the-badge&logo=android&logoColor=white&color=3DDC84" alt="تحميل APK"></a>
-</p>
+ابدأ من هنا إذا كنت تريد الصورة الهندسية بسرعة:
 
-<p align="center">حمِّل أحدث إصدار موقَّع من صفحة <a href="https://github.com/jhonny1994/fleetfill/releases">GitHub Releases</a>.</p>
+- [فهرس التوثيق](docs/README.md)
+- [المعمارية](docs/architecture.md)
+- [نموذج التسليم](docs/delivery.md)
+- [عمليات الإصدارات](docs/releases.md)
 
-## لوحة التحكم
-
-<p align="center">
-  <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/لوحة%20التحكم-Live-brightgreen?style=for-the-badge&logo=vercel&logoColor=white" alt="لوحة التحكم"></a>
-</p>
-
-<p align="center">لوحة تحكم داخلية مُخصَّصة لفريق التشغيل، تشمل مراجعة المدفوعات، والتحقُّق من الناقلين، وإدارة النزاعات، ومراقبة سلامة النظام.</p>
-
-## لقطات الشاشة
-
-### واجهة الشاحنين
+## لمحة بصرية
 
 <div align="center" dir="ltr">
 
-| إنشاء شحنة | البحث عن ناقل | تتبُّع الشحنة |
-|:-----------:|:-------------:|:------------:|
-| ![إنشاء شحنة](docs/assets/screenshots/mobile/shipper_create.png) | ![البحث عن ناقل](docs/assets/screenshots/mobile/shipper_search.png) | ![تتبُّع الشحنة](docs/assets/screenshots/mobile/shipper_track.png) |
+| التطبيق | لوحة الإدارة |
+|:-------:|:------------:|
+| ![تتبُّع الشحنة](docs/assets/screenshots/mobile/shipper_track.png) | ![مراجعة المدفوعات](docs/assets/screenshots/admin/payments.png) |
 
 </div>
 
-### واجهة الناقلين
+## الوصول وإعادة الاستخدام
 
-<div align="center" dir="ltr">
+هذا المستودع ظاهر للعامة لأغراض التقييم، والمراجعة التقنية، والوصول إلى الإصدارات الرسمية فقط. تبقى الشفرة المصدرية، والوثائق، والمواد المرتبطة ملكية خاصة، ولا يُمنح أي ترخيص لإعادة الاستخدام أو التعديل أو التوزيع أو الاستغلال التجاري.
 
-| نشر رحلة | إدارة الحجوزات | تحديث التسليم |
-|:--------:|:--------------:|:-------------:|
-| ![نشر رحلة](docs/assets/screenshots/mobile/carrier_trip.png) | ![إدارة الحجوزات](docs/assets/screenshots/mobile/carrier_bookings.png) | ![تحديث التسليم](docs/assets/screenshots/mobile/carrier_delivery.png) |
-
-</div>
-
-### لوحة التحكم
-
-<div align="center" dir="ltr">
-
-| مراجعة المدفوعات | التحقُّق من الناقلين | إدارة النزاعات |
-|:----------------:|:-----------------:|:--------------:|
-| ![مراجعة المدفوعات](docs/assets/screenshots/admin/payments.png) | ![التحقُّق من الناقلين](docs/assets/screenshots/admin/carrier_verify.png) | ![إدارة النزاعات](docs/assets/screenshots/admin/disputes.png) |
-
-</div>
-
-## نقاط القوة الجوهرية
-
-- منتج مُصمَّم بالعربية أولًا ومُوجَّه للسوق الجزائرية
-- منظومة تشغيلية موحَّدة تجمع التطبيق ولوحة التحكم
-- إشعارات وبريد إلكتروني وتتبُّع ضمن نموذج تشغيلي واحد
-- جاهزية إنتاجية شاملة للنشر والاختبار وإدارة الإصدارات
-
-## بنية المستودع
-
-يُدار FleetFill بوصفه مستودعًا أحاديًّا (Monorepo) عمليًّا يضمّ ثلاث واجهات رئيسية:
-
-- التطبيق المحمول
-- لوحة التحكم الإدارية
-- الواجهة الخلفية (Supabase)
-
-تتواجد هذه الواجهات الثلاث كوحدات مُتجاورة داخل المستودع، وينبغي التعامل معها بوصفها منظومة مُنتَج واحدة متكاملة.
+راجع [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md) للصياغة الكاملة.
 
 ## بُنِي باستخدام
 
@@ -130,10 +83,5 @@
   <img src="https://img.shields.io/badge/Next.js-000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
   <img src="https://img.shields.io/badge/Vercel-000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel">
 </p>
-
-## المزيد
-
-- التوثيق التقني والتشغيلي: [docs/README.md](docs/README.md)
-- الإصدارات الموقَّعة ومسار النشر: [docs/releases.md](docs/releases.md)
 
 </div>

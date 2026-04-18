@@ -2,26 +2,21 @@
 
 <p align="center">
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?style=flat-square" alt="GitHub Release"></a>
-  <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/downloads/jhonny1994/fleetfill/total?style=flat-square" alt="GitHub Downloads"></a>
+  <a href="https://github.com/jhonny1994/fleetfill/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jhonny1994/fleetfill/ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
   <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/Console_Admin-Live-brightgreen?style=flat-square" alt="Console Admin"></a>
 </p>
 
-<p align="center">La plateforme intelligente de fret routier pour l'Algérie.</p>
+<p align="center"><strong>La plateforme intelligente de fret routier pour l'Algérie.</strong></p>
+
+<p align="center">
+  FleetFill réunit expéditeurs, transporteurs et équipes d'exploitation dans un même système produit pour la réservation, la revue des preuves de paiement, le suivi des expéditions, la vérification transporteur, les litiges et les paiements.
+</p>
 
 <p align="center">
   <a href="README.md">العربية</a> · <a href="README.en.md">English</a>
 </p>
 
-Aide les expéditeurs et les transporteurs à gérer le transport quotidien avec plus de confiance, plus de clarté sur les paiements et une meilleure organisation opérationnelle.
-
-## Mention de propriete
-
-- Ce depot est visible publiquement pour l'evaluation du produit, la due diligence et l'acces aux releases officielles de FleetFill.
-- Le depot, le code source, la documentation et les assets restent proprietaires et prives.
-- Aucun droit ni licence n'est accorde pour utiliser, copier, modifier, redistribuer ou exploiter commercialement ce code ou ces contenus.
-- Voir [PROPRIETARY-NOTICE.md](C:/Users/raouf/projects/fleetfill/PROPRIETARY-NOTICE.md) pour la formulation complete.
-
-## Pourquoi FleetFill
+## Pourquoi c'est utile
 
 - recherche précise de trajets et de capacité
 - prix clair avant validation
@@ -30,93 +25,51 @@ Aide les expéditeurs et les transporteurs à gérer le transport quotidien avec
 - litiges, remboursements et paiements structurés
 - support en arabe, français et anglais
 
-## Pour les expéditeurs
+## Surfaces en ligne
 
-- créer une expédition rapidement
-- trouver le bon transporteur selon le trajet et la date
-- déposer la preuve de paiement et suivre sa validation
-- suivre l'avancement de l'expédition étape par étape
-- ouvrir un ticket support ou un litige si nécessaire
+- releases Android officielles : [GitHub Releases](https://github.com/jhonny1994/fleetfill/releases)
+- console d'exploitation : [fleetfill.vercel.app](https://fleetfill.vercel.app)
 
-## Pour les transporteurs
+## Ce que contient ce dépôt
 
-- publier des trajets récurrents ou ponctuels
-- gérer véhicules et documents de vérification
-- recevoir les réservations dans un flux clair
-- mettre à jour les étapes de transport et de livraison
-- gérer les comptes de paiement et le suivi opérationnel
+FleetFill est organisé comme un monorepo produit avec trois surfaces principales :
 
-## Pour les équipes d'exploitation
+- `apps/mobile`
+  - application Flutter pour expéditeurs et transporteurs
+- `apps/admin-web`
+  - console interne Next.js pour les opérations
+- `backend/supabase`
+  - schéma, politiques, RPC, seeds et Edge Functions
 
-- console interne pour la revue des paiements
-- workflows de vérification transporteur
-- gestion des litiges et des paiements transporteurs
-- visibilité support, audit et santé du système
+## Posture de production
 
-## Téléchargement
+- branche `main` protégée avec revue et contrôles obligatoires
+- CI unifiée pour mobile, admin-web et backend
+- workflows de déploiement séparés pour le backend, le web et le mobile
+- orchestration globale des releases via GitHub Actions
 
-<p align="center">
-  <a href="https://github.com/jhonny1994/fleetfill/releases/latest"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?label=Télécharger%20APK&style=for-the-badge&logo=android&logoColor=white&color=3DDC84" alt="Télécharger l'APK"></a>
-</p>
+Pour une vue technique rapide :
 
-<p align="center">Téléchargez la dernière version depuis <a href="https://github.com/jhonny1994/fleetfill/releases">GitHub Releases</a>.</p>
+- [Index de la documentation](docs/README.fr.md)
+- [Architecture](docs/architecture.md)
+- [Modèle de delivery](docs/delivery.md)
+- [Opérations de release](docs/releases.md)
 
-## Console d'administration
-
-<p align="center">
-  <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/Console_Admin-Live-brightgreen?style=for-the-badge&logo=vercel&logoColor=white" alt="Console Admin"></a>
-</p>
-
-<p align="center">Console interne pour la revue des paiements, la vérification des transporteurs, la gestion des litiges et le suivi de la santé du système.</p>
-
-## Captures d'écran
-
-### Expérience expéditeur
+## Aperçu produit
 
 <div align="center">
 
-| Créer une expédition | Trouver un transporteur | Suivre l'expédition |
-|:-------------------:|:----------------------:|:------------------:|
-| ![Créer une expédition](docs/assets/screenshots/mobile/shipper_create.png) | ![Trouver un transporteur](docs/assets/screenshots/mobile/shipper_search.png) | ![Suivre l'expédition](docs/assets/screenshots/mobile/shipper_track.png) |
+| Mobile | Admin |
+|:------:|:-----:|
+| ![Suivre l'expédition](docs/assets/screenshots/mobile/shipper_track.png) | ![Revue des paiements](docs/assets/screenshots/admin/payments.png) |
 
 </div>
 
-### Expérience transporteur
+## Accès et réutilisation
 
-<div align="center">
+Ce dépôt est public pour l'évaluation du produit, la revue technique et l'accès aux releases officielles. Le code source, la documentation et les assets restent propriétaires. Aucun droit n'est accordé pour la réutilisation, la modification, la redistribution ou l'exploitation commerciale.
 
-| Publier un trajet | Gérer les réservations | Mettre à jour la livraison |
-|:----------------:|:---------------------:|:-------------------------:|
-| ![Publier un trajet](docs/assets/screenshots/mobile/carrier_trip.png) | ![Gérer les réservations](docs/assets/screenshots/mobile/carrier_bookings.png) | ![Mettre à jour la livraison](docs/assets/screenshots/mobile/carrier_delivery.png) |
-
-</div>
-
-### Console d'administration
-
-<div align="center">
-
-| Revue des paiements | Vérification transporteur | Gestion des litiges |
-|:-------------------:|:------------------------:|:-------------------:|
-| ![Revue des paiements](docs/assets/screenshots/admin/payments.png) | ![Vérification transporteur](docs/assets/screenshots/admin/carrier_verify.png) | ![Gestion des litiges](docs/assets/screenshots/admin/disputes.png) |
-
-</div>
-
-## Points forts
-
-- produit pensé d'abord pour le marché algérien et la langue arabe
-- une seule base d'exploitation pour l'app et l'admin
-- notifications, email et suivi dans un même modèle opérationnel
-- posture orientée production pour les releases et la validation
-
-## Modèle du dépôt
-
-FleetFill est maintenu comme un monorepo produit pragmatique avec trois surfaces principales :
-
-- application mobile
-- admin web
-- backend Supabase
-
-Les trois surfaces vivent maintenant comme des racines sœurs dans le dépôt et doivent être comprises comme un seul système produit.
+Voir [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md) pour la formulation complète.
 
 ## Construit avec
 
@@ -126,8 +79,3 @@ Les trois surfaces vivent maintenant comme des racines sœurs dans le dépôt et
   <img src="https://img.shields.io/badge/Next.js-000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
   <img src="https://img.shields.io/badge/Vercel-000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel">
 </p>
-
-## En savoir plus
-
-- documentation technique et opérationnelle : [docs/README.md](docs/README.md)
-- releases signées et chemin de publication : [docs/releases.md](docs/releases.md)

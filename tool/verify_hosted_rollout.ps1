@@ -104,6 +104,24 @@ if ([string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken) -and (Test-Pa
   }
 }
 
+function Assert-HasValue {
+  param(
+    [string]$Name,
+    [string]$Value,
+    [string]$ResolutionHint = ""
+  )
+
+  if (-not [string]::IsNullOrWhiteSpace($Value)) {
+    return
+  }
+
+  if (-not [string]::IsNullOrWhiteSpace($ResolutionHint)) {
+    throw "Missing $Name. $ResolutionHint"
+  }
+
+  throw "Missing $Name."
+}
+
 function Get-VercelEnvPayload {
   param(
     [string]$Environment,
@@ -111,8 +129,13 @@ function Get-VercelEnvPayload {
     [string]$ProjectDir
   )
 
-  if ([string]::IsNullOrWhiteSpace($env:VERCEL_TOKEN)) {
-    throw "Missing VERCEL_TOKEN for hosted rollout verification."
+  Assert-HasValue `
+    -Name "VERCEL_TOKEN" `
+    -Value $env:VERCEL_TOKEN `
+    -ResolutionHint "Set a long-lived Vercel dashboard token in the current shell before running hosted rollout verification."
+
+  if ($env:VERCEL_TOKEN.StartsWith("vca_")) {
+    throw "VERCEL_TOKEN must be a long-lived Vercel dashboard token, not a short-lived CLI session token (vca_*)."
   }
 
   $output = & vercel env ls $Environment --format json --scope $Scope --cwd $ProjectDir --token $env:VERCEL_TOKEN 2>&1

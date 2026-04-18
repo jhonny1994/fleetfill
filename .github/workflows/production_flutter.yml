@@ -1,4 +1,8 @@
 name: Production Flutter
+run-name: >-
+  Mobile release (${{
+    github.event_name == 'push' && github.ref_name || inputs.release_tag
+  }})
 
 on:
   push:
@@ -83,8 +87,13 @@ concurrency:
   group: production-flutter-${{ github.ref }}
   cancel-in-progress: false
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   android-release:
+    name: Android Release
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: Production
@@ -108,7 +117,6 @@ jobs:
 
       - name: Resolve release intent
         id: plan
-        shell: bash
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == "push" || "${{ inputs.validate_only }}" != "true" ]]; then
             echo "performed_work=true" >> "$GITHUB_OUTPUT"
@@ -118,7 +126,6 @@ jobs:
 
       - name: Validate requested release shape
         if: github.event_name != 'push'
-        shell: bash
         run: |
           if [[ "${{ inputs.validate_only }}" == "true" ]]; then
             if [[ "${{ inputs.publish_release }}" == "true" ]]; then
@@ -138,7 +145,6 @@ jobs:
           fi
 
       - name: Validate release tag matches mobile version
-        shell: bash
         run: |
           mobile_version="$(sed -n 's/^version: //p' apps/mobile/pubspec.yaml | head -n 1)"
           if [[ -z "$mobile_version" ]]; then
@@ -167,15 +173,35 @@ jobs:
 
       - name: Verify release configuration is present
         if: steps.plan.outputs.performed_work == 'true'
-        shell: bash
         run: |
-          test -n "${SUPABASE_URL}"
-          test -n "${SUPABASE_PUBLISHABLE_KEY}"
-          test -n "${SENTRY_DSN}"
-          test -n "${GOOGLE_WEB_CLIENT_ID}"
-          test -n "${FLEETFILL_RELEASE_STORE_PASSWORD}"
-          test -n "${FLEETFILL_RELEASE_KEY_ALIAS}"
-          test -n "${FLEETFILL_RELEASE_KEY_PASSWORD}"
+          missing=()
+
+          require_value() {
+            local name="$1"
+            local value="$2"
+            if [[ -z "$value" ]]; then
+              missing+=("$name")
+            fi
+          }
+
+          require_value "SUPABASE_URL (GitHub variable)" "${SUPABASE_URL}"
+          require_value "SUPABASE_PUBLISHABLE_KEY (GitHub variable)" "${SUPABASE_PUBLISHABLE_KEY}"
+          require_value "SENTRY_DSN (GitHub variable)" "${SENTRY_DSN}"
+          require_value "GOOGLE_WEB_CLIENT_ID (GitHub variable)" "${GOOGLE_WEB_CLIENT_ID}"
+          require_value "GOOGLE_IOS_CLIENT_ID (GitHub variable)" "${GOOGLE_IOS_CLIENT_ID}"
+          require_value "ANDROID_RELEASE_STORE_PASSWORD (GitHub secret)" "${FLEETFILL_RELEASE_STORE_PASSWORD}"
+          require_value "ANDROID_RELEASE_KEY_ALIAS (GitHub secret)" "${FLEETFILL_RELEASE_KEY_ALIAS}"
+          require_value "ANDROID_RELEASE_KEY_PASSWORD (GitHub secret)" "${FLEETFILL_RELEASE_KEY_PASSWORD}"
+
+          if (( ${#missing[@]} > 0 )); then
+            echo "Missing mobile release configuration:" >&2
+            for item in "${missing[@]}"; do
+              echo "  - $item" >&2
+            done
+            echo "" >&2
+            echo "Populate them in GitHub Settings > Secrets and variables > Actions before rerunning this workflow." >&2
+            exit 1
+          fi
 
       - name: Set up Java
         if: steps.plan.outputs.performed_work == 'true'
@@ -199,20 +225,24 @@ jobs:
         if: steps.plan.outputs.performed_work == 'true'
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}
-        shell: bash
         working-directory: apps/mobile
         run: |
-          test -n "$GOOGLE_SERVICES_JSON"
+          if [[ -z "$GOOGLE_SERVICES_JSON" ]]; then
+            echo "Missing ANDROID_GOOGLE_SERVICES_JSON (GitHub secret)." >&2
+            exit 1
+          fi
           echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
 
       - name: Materialize Android signing keystore
         if: steps.plan.outputs.performed_work == 'true'
         env:
           ANDROID_RELEASE_KEYSTORE_BASE64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}
-        shell: bash
         working-directory: apps/mobile
         run: |
-          test -n "$ANDROID_RELEASE_KEYSTORE_BASE64"
+          if [[ -z "$ANDROID_RELEASE_KEYSTORE_BASE64" ]]; then
+            echo "Missing ANDROID_RELEASE_KEYSTORE_BASE64 (GitHub secret)." >&2
+            exit 1
+          fi
           echo "$ANDROID_RELEASE_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
 
       - name: Build signed Android app bundle
@@ -245,7 +275,6 @@ jobs:
 
       - name: Resolve release metadata
         id: release_meta
-        shell: bash
         run: |
           if [[ "${GITHUB_EVENT_NAME}" != "push" ]]; then
             echo "tag=${{ inputs.release_tag }}" >> "$GITHUB_OUTPUT"
@@ -266,7 +295,6 @@ jobs:
       - name: Resolve artifact list
         id: artifacts
         if: steps.plan.outputs.performed_work == 'true'
-        shell: bash
         run: |
           files=()
           if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then

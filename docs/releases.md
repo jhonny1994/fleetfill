@@ -4,11 +4,11 @@
 
 FleetFill release automation is intentionally simple:
 
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml) validates repository quality
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml) orchestrates coordinated whole-product releases
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml) promotes hosted backend changes
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml) publishes admin-web on demand
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml) builds signed Android release artifacts
+- [ci.yml](../.github/workflows/ci.yml) validates repository quality
+- [release.yml](../.github/workflows/release.yml) orchestrates coordinated whole-product releases
+- [production_supabase.yml](../.github/workflows/production_supabase.yml) promotes hosted backend changes
+- [production_admin_web.yml](../.github/workflows/production_admin_web.yml) publishes admin-web on demand
+- [production_flutter.yml](../.github/workflows/production_flutter.yml) builds signed Android release artifacts
 
 ## Governance
 
@@ -16,31 +16,34 @@ FleetFill release automation is intentionally simple:
 - the required checks are `System Contracts`, `Detect Changed Surfaces`, `Flutter Quality`, `Admin Web Quality`, and `Supabase Validation`
 - the production rollout jobs use the GitHub `Production` environment
 - the `Production` environment currently requires reviewer approval from `jhonny1994`
+- production credentials should be stored at the environment scope when they are environment-gated; repo-level secrets are not a substitute for environment-level approval boundaries
 
 ## Active GitHub Actions
 
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\ci.yml)
+- [ci.yml](../.github/workflows/ci.yml)
   - surface-aware change detection
   - cross-surface system contract validation
   - Flutter quality
   - admin-web quality
   - Supabase local validation
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml)
+- [release.yml](../.github/workflows/release.yml)
   - coordinated backend -> admin-web -> mobile release orchestration
   - keeps the existing surface workflows as reusable rollout units
   - supports a `validate_only` no-deploy rehearsal mode for contract validation
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_supabase.yml)
+- [production_supabase.yml](../.github/workflows/production_supabase.yml)
   - hosted Supabase rollout
   - operator-selected rollout parts
   - hosted verification
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_admin_web.yml)
+- [production_admin_web.yml](../.github/workflows/production_admin_web.yml)
   - Vercel env sync
   - production build
   - production deploy
-- [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
+  - explicit preflight validation for Vercel and Supabase credentials
+- [production_flutter.yml](../.github/workflows/production_flutter.yml)
   - signed Android artifact generation
   - GitHub release publication
   - version tag must match `apps/mobile/pubspec.yaml`
+  - explicit preflight validation for runtime config and Android signing inputs
 
 ## Required GitHub Secrets
 
@@ -85,7 +88,7 @@ Local developer note:
 
 ## Repo-Owned Sync Helper
 
-- [C:\Users\raouf\projects\fleetfill\tool\sync_github_production_config.ps1](C:\Users\raouf\projects\fleetfill\tool\sync_github_production_config.ps1)
+- [sync_github_production_config.ps1](../tool/sync_github_production_config.ps1)
   - syncs GitHub production variables and secrets that can be derived from local config
   - keeps GitHub variable names aligned with the runtime contract used by Flutter builds
   - can generate a local Android release keystore if one does not already exist
@@ -93,7 +96,7 @@ Local developer note:
 
 ## Contract Validation Ownership
 
-- [C:\Users\raouf\projects\fleetfill\tool\validate_system_contracts.ps1](C:\Users\raouf\projects\fleetfill\tool\validate_system_contracts.ps1) is the repo-owned guardrail for cross-surface truths
+- [validate_system_contracts.ps1](../tool/validate_system_contracts.ps1) is the repo-owned guardrail for cross-surface truths
 - when auth, locale, host, workflow, or release contracts change, update the validator in the same change
 - do not weaken the validator to bypass a migration; land the new contract and the new enforcement together
 
@@ -102,8 +105,8 @@ Local developer note:
 Signed Android artifacts are produced by:
 
 - pushing a version tag like `v1.0.0`
-- or manually dispatching [C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\production_flutter.yml)
-- or calling the same reusable mobile workflow through [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml) for a coordinated system release
+- or manually dispatching [production_flutter.yml](../.github/workflows/production_flutter.yml)
+- or calling the same reusable mobile workflow through [release.yml](../.github/workflows/release.yml) for a coordinated system release
 - the requested tag must equal the current mobile version in `apps/mobile/pubspec.yaml`
 
 Auth callback posture for Android releases:
@@ -119,7 +122,7 @@ Production environment gate:
 
 Safe orchestration rehearsal:
 
-- dispatch [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml](C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml) with `validate_only=true` to validate the coordinated release contract without deploying or publishing artifacts
+- dispatch [release.yml](../.github/workflows/release.yml) with `validate_only=true` to validate the coordinated release contract without deploying or publishing artifacts
 - this mode is the preferred way to rehearse the new root release flow before using it as the primary ship path
 
 Published artifacts:

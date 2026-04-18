@@ -74,9 +74,44 @@ if (-not (Test-Path $proprietaryNoticePath)) {
   throw "Missing top-level PROPRIETARY-NOTICE.md."
 }
 
+$securityPolicyPath = "SECURITY.md"
+if (-not (Test-Path $securityPolicyPath)) {
+  throw "Missing top-level SECURITY.md."
+}
+
+$contributingPath = "CONTRIBUTING.md"
+if (-not (Test-Path $contributingPath)) {
+  throw "Missing top-level CONTRIBUTING.md."
+}
+
+$codeOwnersPath = ".github/CODEOWNERS"
+if (-not (Test-Path $codeOwnersPath)) {
+  throw "Missing .github/CODEOWNERS."
+}
+
+$pullRequestTemplatePath = ".github/PULL_REQUEST_TEMPLATE.md"
+if (-not (Test-Path $pullRequestTemplatePath)) {
+  throw "Missing .github/PULL_REQUEST_TEMPLATE.md."
+}
+
+$issueTemplateConfigPath = ".github/ISSUE_TEMPLATE/config.yml"
+if (-not (Test-Path $issueTemplateConfigPath)) {
+  throw "Missing .github/ISSUE_TEMPLATE/config.yml."
+}
+
+$issueTemplateBugPath = ".github/ISSUE_TEMPLATE/bug-report.yml"
+if (-not (Test-Path $issueTemplateBugPath)) {
+  throw "Missing .github/ISSUE_TEMPLATE/bug-report.yml."
+}
+
 $rootReadme = Get-FileText "README.en.md"
 Assert-Contains $rootReadme "This repository is publicly visible" "English README is missing the public-but-proprietary posture."
 Assert-Contains $rootReadme "PROPRIETARY-NOTICE.md" "English README is missing the link to the proprietary notice."
+Assert-Contains $rootReadme "Live Product Surfaces" "English README is missing the live-surface summary."
+Assert-Contains $rootReadme "Production Posture" "English README is missing the production posture section."
+if ($rootReadme.Contains("C:/Users/raouf/projects/fleetfill") -or $rootReadme.Contains("C:\Users\raouf\projects\fleetfill")) {
+  throw "English README still contains local absolute-path links."
+}
 
 $releaseWorkflow = Get-FileText ".github/workflows/release.yml"
 Assert-Contains $releaseWorkflow "name: Validate Release Request" "Root release workflow is missing the release-request validation job."
@@ -152,8 +187,11 @@ foreach ($match in $functionConfigMatches) {
 }
 
 $docsDelivery = Get-FileText "docs/delivery.md"
-Assert-Contains $docsDelivery "prefer [C:\Users\raouf\projects\fleetfill\.github\workflows\release.yml]" "Delivery docs are missing the root release orchestrator guidance."
+Assert-Contains $docsDelivery "prefer [release.yml](../.github/workflows/release.yml)" "Delivery docs are missing the root release orchestrator guidance."
 Assert-Contains $docsDelivery "Arabic, French, and English manual localization QA" "Delivery docs no longer document the supported locale QA contract."
+if ($docsDelivery.Contains("C:/Users/raouf/projects/fleetfill") -or $docsDelivery.Contains("C:\Users\raouf\projects\fleetfill")) {
+  throw "docs/delivery.md still contains local absolute-path links."
+}
 
 $docsReleases = Get-FileText "docs/releases.md"
 Assert-Contains $docsReleases "coordinated backend -> admin-web -> mobile release orchestration" "Release docs are missing the coordinated root orchestrator contract."
@@ -165,6 +203,24 @@ Assert-Contains $docsReleases '`SUPABASE_PUBLISHABLE_KEY`' "Release docs are mis
 Assert-Contains $docsReleases '`SENTRY_DSN`' "Release docs are missing the canonical SENTRY_DSN GitHub variable."
 Assert-Contains $docsReleases '`VERCEL_TOKEN`' "Release docs are missing the Vercel token contract."
 Assert-Contains $docsReleases 'short-lived CLI session tokens (`vca_*`)' "Release docs are missing the Vercel session-token warning."
+if ($docsReleases.Contains("C:/Users/raouf/projects/fleetfill") -or $docsReleases.Contains("C:\Users\raouf\projects\fleetfill")) {
+  throw "docs/releases.md still contains local absolute-path links."
+}
+
+$docsReadme = Get-FileText "docs/README.en.md"
+if ($docsReadme.Contains("C:/Users/raouf/projects/fleetfill") -or $docsReadme.Contains("C:\Users\raouf\projects\fleetfill")) {
+  throw "docs/README.en.md still contains local absolute-path links."
+}
+
+$adminReadme = Get-FileText "apps/admin-web/README.md"
+if ($adminReadme.Contains("C:/Users/raouf/projects/fleetfill") -or $adminReadme.Contains("C:\Users\raouf\projects\fleetfill")) {
+  throw "apps/admin-web/README.md still contains local absolute-path links."
+}
+
+$supabaseReadme = Get-FileText "backend/supabase/README.md"
+if ($supabaseReadme.Contains("C:/Users/raouf/projects/fleetfill") -or $supabaseReadme.Contains("C:\Users\raouf\projects\fleetfill")) {
+  throw "backend/supabase/README.md still contains local absolute-path links."
+}
 
 $appEnvironment = Get-FileText "apps/mobile/lib/core/config/app_environment.dart"
 foreach ($legacyName in @(

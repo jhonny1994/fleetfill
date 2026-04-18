@@ -9,6 +9,24 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Assert-HasValue {
+  param(
+    [string]$Name,
+    [string]$Value,
+    [string]$ResolutionHint = ""
+  )
+
+  if (-not [string]::IsNullOrWhiteSpace($Value)) {
+    return
+  }
+
+  if (-not [string]::IsNullOrWhiteSpace($ResolutionHint)) {
+    throw "Missing $Name. $ResolutionHint"
+  }
+
+  throw "Missing $Name."
+}
+
 if ([string]::IsNullOrWhiteSpace($env:VERCEL_TOKEN)) {
   throw "Missing VERCEL_TOKEN for Vercel environment sync."
 }
@@ -38,6 +56,8 @@ $values = [ordered]@{
 
 foreach ($environment in $TargetEnvironments) {
   foreach ($entry in $values.GetEnumerator()) {
+    Assert-HasValue -Name $entry.Key -Value $entry.Value -ResolutionHint "Verify the Supabase project ref and SiteUrl inputs before syncing Vercel env."
+
     $rmArgs = @("env", "rm", $entry.Key, $environment, "--yes", "--cwd", $ProjectDir, "--token", $env:VERCEL_TOKEN)
     if (-not [string]::IsNullOrWhiteSpace($resolvedScope)) {
       $rmArgs += @("--scope", $resolvedScope)

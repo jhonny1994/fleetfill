@@ -10,37 +10,37 @@
 
 الترجمات:
 
-- [English](C:\Users\raouf\projects\fleetfill\docs\README.en.md)
-- [Français](C:\Users\raouf\projects\fleetfill\docs\README.fr.md)
+- [English](README.en.md)
+- [Français](README.fr.md)
 
 ## الوثائق النشطة
 
-- [product.md](C:\Users\raouf\projects\fleetfill\docs\product.md)
+- [product.md](product.md)
   - نطاق المنتج، الفئات المستهدفة، القواعد الأساسية، ومسارات الاستخدام
-- [architecture.md](C:\Users\raouf\projects\fleetfill\docs\architecture.md)
+- [architecture.md](architecture.md)
   - المعمارية، عقد التشغيل، حدود الخلفية، والأمن
-- [operations.md](C:\Users\raouf\projects\fleetfill\docs\operations.md)
+- [operations.md](operations.md)
   - التشغيل، المدفوعات، النزاعات، الدعم، والبريد
-- [admin-web.md](C:\Users\raouf\projects\fleetfill\docs\admin-web.md)
+- [admin-web.md](admin-web.md)
   - عقد لوحة الإدارة من ناحية المنتج والتنفيذ
-- [delivery.md](C:\Users\raouf\projects\fleetfill\docs\delivery.md)
+- [delivery.md](delivery.md)
   - جاهزية الإطلاق، التحقق، والفجوات التشغيلية المتبقية
-- [releases.md](C:\Users\raouf\projects\fleetfill\docs\releases.md)
+- [releases.md](releases.md)
   - الإصدارات، التوقيع، أسرار GitHub، ومسار نشر النسخ الإنتاجية
-- [repository-structure.md](C:\Users\raouf\projects\fleetfill\docs\repository-structure.md)
+- [repository-structure.md](repository-structure.md)
   - هيكلة المستودع وما هو نشط، محلي، أو مؤرشف
 
 ## مراجع إضافية
 
-- [adr](C:\Users\raouf\projects\fleetfill\docs\adr)
-- [templates](C:\Users\raouf\projects\fleetfill\docs\templates)
-- [workitems](C:\Users\raouf\projects\fleetfill\docs\workitems)
-- [archive](C:\Users\raouf\projects\fleetfill\docs\archive)
+- [adr](adr)
+- [templates](templates)
+- [workitems](workitems)
+- [archive](archive)
 
 ## لقطات المنتج
 
-- [لقطات التطبيق](C:\Users\raouf\projects\fleetfill\docs\assets\screenshots\mobile\README.md)
-- [لقطات لوحة الإدارة](C:\Users\raouf\projects\fleetfill\docs\assets\screenshots\admin\README.md)
+- [لقطات التطبيق](assets/screenshots/mobile/README.md)
+- [لقطات لوحة الإدارة](assets/screenshots/admin/README.md)
 
 ## قاعدة العمل
 
