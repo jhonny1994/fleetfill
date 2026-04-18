@@ -15,8 +15,6 @@ if ([string]::IsNullOrWhiteSpace($env:VERCEL_TOKEN)) {
 
 $resolvedScope = if (-not [string]::IsNullOrWhiteSpace($Scope)) {
   $Scope
-} elseif (-not [string]::IsNullOrWhiteSpace($env:VERCEL_ORG_ID)) {
-  $env:VERCEL_ORG_ID
 } else {
   ""
 }
