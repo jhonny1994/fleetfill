@@ -19,6 +19,10 @@ $resolvedScope = if (-not [string]::IsNullOrWhiteSpace($Scope)) {
   ""
 }
 
+if ($env:VERCEL_TOKEN.StartsWith("vca_")) {
+  throw "VERCEL_TOKEN must be a long-lived Vercel CI token, not a short-lived CLI session token (vca_*). Update the GitHub secret before running production admin-web deploys."
+}
+
 $apiKeys = supabase projects api-keys --project-ref $ProjectRef -o json | ConvertFrom-Json
 $anonKey = ($apiKeys | Where-Object { $_.name -eq "anon" }).api_key
 
