@@ -137,3 +137,16 @@ Published artifacts:
 - secrets and signing material must stay in GitHub secrets, never in git
 - Sentry DSNs are treated as runtime configuration, not hardcoded source constants
 - active hosting-adapter credentials should stay in GitHub secrets or environment secrets; short-lived CLI session tokens are not valid for GitHub Actions
+
+## Netlify Cutover
+
+For the permanent admin-web host transition from Vercel to Netlify, use the dedicated runbook:
+
+- [netlify-cutover.md](./netlify-cutover.md)
+
+That runbook covers:
+
+- merging `migration/hosting`
+- switching Netlify production to `main`
+- keeping Vercel as temporary rollback only
+- removing Vercel credentials and project state after the observation window
