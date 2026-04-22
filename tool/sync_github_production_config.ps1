@@ -2,15 +2,16 @@
 param(
   [string]$Repo = "jhonny1994/fleetfill",
   [string]$ProjectRef = "rkvrdzwlynyionsnwfiu",
+  [string]$PublicSiteUrl = "",
   [string]$GoogleServicesPath = "apps/mobile/android/app/google-services.json",
-  [string]$VercelProjectFile = "apps/admin-web/.vercel/project.json",
   [string]$KeystorePath = "apps/mobile/android/app/upload-keystore.jks",
   [string]$LocalSigningPropertiesPath = "apps/mobile/android/app/release-signing.local.properties",
   [string]$KeystoreAlias = "fleetfill-upload",
   [string]$GoogleWebClientId = "",
   [string]$GoogleIosClientId = "",
   [string]$SentryDsn = "",
-  [string]$VercelToken = "",
+  [string]$NetlifySiteId = "",
+  [string]$NetlifyAuthToken = "",
   [switch]$GenerateKeystoreIfMissing
 )
 
@@ -54,29 +55,73 @@ function Set-GhSecret {
   }
 }
 
-function Resolve-VercelCiToken {
+function Resolve-OptionalValue {
+  param(
+    [string]$ExplicitValue,
+    [hashtable]$EnvMap,
+    [string]$KeyName
+  )
+
+  if (-not [string]::IsNullOrWhiteSpace($ExplicitValue)) {
+    return $ExplicitValue.Trim()
+  }
+
+  if ($EnvMap.ContainsKey($KeyName)) {
+    return [string]$EnvMap[$KeyName]
+  }
+
+  return ""
+}
+
+function Resolve-NetlifyAuthToken {
   param(
     [string]$ExplicitToken,
     [hashtable]$EnvMap
   )
 
-  $candidate = if (-not [string]::IsNullOrWhiteSpace($ExplicitToken)) {
-    $ExplicitToken.Trim()
-  } elseif ($EnvMap.ContainsKey("VERCEL_TOKEN")) {
-    [string]$EnvMap["VERCEL_TOKEN"]
+  $candidate = Resolve-OptionalValue -ExplicitValue $ExplicitToken -EnvMap $EnvMap -KeyName "NETLIFY_AUTH_TOKEN"
+
+  if ([string]::IsNullOrWhiteSpace($candidate)) {
+    throw "Missing NETLIFY_AUTH_TOKEN. Provide a long-lived Netlify personal access token explicitly or add NETLIFY_AUTH_TOKEN to the root .env file."
+  }
+
+  return $candidate.Trim()
+}
+
+function Resolve-NetlifySiteId {
+  param(
+    [string]$ExplicitSiteId,
+    [hashtable]$EnvMap
+  )
+
+  $candidate = Resolve-OptionalValue -ExplicitValue $ExplicitSiteId -EnvMap $EnvMap -KeyName "NETLIFY_SITE_ID"
+
+  if ([string]::IsNullOrWhiteSpace($candidate)) {
+    throw "Missing NETLIFY_SITE_ID. Provide it explicitly or add NETLIFY_SITE_ID to the root .env file."
+  }
+
+  return $candidate.Trim()
+}
+
+function Resolve-PublicSiteUrl {
+  param(
+    [string]$ExplicitUrl,
+    [hashtable]$EnvMap
+  )
+
+  $candidate = if (-not [string]::IsNullOrWhiteSpace($ExplicitUrl)) {
+    $ExplicitUrl.Trim()
+  } elseif ($EnvMap.ContainsKey("PUBLIC_SITE_URL")) {
+    [string]$EnvMap["PUBLIC_SITE_URL"]
   } else {
     ""
   }
 
   if ([string]::IsNullOrWhiteSpace($candidate)) {
-    throw "Missing VERCEL_TOKEN. Provide a long-lived Vercel access token explicitly or add VERCEL_TOKEN to the root .env file."
+    throw "Missing PUBLIC_SITE_URL. Provide it explicitly or add PUBLIC_SITE_URL to the root .env file."
   }
 
-  if ($candidate.StartsWith("vca_")) {
-    throw "VERCEL_TOKEN must be a long-lived Vercel token for CI, not a short-lived CLI session token (vca_*). Create it in the Vercel dashboard and store it in root .env or pass -VercelToken."
-  }
-
-  return $candidate
+  return $candidate.TrimEnd("/")
 }
 
 function Get-EnvMap {
@@ -162,9 +207,8 @@ if ([string]::IsNullOrWhiteSpace($publishableKey)) {
   throw "Could not resolve the Supabase publishable key for $ProjectRef."
 }
 
-$vercelProject = Get-Content $VercelProjectFile -Raw | ConvertFrom-Json
 $envMap = Get-EnvMap -Path ".env"
-$resolvedVercelToken = Resolve-VercelCiToken -ExplicitToken $VercelToken -EnvMap $envMap
+$resolvedPublicSiteUrl = Resolve-PublicSiteUrl -ExplicitUrl $PublicSiteUrl -EnvMap $envMap
 $resolvedSentryDsn = if (-not [string]::IsNullOrWhiteSpace($SentryDsn)) {
   $SentryDsn
 } else {
@@ -216,6 +260,7 @@ if ((-not (Test-Path $KeystorePath)) -and $GenerateKeystoreIfMissing) {
 
 Set-GhVariable -Name "SUPABASE_URL" -Value "https://$ProjectRef.supabase.co"
 Set-GhVariable -Name "SUPABASE_PUBLISHABLE_KEY" -Value $publishableKey
+Set-GhVariable -Name "PUBLIC_SITE_URL" -Value $resolvedPublicSiteUrl
 if (-not [string]::IsNullOrWhiteSpace($resolvedSentryDsn)) {
   Set-GhVariable -Name "SENTRY_DSN" -Value $resolvedSentryDsn
 }
@@ -225,11 +270,18 @@ Set-GhVariable -Name "GOOGLE_WEB_CLIENT_ID" -Value $resolvedGoogleWebClientId
 if (-not [string]::IsNullOrWhiteSpace($resolvedGoogleIosClientId)) {
   Set-GhVariable -Name "GOOGLE_IOS_CLIENT_ID" -Value $resolvedGoogleIosClientId
 }
-Set-GhVariable -Name "VERCEL_ORG_ID" -Value $vercelProject.orgId
-Set-GhVariable -Name "VERCEL_ADMIN_WEB_PROJECT_ID" -Value $vercelProject.projectId
 
 Set-GhSecret -Name "ANDROID_GOOGLE_SERVICES_JSON" -Value (Get-Content $GoogleServicesPath -Raw)
-Set-GhSecret -Name "VERCEL_TOKEN" -Value $resolvedVercelToken
+
+if (-not [string]::IsNullOrWhiteSpace($NetlifySiteId) -or $envMap.ContainsKey("NETLIFY_SITE_ID")) {
+  $resolvedNetlifySiteId = Resolve-NetlifySiteId -ExplicitSiteId $NetlifySiteId -EnvMap $envMap
+  Set-GhVariable -Name "NETLIFY_SITE_ID" -Value $resolvedNetlifySiteId
+}
+
+if (-not [string]::IsNullOrWhiteSpace($NetlifyAuthToken) -or $envMap.ContainsKey("NETLIFY_AUTH_TOKEN")) {
+  $resolvedNetlifyAuthToken = Resolve-NetlifyAuthToken -ExplicitToken $NetlifyAuthToken -EnvMap $envMap
+  Set-GhSecret -Name "NETLIFY_AUTH_TOKEN" -Value $resolvedNetlifyAuthToken
+}
 
 if (Test-Path $KeystorePath) {
   $keystoreBase64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path $KeystorePath)))

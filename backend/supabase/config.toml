@@ -33,14 +33,13 @@ file_size_limit = "10MiB"
 
 [auth]
 enabled = true
-site_url = "https://fleetfill.vercel.app"
+site_url = "env(SUPABASE_AUTH_SITE_URL)"
 additional_redirect_urls = [
   "com.carbodex.fleetfill://auth-callback",
   "http://localhost:3000/**",
   "http://127.0.0.1:3005/**",
-  "https://fleetfill.vercel.app/auth/mobile-callback",
-  "https://fleetfill.vercel.app/**",
-  "https://fleetfill-*-jhonny1994s-projects.vercel.app/**",
+  "env(SUPABASE_AUTH_MOBILE_REDIRECT_URL)",
+  "env(SUPABASE_AUTH_SITE_URL_PATTERN)",
 ]
 jwt_expiry = 3600
 

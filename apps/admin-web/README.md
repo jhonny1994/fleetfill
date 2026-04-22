@@ -49,12 +49,15 @@ cp .env.example .env.local
 
 Then edit `.env.local` and restart `pnpm dev`.
 
-For Vercel production:
+For any hosted deployment:
 
-- update environment variables in the Vercel project settings
-- redeploy the affected environment
-- or run [sync_admin_vercel_env.ps1](../../tool/sync_admin_vercel_env.ps1) from the repo root
-- production `NEXT_PUBLIC_SITE_URL` should stay `https://fleetfill.vercel.app`
+- set the active host's public runtime values for:
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `NEXT_PUBLIC_SITE_URL`
+- redeploy the affected environment after changing them
+- keep `NEXT_PUBLIC_SITE_URL` aligned with the active public admin origin
+- if you deploy through GitHub Actions, the active Netlify adapter workflow syncs these values into the production site before deploy
 
 ## Localization
 
@@ -117,7 +120,7 @@ It runs the app on `http://127.0.0.1:3005`, which is a test-only host and not th
 GitHub Actions workflows:
 
 - [ci.yml](../../.github/workflows/ci.yml)
-- [production_admin_web.yml](../../.github/workflows/production_admin_web.yml)
+- [production_admin_web_netlify.yml](../../.github/workflows/production_admin_web_netlify.yml)
 - [production_supabase.yml](../../.github/workflows/production_supabase.yml)
 
 The admin-web CI path now covers:
@@ -131,11 +134,11 @@ The admin-web CI path now covers:
 
 ## Deployment Notes
 
-- Preview deployments are a Vercel delivery channel, not a separate FleetFill runtime mode.
+- Preview deployments are a hosting concern, not a separate FleetFill runtime mode.
 - Production should use the admin-only domain and production Supabase environment variables.
 - Never expose `service_role` keys to the browser or client bundles.
 - Sensitive admin mutations continue to run through the backend RPC layer.
-- [production_admin_web.yml](../../.github/workflows/production_admin_web.yml) is the canonical production workflow.
+- [production_admin_web_netlify.yml](../../.github/workflows/production_admin_web_netlify.yml) is the current hosting-adapter workflow.
 
 ## Browser QA Focus
 

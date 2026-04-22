@@ -9,9 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const fleetFillPublicSiteOrigin = 'https://fleetfill.vercel.app';
 const mobileAuthCallbackPath = '/auth/mobile-callback';
-const hostedAuthRedirectUri = '$fleetFillPublicSiteOrigin$mobileAuthCallbackPath';
 const localAuthRedirectUri = 'com.carbodex.fleetfill://auth-callback';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -32,8 +30,18 @@ class AuthRepository {
   final NativeGoogleAuthClient googleAuthClient;
 
   SupabaseClient get _client => Supabase.instance.client;
-  String get authRedirectUri =>
-      environment.isLocalBackend ? localAuthRedirectUri : hostedAuthRedirectUri;
+  String get authRedirectUri => environment.isLocalBackend
+      ? localAuthRedirectUri
+      : _resolveHostedAuthRedirectUri();
+
+  String _resolveHostedAuthRedirectUri() {
+    final publicSiteUrl = environment.publicSiteUrl.trim();
+    if (publicSiteUrl.isEmpty) {
+      throw const AuthException('public_site_url_missing');
+    }
+
+    return '$publicSiteUrl$mobileAuthCallbackPath';
+  }
 
   Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
 

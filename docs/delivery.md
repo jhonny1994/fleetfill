@@ -60,8 +60,8 @@ Production delivery is split by surface:
     - scheduler setup
     - hosted verification
 - admin-web
-  - promoted by [production_admin_web.yml](../.github/workflows/production_admin_web.yml)
-  - operator can choose env sync, build, and deploy separately
+  - promoted by [production_admin_web_netlify.yml](../.github/workflows/production_admin_web_netlify.yml)
+  - operator can choose whether to sync Netlify environment values before deploy
 - Flutter mobile
   - released by [production_flutter.yml](../.github/workflows/production_flutter.yml)
   - produces signed Android artifacts on version tags or manual release dispatch
@@ -78,7 +78,7 @@ Promote production in this order:
 - merge validated work to `main`
 - let [ci.yml](../.github/workflows/ci.yml) pass
 - run [production_supabase.yml](../.github/workflows/production_supabase.yml) when backend or hosted config changed
-- run [production_admin_web.yml](../.github/workflows/production_admin_web.yml) when admin-web should ship
+- run [production_admin_web_netlify.yml](../.github/workflows/production_admin_web_netlify.yml) when admin-web should ship
 - prefer [release.yml](../.github/workflows/release.yml) when shipping the coordinated product as one release event
 - use the same root workflow with `validate_only=true` before the first coordinated production run or after major workflow changes
 - run representative-device and hosted smoke validation before announcing release completeness
@@ -101,7 +101,7 @@ Do not claim production-ready rollout until all of the following are true:
 
 - CI passed from the current `main` state
 - hosted backend rollout completed from the current `main` state
-- Vercel published the expected admin-web revision
+- the active admin-web hosting adapter published the expected revision
 - auth email works in the hosted project
 - transactional email works in the hosted project
 - manual device and accessibility validation is complete

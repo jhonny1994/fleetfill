@@ -340,12 +340,16 @@ class _CarrierBookingsScreenState extends ConsumerState<CarrierBookingsScreen> {
         value: bookingsAsync,
         onRetry: () => ref.invalidate(carrierBookingsProvider),
         data: (bookings) {
-          final filteredBookings = bookings.where((booking) {
-            final isHistory =
-                booking.bookingStatus == BookingStatus.completed ||
-                booking.bookingStatus == BookingStatus.cancelled;
-            return _scope == _CarrierBookingsScope.active ? !isHistory : isHistory;
-          }).toList(growable: false);
+          final filteredBookings = bookings
+              .where((booking) {
+                final isHistory =
+                    booking.bookingStatus == BookingStatus.completed ||
+                    booking.bookingStatus == BookingStatus.cancelled;
+                return _scope == _CarrierBookingsScope.active
+                    ? !isHistory
+                    : isHistory;
+              })
+              .toList(growable: false);
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -1206,7 +1210,10 @@ BookingRecord? _highestPriorityCarrierBooking(List<BookingRecord> bookings) {
     return null;
   }
   final ordered = [...bookings]
-    ..sort((a, b) => _carrierBookingPriority(a).compareTo(_carrierBookingPriority(b)));
+    ..sort(
+      (a, b) =>
+          _carrierBookingPriority(a).compareTo(_carrierBookingPriority(b)),
+    );
   return ordered.first;
 }
 
@@ -1256,7 +1263,8 @@ String _carrierBookingFocusMessage(S s, BookingRecord booking) {
     BookingStatus.confirmed => s.carrierNextActionPickup,
     BookingStatus.pickedUp => s.carrierNextActionTransit,
     BookingStatus.inTransit => s.carrierNextActionDelivery,
-    BookingStatus.deliveredPendingReview => s.carrierNextActionAwaitingAdminRelease,
+    BookingStatus.deliveredPendingReview =>
+      s.carrierNextActionAwaitingAdminRelease,
     _ => _carrierBookingSecondaryStatusLabel(s, booking),
   };
 }

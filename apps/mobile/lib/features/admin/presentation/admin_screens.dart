@@ -1083,11 +1083,11 @@ class _AdminPayoutsQueueSectionState
                   .map(
                     (item) => Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        child: AppListCard(
-                          title: item.bookingId,
-                          subtitle:
+                      child: AppListCard(
+                        title: item.bookingId,
+                        subtitle:
                             '${BidiFormatters.latinIdentifier(item.amountDzd.toStringAsFixed(0))} • ${_transferStatusLabel(s, item.status)}',
-                        ),
+                      ),
                     ),
                   )
                   .toList(growable: false),

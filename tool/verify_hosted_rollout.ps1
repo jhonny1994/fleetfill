@@ -1,12 +1,10 @@
 [CmdletBinding()]
 param(
-  [string]$ProjectRef = "rkvrdzwlynyionsnwfiu",
-  [string]$AdminSiteUrl = "https://fleetfill.vercel.app",
-  [string]$ProjectDir = "apps/admin-web",
-  [string]$VercelScope = "jhonny1994s-projects",
+  [string]$ProjectRef = "",
+  [string]$SupabaseUrl = "",
+  [string]$AdminSiteUrl = "",
   [string]$SecretKey = "",
-  [string]$InternalAutomationToken = "",
-  [switch]$RequirePreviewEnv
+  [string]$InternalAutomationToken = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -39,6 +37,54 @@ function Assert-CommandSucceeded {
   }
 }
 
+function Assert-HasValue {
+  param(
+    [string]$Name,
+    [string]$Value,
+    [string]$ResolutionHint = ""
+  )
+
+  if (-not [string]::IsNullOrWhiteSpace($Value)) {
+    return
+  }
+
+  if (-not [string]::IsNullOrWhiteSpace($ResolutionHint)) {
+    throw "Missing $Name. $ResolutionHint"
+  }
+
+  throw "Missing $Name."
+}
+
+function Resolve-SupabaseProjectRef {
+  param(
+    [string]$ExplicitProjectRef,
+    [string]$ExplicitSupabaseUrl
+  )
+
+  if (-not [string]::IsNullOrWhiteSpace($ExplicitProjectRef)) {
+    return $ExplicitProjectRef.Trim()
+  }
+
+  Assert-HasValue -Name "SUPABASE_URL or ProjectRef" -Value $ExplicitSupabaseUrl -ResolutionHint "Pass -ProjectRef explicitly or provide -SupabaseUrl."
+  $uri = [Uri]$ExplicitSupabaseUrl.Trim()
+  $hostParts = $uri.Host.Split(".")
+  if ($hostParts.Length -lt 3 -or $hostParts[1] -ne "supabase" -or $hostParts[2] -ne "co") {
+    throw "Could not derive a Supabase project ref from '$ExplicitSupabaseUrl'."
+  }
+
+  return $hostParts[0]
+}
+
+function Resolve-HostedAdminSiteUrl {
+  param([string]$ExplicitUrl)
+
+  Assert-HasValue -Name "AdminSiteUrl" -Value $ExplicitUrl -ResolutionHint "Pass -AdminSiteUrl explicitly or provide PUBLIC_SITE_URL in the caller environment."
+  return $ExplicitUrl.Trim().TrimEnd("/")
+}
+
+$resolvedProjectRef = Resolve-SupabaseProjectRef -ExplicitProjectRef $ProjectRef -ExplicitSupabaseUrl $SupabaseUrl
+$resolvedAdminSiteUrl = Resolve-HostedAdminSiteUrl -ExplicitUrl $AdminSiteUrl
+
 $expectedFunctions = @(
   "scheduled-automation-tick",
   "signed-file-url",
@@ -48,7 +94,7 @@ $expectedFunctions = @(
   "email-provider-webhook"
 )
 
-$functionsJson = & supabase functions list --project-ref $ProjectRef -o json
+$functionsJson = & supabase functions list --project-ref $resolvedProjectRef -o json
 Assert-CommandSucceeded -ExitCode $LASTEXITCODE -Message "Failed to list Supabase Edge Functions."
 $functions = $functionsJson | ConvertFrom-Json
 
@@ -69,7 +115,7 @@ $protectedFunctions = @(
 
 foreach ($slug in $protectedFunctions) {
   try {
-    $null = Invoke-WebRequest -Uri "https://$ProjectRef.supabase.co/functions/v1/$slug" -Method POST -UseBasicParsing -ErrorAction Stop
+    $null = Invoke-WebRequest -Uri "https://$resolvedProjectRef.supabase.co/functions/v1/$slug" -Method POST -UseBasicParsing -ErrorAction Stop
     throw "Protected function '$slug' unexpectedly allowed an unauthenticated request."
   } catch {
     $statusCode = $_.Exception.Response.StatusCode.value__
@@ -80,7 +126,7 @@ foreach ($slug in $protectedFunctions) {
 }
 
 try {
-  $null = Invoke-WebRequest -Uri "https://$ProjectRef.supabase.co/functions/v1/email-provider-webhook" -Method POST -UseBasicParsing -ErrorAction Stop
+  $null = Invoke-WebRequest -Uri "https://$resolvedProjectRef.supabase.co/functions/v1/email-provider-webhook" -Method POST -UseBasicParsing -ErrorAction Stop
   throw "Webhook function unexpectedly accepted an unsigned request."
 } catch {
   $statusCode = $_.Exception.Response.StatusCode.value__
@@ -89,7 +135,7 @@ try {
   }
 }
 
-$signInResponse = Invoke-WebRequest -Uri "$AdminSiteUrl/ar/sign-in" -UseBasicParsing
+$signInResponse = Invoke-WebRequest -Uri "$resolvedAdminSiteUrl/ar/sign-in" -UseBasicParsing
 if ($signInResponse.StatusCode -lt 200 -or $signInResponse.StatusCode -ge 400) {
   throw "Admin sign-in page returned status $($signInResponse.StatusCode)."
 }
@@ -104,47 +150,8 @@ if ([string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken) -and (Test-Pa
   }
 }
 
-function Assert-HasValue {
-  param(
-    [string]$Name,
-    [string]$Value,
-    [string]$ResolutionHint = ""
-  )
-
-  if (-not [string]::IsNullOrWhiteSpace($Value)) {
-    return
-  }
-
-  if (-not [string]::IsNullOrWhiteSpace($ResolutionHint)) {
-    throw "Missing $Name. $ResolutionHint"
-  }
-
-  throw "Missing $Name."
-}
-
-function Get-VercelEnvPayload {
-  param(
-    [string]$Environment,
-    [string]$Scope,
-    [string]$ProjectDir
-  )
-
-  Assert-HasValue `
-    -Name "VERCEL_TOKEN" `
-    -Value $env:VERCEL_TOKEN `
-    -ResolutionHint "Set a long-lived Vercel dashboard token in the current shell before running hosted rollout verification."
-
-  if ($env:VERCEL_TOKEN.StartsWith("vca_")) {
-    throw "VERCEL_TOKEN must be a long-lived Vercel dashboard token, not a short-lived CLI session token (vca_*)."
-  }
-
-  $output = & vercel env ls $Environment --format json --scope $Scope --cwd $ProjectDir --token $env:VERCEL_TOKEN 2>&1
-  Assert-CommandSucceeded -ExitCode $LASTEXITCODE -Message "Failed to list Vercel $Environment environment variables."
-  return (($output -join "`n") -replace '^[^{]*', '') | ConvertFrom-Json
-}
-
 if ([string]::IsNullOrWhiteSpace($supabaseSecretKey) -or $supabaseSecretKey -match '·') {
-  $supabaseSecretKey = Resolve-CloudAdminKey -ProjectRef $ProjectRef
+  $supabaseSecretKey = Resolve-CloudAdminKey -ProjectRef $resolvedProjectRef
 }
 
 if (-not [string]::IsNullOrWhiteSpace($supabaseSecretKey)) {
@@ -155,7 +162,7 @@ if (-not [string]::IsNullOrWhiteSpace($supabaseSecretKey)) {
   }
 
   $schedulerStatus = Invoke-RestMethod `
-    -Uri "https://$ProjectRef.supabase.co/rest/v1/rpc/scheduled_automation_status" `
+    -Uri "https://$resolvedProjectRef.supabase.co/rest/v1/rpc/scheduled_automation_status" `
     -Method Post `
     -Headers $rpcHeaders `
     -Body "{}"
@@ -165,7 +172,7 @@ if (-not [string]::IsNullOrWhiteSpace($supabaseSecretKey)) {
   }
 
   $wilayas = Invoke-RestMethod `
-    -Uri "https://$ProjectRef.supabase.co/rest/v1/wilayas?select=id&limit=1" `
+    -Uri "https://$resolvedProjectRef.supabase.co/rest/v1/wilayas?select=id&limit=1" `
     -Method Get `
     -Headers $rpcHeaders
 
@@ -181,7 +188,7 @@ if (-not [string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken)) {
   }
 
   $response = Invoke-WebRequest `
-    -Uri "https://$ProjectRef.supabase.co/functions/v1/scheduled-automation-tick" `
+    -Uri "https://$resolvedProjectRef.supabase.co/functions/v1/scheduled-automation-tick" `
     -Method POST `
     -Headers $authHeaders `
     -Body "{}" `
@@ -191,25 +198,4 @@ if (-not [string]::IsNullOrWhiteSpace($resolvedInternalAutomationToken)) {
     throw "Protected function 'scheduled-automation-tick' did not accept the internal automation token."
   }
 }
-
-$productionEnvPayload = Get-VercelEnvPayload -Environment "production" -Scope $VercelScope -ProjectDir $ProjectDir
-$productionEnv = $productionEnvPayload.envs
-
-foreach ($requiredVar in @("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "NEXT_PUBLIC_SITE_URL")) {
-  if (($productionEnv | Where-Object { $_.key -eq $requiredVar }).Count -eq 0) {
-    throw "Missing Vercel production environment variable '$requiredVar'."
-  }
-}
-
-if ($RequirePreviewEnv) {
-  $previewEnvPayload = Get-VercelEnvPayload -Environment "preview" -Scope $VercelScope -ProjectDir $ProjectDir
-  $previewEnv = $previewEnvPayload.envs
-
-  foreach ($requiredVar in @("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "NEXT_PUBLIC_SITE_URL")) {
-    if (($previewEnv | Where-Object { $_.key -eq $requiredVar }).Count -eq 0) {
-      throw "Missing Vercel preview environment variable '$requiredVar'."
-    }
-  }
-}
-
-Write-Host "Hosted rollout verification passed for backend/supabase and apps/admin-web."
+Write-Host "Hosted rollout verification passed for backend/supabase and the configured admin-web host."

@@ -83,6 +83,8 @@ jobs:
     timeout-minutes: 40
     environment: Production
     env:
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
       SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
@@ -96,9 +98,6 @@ jobs:
       PUSH_NOTIFICATIONS_ENABLED: ${{ vars.PUSH_NOTIFICATIONS_ENABLED }}
       PUSH_NOTIFICATIONS_PROVIDER: ${{ vars.PUSH_NOTIFICATIONS_PROVIDER }}
       FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
     outputs:
       performed_work: ${{ steps.plan.outputs.performed_work }}
     steps:
@@ -130,7 +129,9 @@ jobs:
           }
 
           require_secret "SUPABASE_ACCESS_TOKEN (GitHub secret)" "$SUPABASE_ACCESS_TOKEN"
+          require_secret "SUPABASE_URL (GitHub variable)" "$SUPABASE_URL"
           if [[ "${{ inputs.push_config }}" == "true" ]]; then
+            require_secret "PUBLIC_SITE_URL (GitHub variable)" "$PUBLIC_SITE_URL"
             require_secret "GOOGLE_WEB_CLIENT_ID (GitHub variable)" "$GOOGLE_WEB_CLIENT_ID"
             require_secret "SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET (GitHub secret)" "$SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET"
           fi
@@ -146,13 +147,7 @@ jobs:
             require_secret "FIREBASE_SERVICE_ACCOUNT_JSON (GitHub secret)" "$FIREBASE_SERVICE_ACCOUNT_JSON"
           fi
           if [[ "${{ inputs.verify_after }}" == "true" ]]; then
-            require_secret "VERCEL_TOKEN (GitHub secret)" "$VERCEL_TOKEN"
-            require_secret "VERCEL_ORG_ID (GitHub variable)" "$VERCEL_ORG_ID"
-            require_secret "VERCEL_PROJECT_ID (GitHub variable)" "$VERCEL_PROJECT_ID"
-            if [[ "$VERCEL_TOKEN" == vca_* ]]; then
-              echo "VERCEL_TOKEN must be a long-lived Vercel dashboard token, not a short-lived CLI session token (vca_*)." >&2
-              exit 1
-            fi
+            require_secret "PUBLIC_SITE_URL (GitHub variable)" "$PUBLIC_SITE_URL"
           fi
 
           if (( ${#missing[@]} > 0 )); then
@@ -172,25 +167,34 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install Vercel CLI
-        if: steps.plan.outputs.performed_work == 'true' && inputs.verify_after
-        run: npm install --global vercel@latest
-
       - name: Set up Supabase CLI
         if: steps.plan.outputs.performed_work == 'true'
         uses: supabase/setup-cli@v1
         with:
           version: latest
 
+      - name: Resolve Supabase project ref
+        if: steps.plan.outputs.performed_work == 'true'
+        run: |
+          supabase_project_ref="$(echo "${SUPABASE_URL}" | sed -E 's#https?://([^.]+)\.supabase\.co/?#\1#')"
+          if [[ -z "$supabase_project_ref" || "$supabase_project_ref" == "${SUPABASE_URL}" ]]; then
+            echo "Could not derive the Supabase project ref from SUPABASE_URL=${SUPABASE_URL}." >&2
+            exit 1
+          fi
+          echo "SUPABASE_PROJECT_REF=${supabase_project_ref}" >> "$GITHUB_ENV"
+
       - name: Link Supabase project
         if: steps.plan.outputs.performed_work == 'true'
-        run: supabase link --project-ref rkvrdzwlynyionsnwfiu --workdir backend
+        run: supabase link --project-ref "$SUPABASE_PROJECT_REF" --workdir backend
 
       - name: Materialize rollout env
         if: steps.plan.outputs.performed_work == 'true'
         run: |
           cat > .env <<EOF
-          SUPABASE_URL=https://rkvrdzwlynyionsnwfiu.supabase.co
+          SUPABASE_URL=${SUPABASE_URL}
+          SUPABASE_AUTH_SITE_URL=${PUBLIC_SITE_URL}
+          SUPABASE_AUTH_MOBILE_REDIRECT_URL=${PUBLIC_SITE_URL}/auth/mobile-callback
+          SUPABASE_AUTH_SITE_URL_PATTERN=${PUBLIC_SITE_URL}/**
           SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=${GOOGLE_WEB_CLIENT_ID}
           SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=${SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET}
           INTERNAL_AUTOMATION_TOKEN=${INTERNAL_AUTOMATION_TOKEN}
@@ -210,7 +214,7 @@ jobs:
 
       - name: Push Supabase config
         if: steps.plan.outputs.performed_work == 'true' && inputs.push_config
-        run: supabase config push --project-ref rkvrdzwlynyionsnwfiu --workdir backend --yes
+        run: supabase config push --project-ref "$SUPABASE_PROJECT_REF" --workdir backend --yes
 
       - name: Sync Supabase cloud secrets
         if: steps.plan.outputs.performed_work == 'true' && inputs.sync_secrets
@@ -222,7 +226,7 @@ jobs:
         run: |
           for dir in backend/supabase/functions/*; do
             if [[ -f "$dir/index.ts" ]]; then
-              supabase functions deploy "$(basename "$dir")" --project-ref rkvrdzwlynyionsnwfiu --workdir backend
+              supabase functions deploy "$(basename "$dir")" --project-ref "$SUPABASE_PROJECT_REF" --workdir backend
             fi
           done
 
@@ -234,7 +238,7 @@ jobs:
       - name: Verify hosted rollout
         if: steps.plan.outputs.performed_work == 'true' && inputs.verify_after
         shell: pwsh
-        run: ./tool/verify_hosted_rollout.ps1
+        run: ./tool/verify_hosted_rollout.ps1 -SupabaseUrl "$env:SUPABASE_URL" -AdminSiteUrl "$env:PUBLIC_SITE_URL"
 
       - name: Complete no-op validation
         if: steps.plan.outputs.performed_work != 'true'
