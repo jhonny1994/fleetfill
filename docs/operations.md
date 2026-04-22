@@ -10,7 +10,7 @@ FleetFill production operations follow a three-layer model:
 - execution plane
   - repo-owned scripts in [tool/](../tool) perform the project-specific rollout work
 - hosted platforms
-  - Supabase, Vercel, and mobile distribution receive the promoted artifacts or configuration
+  - Supabase, the active admin-web hosting provider, and mobile distribution receive the promoted artifacts or configuration
 
 This split is intentional. It keeps production control centralized while preserving repo-owned rollout logic that would be brittle or duplicated if expanded directly into raw workflow YAML.
 
@@ -97,7 +97,7 @@ Official production entrypoints:
 
 - [ci.yml](../.github/workflows/ci.yml)
 - [production_supabase.yml](../.github/workflows/production_supabase.yml)
-- [production_admin_web.yml](../.github/workflows/production_admin_web.yml)
+- [production_admin_web_netlify.yml](../.github/workflows/production_admin_web_netlify.yml)
 - [production_flutter.yml](../.github/workflows/production_flutter.yml)
 
 The `tool/` scripts remain part of real production behavior, but they should be invoked through these documented paths unless a local maintenance or fallback situation requires otherwise.
@@ -125,7 +125,7 @@ Production source of truth remains:
 
 - GitHub secrets and variables for workflow control
 - Supabase hosted project secrets for Edge Function runtime
-- Vercel project environment variables for admin-web production
+- active hosting-adapter environment variables for admin-web production
 - local root `.env` only for trusted operator and local development flows
 
 ## Booking Operations Model

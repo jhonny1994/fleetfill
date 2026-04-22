@@ -141,6 +141,9 @@ jobs:
         working-directory: backend
         run: |
           cat > .env <<EOF
+          SUPABASE_AUTH_SITE_URL=http://localhost:3000
+          SUPABASE_AUTH_MOBILE_REDIRECT_URL=http://localhost:3000/auth/mobile-callback
+          SUPABASE_AUTH_SITE_URL_PATTERN=http://localhost:3000/**
           GOOGLE_WEB_CLIENT_ID=${GOOGLE_WEB_CLIENT_ID}
           GOOGLE_IOS_CLIENT_ID=${GOOGLE_IOS_CLIENT_ID}
           SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=${SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID}
@@ -224,6 +227,9 @@ jobs:
           cat > .env <<EOF
           SUPABASE_URL=${SUPABASE_URL}
           SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+          SUPABASE_AUTH_SITE_URL=http://localhost:3000
+          SUPABASE_AUTH_MOBILE_REDIRECT_URL=http://localhost:3000/auth/mobile-callback
+          SUPABASE_AUTH_SITE_URL_PATTERN=http://localhost:3000/**
           GOOGLE_WEB_CLIENT_ID=${GOOGLE_WEB_CLIENT_ID}
           GOOGLE_IOS_CLIENT_ID=${GOOGLE_IOS_CLIENT_ID}
           SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=${SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID}

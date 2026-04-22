@@ -18,15 +18,18 @@ void main() {
       automationTick = File(
         '../../backend/supabase/functions/scheduled-automation-tick/index.ts',
       ).readAsStringSync().replaceAll('\r\n', '\n');
-      configToml =
-          File('../../backend/supabase/config.toml').readAsStringSync().replaceAll('\r\n', '\n');
+      configToml = File(
+        '../../backend/supabase/config.toml',
+      ).readAsStringSync().replaceAll('\r\n', '\n');
       schedulerMigration = File(
         '../../backend/supabase/migrations/20260317030000_create_operational_workflows_layer.sql',
       ).readAsStringSync().replaceAll('\r\n', '\n');
       schedulerScript = File(
         '../../backend/supabase/scripts/configure_scheduled_automation.sql',
       ).readAsStringSync().replaceAll('\r\n', '\n');
-      envExample = File('../../.env.example').readAsStringSync().replaceAll('\r\n', '\n');
+      envExample = File(
+        '../../.env.example',
+      ).readAsStringSync().replaceAll('\r\n', '\n');
     });
 
     test('uses the internal automation token in shared runtime helpers', () {

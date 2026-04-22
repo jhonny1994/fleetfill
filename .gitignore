@@ -122,3 +122,6 @@ yarn-error.log*
 /tool/create_admin_account.ps1
 
 .vercel
+
+# Local Netlify folder
+.netlify

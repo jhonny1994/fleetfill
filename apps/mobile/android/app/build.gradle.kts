@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.net.URI
 
 plugins {
     id("com.android.application")
@@ -18,11 +19,15 @@ if (releaseSigningPropertiesFile.exists()) {
 fun signingValue(name: String): String? =
     releaseSigningProperties.getProperty(name)?.takeIf { it.isNotBlank() }
 
-fun resolveSigningValue(name: String): String? =
+fun resolveConfigValue(name: String): String? =
     providers.gradleProperty(name).orNull
         ?.takeIf { it.isNotBlank() }
         ?: providers.environmentVariable(name).orNull
             ?.takeIf { it.isNotBlank() }
+
+fun resolveSigningValue(name: String): String? =
+    resolveConfigValue(name)
+        ?.takeIf { it.isNotBlank() }
         ?: signingValue(name)
 
 val releaseKeystorePath = resolveSigningValue("FLEETFILL_RELEASE_STORE_FILE")
@@ -37,10 +42,24 @@ val hasReleaseSigning =
 val isReleaseBuildRequested = gradle.startParameter.taskNames.any {
     it.contains("Release", ignoreCase = true)
 }
+val publicSiteUrl = resolveConfigValue("PUBLIC_SITE_URL")
+val publicSiteHost =
+    resolveConfigValue("FLEETFILL_PUBLIC_SITE_HOST")
+        ?: publicSiteUrl?.let { candidate ->
+            runCatching { URI(candidate.trim()).host }
+                .getOrNull()
+                ?.takeIf { it.isNotBlank() }
+        }
 
 if (isReleaseBuildRequested && !hasReleaseSigning) {
     throw GradleException(
         "Release signing is required for release builds. Set FLEETFILL_RELEASE_STORE_FILE, FLEETFILL_RELEASE_STORE_PASSWORD, FLEETFILL_RELEASE_KEY_ALIAS, and FLEETFILL_RELEASE_KEY_PASSWORD.",
+    )
+}
+
+if (isReleaseBuildRequested && publicSiteHost.isNullOrBlank()) {
+    throw GradleException(
+        "Release builds require PUBLIC_SITE_URL or FLEETFILL_PUBLIC_SITE_HOST so Android App Links target the configured hosted admin-web domain.",
     )
 }
 
@@ -78,6 +97,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["fleetfillPublicSiteHost"] =
+            publicSiteHost ?: "configured-site.invalid"
     }
 
     buildTypes {

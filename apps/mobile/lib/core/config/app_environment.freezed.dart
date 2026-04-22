@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppEnvironmentConfig implements DiagnosticableTreeMixin {
 
- String get supabaseUrl; String get supabaseAnonKey; String get firebaseApiKey; String get firebaseMessagingSenderId; String get firebaseProjectId; String get firebaseStorageBucket; String get firebaseAndroidAppId; String get firebaseIosAppId; String get googleWebClientId; String get googleIosClientId; String get sentryDsn; bool get maintenanceMode; bool get forceUpdateRequired; bool get crashReportingEnabled;
+ String get supabaseUrl; String get supabaseAnonKey; String get publicSiteUrl; String get firebaseApiKey; String get firebaseMessagingSenderId; String get firebaseProjectId; String get firebaseStorageBucket; String get firebaseAndroidAppId; String get firebaseIosAppId; String get googleWebClientId; String get googleIosClientId; String get sentryDsn; bool get maintenanceMode; bool get forceUpdateRequired; bool get crashReportingEnabled;
 /// Create a copy of AppEnvironmentConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,21 +29,21 @@ $AppEnvironmentConfigCopyWith<AppEnvironmentConfig> get copyWith => _$AppEnviron
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'AppEnvironmentConfig'))
-    ..add(DiagnosticsProperty('supabaseUrl', supabaseUrl))..add(DiagnosticsProperty('supabaseAnonKey', supabaseAnonKey))..add(DiagnosticsProperty('firebaseApiKey', firebaseApiKey))..add(DiagnosticsProperty('firebaseMessagingSenderId', firebaseMessagingSenderId))..add(DiagnosticsProperty('firebaseProjectId', firebaseProjectId))..add(DiagnosticsProperty('firebaseStorageBucket', firebaseStorageBucket))..add(DiagnosticsProperty('firebaseAndroidAppId', firebaseAndroidAppId))..add(DiagnosticsProperty('firebaseIosAppId', firebaseIosAppId))..add(DiagnosticsProperty('googleWebClientId', googleWebClientId))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('sentryDsn', sentryDsn))..add(DiagnosticsProperty('maintenanceMode', maintenanceMode))..add(DiagnosticsProperty('forceUpdateRequired', forceUpdateRequired))..add(DiagnosticsProperty('crashReportingEnabled', crashReportingEnabled));
+    ..add(DiagnosticsProperty('supabaseUrl', supabaseUrl))..add(DiagnosticsProperty('supabaseAnonKey', supabaseAnonKey))..add(DiagnosticsProperty('publicSiteUrl', publicSiteUrl))..add(DiagnosticsProperty('firebaseApiKey', firebaseApiKey))..add(DiagnosticsProperty('firebaseMessagingSenderId', firebaseMessagingSenderId))..add(DiagnosticsProperty('firebaseProjectId', firebaseProjectId))..add(DiagnosticsProperty('firebaseStorageBucket', firebaseStorageBucket))..add(DiagnosticsProperty('firebaseAndroidAppId', firebaseAndroidAppId))..add(DiagnosticsProperty('firebaseIosAppId', firebaseIosAppId))..add(DiagnosticsProperty('googleWebClientId', googleWebClientId))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('sentryDsn', sentryDsn))..add(DiagnosticsProperty('maintenanceMode', maintenanceMode))..add(DiagnosticsProperty('forceUpdateRequired', forceUpdateRequired))..add(DiagnosticsProperty('crashReportingEnabled', crashReportingEnabled));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppEnvironmentConfig&&(identical(other.supabaseUrl, supabaseUrl) || other.supabaseUrl == supabaseUrl)&&(identical(other.supabaseAnonKey, supabaseAnonKey) || other.supabaseAnonKey == supabaseAnonKey)&&(identical(other.firebaseApiKey, firebaseApiKey) || other.firebaseApiKey == firebaseApiKey)&&(identical(other.firebaseMessagingSenderId, firebaseMessagingSenderId) || other.firebaseMessagingSenderId == firebaseMessagingSenderId)&&(identical(other.firebaseProjectId, firebaseProjectId) || other.firebaseProjectId == firebaseProjectId)&&(identical(other.firebaseStorageBucket, firebaseStorageBucket) || other.firebaseStorageBucket == firebaseStorageBucket)&&(identical(other.firebaseAndroidAppId, firebaseAndroidAppId) || other.firebaseAndroidAppId == firebaseAndroidAppId)&&(identical(other.firebaseIosAppId, firebaseIosAppId) || other.firebaseIosAppId == firebaseIosAppId)&&(identical(other.googleWebClientId, googleWebClientId) || other.googleWebClientId == googleWebClientId)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.sentryDsn, sentryDsn) || other.sentryDsn == sentryDsn)&&(identical(other.maintenanceMode, maintenanceMode) || other.maintenanceMode == maintenanceMode)&&(identical(other.forceUpdateRequired, forceUpdateRequired) || other.forceUpdateRequired == forceUpdateRequired)&&(identical(other.crashReportingEnabled, crashReportingEnabled) || other.crashReportingEnabled == crashReportingEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppEnvironmentConfig&&(identical(other.supabaseUrl, supabaseUrl) || other.supabaseUrl == supabaseUrl)&&(identical(other.supabaseAnonKey, supabaseAnonKey) || other.supabaseAnonKey == supabaseAnonKey)&&(identical(other.publicSiteUrl, publicSiteUrl) || other.publicSiteUrl == publicSiteUrl)&&(identical(other.firebaseApiKey, firebaseApiKey) || other.firebaseApiKey == firebaseApiKey)&&(identical(other.firebaseMessagingSenderId, firebaseMessagingSenderId) || other.firebaseMessagingSenderId == firebaseMessagingSenderId)&&(identical(other.firebaseProjectId, firebaseProjectId) || other.firebaseProjectId == firebaseProjectId)&&(identical(other.firebaseStorageBucket, firebaseStorageBucket) || other.firebaseStorageBucket == firebaseStorageBucket)&&(identical(other.firebaseAndroidAppId, firebaseAndroidAppId) || other.firebaseAndroidAppId == firebaseAndroidAppId)&&(identical(other.firebaseIosAppId, firebaseIosAppId) || other.firebaseIosAppId == firebaseIosAppId)&&(identical(other.googleWebClientId, googleWebClientId) || other.googleWebClientId == googleWebClientId)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.sentryDsn, sentryDsn) || other.sentryDsn == sentryDsn)&&(identical(other.maintenanceMode, maintenanceMode) || other.maintenanceMode == maintenanceMode)&&(identical(other.forceUpdateRequired, forceUpdateRequired) || other.forceUpdateRequired == forceUpdateRequired)&&(identical(other.crashReportingEnabled, crashReportingEnabled) || other.crashReportingEnabled == crashReportingEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,supabaseUrl,supabaseAnonKey,firebaseApiKey,firebaseMessagingSenderId,firebaseProjectId,firebaseStorageBucket,firebaseAndroidAppId,firebaseIosAppId,googleWebClientId,googleIosClientId,sentryDsn,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
+int get hashCode => Object.hash(runtimeType,supabaseUrl,supabaseAnonKey,publicSiteUrl,firebaseApiKey,firebaseMessagingSenderId,firebaseProjectId,firebaseStorageBucket,firebaseAndroidAppId,firebaseIosAppId,googleWebClientId,googleIosClientId,sentryDsn,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'AppEnvironmentConfig(supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, firebaseApiKey: $firebaseApiKey, firebaseMessagingSenderId: $firebaseMessagingSenderId, firebaseProjectId: $firebaseProjectId, firebaseStorageBucket: $firebaseStorageBucket, firebaseAndroidAppId: $firebaseAndroidAppId, firebaseIosAppId: $firebaseIosAppId, googleWebClientId: $googleWebClientId, googleIosClientId: $googleIosClientId, sentryDsn: $sentryDsn, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
+  return 'AppEnvironmentConfig(supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, publicSiteUrl: $publicSiteUrl, firebaseApiKey: $firebaseApiKey, firebaseMessagingSenderId: $firebaseMessagingSenderId, firebaseProjectId: $firebaseProjectId, firebaseStorageBucket: $firebaseStorageBucket, firebaseAndroidAppId: $firebaseAndroidAppId, firebaseIosAppId: $firebaseIosAppId, googleWebClientId: $googleWebClientId, googleIosClientId: $googleIosClientId, sentryDsn: $sentryDsn, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $AppEnvironmentConfigCopyWith<$Res>  {
   factory $AppEnvironmentConfigCopyWith(AppEnvironmentConfig value, $Res Function(AppEnvironmentConfig) _then) = _$AppEnvironmentConfigCopyWithImpl;
 @useResult
 $Res call({
- String supabaseUrl, String supabaseAnonKey, String firebaseApiKey, String firebaseMessagingSenderId, String firebaseProjectId, String firebaseStorageBucket, String firebaseAndroidAppId, String firebaseIosAppId, String googleWebClientId, String googleIosClientId, String sentryDsn, bool maintenanceMode, bool forceUpdateRequired, bool crashReportingEnabled
+ String supabaseUrl, String supabaseAnonKey, String publicSiteUrl, String firebaseApiKey, String firebaseMessagingSenderId, String firebaseProjectId, String firebaseStorageBucket, String firebaseAndroidAppId, String firebaseIosAppId, String googleWebClientId, String googleIosClientId, String sentryDsn, bool maintenanceMode, bool forceUpdateRequired, bool crashReportingEnabled
 });
 
 
@@ -71,10 +71,11 @@ class _$AppEnvironmentConfigCopyWithImpl<$Res>
 
 /// Create a copy of AppEnvironmentConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? supabaseUrl = null,Object? supabaseAnonKey = null,Object? firebaseApiKey = null,Object? firebaseMessagingSenderId = null,Object? firebaseProjectId = null,Object? firebaseStorageBucket = null,Object? firebaseAndroidAppId = null,Object? firebaseIosAppId = null,Object? googleWebClientId = null,Object? googleIosClientId = null,Object? sentryDsn = null,Object? maintenanceMode = null,Object? forceUpdateRequired = null,Object? crashReportingEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? supabaseUrl = null,Object? supabaseAnonKey = null,Object? publicSiteUrl = null,Object? firebaseApiKey = null,Object? firebaseMessagingSenderId = null,Object? firebaseProjectId = null,Object? firebaseStorageBucket = null,Object? firebaseAndroidAppId = null,Object? firebaseIosAppId = null,Object? googleWebClientId = null,Object? googleIosClientId = null,Object? sentryDsn = null,Object? maintenanceMode = null,Object? forceUpdateRequired = null,Object? crashReportingEnabled = null,}) {
   return _then(_self.copyWith(
 supabaseUrl: null == supabaseUrl ? _self.supabaseUrl : supabaseUrl // ignore: cast_nullable_to_non_nullable
 as String,supabaseAnonKey: null == supabaseAnonKey ? _self.supabaseAnonKey : supabaseAnonKey // ignore: cast_nullable_to_non_nullable
+as String,publicSiteUrl: null == publicSiteUrl ? _self.publicSiteUrl : publicSiteUrl // ignore: cast_nullable_to_non_nullable
 as String,firebaseApiKey: null == firebaseApiKey ? _self.firebaseApiKey : firebaseApiKey // ignore: cast_nullable_to_non_nullable
 as String,firebaseMessagingSenderId: null == firebaseMessagingSenderId ? _self.firebaseMessagingSenderId : firebaseMessagingSenderId // ignore: cast_nullable_to_non_nullable
 as String,firebaseProjectId: null == firebaseProjectId ? _self.firebaseProjectId : firebaseProjectId // ignore: cast_nullable_to_non_nullable
@@ -172,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String supabaseUrl,  String supabaseAnonKey,  String firebaseApiKey,  String firebaseMessagingSenderId,  String firebaseProjectId,  String firebaseStorageBucket,  String firebaseAndroidAppId,  String firebaseIosAppId,  String googleWebClientId,  String googleIosClientId,  String sentryDsn,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String supabaseUrl,  String supabaseAnonKey,  String publicSiteUrl,  String firebaseApiKey,  String firebaseMessagingSenderId,  String firebaseProjectId,  String firebaseStorageBucket,  String firebaseAndroidAppId,  String firebaseIosAppId,  String googleWebClientId,  String googleIosClientId,  String sentryDsn,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppEnvironmentConfig() when $default != null:
-return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.firebaseApiKey,_that.firebaseMessagingSenderId,_that.firebaseProjectId,_that.firebaseStorageBucket,_that.firebaseAndroidAppId,_that.firebaseIosAppId,_that.googleWebClientId,_that.googleIosClientId,_that.sentryDsn,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
+return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.publicSiteUrl,_that.firebaseApiKey,_that.firebaseMessagingSenderId,_that.firebaseProjectId,_that.firebaseStorageBucket,_that.firebaseAndroidAppId,_that.firebaseIosAppId,_that.googleWebClientId,_that.googleIosClientId,_that.sentryDsn,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
   return orElse();
 
 }
@@ -193,10 +194,10 @@ return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.firebaseApiKey,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String supabaseUrl,  String supabaseAnonKey,  String firebaseApiKey,  String firebaseMessagingSenderId,  String firebaseProjectId,  String firebaseStorageBucket,  String firebaseAndroidAppId,  String firebaseIosAppId,  String googleWebClientId,  String googleIosClientId,  String sentryDsn,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String supabaseUrl,  String supabaseAnonKey,  String publicSiteUrl,  String firebaseApiKey,  String firebaseMessagingSenderId,  String firebaseProjectId,  String firebaseStorageBucket,  String firebaseAndroidAppId,  String firebaseIosAppId,  String googleWebClientId,  String googleIosClientId,  String sentryDsn,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _AppEnvironmentConfig():
-return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.firebaseApiKey,_that.firebaseMessagingSenderId,_that.firebaseProjectId,_that.firebaseStorageBucket,_that.firebaseAndroidAppId,_that.firebaseIosAppId,_that.googleWebClientId,_that.googleIosClientId,_that.sentryDsn,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
+return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.publicSiteUrl,_that.firebaseApiKey,_that.firebaseMessagingSenderId,_that.firebaseProjectId,_that.firebaseStorageBucket,_that.firebaseAndroidAppId,_that.firebaseIosAppId,_that.googleWebClientId,_that.googleIosClientId,_that.sentryDsn,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +214,10 @@ return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.firebaseApiKey,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String supabaseUrl,  String supabaseAnonKey,  String firebaseApiKey,  String firebaseMessagingSenderId,  String firebaseProjectId,  String firebaseStorageBucket,  String firebaseAndroidAppId,  String firebaseIosAppId,  String googleWebClientId,  String googleIosClientId,  String sentryDsn,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String supabaseUrl,  String supabaseAnonKey,  String publicSiteUrl,  String firebaseApiKey,  String firebaseMessagingSenderId,  String firebaseProjectId,  String firebaseStorageBucket,  String firebaseAndroidAppId,  String firebaseIosAppId,  String googleWebClientId,  String googleIosClientId,  String sentryDsn,  bool maintenanceMode,  bool forceUpdateRequired,  bool crashReportingEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _AppEnvironmentConfig() when $default != null:
-return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.firebaseApiKey,_that.firebaseMessagingSenderId,_that.firebaseProjectId,_that.firebaseStorageBucket,_that.firebaseAndroidAppId,_that.firebaseIosAppId,_that.googleWebClientId,_that.googleIosClientId,_that.sentryDsn,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
+return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.publicSiteUrl,_that.firebaseApiKey,_that.firebaseMessagingSenderId,_that.firebaseProjectId,_that.firebaseStorageBucket,_that.firebaseAndroidAppId,_that.firebaseIosAppId,_that.googleWebClientId,_that.googleIosClientId,_that.sentryDsn,_that.maintenanceMode,_that.forceUpdateRequired,_that.crashReportingEnabled);case _:
   return null;
 
 }
@@ -228,11 +229,12 @@ return $default(_that.supabaseUrl,_that.supabaseAnonKey,_that.firebaseApiKey,_th
 @JsonSerializable()
 
 class _AppEnvironmentConfig extends AppEnvironmentConfig with DiagnosticableTreeMixin {
-  const _AppEnvironmentConfig({this.supabaseUrl = '', this.supabaseAnonKey = '', this.firebaseApiKey = '', this.firebaseMessagingSenderId = '', this.firebaseProjectId = '', this.firebaseStorageBucket = '', this.firebaseAndroidAppId = '', this.firebaseIosAppId = '', this.googleWebClientId = '', this.googleIosClientId = '', this.sentryDsn = '', this.maintenanceMode = false, this.forceUpdateRequired = false, this.crashReportingEnabled = false}): super._();
+  const _AppEnvironmentConfig({this.supabaseUrl = '', this.supabaseAnonKey = '', this.publicSiteUrl = '', this.firebaseApiKey = '', this.firebaseMessagingSenderId = '', this.firebaseProjectId = '', this.firebaseStorageBucket = '', this.firebaseAndroidAppId = '', this.firebaseIosAppId = '', this.googleWebClientId = '', this.googleIosClientId = '', this.sentryDsn = '', this.maintenanceMode = false, this.forceUpdateRequired = false, this.crashReportingEnabled = false}): super._();
   factory _AppEnvironmentConfig.fromJson(Map<String, dynamic> json) => _$AppEnvironmentConfigFromJson(json);
 
 @override@JsonKey() final  String supabaseUrl;
 @override@JsonKey() final  String supabaseAnonKey;
+@override@JsonKey() final  String publicSiteUrl;
 @override@JsonKey() final  String firebaseApiKey;
 @override@JsonKey() final  String firebaseMessagingSenderId;
 @override@JsonKey() final  String firebaseProjectId;
@@ -260,21 +262,21 @@ Map<String, dynamic> toJson() {
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'AppEnvironmentConfig'))
-    ..add(DiagnosticsProperty('supabaseUrl', supabaseUrl))..add(DiagnosticsProperty('supabaseAnonKey', supabaseAnonKey))..add(DiagnosticsProperty('firebaseApiKey', firebaseApiKey))..add(DiagnosticsProperty('firebaseMessagingSenderId', firebaseMessagingSenderId))..add(DiagnosticsProperty('firebaseProjectId', firebaseProjectId))..add(DiagnosticsProperty('firebaseStorageBucket', firebaseStorageBucket))..add(DiagnosticsProperty('firebaseAndroidAppId', firebaseAndroidAppId))..add(DiagnosticsProperty('firebaseIosAppId', firebaseIosAppId))..add(DiagnosticsProperty('googleWebClientId', googleWebClientId))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('sentryDsn', sentryDsn))..add(DiagnosticsProperty('maintenanceMode', maintenanceMode))..add(DiagnosticsProperty('forceUpdateRequired', forceUpdateRequired))..add(DiagnosticsProperty('crashReportingEnabled', crashReportingEnabled));
+    ..add(DiagnosticsProperty('supabaseUrl', supabaseUrl))..add(DiagnosticsProperty('supabaseAnonKey', supabaseAnonKey))..add(DiagnosticsProperty('publicSiteUrl', publicSiteUrl))..add(DiagnosticsProperty('firebaseApiKey', firebaseApiKey))..add(DiagnosticsProperty('firebaseMessagingSenderId', firebaseMessagingSenderId))..add(DiagnosticsProperty('firebaseProjectId', firebaseProjectId))..add(DiagnosticsProperty('firebaseStorageBucket', firebaseStorageBucket))..add(DiagnosticsProperty('firebaseAndroidAppId', firebaseAndroidAppId))..add(DiagnosticsProperty('firebaseIosAppId', firebaseIosAppId))..add(DiagnosticsProperty('googleWebClientId', googleWebClientId))..add(DiagnosticsProperty('googleIosClientId', googleIosClientId))..add(DiagnosticsProperty('sentryDsn', sentryDsn))..add(DiagnosticsProperty('maintenanceMode', maintenanceMode))..add(DiagnosticsProperty('forceUpdateRequired', forceUpdateRequired))..add(DiagnosticsProperty('crashReportingEnabled', crashReportingEnabled));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppEnvironmentConfig&&(identical(other.supabaseUrl, supabaseUrl) || other.supabaseUrl == supabaseUrl)&&(identical(other.supabaseAnonKey, supabaseAnonKey) || other.supabaseAnonKey == supabaseAnonKey)&&(identical(other.firebaseApiKey, firebaseApiKey) || other.firebaseApiKey == firebaseApiKey)&&(identical(other.firebaseMessagingSenderId, firebaseMessagingSenderId) || other.firebaseMessagingSenderId == firebaseMessagingSenderId)&&(identical(other.firebaseProjectId, firebaseProjectId) || other.firebaseProjectId == firebaseProjectId)&&(identical(other.firebaseStorageBucket, firebaseStorageBucket) || other.firebaseStorageBucket == firebaseStorageBucket)&&(identical(other.firebaseAndroidAppId, firebaseAndroidAppId) || other.firebaseAndroidAppId == firebaseAndroidAppId)&&(identical(other.firebaseIosAppId, firebaseIosAppId) || other.firebaseIosAppId == firebaseIosAppId)&&(identical(other.googleWebClientId, googleWebClientId) || other.googleWebClientId == googleWebClientId)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.sentryDsn, sentryDsn) || other.sentryDsn == sentryDsn)&&(identical(other.maintenanceMode, maintenanceMode) || other.maintenanceMode == maintenanceMode)&&(identical(other.forceUpdateRequired, forceUpdateRequired) || other.forceUpdateRequired == forceUpdateRequired)&&(identical(other.crashReportingEnabled, crashReportingEnabled) || other.crashReportingEnabled == crashReportingEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppEnvironmentConfig&&(identical(other.supabaseUrl, supabaseUrl) || other.supabaseUrl == supabaseUrl)&&(identical(other.supabaseAnonKey, supabaseAnonKey) || other.supabaseAnonKey == supabaseAnonKey)&&(identical(other.publicSiteUrl, publicSiteUrl) || other.publicSiteUrl == publicSiteUrl)&&(identical(other.firebaseApiKey, firebaseApiKey) || other.firebaseApiKey == firebaseApiKey)&&(identical(other.firebaseMessagingSenderId, firebaseMessagingSenderId) || other.firebaseMessagingSenderId == firebaseMessagingSenderId)&&(identical(other.firebaseProjectId, firebaseProjectId) || other.firebaseProjectId == firebaseProjectId)&&(identical(other.firebaseStorageBucket, firebaseStorageBucket) || other.firebaseStorageBucket == firebaseStorageBucket)&&(identical(other.firebaseAndroidAppId, firebaseAndroidAppId) || other.firebaseAndroidAppId == firebaseAndroidAppId)&&(identical(other.firebaseIosAppId, firebaseIosAppId) || other.firebaseIosAppId == firebaseIosAppId)&&(identical(other.googleWebClientId, googleWebClientId) || other.googleWebClientId == googleWebClientId)&&(identical(other.googleIosClientId, googleIosClientId) || other.googleIosClientId == googleIosClientId)&&(identical(other.sentryDsn, sentryDsn) || other.sentryDsn == sentryDsn)&&(identical(other.maintenanceMode, maintenanceMode) || other.maintenanceMode == maintenanceMode)&&(identical(other.forceUpdateRequired, forceUpdateRequired) || other.forceUpdateRequired == forceUpdateRequired)&&(identical(other.crashReportingEnabled, crashReportingEnabled) || other.crashReportingEnabled == crashReportingEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,supabaseUrl,supabaseAnonKey,firebaseApiKey,firebaseMessagingSenderId,firebaseProjectId,firebaseStorageBucket,firebaseAndroidAppId,firebaseIosAppId,googleWebClientId,googleIosClientId,sentryDsn,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
+int get hashCode => Object.hash(runtimeType,supabaseUrl,supabaseAnonKey,publicSiteUrl,firebaseApiKey,firebaseMessagingSenderId,firebaseProjectId,firebaseStorageBucket,firebaseAndroidAppId,firebaseIosAppId,googleWebClientId,googleIosClientId,sentryDsn,maintenanceMode,forceUpdateRequired,crashReportingEnabled);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'AppEnvironmentConfig(supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, firebaseApiKey: $firebaseApiKey, firebaseMessagingSenderId: $firebaseMessagingSenderId, firebaseProjectId: $firebaseProjectId, firebaseStorageBucket: $firebaseStorageBucket, firebaseAndroidAppId: $firebaseAndroidAppId, firebaseIosAppId: $firebaseIosAppId, googleWebClientId: $googleWebClientId, googleIosClientId: $googleIosClientId, sentryDsn: $sentryDsn, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
+  return 'AppEnvironmentConfig(supabaseUrl: $supabaseUrl, supabaseAnonKey: $supabaseAnonKey, publicSiteUrl: $publicSiteUrl, firebaseApiKey: $firebaseApiKey, firebaseMessagingSenderId: $firebaseMessagingSenderId, firebaseProjectId: $firebaseProjectId, firebaseStorageBucket: $firebaseStorageBucket, firebaseAndroidAppId: $firebaseAndroidAppId, firebaseIosAppId: $firebaseIosAppId, googleWebClientId: $googleWebClientId, googleIosClientId: $googleIosClientId, sentryDsn: $sentryDsn, maintenanceMode: $maintenanceMode, forceUpdateRequired: $forceUpdateRequired, crashReportingEnabled: $crashReportingEnabled)';
 }
 
 
@@ -285,7 +287,7 @@ abstract mixin class _$AppEnvironmentConfigCopyWith<$Res> implements $AppEnviron
   factory _$AppEnvironmentConfigCopyWith(_AppEnvironmentConfig value, $Res Function(_AppEnvironmentConfig) _then) = __$AppEnvironmentConfigCopyWithImpl;
 @override @useResult
 $Res call({
- String supabaseUrl, String supabaseAnonKey, String firebaseApiKey, String firebaseMessagingSenderId, String firebaseProjectId, String firebaseStorageBucket, String firebaseAndroidAppId, String firebaseIosAppId, String googleWebClientId, String googleIosClientId, String sentryDsn, bool maintenanceMode, bool forceUpdateRequired, bool crashReportingEnabled
+ String supabaseUrl, String supabaseAnonKey, String publicSiteUrl, String firebaseApiKey, String firebaseMessagingSenderId, String firebaseProjectId, String firebaseStorageBucket, String firebaseAndroidAppId, String firebaseIosAppId, String googleWebClientId, String googleIosClientId, String sentryDsn, bool maintenanceMode, bool forceUpdateRequired, bool crashReportingEnabled
 });
 
 
@@ -302,10 +304,11 @@ class __$AppEnvironmentConfigCopyWithImpl<$Res>
 
 /// Create a copy of AppEnvironmentConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? supabaseUrl = null,Object? supabaseAnonKey = null,Object? firebaseApiKey = null,Object? firebaseMessagingSenderId = null,Object? firebaseProjectId = null,Object? firebaseStorageBucket = null,Object? firebaseAndroidAppId = null,Object? firebaseIosAppId = null,Object? googleWebClientId = null,Object? googleIosClientId = null,Object? sentryDsn = null,Object? maintenanceMode = null,Object? forceUpdateRequired = null,Object? crashReportingEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? supabaseUrl = null,Object? supabaseAnonKey = null,Object? publicSiteUrl = null,Object? firebaseApiKey = null,Object? firebaseMessagingSenderId = null,Object? firebaseProjectId = null,Object? firebaseStorageBucket = null,Object? firebaseAndroidAppId = null,Object? firebaseIosAppId = null,Object? googleWebClientId = null,Object? googleIosClientId = null,Object? sentryDsn = null,Object? maintenanceMode = null,Object? forceUpdateRequired = null,Object? crashReportingEnabled = null,}) {
   return _then(_AppEnvironmentConfig(
 supabaseUrl: null == supabaseUrl ? _self.supabaseUrl : supabaseUrl // ignore: cast_nullable_to_non_nullable
 as String,supabaseAnonKey: null == supabaseAnonKey ? _self.supabaseAnonKey : supabaseAnonKey // ignore: cast_nullable_to_non_nullable
+as String,publicSiteUrl: null == publicSiteUrl ? _self.publicSiteUrl : publicSiteUrl // ignore: cast_nullable_to_non_nullable
 as String,firebaseApiKey: null == firebaseApiKey ? _self.firebaseApiKey : firebaseApiKey // ignore: cast_nullable_to_non_nullable
 as String,firebaseMessagingSenderId: null == firebaseMessagingSenderId ? _self.firebaseMessagingSenderId : firebaseMessagingSenderId // ignore: cast_nullable_to_non_nullable
 as String,firebaseProjectId: null == firebaseProjectId ? _self.firebaseProjectId : firebaseProjectId // ignore: cast_nullable_to_non_nullable
