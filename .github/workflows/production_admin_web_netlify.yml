@@ -1,6 +1,6 @@
-name: Production Admin Web
+name: Production Admin Web Netlify
 run-name: >-
-  Admin Web deploy (${{
+  Admin Web Netlify deploy (${{
     inputs.git_ref || github.ref_name
   }})
 
@@ -12,15 +12,11 @@ on:
         required: true
         default: main
       sync_env:
-        description: Sync production Vercel env before deploy
-        type: boolean
-        default: true
-      build:
-        description: Build admin-web with Vercel
+        description: Sync Netlify production environment values before deploy
         type: boolean
         default: true
       deploy:
-        description: Publish production deploy
+        description: Build and deploy admin-web to Netlify production
         type: boolean
         default: true
   workflow_call:
@@ -32,17 +28,13 @@ on:
         required: false
         type: boolean
         default: true
-      build:
-        required: false
-        type: boolean
-        default: true
       deploy:
         required: false
         type: boolean
         default: true
 
 concurrency:
-  group: production-admin-web
+  group: production-admin-web-netlify
   cancel-in-progress: false
 
 permissions:
@@ -54,14 +46,15 @@ defaults:
 
 jobs:
   deploy:
-    name: Deploy Admin Web
+    name: Deploy Admin Web To Netlify
     runs-on: ubuntu-latest
     timeout-minutes: 25
     environment: Production
     env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_WEB_PROJECT_ID }}
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+      NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
     outputs:
       performed_work: ${{ steps.plan.outputs.performed_work }}
@@ -74,17 +67,10 @@ jobs:
       - name: Resolve deploy intent
         id: plan
         run: |
-          if [[ "${{ inputs.sync_env }}" == "true" || "${{ inputs.build }}" == "true" || "${{ inputs.deploy }}" == "true" ]]; then
+          if [[ "${{ inputs.sync_env }}" == "true" || "${{ inputs.deploy }}" == "true" ]]; then
             echo "performed_work=true" >> "$GITHUB_OUTPUT"
           else
             echo "performed_work=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Validate requested deploy shape
-        run: |
-          if [[ "${{ inputs.deploy }}" == "true" && "${{ inputs.build }}" != "true" ]]; then
-            echo "Production deploy requires a production build in the same workflow run."
-            exit 1
           fi
 
       - name: Verify deploy configuration is present
@@ -100,14 +86,11 @@ jobs:
             fi
           }
 
-          require_value "VERCEL_TOKEN (GitHub secret or Production environment secret)" "$VERCEL_TOKEN"
-          require_value "VERCEL_ORG_ID (GitHub variable)" "$VERCEL_ORG_ID"
-          require_value "VERCEL_ADMIN_WEB_PROJECT_ID (GitHub variable)" "$VERCEL_PROJECT_ID"
-          if [[ "$VERCEL_TOKEN" == vca_* ]]; then
-            echo "GitHub secret VERCEL_TOKEN is a short-lived CLI session token (vca_*)." >&2
-            echo "Replace it with a long-lived Vercel dashboard token before running Production Admin Web." >&2
-            exit 1
-          fi
+          require_value "NETLIFY_AUTH_TOKEN (GitHub secret)" "$NETLIFY_AUTH_TOKEN"
+          require_value "NETLIFY_SITE_ID (GitHub variable)" "$NETLIFY_SITE_ID"
+          require_value "SUPABASE_URL (GitHub variable)" "$SUPABASE_URL"
+          require_value "PUBLIC_SITE_URL (GitHub variable)" "$PUBLIC_SITE_URL"
+
           if [[ "${{ inputs.sync_env }}" == "true" ]]; then
             require_value "SUPABASE_ACCESS_TOKEN (GitHub secret)" "$SUPABASE_ACCESS_TOKEN"
           fi
@@ -142,31 +125,54 @@ jobs:
         with:
           version: latest
 
-      - name: Install Vercel CLI
+      - name: Install Netlify CLI
         if: steps.plan.outputs.performed_work == 'true'
-        run: npm install --global vercel@latest
+        run: npm install --global netlify-cli@25.1.1
 
       - name: Install dependencies
         if: steps.plan.outputs.performed_work == 'true'
         working-directory: apps/admin-web
         run: pnpm install --frozen-lockfile
 
-      - name: Sync Vercel production env
-        if: steps.plan.outputs.performed_work == 'true' && inputs.sync_env
-        shell: pwsh
-        run: ./tool/sync_admin_vercel_env.ps1 -ProjectDir .
-
-      - name: Pull production environment
+      - name: Resolve admin-web public runtime values
         if: steps.plan.outputs.performed_work == 'true'
-        run: pnpm dlx vercel pull --yes --environment=production --cwd . --token=${{ env.VERCEL_TOKEN }}
+        run: |
+          supabase_project_ref="$(echo "${SUPABASE_URL}" | sed -E 's#https?://([^.]+)\.supabase\.co/?#\1#')"
+          if [[ -z "$supabase_project_ref" || "$supabase_project_ref" == "${SUPABASE_URL}" ]]; then
+            echo "Could not derive the Supabase project ref from SUPABASE_URL=${SUPABASE_URL}." >&2
+            exit 1
+          fi
 
-      - name: Build production deployment
-        if: steps.plan.outputs.performed_work == 'true' && inputs.build
-        run: pnpm dlx vercel build --prod --cwd . --token=${{ env.VERCEL_TOKEN }}
+          if [[ "${{ inputs.sync_env }}" == "true" ]]; then
+            anon_key="$(supabase projects api-keys --project-ref "$supabase_project_ref" -o json | node -e "const fs=require('fs'); const keys=JSON.parse(fs.readFileSync(0,'utf8')); const anon=keys.find((entry)=>entry.name==='anon')?.api_key ?? ''; if (!anon) process.exit(1); process.stdout.write(anon);")"
+          else
+            anon_key=""
+          fi
 
-      - name: Deploy production
+          echo "SUPABASE_PROJECT_REF=${supabase_project_ref}" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://${supabase_project_ref}.supabase.co" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SITE_URL=${PUBLIC_SITE_URL%/}" >> "$GITHUB_ENV"
+          if [[ -n "$anon_key" ]]; then
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${anon_key}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Sync Netlify production environment
+        if: steps.plan.outputs.performed_work == 'true' && inputs.sync_env
+        run: |
+          netlify env:set NEXT_PUBLIC_SUPABASE_URL "$NEXT_PUBLIC_SUPABASE_URL" --context production --site "$NETLIFY_SITE_ID" --auth "$NETLIFY_AUTH_TOKEN" --force
+          netlify env:set NEXT_PUBLIC_SUPABASE_ANON_KEY "$NEXT_PUBLIC_SUPABASE_ANON_KEY" --context production --site "$NETLIFY_SITE_ID" --auth "$NETLIFY_AUTH_TOKEN" --force
+          netlify env:set NEXT_PUBLIC_SITE_URL "$NEXT_PUBLIC_SITE_URL" --context production --site "$NETLIFY_SITE_ID" --auth "$NETLIFY_AUTH_TOKEN" --force
+
+      - name: Deploy production to Netlify
         if: steps.plan.outputs.performed_work == 'true' && inputs.deploy
-        run: pnpm dlx vercel deploy --prebuilt --prod --cwd . --token=${{ env.VERCEL_TOKEN }}
+        run: >
+          netlify deploy
+          --filter admin-web
+          --context production
+          --prod
+          --site "$NETLIFY_SITE_ID"
+          --auth "$NETLIFY_AUTH_TOKEN"
+          --message "Admin Web deploy ${GITHUB_SHA}"
 
       - name: Complete no-op validation
         if: steps.plan.outputs.performed_work != 'true'

@@ -100,6 +100,7 @@ jobs:
     env:
       SUPABASE_URL: ${{ vars.SUPABASE_URL }}
       SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
       SENTRY_DSN: ${{ vars.SENTRY_DSN }}
       GOOGLE_WEB_CLIENT_ID: ${{ vars.GOOGLE_WEB_CLIENT_ID }}
       GOOGLE_IOS_CLIENT_ID: ${{ vars.GOOGLE_IOS_CLIENT_ID }}
@@ -186,6 +187,7 @@ jobs:
 
           require_value "SUPABASE_URL (GitHub variable)" "${SUPABASE_URL}"
           require_value "SUPABASE_PUBLISHABLE_KEY (GitHub variable)" "${SUPABASE_PUBLISHABLE_KEY}"
+          require_value "PUBLIC_SITE_URL (GitHub variable)" "${PUBLIC_SITE_URL}"
           require_value "SENTRY_DSN (GitHub variable)" "${SENTRY_DSN}"
           require_value "GOOGLE_WEB_CLIENT_ID (GitHub variable)" "${GOOGLE_WEB_CLIENT_ID}"
           require_value "GOOGLE_IOS_CLIENT_ID (GitHub variable)" "${GOOGLE_IOS_CLIENT_ID}"
@@ -252,6 +254,7 @@ jobs:
           flutter build appbundle --release
           --dart-define=SUPABASE_URL=${{ env.SUPABASE_URL }}
           --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ env.SUPABASE_PUBLISHABLE_KEY }}
+          --dart-define=PUBLIC_SITE_URL=${{ env.PUBLIC_SITE_URL }}
           --dart-define=SENTRY_DSN=${{ env.SENTRY_DSN }}
           --dart-define=GOOGLE_WEB_CLIENT_ID=${{ env.GOOGLE_WEB_CLIENT_ID }}
           --dart-define=GOOGLE_IOS_CLIENT_ID=${{ env.GOOGLE_IOS_CLIENT_ID }}
@@ -266,6 +269,7 @@ jobs:
           flutter build apk --release
           --dart-define=SUPABASE_URL=${{ env.SUPABASE_URL }}
           --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ env.SUPABASE_PUBLISHABLE_KEY }}
+          --dart-define=PUBLIC_SITE_URL=${{ env.PUBLIC_SITE_URL }}
           --dart-define=SENTRY_DSN=${{ env.SENTRY_DSN }}
           --dart-define=GOOGLE_WEB_CLIENT_ID=${{ env.GOOGLE_WEB_CLIENT_ID }}
           --dart-define=GOOGLE_IOS_CLIENT_ID=${{ env.GOOGLE_IOS_CLIENT_ID }}

@@ -5,7 +5,7 @@
 Security reporting should target the currently deployed FleetFill production surfaces:
 
 - latest Android release published in GitHub Releases
-- current `main`-backed admin deployment on Vercel
+- current `main`-backed admin deployment on the active hosting provider
 - current hosted Supabase production project
 
 ## Reporting A Vulnerability

@@ -31,7 +31,7 @@ There is no separate product model for local, staging, or production. The same a
 
 - Supabase Auth owns email/password signup, confirm-email, password reset, and third-party auth.
 - The app uses deep-link aware auth routing and explicit post-auth guards.
-- Production mobile auth callbacks now standardize on `https://fleetfill.vercel.app/auth/mobile-callback`, with the Android app verified through App Links on the same public FleetFill origin.
+- Production mobile auth callbacks now standardize on the configured hosted public site origin plus `/auth/mobile-callback`, with the Android app verified through App Links on that same configured origin.
 - Local mobile development may temporarily keep `com.carbodex.fleetfill://auth-callback` as the explicit custom-scheme fallback while hosted auth remains HTTPS-first.
 - The custom-scheme fallback is transitional. Remove it only after real-device App Links validation covers signup confirmation, resend confirmation, password reset, and recovery re-entry without regressions.
 - Role, onboarding, and operational access are enforced through shared route guards and backend checks.

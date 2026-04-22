@@ -48,7 +48,7 @@ Run it locally with:
   - configure `[auth.external.google]` in `backend/supabase/config.toml`
   - keep the Google client ID and secret in root `.env` variables via `env(...)`
   - local callback URI should be `http://127.0.0.1:54321/auth/v1/callback`
-  - production mobile auth should redirect to `https://fleetfill.vercel.app/auth/mobile-callback`
+  - production mobile auth should redirect to the configured hosted admin callback URL
   - local mobile development may keep `com.carbodex.fleetfill://auth-callback` as the custom-scheme fallback
 
 Example root `.env` entries:
@@ -57,6 +57,7 @@ Example root `.env` entries:
 - `SUPABASE_PUBLISHABLE_KEY=...`
 - `SUPABASE_ANON_KEY=...` (local CLI/self-hosted only)
 - `SUPABASE_SECRET_KEY=...`
+- `PUBLIC_SITE_URL=https://admin.example.com`
 - `INTERNAL_AUTOMATION_TOKEN=...`
 - `SUPABASE_DB_URL=...` (needed only when applying repo-owned scheduler SQL directly to the hosted database)
 - `SENTRY_DSN=...`
@@ -75,7 +76,9 @@ Example root `.env` entries:
 - `TRANSACTIONAL_EMAIL_FROM_NAME=FleetFill`
 - `TRANSACTIONAL_EMAIL_MOCK_MODE=false`
 - `TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET=...`
-- `VERCEL_TOKEN=...` (must be a long-lived Vercel dashboard token for the correct team scope)
+- `SUPABASE_AUTH_SITE_URL=https://admin.example.com`
+- `SUPABASE_AUTH_MOBILE_REDIRECT_URL=https://admin.example.com/auth/mobile-callback`
+- `SUPABASE_AUTH_SITE_URL_PATTERN=https://admin.example.com/**`
 - `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID=your-google-web-client-id`
 - `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET=your-google-client-secret`
 
@@ -84,8 +87,7 @@ Notes:
 - The mobile app prefers `SUPABASE_ANON_KEY` for local CLI/self-hosted targets and `SUPABASE_PUBLISHABLE_KEY` for hosted targets, with fallback only when one key is intentionally absent.
 - `SUPABASE_SECRET_KEY` is the repo-facing privileged hosted backend credential for service clients and rollout tooling; hosted Edge Functions receive the same value through `SB_SECRET_KEY` because Supabase blocks custom secrets that start with `SUPABASE_`.
 - Recommended ownership split:
-  - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`, plus optional hosted rollout secrets like `SUPABASE_DB_URL`
-    - include `VERCEL_TOKEN` here only if you want repo tooling to sync the GitHub `VERCEL_TOKEN` secret; do not use a short-lived CLI session token (`vca_*`)
+  - root `.env`: local Supabase CLI and server-side secrets consumed through `env(...)`, plus hosted callback/runtime values such as `PUBLIC_SITE_URL`, `SUPABASE_AUTH_SITE_URL`, and optional rollout secrets like `SUPABASE_DB_URL`
   - Flutter `--dart-define` or editor launch config: app runtime values such as `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` / local `SUPABASE_ANON_KEY`, `SENTRY_DSN`, and Google client IDs
   - GitHub Actions: repository variables for non-secret client IDs and repository secrets for secrets such as `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET`
 - Android local runtime should use two explicit launch paths:
@@ -174,11 +176,9 @@ Production-grade alignment notes:
   - syncs function secrets
   - deploys all repo-owned Edge Functions that have an `index.ts`
   - installs the scheduler when `SUPABASE_DB_URL` is available
-  - syncs Vercel admin env values
   - runs hosted verification
 - [verify_hosted_rollout.ps1](../../tool/verify_hosted_rollout.ps1)
   - verifies live function inventory and auth boundaries
-  - checks Vercel production env values
   - checks the live admin sign-in route
 
 ## Database Regression Checks

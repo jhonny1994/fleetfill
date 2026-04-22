@@ -11,6 +11,7 @@ _AppEnvironmentConfig _$AppEnvironmentConfigFromJson(
 ) => _AppEnvironmentConfig(
   supabaseUrl: json['supabaseUrl'] as String? ?? '',
   supabaseAnonKey: json['supabaseAnonKey'] as String? ?? '',
+  publicSiteUrl: json['publicSiteUrl'] as String? ?? '',
   firebaseApiKey: json['firebaseApiKey'] as String? ?? '',
   firebaseMessagingSenderId: json['firebaseMessagingSenderId'] as String? ?? '',
   firebaseProjectId: json['firebaseProjectId'] as String? ?? '',
@@ -30,6 +31,7 @@ Map<String, dynamic> _$AppEnvironmentConfigToJson(
 ) => <String, dynamic>{
   'supabaseUrl': instance.supabaseUrl,
   'supabaseAnonKey': instance.supabaseAnonKey,
+  'publicSiteUrl': instance.publicSiteUrl,
   'firebaseApiKey': instance.firebaseApiKey,
   'firebaseMessagingSenderId': instance.firebaseMessagingSenderId,
   'firebaseProjectId': instance.firebaseProjectId,
