@@ -122,12 +122,15 @@ final payoutsProvider = FutureProvider<List<PayoutRecord>>((ref) {
   return ref.read(disputeRepositoryProvider).fetchPayouts();
 });
 
-final FutureProviderFamily<List<PayoutRecord>, String> payoutsForBookingProvider =
-    FutureProvider.autoDispose.family<List<PayoutRecord>, String>((
+final FutureProviderFamily<List<PayoutRecord>, String>
+payoutsForBookingProvider = FutureProvider.autoDispose
+    .family<List<PayoutRecord>, String>((
       ref,
       bookingId,
     ) {
-      return ref.read(disputeRepositoryProvider).fetchPayouts(bookingId: bookingId);
+      return ref
+          .read(disputeRepositoryProvider)
+          .fetchPayouts(bookingId: bookingId);
     });
 
 final FutureProviderFamily<BookingPayoutRequestContext, String>

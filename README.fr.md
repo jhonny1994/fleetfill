@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://github.com/jhonny1994/fleetfill/releases"><img src="https://img.shields.io/github/v/release/jhonny1994/fleetfill?style=flat-square" alt="GitHub Release"></a>
   <a href="https://github.com/jhonny1994/fleetfill/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/jhonny1994/fleetfill/ci.yml?branch=main&style=flat-square&label=CI" alt="CI"></a>
-  <a href="https://fleetfill.vercel.app"><img src="https://img.shields.io/badge/Console_Admin-Live-brightgreen?style=flat-square" alt="Console Admin"></a>
+  <img src="https://img.shields.io/badge/Console_Admin-Hébergée-brightgreen?style=flat-square" alt="Console Admin">
 </p>
 
 <p align="center"><strong>La plateforme intelligente de fret routier pour l'Algérie.</strong></p>
@@ -28,7 +28,7 @@
 ## Surfaces en ligne
 
 - releases Android officielles : [GitHub Releases](https://github.com/jhonny1994/fleetfill/releases)
-- console d'exploitation : [fleetfill.vercel.app](https://fleetfill.vercel.app)
+- console d'exploitation : configurée sur le fournisseur d'hébergement actif
 
 ## Ce que contient ce dépôt
 
@@ -77,5 +77,5 @@ Voir [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md) pour la formulation complèt
   <img src="https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=flutter&logoColor=white" alt="Flutter">
   <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase">
   <img src="https://img.shields.io/badge/Next.js-000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
-  <img src="https://img.shields.io/badge/Vercel-000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel">
+  <img src="https://img.shields.io/badge/Admin_Web-Hébergé-0A7CFF?style=flat-square" alt="Admin Web Hébergé">
 </p>

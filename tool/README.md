@@ -17,9 +17,7 @@ These scripts are part of the official production path. GitHub Actions calls the
 - `apply_supabase_scheduler.ps1`
   - installs or refreshes the hosted scheduler configuration
 - `verify_hosted_rollout.ps1`
-  - verifies the live hosted Supabase and admin-web surfaces
-- `sync_admin_vercel_env.ps1`
-  - synchronizes admin-web public runtime values into Vercel production
+  - verifies the live hosted Supabase and admin-web surfaces through host-neutral checks
 
 These are implementation, not shadow ops.
 

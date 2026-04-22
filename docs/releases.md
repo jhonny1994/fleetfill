@@ -7,7 +7,7 @@ FleetFill release automation is intentionally simple:
 - [ci.yml](../.github/workflows/ci.yml) validates repository quality
 - [release.yml](../.github/workflows/release.yml) orchestrates coordinated whole-product releases
 - [production_supabase.yml](../.github/workflows/production_supabase.yml) promotes hosted backend changes
-- [production_admin_web.yml](../.github/workflows/production_admin_web.yml) publishes admin-web on demand
+- [production_admin_web_netlify.yml](../.github/workflows/production_admin_web_netlify.yml) runs the current admin-web hosting adapter on demand
 - [production_flutter.yml](../.github/workflows/production_flutter.yml) builds signed Android release artifacts
 
 ## Governance
@@ -34,11 +34,10 @@ FleetFill release automation is intentionally simple:
   - hosted Supabase rollout
   - operator-selected rollout parts
   - hosted verification
-- [production_admin_web.yml](../.github/workflows/production_admin_web.yml)
-  - Vercel env sync
-  - production build
-  - production deploy
-  - explicit preflight validation for Vercel and Supabase credentials
+- [production_admin_web_netlify.yml](../.github/workflows/production_admin_web_netlify.yml)
+  - syncs the public runtime contract into Netlify production
+  - runs the production build and deploy through Netlify CLI
+  - explicit preflight validation for Netlify credentials plus the shared public site URL contract
 - [production_flutter.yml](../.github/workflows/production_flutter.yml)
   - signed Android artifact generation
   - GitHub release publication
@@ -55,7 +54,7 @@ For Supabase production rollout:
 - `TRANSACTIONAL_EMAIL_PROVIDER_API_KEY`
 - `TRANSACTIONAL_EMAIL_PROVIDER_WEBHOOK_SECRET`
 - `FIREBASE_SERVICE_ACCOUNT_JSON`
-- `VERCEL_TOKEN`
+- `NETLIFY_AUTH_TOKEN`
 
 For signed Flutter releases:
 
@@ -75,6 +74,8 @@ Local developer note:
 
 - `SUPABASE_URL`
 - `SUPABASE_PUBLISHABLE_KEY`
+- `PUBLIC_SITE_URL`
+- `NETLIFY_SITE_ID`
 - `SENTRY_DSN`
 - `GOOGLE_WEB_CLIENT_ID`
 - `GOOGLE_IOS_CLIENT_ID`
@@ -83,8 +84,6 @@ Local developer note:
 - `TRANSACTIONAL_EMAIL_FROM_EMAIL`
 - `PUSH_NOTIFICATIONS_ENABLED`
 - `PUSH_NOTIFICATIONS_PROVIDER`
-- `VERCEL_ORG_ID`
-- `VERCEL_ADMIN_WEB_PROJECT_ID`
 
 ## Repo-Owned Sync Helper
 
@@ -92,7 +91,7 @@ Local developer note:
   - syncs GitHub production variables and secrets that can be derived from local config
   - keeps GitHub variable names aligned with the runtime contract used by Flutter builds
   - can generate a local Android release keystore if one does not already exist
-  - requires `VERCEL_TOKEN` to be a long-lived Vercel dashboard token, not a short-lived CLI session token
+  - can optionally sync current Netlify deployment credentials when local config provides them
 
 ## Contract Validation Ownership
 
@@ -111,7 +110,7 @@ Signed Android artifacts are produced by:
 
 Auth callback posture for Android releases:
 
-- Verified Android App Links on `https://fleetfill.vercel.app/auth/mobile-callback` are the production truth
+- Verified Android App Links on the configured `PUBLIC_SITE_URL` plus `/auth/mobile-callback` are the production truth
 - `com.carbodex.fleetfill://auth-callback` remains a temporary local-development and rollback fallback during migration
 - remove the custom-scheme fallback only after real-device signup confirmation, password reset, and recovery re-entry flows are verified through App Links and rollback confidence is documented
 
@@ -137,4 +136,4 @@ Published artifacts:
 - admin-web production publication is now GitHub-controlled through the manual deploy workflow
 - secrets and signing material must stay in GitHub secrets, never in git
 - Sentry DSNs are treated as runtime configuration, not hardcoded source constants
-- `VERCEL_TOKEN` must be created in the Vercel dashboard for the correct team scope; short-lived CLI session tokens (`vca_*`) are not valid for GitHub Actions
+- active hosting-adapter credentials should stay in GitHub secrets or environment secrets; short-lived CLI session tokens are not valid for GitHub Actions

@@ -6,10 +6,7 @@ import 'package:fleetfill/core/config/app_environment.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 String _encodeObjectPath(String objectPath) {
-  return objectPath
-      .split('/')
-      .map(Uri.encodeComponent)
-      .join('/');
+  return objectPath.split('/').map(Uri.encodeComponent).join('/');
 }
 
 Future<void> uploadToProjectStorage({

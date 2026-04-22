@@ -11,6 +11,7 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
   const factory AppEnvironmentConfig({
     @Default('') String supabaseUrl,
     @Default('') String supabaseAnonKey,
+    @Default('') String publicSiteUrl,
     @Default('') String firebaseApiKey,
     @Default('') String firebaseMessagingSenderId,
     @Default('') String firebaseProjectId,
@@ -56,6 +57,9 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
         supabaseUrl: supabaseUrl,
         publishableKey: publishableKey,
         anonKey: anonKey,
+      ),
+      publicSiteUrl: _normalizePublicSiteUrl(
+        const String.fromEnvironment('PUBLIC_SITE_URL'),
       ),
       googleWebClientId: _firstNonEmpty([
         const String.fromEnvironment('GOOGLE_WEB_CLIENT_ID'),
@@ -108,6 +112,8 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
       supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
 
   bool get hasSentryDsn => sentryDsn.trim().isNotEmpty;
+
+  bool get hasPublicSiteUrl => publicSiteUrl.trim().isNotEmpty;
 
   bool get isLocalBackend => _isLocalBackendUrl(supabaseUrl);
 
@@ -166,6 +172,17 @@ abstract class AppEnvironmentConfig with _$AppEnvironmentConfig {
     }
 
     return '';
+  }
+
+  static String _normalizePublicSiteUrl(String url) {
+    final trimmed = url.trim();
+    if (trimmed.isEmpty) {
+      return trimmed;
+    }
+
+    return trimmed.endsWith('/')
+        ? trimmed.substring(0, trimmed.length - 1)
+        : trimmed;
   }
 
   static String normalizeSupabaseUrlForTesting(
