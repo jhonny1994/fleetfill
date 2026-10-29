@@ -3,7 +3,11 @@ import { ShieldEllipsis } from "lucide-react";
 
 import { AdminSignInForm } from "@/components/auth/admin-sign-in-form";
 import { getAdminSession } from "@/lib/auth/get-admin-session";
-import { defaultLocale, getLocaleDirection, isSupportedLocale } from "@/lib/i18n/config";
+import {
+  defaultLocale,
+  getLocaleDirection,
+  isSupportedLocale,
+} from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchRuntimeLocalizationPolicy } from "@/lib/queries/admin-settings";
 import { cn } from "@/lib/utils";

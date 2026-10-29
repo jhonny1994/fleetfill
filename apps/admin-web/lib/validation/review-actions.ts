@@ -38,6 +38,12 @@ export const supportReplySchema = z.object({
 });
 
 export const supportStatusSchema = z.object({
-  status: z.enum(["open", "in_progress", "waiting_for_user", "resolved", "closed"]),
+  status: z.enum([
+    "open",
+    "in_progress",
+    "waiting_for_user",
+    "resolved",
+    "closed",
+  ]),
   priority: z.enum(["normal", "high", "urgent"]).optional(),
 });

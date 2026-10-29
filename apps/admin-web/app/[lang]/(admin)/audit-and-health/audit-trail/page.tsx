@@ -3,7 +3,11 @@ import Link from "next/link";
 
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminActionLabel, getAuditOutcomeLabel, getAuditTargetTypeLabel } from "@/lib/i18n/admin-ui";
+import {
+  getAdminActionLabel,
+  getAuditOutcomeLabel,
+  getAuditTargetTypeLabel,
+} from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchAdminAuditTrailPage } from "@/lib/queries/admin-audit-health";
@@ -12,13 +16,12 @@ function buildPageHref(lang: string, page: number) {
   return `/${lang}/audit-and-health/audit-trail?page=${page}`;
 }
 
-export default async function AdminAuditTrailPage({
-  params,
-  searchParams,
-}: {
+export default async function AdminAuditTrailPage(props: {
   params: Promise<{ lang: string }>;
   searchParams: Promise<{ page?: string }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const [{ lang }, query] = await Promise.all([params, searchParams]);
   const locale = resolveAppLocale(lang);
   const { ui } = asAdminMessages(await getMessages({ locale }));
@@ -33,8 +36,12 @@ export default async function AdminAuditTrailPage({
         <p className="eyebrow">{ui.pages.audit.eyebrow}</p>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-2">
-            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.auditTrail}</h1>
-            <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.auditTrailBody}</p>
+            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">
+              {ui.pages.audit.auditTrail}
+            </h1>
+            <p className="text-sm text-[var(--color-ink-muted)]">
+              {ui.pages.audit.auditTrailBody}
+            </p>
           </div>
           <Link className="button-secondary" href={`/${lang}/audit-and-health`}>
             {backToSummary}
@@ -44,9 +51,15 @@ export default async function AdminAuditTrailPage({
 
       <section className="panel space-y-4 p-6">
         {snapshot.items.map((log) => (
-          <div key={log.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+          <div
+            key={log.id}
+            className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4"
+          >
             <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge label={getAdminActionLabel(lang, log.action)} tone="neutral" />
+              <StatusBadge
+                label={getAdminActionLabel(lang, log.action)}
+                tone="neutral"
+              />
               <StatusBadge
                 label={getAuditOutcomeLabel(lang, log.outcome)}
                 tone={log.outcome === "success" ? "success" : "danger"}
@@ -57,7 +70,8 @@ export default async function AdminAuditTrailPage({
               {log.targetId ? ` • ${log.targetId}` : ""}
             </p>
             <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-              {log.reason ?? ui.labels.noReasonProvided} • {formatDateTime(log.createdAt)}
+              {log.reason ?? ui.labels.noReasonProvided} •{" "}
+              {formatDateTime(log.createdAt)}
             </p>
           </div>
         ))}
@@ -68,12 +82,18 @@ export default async function AdminAuditTrailPage({
           </p>
           <div className="flex gap-2">
             {snapshot.page > 1 ? (
-              <Link className="button-secondary" href={buildPageHref(lang, snapshot.page - 1)}>
+              <Link
+                className="button-secondary"
+                href={buildPageHref(lang, snapshot.page - 1)}
+              >
                 {previous}
               </Link>
             ) : null}
             {snapshot.page < totalPages ? (
-              <Link className="button-secondary" href={buildPageHref(lang, snapshot.page + 1)}>
+              <Link
+                className="button-secondary"
+                href={buildPageHref(lang, snapshot.page + 1)}
+              >
                 {next}
               </Link>
             ) : null}

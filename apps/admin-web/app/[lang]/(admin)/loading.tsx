@@ -33,7 +33,10 @@ export default function AdminLoading() {
             <div className="h-4 rounded-full bg-[var(--color-sand-100)]" />
           </div>
           {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="grid grid-cols-4 gap-3 rounded-[22px] border border-[var(--color-border)] bg-white/60 px-4 py-4">
+            <div
+              key={index}
+              className="grid grid-cols-4 gap-3 rounded-[22px] border border-[var(--color-border)] bg-white/60 px-4 py-4"
+            >
               <div className="h-4 rounded-full bg-[var(--color-sand-100)]" />
               <div className="h-4 rounded-full bg-[var(--color-sand-100)]" />
               <div className="h-4 rounded-full bg-[var(--color-sand-100)]" />

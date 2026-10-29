@@ -52,14 +52,17 @@ async function ensureAuthUser(
   );
 
   if (existingUser?.id) {
-    const updateResult = await supabase.auth.admin.updateUserById(existingUser.id, {
-      email,
-      password,
-      email_confirm: true,
-      user_metadata: {
-        full_name: fullName,
+    const updateResult = await supabase.auth.admin.updateUserById(
+      existingUser.id,
+      {
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: {
+          full_name: fullName,
+        },
       },
-    });
+    );
 
     if (updateResult.error) {
       throw updateResult.error;
@@ -78,7 +81,9 @@ async function ensureAuthUser(
   });
 
   if (createResult.error || !createResult.data.user) {
-    throw createResult.error ?? new Error(`Failed to create auth user for ${email}`);
+    throw (
+      createResult.error ?? new Error(`Failed to create auth user for ${email}`)
+    );
   }
 
   return createResult.data.user.id;
@@ -186,12 +191,16 @@ $$;
 
 export async function seedAdminFixtures() {
   const { secretKey, serviceRoleKey, url } = getSupabaseRuntimeEnv();
-  const authAdminClient = createClient<Database>(url, secretKey || serviceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
+  const authAdminClient = createClient<Database>(
+    url,
+    secretKey || serviceRoleKey,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
     },
-  });
+  );
 
   const superAdminId = await ensureAuthUser(authAdminClient, {
     email: e2eFixtureEmails.superAdmin,
@@ -204,7 +213,10 @@ export async function seedAdminFixtures() {
     fullName: e2eFixtureNames.opsAdmin,
   });
 
-  const fixtureSqlPath = path.join(path.dirname(adminFixtureManifestPath), "admin-fixtures.sql");
+  const fixtureSqlPath = path.join(
+    path.dirname(adminFixtureManifestPath),
+    "admin-fixtures.sql",
+  );
   await ensureDirectory(fixtureSqlPath);
   await fs.writeFile(
     fixtureSqlPath,
@@ -215,9 +227,13 @@ export async function seedAdminFixtures() {
     "utf8",
   );
 
-  await execFile("supabase", ["db", "query", "--workdir", "backend", "--file", fixtureSqlPath], {
-    cwd: repoRoot,
-  });
+  await execFile(
+    "supabase",
+    ["db", "query", "--workdir", "backend", "--file", fixtureSqlPath],
+    {
+      cwd: repoRoot,
+    },
+  );
 
   const manifest: FixtureManifest = {
     superAdmin: {
@@ -233,11 +249,17 @@ export async function seedAdminFixtures() {
   };
 
   await ensureDirectory(adminFixtureManifestPath);
-  await fs.writeFile(adminFixtureManifestPath, JSON.stringify(manifest, null, 2), "utf8");
+  await fs.writeFile(
+    adminFixtureManifestPath,
+    JSON.stringify(manifest, null, 2),
+    "utf8",
+  );
 
   return manifest;
 }
 
 export async function readAdminFixtureManifest() {
-  return JSON.parse(await fs.readFile(adminFixtureManifestPath, "utf8")) as FixtureManifest;
+  return JSON.parse(
+    await fs.readFile(adminFixtureManifestPath, "utf8"),
+  ) as FixtureManifest;
 }

@@ -32,12 +32,18 @@ export function PaginationSummary({
       </p>
       <div className="flex gap-2">
         {page > 1 ? (
-          <Link className="button-secondary" href={buildPageHref(pathname, searchParams, page - 1)}>
+          <Link
+            className="button-secondary"
+            href={buildPageHref(pathname, searchParams, page - 1)}
+          >
             {previousLabel}
           </Link>
         ) : null}
         {page < pages ? (
-          <Link className="button-secondary" href={buildPageHref(pathname, searchParams, page + 1)}>
+          <Link
+            className="button-secondary"
+            href={buildPageHref(pathname, searchParams, page + 1)}
+          >
             {nextLabel}
           </Link>
         ) : null}

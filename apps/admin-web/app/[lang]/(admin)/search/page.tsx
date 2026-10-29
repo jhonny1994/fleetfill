@@ -7,17 +7,46 @@ import { fetchGlobalSearchPage } from "@/lib/queries/admin-search";
 import { getAdminSession } from "@/lib/auth/get-admin-session";
 import type { GlobalSearchKindFilter } from "@/lib/queries/admin-types";
 
-function normalizeKind(value: string | undefined, includeAdmins: boolean): GlobalSearchKindFilter {
+function normalizeKind(
+  value: string | undefined,
+  includeAdmins: boolean,
+): GlobalSearchKindFilter {
   const allowedKinds: GlobalSearchKindFilter[] = includeAdmins
-    ? ["all", "booking", "shipment", "user", "payment", "verification", "dispute", "payout", "support", "admin"]
-    : ["all", "booking", "shipment", "user", "payment", "verification", "dispute", "payout", "support"];
+    ? [
+        "all",
+        "booking",
+        "shipment",
+        "user",
+        "payment",
+        "verification",
+        "dispute",
+        "payout",
+        "support",
+        "admin",
+      ]
+    : [
+        "all",
+        "booking",
+        "shipment",
+        "user",
+        "payment",
+        "verification",
+        "dispute",
+        "payout",
+        "support",
+      ];
 
   return allowedKinds.includes((value ?? "all") as GlobalSearchKindFilter)
     ? ((value ?? "all") as GlobalSearchKindFilter)
     : "all";
 }
 
-function buildSearchHref(lang: string, query: string, kind: GlobalSearchKindFilter, page = 1) {
+function buildSearchHref(
+  lang: string,
+  query: string,
+  kind: GlobalSearchKindFilter,
+  page = 1,
+) {
   const params = new URLSearchParams();
   if (query) params.set("q", query);
   if (kind !== "all") params.set("kind", kind);
@@ -26,14 +55,17 @@ function buildSearchHref(lang: string, query: string, kind: GlobalSearchKindFilt
   return `/${lang}/search${suffix ? `?${suffix}` : ""}`;
 }
 
-export default async function SearchPage({
-  params,
-  searchParams,
-}: {
+export default async function SearchPage(props: {
   params: Promise<{ lang: string }>;
   searchParams: Promise<{ q?: string; kind?: string; page?: string }>;
 }) {
-  const [{ lang }, filters, session] = await Promise.all([params, searchParams, getAdminSession()]);
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const [{ lang }, filters, session] = await Promise.all([
+    params,
+    searchParams,
+    getAdminSession(),
+  ]);
   const locale = resolveAppLocale(lang);
   const query = filters.q?.trim() ?? "";
   const includeAdmins = session?.adminRole === "super_admin";
@@ -49,21 +81,37 @@ export default async function SearchPage({
     pageSize: 10,
   });
   const groupLabels = dictionary.search.groups;
-  const totalPages = Math.max(1, Math.ceil(snapshot.totalResults / snapshot.pageSize));
-  const resultKinds = snapshot.groups.filter((group) => includeAdmins || group.kind !== "admin");
+  const totalPages = Math.max(
+    1,
+    Math.ceil(snapshot.totalResults / snapshot.pageSize),
+  );
+  const resultKinds = snapshot.groups.filter(
+    (group) => includeAdmins || group.kind !== "admin",
+  );
 
   return (
     <div className="space-y-4">
       <section className="panel space-y-3 p-6">
         <p className="eyebrow">{dictionary.search.eyebrow}</p>
-        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{dictionary.search.title}</h1>
-        <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">{dictionary.search.body}</p>
+        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">
+          {dictionary.search.title}
+        </h1>
+        <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
+          {dictionary.search.body}
+        </p>
       </section>
 
       <section className="panel space-y-4 p-5">
-        <form className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_auto] lg:items-end" action={`/${locale}/search`} method="get">
+        <form
+          className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_auto] lg:items-end"
+          action={`/${locale}/search`}
+          method="get"
+        >
           <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-ink-muted)]" htmlFor="search-query">
+            <label
+              className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-ink-muted)]"
+              htmlFor="search-query"
+            >
               {dictionary.search.queryLabel}
             </label>
             <input
@@ -76,7 +124,10 @@ export default async function SearchPage({
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-ink-muted)]" htmlFor="search-kind">
+            <label
+              className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-ink-muted)]"
+              htmlFor="search-kind"
+            >
               {dictionary.search.kindLabel}
             </label>
             <select
@@ -94,7 +145,9 @@ export default async function SearchPage({
               <option value="dispute">{groupLabels.dispute}</option>
               <option value="payout">{groupLabels.payout}</option>
               <option value="support">{groupLabels.support}</option>
-              {includeAdmins ? <option value="admin">{groupLabels.admin}</option> : null}
+              {includeAdmins ? (
+                <option value="admin">{groupLabels.admin}</option>
+              ) : null}
             </select>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -113,7 +166,9 @@ export default async function SearchPage({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1">
               <p className="eyebrow">{dictionary.search.summaryEyebrow}</p>
-              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{dictionary.search.summaryTitle}</h2>
+              <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">
+                {dictionary.search.summaryTitle}
+              </h2>
             </div>
             <p className="text-sm text-[var(--color-ink-muted)]">
               {snapshot.totalResults} {dictionary.search.resultCountLabel}
@@ -128,8 +183,12 @@ export default async function SearchPage({
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium text-[var(--color-ink-muted)]">{groupLabels[group.kind]}</p>
-                    <p className="text-2xl font-semibold text-[var(--color-ink-strong)]">{group.total}</p>
+                    <p className="text-sm font-medium text-[var(--color-ink-muted)]">
+                      {groupLabels[group.kind]}
+                    </p>
+                    <p className="text-2xl font-semibold text-[var(--color-ink-strong)]">
+                      {group.total}
+                    </p>
                   </div>
                   <span className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-accent)]">
                     {dictionary.search.viewAll}
@@ -142,7 +201,9 @@ export default async function SearchPage({
       ) : null}
 
       {!query ? (
-        <section className="panel p-6 text-sm text-[var(--color-ink-muted)]">{dictionary.search.emptyQuery}</section>
+        <section className="panel p-6 text-sm text-[var(--color-ink-muted)]">
+          {dictionary.search.emptyQuery}
+        </section>
       ) : snapshot.kind === "all" && snapshot.groups.length > 0 ? (
         <div className="space-y-4">
           {snapshot.groups.map((group) => (
@@ -151,10 +212,16 @@ export default async function SearchPage({
                 <div className="space-y-2">
                   <p className="eyebrow">{groupLabels[group.kind]}</p>
                   <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">
-                    {groupLabels[group.kind]} <span className="text-sm font-medium text-[var(--color-ink-muted)]">({group.total})</span>
+                    {groupLabels[group.kind]}{" "}
+                    <span className="text-sm font-medium text-[var(--color-ink-muted)]">
+                      ({group.total})
+                    </span>
                   </h2>
                 </div>
-                <Link className="button-secondary" href={buildSearchHref(locale, query, group.kind)}>
+                <Link
+                  className="button-secondary"
+                  href={buildSearchHref(locale, query, group.kind)}
+                >
                   {dictionary.search.viewAll}
                 </Link>
               </div>
@@ -167,10 +234,16 @@ export default async function SearchPage({
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="space-y-1">
-                        <p className="font-semibold text-[var(--color-ink-strong)]">{item.title}</p>
-                        <p className="text-sm text-[var(--color-ink-muted)]">{item.subtitle}</p>
+                        <p className="font-semibold text-[var(--color-ink-strong)]">
+                          {item.title}
+                        </p>
+                        <p className="text-sm text-[var(--color-ink-muted)]">
+                          {item.subtitle}
+                        </p>
                       </div>
-                      <span className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-accent)]">{item.meta}</span>
+                      <span className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-accent)]">
+                        {item.meta}
+                      </span>
                     </div>
                   </Link>
                 ))}
@@ -182,15 +255,24 @@ export default async function SearchPage({
         <section className="panel space-y-4 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-2">
-              <p className="eyebrow">{groupLabels[snapshot.selectedGroup.kind]}</p>
+              <p className="eyebrow">
+                {groupLabels[snapshot.selectedGroup.kind]}
+              </p>
               <h2 className="text-2xl font-semibold text-[var(--color-ink-strong)]">
-                {groupLabels[snapshot.selectedGroup.kind]} <span className="text-sm font-medium text-[var(--color-ink-muted)]">({snapshot.selectedGroup.total})</span>
+                {groupLabels[snapshot.selectedGroup.kind]}{" "}
+                <span className="text-sm font-medium text-[var(--color-ink-muted)]">
+                  ({snapshot.selectedGroup.total})
+                </span>
               </h2>
               <p className="text-sm text-[var(--color-ink-muted)]">
-                {dictionary.search.pageSummaryPrefix} {snapshot.page} / {totalPages}
+                {dictionary.search.pageSummaryPrefix} {snapshot.page} /{" "}
+                {totalPages}
               </p>
             </div>
-            <Link className="button-secondary" href={buildSearchHref(locale, query, "all")}>
+            <Link
+              className="button-secondary"
+              href={buildSearchHref(locale, query, "all")}
+            >
               {dictionary.search.backToAll}
             </Link>
           </div>
@@ -204,10 +286,16 @@ export default async function SearchPage({
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="space-y-1">
-                    <p className="font-semibold text-[var(--color-ink-strong)]">{item.title}</p>
-                    <p className="text-sm text-[var(--color-ink-muted)]">{item.subtitle}</p>
+                    <p className="font-semibold text-[var(--color-ink-strong)]">
+                      {item.title}
+                    </p>
+                    <p className="text-sm text-[var(--color-ink-muted)]">
+                      {item.subtitle}
+                    </p>
                   </div>
-                  <span className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-accent)]">{item.meta}</span>
+                  <span className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-accent)]">
+                    {item.meta}
+                  </span>
                 </div>
               </Link>
             ))}
@@ -215,16 +303,33 @@ export default async function SearchPage({
 
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border)] pt-4">
             <p className="text-sm text-[var(--color-ink-muted)]">
-              {dictionary.search.pageSummaryPrefix} {snapshot.page} / {totalPages}
+              {dictionary.search.pageSummaryPrefix} {snapshot.page} /{" "}
+              {totalPages}
             </p>
             <div className="flex gap-2">
               {snapshot.page > 1 ? (
-                <Link className="button-secondary" href={buildSearchHref(locale, query, snapshot.kind, snapshot.page - 1)}>
+                <Link
+                  className="button-secondary"
+                  href={buildSearchHref(
+                    locale,
+                    query,
+                    snapshot.kind,
+                    snapshot.page - 1,
+                  )}
+                >
                   {ui.pages.audit.previous}
                 </Link>
               ) : null}
               {snapshot.page < totalPages ? (
-                <Link className="button-secondary" href={buildSearchHref(locale, query, snapshot.kind, snapshot.page + 1)}>
+                <Link
+                  className="button-secondary"
+                  href={buildSearchHref(
+                    locale,
+                    query,
+                    snapshot.kind,
+                    snapshot.page + 1,
+                  )}
+                >
                   {ui.pages.audit.next}
                 </Link>
               ) : null}
@@ -233,7 +338,11 @@ export default async function SearchPage({
         </section>
       ) : (
         <section className="panel p-6 text-sm text-[var(--color-ink-muted)]">
-          {dictionary.search.noResultsPrefix} <span className="font-semibold text-[var(--color-ink-strong)]">{query}</span>.
+          {dictionary.search.noResultsPrefix}{" "}
+          <span className="font-semibold text-[var(--color-ink-strong)]">
+            {query}
+          </span>
+          .
         </section>
       )}
     </div>

@@ -9,7 +9,10 @@ import {
 
 describe("i18n config", () => {
   it("filters unsupported locales from runtime-enabled locales", () => {
-    expect(resolveEnabledLocales(["ar", "es", "fr", "ar"])).toEqual(["ar", "fr"]);
+    expect(resolveEnabledLocales(["ar", "es", "fr", "ar"])).toEqual([
+      "ar",
+      "fr",
+    ]);
   });
 
   it("falls back to all locales when runtime-enabled locales are invalid", () => {

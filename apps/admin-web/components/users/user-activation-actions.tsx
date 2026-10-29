@@ -25,10 +25,16 @@ export function UserActivationActions({
   const ui = useAdminUi();
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
-  const [pendingValues, setPendingValues] = useState<z.infer<typeof schema> | null>(null);
+  const [pendingValues, setPendingValues] = useState<z.infer<
+    typeof schema
+  > | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const form = useForm<z.input<typeof schema>, unknown, z.output<typeof schema>>({
+  const form = useForm<
+    z.input<typeof schema>,
+    unknown,
+    z.output<typeof schema>
+  >({
     resolver: zodResolver(schema),
     defaultValues: {
       reason: "",
@@ -55,12 +61,19 @@ export function UserActivationActions({
 
   return (
     <div className="space-y-3">
-      <section className={`compact-section ${isActive ? "danger-section" : ""}`}>
-        <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">{isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}</h3>
+      <section
+        className={`compact-section ${isActive ? "danger-section" : ""}`}
+      >
+        <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">
+          {isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}
+        </h3>
         <p className="text-sm leading-6 text-[var(--color-ink-muted)]">
           {isActive ? ui.actions.suspendBody : ui.actions.reactivateBody}
         </p>
-        <form className="space-y-3" onSubmit={form.handleSubmit((values) => setPendingValues(values))}>
+        <form
+          className="space-y-3"
+          onSubmit={form.handleSubmit((values) => setPendingValues(values))}
+        >
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.reason}</span>
             <textarea
@@ -69,20 +82,31 @@ export function UserActivationActions({
             />
           </label>
           <div className="form-actions">
-            <button className={isActive ? "button-danger" : "button-primary"} type="submit">
+            <button
+              className={isActive ? "button-danger" : "button-primary"}
+              type="submit"
+            >
               {isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}
             </button>
           </div>
         </form>
       </section>
 
-      {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-sm text-[var(--color-red-700)]">{error}</p>
+      ) : null}
 
       <ConfirmDialog
         open={pendingValues !== null}
         title={isActive ? ui.actions.suspendTitle : ui.actions.reactivateTitle}
-        body={isActive ? ui.actions.suspendConfirmBody : ui.actions.reactivateConfirmBody}
-        confirmLabel={isActive ? ui.actions.suspendUser : ui.actions.reactivateUser}
+        body={
+          isActive
+            ? ui.actions.suspendConfirmBody
+            : ui.actions.reactivateConfirmBody
+        }
+        confirmLabel={
+          isActive ? ui.actions.suspendUser : ui.actions.reactivateUser
+        }
         isPending={isPending}
         onCancel={() => setPendingValues(null)}
         onConfirm={confirm}

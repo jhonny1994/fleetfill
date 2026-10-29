@@ -54,8 +54,12 @@ export function AdminQueuePage({
     <div className="space-y-4">
       <section className="panel space-y-3 p-6">
         <p className="eyebrow">{eyebrow}</p>
-        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{title}</h1>
-        <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">{description}</p>
+        <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">
+          {title}
+        </h1>
+        <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
+          {description}
+        </p>
       </section>
       {view ? (
         <AdminQueueScopeTabs

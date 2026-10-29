@@ -2,18 +2,28 @@ import { AdminAccountsTable } from "@/components/admin-management/admin-accounts
 import { AdminInviteForm } from "@/components/admin-management/admin-invite-form";
 import { fetchAdminRegistrySnapshot } from "@/lib/queries/admin-admins";
 
-export default async function AdminsPage({
-  params,
-  searchParams,
-}: {
+export default async function AdminsPage(props: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ q?: string; role?: string; state?: string; page?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    role?: string;
+    state?: string;
+    page?: string;
+  }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const snapshot = await fetchAdminRegistrySnapshot({
     q: filters.q,
-    role: filters.role === "super_admin" || filters.role === "ops_admin" ? filters.role : "all",
-    state: filters.state === "active" || filters.state === "inactive" ? filters.state : "all",
+    role:
+      filters.role === "super_admin" || filters.role === "ops_admin"
+        ? filters.role
+        : "all",
+    state:
+      filters.state === "active" || filters.state === "inactive"
+        ? filters.state
+        : "all",
     page: Number(filters.page ?? "1") || 1,
   });
 

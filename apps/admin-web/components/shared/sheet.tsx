@@ -19,13 +19,16 @@ const SheetClose = DialogClose;
 const SheetTitle = DialogTitle;
 
 const sideClasses = {
-  bottom: "inset-x-0 bottom-0 max-h-[85vh] rounded-t-[var(--radius-panel)] border-t",
+  bottom:
+    "inset-x-0 bottom-0 max-h-[85vh] rounded-t-[var(--radius-panel)] border-t",
   end: "inset-y-0 end-0 h-full w-[min(84vw,340px)] border-s",
   start: "inset-y-0 start-0 h-full w-[min(84vw,340px)] border-e",
   top: "inset-x-0 top-0 max-h-[85vh] rounded-b-[var(--radius-panel)] border-b",
 } as const;
 
-type SheetContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+type SheetContentProps = React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Content
+> & {
   side?: keyof typeof sideClasses;
 };
 

@@ -60,13 +60,20 @@ export function resolveEnabledLocales(value: unknown): AppLocale[] {
   }
 
   const uniqueLocales = Array.from(
-    new Set(value.map((entry) => parseSupportedLocale(entry)).filter((entry): entry is AppLocale => entry !== null)),
+    new Set(
+      value
+        .map((entry) => parseSupportedLocale(entry))
+        .filter((entry): entry is AppLocale => entry !== null),
+    ),
   );
 
   return uniqueLocales.length > 0 ? uniqueLocales : [...locales];
 }
 
-export function resolveFallbackLocale(value: unknown, enabledLocales: readonly AppLocale[]): AppLocale {
+export function resolveFallbackLocale(
+  value: unknown,
+  enabledLocales: readonly AppLocale[],
+): AppLocale {
   const fallback = parseSupportedLocale(value);
 
   if (fallback && enabledLocales.includes(fallback)) {
@@ -76,7 +83,9 @@ export function resolveFallbackLocale(value: unknown, enabledLocales: readonly A
   return enabledLocales[0] ?? defaultLocale;
 }
 
-export function resolvePreferredLocale(acceptLanguage: string | null | undefined): AppLocale {
+export function resolvePreferredLocale(
+  acceptLanguage: string | null | undefined,
+): AppLocale {
   if (!acceptLanguage) {
     return defaultLocale;
   }

@@ -4,7 +4,10 @@ import { resolveAppLocale } from "@/lib/i18n/config";
 import { getAdminDetailCopy } from "@/lib/i18n/admin-ui";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { PayoutsQueueView } from "@/components/queues/payouts-queue-view";
-import { fetchEligiblePayoutQueue, fetchRecentReleasedPayouts } from "@/lib/queries/admin-payouts";
+import {
+  fetchEligiblePayoutQueue,
+  fetchRecentReleasedPayouts,
+} from "@/lib/queries/admin-payouts";
 
 export default async function PayoutsPage({
   params,
@@ -26,7 +29,7 @@ export default async function PayoutsPage({
       eyebrow={ui.pages.payouts.eyebrow}
       title={ui.pages.payouts.title}
       description={detailCopy.payouts.description}
-        pathname={`/${lang}/payouts`}
+      pathname={`/${lang}/payouts`}
       labels={{
         searchPlaceholder: dictionary.shell.searchPlaceholder,
         status: dictionary.common.status,
@@ -39,7 +42,11 @@ export default async function PayoutsPage({
         refreshAriaLabel: dictionary.common.refreshQueue,
       }}
     >
-      <PayoutsQueueView eligible={eligible} released={released} locale={locale} />
+      <PayoutsQueueView
+        eligible={eligible}
+        released={released}
+        locale={locale}
+      />
     </AdminQueuePage>
   );
 }

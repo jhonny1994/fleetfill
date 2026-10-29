@@ -17,21 +17,29 @@ export default async function globalSetup() {
   await page.goto(`${baseURL}/en/sign-in`);
   await page.getByLabel("Admin email").fill(fixtures.superAdmin.email);
   await page.getByLabel("Password").fill(fixtures.superAdmin.password);
-  await page.getByRole("button", { name: "Continue with admin sign in" }).click();
+  await page
+    .getByRole("button", { name: "Continue with admin sign in" })
+    .click();
 
-  const authError = page.locator("p.text-sm.text-\\[var\\(--color-red-700\\)\\]").first();
+  const authError = page
+    .locator("p.text-sm.text-\\[var\\(--color-red-700\\)\\]")
+    .first();
   const dashboardNavigation = page.waitForURL("**/en/dashboard");
   const authFailure = authError.waitFor({ state: "visible" }).then(async () => {
-    throw new Error(`Playwright auth bootstrap failed: ${await authError.innerText()}`);
-  });
-
-  await Promise.race([dashboardNavigation, authFailure]).catch(async (error) => {
-    const currentUrl = page.url();
-    const bodyText = await page.locator("body").innerText();
     throw new Error(
-      `${error instanceof Error ? error.message : String(error)}\nCurrent URL: ${currentUrl}\nBody: ${bodyText}`,
+      `Playwright auth bootstrap failed: ${await authError.innerText()}`,
     );
   });
+
+  await Promise.race([dashboardNavigation, authFailure]).catch(
+    async (error) => {
+      const currentUrl = page.url();
+      const bodyText = await page.locator("body").innerText();
+      throw new Error(
+        `${error instanceof Error ? error.message : String(error)}\nCurrent URL: ${currentUrl}\nBody: ${bodyText}`,
+      );
+    },
+  );
 
   await page.context().storageState({ path: adminStorageStatePath });
   await browser.close();

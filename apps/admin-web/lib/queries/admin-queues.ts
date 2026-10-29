@@ -6,9 +6,7 @@ import type {
   SupportQueueItem,
   VerificationQueueItem,
 } from "@/lib/queries/admin-types";
-import {
-  diffHoursFromNow,
-} from "@/lib/formatting/formatters";
+import { diffHoursFromNow } from "@/lib/formatting/formatters";
 
 const PROFILE_REQUIRED_DOCUMENTS = ["driver_identity_or_license"] as const;
 const VEHICLE_REQUIRED_DOCUMENTS = [
@@ -52,7 +50,9 @@ export async function fetchPaymentQueue({
   const normalized = query?.trim().toLowerCase();
   let proofRequest = supabase
     .from("payment_proofs")
-    .select("id, booking_id, payment_rail, status, submitted_reference, submitted_amount_dzd, submitted_at")
+    .select(
+      "id, booking_id, payment_rail, status, submitted_reference, submitted_amount_dzd, submitted_at",
+    )
     .order("submitted_at", { ascending: false });
 
   if (statuses != null && statuses.length > 0) {
@@ -69,7 +69,7 @@ export async function fetchPaymentQueue({
     throw proofError;
   }
 
-  const proofRows = ((proofs ?? []) as PaymentProofRow[]);
+  const proofRows = (proofs ?? []) as PaymentProofRow[];
   if (proofRows.length === 0) {
     return [];
   }
@@ -77,7 +77,9 @@ export async function fetchPaymentQueue({
   const bookingIds = [...new Set(proofRows.map((proof) => proof.booking_id))];
   const { data: bookings, error: bookingError } = await supabase
     .from("bookings")
-    .select("id, tracking_number, payment_reference, shipper_total_dzd, carrier_payout_dzd")
+    .select(
+      "id, tracking_number, payment_reference, shipper_total_dzd, carrier_payout_dzd",
+    )
     .in("id", bookingIds);
 
   if (bookingError) {
@@ -242,7 +244,9 @@ export async function fetchVerificationQueue({
 
   const { data: documents, error: documentError } = await supabase
     .from("verification_documents")
-    .select("id, entity_type, entity_id, document_type, status, created_at, updated_at")
+    .select(
+      "id, entity_type, entity_id, document_type, status, created_at, updated_at",
+    )
     .or(documentFilters.join(","))
     .order("created_at", { ascending: false });
 
@@ -267,69 +271,85 @@ export async function fetchVerificationQueue({
 
   const results: VerificationQueueItem[] = [];
   for (const profile of profileRows) {
-      const packet = packetMap.get(profile.id);
-      if (!packet) {
-        continue;
-      }
-      const carrierVehicles = vehiclesByCarrier.get(profile.id) ?? [];
-      const carrierDocuments = PROFILE_REQUIRED_DOCUMENTS.map((documentType) =>
-        latestByEntityType.get(`profile:${profile.id}:${documentType}`),
+    const packet = packetMap.get(profile.id);
+    if (!packet) {
+      continue;
+    }
+    const carrierVehicles = vehiclesByCarrier.get(profile.id) ?? [];
+    const carrierDocuments = PROFILE_REQUIRED_DOCUMENTS.map((documentType) =>
+      latestByEntityType.get(`profile:${profile.id}:${documentType}`),
+    ).filter(Boolean) as VerificationDocumentRow[];
+    const carrierMissingDocuments = PROFILE_REQUIRED_DOCUMENTS.filter(
+      (documentType) =>
+        !carrierDocuments.some(
+          (document) =>
+            document.document_type === documentType &&
+            document.status === "verified",
+        ),
+    );
+
+    const vehicles = carrierVehicles.map((vehicle) => {
+      const documents = VEHICLE_REQUIRED_DOCUMENTS.map((documentType) =>
+        latestByEntityType.get(`vehicle:${vehicle.id}:${documentType}`),
       ).filter(Boolean) as VerificationDocumentRow[];
-      const carrierMissingDocuments = PROFILE_REQUIRED_DOCUMENTS.filter(
+      const missingDocuments = VEHICLE_REQUIRED_DOCUMENTS.filter(
         (documentType) =>
-          !carrierDocuments.some(
-            (document) => document.document_type === documentType && document.status === "verified",
+          !documents.some(
+            (document) =>
+              document.document_type === documentType &&
+              document.status === "verified",
           ),
       );
 
-      const vehicles = carrierVehicles.map((vehicle) => {
-        const documents = VEHICLE_REQUIRED_DOCUMENTS.map((documentType) =>
-          latestByEntityType.get(`vehicle:${vehicle.id}:${documentType}`),
-        ).filter(Boolean) as VerificationDocumentRow[];
-        const missingDocuments = VEHICLE_REQUIRED_DOCUMENTS.filter(
-          (documentType) =>
-            !documents.some(
-              (document) => document.document_type === documentType && document.status === "verified",
-            ),
-        );
+      return {
+        id: vehicle.id,
+        label: `${vehicle.vehicle_type.toUpperCase()} • ${vehicle.plate_number}`,
+        pendingDocuments: documents.filter(
+          (document) => document.status === "pending",
+        ).length,
+        missingDocuments,
+      };
+    });
 
-        return {
-          id: vehicle.id,
-          label: `${vehicle.vehicle_type.toUpperCase()} • ${vehicle.plate_number}`,
-          pendingDocuments: documents.filter((document) => document.status === "pending").length,
-          missingDocuments,
-        };
-      });
-
-      const pendingDocumentCount =
-        carrierDocuments.filter((document) => document.status === "pending").length +
-        vehicles.reduce((sum, vehicle) => sum + vehicle.pendingDocuments, 0);
-      const latestRelevantUpdateAt = [profile.updated_at, ...carrierVehicles.map((vehicle) => vehicle.updated_at)]
+    const pendingDocumentCount =
+      carrierDocuments.filter((document) => document.status === "pending")
+        .length +
+      vehicles.reduce((sum, vehicle) => sum + vehicle.pendingDocuments, 0);
+    const latestRelevantUpdateAt =
+      [
+        profile.updated_at,
+        ...carrierVehicles.map((vehicle) => vehicle.updated_at),
+      ]
         .filter(Boolean)
         .sort()
         .at(-1) ?? null;
 
-      const item: VerificationQueueItem = {
-        carrierId: profile.id,
-        displayName: profile.company_name?.trim() || profile.full_name?.trim() || profile.email,
-        companyName: profile.company_name,
-        status: packet.status,
-        carrierPendingDocuments: carrierDocuments.filter((document) => document.status === "pending").length,
-        carrierMissingDocuments,
-        vehicleCount: carrierVehicles.length,
-        pendingDocumentCount,
-        latestRelevantUpdateAt,
-        vehicles,
-      };
+    const item: VerificationQueueItem = {
+      carrierId: profile.id,
+      displayName:
+        profile.company_name?.trim() ||
+        profile.full_name?.trim() ||
+        profile.email,
+      companyName: profile.company_name,
+      status: packet.status,
+      carrierPendingDocuments: carrierDocuments.filter(
+        (document) => document.status === "pending",
+      ).length,
+      carrierMissingDocuments,
+      vehicleCount: carrierVehicles.length,
+      pendingDocumentCount,
+      latestRelevantUpdateAt,
+      vehicles,
+    };
 
-      if (
-        packet.status === "verified" ||
-        item.pendingDocumentCount > 0 ||
-        item.carrierMissingDocuments.length > 0
-      ) {
-        results.push(item);
-      }
+    if (
+      packet.status === "verified" ||
+      item.pendingDocumentCount > 0 ||
+      item.carrierMissingDocuments.length > 0
+    ) {
+      results.push(item);
     }
+  }
 
   const filtered = !normalized
     ? results
@@ -350,7 +370,9 @@ export async function fetchVerificationQueue({
       if (right.pendingDocumentCount !== left.pendingDocumentCount) {
         return right.pendingDocumentCount - left.pendingDocumentCount;
       }
-      return (left.latestRelevantUpdateAt ?? "").localeCompare(right.latestRelevantUpdateAt ?? "");
+      return (left.latestRelevantUpdateAt ?? "").localeCompare(
+        right.latestRelevantUpdateAt ?? "",
+      );
     })
     .slice(0, limit);
 }
@@ -396,26 +418,44 @@ export async function fetchDisputeQueue({
   }
 
   const disputeRows = (data ?? []) as DisputeRow[];
-  const bookingIds = [...new Set(disputeRows.map((dispute) => dispute.booking_id))];
+  const bookingIds = [
+    ...new Set(disputeRows.map((dispute) => dispute.booking_id)),
+  ];
   const [bookingsResult, evidenceResult] = await Promise.all([
     bookingIds.length
-      ? supabase.from("bookings").select("id, tracking_number").in("id", bookingIds)
+      ? supabase
+          .from("bookings")
+          .select("id, tracking_number")
+          .in("id", bookingIds)
       : Promise.resolve({ data: [], error: null }),
     disputeRows.length
-      ? supabase.from("dispute_evidence").select("id, dispute_id").in("dispute_id", disputeRows.map((row) => row.id))
+      ? supabase
+          .from("dispute_evidence")
+          .select("id, dispute_id")
+          .in(
+            "dispute_id",
+            disputeRows.map((row) => row.id),
+          )
       : Promise.resolve({ data: [], error: null }),
   ]);
   if (bookingsResult.error) throw bookingsResult.error;
   if (evidenceResult.error) throw evidenceResult.error;
   const trackingMap = new Map(
-    ((bookingsResult.data ?? []) as Array<{ id: string; tracking_number: string }>).map((booking) => [
-      booking.id,
-      booking.tracking_number,
-    ]),
+    (
+      (bookingsResult.data ?? []) as Array<{
+        id: string;
+        tracking_number: string;
+      }>
+    ).map((booking) => [booking.id, booking.tracking_number]),
   );
   const evidenceCountByDispute = new Map<string, number>();
-  for (const row of (evidenceResult.data ?? []) as Array<{ dispute_id: string }>) {
-    evidenceCountByDispute.set(row.dispute_id, (evidenceCountByDispute.get(row.dispute_id) ?? 0) + 1);
+  for (const row of (evidenceResult.data ?? []) as Array<{
+    dispute_id: string;
+  }>) {
+    evidenceCountByDispute.set(
+      row.dispute_id,
+      (evidenceCountByDispute.get(row.dispute_id) ?? 0) + 1,
+    );
   }
 
   const results = disputeRows.map((dispute) => ({
@@ -436,7 +476,10 @@ export async function fetchDisputeQueue({
 
   return results
     .filter((item) =>
-      [item.bookingId, item.id, item.reason, item.trackingNumber ?? ""].join(" ").toLowerCase().includes(normalized),
+      [item.bookingId, item.id, item.reason, item.trackingNumber ?? ""]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalized),
     )
     .slice(0, limit);
 }
@@ -455,8 +498,16 @@ type SupportRow = {
   admin_last_read_at: string | null;
 };
 
-const supportStatuses = ["open", "in_progress", "waiting_for_user", "resolved", "closed"] as const;
-function isSupportStatus(value: string): value is (typeof supportStatuses)[number] {
+const supportStatuses = [
+  "open",
+  "in_progress",
+  "waiting_for_user",
+  "resolved",
+  "closed",
+] as const;
+function isSupportStatus(
+  value: string,
+): value is (typeof supportStatuses)[number] {
   return supportStatuses.includes(value as (typeof supportStatuses)[number]);
 }
 
@@ -506,7 +557,9 @@ export async function fetchSupportQueue({
     }
   }
 
-  const { data, error } = await request.order("last_message_at", { ascending: false }).limit(limit);
+  const { data, error } = await request
+    .order("last_message_at", { ascending: false })
+    .limit(limit);
   if (error) {
     throw error;
   }
@@ -524,6 +577,7 @@ export async function fetchSupportQueue({
     lastMessageAt: row.last_message_at,
     hasUnreadForAdmin:
       row.last_message_sender_type === "user" &&
-      (!row.admin_last_read_at || new Date(row.last_message_at) > new Date(row.admin_last_read_at)),
+      (!row.admin_last_read_at ||
+        new Date(row.last_message_at) > new Date(row.admin_last_read_at)),
   }));
 }

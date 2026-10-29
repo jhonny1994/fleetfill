@@ -11,7 +11,10 @@ import type { AppLocale } from "@/lib/i18n/config";
 import { getAdminActionErrorMessage, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { supportReplySchema, supportStatusSchema } from "@/lib/validation/review-actions";
+import {
+  supportReplySchema,
+  supportStatusSchema,
+} from "@/lib/validation/review-actions";
 
 export function SupportThreadActions({
   locale,
@@ -28,8 +31,12 @@ export function SupportThreadActions({
   const isTerminal = currentStatus === "resolved" || currentStatus === "closed";
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
-  const [pendingReply, setPendingReply] = useState<z.infer<typeof supportReplySchema> | null>(null);
-  const [pendingStatus, setPendingStatus] = useState<z.infer<typeof supportStatusSchema> | null>(null);
+  const [pendingReply, setPendingReply] = useState<z.infer<
+    typeof supportReplySchema
+  > | null>(null);
+  const [pendingStatus, setPendingStatus] = useState<z.infer<
+    typeof supportStatusSchema
+  > | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,13 +46,20 @@ export function SupportThreadActions({
   });
   const statusForm = useForm<z.infer<typeof supportStatusSchema>>({
     resolver: zodResolver(supportStatusSchema),
-    defaultValues: { status: currentStatus as z.infer<typeof supportStatusSchema>["status"], priority: currentPriority as z.infer<typeof supportStatusSchema>["priority"] },
+    defaultValues: {
+      status: currentStatus as z.infer<typeof supportStatusSchema>["status"],
+      priority: currentPriority as z.infer<
+        typeof supportStatusSchema
+      >["priority"],
+    },
   });
 
   useEffect(() => {
     statusForm.reset({
       status: currentStatus as z.infer<typeof supportStatusSchema>["status"],
-      priority: currentPriority as z.infer<typeof supportStatusSchema>["priority"],
+      priority: currentPriority as z.infer<
+        typeof supportStatusSchema
+      >["priority"],
     });
   }, [currentPriority, currentStatus, statusForm]);
 
@@ -71,11 +85,14 @@ export function SupportThreadActions({
     if (!pendingStatus) return;
     setIsPending(true);
     setError(null);
-    const { error: rpcError } = await supabase.rpc("admin_set_support_request_status", {
-      p_request_id: requestId,
-      p_status: pendingStatus.status,
-      p_priority: pendingStatus.priority ?? undefined,
-    });
+    const { error: rpcError } = await supabase.rpc(
+      "admin_set_support_request_status",
+      {
+        p_request_id: requestId,
+        p_status: pendingStatus.status,
+        p_priority: pendingStatus.priority ?? undefined,
+      },
+    );
     setIsPending(false);
     setPendingStatus(null);
     if (rpcError) {
@@ -89,48 +106,95 @@ export function SupportThreadActions({
     <div className="space-y-5">
       {!isTerminal ? (
         <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-          <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.reply}</h3>
-          <form className="space-y-3" onSubmit={replyForm.handleSubmit((values) => setPendingReply(values))}>
+          <h3 className="font-semibold text-[var(--color-ink-strong)]">
+            {ui.actions.reply}
+          </h3>
+          <form
+            className="space-y-3"
+            onSubmit={replyForm.handleSubmit((values) =>
+              setPendingReply(values),
+            )}
+          >
             <label className="grid gap-1 text-sm">
               <span>{ui.actions.replyLabel}</span>
-              <textarea className="min-h-28 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...replyForm.register("message")} />
+              <textarea
+                className="min-h-28 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+                {...replyForm.register("message")}
+              />
             </label>
-            <button className="button-primary" type="submit">{ui.actions.reply}</button>
+            <button className="button-primary" type="submit">
+              {ui.actions.reply}
+            </button>
           </form>
         </section>
       ) : (
         <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4 text-sm text-[var(--color-ink-muted)]">
-          <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.reply}</h3>
+          <h3 className="font-semibold text-[var(--color-ink-strong)]">
+            {ui.actions.reply}
+          </h3>
           <p>{getEnumLabel(locale, "supportStatus", currentStatus)}</p>
         </section>
       )}
 
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.updateStatus}</h3>
-        <form className="space-y-3" onSubmit={statusForm.handleSubmit((values) => setPendingStatus(values))}>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">
+          {ui.actions.updateStatus}
+        </h3>
+        <form
+          className="space-y-3"
+          onSubmit={statusForm.handleSubmit((values) =>
+            setPendingStatus(values),
+          )}
+        >
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.state}</span>
-            <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...statusForm.register("status")}>
-              <option value="open">{getEnumLabel(locale, "supportStatus", "open")}</option>
-              <option value="in_progress">{getEnumLabel(locale, "supportStatus", "in_progress")}</option>
-              <option value="waiting_for_user">{getEnumLabel(locale, "supportStatus", "waiting_for_user")}</option>
-              <option value="resolved">{getEnumLabel(locale, "supportStatus", "resolved")}</option>
-              <option value="closed">{getEnumLabel(locale, "supportStatus", "closed")}</option>
+            <select
+              className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...statusForm.register("status")}
+            >
+              <option value="open">
+                {getEnumLabel(locale, "supportStatus", "open")}
+              </option>
+              <option value="in_progress">
+                {getEnumLabel(locale, "supportStatus", "in_progress")}
+              </option>
+              <option value="waiting_for_user">
+                {getEnumLabel(locale, "supportStatus", "waiting_for_user")}
+              </option>
+              <option value="resolved">
+                {getEnumLabel(locale, "supportStatus", "resolved")}
+              </option>
+              <option value="closed">
+                {getEnumLabel(locale, "supportStatus", "closed")}
+              </option>
             </select>
           </label>
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.priority}</span>
-            <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...statusForm.register("priority")}>
-              <option value="normal">{getEnumLabel(locale, "supportPriority", "normal")}</option>
-              <option value="high">{getEnumLabel(locale, "supportPriority", "high")}</option>
-              <option value="urgent">{getEnumLabel(locale, "supportPriority", "urgent")}</option>
+            <select
+              className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...statusForm.register("priority")}
+            >
+              <option value="normal">
+                {getEnumLabel(locale, "supportPriority", "normal")}
+              </option>
+              <option value="high">
+                {getEnumLabel(locale, "supportPriority", "high")}
+              </option>
+              <option value="urgent">
+                {getEnumLabel(locale, "supportPriority", "urgent")}
+              </option>
             </select>
           </label>
-          <button className="button-secondary" type="submit">{ui.actions.updateStatus}</button>
+          <button className="button-secondary" type="submit">
+            {ui.actions.updateStatus}
+          </button>
         </form>
       </section>
 
-      {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-sm text-[var(--color-red-700)]">{error}</p>
+      ) : null}
 
       <ConfirmDialog
         open={pendingReply !== null}

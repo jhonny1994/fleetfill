@@ -32,7 +32,9 @@ export function VerificationReviewActions({
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [pendingApproveAll, setPendingApproveAll] = useState(false);
-  const [pendingDocumentReview, setPendingDocumentReview] = useState<z.infer<typeof verificationReviewSchema> | null>(null);
+  const [pendingDocumentReview, setPendingDocumentReview] = useState<z.infer<
+    typeof verificationReviewSchema
+  > | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,9 +58,12 @@ export function VerificationReviewActions({
   async function confirmApproveAll() {
     setIsPending(true);
     setError(null);
-    const { error: rpcError } = await supabase.rpc("admin_approve_verification_packet", {
-      p_carrier_id: carrierId,
-    });
+    const { error: rpcError } = await supabase.rpc(
+      "admin_approve_verification_packet",
+      {
+        p_carrier_id: carrierId,
+      },
+    );
     setIsPending(false);
     setPendingApproveAll(false);
     if (rpcError) {
@@ -72,11 +77,14 @@ export function VerificationReviewActions({
     if (!pendingDocumentReview) return;
     setIsPending(true);
     setError(null);
-    const { error: rpcError } = await supabase.rpc("admin_review_verification_document", {
-      p_document_id: pendingDocumentReview.documentId,
-      p_status: pendingDocumentReview.status,
-      p_reason: pendingDocumentReview.reason || undefined,
-    });
+    const { error: rpcError } = await supabase.rpc(
+      "admin_review_verification_document",
+      {
+        p_document_id: pendingDocumentReview.documentId,
+        p_status: pendingDocumentReview.status,
+        p_reason: pendingDocumentReview.reason || undefined,
+      },
+    );
     setIsPending(false);
     setPendingDocumentReview(null);
     if (rpcError) {
@@ -89,44 +97,71 @@ export function VerificationReviewActions({
   return (
     <div className="space-y-5">
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.approvePacket}</h3>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">
+          {ui.actions.approvePacket}
+        </h3>
         <p className="text-sm text-[var(--color-ink-muted)]">
           {ui.actions.approvePacketBody}
         </p>
-        <button className="button-primary" type="button" onClick={() => setPendingApproveAll(true)}>
+        <button
+          className="button-primary"
+          type="button"
+          onClick={() => setPendingApproveAll(true)}
+        >
           {ui.actions.approvePacket}
         </button>
       </section>
 
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.reviewDocument}</h3>
-        <form className="space-y-3" onSubmit={form.handleSubmit((values) => setPendingDocumentReview(values))}>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">
+          {ui.actions.reviewDocument}
+        </h3>
+        <form
+          className="space-y-3"
+          onSubmit={form.handleSubmit((values) =>
+            setPendingDocumentReview(values),
+          )}
+        >
           <label className="grid gap-1 text-sm">
             <span>{ui.actions.document}</span>
-            <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("documentId")}>
+            <select
+              className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...form.register("documentId")}
+            >
               {documents.map((document) => (
                 <option key={document.id} value={document.id}>
-                  {document.label} • {getEnumLabel(locale, "verification", document.status)}
+                  {document.label} •{" "}
+                  {getEnumLabel(locale, "verification", document.status)}
                 </option>
               ))}
             </select>
           </label>
           <label className="grid gap-1 text-sm">
             <span>{ui.actions.decision}</span>
-            <select className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("status")}>
+            <select
+              className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...form.register("status")}
+            >
               <option value="verified">{ui.actions.approveDocument}</option>
               <option value="rejected">{ui.actions.rejectDocument}</option>
             </select>
           </label>
           <label className="grid gap-1 text-sm">
             <span>{ui.actions.reasonRequired}</span>
-            <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("reason")} />
+            <textarea
+              className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...form.register("reason")}
+            />
           </label>
-          <button className="button-secondary" type="submit">{ui.actions.reviewDocument}</button>
+          <button className="button-secondary" type="submit">
+            {ui.actions.reviewDocument}
+          </button>
         </form>
       </section>
 
-      {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-sm text-[var(--color-red-700)]">{error}</p>
+      ) : null}
 
       <ConfirmDialog
         open={pendingApproveAll}

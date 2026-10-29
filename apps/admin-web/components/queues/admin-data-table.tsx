@@ -40,7 +40,11 @@ export function AdminDataTable<TData>({
   if (data.length === 0) {
     return (
       <div className="table-shell p-4">
-        <EmptyState eyebrow={emptyEyebrow} title={emptyTitle} body={emptyBody} />
+        <EmptyState
+          eyebrow={emptyEyebrow}
+          title={emptyTitle}
+          body={emptyBody}
+        />
       </div>
     );
   }
@@ -59,11 +63,17 @@ export function AdminDataTable<TData>({
                       onClick={header.column.getToggleSortingHandler()}
                       className="inline-flex items-center gap-2"
                     >
-                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
                       <SortIcon direction={header.column.getIsSorted()} />
                     </button>
                   ) : (
-                    flexRender(header.column.columnDef.header, header.getContext())
+                    flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )
                   )}
                 </th>
               ))}
@@ -74,7 +84,10 @@ export function AdminDataTable<TData>({
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id} className="hover:bg-white/65">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="text-sm text-[var(--color-ink-base)]">
+                <td
+                  key={cell.id}
+                  className="text-sm text-[var(--color-ink-base)]"
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

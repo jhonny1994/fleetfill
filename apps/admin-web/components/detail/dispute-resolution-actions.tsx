@@ -10,23 +10,44 @@ import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { getAdminActionErrorMessage } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { disputeCompleteSchema, disputeRefundSchema } from "@/lib/validation/review-actions";
+import {
+  disputeCompleteSchema,
+  disputeRefundSchema,
+} from "@/lib/validation/review-actions";
 
-export function DisputeResolutionActions({ disputeId, locale: _locale }: { disputeId: string; locale: string }) {
+export function DisputeResolutionActions({
+  disputeId,
+  locale: _locale,
+}: {
+  disputeId: string;
+  locale: string;
+}) {
   void _locale;
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const ui = useAdminUi();
-  const [pendingComplete, setPendingComplete] = useState<z.infer<typeof disputeCompleteSchema> | null>(null);
-  const [pendingRefund, setPendingRefund] = useState<z.infer<typeof disputeRefundSchema> | null>(null);
+  const [pendingComplete, setPendingComplete] = useState<z.infer<
+    typeof disputeCompleteSchema
+  > | null>(null);
+  const [pendingRefund, setPendingRefund] = useState<z.infer<
+    typeof disputeRefundSchema
+  > | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const completeForm = useForm<z.input<typeof disputeCompleteSchema>, unknown, z.output<typeof disputeCompleteSchema>>({
+  const completeForm = useForm<
+    z.input<typeof disputeCompleteSchema>,
+    unknown,
+    z.output<typeof disputeCompleteSchema>
+  >({
     resolver: zodResolver(disputeCompleteSchema),
     defaultValues: { resolutionNote: "" },
   });
-  const refundForm = useForm<z.input<typeof disputeRefundSchema>, unknown, z.output<typeof disputeRefundSchema>>({
+  const refundForm = useForm<
+    z.input<typeof disputeRefundSchema>,
+    unknown,
+    z.output<typeof disputeRefundSchema>
+  >({
     resolver: zodResolver(disputeRefundSchema),
     defaultValues: {
       refundAmountDzd: 0,
@@ -40,10 +61,13 @@ export function DisputeResolutionActions({ disputeId, locale: _locale }: { dispu
     if (!pendingComplete) return;
     setIsPending(true);
     setError(null);
-    const { error: rpcError } = await supabase.rpc("admin_resolve_dispute_complete", {
-      p_dispute_id: disputeId,
-      p_resolution_note: pendingComplete.resolutionNote || undefined,
-    });
+    const { error: rpcError } = await supabase.rpc(
+      "admin_resolve_dispute_complete",
+      {
+        p_dispute_id: disputeId,
+        p_resolution_note: pendingComplete.resolutionNote || undefined,
+      },
+    );
     setIsPending(false);
     setPendingComplete(null);
     if (rpcError) {
@@ -57,13 +81,16 @@ export function DisputeResolutionActions({ disputeId, locale: _locale }: { dispu
     if (!pendingRefund) return;
     setIsPending(true);
     setError(null);
-    const { error: rpcError } = await supabase.rpc("admin_resolve_dispute_refund", {
-      p_dispute_id: disputeId,
-      p_refund_amount_dzd: pendingRefund.refundAmountDzd,
-      p_refund_reason: pendingRefund.refundReason,
-      p_external_reference: pendingRefund.externalReference || undefined,
-      p_resolution_note: pendingRefund.resolutionNote || undefined,
-    });
+    const { error: rpcError } = await supabase.rpc(
+      "admin_resolve_dispute_refund",
+      {
+        p_dispute_id: disputeId,
+        p_refund_amount_dzd: pendingRefund.refundAmountDzd,
+        p_refund_reason: pendingRefund.refundReason,
+        p_external_reference: pendingRefund.externalReference || undefined,
+        p_resolution_note: pendingRefund.resolutionNote || undefined,
+      },
+    );
     setIsPending(false);
     setPendingRefund(null);
     if (rpcError) {
@@ -76,40 +103,77 @@ export function DisputeResolutionActions({ disputeId, locale: _locale }: { dispu
   return (
     <div className="space-y-5">
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.resolveWithoutRefund}</h3>
-        <form className="space-y-3" onSubmit={completeForm.handleSubmit((values) => setPendingComplete(values))}>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">
+          {ui.actions.resolveWithoutRefund}
+        </h3>
+        <form
+          className="space-y-3"
+          onSubmit={completeForm.handleSubmit((values) =>
+            setPendingComplete(values),
+          )}
+        >
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.resolutionNote}</span>
-            <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...completeForm.register("resolutionNote")} />
+            <textarea
+              className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...completeForm.register("resolutionNote")}
+            />
           </label>
-          <button className="button-primary" type="submit">{ui.actions.resolveDispute}</button>
+          <button className="button-primary" type="submit">
+            {ui.actions.resolveDispute}
+          </button>
         </form>
       </section>
 
       <section className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4">
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.issueRefund}</h3>
-        <form className="space-y-3" onSubmit={refundForm.handleSubmit((values) => setPendingRefund(values))}>
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">
+          {ui.actions.issueRefund}
+        </h3>
+        <form
+          className="space-y-3"
+          onSubmit={refundForm.handleSubmit((values) =>
+            setPendingRefund(values),
+          )}
+        >
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.refundAmount}</span>
-            <input type="number" step="1" className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...refundForm.register("refundAmountDzd")} />
+            <input
+              type="number"
+              step="1"
+              className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...refundForm.register("refundAmountDzd")}
+            />
           </label>
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.refundReason}</span>
-            <input className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...refundForm.register("refundReason")} />
+            <input
+              className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...refundForm.register("refundReason")}
+            />
           </label>
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.externalReference}</span>
-            <input className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...refundForm.register("externalReference")} />
+            <input
+              className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...refundForm.register("externalReference")}
+            />
           </label>
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.resolutionNote}</span>
-            <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...refundForm.register("resolutionNote")} />
+            <textarea
+              className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+              {...refundForm.register("resolutionNote")}
+            />
           </label>
-          <button className="button-secondary" type="submit">{ui.actions.createRefund}</button>
+          <button className="button-secondary" type="submit">
+            {ui.actions.createRefund}
+          </button>
         </form>
       </section>
 
-      {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-sm text-[var(--color-red-700)]">{error}</p>
+      ) : null}
 
       <ConfirmDialog
         open={pendingComplete !== null}

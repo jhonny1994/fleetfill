@@ -1,6 +1,9 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export async function createSignedFileUrl(bucketId: string, objectPath: string) {
+export async function createSignedFileUrl(
+  bucketId: string,
+  objectPath: string,
+) {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.functions.invoke("signed-file-url", {
     body: {

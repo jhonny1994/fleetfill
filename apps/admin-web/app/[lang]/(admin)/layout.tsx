@@ -32,7 +32,11 @@ export default async function AdminLayout({
   return (
     <div className="space-y-3 lg:grid lg:min-h-[calc(100vh-2rem)] lg:grid-cols-[244px_minmax(0,1fr)] lg:gap-3 lg:space-y-0">
       <div className="hidden lg:block">
-        <AdminSidebar locale={locale} dictionary={dictionary} adminRole={session.adminRole} />
+        <AdminSidebar
+          locale={locale}
+          dictionary={dictionary}
+          adminRole={session.adminRole}
+        />
       </div>
       <div className="space-y-3">
         <AdminHeader
@@ -42,7 +46,11 @@ export default async function AdminLayout({
           dictionary={dictionary}
           enabledLocales={settings.localization.enabledLocales}
           navigationTrigger={
-            <MobileAdminSidebar locale={locale} dictionary={dictionary} adminRole={session.adminRole} />
+            <MobileAdminSidebar
+              locale={locale}
+              dictionary={dictionary}
+              adminRole={session.adminRole}
+            />
           }
         />
         <main className="space-y-3">{children}</main>

@@ -42,12 +42,16 @@ type AdminDisputeDetail = {
   }>;
 };
 
-export async function fetchDisputeDetail(bookingId: string): Promise<AdminDisputeDetail | null> {
+export async function fetchDisputeDetail(
+  bookingId: string,
+): Promise<AdminDisputeDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: dispute, error: disputeError } = await supabase
     .from("disputes")
-    .select("id, booking_id, reason, description, status, resolution, resolution_note, created_at")
+    .select(
+      "id, booking_id, reason, description, status, resolution, resolution_note, created_at",
+    )
     .eq("booking_id", bookingId)
     .order("created_at", { ascending: false })
     .limit(1)
@@ -60,24 +64,29 @@ export async function fetchDisputeDetail(bookingId: string): Promise<AdminDisput
     return null;
   }
 
-  const [{ data: booking, error: bookingError }, { data: evidence, error: evidenceError }, { data: refunds }] =
-    await Promise.all([
-      supabase
-        .from("bookings")
-        .select("id, tracking_number, payment_reference, carrier_payout_dzd, shipper_total_dzd")
-        .eq("id", bookingId)
-        .maybeSingle(),
-      supabase
-        .from("dispute_evidence")
-        .select("id, storage_path, note, content_type, created_at")
-        .eq("dispute_id", dispute.id)
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("refunds")
-        .select("id, amount_dzd, status, reason, processed_at")
-        .eq("dispute_id", dispute.id)
-        .order("created_at", { ascending: false }),
-    ]);
+  const [
+    { data: booking, error: bookingError },
+    { data: evidence, error: evidenceError },
+    { data: refunds },
+  ] = await Promise.all([
+    supabase
+      .from("bookings")
+      .select(
+        "id, tracking_number, payment_reference, carrier_payout_dzd, shipper_total_dzd",
+      )
+      .eq("id", bookingId)
+      .maybeSingle(),
+    supabase
+      .from("dispute_evidence")
+      .select("id, storage_path, note, content_type, created_at")
+      .eq("dispute_id", dispute.id)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("refunds")
+      .select("id, amount_dzd, status, reason, processed_at")
+      .eq("dispute_id", dispute.id)
+      .order("created_at", { ascending: false }),
+  ]);
 
   if (bookingError) {
     throw bookingError;
@@ -91,7 +100,9 @@ export async function fetchDisputeDetail(bookingId: string): Promise<AdminDisput
 
   const evidenceRows = (evidence ?? []) as DisputeEvidenceRow[];
   const signedUrls = await Promise.all(
-    evidenceRows.map((item) => createSignedFileUrl("dispute-evidence", item.storage_path)),
+    evidenceRows.map((item) =>
+      createSignedFileUrl("dispute-evidence", item.storage_path),
+    ),
   );
 
   return {
@@ -100,7 +111,10 @@ export async function fetchDisputeDetail(bookingId: string): Promise<AdminDisput
       description: dispute.description,
     },
     booking: booking as BookingRow,
-    evidence: evidenceRows.map((item, index) => ({ ...item, signedUrl: signedUrls[index] })),
+    evidence: evidenceRows.map((item, index) => ({
+      ...item,
+      signedUrl: signedUrls[index],
+    })),
     refunds: (refunds ?? []) as Array<{
       id: string;
       amount_dzd: number;

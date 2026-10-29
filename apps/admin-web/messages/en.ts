@@ -17,9 +17,12 @@ const messages = {
       passwordTooShort: "Use at least 8 characters.",
       invalidCredentials: "The email or password is incorrect.",
       noSession: "We could not establish an admin session.",
-      inactiveAdmin: "This account does not have active FleetFill admin access.",
-      networkError: "The sign-in service could not be reached. Check Supabase connectivity and try again.",
-      unexpectedError: "An unexpected sign-in error occurred. Please try again in a moment.",
+      inactiveAdmin:
+        "This account does not have active FleetFill admin access.",
+      networkError:
+        "The sign-in service could not be reached. Check Supabase connectivity and try again.",
+      unexpectedError:
+        "An unexpected sign-in error occurred. Please try again in a moment.",
       signOut: "Sign out",
       openAlerts: "Open alerts",
     },
@@ -44,7 +47,8 @@ const messages = {
         superAdmin: "Super admin",
         opsAdmin: "Ops admin",
       },
-      searchPlaceholder: "Search bookings, users, disputes, payouts, or support tickets...",
+      searchPlaceholder:
+        "Search bookings, users, disputes, payouts, or support tickets...",
       searchShortcut: "Search shortcut",
       openNavigation: "Open navigation",
       closeNavigation: "Close navigation",
@@ -75,8 +79,7 @@ const messages = {
     dashboard: {
       eyebrow: "Control tower",
       title: "The FleetFill operations console starts here.",
-      body:
-        "This is the queue-first snapshot for payment review, verification packets, disputes, payouts, support tickets, and operational health. It should always answer what needs action now.",
+      body: "This is the queue-first snapshot for payment review, verification packets, disputes, payouts, support tickets, and operational health. It should always answer what needs action now.",
       metrics: {
         paymentProofs: "Payment proofs",
         verificationPackets: "Verification packets",
@@ -97,7 +100,8 @@ const messages = {
       readyForReview: "Ready for review",
       pendingDocuments: "pending",
       vehicles: "vehicles",
-      noExceptions: "No control-tower exceptions are currently above the attention threshold.",
+      noExceptions:
+        "No control-tower exceptions are currently above the attention threshold.",
       alerts: {
         deliveryReviewOverdueTitle: "Delivered bookings are waiting on review.",
         deliveryReviewOverdueBody:
@@ -115,15 +119,16 @@ const messages = {
     search: {
       eyebrow: "Operations search",
       title: "Search across operational records.",
-      body:
-        "Find the booking, shipment, user, dispute, payout, or support ticket you need, then jump straight into the matching admin workspace.",
+      body: "Find the booking, shipment, user, dispute, payout, or support ticket you need, then jump straight into the matching admin workspace.",
       queryLabel: "Search query",
       kindLabel: "Result type",
       allKinds: "All kinds",
-      placeholder: "Search bookings, shipments, users, disputes, payouts, support tickets, and more",
+      placeholder:
+        "Search bookings, shipments, users, disputes, payouts, support tickets, and more",
       submit: "Search",
       reset: "Reset",
-      emptyQuery: "Enter a reference, name, email, or operational identifier to search across FleetFill.",
+      emptyQuery:
+        "Enter a reference, name, email, or operational identifier to search across FleetFill.",
       noResultsPrefix: "No matching results for",
       summaryEyebrow: "Search summary",
       summaryTitle: "Matching result groups",
@@ -145,10 +150,484 @@ const messages = {
     },
   },
   ui: {
-    pages: { admins: { eyebrow: "Admins", title: "Active admin accounts", listBody: "Compact admin roster showing role, status, and latest activity, with detail pages handling the actual governance work.", detailBody: "Balanced admin workspace for account state, invitation history, and audit context without wasting the page on oversized forms.", accountOverview: "Admin account overview", accountOverviewBody: "Use this summary to confirm the account state before changing role access or disabling console access.", invitations: "Admin invitation history", invitationHistoryBody: "Review all invitations associated with this account, their status, and whether they are still usable.", governanceActions: "Governance actions", governanceActionsBody: "Use these actions to update admin role or remove access, with every change captured in audit logs.", inviteTitle: "Invite a new admin", inviteBody: "Admins are created by invitation only. The raw token is shown once here so it can be delivered through a secure internal channel.", invitationCreatedFor: "Invitation created for {email}", invitationMeta: "Role {role} • expires {date}", accountMeta: "Invited by {actor} • updated {date}", searchLabel: "Search admins", searchPlaceholder: "Search by name, email, role, or profile ID", totalAdmins: "Total admins", activeAdmins: "Active admins", inactiveAdmins: "Inactive admins", superAdmins: "Super admins", opsAdmins: "Ops admins", pendingInvitations: "Pending invitations", totalAdminAccounts: "admin accounts", accountPageSummary: "Page", invitationHistorySummary: "{count} recent invitations out of {total} total", notFound: "Admin account not found." }, audit: { eyebrow: "Audit & health", title: "Operational audit and delivery health", body: "This page tracks operational audit history plus the transactional email pipeline only. Account-confirmation and password-reset emails remain managed by Supabase Auth outside these logs.", auditTrail: "Admin audit trail", auditTrailBody: "Every sensitive admin action is recorded here so operators can reconstruct what changed and why.", emailLogs: "Email delivery logs", emailLogsBody: "These logs cover transactional mail flowing through FleetFill outbox jobs, dispatch workers, and provider webhooks, not Supabase Auth email.", deadLetters: "Dead-letter queue", deadLettersBody: "Retry transactional email or push jobs from here after they exhaust their automatic delivery attempts.", viewAll: "View all", backToSummary: "Back to summary", previous: "Previous", next: "Next", page: "Page", total: "total", emailDeadLetters: "Email dead letters", pushDeadLetters: "Push dead letters" }, payments: { eyebrow: "Payments", title: "Payment-proof review queue", notFound: "Payment detail not found.", actions: "Payment actions", preview: "Proof preview" }, verification: { eyebrow: "Verification", title: "Verification packet review", notFound: "Verification packet not found.", actions: "Verification actions", preview: "Latest document preview", packetDocs: "Packet documents" }, disputes: { eyebrow: "Disputes", title: "Open dispute queue", notFound: "Dispute detail not found.", actions: "Dispute actions", preview: "Evidence preview" }, payouts: { eyebrow: "Payouts", title: "Carrier payout operations", notFound: "Payout detail not found.", actions: "Payout actions", account: "Active payout account" }, support: { eyebrow: "Support", title: "Support tickets", notFound: "Support ticket not found.", actions: "Support actions", conversation: "Conversation" }, users: { eyebrow: "Users", title: "User operations and lifecycle", listBody: "Compact roster of account state, verification, and recent activity, with the detail page reserved for deeper review or lifecycle actions.", searchPlaceholder: "Search by name, email, phone, or profile ID", userLabel: "User", bookingsLabel: "bookings", notFound: "User detail not found.", controls: "Account controls" }, bookingsList: { eyebrow: "Bookings", title: "Booking registry", body: "Review bookings as an operational list with routing, parties, payment state, and direct drill-down into the primary workspace.", resultsSummary: "{from}-{to} of {total}", sidebarHint: "Use this index to investigate a booking or move into the linked shipment workspace.", searchPlaceholder: "Search by tracking number, payment reference, booking ID, or shipment ID", emptyTitle: "No bookings yet", emptyBody: "Bookings will appear here as soon as shipments begin moving through the platform.", filteredEmptyTitle: "No bookings match these filters", filteredEmptyBody: "Try widening the query or clearing the current booking-state filter.", bookingLabel: "Booking", routeLabel: "Route", partiesLabel: "Shipper / carrier", amountsLabel: "Amounts", paymentReference: "Payment reference {reference}" }, bookings: { eyebrow: "Bookings", notFound: "Booking detail not found.", linkedOps: "Linked operations", references: "References" }, settings: { eyebrow: "Settings", title: "Platform operating controls" }, shipmentsList: { eyebrow: "Shipments", title: "Shipment registry", body: "Use this list to inspect shipment demand, route coverage, linked booking state, and current operational blockers.", resultsSummary: "{from}-{to} of {total}", sidebarHint: "Every row should help an operator jump into the right shipment or booking workspace immediately.", searchPlaceholder: "Search by shipment ID, shipper ID, or description", emptyTitle: "No shipments yet", emptyBody: "Shipments will appear here once shippers begin posting lanes and load requests.", filteredEmptyTitle: "No shipments match these filters", filteredEmptyBody: "Clear one or more filters to widen the operational view.", shipmentLabel: "Shipment", routeLabel: "Route", shipperLabel: "Shipper", bookingLabel: "Linked booking", noBookingYet: "No booking yet" }, shipments: { eyebrow: "Shipments", notFound: "Shipment detail not found.", routeContext: "Route context", linkedEntities: "Linked entities", linkedBooking: "Linked booking", noBookingYet: "No booking has been created yet for this shipment.", shipperProfile: "Shipper profile" }, userDetail: { profileAndVerification: "Profile and verification", vehicles: "Vehicles", payoutAccounts: "Payout accounts", recentShipments: "Recent shipments", recentBookings: "Recent bookings", supportThreads: "Support tickets", verificationDocuments: "Verification documents", noVehicles: "No vehicles linked to this user.", noPayoutAccounts: "No payout accounts on file.", noShipments: "No shipments created by this user.", noBookings: "No bookings linked to this user.", noSupportThreads: "No support tickets for this user.", noVerificationDocuments: "No verification documents for this user." } },
-    labels: { role: "Role", adminAccount: "Admin account", state: "State", email: "Email", updated: "Updated", context: "Context", operationalContext: "Operational context", request: "Ticket", priority: "Priority", linkedBooking: "Linked booking", workflow: "Workflow", readState: "Read state", latestMessage: "Latest message", latestActivity: "Latest activity", amount: "Amount", age: "Age", subject: "Subject", reason: "Reason", verification: "Verification", accountState: "Account state", preferredLocale: "Preferred locale", carrier: "Carrier", documents: "Documents", queue: "Queue", timeline: "Timeline", current: "Current", none: "None", allRoles: "All roles", allAccountStates: "All account states", allVerificationStates: "All verification states", unknown: "Unknown", notApplicable: "Not applicable", noNote: "No note", noReasonProvided: "No reason provided", noProviderMessage: "No provider message", noSignedPreview: "No signed preview is available yet.", previewUnavailable: "Inline preview is not available for this file type.", openFile: "Open file", noTimeline: "No timeline events are available yet.", new: "New", seen: "Seen", noLinkedEntity: "No linked entity", profileDocsComplete: "Profile docs complete", vehicleDocsComplete: "Vehicle docs complete", noVehiclesYet: "No vehicles yet", noTransferNote: "No submitted payment reference", noInstitution: "No institution name", noExternalReference: "No external reference", noSubmittedReference: "No submitted reference", booking: "Booking", bookingState: "Booking state", paymentState: "Payment state", shipperTotal: "Shipper total", carrierPayout: "Carrier payout", created: "Created", weight: "Weight", volume: "Volume", noActivePayoutAccount: "No active payout account is available for this carrier.", resolutionNote: "Resolution note", refundAmount: "Refund amount (DZD)", refundReason: "Refund reason", externalReference: "External reference", evidenceItems: "Evidence items", missingOrBlocked: "Missing / blocked", vehiclesSummary: "{count} vehicles", noCarrierPacketsWaiting: "No verification packets are waiting on review.", noCarrierPacketsWaitingBody: "When a carrier uploads or resubmits verification documents, the packet will appear here.", queueScopeOpen: "Open", queueScopeHistory: "History", queueScopeAll: "All", proof: "Payment proof", expectedAmount: "Expected {amount}", noPaymentProofsWaiting: "No payment proofs need review.", noPaymentProofsWaitingBody: "This queue will repopulate when shippers submit new proofs or a review returns to pending.", noOpenDisputesWaiting: "No open disputes require attention.", noOpenDisputesWaitingBody: "Resolved and closed disputes leave this queue automatically.", pendingCount: "{count} pending", supportLinkedDispute: "Dispute {reference}", supportLinkedPayment: "Payment {reference}", noSupportThreadsWaiting: "No support tickets need triage.", noSupportThreadsWaitingBody: "Open support tickets with user follow-ups or active work will show up here.", payoutsReady: "{count} ready", payoutsRecent: "{count} recent", noEligiblePayoutsWaiting: "No payouts are ready right now.", noEligiblePayoutsWaitingBody: "Completed, secured bookings without open disputes will appear here when they are eligible for payout.", noReleasedPayoutsYet: "No payouts have been processed yet.", noReleasedPayoutsYetBody: "Released payouts will accumulate here for operational visibility and audit trail entry points." },
-    actions: { confirm: "Confirm", cancel: "Cancel", openDetail: "Open detail", working: "Working...", retry: "Retry", revoke: "Revoke invitation", revokeTitle: "Revoke this invitation?", revokeBody: "The invite token will stop working immediately and the invitation will be marked as revoked.", revokeReason: "Revoked from admin console", createInvitation: "Create invitation", creatingInvitation: "Creating invitation...", copyToken: "Copy token", expiryHours: "Expiry (hours)", viewAccount: "Open detail", changeRole: "Change role", changeRoleBody: "Use this when the account needs a durable change in admin permission level.", changeRoleTitle: "Confirm role change?", changeRoleConfirmBody: "This admin role will be updated immediately and the reason will be recorded in the audit trail.", updateRole: "Update role", deactivateAdmin: "Deactivate admin", reactivateAdmin: "Reactivate admin", deactivateAdminBody: "Disable console access until another super admin restores this account.", reactivateAdminBody: "Restore console access after review or an operational hold.", deactivateAdminTitle: "Deactivate this admin?", deactivateAdminConfirmBody: "This account will immediately lose access to the admin console until it is reactivated.", reactivateAdminTitle: "Reactivate this admin?", reactivateAdminConfirmBody: "This account will immediately regain access to the admin console.", suspendBody: "Use this when the account should be blocked from platform activity until an operator resolves the issue.", reactivateBody: "Use this to restore account access after a suspension or moderation hold.", suspendTitle: "Suspend this user?", suspendConfirmBody: "This will block the account from normal app access until an admin reactivates it.", reactivateTitle: "Reactivate this user?", reactivateConfirmBody: "This will restore the account and allow the user back into the platform.", approveProof: "Approve proof", rejectProof: "Reject proof", verifiedAmount: "Verified amount (DZD)", verifiedReference: "Verified reference", decisionNote: "Decision note", rejectionReason: "Rejection reason", approveTitle: "Approve payment proof?", approveBody: "This will verify the payment proof and unblock the secured payment state for the booking.", rejectTitle: "Reject payment proof?", rejectBody: "This will reject the submitted proof and return the booking to payment resubmission.", approvePacket: "Approve packet", approvePacketBody: "Use this when the full driver and vehicle packet is complete and ready to verify in one action.", document: "Document", decision: "Decision", approveDocument: "Approve document", rejectDocument: "Reject document", reasonRequired: "Reason (required on rejection)", approvePacketTitle: "Approve the full verification packet?", approvePacketConfirmBody: "This will mark the packet approved and send the approval notification when it becomes fully verified.", submitReviewTitle: "Submit document review?", submitReviewBody: "This will update the document review state immediately and refresh the carrier packet.", reviewDocument: "Review document", resolveWithoutRefund: "Resolve without refund", issueRefund: "Issue refund", releasePayout: "Release payout", replyLabel: "Reply", sendReplyTitle: "Send admin reply?", sendReplyBody: "This will post your reply into the support ticket and notify the user.", updateStatusTitle: "Update support ticket status?", updateStatusBody: "This will change the status and priority for the support ticket.", reply: "Send reply", updateStatus: "Update status", retryEmailDelivery: "Retry email delivery", retryEmailDeliveryTitle: "Retry this email delivery?", retryEmailDeliveryBody: "This queues a fresh high-priority email job from the failed delivery log.", retryDeadLetter: "Retry dead-letter email", retryDeadLetterTitle: "Retry this dead-letter email?", retryDeadLetterBody: "This creates a new queued email outbox job from the dead-letter payload.", suspendUser: "Suspend user", reactivateUser: "Reactivate user", paymentReview: "Payment review", payoutDetail: "Payout detail", disputeDetail: "Dispute detail", shipmentDetail: "Shipment detail", resolveDispute: "Resolve dispute", createRefund: "Create refund", resolveNoRefundTitle: "Resolve dispute without refund?", resolveNoRefundBody: "This will close the dispute and preserve the current financial outcome.", resolveWithRefundTitle: "Resolve dispute with refund?", resolveWithRefundBody: "This will create the refund workflow and close the dispute with a refund outcome.", saveSettingTitle: "Save platform setting?", saveSettingBody: "This writes directly to the audited operating-settings store and takes effect for future platform behavior.", saveSetting: "Save setting" },
-    enums: { adminRoles: { super_admin: "Super admin", ops_admin: "Ops admin" }, userRoles: { shipper: "Shipper", carrier: "Carrier", admin: "Admin" }, activity: { active: "Active", inactive: "Inactive", suspended: "Suspended" }, verification: { pending: "Pending review", verified: "Verified", rejected: "Rejected", incomplete: "Incomplete" }, invitations: { pending: "Pending", accepted: "Accepted", revoked: "Revoked", expired: "Expired" }, supportStatus: { open: "Open", in_progress: "In progress", waiting_for_user: "Waiting for user", resolved: "Resolved", closed: "Closed" }, supportPriority: { normal: "Normal", high: "High", urgent: "Urgent" }, payment: { pending: "Pending", unpaid: "Unpaid", submitted: "Submitted", proof_submitted: "Proof submitted", under_review: "Under review", under_verification: "Under verification", rejected: "Rejected", secured: "Secured", refunded: "Refunded", released: "Released", released_to_carrier: "Released to carrier" }, booking: { pending: "Pending", pending_payment: "Pending payment", payment_under_review: "Payment under review", confirmed: "Confirmed", picked_up: "Picked up", in_transit: "In transit", delivered_pending_review: "Delivered, pending review", completed: "Completed", canceled: "Canceled", cancelled: "Cancelled", disputed: "Disputed" }, shipment: { draft: "Draft", booked: "Booked", cancelled: "Cancelled", canceled: "Canceled" }, dispute: { open: "Open", resolved: "Resolved", refunded: "Refunded", closed: "Closed" }, payout: { pending: "Pending", released: "Released", sent: "Sent", failed: "Failed", processing: "Processing", cancelled: "Cancelled", canceled: "Canceled" }, entity: { profile: "Profile", vehicle: "Vehicle" }, sender: { user: "User", admin: "Admin", system: "System" }, email: { delivered: "Delivered", soft_failed: "Soft failed", failed: "Failed", dead_letter: "Dead letter" }, locale: { ar: "Arabic", fr: "French", en: "English" }, document: { driver_identity_or_license: "Driver's license", truck_registration: "Vehicle registration card", truck_insurance: "Vehicle insurance", truck_technical_inspection: "Technical inspection", transport_license: "Transport license" } },
+    pages: {
+      admins: {
+        eyebrow: "Admins",
+        title: "Active admin accounts",
+        listBody:
+          "Compact admin roster showing role, status, and latest activity, with detail pages handling the actual governance work.",
+        detailBody:
+          "Balanced admin workspace for account state, invitation history, and audit context without wasting the page on oversized forms.",
+        accountOverview: "Admin account overview",
+        accountOverviewBody:
+          "Use this summary to confirm the account state before changing role access or disabling console access.",
+        invitations: "Admin invitation history",
+        invitationHistoryBody:
+          "Review all invitations associated with this account, their status, and whether they are still usable.",
+        governanceActions: "Governance actions",
+        governanceActionsBody:
+          "Use these actions to update admin role or remove access, with every change captured in audit logs.",
+        inviteTitle: "Invite a new admin",
+        inviteBody:
+          "Admins are created by invitation only. The raw token is shown once here so it can be delivered through a secure internal channel.",
+        invitationCreatedFor: "Invitation created for {email}",
+        invitationMeta: "Role {role} • expires {date}",
+        accountMeta: "Invited by {actor} • updated {date}",
+        searchLabel: "Search admins",
+        searchPlaceholder: "Search by name, email, role, or profile ID",
+        totalAdmins: "Total admins",
+        activeAdmins: "Active admins",
+        inactiveAdmins: "Inactive admins",
+        superAdmins: "Super admins",
+        opsAdmins: "Ops admins",
+        pendingInvitations: "Pending invitations",
+        totalAdminAccounts: "admin accounts",
+        accountPageSummary: "Page",
+        invitationHistorySummary:
+          "{count} recent invitations out of {total} total",
+        notFound: "Admin account not found.",
+      },
+      audit: {
+        eyebrow: "Audit & health",
+        title: "Operational audit and delivery health",
+        body: "This page tracks operational audit history plus the transactional email pipeline only. Account-confirmation and password-reset emails remain managed by Supabase Auth outside these logs.",
+        auditTrail: "Admin audit trail",
+        auditTrailBody:
+          "Every sensitive admin action is recorded here so operators can reconstruct what changed and why.",
+        emailLogs: "Email delivery logs",
+        emailLogsBody:
+          "These logs cover transactional mail flowing through FleetFill outbox jobs, dispatch workers, and provider webhooks, not Supabase Auth email.",
+        deadLetters: "Dead-letter queue",
+        deadLettersBody:
+          "Retry transactional email or push jobs from here after they exhaust their automatic delivery attempts.",
+        viewAll: "View all",
+        backToSummary: "Back to summary",
+        previous: "Previous",
+        next: "Next",
+        page: "Page",
+        total: "total",
+        emailDeadLetters: "Email dead letters",
+        pushDeadLetters: "Push dead letters",
+      },
+      payments: {
+        eyebrow: "Payments",
+        title: "Payment-proof review queue",
+        notFound: "Payment detail not found.",
+        actions: "Payment actions",
+        preview: "Proof preview",
+      },
+      verification: {
+        eyebrow: "Verification",
+        title: "Verification packet review",
+        notFound: "Verification packet not found.",
+        actions: "Verification actions",
+        preview: "Latest document preview",
+        packetDocs: "Packet documents",
+      },
+      disputes: {
+        eyebrow: "Disputes",
+        title: "Open dispute queue",
+        notFound: "Dispute detail not found.",
+        actions: "Dispute actions",
+        preview: "Evidence preview",
+      },
+      payouts: {
+        eyebrow: "Payouts",
+        title: "Carrier payout operations",
+        notFound: "Payout detail not found.",
+        actions: "Payout actions",
+        account: "Active payout account",
+      },
+      support: {
+        eyebrow: "Support",
+        title: "Support tickets",
+        notFound: "Support ticket not found.",
+        actions: "Support actions",
+        conversation: "Conversation",
+      },
+      users: {
+        eyebrow: "Users",
+        title: "User operations and lifecycle",
+        listBody:
+          "Compact roster of account state, verification, and recent activity, with the detail page reserved for deeper review or lifecycle actions.",
+        searchPlaceholder: "Search by name, email, phone, or profile ID",
+        userLabel: "User",
+        bookingsLabel: "bookings",
+        notFound: "User detail not found.",
+        controls: "Account controls",
+      },
+      bookingsList: {
+        eyebrow: "Bookings",
+        title: "Booking registry",
+        body: "Review bookings as an operational list with routing, parties, payment state, and direct drill-down into the primary workspace.",
+        resultsSummary: "{from}-{to} of {total}",
+        sidebarHint:
+          "Use this index to investigate a booking or move into the linked shipment workspace.",
+        searchPlaceholder:
+          "Search by tracking number, payment reference, booking ID, or shipment ID",
+        emptyTitle: "No bookings yet",
+        emptyBody:
+          "Bookings will appear here as soon as shipments begin moving through the platform.",
+        filteredEmptyTitle: "No bookings match these filters",
+        filteredEmptyBody:
+          "Try widening the query or clearing the current booking-state filter.",
+        bookingLabel: "Booking",
+        routeLabel: "Route",
+        partiesLabel: "Shipper / carrier",
+        amountsLabel: "Amounts",
+        paymentReference: "Payment reference {reference}",
+      },
+      bookings: {
+        eyebrow: "Bookings",
+        notFound: "Booking detail not found.",
+        linkedOps: "Linked operations",
+        references: "References",
+      },
+      settings: { eyebrow: "Settings", title: "Platform operating controls" },
+      shipmentsList: {
+        eyebrow: "Shipments",
+        title: "Shipment registry",
+        body: "Use this list to inspect shipment demand, route coverage, linked booking state, and current operational blockers.",
+        resultsSummary: "{from}-{to} of {total}",
+        sidebarHint:
+          "Every row should help an operator jump into the right shipment or booking workspace immediately.",
+        searchPlaceholder: "Search by shipment ID, shipper ID, or description",
+        emptyTitle: "No shipments yet",
+        emptyBody:
+          "Shipments will appear here once shippers begin posting lanes and load requests.",
+        filteredEmptyTitle: "No shipments match these filters",
+        filteredEmptyBody:
+          "Clear one or more filters to widen the operational view.",
+        shipmentLabel: "Shipment",
+        routeLabel: "Route",
+        shipperLabel: "Shipper",
+        bookingLabel: "Linked booking",
+        noBookingYet: "No booking yet",
+      },
+      shipments: {
+        eyebrow: "Shipments",
+        notFound: "Shipment detail not found.",
+        routeContext: "Route context",
+        linkedEntities: "Linked entities",
+        linkedBooking: "Linked booking",
+        noBookingYet: "No booking has been created yet for this shipment.",
+        shipperProfile: "Shipper profile",
+      },
+      userDetail: {
+        profileAndVerification: "Profile and verification",
+        vehicles: "Vehicles",
+        payoutAccounts: "Payout accounts",
+        recentShipments: "Recent shipments",
+        recentBookings: "Recent bookings",
+        supportThreads: "Support tickets",
+        verificationDocuments: "Verification documents",
+        noVehicles: "No vehicles linked to this user.",
+        noPayoutAccounts: "No payout accounts on file.",
+        noShipments: "No shipments created by this user.",
+        noBookings: "No bookings linked to this user.",
+        noSupportThreads: "No support tickets for this user.",
+        noVerificationDocuments: "No verification documents for this user.",
+      },
+    },
+    labels: {
+      role: "Role",
+      adminAccount: "Admin account",
+      state: "State",
+      email: "Email",
+      updated: "Updated",
+      context: "Context",
+      operationalContext: "Operational context",
+      request: "Ticket",
+      priority: "Priority",
+      linkedBooking: "Linked booking",
+      workflow: "Workflow",
+      readState: "Read state",
+      latestMessage: "Latest message",
+      latestActivity: "Latest activity",
+      amount: "Amount",
+      age: "Age",
+      subject: "Subject",
+      reason: "Reason",
+      verification: "Verification",
+      accountState: "Account state",
+      preferredLocale: "Preferred locale",
+      carrier: "Carrier",
+      documents: "Documents",
+      queue: "Queue",
+      timeline: "Timeline",
+      current: "Current",
+      none: "None",
+      allRoles: "All roles",
+      allAccountStates: "All account states",
+      allVerificationStates: "All verification states",
+      unknown: "Unknown",
+      notApplicable: "Not applicable",
+      noNote: "No note",
+      noReasonProvided: "No reason provided",
+      noProviderMessage: "No provider message",
+      noSignedPreview: "No signed preview is available yet.",
+      previewUnavailable: "Inline preview is not available for this file type.",
+      openFile: "Open file",
+      noTimeline: "No timeline events are available yet.",
+      new: "New",
+      seen: "Seen",
+      noLinkedEntity: "No linked entity",
+      profileDocsComplete: "Profile docs complete",
+      vehicleDocsComplete: "Vehicle docs complete",
+      noVehiclesYet: "No vehicles yet",
+      noTransferNote: "No submitted payment reference",
+      noInstitution: "No institution name",
+      noExternalReference: "No external reference",
+      noSubmittedReference: "No submitted reference",
+      booking: "Booking",
+      bookingState: "Booking state",
+      paymentState: "Payment state",
+      shipperTotal: "Shipper total",
+      carrierPayout: "Carrier payout",
+      created: "Created",
+      weight: "Weight",
+      volume: "Volume",
+      noActivePayoutAccount:
+        "No active payout account is available for this carrier.",
+      resolutionNote: "Resolution note",
+      refundAmount: "Refund amount (DZD)",
+      refundReason: "Refund reason",
+      externalReference: "External reference",
+      evidenceItems: "Evidence items",
+      missingOrBlocked: "Missing / blocked",
+      vehiclesSummary: "{count} vehicles",
+      noCarrierPacketsWaiting: "No verification packets are waiting on review.",
+      noCarrierPacketsWaitingBody:
+        "When a carrier uploads or resubmits verification documents, the packet will appear here.",
+      queueScopeOpen: "Open",
+      queueScopeHistory: "History",
+      queueScopeAll: "All",
+      proof: "Payment proof",
+      expectedAmount: "Expected {amount}",
+      noPaymentProofsWaiting: "No payment proofs need review.",
+      noPaymentProofsWaitingBody:
+        "This queue will repopulate when shippers submit new proofs or a review returns to pending.",
+      noOpenDisputesWaiting: "No open disputes require attention.",
+      noOpenDisputesWaitingBody:
+        "Resolved and closed disputes leave this queue automatically.",
+      pendingCount: "{count} pending",
+      supportLinkedDispute: "Dispute {reference}",
+      supportLinkedPayment: "Payment {reference}",
+      noSupportThreadsWaiting: "No support tickets need triage.",
+      noSupportThreadsWaitingBody:
+        "Open support tickets with user follow-ups or active work will show up here.",
+      payoutsReady: "{count} ready",
+      payoutsRecent: "{count} recent",
+      noEligiblePayoutsWaiting: "No payouts are ready right now.",
+      noEligiblePayoutsWaitingBody:
+        "Completed, secured bookings without open disputes will appear here when they are eligible for payout.",
+      noReleasedPayoutsYet: "No payouts have been processed yet.",
+      noReleasedPayoutsYetBody:
+        "Released payouts will accumulate here for operational visibility and audit trail entry points.",
+    },
+    actions: {
+      confirm: "Confirm",
+      cancel: "Cancel",
+      openDetail: "Open detail",
+      working: "Working...",
+      retry: "Retry",
+      revoke: "Revoke invitation",
+      revokeTitle: "Revoke this invitation?",
+      revokeBody:
+        "The invite token will stop working immediately and the invitation will be marked as revoked.",
+      revokeReason: "Revoked from admin console",
+      createInvitation: "Create invitation",
+      creatingInvitation: "Creating invitation...",
+      copyToken: "Copy token",
+      expiryHours: "Expiry (hours)",
+      viewAccount: "Open detail",
+      changeRole: "Change role",
+      changeRoleBody:
+        "Use this when the account needs a durable change in admin permission level.",
+      changeRoleTitle: "Confirm role change?",
+      changeRoleConfirmBody:
+        "This admin role will be updated immediately and the reason will be recorded in the audit trail.",
+      updateRole: "Update role",
+      deactivateAdmin: "Deactivate admin",
+      reactivateAdmin: "Reactivate admin",
+      deactivateAdminBody:
+        "Disable console access until another super admin restores this account.",
+      reactivateAdminBody:
+        "Restore console access after review or an operational hold.",
+      deactivateAdminTitle: "Deactivate this admin?",
+      deactivateAdminConfirmBody:
+        "This account will immediately lose access to the admin console until it is reactivated.",
+      reactivateAdminTitle: "Reactivate this admin?",
+      reactivateAdminConfirmBody:
+        "This account will immediately regain access to the admin console.",
+      suspendBody:
+        "Use this when the account should be blocked from platform activity until an operator resolves the issue.",
+      reactivateBody:
+        "Use this to restore account access after a suspension or moderation hold.",
+      suspendTitle: "Suspend this user?",
+      suspendConfirmBody:
+        "This will block the account from normal app access until an admin reactivates it.",
+      reactivateTitle: "Reactivate this user?",
+      reactivateConfirmBody:
+        "This will restore the account and allow the user back into the platform.",
+      approveProof: "Approve proof",
+      rejectProof: "Reject proof",
+      verifiedAmount: "Verified amount (DZD)",
+      verifiedReference: "Verified reference",
+      decisionNote: "Decision note",
+      rejectionReason: "Rejection reason",
+      approveTitle: "Approve payment proof?",
+      approveBody:
+        "This will verify the payment proof and unblock the secured payment state for the booking.",
+      rejectTitle: "Reject payment proof?",
+      rejectBody:
+        "This will reject the submitted proof and return the booking to payment resubmission.",
+      approvePacket: "Approve packet",
+      approvePacketBody:
+        "Use this when the full driver and vehicle packet is complete and ready to verify in one action.",
+      document: "Document",
+      decision: "Decision",
+      approveDocument: "Approve document",
+      rejectDocument: "Reject document",
+      reasonRequired: "Reason (required on rejection)",
+      approvePacketTitle: "Approve the full verification packet?",
+      approvePacketConfirmBody:
+        "This will mark the packet approved and send the approval notification when it becomes fully verified.",
+      submitReviewTitle: "Submit document review?",
+      submitReviewBody:
+        "This will update the document review state immediately and refresh the carrier packet.",
+      reviewDocument: "Review document",
+      resolveWithoutRefund: "Resolve without refund",
+      issueRefund: "Issue refund",
+      releasePayout: "Release payout",
+      replyLabel: "Reply",
+      sendReplyTitle: "Send admin reply?",
+      sendReplyBody:
+        "This will post your reply into the support ticket and notify the user.",
+      updateStatusTitle: "Update support ticket status?",
+      updateStatusBody:
+        "This will change the status and priority for the support ticket.",
+      reply: "Send reply",
+      updateStatus: "Update status",
+      retryEmailDelivery: "Retry email delivery",
+      retryEmailDeliveryTitle: "Retry this email delivery?",
+      retryEmailDeliveryBody:
+        "This queues a fresh high-priority email job from the failed delivery log.",
+      retryDeadLetter: "Retry dead-letter email",
+      retryDeadLetterTitle: "Retry this dead-letter email?",
+      retryDeadLetterBody:
+        "This creates a new queued email outbox job from the dead-letter payload.",
+      suspendUser: "Suspend user",
+      reactivateUser: "Reactivate user",
+      paymentReview: "Payment review",
+      payoutDetail: "Payout detail",
+      disputeDetail: "Dispute detail",
+      shipmentDetail: "Shipment detail",
+      resolveDispute: "Resolve dispute",
+      createRefund: "Create refund",
+      resolveNoRefundTitle: "Resolve dispute without refund?",
+      resolveNoRefundBody:
+        "This will close the dispute and preserve the current financial outcome.",
+      resolveWithRefundTitle: "Resolve dispute with refund?",
+      resolveWithRefundBody:
+        "This will create the refund workflow and close the dispute with a refund outcome.",
+      saveSettingTitle: "Save platform setting?",
+      saveSettingBody:
+        "This writes directly to the audited operating-settings store and takes effect for future platform behavior.",
+      saveSetting: "Save setting",
+    },
+    enums: {
+      adminRoles: { super_admin: "Super admin", ops_admin: "Ops admin" },
+      userRoles: { shipper: "Shipper", carrier: "Carrier", admin: "Admin" },
+      activity: {
+        active: "Active",
+        inactive: "Inactive",
+        suspended: "Suspended",
+      },
+      verification: {
+        pending: "Pending review",
+        verified: "Verified",
+        rejected: "Rejected",
+        incomplete: "Incomplete",
+      },
+      invitations: {
+        pending: "Pending",
+        accepted: "Accepted",
+        revoked: "Revoked",
+        expired: "Expired",
+      },
+      supportStatus: {
+        open: "Open",
+        in_progress: "In progress",
+        waiting_for_user: "Waiting for user",
+        resolved: "Resolved",
+        closed: "Closed",
+      },
+      supportPriority: { normal: "Normal", high: "High", urgent: "Urgent" },
+      payment: {
+        pending: "Pending",
+        unpaid: "Unpaid",
+        submitted: "Submitted",
+        proof_submitted: "Proof submitted",
+        under_review: "Under review",
+        under_verification: "Under verification",
+        rejected: "Rejected",
+        secured: "Secured",
+        refunded: "Refunded",
+        released: "Released",
+        released_to_carrier: "Released to carrier",
+      },
+      booking: {
+        pending: "Pending",
+        pending_payment: "Pending payment",
+        payment_under_review: "Payment under review",
+        confirmed: "Confirmed",
+        picked_up: "Picked up",
+        in_transit: "In transit",
+        delivered_pending_review: "Delivered, pending review",
+        completed: "Completed",
+        canceled: "Canceled",
+        cancelled: "Cancelled",
+        disputed: "Disputed",
+      },
+      shipment: {
+        draft: "Draft",
+        booked: "Booked",
+        cancelled: "Cancelled",
+        canceled: "Canceled",
+      },
+      dispute: {
+        open: "Open",
+        resolved: "Resolved",
+        refunded: "Refunded",
+        closed: "Closed",
+      },
+      payout: {
+        pending: "Pending",
+        released: "Released",
+        sent: "Sent",
+        failed: "Failed",
+        processing: "Processing",
+        cancelled: "Cancelled",
+        canceled: "Canceled",
+      },
+      entity: { profile: "Profile", vehicle: "Vehicle" },
+      sender: { user: "User", admin: "Admin", system: "System" },
+      email: {
+        delivered: "Delivered",
+        soft_failed: "Soft failed",
+        failed: "Failed",
+        dead_letter: "Dead letter",
+      },
+      locale: { ar: "Arabic", fr: "French", en: "English" },
+      document: {
+        driver_identity_or_license: "Driver's license",
+        truck_registration: "Vehicle registration card",
+        truck_insurance: "Vehicle insurance",
+        truck_technical_inspection: "Technical inspection",
+        transport_license: "Transport license",
+      },
+    },
     detail: {
       bookings: {
         description:
@@ -174,9 +653,11 @@ const messages = {
         blockerPaymentReviewPending: "Current blocker: payment review pending",
         blockerTemplate: "Current blocker: {reason}",
         nextActionResolveDispute: "Next action: resolve the open dispute",
-        nextActionWaitForShipperPayment: "Next action: wait for shipper payment",
+        nextActionWaitForShipperPayment:
+          "Next action: wait for shipper payment",
         nextActionReviewPaymentProof: "Next action: review payment proof",
-        nextActionReleaseRequestedPayout: "Next action: release the requested payout",
+        nextActionReleaseRequestedPayout:
+          "Next action: release the requested payout",
         nextActionMonitorDeliveryReview: "Next action: monitor delivery review",
         nextActionNoneBookingComplete: "Next action: none, booking is complete",
         nextActionMonitorProgress: "Next action: monitor booking progress",
@@ -214,20 +695,24 @@ const messages = {
       },
       payouts: {
         title: "Payout release for {trackingNumber}",
-        description: "Confirm the carrier payout account and release state before creating the payout record for the booking.",
+        description:
+          "Confirm the carrier payout account and release state before creating the payout record for the booking.",
         payoutState: "Current payout",
         notReleased: "Not released",
         payoutEntry: "Payout {state}",
         externalReferenceLabel: "External reference",
       },
       support: {
-        description: "Reply to the user and move the thread through the support workflow without leaving the admin console.",
-        actionsBody: "Reply and status changes call the same audited support RPCs used by the platform.",
+        description:
+          "Reply to the user and move the thread through the support workflow without leaving the admin console.",
+        actionsBody:
+          "Reply and status changes call the same audited support RPCs used by the platform.",
       },
       shipments: {
         eyebrow: "Shipments",
         notFound: "Shipment detail not found.",
-        description: "Canonical shipment workspace for admin search and operational cross-checks.",
+        description:
+          "Canonical shipment workspace for admin search and operational cross-checks.",
         weightLabel: "Weight",
         volumeLabel: "Volume",
         createdLabel: "Created",
@@ -259,15 +744,20 @@ const messages = {
         description:
           "These settings control mobile runtime policy, pricing guardrails, localization, and operational safety flags.",
         runtimeTitle: "Runtime policy",
-        runtimeBody: "Maintenance mode and minimum supported mobile versions are the highest-impact platform controls.",
+        runtimeBody:
+          "Maintenance mode and minimum supported mobile versions are the highest-impact platform controls.",
         pricingTitle: "Pricing guardrails",
-        pricingBody: "These values shape price composition and payment review deadlines for all new bookings.",
+        pricingBody:
+          "These values shape price composition and payment review deadlines for all new bookings.",
         reviewTitle: "Delivery review",
-        reviewBody: "The grace window determines when delivered bookings become overdue for operational review.",
+        reviewBody:
+          "The grace window determines when delivered bookings become overdue for operational review.",
         featureTitle: "Feature flags",
-        featureBody: "Keep these small and operationally meaningful. This is not a dumping ground for product logic.",
+        featureBody:
+          "Keep these small and operationally meaningful. This is not a dumping ground for product logic.",
         localizationTitle: "Localization policy",
-        localizationBody: "These values control the fallback locale and the set of enabled locales used across the platform.",
+        localizationBody:
+          "These values control the fallback locale and the set of enabled locales used across the platform.",
         maintenanceMode: "Maintenance mode",
         forceUpdateRequired: "Force update required",
         minimumAndroidVersion: "Minimum Android version",
@@ -288,7 +778,8 @@ const messages = {
         enabledLocales: "Enabled locales",
         saveLocalizationPolicy: "Save localization policy",
         auditDescriptions: {
-          app_runtime: "Admin-controlled runtime policy for maintenance and minimum supported versions",
+          app_runtime:
+            "Admin-controlled runtime policy for maintenance and minimum supported versions",
           booking_pricing: "Admin-controlled booking pricing policy",
           delivery_review: "Admin-controlled delivery review timing",
           feature_flags: "Admin-controlled runtime feature flags",
@@ -394,11 +885,14 @@ const messages = {
       requested: "Requested",
       fulfilled: "Released",
       cancelled: "Cancelled",
-      booking_not_completed: "Payout requests open only after the booking is completed.",
+      booking_not_completed:
+        "Payout requests open only after the booking is completed.",
       payment_not_secured: "Payout remains blocked until payment is secured.",
       open_dispute: "Payout is blocked while an open dispute exists.",
-      payout_account_required: "Add an active payout account before requesting payout.",
-      payout_already_released: "Payout has already been released for this booking.",
+      payout_account_required:
+        "Add an active payout account before requesting payout.",
+      payout_already_released:
+        "Payout has already been released for this booking.",
       not_requested: "Not requested",
     },
     notificationTemplateLabels: {
@@ -417,17 +911,25 @@ const messages = {
       verification_packet_approved_title: "Verification packet approved",
     },
     healthErrorLabels: {
-      unknown_push_error: "Push delivery failed because the push/Firebase configuration is invalid.",
-      firebase_service_account_invalid: "The Firebase push service account is invalid and needs to be corrected.",
+      unknown_push_error:
+        "Push delivery failed because the push/Firebase configuration is invalid.",
+      firebase_service_account_invalid:
+        "The Firebase push service account is invalid and needs to be corrected.",
     },
     actionErrors: {
-      generic: "This action could not be completed right now. Please try again in a moment.",
-      network: "The admin action could not reach the backend service. Check connectivity and try again.",
-      timeout: "The admin action timed out before the backend responded. Please retry.",
+      generic:
+        "This action could not be completed right now. Please try again in a moment.",
+      network:
+        "The admin action could not reach the backend service. Check connectivity and try again.",
+      timeout:
+        "The admin action timed out before the backend responded. Please retry.",
       forbidden: "You do not have permission to perform this admin action.",
-      notFound: "The requested admin record was not found anymore. Refresh the page and try again.",
-      conflict: "This admin action conflicts with the latest record state. Refresh the page and try again.",
-      validation: "The submitted admin action data is invalid or incomplete. Review the form and try again.",
+      notFound:
+        "The requested admin record was not found anymore. Refresh the page and try again.",
+      conflict:
+        "This admin action conflicts with the latest record state. Refresh the page and try again.",
+      validation:
+        "The submitted admin action data is invalid or incomplete. Review the form and try again.",
     },
   },
 } as const;

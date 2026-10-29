@@ -25,11 +25,21 @@ export function AdminHeader({
   return (
     <header className="panel flex flex-col gap-3 p-3 lg:flex-row lg:items-center">
       <div className="flex min-w-0 items-center gap-2.5 lg:flex-1">
-        {navigationTrigger ? <div className="lg:hidden">{navigationTrigger}</div> : null}
-        <CommandSearch locale={locale} placeholder={dictionary.shell.searchPlaceholder} shortcutLabel="/" />
+        {navigationTrigger ? (
+          <div className="lg:hidden">{navigationTrigger}</div>
+        ) : null}
+        <CommandSearch
+          locale={locale}
+          placeholder={dictionary.shell.searchPlaceholder}
+          shortcutLabel="/"
+        />
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <AdminLocaleSwitcher locale={locale} dictionary={dictionary} availableLocales={enabledLocales} />
+        <AdminLocaleSwitcher
+          locale={locale}
+          dictionary={dictionary}
+          availableLocales={enabledLocales}
+        />
         <button
           type="button"
           className="admin-toolbar-icon"

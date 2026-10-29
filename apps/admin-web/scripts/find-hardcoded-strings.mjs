@@ -3,7 +3,9 @@ import path from "node:path";
 import ts from "typescript";
 
 const ROOT = process.cwd();
-const TARGETS = ["app", "components"].map((segment) => path.join(ROOT, segment));
+const TARGETS = ["app", "components"].map((segment) =>
+  path.join(ROOT, segment),
+);
 const EXCLUDED = [".next", "node_modules", "tests"];
 const TEXT_REGEX = /[\p{L}]/u;
 const IGNORE_TEXT = new Set(["->", "—"]);
@@ -30,7 +32,10 @@ function walk(dir) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...walk(fullPath));
-    } else if (/\.(tsx|ts)$/.test(entry.name) && !/\.(test|spec)\.(tsx|ts)$/.test(entry.name)) {
+    } else if (
+      /\.(tsx|ts)$/.test(entry.name) &&
+      !/\.(test|spec)\.(tsx|ts)$/.test(entry.name)
+    ) {
       files.push(fullPath);
     }
   }
@@ -42,15 +47,24 @@ function report(file, node, text, findings) {
   if (!trimmed || IGNORE_TEXT.has(trimmed) || !TEXT_REGEX.test(trimmed)) {
     return;
   }
-  if (/^[a-z0-9_:[\]\-./()%#\s]+$/i.test(trimmed) && !/\s[a-z]/i.test(trimmed)) {
+  if (
+    /^[a-z0-9_:[\]\-./()%#\s]+$/i.test(trimmed) &&
+    !/\s[a-z]/i.test(trimmed)
+  ) {
     return;
   }
-  const { line } = ts.getLineAndCharacterOfPosition(node.getSourceFile(), node.getStart());
+  const { line } = ts.getLineAndCharacterOfPosition(
+    node.getSourceFile(),
+    node.getStart(),
+  );
   findings.push(`${path.relative(ROOT, file)}:${line + 1}: ${trimmed}`);
 }
 
 function shouldCheckLiteral(node) {
-  if (ts.isImportDeclaration(node.parent) || ts.isExportDeclaration(node.parent)) {
+  if (
+    ts.isImportDeclaration(node.parent) ||
+    ts.isExportDeclaration(node.parent)
+  ) {
     return false;
   }
   if (ts.isPropertyAssignment(node.parent)) {
@@ -72,12 +86,22 @@ const findings = [];
 for (const target of TARGETS) {
   for (const file of walk(target)) {
     const source = fs.readFileSync(file, "utf8");
-    const sourceFile = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+    const sourceFile = ts.createSourceFile(
+      file,
+      source,
+      ts.ScriptTarget.Latest,
+      true,
+      file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+    );
 
     function visit(node) {
       if (ts.isJsxText(node)) {
         report(file, node, node.getText(sourceFile), findings);
-      } else if ((ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) && shouldCheckLiteral(node)) {
+      } else if (
+        (ts.isStringLiteral(node) ||
+          ts.isNoSubstitutionTemplateLiteral(node)) &&
+        shouldCheckLiteral(node)
+      ) {
         report(file, node, node.text, findings);
       }
       ts.forEachChild(node, visit);

@@ -18,7 +18,9 @@ export function TimelinePanel({
 }) {
   return (
     <section className="panel space-y-4 p-5">
-      <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{title}</h2>
+      <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">
+        {title}
+      </h2>
       {items.length === 0 ? (
         <p className="text-sm text-[var(--color-ink-muted)]">{emptyLabel}</p>
       ) : (
@@ -35,7 +37,9 @@ export function TimelinePanel({
               <div className="relative flex w-5 justify-center">
                 <span
                   className={`mt-1.5 size-2 rounded-full ${
-                    index === 0 ? "bg-[var(--color-accent-strong)]" : "bg-[var(--color-accent)]"
+                    index === 0
+                      ? "bg-[var(--color-accent-strong)]"
+                      : "bg-[var(--color-accent)]"
                   }`}
                 />
                 {index < items.length - 1 ? (
@@ -48,9 +52,17 @@ export function TimelinePanel({
                     {currentLabel}
                   </span>
                 ) : null}
-                <p className="font-medium text-[var(--color-ink-strong)]">{item.title}</p>
-                <p className="text-sm text-[var(--color-ink-muted)]">{item.detail}</p>
-                {item.at ? <p className="text-xs text-[var(--color-ink-muted)]">{item.at}</p> : null}
+                <p className="font-medium text-[var(--color-ink-strong)]">
+                  {item.title}
+                </p>
+                <p className="text-sm text-[var(--color-ink-muted)]">
+                  {item.detail}
+                </p>
+                {item.at ? (
+                  <p className="text-xs text-[var(--color-ink-muted)]">
+                    {item.at}
+                  </p>
+                ) : null}
               </div>
             </li>
           ))}

@@ -8,7 +8,10 @@ import { formatDateTime } from "@/lib/formatting/formatters";
 import { formatTemplate, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
-import { fetchShipmentIndexPage, shipmentIndexStatuses } from "@/lib/queries/admin-operations";
+import {
+  fetchShipmentIndexPage,
+  shipmentIndexStatuses,
+} from "@/lib/queries/admin-operations";
 
 function buildPageHref(
   locale: string,
@@ -39,13 +42,12 @@ function buildPageHref(
   return query ? `/${locale}/shipments?${query}` : `/${locale}/shipments`;
 }
 
-export default async function ShipmentsPage({
-  params,
-  searchParams,
-}: {
+export default async function ShipmentsPage(props: {
   params: Promise<{ lang: string }>;
   searchParams: Promise<{ q?: string; status?: string; page?: string }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const locale = resolveAppLocale(lang);
   const query = filters.q?.trim();
@@ -57,11 +59,19 @@ export default async function ShipmentsPage({
     status,
     page: requestedPage,
   });
-  const summaryFrom = snapshot.total === 0 ? 0 : (snapshot.page - 1) * snapshot.pageSize + 1;
-  const summaryTo = snapshot.total === 0 ? 0 : Math.min(snapshot.page * snapshot.pageSize, snapshot.total);
+  const summaryFrom =
+    snapshot.total === 0 ? 0 : (snapshot.page - 1) * snapshot.pageSize + 1;
+  const summaryTo =
+    snapshot.total === 0
+      ? 0
+      : Math.min(snapshot.page * snapshot.pageSize, snapshot.total);
   const hasFilters = Boolean(query || status);
-  const emptyTitle = hasFilters ? ui.pages.shipmentsList.filteredEmptyTitle : ui.pages.shipmentsList.emptyTitle;
-  const emptyBody = hasFilters ? ui.pages.shipmentsList.filteredEmptyBody : ui.pages.shipmentsList.emptyBody;
+  const emptyTitle = hasFilters
+    ? ui.pages.shipmentsList.filteredEmptyTitle
+    : ui.pages.shipmentsList.emptyTitle;
+  const emptyBody = hasFilters
+    ? ui.pages.shipmentsList.filteredEmptyBody
+    : ui.pages.shipmentsList.emptyBody;
 
   return (
     <div className="space-y-4">
@@ -69,8 +79,12 @@ export default async function ShipmentsPage({
         <p className="eyebrow">{ui.pages.shipmentsList.eyebrow}</p>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">
-            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.shipmentsList.title}</h1>
-            <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">{ui.pages.shipmentsList.body}</p>
+            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">
+              {ui.pages.shipmentsList.title}
+            </h1>
+            <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
+              {ui.pages.shipmentsList.body}
+            </p>
             <p className="text-sm font-medium text-[var(--color-ink-strong)]">
               {formatTemplate(ui.pages.shipmentsList.resultsSummary, {
                 from: summaryFrom,
@@ -109,7 +123,11 @@ export default async function ShipmentsPage({
 
       {snapshot.items.length === 0 ? (
         <div className="table-shell p-4">
-          <EmptyState eyebrow={ui.pages.shipmentsList.eyebrow} title={emptyTitle} body={emptyBody} />
+          <EmptyState
+            eyebrow={ui.pages.shipmentsList.eyebrow}
+            title={emptyTitle}
+            body={emptyBody}
+          />
         </div>
       ) : (
         <section className="panel space-y-4 p-4">
@@ -137,22 +155,36 @@ export default async function ShipmentsPage({
                         >
                           {shipment.description?.trim() || shipment.id}
                         </Link>
-                        <p className="text-xs text-[var(--color-ink-muted)]">{shipment.id}</p>
+                        <p className="text-xs text-[var(--color-ink-muted)]">
+                          {shipment.id}
+                        </p>
                       </div>
                     </td>
                     <td>
-                      <StatusBadge label={getEnumLabel(locale, "shipment", shipment.status)} tone="neutral" />
+                      <StatusBadge
+                        label={getEnumLabel(
+                          locale,
+                          "shipment",
+                          shipment.status,
+                        )}
+                        tone="neutral"
+                      />
                     </td>
                     <td className="text-sm text-[var(--color-ink-strong)]">
                       <div className="space-y-1">
                         <p>
-                          {shipment.originLabel} {"->"} {shipment.destinationLabel}
+                          {shipment.originLabel} {"->"}{" "}
+                          {shipment.destinationLabel}
                         </p>
-                        <p className="text-xs text-[var(--color-ink-muted)]">{shipment.totalWeightKg} kg</p>
+                        <p className="text-xs text-[var(--color-ink-muted)]">
+                          {shipment.totalWeightKg} kg
+                        </p>
                       </div>
                     </td>
                     <td className="text-sm">
-                      <p className="font-medium text-[var(--color-ink-strong)]">{shipment.shipperName}</p>
+                      <p className="font-medium text-[var(--color-ink-strong)]">
+                        {shipment.shipperName}
+                      </p>
                     </td>
                     <td className="text-sm">
                       {shipment.bookingId ? (
@@ -165,28 +197,55 @@ export default async function ShipmentsPage({
                           </Link>
                           <div className="flex flex-wrap gap-2">
                             {shipment.bookingStatus ? (
-                              <StatusBadge label={getEnumLabel(locale, "booking", shipment.bookingStatus)} tone="neutral" />
+                              <StatusBadge
+                                label={getEnumLabel(
+                                  locale,
+                                  "booking",
+                                  shipment.bookingStatus,
+                                )}
+                                tone="neutral"
+                              />
                             ) : null}
                             {shipment.paymentStatus ? (
                               <StatusBadge
-                                label={getEnumLabel(locale, "payment", shipment.paymentStatus)}
-                                tone={shipment.paymentStatus === "secured" ? "success" : shipment.paymentStatus === "rejected" ? "danger" : "warning"}
+                                label={getEnumLabel(
+                                  locale,
+                                  "payment",
+                                  shipment.paymentStatus,
+                                )}
+                                tone={
+                                  shipment.paymentStatus === "secured"
+                                    ? "success"
+                                    : shipment.paymentStatus === "rejected"
+                                      ? "danger"
+                                      : "warning"
+                                }
                               />
                             ) : null}
                           </div>
                         </div>
                       ) : (
-                        <span className="text-sm text-[var(--color-ink-muted)]">{ui.pages.shipmentsList.noBookingYet}</span>
+                        <span className="text-sm text-[var(--color-ink-muted)]">
+                          {ui.pages.shipmentsList.noBookingYet}
+                        </span>
                       )}
                     </td>
-                    <td className="text-sm text-[var(--color-ink-muted)]">{formatDateTime(shipment.createdAt, locale)}</td>
+                    <td className="text-sm text-[var(--color-ink-muted)]">
+                      {formatDateTime(shipment.createdAt, locale)}
+                    </td>
                     <td>
                       <div className="flex flex-wrap gap-2">
-                        <Link className="button-secondary" href={`/${locale}/shipments/${shipment.id}`}>
+                        <Link
+                          className="button-secondary"
+                          href={`/${locale}/shipments/${shipment.id}`}
+                        >
                           {ui.actions.openDetail}
                         </Link>
                         {shipment.bookingId ? (
-                          <Link className="button-secondary" href={`/${locale}/bookings/${shipment.bookingId}`}>
+                          <Link
+                            className="button-secondary"
+                            href={`/${locale}/bookings/${shipment.bookingId}`}
+                          >
                             {ui.labels.booking}
                           </Link>
                         ) : null}
@@ -200,16 +259,31 @@ export default async function ShipmentsPage({
 
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border)] pt-4">
             <p className="text-sm text-[var(--color-ink-muted)]">
-              {ui.pages.audit.page} {snapshot.page} / {snapshot.totalPages} • {snapshot.total} {ui.pages.audit.total}
+              {ui.pages.audit.page} {snapshot.page} / {snapshot.totalPages} •{" "}
+              {snapshot.total} {ui.pages.audit.total}
             </p>
             <div className="flex gap-2">
               {snapshot.page > 1 ? (
-                <Link className="button-secondary" href={buildPageHref(locale, { q: query, status }, snapshot.page - 1)}>
+                <Link
+                  className="button-secondary"
+                  href={buildPageHref(
+                    locale,
+                    { q: query, status },
+                    snapshot.page - 1,
+                  )}
+                >
                   {ui.pages.audit.previous}
                 </Link>
               ) : null}
               {snapshot.page < snapshot.totalPages ? (
-                <Link className="button-secondary" href={buildPageHref(locale, { q: query, status }, snapshot.page + 1)}>
+                <Link
+                  className="button-secondary"
+                  href={buildPageHref(
+                    locale,
+                    { q: query, status },
+                    snapshot.page + 1,
+                  )}
+                >
                   {ui.pages.audit.next}
                 </Link>
               ) : null}

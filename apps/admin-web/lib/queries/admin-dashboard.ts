@@ -16,10 +16,14 @@ import {
 } from "@/lib/queries/admin-queues";
 import { fetchEligiblePayoutQueue } from "@/lib/queries/admin-payouts";
 
-function mapSummary(payload: Record<string, unknown> | null): AdminOperationalSummary {
+function mapSummary(
+  payload: Record<string, unknown> | null,
+): AdminOperationalSummary {
   return {
     verificationPackets: Number(payload?.verification_packets ?? 0),
-    pendingVerificationDocuments: Number(payload?.pending_verification_documents ?? 0),
+    pendingVerificationDocuments: Number(
+      payload?.pending_verification_documents ?? 0,
+    ),
     paymentProofs: Number(payload?.payment_proofs ?? 0),
     disputes: Number(payload?.disputes ?? 0),
     eligiblePayouts: Number(payload?.eligible_payouts ?? 0),
@@ -28,7 +32,9 @@ function mapSummary(payload: Record<string, unknown> | null): AdminOperationalSu
     emailDeadLetter: Number(payload?.email_dead_letter ?? 0),
     auditEventsLast24h: Number(payload?.audit_events_last_24h ?? 0),
     overdueDeliveryReviews: Number(payload?.overdue_delivery_reviews ?? 0),
-    overduePaymentResubmissions: Number(payload?.overdue_payment_resubmissions ?? 0),
+    overduePaymentResubmissions: Number(
+      payload?.overdue_payment_resubmissions ?? 0,
+    ),
   };
 }
 
@@ -53,13 +59,14 @@ type DashboardQueuePreviews = {
 };
 
 export async function fetchDashboardQueuePreviews(): Promise<DashboardQueuePreviews> {
-  const [payments, verification, disputes, payouts, support] = await Promise.all([
-    fetchPaymentQueue({ limit: 5 }),
-    fetchVerificationQueue({ limit: 5 }),
-    fetchDisputeQueue({ limit: 5 }),
-    fetchEligiblePayoutQueue({ limit: 5 }),
-    fetchSupportQueue({ limit: 5 }),
-  ]);
+  const [payments, verification, disputes, payouts, support] =
+    await Promise.all([
+      fetchPaymentQueue({ limit: 5 }),
+      fetchVerificationQueue({ limit: 5 }),
+      fetchDisputeQueue({ limit: 5 }),
+      fetchEligiblePayoutQueue({ limit: 5 }),
+      fetchSupportQueue({ limit: 5 }),
+    ]);
 
   return { payments, verification, disputes, payouts, support };
 }
@@ -85,14 +92,18 @@ export function buildDashboardAlerts(
   },
 ): DashboardAlert[] {
   const alerts: DashboardAlert[] = [];
-  const withCount = (template: string, count: number) => template.replace("{count}", String(count));
+  const withCount = (template: string, count: number) =>
+    template.replace("{count}", String(count));
 
   if (summary.overdueDeliveryReviews > 0) {
     alerts.push({
       id: "delivery-review-overdue",
       tone: "danger",
       title: labels.deliveryReviewOverdueTitle,
-      body: withCount(labels.deliveryReviewOverdueBody, summary.overdueDeliveryReviews),
+      body: withCount(
+        labels.deliveryReviewOverdueBody,
+        summary.overdueDeliveryReviews,
+      ),
     });
   }
 
@@ -101,7 +112,10 @@ export function buildDashboardAlerts(
       id: "payment-resubmission-overdue",
       tone: "warning",
       title: labels.paymentResubmissionOverdueTitle,
-      body: withCount(labels.paymentResubmissionOverdueBody, summary.overduePaymentResubmissions),
+      body: withCount(
+        labels.paymentResubmissionOverdueBody,
+        summary.overduePaymentResubmissions,
+      ),
     });
   }
 

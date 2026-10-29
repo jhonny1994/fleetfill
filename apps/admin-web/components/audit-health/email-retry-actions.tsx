@@ -23,9 +23,12 @@ export function EmailDeliveryRetryAction({
   async function retry() {
     setIsPending(true);
     setError(null);
-    const { error: rpcError } = await supabase.rpc("admin_retry_email_delivery", {
-      p_delivery_log_id: deliveryLogId,
-    });
+    const { error: rpcError } = await supabase.rpc(
+      "admin_retry_email_delivery",
+      {
+        p_delivery_log_id: deliveryLogId,
+      },
+    );
     setIsPending(false);
     setOpen(false);
     if (rpcError) {
@@ -37,10 +40,16 @@ export function EmailDeliveryRetryAction({
 
   return (
     <div className="space-y-2">
-      <button type="button" className="button-secondary" onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        className="button-secondary"
+        onClick={() => setOpen(true)}
+      >
         {ui.actions.retryEmailDelivery}
       </button>
-      {error ? <p className="text-xs text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-xs text-[var(--color-red-700)]">{error}</p>
+      ) : null}
       <ConfirmDialog
         open={open}
         title={ui.actions.retryEmailDeliveryTitle}
@@ -54,11 +63,7 @@ export function EmailDeliveryRetryAction({
   );
 }
 
-export function EmailDeadLetterRetryAction({
-  jobId,
-}: {
-  jobId: string;
-}) {
+export function EmailDeadLetterRetryAction({ jobId }: { jobId: string }) {
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [open, setOpen] = useState(false);
@@ -69,9 +74,12 @@ export function EmailDeadLetterRetryAction({
   async function retry() {
     setIsPending(true);
     setError(null);
-    const { error: rpcError } = await supabase.rpc("admin_retry_dead_letter_email_job", {
-      p_job_id: jobId,
-    });
+    const { error: rpcError } = await supabase.rpc(
+      "admin_retry_dead_letter_email_job",
+      {
+        p_job_id: jobId,
+      },
+    );
     setIsPending(false);
     setOpen(false);
     if (rpcError) {
@@ -83,10 +91,16 @@ export function EmailDeadLetterRetryAction({
 
   return (
     <div className="space-y-2">
-      <button type="button" className="button-secondary" onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        className="button-secondary"
+        onClick={() => setOpen(true)}
+      >
         {ui.actions.retryDeadLetter}
       </button>
-      {error ? <p className="text-xs text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-xs text-[var(--color-red-700)]">{error}</p>
+      ) : null}
       <ConfirmDialog
         open={open}
         title={ui.actions.retryDeadLetterTitle}

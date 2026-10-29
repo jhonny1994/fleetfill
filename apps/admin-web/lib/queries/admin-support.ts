@@ -27,7 +27,9 @@ type AdminSupportDetail = {
   messages: SupportMessageRow[];
 };
 
-export async function fetchSupportDetail(requestId: string): Promise<AdminSupportDetail | null> {
+export async function fetchSupportDetail(
+  requestId: string,
+): Promise<AdminSupportDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: request, error: requestError } = await supabase

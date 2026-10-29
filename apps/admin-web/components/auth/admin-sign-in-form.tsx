@@ -16,7 +16,13 @@ type SignInValues = {
 };
 
 function resolveAuthErrorMessage(
-  error: Awaited<ReturnType<ReturnType<typeof createSupabaseBrowserClient>["auth"]["signInWithPassword"]>>["error"],
+  error: Awaited<
+    ReturnType<
+      ReturnType<
+        typeof createSupabaseBrowserClient
+      >["auth"]["signInWithPassword"]
+    >
+  >["error"],
   dictionary: AdminDictionary,
 ) {
   const normalizedMessage = error?.message?.toLowerCase() ?? "";
@@ -57,8 +63,12 @@ export function AdminSignInForm({
 
   async function onSubmit(values: SignInValues) {
     setAuthError(null);
-    let data: Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>["data"] | null = null;
-    let error: Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>["error"] | null = null;
+    let data:
+      | Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>["data"]
+      | null = null;
+    let error:
+      | Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>["error"]
+      | null = null;
 
     try {
       const result = await supabase.auth.signInWithPassword({
@@ -96,7 +106,11 @@ export function AdminSignInForm({
       ? adminAccount?.profiles[0]
       : adminAccount?.profiles;
 
-    if (!adminAccount || adminAccount.is_active !== true || profile?.is_active !== true) {
+    if (
+      !adminAccount ||
+      adminAccount.is_active !== true ||
+      profile?.is_active !== true
+    ) {
       await supabase.auth.signOut();
       setAuthError(dictionary.auth.inactiveAdmin);
       return;
@@ -111,7 +125,10 @@ export function AdminSignInForm({
   return (
     <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-[var(--color-ink-strong)]" htmlFor="email">
+        <label
+          className="text-sm font-medium text-[var(--color-ink-strong)]"
+          htmlFor="email"
+        >
           {dictionary.auth.emailLabel}
         </label>
         <input
@@ -128,11 +145,16 @@ export function AdminSignInForm({
           {...form.register("email")}
         />
         {form.formState.errors.email ? (
-          <p className="text-sm text-[var(--color-red-700)]">{form.formState.errors.email.message}</p>
+          <p className="text-sm text-[var(--color-red-700)]">
+            {form.formState.errors.email.message}
+          </p>
         ) : null}
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-[var(--color-ink-strong)]" htmlFor="password">
+        <label
+          className="text-sm font-medium text-[var(--color-ink-strong)]"
+          htmlFor="password"
+        >
           {dictionary.auth.passwordLabel}
         </label>
         <input
@@ -151,8 +173,14 @@ export function AdminSignInForm({
           </p>
         ) : null}
       </div>
-      {authError ? <p className="text-sm text-[var(--color-red-700)]">{authError}</p> : null}
-      <button className="button-primary w-full" type="submit" disabled={isPending}>
+      {authError ? (
+        <p className="text-sm text-[var(--color-red-700)]">{authError}</p>
+      ) : null}
+      <button
+        className="button-primary w-full"
+        type="submit"
+        disabled={isPending}
+      >
         {isPending ? dictionary.auth.submitting : dictionary.auth.submit}
       </button>
     </form>

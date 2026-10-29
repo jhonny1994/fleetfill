@@ -5,7 +5,11 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 
-import { getLocaleDirection, isSupportedLocale, resolveAppLocale } from "@/lib/i18n/config";
+import {
+  getLocaleDirection,
+  isSupportedLocale,
+  resolveAppLocale,
+} from "@/lib/i18n/config";
 import { buildLocalizedPath } from "@/lib/i18n/runtime-localization-policy";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchRuntimeLocalizationPolicy } from "@/lib/queries/admin-settings";

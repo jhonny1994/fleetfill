@@ -5,7 +5,12 @@ import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { AdminAccountActions } from "@/components/admin-management/admin-account-actions";
 import { AdminInvitationActions } from "@/components/admin-management/admin-invitation-actions";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminActionLabel, getAdminRoleLabel, getAuditOutcomeLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
+import {
+  getAdminActionLabel,
+  getAdminRoleLabel,
+  getAuditOutcomeLabel,
+  getEnumLabel,
+} from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchAdminAccountDetail } from "@/lib/queries/admin-admins";
@@ -22,7 +27,11 @@ export default async function AdminDetailPage({
   const detail = await fetchAdminAccountDetail(profileId);
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.admins.notFound}</div>;
+    return (
+      <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">
+        {ui.pages.admins.notFound}
+      </div>
+    );
   }
 
   return (
@@ -31,30 +40,59 @@ export default async function AdminDetailPage({
       title={detail.account.displayName}
       description={detail.account.email}
       backLink={{ href: `/${locale}/admins`, label: ui.pages.admins.title }}
-      relatedLinks={[{ href: `/${locale}/admins?q=${encodeURIComponent(detail.account.profileId)}`, label: ui.pages.admins.accountOverview }]}
+      relatedLinks={[
+        {
+          href: `/${locale}/admins?q=${encodeURIComponent(detail.account.profileId)}`,
+          label: ui.pages.admins.accountOverview,
+        },
+      ]}
       facts={[
-        { label: ui.labels.role, value: getAdminRoleLabel(locale, detail.account.adminRole) },
-        { label: ui.labels.state, value: getEnumLabel(locale, "activity", detail.account.isActive ? "active" : "inactive") },
-        { label: ui.labels.updated, value: formatDateTime(detail.account.updatedAt) },
+        {
+          label: ui.labels.role,
+          value: getAdminRoleLabel(locale, detail.account.adminRole),
+        },
+        {
+          label: ui.labels.state,
+          value: getEnumLabel(
+            locale,
+            "activity",
+            detail.account.isActive ? "active" : "inactive",
+          ),
+        },
+        {
+          label: ui.labels.updated,
+          value: formatDateTime(detail.account.updatedAt),
+        },
       ]}
       main={
         <>
           <section className="panel space-y-3 p-5">
             <div className="section-header">
-              <h2 className="text-[1.2rem] font-semibold text-[var(--color-ink-strong)]">{ui.pages.admins.invitations}</h2>
+              <h2 className="text-[1.2rem] font-semibold text-[var(--color-ink-strong)]">
+                {ui.pages.admins.invitations}
+              </h2>
             </div>
             <div className="space-y-3">
               {detail.invitations.length === 0 ? (
-                <p className="text-sm text-[var(--color-ink-muted)]">{ui.labels.none}</p>
+                <p className="text-sm text-[var(--color-ink-muted)]">
+                  {ui.labels.none}
+                </p>
               ) : (
                 detail.invitations.slice(0, 4).map((invitation) => (
                   <div key={invitation.id} className="section-card p-4">
-                    <p className="font-medium text-[var(--color-ink-strong)]">{invitation.email}</p>
+                    <p className="font-medium text-[var(--color-ink-strong)]">
+                      {invitation.email}
+                    </p>
                     <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                      {getAdminRoleLabel(locale, invitation.role)} • {getEnumLabel(locale, "invitations", invitation.status)} • {formatDateTime(invitation.expiresAt)}
+                      {getAdminRoleLabel(locale, invitation.role)} •{" "}
+                      {getEnumLabel(locale, "invitations", invitation.status)} •{" "}
+                      {formatDateTime(invitation.expiresAt)}
                     </p>
                     <div className="mt-3">
-                      <AdminInvitationActions invitationId={invitation.id} status={invitation.status} />
+                      <AdminInvitationActions
+                        invitationId={invitation.id}
+                        status={invitation.status}
+                      />
                     </div>
                   </div>
                 ))
@@ -75,7 +113,10 @@ export default async function AdminDetailPage({
         </>
       }
       rail={
-        <ActionRail title={ui.pages.admins.governanceActions} description={detailCopy.governanceActionsBody}>
+        <ActionRail
+          title={ui.pages.admins.governanceActions}
+          description={detailCopy.governanceActionsBody}
+        >
           <AdminAccountActions
             locale={locale}
             profileId={detail.account.profileId}

@@ -9,13 +9,16 @@ import { fetchPaymentQueue } from "@/lib/queries/admin-queues";
 const paymentStatuses = ["pending", "verified", "rejected"] as const;
 type PaymentPageStatus = (typeof paymentStatuses)[number];
 
-export default async function PaymentsPage({
-  params,
-  searchParams,
-}: {
+export default async function PaymentsPage(props: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ q?: string; status?: string; view?: "open" | "history" | "all" }>;
+  searchParams: Promise<{
+    q?: string;
+    status?: string;
+    view?: "open" | "history" | "all";
+  }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const locale = resolveAppLocale(lang);
   const query = filters.q?.trim();
@@ -46,7 +49,7 @@ export default async function PaymentsPage({
       eyebrow={ui.pages.payments.eyebrow}
       title={ui.pages.payments.title}
       description={dictionary.dashboard.body}
-        pathname={pathname}
+      pathname={pathname}
       query={query}
       status={status}
       view={view}
@@ -56,9 +59,18 @@ export default async function PaymentsPage({
         all: allItems.length,
       }}
       statusOptions={[
-        { value: "pending", label: getEnumLabel(locale, "verification", "pending") },
-        { value: "verified", label: getEnumLabel(locale, "verification", "verified") },
-        { value: "rejected", label: getEnumLabel(locale, "verification", "rejected") },
+        {
+          value: "pending",
+          label: getEnumLabel(locale, "verification", "pending"),
+        },
+        {
+          value: "verified",
+          label: getEnumLabel(locale, "verification", "verified"),
+        },
+        {
+          value: "rejected",
+          label: getEnumLabel(locale, "verification", "rejected"),
+        },
       ]}
       labels={{
         searchPlaceholder: dictionary.shell.searchPlaceholder,

@@ -5,12 +5,16 @@ import { readAdminFixtureManifest } from "@/tests/e2e/helpers/admin-fixtures";
 
 test.use({ storageState: adminStorageStatePath });
 
-test("shared destructive confirmation dialog opens and closes on an admin detail action", async ({ page }) => {
+test("shared destructive confirmation dialog opens and closes on an admin detail action", async ({
+  page,
+}) => {
   const fixtures = await readAdminFixtureManifest();
 
   await page.goto(`/en/admins/${fixtures.opsAdmin.profileId}`);
 
-  const deactivateButton = page.getByRole("button", { name: "Deactivate admin" });
+  const deactivateButton = page.getByRole("button", {
+    name: "Deactivate admin",
+  });
   await deactivateButton.click();
 
   const dialog = page.getByRole("dialog");

@@ -124,7 +124,8 @@ export type AdminUserRoleFilter = "all" | "shipper" | "carrier";
 
 export type AdminUserActivityFilter = "all" | "active" | "inactive";
 
-export type AdminUserVerificationFilter = "all" | "pending" | "rejected" | "verified";
+export type AdminUserVerificationFilter =
+  "all" | "pending" | "rejected" | "verified";
 
 export type AdminUserRegistryFilters = {
   q?: string;
@@ -328,7 +329,14 @@ export type PlatformSettingsSnapshot = {
     enabledLocales: AppLocale[];
   };
   updatedAtByKey: Partial<
-    Record<"app_runtime" | "booking_pricing" | "delivery_review" | "feature_flags" | "localization", string | null>
+    Record<
+      | "app_runtime"
+      | "booking_pricing"
+      | "delivery_review"
+      | "feature_flags"
+      | "localization",
+      string | null
+    >
   >;
 };
 
@@ -523,7 +531,9 @@ type ProfileMap = {
   company_name: string | null;
 };
 
-export function resolveProfileDisplayName(profile: ProfileMap | null | undefined) {
+export function resolveProfileDisplayName(
+  profile: ProfileMap | null | undefined,
+) {
   if (!profile) {
     return "Unknown";
   }

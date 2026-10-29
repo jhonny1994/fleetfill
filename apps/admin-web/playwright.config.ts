@@ -9,21 +9,31 @@ const repoRoot = path.resolve(process.cwd(), "..", "..");
 const appRoot = process.cwd();
 const supabaseCliEnv = {
   ...process.env,
-  GOOGLE_WEB_CLIENT_ID: process.env.GOOGLE_WEB_CLIENT_ID ?? "dummy-google-web-client-id.apps.googleusercontent.com",
-  GOOGLE_IOS_CLIENT_ID: process.env.GOOGLE_IOS_CLIENT_ID ?? "dummy-google-ios-client-id.apps.googleusercontent.com",
+  GOOGLE_WEB_CLIENT_ID:
+    process.env.GOOGLE_WEB_CLIENT_ID ??
+    "dummy-google-web-client-id.apps.googleusercontent.com",
+  GOOGLE_IOS_CLIENT_ID:
+    process.env.GOOGLE_IOS_CLIENT_ID ??
+    "dummy-google-ios-client-id.apps.googleusercontent.com",
   SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID:
-    process.env.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID ?? "dummy-google-web-client-id.apps.googleusercontent.com",
+    process.env.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID ??
+    "dummy-google-web-client-id.apps.googleusercontent.com",
   SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET:
-    process.env.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET ?? "dummy-google-client-secret",
+    process.env.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET ??
+    "dummy-google-client-secret",
 };
 
 function resolveSupabaseStatusEnv() {
   try {
-    const stdout = execFileSync("supabase", ["status", "-o", "env", "--workdir", "backend"], {
-      cwd: repoRoot,
-      encoding: "utf8",
-      env: supabaseCliEnv,
-    });
+    const stdout = execFileSync(
+      "supabase",
+      ["status", "-o", "env", "--workdir", "backend"],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+        env: supabaseCliEnv,
+      },
+    );
 
     return stdout
       .split(/\r?\n/)
@@ -47,7 +57,11 @@ process.env.SUPABASE_SECRET_KEY ??= supabaseStatusEnv.SECRET_KEY;
 process.env.E2E_APP_ROOT ??= appRoot;
 process.env.E2E_REPO_ROOT ??= repoRoot;
 
-export const adminStorageStatePath = path.join(process.cwd(), ".playwright", "admin-storage-state.json");
+export const adminStorageStatePath = path.join(
+  process.cwd(),
+  ".playwright",
+  "admin-storage-state.json",
+);
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -82,8 +96,10 @@ export default defineConfig({
       E2E_REPO_ROOT: process.env.E2E_REPO_ROOT,
       GOOGLE_WEB_CLIENT_ID: supabaseCliEnv.GOOGLE_WEB_CLIENT_ID,
       GOOGLE_IOS_CLIENT_ID: supabaseCliEnv.GOOGLE_IOS_CLIENT_ID,
-      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID: supabaseCliEnv.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID,
-      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET: supabaseCliEnv.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET,
+      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID:
+        supabaseCliEnv.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID,
+      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET:
+        supabaseCliEnv.SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET,
     },
   },
 });

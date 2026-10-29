@@ -13,13 +13,15 @@ describe("runtime localization policy helpers", () => {
       fallback_locale: "ar",
     });
 
-    expect(resolveEnabledLocaleForRequest("fr-FR,fr;q=0.9,en;q=0.8", policy)).toBe("ar");
+    expect(
+      resolveEnabledLocaleForRequest("fr-FR,fr;q=0.9,en;q=0.8", policy),
+    ).toBe("ar");
   });
 
   it("preserves the current route and query string when replacing the locale", () => {
-    expect(buildLocalizedPath("/fr/payments", "fr", "ar", "?view=history&q=test")).toBe(
-      "/ar/payments?view=history&q=test",
-    );
+    expect(
+      buildLocalizedPath("/fr/payments", "fr", "ar", "?view=history&q=test"),
+    ).toBe("/ar/payments?view=history&q=test");
   });
 
   it("keeps localized roots clean when redirecting to a fallback locale", () => {

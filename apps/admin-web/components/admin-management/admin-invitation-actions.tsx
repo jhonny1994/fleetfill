@@ -44,10 +44,16 @@ export function AdminInvitationActions({
 
   return (
     <div className="space-y-2">
-      <button type="button" className="button-secondary" onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        className="button-secondary"
+        onClick={() => setOpen(true)}
+      >
         {ui.actions.revoke}
       </button>
-      {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-sm text-[var(--color-red-700)]">{error}</p>
+      ) : null}
       <ConfirmDialog
         open={open}
         title={ui.actions.revokeTitle}

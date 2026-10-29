@@ -3,7 +3,11 @@ import Link from "next/link";
 
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAuditHealthErrorLabel, getEnumLabel, getNotificationTemplateLabel } from "@/lib/i18n/admin-ui";
+import {
+  getAuditHealthErrorLabel,
+  getEnumLabel,
+  getNotificationTemplateLabel,
+} from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchEmailDeliveryHealthPage } from "@/lib/queries/admin-audit-health";
@@ -12,13 +16,12 @@ function buildPageHref(lang: string, page: number) {
   return `/${lang}/audit-and-health/email-deliveries?page=${page}`;
 }
 
-export default async function AdminEmailDeliveriesPage({
-  params,
-  searchParams,
-}: {
+export default async function AdminEmailDeliveriesPage(props: {
   params: Promise<{ lang: string }>;
   searchParams: Promise<{ page?: string }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const [{ lang }, query] = await Promise.all([params, searchParams]);
   const locale = resolveAppLocale(lang);
   const { ui } = asAdminMessages(await getMessages({ locale }));
@@ -33,8 +36,12 @@ export default async function AdminEmailDeliveriesPage({
         <p className="eyebrow">{ui.pages.audit.eyebrow}</p>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-2">
-            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.emailLogs}</h1>
-            <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.emailLogsBody}</p>
+            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">
+              {ui.pages.audit.emailLogs}
+            </h1>
+            <p className="text-sm text-[var(--color-ink-muted)]">
+              {ui.pages.audit.emailLogsBody}
+            </p>
           </div>
           <Link className="button-secondary" href={`/${lang}/audit-and-health`}>
             {backToSummary}
@@ -49,26 +56,43 @@ export default async function AdminEmailDeliveriesPage({
               <div className="flex flex-wrap items-center gap-2">
                 <StatusBadge
                   label={getEnumLabel(lang, "email", log.status)}
-                  tone={log.status === "delivered" ? "success" : log.status === "soft_failed" ? "warning" : "danger"}
+                  tone={
+                    log.status === "delivered"
+                      ? "success"
+                      : log.status === "soft_failed"
+                        ? "warning"
+                        : "danger"
+                  }
                 />
                 <p className="text-sm font-medium text-[var(--color-ink-strong)]">
                   {getNotificationTemplateLabel(lang, log.templateKey)}
                 </p>
               </div>
-              <p className="mt-2 text-sm text-[var(--color-ink-muted)]">{log.recipientEmail}</p>
+              <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+                {log.recipientEmail}
+              </p>
               <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                {log.provider} • {formatDateTime(log.lastAttemptAt ?? log.createdAt)}
+                {log.provider} •{" "}
+                {formatDateTime(log.lastAttemptAt ?? log.createdAt)}
               </p>
               {log.errorCode || log.errorMessage ? (
                 <p className="mt-2 text-xs text-[var(--color-red-700)]">
-                  {getAuditHealthErrorLabel(lang, log.errorCode, log.errorMessage)}
+                  {getAuditHealthErrorLabel(
+                    lang,
+                    log.errorCode,
+                    log.errorMessage,
+                  )}
                 </p>
               ) : null}
             </div>
           );
 
           return log.bookingId ? (
-            <Link key={log.id} href={`/${lang}/bookings/${log.bookingId}`} className="block">
+            <Link
+              key={log.id}
+              href={`/${lang}/bookings/${log.bookingId}`}
+              className="block"
+            >
               {card}
             </Link>
           ) : (
@@ -82,12 +106,18 @@ export default async function AdminEmailDeliveriesPage({
           </p>
           <div className="flex gap-2">
             {snapshot.page > 1 ? (
-              <Link className="button-secondary" href={buildPageHref(lang, snapshot.page - 1)}>
+              <Link
+                className="button-secondary"
+                href={buildPageHref(lang, snapshot.page - 1)}
+              >
                 {previous}
               </Link>
             ) : null}
             {snapshot.page < totalPages ? (
-              <Link className="button-secondary" href={buildPageHref(lang, snapshot.page + 1)}>
+              <Link
+                className="button-secondary"
+                href={buildPageHref(lang, snapshot.page + 1)}
+              >
                 {next}
               </Link>
             ) : null}

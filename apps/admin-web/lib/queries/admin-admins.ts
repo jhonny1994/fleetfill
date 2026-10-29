@@ -18,13 +18,11 @@ type AdminAccountRow = {
   activated_at: string | null;
   deactivated_at: string | null;
   updated_at: string | null;
-  profile:
-    | {
-        full_name: string | null;
-        email: string;
-        company_name: string | null;
-      }
-    | null;
+  profile: {
+    full_name: string | null;
+    email: string;
+    company_name: string | null;
+  } | null;
 };
 
 type AdminInvitationRow = {
@@ -61,7 +59,10 @@ type RegistryData = {
   invitations: AdminInvitationListItem[];
 };
 
-function resolveDisplayName(name: string | null, email: string | null | undefined) {
+function resolveDisplayName(
+  name: string | null,
+  email: string | null | undefined,
+) {
   return name?.trim() || email?.trim() || "Unknown admin";
 }
 
@@ -78,11 +79,15 @@ function matchesQuery(values: Array<string | null | undefined>, query: string) {
 }
 
 function clampPage(page: number | undefined) {
-  return Number.isFinite(page) && (page ?? 1) > 0 ? Math.floor(page as number) : 1;
+  return Number.isFinite(page) && (page ?? 1) > 0
+    ? Math.floor(page as number)
+    : 1;
 }
 
 function clampPageSize(pageSize: number | undefined) {
-  const normalized = Number.isFinite(pageSize) ? Math.floor(pageSize as number) : 10;
+  const normalized = Number.isFinite(pageSize)
+    ? Math.floor(pageSize as number)
+    : 10;
   return Math.min(25, Math.max(5, normalized || 10));
 }
 
@@ -116,7 +121,9 @@ async function fetchRegistryData(): Promise<RegistryData> {
       .order("updated_at", { ascending: false }),
     supabase
       .from("admin_invitations")
-      .select("id, email, role, status, expires_at, invited_by, accepted_by_profile_id, created_at, updated_at")
+      .select(
+        "id, email, role, status, expires_at, invited_by, accepted_by_profile_id, created_at, updated_at",
+      )
       .order("created_at", { ascending: false }),
   ]);
 
@@ -126,34 +133,45 @@ async function fetchRegistryData(): Promise<RegistryData> {
   const accountRows = (accountsResult.data ?? []) as AdminAccountRow[];
   const invitationRows = (invitationsResult.data ?? []) as AdminInvitationRow[];
   const relatedProfileIds = [
-    ...new Set(
-      [
-        ...accountRows.map((row) => row.invited_by).filter(Boolean),
-        ...invitationRows.map((row) => row.invited_by).filter(Boolean),
-        ...invitationRows.map((row) => row.accepted_by_profile_id).filter(Boolean),
-      ] as string[],
-    ),
+    ...new Set([
+      ...accountRows.map((row) => row.invited_by).filter(Boolean),
+      ...invitationRows.map((row) => row.invited_by).filter(Boolean),
+      ...invitationRows
+        .map((row) => row.accepted_by_profile_id)
+        .filter(Boolean),
+    ] as string[]),
   ];
 
   const { data: profiles, error: profilesError } = relatedProfileIds.length
-    ? await supabase.from("profiles").select("id, full_name, email").in("id", relatedProfileIds)
+    ? await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", relatedProfileIds)
     : { data: [], error: null };
 
   if (profilesError) throw profilesError;
 
-  const profileMap = new Map<string, ProfileRow>(((profiles ?? []) as ProfileRow[]).map((profile) => [profile.id, profile]));
+  const profileMap = new Map<string, ProfileRow>(
+    ((profiles ?? []) as ProfileRow[]).map((profile) => [profile.id, profile]),
+  );
 
   return {
     accounts: accountRows.map((row) => {
       const profile = row.profile;
       return {
         profileId: row.profile_id,
-        displayName: resolveDisplayName(profile?.full_name ?? null, profile?.email),
+        displayName: resolveDisplayName(
+          profile?.full_name ?? null,
+          profile?.email,
+        ),
         email: profile?.email ?? "—",
         adminRole: row.admin_role,
         isActive: row.is_active,
         invitedByName: row.invited_by
-          ? resolveDisplayName(profileMap.get(row.invited_by)?.full_name ?? null, profileMap.get(row.invited_by)?.email)
+          ? resolveDisplayName(
+              profileMap.get(row.invited_by)?.full_name ?? null,
+              profileMap.get(row.invited_by)?.email,
+            )
           : null,
         activatedAt: row.activated_at,
         deactivatedAt: row.deactivated_at,
@@ -167,7 +185,10 @@ async function fetchRegistryData(): Promise<RegistryData> {
       status: row.status,
       expiresAt: row.expires_at,
       invitedByName: row.invited_by
-        ? resolveDisplayName(profileMap.get(row.invited_by)?.full_name ?? null, profileMap.get(row.invited_by)?.email)
+        ? resolveDisplayName(
+            profileMap.get(row.invited_by)?.full_name ?? null,
+            profileMap.get(row.invited_by)?.email,
+          )
         : null,
       acceptedByName: row.accepted_by_profile_id
         ? resolveDisplayName(
@@ -186,8 +207,11 @@ function filterAccounts(
   filters: Required<Pick<AdminRegistryFilters, "q" | "role" | "state">>,
 ) {
   return accounts.filter((account) => {
-    const matchesRole = filters.role === "all" || account.adminRole === filters.role;
-    const matchesState = filters.state === "all" || (filters.state === "active" ? account.isActive : !account.isActive);
+    const matchesRole =
+      filters.role === "all" || account.adminRole === filters.role;
+    const matchesState =
+      filters.state === "all" ||
+      (filters.state === "active" ? account.isActive : !account.isActive);
     const matchesSearch = matchesQuery(
       [
         account.displayName,
@@ -203,7 +227,10 @@ function filterAccounts(
   });
 }
 
-function filterInvitations(invitations: AdminInvitationListItem[], query: string) {
+function filterInvitations(
+  invitations: AdminInvitationListItem[],
+  query: string,
+) {
   return invitations.filter((invitation) =>
     matchesQuery(
       [
@@ -218,21 +245,31 @@ function filterInvitations(invitations: AdminInvitationListItem[], query: string
   );
 }
 
-function summarizeRegistry(accounts: AdminAccountListItem[], invitations: AdminInvitationListItem[]): AdminRegistrySummary {
+function summarizeRegistry(
+  accounts: AdminAccountListItem[],
+  invitations: AdminInvitationListItem[],
+): AdminRegistrySummary {
   const activeAccounts = accounts.filter((account) => account.isActive).length;
   const inactiveAccounts = accounts.length - activeAccounts;
   return {
     totalAccounts: accounts.length,
     activeAccounts,
     inactiveAccounts,
-    superAdmins: accounts.filter((account) => account.adminRole === "super_admin").length,
-    opsAdmins: accounts.filter((account) => account.adminRole === "ops_admin").length,
+    superAdmins: accounts.filter(
+      (account) => account.adminRole === "super_admin",
+    ).length,
+    opsAdmins: accounts.filter((account) => account.adminRole === "ops_admin")
+      .length,
     totalInvitations: invitations.length,
-    pendingInvitations: invitations.filter((invitation) => invitation.status === "pending").length,
+    pendingInvitations: invitations.filter(
+      (invitation) => invitation.status === "pending",
+    ).length,
   };
 }
 
-export async function fetchAdminRegistrySnapshot(filters: AdminRegistryFilters = {}): Promise<AdminRegistrySnapshot> {
+export async function fetchAdminRegistrySnapshot(
+  filters: AdminRegistryFilters = {},
+): Promise<AdminRegistrySnapshot> {
   const data = await fetchRegistryData();
   const normalizedFilters = {
     q: normalizeQuery(filters.q),
@@ -242,7 +279,10 @@ export async function fetchAdminRegistrySnapshot(filters: AdminRegistryFilters =
   const pageSize = clampPageSize(filters.pageSize);
   const page = clampPage(filters.page);
   const filteredAccounts = filterAccounts(data.accounts, normalizedFilters);
-  const filteredInvitations = filterInvitations(data.invitations, normalizedFilters.q);
+  const filteredInvitations = filterInvitations(
+    data.invitations,
+    normalizedFilters.q,
+  );
   const { from, to } = pageRange(page, pageSize);
   const pagedAccounts = filteredAccounts.slice(from, to + 1);
 
@@ -269,7 +309,9 @@ async function fetchAdminAccountsAndInvitations(): Promise<{
   };
 }
 
-export async function fetchAdminAccountDetail(profileId: string): Promise<AdminAccountDetail | null> {
+export async function fetchAdminAccountDetail(
+  profileId: string,
+): Promise<AdminAccountDetail | null> {
   const { accounts, invitations } = await fetchAdminAccountsAndInvitations();
   const account = accounts.find((item) => item.profileId === profileId);
   if (!account) return null;
@@ -277,7 +319,9 @@ export async function fetchAdminAccountDetail(profileId: string): Promise<AdminA
   const supabase = await createSupabaseServerClient();
   const { data: auditRows, error: auditError } = await supabase
     .from("admin_audit_logs")
-    .select("id, action, target_type, target_id, outcome, reason, metadata, created_at")
+    .select(
+      "id, action, target_type, target_id, outcome, reason, metadata, created_at",
+    )
     .eq("target_id", profileId)
     .order("created_at", { ascending: false })
     .limit(20);
@@ -286,7 +330,9 @@ export async function fetchAdminAccountDetail(profileId: string): Promise<AdminA
 
   return {
     account,
-    invitations: invitations.filter((item) => item.email.toLowerCase() === account.email.toLowerCase()),
+    invitations: invitations.filter(
+      (item) => item.email.toLowerCase() === account.email.toLowerCase(),
+    ),
     auditLogs: mapAuditLogs((auditRows ?? []) as AuditRow[]),
   };
 }

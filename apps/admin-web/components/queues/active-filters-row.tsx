@@ -8,10 +8,16 @@ export function ActiveFiltersRow({
   clearAllLabel = "Clear all",
 }: {
   clearHref: string;
-  filters: Array<{ key: string; label: string; value: string | null | undefined }>;
+  filters: Array<{
+    key: string;
+    label: string;
+    value: string | null | undefined;
+  }>;
   clearAllLabel?: string;
 }) {
-  const active = filters.filter((filter) => filter.value && filter.value.trim().length > 0);
+  const active = filters.filter(
+    (filter) => filter.value && filter.value.trim().length > 0,
+  );
   if (active.length === 0) {
     return null;
   }
@@ -19,9 +25,16 @@ export function ActiveFiltersRow({
   return (
     <div className="flex flex-wrap items-center gap-2">
       {active.map((filter) => (
-        <StatusBadge key={filter.key} label={`${filter.label}: ${filter.value}`} tone="neutral" />
+        <StatusBadge
+          key={filter.key}
+          label={`${filter.label}: ${filter.value}`}
+          tone="neutral"
+        />
       ))}
-      <Link className="text-sm font-medium text-[var(--color-accent-ink)] underline-offset-4 hover:underline" href={clearHref}>
+      <Link
+        className="text-sm font-medium text-[var(--color-accent-ink)] underline-offset-4 hover:underline"
+        href={clearHref}
+      >
         {clearAllLabel}
       </Link>
     </div>

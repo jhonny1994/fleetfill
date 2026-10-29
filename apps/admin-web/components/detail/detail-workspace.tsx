@@ -43,14 +43,22 @@ export function DetailWorkspace({
             </Link>
           ) : null}
           <p className="eyebrow">{eyebrow}</p>
-          <h1 className="text-[1.45rem] font-semibold text-[var(--color-ink-strong)]">{title}</h1>
+          <h1 className="text-[1.45rem] font-semibold text-[var(--color-ink-strong)]">
+            {title}
+          </h1>
           {description ? (
-            <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">{description}</p>
+            <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
+              {description}
+            </p>
           ) : null}
           {relatedLinks?.length ? (
             <div className="flex flex-wrap gap-2 pt-1">
               {relatedLinks.map((link) => (
-                <Link key={`${link.href}-${link.label}`} className="button-secondary" href={link.href}>
+                <Link
+                  key={`${link.href}-${link.label}`}
+                  className="button-secondary"
+                  href={link.href}
+                >
                   {link.label}
                 </Link>
               ))}

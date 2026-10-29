@@ -1,7 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { defaultLocale, getLocaleDirection, isSupportedLocale, locales } from "@/lib/i18n/config";
+import {
+  defaultLocale,
+  getLocaleDirection,
+  isSupportedLocale,
+  locales,
+} from "@/lib/i18n/config";
 import {
   buildLocalizedPath,
   resolveEnabledLocaleForRequest,
@@ -26,7 +31,9 @@ export async function proxy(request: NextRequest) {
   );
 
   const localeSegment = pathname.split("/")[1] ?? defaultLocale;
-  const requestedLocale = isSupportedLocale(localeSegment) ? localeSegment : defaultLocale;
+  const requestedLocale = isSupportedLocale(localeSegment)
+    ? localeSegment
+    : defaultLocale;
 
   const baseRequestHeaders = new Headers(request.headers);
   baseRequestHeaders.set("x-fleetfill-pathname", pathname);
@@ -47,13 +54,18 @@ export async function proxy(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value),
+          );
           const nextRequestHeaders = new Headers(request.headers);
           nextRequestHeaders.set("x-fleetfill-pathname", pathname);
           nextRequestHeaders.set("x-fleetfill-search", request.nextUrl.search);
           if (hasLocale) {
             nextRequestHeaders.set("x-fleetfill-locale", requestedLocale);
-            nextRequestHeaders.set("x-fleetfill-direction", getLocaleDirection(requestedLocale));
+            nextRequestHeaders.set(
+              "x-fleetfill-direction",
+              getLocaleDirection(requestedLocale),
+            );
           }
           response = NextResponse.next({
             request: {
@@ -69,7 +81,11 @@ export async function proxy(request: NextRequest) {
   );
 
   const [{ data: localizationSettings }, authResult] = await Promise.all([
-    supabase.from("platform_settings").select("value").eq("key", "localization").maybeSingle(),
+    supabase
+      .from("platform_settings")
+      .select("value")
+      .eq("key", "localization")
+      .maybeSingle(),
     supabase.auth.getUser(),
   ]);
   void authResult;
@@ -92,7 +108,10 @@ export async function proxy(request: NextRequest) {
 
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-fleetfill-locale", requestedLocale);
-    requestHeaders.set("x-fleetfill-direction", getLocaleDirection(requestedLocale));
+    requestHeaders.set(
+      "x-fleetfill-direction",
+      getLocaleDirection(requestedLocale),
+    );
     requestHeaders.set("x-fleetfill-pathname", pathname);
     requestHeaders.set("x-fleetfill-search", request.nextUrl.search);
 
@@ -109,7 +128,12 @@ export async function proxy(request: NextRequest) {
     localizationPolicy,
   );
   const url = request.nextUrl.clone();
-  url.pathname = buildLocalizedPath(pathname, defaultLocale, locale, request.nextUrl.search);
+  url.pathname = buildLocalizedPath(
+    pathname,
+    defaultLocale,
+    locale,
+    request.nextUrl.search,
+  );
   return NextResponse.redirect(url);
 }
 

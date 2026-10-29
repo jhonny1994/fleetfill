@@ -50,12 +50,16 @@ type AdminPaymentDetail = {
   auditLogs: AuditLog[];
 };
 
-export async function fetchPaymentDetail(bookingId: string): Promise<AdminPaymentDetail | null> {
+export async function fetchPaymentDetail(
+  bookingId: string,
+): Promise<AdminPaymentDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: booking, error: bookingError } = await supabase
     .from("bookings")
-    .select("id, tracking_number, payment_reference, shipper_total_dzd, carrier_payout_dzd, payment_status, booking_status, carrier_id")
+    .select(
+      "id, tracking_number, payment_reference, shipper_total_dzd, carrier_payout_dzd, payment_status, booking_status, carrier_id",
+    )
     .eq("id", bookingId)
     .maybeSingle();
 
@@ -80,11 +84,15 @@ export async function fetchPaymentDetail(bookingId: string): Promise<AdminPaymen
 
   const proofHistory = (proofs ?? []) as PaymentProofDetail[];
   const latestProof = proofHistory[0] ?? null;
-  const signedUrl = latestProof ? await createSignedFileUrl("payment-proofs", latestProof.storage_path) : null;
+  const signedUrl = latestProof
+    ? await createSignedFileUrl("payment-proofs", latestProof.storage_path)
+    : null;
 
   const { data: auditLogs, error: auditError } = await supabase
     .from("admin_audit_logs")
-    .select("id, action, target_type, target_id, outcome, reason, metadata, created_at")
+    .select(
+      "id, action, target_type, target_id, outcome, reason, metadata, created_at",
+    )
     .eq("target_id", latestProof?.id ?? bookingId)
     .order("created_at", { ascending: false })
     .limit(20);

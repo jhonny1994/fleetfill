@@ -30,7 +30,11 @@ export function RefreshButton({
       disabled={isPending}
       aria-label={ariaLabel}
     >
-      {isPending ? <LoaderCircle className="size-4 animate-spin" /> : <RefreshCcw className="size-4" />}
+      {isPending ? (
+        <LoaderCircle className="size-4 animate-spin" />
+      ) : (
+        <RefreshCcw className="size-4" />
+      )}
       {label}
     </button>
   );

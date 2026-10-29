@@ -3,7 +3,8 @@ const messages = {
     appTitle: "لوحة تحكم FleetFill",
     auth: {
       signInTitle: "تسجيل الدخول إلى لوحة التحكم",
-      signInBody: "هذه الواجهة مُخصَّصة لفريق FleetFill الداخلي حصرًا. سجِّل الدخول بحساب إداري مُفعَّل.",
+      signInBody:
+        "هذه الواجهة مُخصَّصة لفريق FleetFill الداخلي حصرًا. سجِّل الدخول بحساب إداري مُفعَّل.",
       accessTitle: "وصول داخلي مُقيَّد",
       accessBody:
         "تدعم المنصة تهيئة المشرف الأول، والدعوات الإدارية، وتوزيع الصلاحيات بين المشرف العام ومشرف العمليات. تُعدّ هذه الواجهة مركز التشغيل اليومي للفريق.",
@@ -18,8 +19,10 @@ const messages = {
       invalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحين.",
       noSession: "تعذَّر إنشاء جلسة إدارية صالحة.",
       inactiveAdmin: "لا يمتلك هذا الحساب صلاحية إدارية نشطة في FleetFill.",
-      networkError: "تعذَّر الوصول إلى خدمة تسجيل الدخول. تحقَّق من اتصال Supabase ثم أعِد المحاولة.",
-      unexpectedError: "حدث خطأ غير متوقَّع أثناء تسجيل الدخول. أعِد المحاولة بعد لحظات.",
+      networkError:
+        "تعذَّر الوصول إلى خدمة تسجيل الدخول. تحقَّق من اتصال Supabase ثم أعِد المحاولة.",
+      unexpectedError:
+        "حدث خطأ غير متوقَّع أثناء تسجيل الدخول. أعِد المحاولة بعد لحظات.",
       signOut: "تسجيل الخروج",
       openAlerts: "فتح التنبيهات",
     },
@@ -44,7 +47,8 @@ const messages = {
         superAdmin: "مشرف عام",
         opsAdmin: "مشرف عمليات",
       },
-      searchPlaceholder: "ابحث عن الحجوزات، والشحنات، والمستخدمين، والنزاعات، والمستحقات، والدعم…",
+      searchPlaceholder:
+        "ابحث عن الحجوزات، والشحنات، والمستخدمين، والنزاعات، والمستحقات، والدعم…",
       searchShortcut: "اختصار البحث",
       openNavigation: "فتح قائمة التنقُّل",
       closeNavigation: "إغلاق قائمة التنقُّل",
@@ -75,8 +79,7 @@ const messages = {
     dashboard: {
       eyebrow: "برج المراقبة",
       title: "من هنا تبدأ عمليات FleetFill اليومية.",
-      body:
-        "عرض تشغيلي قائم على الطوابير لمراجعة المدفوعات وملفات التحقق والنزاعات ومستحقات الناقلين والدعم وصحة التشغيل. الغرض منه إظهار ما يتطلب تدخّلًا فوريًا بوضوح.",
+      body: "عرض تشغيلي قائم على الطوابير لمراجعة المدفوعات وملفات التحقق والنزاعات ومستحقات الناقلين والدعم وصحة التشغيل. الغرض منه إظهار ما يتطلب تدخّلًا فوريًا بوضوح.",
       metrics: {
         paymentProofs: "إثباتات الدفع",
         verificationPackets: "ملفات التحقُّق",
@@ -99,30 +102,36 @@ const messages = {
       vehicles: "مركبات",
       noExceptions: "لا توجد حالات تشغيلية تستدعي الانتباه حاليًّا.",
       alerts: {
-        deliveryReviewOverdueTitle: "ثمة حجوزات مُسلَّمة لا تزال بانتظار المراجعة.",
+        deliveryReviewOverdueTitle:
+          "ثمة حجوزات مُسلَّمة لا تزال بانتظار المراجعة.",
         deliveryReviewOverdueBody:
           "يوجد {count} حجزًا بقي في حالة «مُسلَّم بانتظار المراجعة» بعد انقضاء نافذة السماح المحدَّدة.",
-        paymentResubmissionOverdueTitle: "تجاوزت بعض المدفوعات المرفوضة مهلة إعادة الإرسال.",
+        paymentResubmissionOverdueTitle:
+          "تجاوزت بعض المدفوعات المرفوضة مهلة إعادة الإرسال.",
         paymentResubmissionOverdueBody:
           "يوجد {count} حجزًا لا يزال بحاجة إلى إعادة إرسال إثبات الدفع.",
         emailDeadLetterTitle: "ثمة إخفاقات في التسليم تستلزم تدخلًا تشغيليًّا.",
-        emailDeadLetterBody: "يوجد {count} مهمة بريد إلكتروني في قائمة الرسائل الميتة.",
-        supportNeedsReplyTitle: "يتضمّن طابور الدعم رسائل مستخدمين بانتظار الرد.",
-        supportNeedsReplyBody: "يوجد {count} طلب دعم يحتوي على متابعات من المستخدمين لم يطّلع عليها المشرفون بعد.",
+        emailDeadLetterBody:
+          "يوجد {count} مهمة بريد إلكتروني في قائمة الرسائل الميتة.",
+        supportNeedsReplyTitle:
+          "يتضمّن طابور الدعم رسائل مستخدمين بانتظار الرد.",
+        supportNeedsReplyBody:
+          "يوجد {count} طلب دعم يحتوي على متابعات من المستخدمين لم يطّلع عليها المشرفون بعد.",
       },
     },
     search: {
       eyebrow: "البحث التشغيلي",
       title: "ابحث في السجلات التشغيلية من نقطة واحدة.",
-      body:
-        "اعثر بسرعة على الحجز أو الشحنة أو المستخدم أو النزاع أو المستحق المطلوب، ثم انتقل مباشرةً إلى مساحة العمل المرجعية داخل لوحة التحكم.",
+      body: "اعثر بسرعة على الحجز أو الشحنة أو المستخدم أو النزاع أو المستحق المطلوب، ثم انتقل مباشرةً إلى مساحة العمل المرجعية داخل لوحة التحكم.",
       queryLabel: "عبارة البحث",
       kindLabel: "نوع النتيجة",
       allKinds: "كل الأنواع",
-      placeholder: "ابحث عن الحجوزات، والشحنات، والمستخدمين، والنزاعات، والمستحقات، والدعم…",
+      placeholder:
+        "ابحث عن الحجوزات، والشحنات، والمستخدمين، والنزاعات، والمستحقات، والدعم…",
       submit: "بحث",
       reset: "إعادة تعيين",
-      emptyQuery: "أدخِل رقمًا مرجعيًّا أو اسمًا أو بريدًا إلكترونيًّا أو أيَّ معرِّف تشغيلي للبحث في منظومة FleetFill.",
+      emptyQuery:
+        "أدخِل رقمًا مرجعيًّا أو اسمًا أو بريدًا إلكترونيًّا أو أيَّ معرِّف تشغيلي للبحث في منظومة FleetFill.",
       noResultsPrefix: "لا توجد نتائج مطابقة لـ",
       summaryEyebrow: "ملخص البحث",
       summaryTitle: "مجموعات النتائج المطابقة",
@@ -145,20 +154,183 @@ const messages = {
   },
   ui: {
     pages: {
-      admins: { eyebrow: "المشرفون", title: "الحسابات الإدارية النشطة", listBody: "عرض مُوجَز للحسابات الإدارية يوضِّح الحالة والدور وتاريخ آخر تحديث، مع إمكانية الانتقال إلى صفحة التفاصيل لإدارة الصلاحيات والتفعيل.", detailBody: "مساحة عمل إدارية مُركَّزة تجمع حالة الحساب وسجلّ الدعوات ومسار التدقيق في واجهة واحدة متوازنة.", accountOverview: "نظرة عامة على الحساب الإداري", accountOverviewBody: "تعرض هذه البطاقة أهمّ بيانات الحساب قبل تنفيذ أيّ تغيير في الحوكمة أو التشغيل.", invitations: "سجلّ الدعوات الإدارية", invitationHistoryBody: "راجِع الدعوات السابقة لهذا الحساب، وحالة كلّ دعوة، وما إذا كانت لا تزال صالحة للاستخدام.", governanceActions: "إجراءات الحوكمة", governanceActionsBody: "استخدِم هذه الإجراءات لتحديث الدور أو تعطيل الوصول الإداري مع تسجيل السبب في سجلّ التدقيق.", inviteTitle: "دعوة مشرف جديد", inviteBody: "لا يُنشأ المشرفون إلّا عبر الدعوة. يظهر الرمز مرة واحدة هنا ليُرسَل عبر قناة داخلية آمنة.", invitationCreatedFor: "أُنشئت دعوة إلى {email}", invitationMeta: "الدور {role} · تنتهي في {date}", accountMeta: "بدعوة من {actor} · آخر تحديث {date}", searchLabel: "البحث في المشرفين", searchPlaceholder: "ابحث بالاسم أو البريد أو الدور أو معرّف الملف", totalAdmins: "إجمالي المشرفين", activeAdmins: "المشرفون النشطون", inactiveAdmins: "المشرفون غير النشطين", superAdmins: "المشرفون العامون", opsAdmins: "مشرفو العمليات", pendingInvitations: "الدعوات المعلّقة", totalAdminAccounts: "حسابًا إداريًّا", accountPageSummary: "الصفحة", invitationHistorySummary: "عدد الدعوات الحديثة {count} من أصل {total}", notFound: "لم يُعثَر على الحساب الإداري." },
-      audit: { eyebrow: "التدقيق وصحة التشغيل", title: "سجل التدقيق وصحة التسليم", body: "تعرض هذه الصفحة سجل التدقيق التشغيلي ومؤشرات صحة البريد التشغيلي فقط. أما رسائل تأكيد الحساب وإعادة تعيين كلمة المرور فتظل مُدارة عبر Supabase Auth خارج هذه السجلات.", auditTrail: "سجلّ تدقيق المشرفين", auditTrailBody: "يُسجَّل هنا كل إجراء إداري حساس حتى يتمكن فريق التشغيل من تتبّع ما تغيّر ومتى ولماذا.", emailLogs: "سجلّ تسليم البريد", emailLogsBody: "تشمل هذه السجلات رسائل البريد التشغيلي الخارجة من FleetFill عبر صندوق البريد الصادر وعمال الإرسال وخطافات المزوّد، ولا تشمل رسائل Supabase Auth.", deadLetters: "الرسائل المتعثّرة", deadLettersBody: "راجِع هنا رسائل البريد أو الإشعارات التي استنفدت محاولات الإرسال التلقائي، ثم أعد تشغيلها عند الحاجة.", viewAll: "عرض الكل", backToSummary: "العودة إلى الملخص", previous: "السابق", next: "التالي", page: "الصفحة", total: "إجمالي", emailDeadLetters: "رسائل البريد المتعثّرة", pushDeadLetters: "إشعارات الدفع المتعثّرة" },
-      payments: { eyebrow: "المدفوعات", title: "طابور مراجعة إثباتات الدفع", notFound: "لم يُعثَر على تفاصيل الدفع.", actions: "إجراءات الدفع", preview: "معاينة الإثبات" },
-      verification: { eyebrow: "التحقُّق", title: "مراجعة ملف تحقق الناقل", notFound: "لم يُعثَر على ملف التحقُّق.", actions: "إجراءات التحقُّق", preview: "معاينة أحدث مستند", packetDocs: "مستندات ملف التحقّق" },
-      disputes: { eyebrow: "النزاعات", title: "طابور النزاعات المفتوحة", notFound: "لم يُعثَر على تفاصيل النزاع.", actions: "إجراءات النزاع", preview: "معاينة الأدلة" },
-      payouts: { eyebrow: "المستحقات", title: "إدارة مستحقات الناقلين", notFound: "لم يُعثَر على تفاصيل المستحق.", actions: "إجراءات المستحقات", account: "حساب المستحقات النشط" },
-      support: { eyebrow: "الدعم", title: "صندوق الدعم", notFound: "لم يُعثَر على محادثة الدعم.", actions: "إجراءات الدعم", conversation: "المحادثة" },
-      users: { eyebrow: "المستخدمون", title: "إدارة المستخدمين ودورة حياة الحسابات", listBody: "قائمة تشغيلية مُوجَزة تعرض حالة الحساب، والتحقُّق، وآخر نشاط، مع الانتقال إلى صفحة التفاصيل عند الحاجة إلى إجراء أو مراجعة أعمق.", searchPlaceholder: "ابحث بالاسم أو البريد أو الهاتف أو معرِّف الملف", userLabel: "المستخدم", bookingsLabel: "حجوزات", notFound: "لم يُعثَر على المستخدم.", controls: "إجراءات الحساب" },
-      bookingsList: { eyebrow: "الحجوزات", title: "سجلّ الحجوزات", body: "اعرض الحجوزات كقائمة تشغيلية تتضمن المسار والأطراف وحالة الدفع مع انتقال مباشر إلى مساحة العمل الصحيحة.", resultsSummary: "{from}-{to} من {total}", sidebarHint: "استخدم هذا السجل للتحقيق في الحجز ثم فتح المراجعة أو الشحنة المرتبطة.", searchPlaceholder: "ابحث برقم التتبع أو مرجع الدفع أو معرّف الحجز أو معرّف الشحنة", emptyTitle: "لا توجد حجوزات بعد", emptyBody: "ستظهر الحجوزات هنا عندما تبدأ الطلبات بالتحول إلى عمليات فعلية.", filteredEmptyTitle: "لا توجد حجوزات مطابقة لهذه الفلاتر", filteredEmptyBody: "وسّع البحث أو أزل فلتر الحالة الحالي.", bookingLabel: "الحجز", routeLabel: "المسار", partiesLabel: "الشاحن / الناقل", amountsLabel: "المبالغ", paymentReference: "مرجع الدفع {reference}" },
-      bookings: { eyebrow: "الحجوزات", notFound: "لم يُعثَر على تفاصيل الحجز.", linkedOps: "العمليات المرتبطة", references: "المراجع" },
-      settings: { eyebrow: "الإعدادات", title: "عناصر التحكم التشغيلية للمنصة" },
-      shipmentsList: { eyebrow: "الشحنات", title: "سجلّ الشحنات", body: "استخدم هذه القائمة لمراجعة الطلبات والمسارات وحالة الحجوزات المرتبطة والعوائق التشغيلية الحالية.", resultsSummary: "{from}-{to} من {total}", sidebarHint: "يجب أن تساعد كل خانة المشرف على فتح الشحنة أو الحجز الصحيح مباشرة.", searchPlaceholder: "ابحث بمعرّف الشحنة أو معرّف الشاحن أو الوصف", emptyTitle: "لا توجد شحنات بعد", emptyBody: "ستظهر الشحنات هنا عندما يبدأ الشاحنون بنشر الطلبات والمسارات.", filteredEmptyTitle: "لا توجد شحنات مطابقة لهذه الفلاتر", filteredEmptyBody: "أزل فلترًا أو أكثر لتوسيع الرؤية التشغيلية.", shipmentLabel: "الشحنة", routeLabel: "المسار", shipperLabel: "الشاحن", bookingLabel: "الحجز المرتبط", noBookingYet: "لا يوجد حجز بعد" },
-      shipments: { eyebrow: "الشحنات", notFound: "لم يُعثَر على تفاصيل الشحنة.", routeContext: "سياق المسار", linkedEntities: "الكيانات المرتبطة", linkedBooking: "الحجز المرتبط", noBookingYet: "لم يُنشأ حجز لهذه الشحنة بعد.", shipperProfile: "ملف الشاحن" },
-      userDetail: { profileAndVerification: "الملف الشخصي والتحقُّق", vehicles: "المركبات", payoutAccounts: "حسابات المستحقات", recentShipments: "أحدث الشحنات", recentBookings: "أحدث الحجوزات", supportThreads: "طلبات الدعم", verificationDocuments: "مستندات التحقُّق", noVehicles: "لا توجد مركبات مرتبطة بهذا المستخدم.", noPayoutAccounts: "لا توجد حسابات مستحقات مسجَّلة.", noShipments: "لا توجد شحنات أنشأها هذا المستخدم.", noBookings: "لا توجد حجوزات مرتبطة بهذا المستخدم.", noSupportThreads: "لا توجد طلبات دعم لهذا المستخدم.", noVerificationDocuments: "لا توجد مستندات تحقُّق لهذا المستخدم." },
+      admins: {
+        eyebrow: "المشرفون",
+        title: "الحسابات الإدارية النشطة",
+        listBody:
+          "عرض مُوجَز للحسابات الإدارية يوضِّح الحالة والدور وتاريخ آخر تحديث، مع إمكانية الانتقال إلى صفحة التفاصيل لإدارة الصلاحيات والتفعيل.",
+        detailBody:
+          "مساحة عمل إدارية مُركَّزة تجمع حالة الحساب وسجلّ الدعوات ومسار التدقيق في واجهة واحدة متوازنة.",
+        accountOverview: "نظرة عامة على الحساب الإداري",
+        accountOverviewBody:
+          "تعرض هذه البطاقة أهمّ بيانات الحساب قبل تنفيذ أيّ تغيير في الحوكمة أو التشغيل.",
+        invitations: "سجلّ الدعوات الإدارية",
+        invitationHistoryBody:
+          "راجِع الدعوات السابقة لهذا الحساب، وحالة كلّ دعوة، وما إذا كانت لا تزال صالحة للاستخدام.",
+        governanceActions: "إجراءات الحوكمة",
+        governanceActionsBody:
+          "استخدِم هذه الإجراءات لتحديث الدور أو تعطيل الوصول الإداري مع تسجيل السبب في سجلّ التدقيق.",
+        inviteTitle: "دعوة مشرف جديد",
+        inviteBody:
+          "لا يُنشأ المشرفون إلّا عبر الدعوة. يظهر الرمز مرة واحدة هنا ليُرسَل عبر قناة داخلية آمنة.",
+        invitationCreatedFor: "أُنشئت دعوة إلى {email}",
+        invitationMeta: "الدور {role} · تنتهي في {date}",
+        accountMeta: "بدعوة من {actor} · آخر تحديث {date}",
+        searchLabel: "البحث في المشرفين",
+        searchPlaceholder: "ابحث بالاسم أو البريد أو الدور أو معرّف الملف",
+        totalAdmins: "إجمالي المشرفين",
+        activeAdmins: "المشرفون النشطون",
+        inactiveAdmins: "المشرفون غير النشطين",
+        superAdmins: "المشرفون العامون",
+        opsAdmins: "مشرفو العمليات",
+        pendingInvitations: "الدعوات المعلّقة",
+        totalAdminAccounts: "حسابًا إداريًّا",
+        accountPageSummary: "الصفحة",
+        invitationHistorySummary: "عدد الدعوات الحديثة {count} من أصل {total}",
+        notFound: "لم يُعثَر على الحساب الإداري.",
+      },
+      audit: {
+        eyebrow: "التدقيق وصحة التشغيل",
+        title: "سجل التدقيق وصحة التسليم",
+        body: "تعرض هذه الصفحة سجل التدقيق التشغيلي ومؤشرات صحة البريد التشغيلي فقط. أما رسائل تأكيد الحساب وإعادة تعيين كلمة المرور فتظل مُدارة عبر Supabase Auth خارج هذه السجلات.",
+        auditTrail: "سجلّ تدقيق المشرفين",
+        auditTrailBody:
+          "يُسجَّل هنا كل إجراء إداري حساس حتى يتمكن فريق التشغيل من تتبّع ما تغيّر ومتى ولماذا.",
+        emailLogs: "سجلّ تسليم البريد",
+        emailLogsBody:
+          "تشمل هذه السجلات رسائل البريد التشغيلي الخارجة من FleetFill عبر صندوق البريد الصادر وعمال الإرسال وخطافات المزوّد، ولا تشمل رسائل Supabase Auth.",
+        deadLetters: "الرسائل المتعثّرة",
+        deadLettersBody:
+          "راجِع هنا رسائل البريد أو الإشعارات التي استنفدت محاولات الإرسال التلقائي، ثم أعد تشغيلها عند الحاجة.",
+        viewAll: "عرض الكل",
+        backToSummary: "العودة إلى الملخص",
+        previous: "السابق",
+        next: "التالي",
+        page: "الصفحة",
+        total: "إجمالي",
+        emailDeadLetters: "رسائل البريد المتعثّرة",
+        pushDeadLetters: "إشعارات الدفع المتعثّرة",
+      },
+      payments: {
+        eyebrow: "المدفوعات",
+        title: "طابور مراجعة إثباتات الدفع",
+        notFound: "لم يُعثَر على تفاصيل الدفع.",
+        actions: "إجراءات الدفع",
+        preview: "معاينة الإثبات",
+      },
+      verification: {
+        eyebrow: "التحقُّق",
+        title: "مراجعة ملف تحقق الناقل",
+        notFound: "لم يُعثَر على ملف التحقُّق.",
+        actions: "إجراءات التحقُّق",
+        preview: "معاينة أحدث مستند",
+        packetDocs: "مستندات ملف التحقّق",
+      },
+      disputes: {
+        eyebrow: "النزاعات",
+        title: "طابور النزاعات المفتوحة",
+        notFound: "لم يُعثَر على تفاصيل النزاع.",
+        actions: "إجراءات النزاع",
+        preview: "معاينة الأدلة",
+      },
+      payouts: {
+        eyebrow: "المستحقات",
+        title: "إدارة مستحقات الناقلين",
+        notFound: "لم يُعثَر على تفاصيل المستحق.",
+        actions: "إجراءات المستحقات",
+        account: "حساب المستحقات النشط",
+      },
+      support: {
+        eyebrow: "الدعم",
+        title: "صندوق الدعم",
+        notFound: "لم يُعثَر على محادثة الدعم.",
+        actions: "إجراءات الدعم",
+        conversation: "المحادثة",
+      },
+      users: {
+        eyebrow: "المستخدمون",
+        title: "إدارة المستخدمين ودورة حياة الحسابات",
+        listBody:
+          "قائمة تشغيلية مُوجَزة تعرض حالة الحساب، والتحقُّق، وآخر نشاط، مع الانتقال إلى صفحة التفاصيل عند الحاجة إلى إجراء أو مراجعة أعمق.",
+        searchPlaceholder: "ابحث بالاسم أو البريد أو الهاتف أو معرِّف الملف",
+        userLabel: "المستخدم",
+        bookingsLabel: "حجوزات",
+        notFound: "لم يُعثَر على المستخدم.",
+        controls: "إجراءات الحساب",
+      },
+      bookingsList: {
+        eyebrow: "الحجوزات",
+        title: "سجلّ الحجوزات",
+        body: "اعرض الحجوزات كقائمة تشغيلية تتضمن المسار والأطراف وحالة الدفع مع انتقال مباشر إلى مساحة العمل الصحيحة.",
+        resultsSummary: "{from}-{to} من {total}",
+        sidebarHint:
+          "استخدم هذا السجل للتحقيق في الحجز ثم فتح المراجعة أو الشحنة المرتبطة.",
+        searchPlaceholder:
+          "ابحث برقم التتبع أو مرجع الدفع أو معرّف الحجز أو معرّف الشحنة",
+        emptyTitle: "لا توجد حجوزات بعد",
+        emptyBody:
+          "ستظهر الحجوزات هنا عندما تبدأ الطلبات بالتحول إلى عمليات فعلية.",
+        filteredEmptyTitle: "لا توجد حجوزات مطابقة لهذه الفلاتر",
+        filteredEmptyBody: "وسّع البحث أو أزل فلتر الحالة الحالي.",
+        bookingLabel: "الحجز",
+        routeLabel: "المسار",
+        partiesLabel: "الشاحن / الناقل",
+        amountsLabel: "المبالغ",
+        paymentReference: "مرجع الدفع {reference}",
+      },
+      bookings: {
+        eyebrow: "الحجوزات",
+        notFound: "لم يُعثَر على تفاصيل الحجز.",
+        linkedOps: "العمليات المرتبطة",
+        references: "المراجع",
+      },
+      settings: {
+        eyebrow: "الإعدادات",
+        title: "عناصر التحكم التشغيلية للمنصة",
+      },
+      shipmentsList: {
+        eyebrow: "الشحنات",
+        title: "سجلّ الشحنات",
+        body: "استخدم هذه القائمة لمراجعة الطلبات والمسارات وحالة الحجوزات المرتبطة والعوائق التشغيلية الحالية.",
+        resultsSummary: "{from}-{to} من {total}",
+        sidebarHint:
+          "يجب أن تساعد كل خانة المشرف على فتح الشحنة أو الحجز الصحيح مباشرة.",
+        searchPlaceholder: "ابحث بمعرّف الشحنة أو معرّف الشاحن أو الوصف",
+        emptyTitle: "لا توجد شحنات بعد",
+        emptyBody:
+          "ستظهر الشحنات هنا عندما يبدأ الشاحنون بنشر الطلبات والمسارات.",
+        filteredEmptyTitle: "لا توجد شحنات مطابقة لهذه الفلاتر",
+        filteredEmptyBody: "أزل فلترًا أو أكثر لتوسيع الرؤية التشغيلية.",
+        shipmentLabel: "الشحنة",
+        routeLabel: "المسار",
+        shipperLabel: "الشاحن",
+        bookingLabel: "الحجز المرتبط",
+        noBookingYet: "لا يوجد حجز بعد",
+      },
+      shipments: {
+        eyebrow: "الشحنات",
+        notFound: "لم يُعثَر على تفاصيل الشحنة.",
+        routeContext: "سياق المسار",
+        linkedEntities: "الكيانات المرتبطة",
+        linkedBooking: "الحجز المرتبط",
+        noBookingYet: "لم يُنشأ حجز لهذه الشحنة بعد.",
+        shipperProfile: "ملف الشاحن",
+      },
+      userDetail: {
+        profileAndVerification: "الملف الشخصي والتحقُّق",
+        vehicles: "المركبات",
+        payoutAccounts: "حسابات المستحقات",
+        recentShipments: "أحدث الشحنات",
+        recentBookings: "أحدث الحجوزات",
+        supportThreads: "طلبات الدعم",
+        verificationDocuments: "مستندات التحقُّق",
+        noVehicles: "لا توجد مركبات مرتبطة بهذا المستخدم.",
+        noPayoutAccounts: "لا توجد حسابات مستحقات مسجَّلة.",
+        noShipments: "لا توجد شحنات أنشأها هذا المستخدم.",
+        noBookings: "لا توجد حجوزات مرتبطة بهذا المستخدم.",
+        noSupportThreads: "لا توجد طلبات دعم لهذا المستخدم.",
+        noVerificationDocuments: "لا توجد مستندات تحقُّق لهذا المستخدم.",
+      },
     },
     labels: {
       role: "الدور",
@@ -238,19 +410,22 @@ const messages = {
       noPaymentProofsWaitingBody:
         "سيعود هذا الطابور للامتلاء عند رفع إثباتات جديدة أو إعادة حالة المراجعة إلى الانتظار.",
       noOpenDisputesWaiting: "لا توجد نزاعات مفتوحة تحتاج إلى تدخل حالياً.",
-      noOpenDisputesWaitingBody: "تغادر النزاعات التي تم حلها أو إغلاقها هذا الطابور تلقائياً.",
+      noOpenDisputesWaitingBody:
+        "تغادر النزاعات التي تم حلها أو إغلاقها هذا الطابور تلقائياً.",
       pendingCount: "{count} قيد المراجعة",
       supportLinkedDispute: "النزاع {reference}",
       supportLinkedPayment: "الدفع {reference}",
       noSupportThreadsWaiting: "لا توجد طلبات دعم تحتاج إلى فرز.",
-      noSupportThreadsWaitingBody: "ستظهر هنا التذاكر المفتوحة أو التي تحتوي على متابعات من المستخدم.",
+      noSupportThreadsWaitingBody:
+        "ستظهر هنا التذاكر المفتوحة أو التي تحتوي على متابعات من المستخدم.",
       payoutsReady: "{count} مستحقة",
       payoutsRecent: "{count} حديثة",
       noEligiblePayoutsWaiting: "لا توجد مستحقات جاهزة حالياً.",
       noEligiblePayoutsWaitingBody:
         "ستظهر هنا الحجوزات المكتملة والمضمونة من دون نزاعات مفتوحة عندما تصبح جاهزة للصرف.",
       noReleasedPayoutsYet: "لم تُصرف أي مستحقات بعد.",
-      noReleasedPayoutsYetBody: "ستتجمع هنا المستحقات المصروفة لأغراض المتابعة وسجل التدقيق.",
+      noReleasedPayoutsYetBody:
+        "ستتجمع هنا المستحقات المصروفة لأغراض المتابعة وسجل التدقيق.",
     },
     actions: {
       confirm: "تأكيد",
@@ -260,7 +435,8 @@ const messages = {
       retry: "إعادة المحاولة",
       revoke: "إلغاء الدعوة",
       revokeTitle: "إلغاء هذه الدعوة؟",
-      revokeBody: "سيتوقف رمز الدعوة عن العمل فورًا وستُسجَّل الدعوة على أنها ملغاة.",
+      revokeBody:
+        "سيتوقف رمز الدعوة عن العمل فورًا وستُسجَّل الدعوة على أنها ملغاة.",
       revokeReason: "أُلغيت من لوحة التحكم",
       createInvitation: "إنشاء الدعوة",
       creatingInvitation: "جارٍ إنشاء الدعوة…",
@@ -268,24 +444,34 @@ const messages = {
       expiryHours: "مدة الصلاحية (بالساعات)",
       viewAccount: "فتح التفاصيل",
       changeRole: "تغيير الدور",
-      changeRoleBody: "استخدِم هذا الإجراء عندما يحتاج الحساب إلى تغيير دائم في مستوى الصلاحية الإدارية.",
+      changeRoleBody:
+        "استخدِم هذا الإجراء عندما يحتاج الحساب إلى تغيير دائم في مستوى الصلاحية الإدارية.",
       changeRoleTitle: "تأكيد تغيير الدور؟",
-      changeRoleConfirmBody: "سيُحدَّث الدور الإداري لهذا الحساب فورًا مع تسجيل السبب في سجلّ التدقيق.",
+      changeRoleConfirmBody:
+        "سيُحدَّث الدور الإداري لهذا الحساب فورًا مع تسجيل السبب في سجلّ التدقيق.",
       updateRole: "تحديث الدور",
       deactivateAdmin: "تعطيل المشرف",
       reactivateAdmin: "إعادة تفعيل المشرف",
-      deactivateAdminBody: "أوقِف الوصول الإداري عندما يستلزم الحساب تعليقًا تشغيليًّا أو أمنيًّا ريثما تُستكمَل المراجعة.",
-      reactivateAdminBody: "أعِد الوصول الإداري بعد انتهاء سبب التعليق أو اكتمال المراجعة.",
+      deactivateAdminBody:
+        "أوقِف الوصول الإداري عندما يستلزم الحساب تعليقًا تشغيليًّا أو أمنيًّا ريثما تُستكمَل المراجعة.",
+      reactivateAdminBody:
+        "أعِد الوصول الإداري بعد انتهاء سبب التعليق أو اكتمال المراجعة.",
       deactivateAdminTitle: "تعطيل هذا المشرف؟",
-      deactivateAdminConfirmBody: "سيُمنَع هذا الحساب من الوصول إلى لوحة التحكم إلى أن يُعاد تفعيله من مشرف آخر.",
+      deactivateAdminConfirmBody:
+        "سيُمنَع هذا الحساب من الوصول إلى لوحة التحكم إلى أن يُعاد تفعيله من مشرف آخر.",
       reactivateAdminTitle: "إعادة تفعيل هذا المشرف؟",
-      reactivateAdminConfirmBody: "سيستعيد هذا الحساب إمكانية الوصول إلى لوحة التحكم فورًا.",
-      suspendBody: "استخدِم هذا الإجراء عندما يجب منع الحساب من ممارسة أيّ نشاط على المنصة ريثما يُعالِج المشرف المشكلة.",
-      reactivateBody: "استخدِم هذا الإجراء لإعادة الوصول بعد تعليق أو إيقاف إشرافي.",
+      reactivateAdminConfirmBody:
+        "سيستعيد هذا الحساب إمكانية الوصول إلى لوحة التحكم فورًا.",
+      suspendBody:
+        "استخدِم هذا الإجراء عندما يجب منع الحساب من ممارسة أيّ نشاط على المنصة ريثما يُعالِج المشرف المشكلة.",
+      reactivateBody:
+        "استخدِم هذا الإجراء لإعادة الوصول بعد تعليق أو إيقاف إشرافي.",
       suspendTitle: "تعليق هذا المستخدم؟",
-      suspendConfirmBody: "سيُمنَع الحساب من الوصول المعتاد إلى التطبيق حتى يُعيد أحد المشرفين تفعيله.",
+      suspendConfirmBody:
+        "سيُمنَع الحساب من الوصول المعتاد إلى التطبيق حتى يُعيد أحد المشرفين تفعيله.",
       reactivateTitle: "إعادة تفعيل هذا المستخدم؟",
-      reactivateConfirmBody: "سيُعاد تفعيل الحساب ويُسمَح للمستخدم بالعودة إلى المنصة.",
+      reactivateConfirmBody:
+        "سيُعاد تفعيل الحساب ويُسمَح للمستخدم بالعودة إلى المنصة.",
       approveProof: "اعتماد الإثبات",
       rejectProof: "رفض الإثبات",
       verifiedAmount: "المبلغ المعتمَد (دج)",
@@ -293,20 +479,25 @@ const messages = {
       decisionNote: "ملاحظة القرار",
       rejectionReason: "سبب الرفض",
       approveTitle: "اعتماد إثبات الدفع؟",
-      approveBody: "سيؤدي هذا إلى اعتماد الإثبات ونقل الحجز إلى حالة الدفع المضمون.",
+      approveBody:
+        "سيؤدي هذا إلى اعتماد الإثبات ونقل الحجز إلى حالة الدفع المضمون.",
       rejectTitle: "رفض إثبات الدفع؟",
-      rejectBody: "سيؤدي هذا إلى رفض الإثبات وإعادة الحجز إلى مسار إعادة إرسال الدفع.",
+      rejectBody:
+        "سيؤدي هذا إلى رفض الإثبات وإعادة الحجز إلى مسار إعادة إرسال الدفع.",
       approvePacket: "اعتماد الملف بالكامل",
-      approvePacketBody: "استخدِم هذا الإجراء عندما يكتمل ملف السائق والمركبة ويصبح جاهزًا للاعتماد دفعة واحدة.",
+      approvePacketBody:
+        "استخدِم هذا الإجراء عندما يكتمل ملف السائق والمركبة ويصبح جاهزًا للاعتماد دفعة واحدة.",
       document: "المستند",
       decision: "القرار",
       approveDocument: "اعتماد المستند",
       rejectDocument: "رفض المستند",
       reasonRequired: "السبب (إلزامي عند الرفض)",
       approvePacketTitle: "اعتماد ملف التحقُّق بالكامل؟",
-      approvePacketConfirmBody: "سيؤدي هذا إلى اعتماد الملف وإرسال إشعار الاعتماد عند اكتمال التحقُّق.",
+      approvePacketConfirmBody:
+        "سيؤدي هذا إلى اعتماد الملف وإرسال إشعار الاعتماد عند اكتمال التحقُّق.",
       submitReviewTitle: "إرسال مراجعة المستند؟",
-      submitReviewBody: "ستُحدَّث حالة مراجعة المستند فورًا مع تحديث ملف الناقل.",
+      submitReviewBody:
+        "ستُحدَّث حالة مراجعة المستند فورًا مع تحديث ملف الناقل.",
       reviewDocument: "مراجعة المستند",
       resolveWithoutRefund: "إغلاق دون استرداد",
       issueRefund: "إصدار استرداد",
@@ -335,31 +526,103 @@ const messages = {
       resolveDispute: "تسوية النزاع",
       createRefund: "إنشاء استرداد",
       resolveNoRefundTitle: "تسوية النزاع دون استرداد؟",
-      resolveNoRefundBody: "سيؤدي هذا إلى إغلاق النزاع مع الإبقاء على النتيجة المالية الحالية كما هي.",
+      resolveNoRefundBody:
+        "سيؤدي هذا إلى إغلاق النزاع مع الإبقاء على النتيجة المالية الحالية كما هي.",
       resolveWithRefundTitle: "تسوية النزاع مع استرداد؟",
-      resolveWithRefundBody: "سيؤدي هذا إلى إنشاء مسار الاسترداد وإقفال النزاع بنتيجة استرداد.",
+      resolveWithRefundBody:
+        "سيؤدي هذا إلى إنشاء مسار الاسترداد وإقفال النزاع بنتيجة استرداد.",
       saveSettingTitle: "حفظ إعداد المنصة؟",
-      saveSettingBody: "سيُكتَب هذا مباشرةً في مخزن الإعدادات الخاضع للتدقيق وسيؤثِّر في السلوك التشغيلي اللاحق للمنصة.",
+      saveSettingBody:
+        "سيُكتَب هذا مباشرةً في مخزن الإعدادات الخاضع للتدقيق وسيؤثِّر في السلوك التشغيلي اللاحق للمنصة.",
       saveSetting: "حفظ الإعداد",
     },
     enums: {
       adminRoles: { super_admin: "مشرف عام", ops_admin: "مشرف عمليات" },
       userRoles: { shipper: "شاحن", carrier: "ناقل", admin: "مشرف" },
       activity: { active: "نشط", inactive: "غير نشط", suspended: "مُعلَّق" },
-      verification: { pending: "قيد المراجعة", verified: "مُعتمَد", rejected: "مرفوض", incomplete: "غير مكتمل" },
-      invitations: { pending: "معلَّقة", accepted: "مقبولة", revoked: "ملغاة", expired: "منتهية الصلاحية" },
-      supportStatus: { open: "مفتوح", in_progress: "قيد المعالجة", waiting_for_user: "بانتظار المستخدم", resolved: "تمّت التسوية", closed: "مُغلَق" },
+      verification: {
+        pending: "قيد المراجعة",
+        verified: "مُعتمَد",
+        rejected: "مرفوض",
+        incomplete: "غير مكتمل",
+      },
+      invitations: {
+        pending: "معلَّقة",
+        accepted: "مقبولة",
+        revoked: "ملغاة",
+        expired: "منتهية الصلاحية",
+      },
+      supportStatus: {
+        open: "مفتوح",
+        in_progress: "قيد المعالجة",
+        waiting_for_user: "بانتظار المستخدم",
+        resolved: "تمّت التسوية",
+        closed: "مُغلَق",
+      },
       supportPriority: { normal: "عادية", high: "مرتفعة", urgent: "عاجلة" },
-      payment: { pending: "معلَّق", unpaid: "غير مدفوع", submitted: "تم الإرسال", proof_submitted: "تم إرسال الإثبات", under_review: "قيد المراجعة", under_verification: "قيد التحقُّق", rejected: "مرفوض", secured: "مضمون", refunded: "مُستردّ", released: "مصروف", released_to_carrier: "حُوِّل إلى الناقل" },
-      booking: { pending: "معلَّق", pending_payment: "بانتظار الدفع", payment_under_review: "الدفع قيد المراجعة", confirmed: "مؤكَّد", picked_up: "تم الاستلام", in_transit: "قيد النقل", delivered_pending_review: "مُسلَّم بانتظار المراجعة", completed: "مكتمل", canceled: "ملغى", cancelled: "ملغى", disputed: "متنازَع عليه" },
-      shipment: { draft: "مسوّدة", booked: "محجوزة", cancelled: "ملغاة", canceled: "ملغاة" },
-      dispute: { open: "مفتوح", resolved: "تمّت التسوية", refunded: "مُستردّ", closed: "مُغلَق" },
-      payout: { pending: "معلَّق", released: "مصروف", sent: "تم الإرسال", failed: "أخفق", processing: "قيد التنفيذ", cancelled: "ملغى", canceled: "ملغى" },
+      payment: {
+        pending: "معلَّق",
+        unpaid: "غير مدفوع",
+        submitted: "تم الإرسال",
+        proof_submitted: "تم إرسال الإثبات",
+        under_review: "قيد المراجعة",
+        under_verification: "قيد التحقُّق",
+        rejected: "مرفوض",
+        secured: "مضمون",
+        refunded: "مُستردّ",
+        released: "مصروف",
+        released_to_carrier: "حُوِّل إلى الناقل",
+      },
+      booking: {
+        pending: "معلَّق",
+        pending_payment: "بانتظار الدفع",
+        payment_under_review: "الدفع قيد المراجعة",
+        confirmed: "مؤكَّد",
+        picked_up: "تم الاستلام",
+        in_transit: "قيد النقل",
+        delivered_pending_review: "مُسلَّم بانتظار المراجعة",
+        completed: "مكتمل",
+        canceled: "ملغى",
+        cancelled: "ملغى",
+        disputed: "متنازَع عليه",
+      },
+      shipment: {
+        draft: "مسوّدة",
+        booked: "محجوزة",
+        cancelled: "ملغاة",
+        canceled: "ملغاة",
+      },
+      dispute: {
+        open: "مفتوح",
+        resolved: "تمّت التسوية",
+        refunded: "مُستردّ",
+        closed: "مُغلَق",
+      },
+      payout: {
+        pending: "معلَّق",
+        released: "مصروف",
+        sent: "تم الإرسال",
+        failed: "أخفق",
+        processing: "قيد التنفيذ",
+        cancelled: "ملغى",
+        canceled: "ملغى",
+      },
       entity: { profile: "ملف شخصي", vehicle: "مركبة" },
       sender: { user: "المستخدم", admin: "المشرف", system: "النظام" },
-      email: { delivered: "تم التسليم", soft_failed: "إخفاق مؤقت", failed: "أخفق", dead_letter: "رسائل ميتة" },
+      email: {
+        delivered: "تم التسليم",
+        soft_failed: "إخفاق مؤقت",
+        failed: "أخفق",
+        dead_letter: "رسائل ميتة",
+      },
       locale: { ar: "العربية", fr: "الفرنسية", en: "الإنجليزية" },
-      document: { driver_identity_or_license: "رخصة القيادة", truck_registration: "البطاقة الرمادية", truck_insurance: "تأمين المركبة", truck_technical_inspection: "الفحص التقني", transport_license: "رخصة النقل" },
+      document: {
+        driver_identity_or_license: "رخصة القيادة",
+        truck_registration: "البطاقة الرمادية",
+        truck_insurance: "تأمين المركبة",
+        truck_technical_inspection: "الفحص التقني",
+        transport_license: "رخصة النقل",
+      },
     },
     detail: {
       bookings: {
@@ -386,10 +649,12 @@ const messages = {
         blockerPaymentReviewPending: "العائق الحالي: مراجعة الدفع معلقة",
         blockerTemplate: "العائق الحالي: {reason}",
         nextActionResolveDispute: "الإجراء التالي: حل النزاع المفتوح",
-        nextActionWaitForShipperPayment: "الإجراء التالي: انتظار الشاحن لإرسال الدفع",
+        nextActionWaitForShipperPayment:
+          "الإجراء التالي: انتظار الشاحن لإرسال الدفع",
         nextActionReviewPaymentProof: "الإجراء التالي: مراجعة إثبات الدفع",
         nextActionReleaseRequestedPayout: "الإجراء التالي: صرف التحويل المطلوب",
-        nextActionMonitorDeliveryReview: "الإجراء التالي: مراقبة مراجعة التسليم",
+        nextActionMonitorDeliveryReview:
+          "الإجراء التالي: مراقبة مراجعة التسليم",
         nextActionNoneBookingComplete: "الإجراء التالي: لا يوجد، الحجز مكتمل",
         nextActionMonitorProgress: "الإجراء التالي: متابعة الحجز",
       },
@@ -426,20 +691,24 @@ const messages = {
       },
       payouts: {
         title: "صرف التحويل للحجز {trackingNumber}",
-        description: "تحقَّق من حساب التحويل وحالة الصرف قبل إنشاء سجلّ التحويل الخاص بالحجز.",
+        description:
+          "تحقَّق من حساب التحويل وحالة الصرف قبل إنشاء سجلّ التحويل الخاص بالحجز.",
         payoutState: "حالة التحويل الحالية",
         notReleased: "لم يُصرَف بعد",
         payoutEntry: "التحويل {state}",
         externalReferenceLabel: "المرجع الخارجي",
       },
       support: {
-        description: "أرسل الردود وحرّك طلب الدعم داخل مساره التشغيلي من دون مغادرة لوحة الإدارة.",
-        actionsBody: "تستخدم الردود وتحديثات الحالة هنا الإجراءات نفسها الخاضعة للتدقيق والمعتمدة في المنصة.",
+        description:
+          "أرسل الردود وحرّك طلب الدعم داخل مساره التشغيلي من دون مغادرة لوحة الإدارة.",
+        actionsBody:
+          "تستخدم الردود وتحديثات الحالة هنا الإجراءات نفسها الخاضعة للتدقيق والمعتمدة في المنصة.",
       },
       shipments: {
         eyebrow: "الشحنات",
         notFound: "لم يُعثَر على تفاصيل الشحنة.",
-        description: "مساحة العمل المرجعية للشحنة داخل لوحة التحكم، تُستخدَم للتدقيق التشغيلي والبحث العابر للطوابير.",
+        description:
+          "مساحة العمل المرجعية للشحنة داخل لوحة التحكم، تُستخدَم للتدقيق التشغيلي والبحث العابر للطوابير.",
         weightLabel: "الوزن",
         volumeLabel: "الحجم",
         createdLabel: "تاريخ الإنشاء",
@@ -471,15 +740,20 @@ const messages = {
         description:
           "تتحكم هذه الإعدادات في سياسات التشغيل، وحدود التسعير، واللغات المفعّلة، وبعض عناصر الأمان التشغيلي داخل المنصة.",
         runtimeTitle: "سياسة التشغيل",
-        runtimeBody: "يؤثِّر وضع الصيانة والحدّ الأدنى لإصدارات التطبيق المدعومة تأثيرًا مباشرًا في جاهزية المنصة.",
+        runtimeBody:
+          "يؤثِّر وضع الصيانة والحدّ الأدنى لإصدارات التطبيق المدعومة تأثيرًا مباشرًا في جاهزية المنصة.",
         pricingTitle: "حواجز التسعير",
-        pricingBody: "تحدِّد هذه القيم مكوِّنات التسعير ومهلة إعادة إرسال إثباتات الدفع للحجوزات الجديدة.",
+        pricingBody:
+          "تحدِّد هذه القيم مكوِّنات التسعير ومهلة إعادة إرسال إثباتات الدفع للحجوزات الجديدة.",
         reviewTitle: "مراجعة التسليم",
-        reviewBody: "تحدِّد نافذة السماح متى تصبح الحجوزات المُسلَّمة متأخرة عن المراجعة التشغيلية.",
+        reviewBody:
+          "تحدِّد نافذة السماح متى تصبح الحجوزات المُسلَّمة متأخرة عن المراجعة التشغيلية.",
         featureTitle: "الرايات التشغيلية",
-        featureBody: "احتفِظ بهذه الرايات صغيرة وواضحة الأثر التشغيلي، ولا تستخدمها كمستودع لمنطق المنتج.",
+        featureBody:
+          "احتفِظ بهذه الرايات صغيرة وواضحة الأثر التشغيلي، ولا تستخدمها كمستودع لمنطق المنتج.",
         localizationTitle: "سياسة اللغات",
-        localizationBody: "تتحكم هذه القيم في اللغة الافتراضية واللغات المُفعَّلة عبر المنصة.",
+        localizationBody:
+          "تتحكم هذه القيم في اللغة الافتراضية واللغات المُفعَّلة عبر المنصة.",
         maintenanceMode: "وضع الصيانة",
         forceUpdateRequired: "إلزام التحديث",
         minimumAndroidVersion: "الحدّ الأدنى لإصدار Android",
@@ -500,7 +774,8 @@ const messages = {
         enabledLocales: "اللغات المُفعَّلة",
         saveLocalizationPolicy: "حفظ سياسة اللغات",
         auditDescriptions: {
-          app_runtime: "سياسة تشغيل إدارية خاصة بالصيانة والحد الأدنى للإصدارات المدعومة",
+          app_runtime:
+            "سياسة تشغيل إدارية خاصة بالصيانة والحد الأدنى للإصدارات المدعومة",
           booking_pricing: "سياسة تسعير الحجوزات الخاضعة لإدارة المشرفين",
           delivery_review: "مهلة مراجعة التسليم الخاضعة لإدارة المشرفين",
           feature_flags: "رايات تشغيلية خاضعة لإدارة المشرفين",
@@ -629,17 +904,24 @@ const messages = {
       verification_packet_approved_title: "تم اعتماد ملف التحقق",
     },
     healthErrorLabels: {
-      unknown_push_error: "تعذَّر إرسال الإشعار بسبب خلل في إعدادات الإشعارات أو Firebase.",
-      firebase_service_account_invalid: "إعداد حساب خدمة Firebase الخاص بالإشعارات غير صالح ويجب تصحيحه.",
+      unknown_push_error:
+        "تعذَّر إرسال الإشعار بسبب خلل في إعدادات الإشعارات أو Firebase.",
+      firebase_service_account_invalid:
+        "إعداد حساب خدمة Firebase الخاص بالإشعارات غير صالح ويجب تصحيحه.",
     },
     actionErrors: {
       generic: "تعذَّر تنفيذ هذا الإجراء الإداري الآن. أعد المحاولة بعد قليل.",
-      network: "تعذَّر على الإجراء الإداري الوصول إلى الخدمة الخلفية. تحقَّق من الاتصال ثم أعد المحاولة.",
-      timeout: "انتهت مهلة الإجراء الإداري قبل أن تستجيب الخدمة الخلفية. أعد المحاولة.",
+      network:
+        "تعذَّر على الإجراء الإداري الوصول إلى الخدمة الخلفية. تحقَّق من الاتصال ثم أعد المحاولة.",
+      timeout:
+        "انتهت مهلة الإجراء الإداري قبل أن تستجيب الخدمة الخلفية. أعد المحاولة.",
       forbidden: "ليست لديك الصلاحية اللازمة لتنفيذ هذا الإجراء الإداري.",
-      notFound: "لم يعد السجل الإداري المطلوب موجودًا. أعِد تحميل الصفحة ثم جرّب مرة أخرى.",
-      conflict: "يتعارض هذا الإجراء الإداري مع أحدث حالة للسجل. أعِد تحميل الصفحة ثم جرّب مرة أخرى.",
-      validation: "بيانات هذا الإجراء الإداري غير صالحة أو غير مكتملة. راجع النموذج ثم أعد المحاولة.",
+      notFound:
+        "لم يعد السجل الإداري المطلوب موجودًا. أعِد تحميل الصفحة ثم جرّب مرة أخرى.",
+      conflict:
+        "يتعارض هذا الإجراء الإداري مع أحدث حالة للسجل. أعِد تحميل الصفحة ثم جرّب مرة أخرى.",
+      validation:
+        "بيانات هذا الإجراء الإداري غير صالحة أو غير مكتملة. راجع النموذج ثم أعد المحاولة.",
     },
   },
 } as const;

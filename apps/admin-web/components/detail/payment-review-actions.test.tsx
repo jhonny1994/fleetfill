@@ -24,10 +24,16 @@ describe("PaymentReviewActions", () => {
   it("submits the approve flow through the payment RPC", async () => {
     const user = userEvent.setup();
 
-    renderWithIntl(<PaymentReviewActions proofId="proof-1" defaultAmount={12000} />);
+    renderWithIntl(
+      <PaymentReviewActions proofId="proof-1" defaultAmount={12000} />,
+    );
 
     await user.click(screen.getByRole("button", { name: "Approve proof" }));
-    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Approve proof" }));
+    await user.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Approve proof",
+      }),
+    );
 
     await waitFor(() =>
       expect(rpcSpy).toHaveBeenCalledWith("admin_approve_payment_proof", {

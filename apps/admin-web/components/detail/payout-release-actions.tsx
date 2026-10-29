@@ -16,7 +16,9 @@ export function PayoutReleaseActions({ bookingId }: { bookingId: string }) {
   const ui = useAdminUi();
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
-  const [pendingValues, setPendingValues] = useState<z.infer<typeof payoutReleaseSchema> | null>(null);
+  const [pendingValues, setPendingValues] = useState<z.infer<
+    typeof payoutReleaseSchema
+  > | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof payoutReleaseSchema>>({
@@ -47,19 +49,34 @@ export function PayoutReleaseActions({ bookingId }: { bookingId: string }) {
 
   return (
     <div className="space-y-4">
-      <form className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4" onSubmit={form.handleSubmit((values) => setPendingValues(values))}>
-        <h3 className="font-semibold text-[var(--color-ink-strong)]">{ui.actions.releasePayout}</h3>
+      <form
+        className="space-y-3 rounded-[22px] border border-[var(--color-border)] bg-white/50 p-4"
+        onSubmit={form.handleSubmit((values) => setPendingValues(values))}
+      >
+        <h3 className="font-semibold text-[var(--color-ink-strong)]">
+          {ui.actions.releasePayout}
+        </h3>
         <label className="grid gap-1 text-sm">
           <span>{ui.detail.payouts.externalReferenceLabel}</span>
-          <input className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("externalReference")} />
+          <input
+            className="rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+            {...form.register("externalReference")}
+          />
         </label>
         <label className="grid gap-1 text-sm">
           <span>{ui.labels.noNote}</span>
-          <textarea className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2" {...form.register("note")} />
+          <textarea
+            className="min-h-24 rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2"
+            {...form.register("note")}
+          />
         </label>
-        <button className="button-primary" type="submit">{ui.actions.releasePayout}</button>
+        <button className="button-primary" type="submit">
+          {ui.actions.releasePayout}
+        </button>
       </form>
-      {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-sm text-[var(--color-red-700)]">{error}</p>
+      ) : null}
       <ConfirmDialog
         open={pendingValues !== null}
         title={ui.actions.releasePayout}

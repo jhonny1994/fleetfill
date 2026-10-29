@@ -3,8 +3,16 @@ import { ActionRail } from "@/components/detail/action-rail";
 import { DetailWorkspace } from "@/components/detail/detail-workspace";
 import { SupportThreadActions } from "@/components/detail/support-thread-actions";
 import { TimelinePanel } from "@/components/detail/timeline-panel";
-import { formatCompactReference, formatDateTime } from "@/lib/formatting/formatters";
-import { getAdminDetailCopy, getEnumLabel, getSupportMessagePreview, getSupportMessageTitle } from "@/lib/i18n/admin-ui";
+import {
+  formatCompactReference,
+  formatDateTime,
+} from "@/lib/formatting/formatters";
+import {
+  getAdminDetailCopy,
+  getEnumLabel,
+  getSupportMessagePreview,
+  getSupportMessageTitle,
+} from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchSupportDetail } from "@/lib/queries/admin-support";
@@ -21,7 +29,11 @@ export default async function SupportDetailPage({
   const detailCopy = getAdminDetailCopy(locale);
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.support.notFound}</div>;
+    return (
+      <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">
+        {ui.pages.support.notFound}
+      </div>
+    );
   }
 
   return (
@@ -30,23 +42,52 @@ export default async function SupportDetailPage({
       title={detail.request.subject}
       description={detailCopy.support.description}
       facts={[
-        { label: ui.labels.request, value: formatCompactReference(detail.request.id) },
-        { label: ui.labels.state, value: getEnumLabel(locale, "supportStatus", detail.request.status) },
-        { label: ui.labels.priority, value: getEnumLabel(locale, "supportPriority", detail.request.priority) },
-        { label: ui.labels.linkedBooking, value: detail.request.booking_id ? formatCompactReference(detail.request.booking_id) : ui.labels.none },
+        {
+          label: ui.labels.request,
+          value: formatCompactReference(detail.request.id),
+        },
+        {
+          label: ui.labels.state,
+          value: getEnumLabel(locale, "supportStatus", detail.request.status),
+        },
+        {
+          label: ui.labels.priority,
+          value: getEnumLabel(
+            locale,
+            "supportPriority",
+            detail.request.priority,
+          ),
+        },
+        {
+          label: ui.labels.linkedBooking,
+          value: detail.request.booking_id
+            ? formatCompactReference(detail.request.booking_id)
+            : ui.labels.none,
+        },
       ]}
       main={
         <>
           <section className="panel space-y-4 p-5">
-            <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{ui.pages.support.conversation}</h2>
+            <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">
+              {ui.pages.support.conversation}
+            </h2>
             <div className="space-y-3">
               {detail.messages.map((message) => (
-                <div key={message.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+                <div
+                  key={message.id}
+                  className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4"
+                >
                   <div className="flex items-center justify-between gap-3">
-                    <p className="font-medium text-[var(--color-ink-strong)]">{getEnumLabel(locale, "sender", message.sender_type)}</p>
-                    <p className="text-xs text-[var(--color-ink-muted)]">{formatDateTime(message.created_at)}</p>
+                    <p className="font-medium text-[var(--color-ink-strong)]">
+                      {getEnumLabel(locale, "sender", message.sender_type)}
+                    </p>
+                    <p className="text-xs text-[var(--color-ink-muted)]">
+                      {formatDateTime(message.created_at)}
+                    </p>
                   </div>
-                  <p className="mt-3 text-sm text-[var(--color-ink-base)]">{message.body}</p>
+                  <p className="mt-3 text-sm text-[var(--color-ink-base)]">
+                    {message.body}
+                  </p>
                 </div>
               ))}
             </div>
@@ -65,7 +106,10 @@ export default async function SupportDetailPage({
         </>
       }
       rail={
-        <ActionRail title={ui.pages.support.actions} description={detailCopy.support.actionsBody}>
+        <ActionRail
+          title={ui.pages.support.actions}
+          description={detailCopy.support.actionsBody}
+        >
           <SupportThreadActions
             locale={locale}
             requestId={detail.request.id}

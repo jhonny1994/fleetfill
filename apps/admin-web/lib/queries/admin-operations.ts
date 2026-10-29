@@ -69,7 +69,12 @@ export const bookingIndexStatuses = [
   "disputed",
 ] as const;
 
-export const shipmentIndexStatuses = ["draft", "booked", "canceled", "cancelled"] as const;
+export const shipmentIndexStatuses = [
+  "draft",
+  "booked",
+  "canceled",
+  "cancelled",
+] as const;
 
 type ProfileRow = {
   id: string;
@@ -121,12 +126,20 @@ type ShipmentBookingRow = {
   created_at: string | null;
 };
 
-function isBookingIndexStatus(value: string): value is (typeof bookingIndexStatuses)[number] {
-  return bookingIndexStatuses.includes(value as (typeof bookingIndexStatuses)[number]);
+function isBookingIndexStatus(
+  value: string,
+): value is (typeof bookingIndexStatuses)[number] {
+  return bookingIndexStatuses.includes(
+    value as (typeof bookingIndexStatuses)[number],
+  );
 }
 
-function isShipmentIndexStatus(value: string): value is (typeof shipmentIndexStatuses)[number] {
-  return shipmentIndexStatuses.includes(value as (typeof shipmentIndexStatuses)[number]);
+function isShipmentIndexStatus(
+  value: string,
+): value is (typeof shipmentIndexStatuses)[number] {
+  return shipmentIndexStatuses.includes(
+    value as (typeof shipmentIndexStatuses)[number],
+  );
 }
 
 function escapeLikeQuery(value: string) {
@@ -134,7 +147,9 @@ function escapeLikeQuery(value: string) {
 }
 
 function isUuidLike(value: string) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value.trim());
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value.trim(),
+  );
 }
 
 function buildBookingSearchFilter(query: string) {
@@ -182,7 +197,12 @@ function resolveDisplayName(profile: ProfileRow | null | undefined) {
     return "Unknown";
   }
 
-  return profile.company_name?.trim() || profile.full_name?.trim() || profile.email.trim() || profile.id;
+  return (
+    profile.company_name?.trim() ||
+    profile.full_name?.trim() ||
+    profile.email.trim() ||
+    profile.id
+  );
 }
 
 function paginate(total: number, requestedPage: number, pageSize: number) {
@@ -191,27 +211,50 @@ function paginate(total: number, requestedPage: number, pageSize: number) {
   return { page, totalPages };
 }
 
-export async function fetchBookingWorkspaceDetail(bookingId: string): Promise<BookingWorkspaceDetail | null> {
+export async function fetchBookingWorkspaceDetail(
+  bookingId: string,
+): Promise<BookingWorkspaceDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: booking, error: bookingError } = await supabase
     .from("bookings")
-    .select("id, shipment_id, shipper_id, carrier_id, vehicle_id, tracking_number, payment_reference, booking_status, payment_status, shipper_total_dzd, carrier_payout_dzd, created_at")
+    .select(
+      "id, shipment_id, shipper_id, carrier_id, vehicle_id, tracking_number, payment_reference, booking_status, payment_status, shipper_total_dzd, carrier_payout_dzd, created_at",
+    )
     .eq("id", bookingId)
     .maybeSingle();
 
   if (bookingError) throw bookingError;
   if (!booking) return null;
 
-  const [shipmentResult, proofsResult, disputeResult, payoutResult, trackingResult] = await Promise.all([
+  const [
+    shipmentResult,
+    proofsResult,
+    disputeResult,
+    payoutResult,
+    trackingResult,
+  ] = await Promise.all([
     supabase
       .from("shipments")
-      .select("id, shipper_id, origin_commune_id, destination_commune_id, total_weight_kg, total_volume_m3, description, status, created_at")
+      .select(
+        "id, shipper_id, origin_commune_id, destination_commune_id, total_weight_kg, total_volume_m3, description, status, created_at",
+      )
       .eq("id", (booking as BookingRow).shipment_id)
       .maybeSingle(),
-    supabase.from("payment_proofs").select("id", { count: "exact", head: true }).eq("booking_id", bookingId),
-    supabase.from("disputes").select("status").eq("booking_id", bookingId).maybeSingle(),
-    supabase.from("payouts").select("status").eq("booking_id", bookingId).maybeSingle(),
+    supabase
+      .from("payment_proofs")
+      .select("id", { count: "exact", head: true })
+      .eq("booking_id", bookingId),
+    supabase
+      .from("disputes")
+      .select("status")
+      .eq("booking_id", bookingId)
+      .maybeSingle(),
+    supabase
+      .from("payouts")
+      .select("status")
+      .eq("booking_id", bookingId)
+      .maybeSingle(),
     supabase
       .from("tracking_events")
       .select("id, event_type, note, recorded_at")
@@ -225,26 +268,38 @@ export async function fetchBookingWorkspaceDetail(bookingId: string): Promise<Bo
   if (disputeResult.error) throw disputeResult.error;
   if (payoutResult.error) throw payoutResult.error;
   if (trackingResult.error) throw trackingResult.error;
-  const { data: payoutRequestContext, error: payoutRequestContextError } = await supabase.rpc(
-    "get_booking_payout_request_context",
-    { p_booking_id: bookingId },
-  );
+  const { data: payoutRequestContext, error: payoutRequestContextError } =
+    await supabase.rpc("get_booking_payout_request_context", {
+      p_booking_id: bookingId,
+    });
   if (payoutRequestContextError) throw payoutRequestContextError;
 
   const shipment = shipmentResult.data as ShipmentRow | null;
   let shipmentContext: BookingWorkspaceDetail["shipment"] = null;
 
   if (shipment) {
-    const communeIds = [shipment.origin_commune_id, shipment.destination_commune_id];
-    const { data: communes, error: communesError } = await supabase.from("communes").select("id, name").in("id", communeIds);
+    const communeIds = [
+      shipment.origin_commune_id,
+      shipment.destination_commune_id,
+    ];
+    const { data: communes, error: communesError } = await supabase
+      .from("communes")
+      .select("id, name")
+      .in("id", communeIds);
     if (communesError) throw communesError;
-    const communeMap = new Map<number, string>(((communes ?? []) as CommuneRow[]).map((row) => [row.id, row.name]));
+    const communeMap = new Map<number, string>(
+      ((communes ?? []) as CommuneRow[]).map((row) => [row.id, row.name]),
+    );
     shipmentContext = {
       id: shipment.id,
       status: shipment.status,
       description: shipment.description,
-      originLabel: communeMap.get(shipment.origin_commune_id) ?? `Commune #${shipment.origin_commune_id}`,
-      destinationLabel: communeMap.get(shipment.destination_commune_id) ?? `Commune #${shipment.destination_commune_id}`,
+      originLabel:
+        communeMap.get(shipment.origin_commune_id) ??
+        `Commune #${shipment.origin_commune_id}`,
+      destinationLabel:
+        communeMap.get(shipment.destination_commune_id) ??
+        `Commune #${shipment.destination_commune_id}`,
     };
   }
 
@@ -265,32 +320,46 @@ export async function fetchBookingWorkspaceDetail(bookingId: string): Promise<Bo
     },
     shipment: shipmentContext,
     paymentProofCount: proofsResult.count ?? 0,
-    disputeStatus: (disputeResult.data as { status: string } | null)?.status ?? null,
-    payoutStatus: (payoutResult.data as { status: string } | null)?.status ?? null,
+    disputeStatus:
+      (disputeResult.data as { status: string } | null)?.status ?? null,
+    payoutStatus:
+      (payoutResult.data as { status: string } | null)?.status ?? null,
     payoutRequestContext: payoutRequestContext
       ? {
-          blockedReason: (payoutRequestContext as PayoutRequestContextRow).blocked_reason,
-          isEligible: (payoutRequestContext as PayoutRequestContextRow).is_eligible ?? false,
-          requestStatus: (payoutRequestContext as PayoutRequestContextRow).request_status,
-          requestedAt: (payoutRequestContext as PayoutRequestContextRow).requested_at,
-          payoutProcessedAt: (payoutRequestContext as PayoutRequestContextRow).payout_processed_at,
+          blockedReason: (payoutRequestContext as PayoutRequestContextRow)
+            .blocked_reason,
+          isEligible:
+            (payoutRequestContext as PayoutRequestContextRow).is_eligible ??
+            false,
+          requestStatus: (payoutRequestContext as PayoutRequestContextRow)
+            .request_status,
+          requestedAt: (payoutRequestContext as PayoutRequestContextRow)
+            .requested_at,
+          payoutProcessedAt: (payoutRequestContext as PayoutRequestContextRow)
+            .payout_processed_at,
         }
       : null,
-    trackingEvents: ((trackingResult.data ?? []) as TrackingEventRow[]).map((row) => ({
-      id: row.id,
-      eventType: row.event_type,
-      note: row.note,
-      recordedAt: row.recorded_at,
-    })),
+    trackingEvents: ((trackingResult.data ?? []) as TrackingEventRow[]).map(
+      (row) => ({
+        id: row.id,
+        eventType: row.event_type,
+        note: row.note,
+        recordedAt: row.recorded_at,
+      }),
+    ),
   };
 }
 
-export async function fetchShipmentWorkspaceDetail(shipmentId: string): Promise<ShipmentWorkspaceDetail | null> {
+export async function fetchShipmentWorkspaceDetail(
+  shipmentId: string,
+): Promise<ShipmentWorkspaceDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: shipment, error: shipmentError } = await supabase
     .from("shipments")
-    .select("id, shipper_id, origin_commune_id, destination_commune_id, total_weight_kg, total_volume_m3, description, status, created_at")
+    .select(
+      "id, shipper_id, origin_commune_id, destination_commune_id, total_weight_kg, total_volume_m3, description, status, created_at",
+    )
     .eq("id", shipmentId)
     .maybeSingle();
 
@@ -298,17 +367,29 @@ export async function fetchShipmentWorkspaceDetail(shipmentId: string): Promise<
   if (!shipment) return null;
 
   const [bookingResult, communesResult] = await Promise.all([
-    supabase.from("bookings").select("id, tracking_number, booking_status, payment_status").eq("shipment_id", shipmentId).maybeSingle(),
+    supabase
+      .from("bookings")
+      .select("id, tracking_number, booking_status, payment_status")
+      .eq("shipment_id", shipmentId)
+      .maybeSingle(),
     supabase
       .from("communes")
       .select("id, name")
-      .in("id", [(shipment as ShipmentRow).origin_commune_id, (shipment as ShipmentRow).destination_commune_id]),
+      .in("id", [
+        (shipment as ShipmentRow).origin_commune_id,
+        (shipment as ShipmentRow).destination_commune_id,
+      ]),
   ]);
 
   if (bookingResult.error) throw bookingResult.error;
   if (communesResult.error) throw communesResult.error;
 
-  const communeMap = new Map<number, string>(((communesResult.data ?? []) as CommuneRow[]).map((row) => [row.id, row.name]));
+  const communeMap = new Map<number, string>(
+    ((communesResult.data ?? []) as CommuneRow[]).map((row) => [
+      row.id,
+      row.name,
+    ]),
+  );
 
   return {
     shipment: {
@@ -316,9 +397,16 @@ export async function fetchShipmentWorkspaceDetail(shipmentId: string): Promise<
       status: (shipment as ShipmentRow).status,
       description: (shipment as ShipmentRow).description,
       totalWeightKg: Number((shipment as ShipmentRow).total_weight_kg),
-      totalVolumeM3: (shipment as ShipmentRow).total_volume_m3 == null ? null : Number((shipment as ShipmentRow).total_volume_m3),
-      originLabel: communeMap.get((shipment as ShipmentRow).origin_commune_id) ?? `Commune #${(shipment as ShipmentRow).origin_commune_id}`,
-      destinationLabel: communeMap.get((shipment as ShipmentRow).destination_commune_id) ?? `Commune #${(shipment as ShipmentRow).destination_commune_id}`,
+      totalVolumeM3:
+        (shipment as ShipmentRow).total_volume_m3 == null
+          ? null
+          : Number((shipment as ShipmentRow).total_volume_m3),
+      originLabel:
+        communeMap.get((shipment as ShipmentRow).origin_commune_id) ??
+        `Commune #${(shipment as ShipmentRow).origin_commune_id}`,
+      destinationLabel:
+        communeMap.get((shipment as ShipmentRow).destination_commune_id) ??
+        `Commune #${(shipment as ShipmentRow).destination_commune_id}`,
       shipperId: (shipment as ShipmentRow).shipper_id,
       createdAt: (shipment as ShipmentRow).created_at,
     },
@@ -329,7 +417,7 @@ export async function fetchShipmentWorkspaceDetail(shipmentId: string): Promise<
           bookingStatus: bookingResult.data.booking_status,
           paymentStatus: bookingResult.data.payment_status,
         }
-    : null,
+      : null,
   };
 }
 
@@ -420,17 +508,28 @@ export async function fetchBookingIndexPage({
   const rows = (bookingRows ?? []) as BookingIndexRow[];
   const shipmentIds = [...new Set(rows.map((row) => row.shipment_id))];
   const shipperIds = [...new Set(rows.map((row) => row.shipper_id))];
-  const carrierIds = [...new Set(rows.map((row) => row.carrier_id).filter((value): value is string => Boolean(value)))];
+  const carrierIds = [
+    ...new Set(
+      rows
+        .map((row) => row.carrier_id)
+        .filter((value): value is string => Boolean(value)),
+    ),
+  ];
 
   const [shipmentsResult, profilesResult] = await Promise.all([
     shipmentIds.length
       ? supabase
           .from("shipments")
-          .select("id, description, status, origin_commune_id, destination_commune_id")
+          .select(
+            "id, description, status, origin_commune_id, destination_commune_id",
+          )
           .in("id", shipmentIds)
       : Promise.resolve({ data: [], error: null }),
     [...new Set([...shipperIds, ...carrierIds])].length
-      ? supabase.from("profiles").select("id, full_name, email, company_name").in("id", [...new Set([...shipperIds, ...carrierIds])])
+      ? supabase
+          .from("profiles")
+          .select("id, full_name, email, company_name")
+          .in("id", [...new Set([...shipperIds, ...carrierIds])])
       : Promise.resolve({ data: [], error: null }),
   ]);
 
@@ -442,8 +541,17 @@ export async function fetchBookingIndexPage({
   }
 
   const shipmentRows = (shipmentsResult.data ?? []) as BookingShipmentRow[];
-  const shipmentMap = new Map<string, BookingShipmentRow>(shipmentRows.map((row) => [row.id, row]));
-  const communeIds = [...new Set(shipmentRows.flatMap((row) => [row.origin_commune_id, row.destination_commune_id]))];
+  const shipmentMap = new Map<string, BookingShipmentRow>(
+    shipmentRows.map((row) => [row.id, row]),
+  );
+  const communeIds = [
+    ...new Set(
+      shipmentRows.flatMap((row) => [
+        row.origin_commune_id,
+        row.destination_commune_id,
+      ]),
+    ),
+  ];
   const { data: communes, error: communesError } = communeIds.length
     ? await supabase.from("communes").select("id, name").in("id", communeIds)
     : { data: [], error: null };
@@ -452,14 +560,21 @@ export async function fetchBookingIndexPage({
     throw communesError;
   }
 
-  const communeMap = new Map<number, string>(((communes ?? []) as CommuneRow[]).map((row) => [row.id, row.name]));
-  const profileMap = new Map<string, ProfileRow>((profilesResult.data ?? []).map((row) => [row.id, row as ProfileRow]));
+  const communeMap = new Map<number, string>(
+    ((communes ?? []) as CommuneRow[]).map((row) => [row.id, row.name]),
+  );
+  const profileMap = new Map<string, ProfileRow>(
+    (profilesResult.data ?? []).map((row) => [row.id, row as ProfileRow]),
+  );
 
   const paymentProofCounts = rows.length
-    ? await supabase.from("payment_proofs").select("id, booking_id", { count: "exact" }).in(
-        "booking_id",
-        rows.map((row) => row.id),
-      )
+    ? await supabase
+        .from("payment_proofs")
+        .select("id, booking_id", { count: "exact" })
+        .in(
+          "booking_id",
+          rows.map((row) => row.id),
+        )
     : { data: [], count: 0, error: null };
 
   if (paymentProofCounts.error) {
@@ -467,10 +582,13 @@ export async function fetchBookingIndexPage({
   }
 
   const disputeResult = rows.length
-    ? await supabase.from("disputes").select("booking_id, status").in(
-        "booking_id",
-        rows.map((row) => row.id),
-      )
+    ? await supabase
+        .from("disputes")
+        .select("booking_id, status")
+        .in(
+          "booking_id",
+          rows.map((row) => row.id),
+        )
     : { data: [], error: null };
 
   if (disputeResult.error) {
@@ -478,11 +596,21 @@ export async function fetchBookingIndexPage({
   }
 
   const disputeMap = new Map<string, string>(
-    ((disputeResult.data ?? []) as Array<{ booking_id: string; status: string }>).map((row) => [row.booking_id, row.status]),
+    (
+      (disputeResult.data ?? []) as Array<{
+        booking_id: string;
+        status: string;
+      }>
+    ).map((row) => [row.booking_id, row.status]),
   );
   const paymentProofMap = new Map<string, number>();
-  for (const proof of ((paymentProofCounts.data ?? []) as Array<{ booking_id: string }>)) {
-    paymentProofMap.set(proof.booking_id, (paymentProofMap.get(proof.booking_id) ?? 0) + 1);
+  for (const proof of (paymentProofCounts.data ?? []) as Array<{
+    booking_id: string;
+  }>) {
+    paymentProofMap.set(
+      proof.booking_id,
+      (paymentProofMap.get(proof.booking_id) ?? 0) + 1,
+    );
   }
 
   return {
@@ -504,9 +632,13 @@ export async function fetchBookingIndexPage({
         carrierDisplayName: resolveDisplayName(carrier ?? undefined),
         shipperName: resolveDisplayName(shipper),
         carrierName: resolveDisplayName(carrier ?? undefined),
-        originLabel: shipment ? communeMap.get(shipment.origin_commune_id) ?? `Commune #${shipment.origin_commune_id}` : `Shipment #${row.shipment_id}`,
+        originLabel: shipment
+          ? (communeMap.get(shipment.origin_commune_id) ??
+            `Commune #${shipment.origin_commune_id}`)
+          : `Shipment #${row.shipment_id}`,
         destinationLabel: shipment
-          ? communeMap.get(shipment.destination_commune_id) ?? `Commune #${shipment.destination_commune_id}`
+          ? (communeMap.get(shipment.destination_commune_id) ??
+            `Commune #${shipment.destination_commune_id}`)
           : `Shipment #${row.shipment_id}`,
         shipmentDescription: shipment?.description ?? null,
         shipperTotalDzd: Number(row.shipper_total_dzd),
@@ -554,7 +686,9 @@ export async function fetchShipmentIndexPage({
   const dataRequest = applyShipmentIndexFilters(
     supabase
       .from("shipments")
-      .select("id, shipper_id, origin_commune_id, destination_commune_id, total_weight_kg, total_volume_m3, description, status, created_at")
+      .select(
+        "id, shipper_id, origin_commune_id, destination_commune_id, total_weight_kg, total_volume_m3, description, status, created_at",
+      )
       .order("created_at", { ascending: false })
       .range(offset, offset + pageSize - 1),
     query,
@@ -567,12 +701,22 @@ export async function fetchShipmentIndexPage({
 
   const rows = (shipmentRows ?? []) as ShipmentIndexRow[];
   const shipperIds = [...new Set(rows.map((row) => row.shipper_id))];
-  const communeIds = [...new Set(rows.flatMap((row) => [row.origin_commune_id, row.destination_commune_id]))];
+  const communeIds = [
+    ...new Set(
+      rows.flatMap((row) => [
+        row.origin_commune_id,
+        row.destination_commune_id,
+      ]),
+    ),
+  ];
   const shipmentIds = rows.map((row) => row.id);
 
   const [profilesResult, communesResult, bookingsResult] = await Promise.all([
     shipperIds.length
-      ? supabase.from("profiles").select("id, full_name, email, company_name").in("id", shipperIds)
+      ? supabase
+          .from("profiles")
+          .select("id, full_name, email, company_name")
+          .in("id", shipperIds)
       : Promise.resolve({ data: [], error: null }),
     communeIds.length
       ? supabase.from("communes").select("id, name").in("id", communeIds)
@@ -580,7 +724,9 @@ export async function fetchShipmentIndexPage({
     shipmentIds.length
       ? supabase
           .from("bookings")
-          .select("id, shipment_id, tracking_number, booking_status, payment_status, created_at")
+          .select(
+            "id, shipment_id, tracking_number, booking_status, payment_status, created_at",
+          )
           .in("shipment_id", shipmentIds)
           .order("created_at", { ascending: false })
       : Promise.resolve({ data: [], error: null }),
@@ -596,8 +742,15 @@ export async function fetchShipmentIndexPage({
     throw bookingsResult.error;
   }
 
-  const profileMap = new Map<string, ProfileRow>((profilesResult.data ?? []).map((row) => [row.id, row as ProfileRow]));
-  const communeMap = new Map<number, string>(((communesResult.data ?? []) as CommuneRow[]).map((row) => [row.id, row.name]));
+  const profileMap = new Map<string, ProfileRow>(
+    (profilesResult.data ?? []).map((row) => [row.id, row as ProfileRow]),
+  );
+  const communeMap = new Map<number, string>(
+    ((communesResult.data ?? []) as CommuneRow[]).map((row) => [
+      row.id,
+      row.name,
+    ]),
+  );
   const bookingRows = (bookingsResult.data ?? []) as ShipmentBookingRow[];
   const bookingMap = new Map<string, ShipmentBookingRow>();
   for (const row of bookingRows) {
@@ -616,10 +769,15 @@ export async function fetchShipmentIndexPage({
         shipperId: row.shipper_id,
         shipperDisplayName: resolveDisplayName(profileMap.get(row.shipper_id)),
         shipperName: resolveDisplayName(profileMap.get(row.shipper_id)),
-        originLabel: communeMap.get(row.origin_commune_id) ?? `Commune #${row.origin_commune_id}`,
-        destinationLabel: communeMap.get(row.destination_commune_id) ?? `Commune #${row.destination_commune_id}`,
+        originLabel:
+          communeMap.get(row.origin_commune_id) ??
+          `Commune #${row.origin_commune_id}`,
+        destinationLabel:
+          communeMap.get(row.destination_commune_id) ??
+          `Commune #${row.destination_commune_id}`,
         totalWeightKg: Number(row.total_weight_kg),
-        totalVolumeM3: row.total_volume_m3 == null ? null : Number(row.total_volume_m3),
+        totalVolumeM3:
+          row.total_volume_m3 == null ? null : Number(row.total_volume_m3),
         bookingId: booking?.id ?? null,
         bookingTrackingNumber: booking?.tracking_number ?? null,
         bookingStatus: booking?.booking_status ?? null,

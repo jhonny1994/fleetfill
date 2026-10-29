@@ -30,7 +30,11 @@ export default async function BookingDetailPage({
   const detailCopy = getAdminDetailCopy(locale);
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.bookings.notFound}</div>;
+    return (
+      <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">
+        {ui.pages.bookings.notFound}
+      </div>
+    );
   }
 
   const nextActionLabel = getBookingNextActionLabel(locale, detail);
@@ -42,51 +46,124 @@ export default async function BookingDetailPage({
       eyebrow={ui.pages.bookings.eyebrow}
       title={detail.booking.trackingNumber}
       description={detailCopy.bookings.description}
-      backLink={{ href: `/${locale}/bookings`, label: ui.pages.bookings.eyebrow }}
+      backLink={{
+        href: `/${locale}/bookings`,
+        label: ui.pages.bookings.eyebrow,
+      }}
       relatedLinks={[
-        { href: buildAdminRoute(locale, "shipment", detail.booking.shipmentId), label: ui.actions.shipmentDetail },
-        { href: buildAdminRoute(locale, "payment", detail.booking.id), label: ui.actions.paymentReview },
-        { href: buildAdminRoute(locale, "payout", detail.booking.id), label: ui.actions.payoutDetail },
-        { href: buildAdminRoute(locale, "dispute", detail.booking.id), label: ui.actions.disputeDetail },
+        {
+          href: buildAdminRoute(locale, "shipment", detail.booking.shipmentId),
+          label: ui.actions.shipmentDetail,
+        },
+        {
+          href: buildAdminRoute(locale, "payment", detail.booking.id),
+          label: ui.actions.paymentReview,
+        },
+        {
+          href: buildAdminRoute(locale, "payout", detail.booking.id),
+          label: ui.actions.payoutDetail,
+        },
+        {
+          href: buildAdminRoute(locale, "dispute", detail.booking.id),
+          label: ui.actions.disputeDetail,
+        },
       ]}
       facts={[
-        { label: detailCopy.bookings.bookingStateLabel, value: getEnumLabel(locale, "booking", detail.booking.bookingStatus) },
-        { label: detailCopy.bookings.paymentStateLabel, value: getEnumLabel(locale, "payment", detail.booking.paymentStatus) },
-        { label: detailCopy.bookings.shipperTotalLabel, value: formatCurrencyDzd(detail.booking.shipperTotalDzd) },
-        { label: detailCopy.bookings.carrierPayoutLabel, value: formatCurrencyDzd(detail.booking.carrierPayoutDzd) },
+        {
+          label: detailCopy.bookings.bookingStateLabel,
+          value: getEnumLabel(locale, "booking", detail.booking.bookingStatus),
+        },
+        {
+          label: detailCopy.bookings.paymentStateLabel,
+          value: getEnumLabel(locale, "payment", detail.booking.paymentStatus),
+        },
+        {
+          label: detailCopy.bookings.shipperTotalLabel,
+          value: formatCurrencyDzd(detail.booking.shipperTotalDzd),
+        },
+        {
+          label: detailCopy.bookings.carrierPayoutLabel,
+          value: formatCurrencyDzd(detail.booking.carrierPayoutDzd),
+        },
       ]}
       main={
         <>
           <section className="panel space-y-3 p-6">
-            <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.bookings.linkedOps}</h2>
+            <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">
+              {ui.pages.bookings.linkedOps}
+            </h2>
             <div className="flex flex-wrap gap-2">
-              <Link className="button-secondary" href={buildAdminRoute(locale, "payment", detail.booking.id)}>
+              <Link
+                className="button-secondary"
+                href={buildAdminRoute(locale, "payment", detail.booking.id)}
+              >
                 {ui.actions.paymentReview}
               </Link>
-              <Link className="button-secondary" href={buildAdminRoute(locale, "payout", detail.booking.id)}>
+              <Link
+                className="button-secondary"
+                href={buildAdminRoute(locale, "payout", detail.booking.id)}
+              >
                 {ui.actions.payoutDetail}
               </Link>
-              <Link className="button-secondary" href={buildAdminRoute(locale, "dispute", detail.booking.id)}>
+              <Link
+                className="button-secondary"
+                href={buildAdminRoute(locale, "dispute", detail.booking.id)}
+              >
                 {ui.actions.disputeDetail}
               </Link>
-              <Link className="button-secondary" href={buildAdminRoute(locale, "shipment", detail.booking.shipmentId)}>
+              <Link
+                className="button-secondary"
+                href={buildAdminRoute(
+                  locale,
+                  "shipment",
+                  detail.booking.shipmentId,
+                )}
+              >
                 {ui.actions.shipmentDetail}
               </Link>
             </div>
             <div className="flex flex-wrap gap-2">
-              <StatusBadge label={formatTemplate(detailCopy.bookings.paymentProofCount, { count: detail.paymentProofCount })} tone="neutral" />
+              <StatusBadge
+                label={formatTemplate(detailCopy.bookings.paymentProofCount, {
+                  count: detail.paymentProofCount,
+                })}
+                tone="neutral"
+              />
               <StatusBadge label={nextOwnerLabel} tone="neutral" />
-              {blockerLabel ? <StatusBadge label={blockerLabel} tone="warning" /> : null}
+              {blockerLabel ? (
+                <StatusBadge label={blockerLabel} tone="warning" />
+              ) : null}
               {detail.disputeStatus ? (
-                <StatusBadge label={formatTemplate(detailCopy.bookings.disputeBadge, { state: getEnumLabel(locale, "dispute", detail.disputeStatus) })} tone="warning" />
+                <StatusBadge
+                  label={formatTemplate(detailCopy.bookings.disputeBadge, {
+                    state: getEnumLabel(
+                      locale,
+                      "dispute",
+                      detail.disputeStatus,
+                    ),
+                  })}
+                  tone="warning"
+                />
               ) : null}
               {detail.payoutStatus ? (
-                <StatusBadge label={formatTemplate(detailCopy.bookings.payoutBadge, { state: getEnumLabel(locale, "payout", detail.payoutStatus) })} tone="success" />
+                <StatusBadge
+                  label={formatTemplate(detailCopy.bookings.payoutBadge, {
+                    state: getEnumLabel(locale, "payout", detail.payoutStatus),
+                  })}
+                  tone="success"
+                />
               ) : null}
               {detail.payoutRequestContext?.requestStatus ? (
                 <StatusBadge
-                  label={getPayoutRequestLabel(locale, detail.payoutRequestContext.requestStatus)}
-                  tone={detail.payoutRequestContext.requestStatus === "requested" ? "warning" : "success"}
+                  label={getPayoutRequestLabel(
+                    locale,
+                    detail.payoutRequestContext.requestStatus,
+                  )}
+                  tone={
+                    detail.payoutRequestContext.requestStatus === "requested"
+                      ? "warning"
+                      : "success"
+                  }
                 />
               ) : null}
             </div>
@@ -100,7 +177,10 @@ export default async function BookingDetailPage({
             ) : null}
             {detail.payoutRequestContext?.blockedReason ? (
               <p className="text-sm text-[var(--color-ink-muted)]">
-                {getPayoutRequestBlockedReasonLabel(locale, detail.payoutRequestContext.blockedReason)}
+                {getPayoutRequestBlockedReasonLabel(
+                  locale,
+                  detail.payoutRequestContext.blockedReason,
+                )}
               </p>
             ) : null}
           </section>
@@ -119,18 +199,43 @@ export default async function BookingDetailPage({
       }
       rail={
         <section className="panel space-y-3 p-6">
-          <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{ui.pages.bookings.references}</h2>
+          <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">
+            {ui.pages.bookings.references}
+          </h2>
           <StatusBadge
             label={nextActionLabel}
-            tone={detail.disputeStatus === "open" ? "warning" : detail.booking.paymentStatus === "secured" ? "success" : "neutral"}
+            tone={
+              detail.disputeStatus === "open"
+                ? "warning"
+                : detail.booking.paymentStatus === "secured"
+                  ? "success"
+                  : "neutral"
+            }
           />
-          <p className="text-sm text-[var(--color-ink-muted)]">{nextOwnerLabel}</p>
-          {blockerLabel ? <p className="text-sm text-[var(--color-ink-muted)]">{blockerLabel}</p> : null}
-          <p className="text-sm text-[var(--color-ink-muted)]">{formatTemplate(detailCopy.bookings.paymentReference, { reference: detail.booking.paymentReference })}</p>
-          <p className="text-sm text-[var(--color-ink-muted)]">{formatTemplate(detailCopy.bookings.createdAt, { date: formatDateTime(detail.booking.createdAt) })}</p>
+          <p className="text-sm text-[var(--color-ink-muted)]">
+            {nextOwnerLabel}
+          </p>
+          {blockerLabel ? (
+            <p className="text-sm text-[var(--color-ink-muted)]">
+              {blockerLabel}
+            </p>
+          ) : null}
+          <p className="text-sm text-[var(--color-ink-muted)]">
+            {formatTemplate(detailCopy.bookings.paymentReference, {
+              reference: detail.booking.paymentReference,
+            })}
+          </p>
+          <p className="text-sm text-[var(--color-ink-muted)]">
+            {formatTemplate(detailCopy.bookings.createdAt, {
+              date: formatDateTime(detail.booking.createdAt),
+            })}
+          </p>
           {detail.payoutRequestContext?.blockedReason ? (
             <p className="text-sm text-[var(--color-ink-muted)]">
-              {getPayoutRequestBlockedReasonLabel(locale, detail.payoutRequestContext.blockedReason)}
+              {getPayoutRequestBlockedReasonLabel(
+                locale,
+                detail.payoutRequestContext.blockedReason,
+              )}
             </p>
           ) : null}
         </section>
@@ -149,15 +254,24 @@ function getBookingNextOwnerLabel(
     return copy.nextOwnerAdmin;
   }
 
-  if (detail.booking.paymentStatus === "unpaid" || detail.booking.paymentStatus === "rejected") {
+  if (
+    detail.booking.paymentStatus === "unpaid" ||
+    detail.booking.paymentStatus === "rejected"
+  ) {
     return copy.nextOwnerShipper;
   }
 
-  if (detail.booking.paymentStatus === "proof_submitted" || detail.booking.paymentStatus === "under_verification") {
+  if (
+    detail.booking.paymentStatus === "proof_submitted" ||
+    detail.booking.paymentStatus === "under_verification"
+  ) {
     return copy.nextOwnerAdmin;
   }
 
-  if (detail.booking.bookingStatus === "confirmed" || detail.booking.bookingStatus === "in_transit") {
+  if (
+    detail.booking.bookingStatus === "confirmed" ||
+    detail.booking.bookingStatus === "in_transit"
+  ) {
     return copy.nextOwnerCarrier;
   }
 
@@ -165,7 +279,10 @@ function getBookingNextOwnerLabel(
     return copy.nextOwnerShipperOrAdmin;
   }
 
-  if (detail.payoutRequestContext?.requestStatus === "requested" && detail.payoutStatus == null) {
+  if (
+    detail.payoutRequestContext?.requestStatus === "requested" &&
+    detail.payoutStatus == null
+  ) {
     return copy.nextOwnerAdmin;
   }
 
@@ -190,12 +307,18 @@ function getBookingPrimaryBlockerLabel(
     return copy.blockerPaymentRejected;
   }
 
-  if (detail.booking.paymentStatus === "proof_submitted" || detail.booking.paymentStatus === "under_verification") {
+  if (
+    detail.booking.paymentStatus === "proof_submitted" ||
+    detail.booking.paymentStatus === "under_verification"
+  ) {
     return copy.blockerPaymentReviewPending;
   }
 
   if (detail.payoutRequestContext?.blockedReason) {
-    const blocked = getPayoutRequestBlockedReasonLabel(lang, detail.payoutRequestContext.blockedReason);
+    const blocked = getPayoutRequestBlockedReasonLabel(
+      lang,
+      detail.payoutRequestContext.blockedReason,
+    );
     if (blocked) {
       return formatTemplate(copy.blockerTemplate, { reason: blocked });
     }
@@ -214,7 +337,10 @@ function getBookingNextActionLabel(
     return copy.nextActionResolveDispute;
   }
 
-  if (detail.booking.paymentStatus === "unpaid" || detail.booking.paymentStatus === "rejected") {
+  if (
+    detail.booking.paymentStatus === "unpaid" ||
+    detail.booking.paymentStatus === "rejected"
+  ) {
     return copy.nextActionWaitForShipperPayment;
   }
 
@@ -225,7 +351,10 @@ function getBookingNextActionLabel(
     return copy.nextActionReviewPaymentProof;
   }
 
-  if (detail.payoutRequestContext?.requestStatus === "requested" && detail.payoutStatus == null) {
+  if (
+    detail.payoutRequestContext?.requestStatus === "requested" &&
+    detail.payoutStatus == null
+  ) {
     return copy.nextActionReleaseRequestedPayout;
   }
 
@@ -233,7 +362,10 @@ function getBookingNextActionLabel(
     return copy.nextActionMonitorDeliveryReview;
   }
 
-  if (detail.booking.bookingStatus === "completed" && detail.payoutStatus != null) {
+  if (
+    detail.booking.bookingStatus === "completed" &&
+    detail.payoutStatus != null
+  ) {
     return copy.nextActionNoneBookingComplete;
   }
 

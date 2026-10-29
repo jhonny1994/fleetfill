@@ -15,7 +15,12 @@ function scopeLabel(labels: AdminUi["labels"], scope: QueueScope) {
       : labels.queueScopeAll;
 }
 
-function buildHref(pathname: string, scope: QueueScope, query?: string, status?: string) {
+function buildHref(
+  pathname: string,
+  scope: QueueScope,
+  query?: string,
+  status?: string,
+) {
   const params = new URLSearchParams();
   params.set("view", scope);
   if (query) {
@@ -53,7 +58,11 @@ export function AdminQueueScopeTabs({
             key={scope}
             href={buildHref(pathname, scope, query, status)}
             aria-current={isActive ? "page" : undefined}
-            className={isActive ? "queue-scope-tab queue-scope-tab-active" : "queue-scope-tab"}
+            className={
+              isActive
+                ? "queue-scope-tab queue-scope-tab-active"
+                : "queue-scope-tab"
+            }
           >
             {scopeLabel(ui.labels, scope)}
             {counts?.[scope] != null ? ` (${counts[scope]})` : ""}

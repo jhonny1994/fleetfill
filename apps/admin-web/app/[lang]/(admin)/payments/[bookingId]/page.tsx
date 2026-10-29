@@ -5,7 +5,13 @@ import { FilePreviewPanel } from "@/components/detail/file-preview-panel";
 import { PaymentReviewActions } from "@/components/detail/payment-review-actions";
 import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { formatCurrencyDzd, formatDateTime } from "@/lib/formatting/formatters";
-import { formatTemplate, getAdminActionLabel, getAdminDetailCopy, getAuditOutcomeLabel, getEnumLabel } from "@/lib/i18n/admin-ui";
+import {
+  formatTemplate,
+  getAdminActionLabel,
+  getAdminDetailCopy,
+  getAuditOutcomeLabel,
+  getEnumLabel,
+} from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchPaymentDetail } from "@/lib/queries/admin-payments";
@@ -22,25 +28,44 @@ export default async function PaymentDetailPage({
   const copy = getAdminDetailCopy(locale).payments;
 
   if (!detail || !detail.latestProof) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.payments.notFound}</div>;
+    return (
+      <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">
+        {ui.pages.payments.notFound}
+      </div>
+    );
   }
 
   return (
     <DetailWorkspace
       eyebrow={ui.pages.payments.eyebrow}
-      title={formatTemplate(copy.title, { trackingNumber: detail.booking.tracking_number })}
+      title={formatTemplate(copy.title, {
+        trackingNumber: detail.booking.tracking_number,
+      })}
       description={copy.description}
       facts={[
         { label: ui.labels.booking, value: detail.booking.tracking_number },
-        { label: ui.labels.paymentState, value: getEnumLabel(locale, "payment", detail.booking.payment_status) },
-        { label: copy.submittedAmountLabel, value: formatCurrencyDzd(Number(detail.latestProof.submitted_amount_dzd)) },
-        { label: copy.expectedTotalLabel, value: formatCurrencyDzd(Number(detail.booking.shipper_total_dzd)) },
+        {
+          label: ui.labels.paymentState,
+          value: getEnumLabel(locale, "payment", detail.booking.payment_status),
+        },
+        {
+          label: copy.submittedAmountLabel,
+          value: formatCurrencyDzd(
+            Number(detail.latestProof.submitted_amount_dzd),
+          ),
+        },
+        {
+          label: copy.expectedTotalLabel,
+          value: formatCurrencyDzd(Number(detail.booking.shipper_total_dzd)),
+        },
       ]}
       main={
         <>
           <FilePreviewPanel
             title={ui.pages.payments.preview}
-            label={formatTemplate(copy.proofLabel, { rail: detail.latestProof.payment_rail.toUpperCase() })}
+            label={formatTemplate(copy.proofLabel, {
+              rail: detail.latestProof.payment_rail.toUpperCase(),
+            })}
             storagePath={detail.latestProof.storage_path}
             contentType={detail.latestProof.content_type}
             signedUrl={detail.signedUrl}
@@ -56,7 +81,9 @@ export default async function PaymentDetailPage({
               {
                 id: "submitted",
                 title: copy.submittedTitle,
-                detail: detail.latestProof.submitted_reference ?? ui.labels.noSubmittedReference,
+                detail:
+                  detail.latestProof.submitted_reference ??
+                  ui.labels.noSubmittedReference,
                 at: formatDateTime(detail.latestProof.submitted_at),
               },
               ...detail.auditLogs.map((log) => ({
@@ -74,7 +101,10 @@ export default async function PaymentDetailPage({
           title={ui.pages.payments.actions}
           description={copy.paymentActionsBody}
         >
-          <PaymentReviewActions proofId={detail.latestProof.id} defaultAmount={Number(detail.latestProof.submitted_amount_dzd)} />
+          <PaymentReviewActions
+            proofId={detail.latestProof.id}
+            defaultAmount={Number(detail.latestProof.submitted_amount_dzd)}
+          />
         </ActionRail>
       }
     />

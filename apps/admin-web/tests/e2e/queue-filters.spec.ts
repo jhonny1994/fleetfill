@@ -10,7 +10,9 @@ test("queue filters keep state in the URL", async ({ page }) => {
   await page.getByRole("combobox", { name: "Status" }).selectOption("verified");
   await page.getByRole("button", { name: "Apply" }).click();
 
-  await expect(page).toHaveURL(/\/en\/payments\?(?:.*&)?view=open(?:&.*)?status=verified(?:&.*)?$/);
+  await expect(page).toHaveURL(
+    /\/en\/payments\?(?:.*&)?view=open(?:&.*)?status=verified(?:&.*)?$/,
+  );
 });
 
 test("locale switching preserves queue URL state", async ({ page }) => {
@@ -18,5 +20,7 @@ test("locale switching preserves queue URL state", async ({ page }) => {
 
   await page.getByRole("combobox", { name: "Language" }).selectOption("fr");
 
-  await expect(page).toHaveURL(/\/fr\/payments\?(?:.*&)?view=history(?:&.*)?q=trk(?:&.*)?status=verified(?:&.*)?$/);
+  await expect(page).toHaveURL(
+    /\/fr\/payments\?(?:.*&)?view=history(?:&.*)?q=trk(?:&.*)?status=verified(?:&.*)?$/,
+  );
 });

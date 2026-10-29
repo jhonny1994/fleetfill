@@ -45,6 +45,8 @@ describe("AdminInviteForm", () => {
         p_expires_in_hours: 72,
       }),
     );
-    expect(screen.getByText("Invitation created for ops@fleetfill.dz")).toBeInTheDocument();
+    expect(
+      screen.getByText("Invitation created for ops@fleetfill.dz"),
+    ).toBeInTheDocument();
   });
 });

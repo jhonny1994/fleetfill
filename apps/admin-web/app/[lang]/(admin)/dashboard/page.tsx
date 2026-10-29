@@ -4,7 +4,11 @@ import Link from "next/link";
 import { ExceptionAlerts } from "@/components/dashboard/exception-alerts";
 import { QueueMetricStrip } from "@/components/dashboard/queue-metric-strip";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { formatCompactReference, formatCurrencyDzd, formatQueueAge } from "@/lib/formatting/formatters";
+import {
+  formatCompactReference,
+  formatCurrencyDzd,
+  formatQueueAge,
+} from "@/lib/formatting/formatters";
 import { getDocumentLabel } from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
@@ -34,21 +38,53 @@ export default async function DashboardPage({
         <p className="eyebrow">{dictionary.dashboard.eyebrow}</p>
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
-            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{dictionary.dashboard.title}</h1>
-            <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">{dictionary.dashboard.body}</p>
+            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">
+              {dictionary.dashboard.title}
+            </h1>
+            <p className="max-w-3xl text-sm leading-6 text-[var(--color-ink-muted)]">
+              {dictionary.dashboard.body}
+            </p>
           </div>
-          <StatusBadge label={`${alerts.length} ${dictionary.common.activeAlerts}`} tone={alerts.length > 0 ? "warning" : "success"} />
+          <StatusBadge
+            label={`${alerts.length} ${dictionary.common.activeAlerts}`}
+            tone={alerts.length > 0 ? "warning" : "success"}
+          />
         </div>
       </section>
 
       <QueueMetricStrip
         queueLabel={dictionary.common.queue}
         items={[
-          { label: dictionary.dashboard.metrics.paymentProofs, value: String(summary.paymentProofs), href: `/${locale}/payments`, tone: summary.paymentProofs > 0 ? "warning" : "success" },
-          { label: dictionary.dashboard.metrics.verificationPackets, value: String(summary.verificationPackets), href: `/${locale}/verification`, tone: summary.verificationPackets > 0 ? "warning" : "success" },
-          { label: dictionary.dashboard.metrics.openDisputes, value: String(summary.disputes), href: `/${locale}/disputes`, tone: summary.disputes > 0 ? "warning" : "success" },
-          { label: dictionary.dashboard.metrics.eligiblePayouts, value: String(summary.eligiblePayouts), href: `/${locale}/payouts`, tone: summary.eligiblePayouts > 0 ? "warning" : "success" },
-          { label: dictionary.dashboard.metrics.supportNeedsReply, value: String(summary.supportNeedsReply), href: `/${locale}/support`, tone: summary.supportNeedsReply > 0 ? "warning" : "success" },
+          {
+            label: dictionary.dashboard.metrics.paymentProofs,
+            value: String(summary.paymentProofs),
+            href: `/${locale}/payments`,
+            tone: summary.paymentProofs > 0 ? "warning" : "success",
+          },
+          {
+            label: dictionary.dashboard.metrics.verificationPackets,
+            value: String(summary.verificationPackets),
+            href: `/${locale}/verification`,
+            tone: summary.verificationPackets > 0 ? "warning" : "success",
+          },
+          {
+            label: dictionary.dashboard.metrics.openDisputes,
+            value: String(summary.disputes),
+            href: `/${locale}/disputes`,
+            tone: summary.disputes > 0 ? "warning" : "success",
+          },
+          {
+            label: dictionary.dashboard.metrics.eligiblePayouts,
+            value: String(summary.eligiblePayouts),
+            href: `/${locale}/payouts`,
+            tone: summary.eligiblePayouts > 0 ? "warning" : "success",
+          },
+          {
+            label: dictionary.dashboard.metrics.supportNeedsReply,
+            value: String(summary.supportNeedsReply),
+            href: `/${locale}/support`,
+            tone: summary.supportNeedsReply > 0 ? "warning" : "success",
+          },
         ]}
       />
 
@@ -95,7 +131,9 @@ export default async function DashboardPage({
           emptyBody={dictionary.common.emptyQueue}
           rows={previews.support.map((item) => ({
             title: item.subject,
-            detail: item.hasUnreadForAdmin ? dictionary.common.new : dictionary.common.seen,
+            detail: item.hasUnreadForAdmin
+              ? dictionary.common.new
+              : dictionary.common.seen,
             meta: formatCompactReference(item.id),
           }))}
         />
@@ -136,9 +174,14 @@ function PreviewPanel({
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="eyebrow">{eyebrow}</p>
-          <h2 className="mt-2 text-lg font-semibold text-[var(--color-ink-strong)]">{title}</h2>
+          <h2 className="mt-2 text-lg font-semibold text-[var(--color-ink-strong)]">
+            {title}
+          </h2>
         </div>
-        <Link href={href} className="text-sm font-medium text-[var(--color-accent-ink)] underline-offset-4 hover:underline">
+        <Link
+          href={href}
+          className="text-sm font-medium text-[var(--color-accent-ink)] underline-offset-4 hover:underline"
+        >
           {openQueueLabel}
         </Link>
       </div>
@@ -147,11 +190,18 @@ function PreviewPanel({
           <p className="text-sm text-[var(--color-ink-muted)]">{emptyBody}</p>
         ) : (
           rows.map((row) => (
-            <div key={`${row.title}-${row.meta}`} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 px-4 py-3">
+            <div
+              key={`${row.title}-${row.meta}`}
+              className="rounded-[22px] border border-[var(--color-border)] bg-white/55 px-4 py-3"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
-                  <p className="font-medium text-[var(--color-ink-strong)]">{row.title}</p>
-                  <p className="text-sm text-[var(--color-ink-muted)]">{row.detail}</p>
+                  <p className="font-medium text-[var(--color-ink-strong)]">
+                    {row.title}
+                  </p>
+                  <p className="text-sm text-[var(--color-ink-muted)]">
+                    {row.detail}
+                  </p>
                 </div>
                 <StatusBadge label={row.meta} tone="neutral" />
               </div>

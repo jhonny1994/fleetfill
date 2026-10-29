@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 
-import { getAdminSession, type AdminSession } from "@/lib/auth/get-admin-session";
+import {
+  getAdminSession,
+  type AdminSession,
+} from "@/lib/auth/get-admin-session";
 import { defaultLocale } from "@/lib/i18n/config";
 
 export async function requireServerAdminSession(): Promise<AdminSession> {

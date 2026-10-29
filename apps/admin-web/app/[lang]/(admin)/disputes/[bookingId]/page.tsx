@@ -5,7 +5,11 @@ import { DisputeResolutionActions } from "@/components/detail/dispute-resolution
 import { FilePreviewPanel } from "@/components/detail/file-preview-panel";
 import { TimelinePanel } from "@/components/detail/timeline-panel";
 import { formatCurrencyDzd, formatDateTime } from "@/lib/formatting/formatters";
-import { formatTemplate, getAdminDetailCopy, getEnumLabel } from "@/lib/i18n/admin-ui";
+import {
+  formatTemplate,
+  getAdminDetailCopy,
+  getEnumLabel,
+} from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchDisputeDetail } from "@/lib/queries/admin-disputes";
@@ -22,7 +26,11 @@ export default async function DisputeDetailPage({
   const detailCopy = getAdminDetailCopy(locale);
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.disputes.notFound}</div>;
+    return (
+      <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">
+        {ui.pages.disputes.notFound}
+      </div>
+    );
   }
 
   const previewEvidence = detail.evidence[0] ?? null;
@@ -33,10 +41,19 @@ export default async function DisputeDetailPage({
       title={detail.booking.tracking_number}
       description={detailCopy.disputes.description}
       facts={[
-        { label: detailCopy.disputes.bookingLabel, value: detail.booking.tracking_number },
+        {
+          label: detailCopy.disputes.bookingLabel,
+          value: detail.booking.tracking_number,
+        },
         { label: ui.labels.reason, value: detail.dispute.reason },
-        { label: detailCopy.disputes.disputeStateLabel, value: getEnumLabel(locale, "dispute", detail.dispute.status) },
-        { label: detailCopy.disputes.evidenceItemsLabel, value: String(detail.evidence.length) },
+        {
+          label: detailCopy.disputes.disputeStateLabel,
+          value: getEnumLabel(locale, "dispute", detail.dispute.status),
+        },
+        {
+          label: detailCopy.disputes.evidenceItemsLabel,
+          value: String(detail.evidence.length),
+        },
       ]}
       main={
         <>
@@ -76,8 +93,14 @@ export default async function DisputeDetailPage({
         </>
       }
       rail={
-        <ActionRail title={ui.pages.disputes.actions} description={ui.pages.disputes.title}>
-          <DisputeResolutionActions locale={locale} disputeId={detail.dispute.id} />
+        <ActionRail
+          title={ui.pages.disputes.actions}
+          description={ui.pages.disputes.title}
+        >
+          <DisputeResolutionActions
+            locale={locale}
+            disputeId={detail.dispute.id}
+          />
         </ActionRail>
       }
     />

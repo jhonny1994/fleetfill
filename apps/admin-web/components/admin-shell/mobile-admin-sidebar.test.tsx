@@ -23,21 +23,35 @@ describe("MobileAdminSidebar", () => {
     render(
       <div>
         <button type="button">Outside action</button>
-        <MobileAdminSidebar locale="en" dictionary={dictionaries.en} adminRole="super_admin" />
+        <MobileAdminSidebar
+          locale="en"
+          dictionary={dictionaries.en}
+          adminRole="super_admin"
+        />
       </div>,
     );
 
-    const trigger = screen.getByRole("button", { name: dictionaries.en.shell.openNavigation });
+    const trigger = screen.getByRole("button", {
+      name: dictionaries.en.shell.openNavigation,
+    });
     await user.click(trigger);
 
-    expect(screen.getByRole("dialog", { name: dictionaries.en.shell.title })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: dictionaries.en.shell.closeNavigation })).toHaveFocus();
+    expect(
+      screen.getByRole("dialog", { name: dictionaries.en.shell.title }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: dictionaries.en.shell.closeNavigation,
+      }),
+    ).toHaveFocus();
 
     await user.tab();
     expect(screen.getByRole("button", { name: "Dashboard" })).toHaveFocus();
 
     await user.keyboard("{Escape}");
-    expect(screen.queryByRole("dialog", { name: dictionaries.en.shell.title })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("dialog", { name: dictionaries.en.shell.title }),
+    ).not.toBeInTheDocument();
     expect(trigger).toHaveFocus();
   });
 });

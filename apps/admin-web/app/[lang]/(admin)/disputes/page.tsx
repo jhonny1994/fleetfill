@@ -9,13 +9,16 @@ import { fetchDisputeQueue } from "@/lib/queries/admin-queues";
 const disputeStatuses = ["open", "resolved"] as const;
 type DisputePageStatus = (typeof disputeStatuses)[number];
 
-export default async function DisputesPage({
-  params,
-  searchParams,
-}: {
+export default async function DisputesPage(props: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ q?: string; status?: string; view?: "open" | "history" | "all" }>;
+  searchParams: Promise<{
+    q?: string;
+    status?: string;
+    view?: "open" | "history" | "all";
+  }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const [{ lang }, filters] = await Promise.all([params, searchParams]);
   const locale = resolveAppLocale(lang);
   const query = filters.q?.trim();
@@ -47,7 +50,7 @@ export default async function DisputesPage({
       eyebrow={ui.pages.disputes.eyebrow}
       title={ui.pages.disputes.title}
       description={detailCopy.disputes.description}
-        pathname={pathname}
+      pathname={pathname}
       query={query}
       status={status}
       view={view}
@@ -58,7 +61,10 @@ export default async function DisputesPage({
       }}
       statusOptions={[
         { value: "open", label: getEnumLabel(locale, "dispute", "open") },
-        { value: "resolved", label: getEnumLabel(locale, "dispute", "resolved") },
+        {
+          value: "resolved",
+          label: getEnumLabel(locale, "dispute", "resolved"),
+        },
       ]}
       labels={{
         searchPlaceholder: dictionary.shell.searchPlaceholder,

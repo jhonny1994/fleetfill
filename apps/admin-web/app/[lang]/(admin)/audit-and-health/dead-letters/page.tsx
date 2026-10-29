@@ -4,7 +4,11 @@ import Link from "next/link";
 import { EmailDeadLetterRetryAction } from "@/components/audit-health/email-retry-actions";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatDateTime } from "@/lib/formatting/formatters";
-import { getAuditHealthErrorLabel, getEnumLabel, getNotificationTemplateLabel } from "@/lib/i18n/admin-ui";
+import {
+  getAuditHealthErrorLabel,
+  getEnumLabel,
+  getNotificationTemplateLabel,
+} from "@/lib/i18n/admin-ui";
 import { resolveAppLocale } from "@/lib/i18n/config";
 import { asAdminMessages } from "@/lib/i18n/messages";
 import { fetchDeadLetterHealthPage } from "@/lib/queries/admin-audit-health";
@@ -13,13 +17,12 @@ function buildPageHref(lang: string, page: number) {
   return `/${lang}/audit-and-health/dead-letters?page=${page}`;
 }
 
-export default async function AdminDeadLettersPage({
-  params,
-  searchParams,
-}: {
+export default async function AdminDeadLettersPage(props: {
   params: Promise<{ lang: string }>;
   searchParams: Promise<{ page?: string }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const [{ lang }, query] = await Promise.all([params, searchParams]);
   const locale = resolveAppLocale(lang);
   const { ui } = asAdminMessages(await getMessages({ locale }));
@@ -28,9 +31,20 @@ export default async function AdminDeadLettersPage({
   const total = snapshot.totalDeadLetterEmails + snapshot.totalDeadLetterPushes;
   const totalPages = Math.max(
     1,
-    Math.ceil(Math.max(snapshot.totalDeadLetterEmails, snapshot.totalDeadLetterPushes) / snapshot.pageSize),
+    Math.ceil(
+      Math.max(snapshot.totalDeadLetterEmails, snapshot.totalDeadLetterPushes) /
+        snapshot.pageSize,
+    ),
   );
-  const { backToSummary, previous, next, page, total: totalLabel, emailDeadLetters, pushDeadLetters } = ui.pages.audit;
+  const {
+    backToSummary,
+    previous,
+    next,
+    page,
+    total: totalLabel,
+    emailDeadLetters,
+    pushDeadLetters,
+  } = ui.pages.audit;
 
   return (
     <div className="space-y-4">
@@ -38,8 +52,12 @@ export default async function AdminDeadLettersPage({
         <p className="eyebrow">{ui.pages.audit.eyebrow}</p>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-2">
-            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">{ui.pages.audit.deadLetters}</h1>
-            <p className="text-sm text-[var(--color-ink-muted)]">{ui.pages.audit.deadLettersBody}</p>
+            <h1 className="text-3xl font-semibold text-[var(--color-ink-strong)]">
+              {ui.pages.audit.deadLetters}
+            </h1>
+            <p className="text-sm text-[var(--color-ink-muted)]">
+              {ui.pages.audit.deadLettersBody}
+            </p>
           </div>
           <Link className="button-secondary" href={`/${lang}/audit-and-health`}>
             {backToSummary}
@@ -48,33 +66,49 @@ export default async function AdminDeadLettersPage({
       </section>
 
       <section className="panel space-y-4 p-6">
-        <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{emailDeadLetters}</h2>
+        <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">
+          {emailDeadLetters}
+        </h2>
         {snapshot.deadLetterEmails.map((job) => {
           const card = (
             <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
               <div className="flex flex-wrap items-center gap-2">
-                <StatusBadge label={getEnumLabel(lang, "email", "dead_letter")} tone="danger" />
+                <StatusBadge
+                  label={getEnumLabel(lang, "email", "dead_letter")}
+                  tone="danger"
+                />
                 <p className="text-sm font-medium text-[var(--color-ink-strong)]">
                   {getNotificationTemplateLabel(lang, job.templateKey)}
                 </p>
               </div>
-              <p className="mt-2 text-sm text-[var(--color-ink-muted)]">{job.recipientEmail}</p>
+              <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+                {job.recipientEmail}
+              </p>
               <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                {job.attemptCount}/{job.maxAttempts} • {formatDateTime(job.updatedAt)}
+                {job.attemptCount}/{job.maxAttempts} •{" "}
+                {formatDateTime(job.updatedAt)}
               </p>
               {job.lastErrorCode || job.lastErrorMessage ? (
                 <p className="mt-2 text-xs text-[var(--color-red-700)]">
-                  {getAuditHealthErrorLabel(lang, job.lastErrorCode, job.lastErrorMessage)}
+                  {getAuditHealthErrorLabel(
+                    lang,
+                    job.lastErrorCode,
+                    job.lastErrorMessage,
+                  )}
                 </p>
               ) : null}
               <div className="mt-3">
-                    <EmailDeadLetterRetryAction jobId={job.id} />
+                <EmailDeadLetterRetryAction jobId={job.id} />
               </div>
             </div>
           );
 
           return job.bookingId ? (
-            <Link key={job.id} href={`/${lang}/bookings/${job.bookingId}`} className="block">
+            <Link
+              key={job.id}
+              href={`/${lang}/bookings/${job.bookingId}`}
+              className="block"
+            >
               {card}
             </Link>
           ) : (
@@ -84,22 +118,36 @@ export default async function AdminDeadLettersPage({
 
         <div className="border-t border-[var(--color-border)] pt-4" />
 
-        <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">{pushDeadLetters}</h2>
+        <h2 className="text-xl font-semibold text-[var(--color-ink-strong)]">
+          {pushDeadLetters}
+        </h2>
         {snapshot.deadLetterPushes.map((job) => (
-          <Link key={job.id} href={`/${lang}/users/${job.profileId}`} className="block">
+          <Link
+            key={job.id}
+            href={`/${lang}/users/${job.profileId}`}
+            className="block"
+          >
             <div className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
               <div className="flex flex-wrap items-center gap-2">
-                <StatusBadge label={getEnumLabel(lang, "email", "dead_letter")} tone="warning" />
+                <StatusBadge
+                  label={getEnumLabel(lang, "email", "dead_letter")}
+                  tone="warning"
+                />
                 <p className="text-sm font-medium text-[var(--color-ink-strong)]">
                   {getNotificationTemplateLabel(lang, job.title)}
                 </p>
               </div>
               <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-                {getNotificationTemplateLabel(lang, job.eventKey)} • {job.attemptCount}/{job.maxAttempts}
+                {getNotificationTemplateLabel(lang, job.eventKey)} •{" "}
+                {job.attemptCount}/{job.maxAttempts}
               </p>
               {job.lastErrorCode || job.lastErrorMessage ? (
                 <p className="mt-2 text-xs text-[var(--color-red-700)]">
-                  {getAuditHealthErrorLabel(lang, job.lastErrorCode, job.lastErrorMessage)}
+                  {getAuditHealthErrorLabel(
+                    lang,
+                    job.lastErrorCode,
+                    job.lastErrorMessage,
+                  )}
                 </p>
               ) : null}
             </div>
@@ -112,12 +160,18 @@ export default async function AdminDeadLettersPage({
           </p>
           <div className="flex gap-2">
             {snapshot.page > 1 ? (
-              <Link className="button-secondary" href={buildPageHref(lang, snapshot.page - 1)}>
+              <Link
+                className="button-secondary"
+                href={buildPageHref(lang, snapshot.page - 1)}
+              >
                 {previous}
               </Link>
             ) : null}
             {snapshot.page < totalPages ? (
-              <Link className="button-secondary" href={buildPageHref(lang, snapshot.page + 1)}>
+              <Link
+                className="button-secondary"
+                href={buildPageHref(lang, snapshot.page + 1)}
+              >
                 {next}
               </Link>
             ) : null}

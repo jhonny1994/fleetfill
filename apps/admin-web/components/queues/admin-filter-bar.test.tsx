@@ -5,7 +5,11 @@ import { describe, expect, it, vi } from "vitest";
 import { AdminFilterBar } from "@/components/queues/admin-filter-bar";
 
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...rest }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
+  default: ({
+    children,
+    href,
+    ...rest
+  }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
     <a href={href} {...rest}>
       {children}
     </a>
@@ -65,7 +69,13 @@ describe("AdminFilterBar", () => {
       />,
     );
 
-    expect(screen.getByRole("link", { name: "Reset" })).toHaveAttribute("href", "/ar/payments?view=history");
-    expect(screen.getByRole("link", { name: "Clear all" })).toHaveAttribute("href", "/ar/payments?view=history");
+    expect(screen.getByRole("link", { name: "Reset" })).toHaveAttribute(
+      "href",
+      "/ar/payments?view=history",
+    );
+    expect(screen.getByRole("link", { name: "Clear all" })).toHaveAttribute(
+      "href",
+      "/ar/payments?view=history",
+    );
   });
 });

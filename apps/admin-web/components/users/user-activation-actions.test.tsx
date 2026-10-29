@@ -27,7 +27,11 @@ describe("UserActivationActions", () => {
     renderWithIntl(<UserActivationActions profileId="profile-1" isActive />);
 
     await user.click(screen.getByRole("button", { name: "Suspend user" }));
-    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Suspend user" }));
+    await user.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Suspend user",
+      }),
+    );
 
     await waitFor(() =>
       expect(rpcSpy).toHaveBeenCalledWith("admin_set_profile_active", {

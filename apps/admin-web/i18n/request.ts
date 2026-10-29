@@ -6,7 +6,9 @@ import { getMessagesForLocale } from "@/lib/i18n/messages";
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const requestedLocale = await requestLocale;
-  const locale = hasLocale(locales, requestedLocale) ? requestedLocale : defaultLocale;
+  const locale = hasLocale(locales, requestedLocale)
+    ? requestedLocale
+    : defaultLocale;
 
   return {
     locale,

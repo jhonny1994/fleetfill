@@ -35,7 +35,9 @@ describe("ConfirmDialog", () => {
     const trigger = screen.getByRole("button", { name: "Open confirm" });
     await user.click(trigger);
 
-    expect(screen.getByRole("dialog", { name: "Delete record" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("dialog", { name: "Delete record" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Cancel" })).toHaveFocus();
 
     await user.tab();
@@ -45,7 +47,9 @@ describe("ConfirmDialog", () => {
     expect(screen.getByRole("button", { name: "Cancel" })).toHaveFocus();
 
     await user.keyboard("{Escape}");
-    expect(screen.queryByRole("dialog", { name: "Delete record" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("dialog", { name: "Delete record" }),
+    ).not.toBeInTheDocument();
     expect(trigger).toHaveFocus();
   });
 });

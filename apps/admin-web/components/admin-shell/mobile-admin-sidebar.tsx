@@ -4,7 +4,13 @@ import { Menu, X } from "lucide-react";
 import { useId, useState } from "react";
 
 import { AdminSidebar } from "@/components/admin-shell/admin-sidebar";
-import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/shared/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/shared/sheet";
 import type { AppLocale } from "@/lib/i18n/config";
 import type { AdminDictionary } from "@/lib/i18n/dictionaries";
 
@@ -35,12 +41,19 @@ export function MobileAdminSidebar({
       <SheetContent
         side={isRtl ? "end" : "start"}
         aria-labelledby={titleId}
-        className={isRtl ? "border-s border-[var(--color-border)]" : "border-e border-[var(--color-border)]"}
+        className={
+          isRtl
+            ? "border-s border-[var(--color-border)]"
+            : "border-e border-[var(--color-border)]"
+        }
       >
         <div className="mb-2 flex items-center justify-between rounded-[var(--radius-panel)] border border-[var(--color-border)] bg-white/80 px-3 py-2.5">
           <div className="min-w-0">
             <p className="eyebrow">{dictionary.shell.eyebrow}</p>
-            <SheetTitle id={titleId} className="truncate text-sm font-semibold text-[var(--color-ink-strong)]">
+            <SheetTitle
+              id={titleId}
+              className="truncate text-sm font-semibold text-[var(--color-ink-strong)]"
+            >
               {dictionary.shell.title}
             </SheetTitle>
           </div>

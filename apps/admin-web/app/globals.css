@@ -51,8 +51,16 @@ body {
   min-height: 100vh;
   color: var(--color-ink-base);
   background:
-    radial-gradient(circle at top left, rgba(11, 110, 105, 0.16), transparent 26%),
-    radial-gradient(circle at right top, rgba(29, 78, 216, 0.08), transparent 24%),
+    radial-gradient(
+      circle at top left,
+      rgba(11, 110, 105, 0.16),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at right top,
+      rgba(29, 78, 216, 0.08),
+      transparent 24%
+    ),
     linear-gradient(180deg, #fbfdfd 0%, #f4f8f7 52%, #e8f1f0 100%);
   font-family: "Roboto", "Noto Sans Arabic", "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
@@ -83,7 +91,11 @@ select {
   min-height: 100vh;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.46), transparent 36%),
-    radial-gradient(circle at right top, rgba(11, 110, 105, 0.12), transparent 24%);
+    radial-gradient(
+      circle at right top,
+      rgba(11, 110, 105, 0.12),
+      transparent 24%
+    );
 }
 
 .panel {
@@ -160,7 +172,11 @@ select {
   min-height: 2.75rem;
   border: 1px solid rgba(142, 48, 37, 0.24);
   border-radius: var(--radius-control);
-  background: linear-gradient(180deg, rgba(248, 223, 220, 0.82), rgba(255, 255, 255, 0.88));
+  background: linear-gradient(
+    180deg,
+    rgba(248, 223, 220, 0.82),
+    rgba(255, 255, 255, 0.88)
+  );
   color: var(--color-red-700);
   padding: 0.72rem 1.05rem;
   font-weight: 600;
@@ -269,7 +285,10 @@ select {
   color: var(--color-ink-strong);
   padding: var(--space-control-y) var(--space-control-x);
   outline: none;
-  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease;
 }
 
 .admin-field:focus,
@@ -317,7 +336,10 @@ textarea.admin-field {
   background: #fff;
   display: inline-grid;
   place-content: center;
-  transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
   cursor: pointer;
 }
 
@@ -378,7 +400,11 @@ textarea.admin-field {
 
 .danger-section {
   border-color: rgba(142, 48, 37, 0.18);
-  background: linear-gradient(180deg, rgba(248, 223, 220, 0.34), rgba(255, 255, 255, 0.8));
+  background: linear-gradient(
+    180deg,
+    rgba(248, 223, 220, 0.34),
+    rgba(255, 255, 255, 0.8)
+  );
 }
 
 .section-header {

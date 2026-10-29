@@ -8,7 +8,10 @@ export function formatCompactReference(value: string) {
   return `${value.slice(0, 6)}...${value.slice(-4)}`;
 }
 
-export function formatCurrencyDzd(value: number, locale: AppLocale | string = "en-DZ") {
+export function formatCurrencyDzd(
+  value: number,
+  locale: AppLocale | string = "en-DZ",
+) {
   return new Intl.NumberFormat(getIntlLocale(locale), {
     style: "currency",
     currency: "DZD",
@@ -49,7 +52,10 @@ export function diffHoursFromNow(value: string | Date | null | undefined) {
   return Math.max(0, Math.round((Date.now() - date.getTime()) / 3600000));
 }
 
-export function formatQueueAge(hours: number, locale: AppLocale | string = "en") {
+export function formatQueueAge(
+  hours: number,
+  locale: AppLocale | string = "en",
+) {
   const intlLocale = getIntlLocale(locale);
   const number = new Intl.NumberFormat(intlLocale);
 

@@ -11,7 +11,10 @@ import type { AppLocale } from "@/lib/i18n/config";
 import { getAdminActionErrorMessage, getEnumLabel } from "@/lib/i18n/admin-ui";
 import { useAdminUi } from "@/lib/i18n/use-admin-messages";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { adminActivationSchema, adminRoleChangeSchema } from "@/lib/validation/admin-management";
+import {
+  adminActivationSchema,
+  adminRoleChangeSchema,
+} from "@/lib/validation/admin-management";
 
 export function AdminAccountActions({
   locale,
@@ -28,11 +31,19 @@ export function AdminAccountActions({
   const router = useRouter();
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const [error, setError] = useState<string | null>(null);
-  const [pendingRole, setPendingRole] = useState<z.infer<typeof adminRoleChangeSchema> | null>(null);
-  const [pendingActivation, setPendingActivation] = useState<z.infer<typeof adminActivationSchema> | null>(null);
+  const [pendingRole, setPendingRole] = useState<z.infer<
+    typeof adminRoleChangeSchema
+  > | null>(null);
+  const [pendingActivation, setPendingActivation] = useState<z.infer<
+    typeof adminActivationSchema
+  > | null>(null);
   const [isPending, setIsPending] = useState(false);
 
-  const roleForm = useForm<z.input<typeof adminRoleChangeSchema>, unknown, z.output<typeof adminRoleChangeSchema>>({
+  const roleForm = useForm<
+    z.input<typeof adminRoleChangeSchema>,
+    unknown,
+    z.output<typeof adminRoleChangeSchema>
+  >({
     resolver: zodResolver(adminRoleChangeSchema),
     defaultValues: {
       role: currentRole,
@@ -40,7 +51,11 @@ export function AdminAccountActions({
     },
   });
 
-  const activationForm = useForm<z.input<typeof adminActivationSchema>, unknown, z.output<typeof adminActivationSchema>>({
+  const activationForm = useForm<
+    z.input<typeof adminActivationSchema>,
+    unknown,
+    z.output<typeof adminActivationSchema>
+  >({
     resolver: zodResolver(adminActivationSchema),
     defaultValues: {
       isActive,
@@ -84,11 +99,14 @@ export function AdminAccountActions({
     if (!pendingActivation) return;
     setIsPending(true);
     setError(null);
-    const { error: rpcError } = await supabase.rpc("admin_set_admin_account_active", {
-      p_profile_id: profileId,
-      p_is_active: pendingActivation.isActive,
-      p_reason: pendingActivation.reason || undefined,
-    });
+    const { error: rpcError } = await supabase.rpc(
+      "admin_set_admin_account_active",
+      {
+        p_profile_id: profileId,
+        p_is_active: pendingActivation.isActive,
+        p_reason: pendingActivation.reason || undefined,
+      },
+    );
     setIsPending(false);
     setPendingActivation(null);
     if (rpcError) {
@@ -102,20 +120,35 @@ export function AdminAccountActions({
     <div className="space-y-3.5">
       <section className="compact-section">
         <div className="section-header">
-          <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">{ui.actions.changeRole}</h3>
+          <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">
+            {ui.actions.changeRole}
+          </h3>
           <p>{ui.actions.changeRoleBody}</p>
         </div>
-        <form className="space-y-3" onSubmit={roleForm.handleSubmit((values) => setPendingRole(values))}>
+        <form
+          className="space-y-3"
+          onSubmit={roleForm.handleSubmit((values) => setPendingRole(values))}
+        >
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.role}</span>
-            <select className="admin-field admin-select" {...roleForm.register("role")}>
-              <option value="ops_admin">{getEnumLabel(locale, "adminRoles", "ops_admin")}</option>
-              <option value="super_admin">{getEnumLabel(locale, "adminRoles", "super_admin")}</option>
+            <select
+              className="admin-field admin-select"
+              {...roleForm.register("role")}
+            >
+              <option value="ops_admin">
+                {getEnumLabel(locale, "adminRoles", "ops_admin")}
+              </option>
+              <option value="super_admin">
+                {getEnumLabel(locale, "adminRoles", "super_admin")}
+              </option>
             </select>
           </label>
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.reason}</span>
-            <textarea className="admin-field min-h-[4.25rem]" {...roleForm.register("reason")} />
+            <textarea
+              className="admin-field min-h-[4.25rem]"
+              {...roleForm.register("reason")}
+            />
           </label>
           <div className="form-actions">
             <button className="button-secondary" type="submit">
@@ -125,12 +158,18 @@ export function AdminAccountActions({
         </form>
       </section>
 
-      <section className={`compact-section ${isActive ? "danger-section" : ""}`}>
+      <section
+        className={`compact-section ${isActive ? "danger-section" : ""}`}
+      >
         <div className="section-header">
           <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">
             {isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
           </h3>
-          <p>{isActive ? ui.actions.deactivateAdminBody : ui.actions.reactivateAdminBody}</p>
+          <p>
+            {isActive
+              ? ui.actions.deactivateAdminBody
+              : ui.actions.reactivateAdminBody}
+          </p>
         </div>
         <form
           className="space-y-3"
@@ -143,17 +182,27 @@ export function AdminAccountActions({
         >
           <label className="grid gap-1 text-sm">
             <span>{ui.labels.reason}</span>
-            <textarea className="admin-field min-h-[4.25rem]" {...activationForm.register("reason")} />
+            <textarea
+              className="admin-field min-h-[4.25rem]"
+              {...activationForm.register("reason")}
+            />
           </label>
           <div className="form-actions">
-            <button className={isActive ? "button-danger" : "button-primary"} type="submit">
-              {isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
+            <button
+              className={isActive ? "button-danger" : "button-primary"}
+              type="submit"
+            >
+              {isActive
+                ? ui.actions.deactivateAdmin
+                : ui.actions.reactivateAdmin}
             </button>
           </div>
         </form>
       </section>
 
-      {error ? <p className="text-sm text-[var(--color-red-700)]">{error}</p> : null}
+      {error ? (
+        <p className="text-sm text-[var(--color-red-700)]">{error}</p>
+      ) : null}
 
       <ConfirmDialog
         open={pendingRole !== null}
@@ -166,9 +215,19 @@ export function AdminAccountActions({
       />
       <ConfirmDialog
         open={pendingActivation !== null}
-        title={isActive ? ui.actions.deactivateAdminTitle : ui.actions.reactivateAdminTitle}
-        body={isActive ? ui.actions.deactivateAdminConfirmBody : ui.actions.reactivateAdminConfirmBody}
-        confirmLabel={isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin}
+        title={
+          isActive
+            ? ui.actions.deactivateAdminTitle
+            : ui.actions.reactivateAdminTitle
+        }
+        body={
+          isActive
+            ? ui.actions.deactivateAdminConfirmBody
+            : ui.actions.reactivateAdminConfirmBody
+        }
+        confirmLabel={
+          isActive ? ui.actions.deactivateAdmin : ui.actions.reactivateAdmin
+        }
         isPending={isPending}
         onCancel={() => setPendingActivation(null)}
         onConfirm={confirmActivationChange}

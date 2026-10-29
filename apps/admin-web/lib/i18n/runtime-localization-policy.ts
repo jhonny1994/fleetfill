@@ -16,7 +16,10 @@ export function resolveRuntimeLocalizationPolicy(
   localization: Record<string, unknown> | undefined,
 ): RuntimeLocalizationPolicy {
   const enabledLocales = resolveEnabledLocales(localization?.enabled_locales);
-  const fallbackLocale = resolveFallbackLocale(localization?.fallback_locale ?? defaultLocale, enabledLocales);
+  const fallbackLocale = resolveFallbackLocale(
+    localization?.fallback_locale ?? defaultLocale,
+    enabledLocales,
+  );
 
   return {
     fallbackLocale,
@@ -29,7 +32,9 @@ export function resolveEnabledLocaleForRequest(
   policy: RuntimeLocalizationPolicy,
 ): AppLocale {
   const preferredLocale = resolvePreferredLocale(acceptLanguage);
-  return policy.enabledLocales.includes(preferredLocale) ? preferredLocale : policy.fallbackLocale;
+  return policy.enabledLocales.includes(preferredLocale)
+    ? preferredLocale
+    : policy.fallbackLocale;
 }
 
 export function buildLocalizedPath(
@@ -38,9 +43,13 @@ export function buildLocalizedPath(
   nextLocale: AppLocale,
   search = "",
 ) {
-  const normalizedPathname = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  const normalizedPathname = pathname.startsWith("/")
+    ? pathname
+    : `/${pathname}`;
   const matchedLocale = locales.find(
-    (locale) => normalizedPathname === `/${locale}` || normalizedPathname.startsWith(`/${locale}/`),
+    (locale) =>
+      normalizedPathname === `/${locale}` ||
+      normalizedPathname.startsWith(`/${locale}/`),
   );
   const pathWithoutLocale = matchedLocale
     ? normalizedPathname.slice(matchedLocale.length + 1) || "/"
@@ -55,6 +64,8 @@ export function buildLocalizedPath(
     return `/${nextLocale}${normalizedSearch}`;
   }
 
-  const safePathWithoutLocale = pathWithoutLocale.startsWith("/") ? pathWithoutLocale : `/${pathWithoutLocale}`;
+  const safePathWithoutLocale = pathWithoutLocale.startsWith("/")
+    ? pathWithoutLocale
+    : `/${pathWithoutLocale}`;
   return `/${nextLocale}${safePathWithoutLocale}${normalizedSearch}`;
 }

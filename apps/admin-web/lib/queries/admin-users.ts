@@ -15,7 +15,9 @@ import type {
 } from "@/lib/queries/admin-types";
 
 function isUuidLike(value: string) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value.trim());
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value.trim(),
+  );
 }
 
 const userRoles = ["shipper", "carrier", "admin"] as const;
@@ -45,11 +47,15 @@ function normalizeQuery(value?: string) {
 }
 
 function clampPage(page: number | undefined) {
-  return Number.isFinite(page) && (page ?? 1) > 0 ? Math.floor(page as number) : 1;
+  return Number.isFinite(page) && (page ?? 1) > 0
+    ? Math.floor(page as number)
+    : 1;
 }
 
 function clampPageSize(pageSize: number | undefined) {
-  const normalized = Number.isFinite(pageSize) ? Math.floor(pageSize as number) : 25;
+  const normalized = Number.isFinite(pageSize)
+    ? Math.floor(pageSize as number)
+    : 25;
   return Math.min(50, Math.max(10, normalized || 25));
 }
 
@@ -149,8 +155,12 @@ type AuditRow = {
   created_at: string | null;
 };
 
-function resolveDisplayName(profile: Pick<ProfileRow, "company_name" | "full_name" | "email">) {
-  return profile.company_name?.trim() || profile.full_name?.trim() || profile.email;
+function resolveDisplayName(
+  profile: Pick<ProfileRow, "company_name" | "full_name" | "email">,
+) {
+  return (
+    profile.company_name?.trim() || profile.full_name?.trim() || profile.email
+  );
 }
 
 function mapAuditLogs(rows: AuditRow[]): AdminAuditLogItem[] {
@@ -177,12 +187,17 @@ function normalizeUserFilters(filters: AdminUserRegistryFilters) {
   } as const;
 }
 
-export async function fetchUsers(filters: AdminUserRegistryFilters = {}): Promise<AdminUserRegistrySnapshot> {
+export async function fetchUsers(
+  filters: AdminUserRegistryFilters = {},
+): Promise<AdminUserRegistrySnapshot> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const normalized = normalizeUserFilters(filters);
 
-  let countRequest = supabase.from("profiles").select("id", { count: "exact", head: true }).neq("role", "admin");
+  let countRequest = supabase
+    .from("profiles")
+    .select("id", { count: "exact", head: true })
+    .neq("role", "admin");
   let pageRequest = supabase
     .from("profiles")
     .select(
@@ -224,14 +239,21 @@ export async function fetchUsers(filters: AdminUserRegistryFilters = {}): Promis
     countRequest = countRequest.eq("role", "carrier");
     pageRequest = pageRequest.eq("role", "carrier");
 
-    const { data: matchingPackets, error: matchingPacketsError } = await supabase
-      .from("carrier_verification_packets")
-      .select("carrier_id")
-      .eq("status", normalized.verification);
+    const { data: matchingPackets, error: matchingPacketsError } =
+      await supabase
+        .from("carrier_verification_packets")
+        .select("carrier_id")
+        .eq("status", normalized.verification);
 
     if (matchingPacketsError) throw matchingPacketsError;
 
-    const carrierIds = [...new Set(((matchingPackets ?? []) as Array<{ carrier_id: string }>).map((row) => row.carrier_id))];
+    const carrierIds = [
+      ...new Set(
+        ((matchingPackets ?? []) as Array<{ carrier_id: string }>).map(
+          (row) => row.carrier_id,
+        ),
+      ),
+    ];
     if (carrierIds.length === 0) {
       return {
         users: [],
@@ -249,7 +271,10 @@ export async function fetchUsers(filters: AdminUserRegistryFilters = {}): Promis
   const countResult = await countRequest;
   if (countResult.error) throw countResult.error;
 
-  const safePage = Math.min(normalized.page, totalPages(countResult.count ?? 0, normalized.pageSize));
+  const safePage = Math.min(
+    normalized.page,
+    totalPages(countResult.count ?? 0, normalized.pageSize),
+  );
   const { from, to } = pageRange(safePage, normalized.pageSize);
   const pageResult = await pageRequest.range(from, to);
   if (pageResult.error) throw pageResult.error;
@@ -266,21 +291,42 @@ export async function fetchUsers(filters: AdminUserRegistryFilters = {}): Promis
   }
 
   const profileIds = profiles.map((profile) => profile.id);
-  const carrierIds = profiles.filter((profile) => profile.role === "carrier").map((profile) => profile.id);
-  const shipperIds = profiles.filter((profile) => profile.role === "shipper").map((profile) => profile.id);
+  const carrierIds = profiles
+    .filter((profile) => profile.role === "carrier")
+    .map((profile) => profile.id);
+  const shipperIds = profiles
+    .filter((profile) => profile.role === "shipper")
+    .map((profile) => profile.id);
 
-  const [vehiclesResult, bookingsAsShipperResult, bookingsAsCarrierResult, shipmentsResult] = await Promise.all([
+  const [
+    vehiclesResult,
+    bookingsAsShipperResult,
+    bookingsAsCarrierResult,
+    shipmentsResult,
+  ] = await Promise.all([
     profileIds.length
-      ? supabase.from("vehicles").select("id, carrier_id").in("carrier_id", profileIds)
+      ? supabase
+          .from("vehicles")
+          .select("id, carrier_id")
+          .in("carrier_id", profileIds)
       : Promise.resolve({ data: [], error: null }),
     shipperIds.length
-      ? supabase.from("bookings").select("id, shipper_id").in("shipper_id", shipperIds)
+      ? supabase
+          .from("bookings")
+          .select("id, shipper_id")
+          .in("shipper_id", shipperIds)
       : Promise.resolve({ data: [], error: null }),
     carrierIds.length
-      ? supabase.from("bookings").select("id, carrier_id").in("carrier_id", carrierIds)
+      ? supabase
+          .from("bookings")
+          .select("id, carrier_id")
+          .in("carrier_id", carrierIds)
       : Promise.resolve({ data: [], error: null }),
     shipperIds.length
-      ? supabase.from("shipments").select("id, shipper_id").in("shipper_id", shipperIds)
+      ? supabase
+          .from("shipments")
+          .select("id, shipper_id")
+          .in("shipper_id", shipperIds)
       : Promise.resolve({ data: [], error: null }),
   ]);
 
@@ -299,27 +345,50 @@ export async function fetchUsers(filters: AdminUserRegistryFilters = {}): Promis
   if (packetError) throw packetError;
 
   const packetMap = new Map<string, CarrierVerificationPacketRow>(
-    ((packets ?? []) as CarrierVerificationPacketRow[]).map((packet) => [packet.carrier_id, packet]),
+    ((packets ?? []) as CarrierVerificationPacketRow[]).map((packet) => [
+      packet.carrier_id,
+      packet,
+    ]),
   );
 
   const vehicleCounts = new Map<string, number>();
-  for (const vehicle of ((vehiclesResult.data ?? []) as Array<{ carrier_id: string }>)) {
-    vehicleCounts.set(vehicle.carrier_id, (vehicleCounts.get(vehicle.carrier_id) ?? 0) + 1);
+  for (const vehicle of (vehiclesResult.data ?? []) as Array<{
+    carrier_id: string;
+  }>) {
+    vehicleCounts.set(
+      vehicle.carrier_id,
+      (vehicleCounts.get(vehicle.carrier_id) ?? 0) + 1,
+    );
   }
 
   const shipperBookingCounts = new Map<string, number>();
-  for (const booking of ((bookingsAsShipperResult.data ?? []) as Array<{ shipper_id: string }>)) {
-    shipperBookingCounts.set(booking.shipper_id, (shipperBookingCounts.get(booking.shipper_id) ?? 0) + 1);
+  for (const booking of (bookingsAsShipperResult.data ?? []) as Array<{
+    shipper_id: string;
+  }>) {
+    shipperBookingCounts.set(
+      booking.shipper_id,
+      (shipperBookingCounts.get(booking.shipper_id) ?? 0) + 1,
+    );
   }
 
   const carrierBookingCounts = new Map<string, number>();
-  for (const booking of ((bookingsAsCarrierResult.data ?? []) as Array<{ carrier_id: string }>)) {
-    carrierBookingCounts.set(booking.carrier_id, (carrierBookingCounts.get(booking.carrier_id) ?? 0) + 1);
+  for (const booking of (bookingsAsCarrierResult.data ?? []) as Array<{
+    carrier_id: string;
+  }>) {
+    carrierBookingCounts.set(
+      booking.carrier_id,
+      (carrierBookingCounts.get(booking.carrier_id) ?? 0) + 1,
+    );
   }
 
   const shipmentCounts = new Map<string, number>();
-  for (const shipment of ((shipmentsResult.data ?? []) as Array<{ shipper_id: string }>)) {
-    shipmentCounts.set(shipment.shipper_id, (shipmentCounts.get(shipment.shipper_id) ?? 0) + 1);
+  for (const shipment of (shipmentsResult.data ?? []) as Array<{
+    shipper_id: string;
+  }>) {
+    shipmentCounts.set(
+      shipment.shipper_id,
+      (shipmentCounts.get(shipment.shipper_id) ?? 0) + 1,
+    );
   }
 
   return {
@@ -331,7 +400,10 @@ export async function fetchUsers(filters: AdminUserRegistryFilters = {}): Promis
       phoneNumber: profile.phone_number,
       companyName: profile.company_name,
       isActive: profile.is_active,
-      verificationStatus: profile.role === "carrier" ? (packetMap.get(profile.id)?.status ?? "pending") : null,
+      verificationStatus:
+        profile.role === "carrier"
+          ? (packetMap.get(profile.id)?.status ?? "pending")
+          : null,
       vehicleCount: vehicleCounts.get(profile.id) ?? 0,
       shipmentCount: shipmentCounts.get(profile.id) ?? 0,
       bookingCount:
@@ -347,7 +419,9 @@ export async function fetchUsers(filters: AdminUserRegistryFilters = {}): Promis
   };
 }
 
-export async function fetchUserDetail(userId: string): Promise<AdminUserDetail | null> {
+export async function fetchUserDetail(
+  userId: string,
+): Promise<AdminUserDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: profile, error: profileError } = await supabase
@@ -373,57 +447,79 @@ export async function fetchUserDetail(userId: string): Promise<AdminUserDetail |
 
   if (packetError) throw packetError;
 
-  const [vehiclesResult, shipmentsResult, bookingsAsShipperResult, bookingsAsCarrierResult, supportResult, documentsResult, payoutAccountsResult, auditLogsResult] =
-    await Promise.all([
-      supabase
-        .from("vehicles")
-        .select("id, carrier_id, plate_number, vehicle_type, verification_status, updated_at")
-        .eq("carrier_id", userId)
-        .order("updated_at", { ascending: false })
-        .limit(8),
-      supabase
-        .from("shipments")
-        .select("id, shipper_id, origin_commune_id, destination_commune_id, total_weight_kg, description, status, created_at")
-        .eq("shipper_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(8),
-      supabase
-        .from("bookings")
-        .select("id, shipment_id, shipper_id, carrier_id, tracking_number, booking_status, payment_status, created_at")
-        .eq("shipper_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(6),
-      supabase
-        .from("bookings")
-        .select("id, shipment_id, shipper_id, carrier_id, tracking_number, booking_status, payment_status, created_at")
-        .eq("carrier_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(6),
-      supabase
-        .from("support_requests")
-        .select("id, created_by, subject, status, last_message_at")
-        .eq("created_by", userId)
-        .order("last_message_at", { ascending: false })
-        .limit(6),
-      supabase
-        .from("verification_documents")
-        .select("id, owner_profile_id, document_type, entity_type, status, updated_at")
-        .eq("owner_profile_id", userId)
-        .order("updated_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("payout_accounts")
-        .select("id, carrier_id, account_type, account_identifier, bank_or_ccp_name, is_verified, is_active, updated_at")
-        .eq("carrier_id", userId)
-        .order("updated_at", { ascending: false })
-        .limit(4),
-      supabase
-        .from("admin_audit_logs")
-        .select("id, action, target_type, target_id, outcome, reason, metadata, created_at")
-        .eq("target_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(15),
-    ]);
+  const [
+    vehiclesResult,
+    shipmentsResult,
+    bookingsAsShipperResult,
+    bookingsAsCarrierResult,
+    supportResult,
+    documentsResult,
+    payoutAccountsResult,
+    auditLogsResult,
+  ] = await Promise.all([
+    supabase
+      .from("vehicles")
+      .select(
+        "id, carrier_id, plate_number, vehicle_type, verification_status, updated_at",
+      )
+      .eq("carrier_id", userId)
+      .order("updated_at", { ascending: false })
+      .limit(8),
+    supabase
+      .from("shipments")
+      .select(
+        "id, shipper_id, origin_commune_id, destination_commune_id, total_weight_kg, description, status, created_at",
+      )
+      .eq("shipper_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(8),
+    supabase
+      .from("bookings")
+      .select(
+        "id, shipment_id, shipper_id, carrier_id, tracking_number, booking_status, payment_status, created_at",
+      )
+      .eq("shipper_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(6),
+    supabase
+      .from("bookings")
+      .select(
+        "id, shipment_id, shipper_id, carrier_id, tracking_number, booking_status, payment_status, created_at",
+      )
+      .eq("carrier_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(6),
+    supabase
+      .from("support_requests")
+      .select("id, created_by, subject, status, last_message_at")
+      .eq("created_by", userId)
+      .order("last_message_at", { ascending: false })
+      .limit(6),
+    supabase
+      .from("verification_documents")
+      .select(
+        "id, owner_profile_id, document_type, entity_type, status, updated_at",
+      )
+      .eq("owner_profile_id", userId)
+      .order("updated_at", { ascending: false })
+      .limit(10),
+    supabase
+      .from("payout_accounts")
+      .select(
+        "id, carrier_id, account_type, account_identifier, bank_or_ccp_name, is_verified, is_active, updated_at",
+      )
+      .eq("carrier_id", userId)
+      .order("updated_at", { ascending: false })
+      .limit(4),
+    supabase
+      .from("admin_audit_logs")
+      .select(
+        "id, action, target_type, target_id, outcome, reason, metadata, created_at",
+      )
+      .eq("target_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(15),
+  ]);
 
   if (vehiclesResult.error) throw vehiclesResult.error;
   if (shipmentsResult.error) throw shipmentsResult.error;
@@ -435,20 +531,37 @@ export async function fetchUserDetail(userId: string): Promise<AdminUserDetail |
   if (auditLogsResult.error) throw auditLogsResult.error;
 
   const shipmentRows = (shipmentsResult.data ?? []) as ShipmentRow[];
-  const communeIds = [...new Set(shipmentRows.flatMap((shipment) => [shipment.origin_commune_id, shipment.destination_commune_id]))];
+  const communeIds = [
+    ...new Set(
+      shipmentRows.flatMap((shipment) => [
+        shipment.origin_commune_id,
+        shipment.destination_commune_id,
+      ]),
+    ),
+  ];
   const { data: communes, error: communeError } = communeIds.length
     ? await supabase.from("communes").select("id, name").in("id", communeIds)
     : { data: [], error: null };
 
   if (communeError) throw communeError;
 
-  const communeMap = new Map<number, string>(((communes ?? []) as CommuneRow[]).map((commune) => [commune.id, commune.name]));
+  const communeMap = new Map<number, string>(
+    ((communes ?? []) as CommuneRow[]).map((commune) => [
+      commune.id,
+      commune.name,
+    ]),
+  );
   const bookings = [
     ...((bookingsAsShipperResult.data ?? []) as BookingRow[]),
     ...((bookingsAsCarrierResult.data ?? []) as BookingRow[]),
   ]
-    .filter((booking, index, all) => all.findIndex((candidate) => candidate.id === booking.id) === index)
-    .sort((left, right) => (right.created_at ?? "").localeCompare(left.created_at ?? ""))
+    .filter(
+      (booking, index, all) =>
+        all.findIndex((candidate) => candidate.id === booking.id) === index,
+    )
+    .sort((left, right) =>
+      (right.created_at ?? "").localeCompare(left.created_at ?? ""),
+    )
     .slice(0, 8);
 
   return {
@@ -461,14 +574,18 @@ export async function fetchUserDetail(userId: string): Promise<AdminUserDetail |
       companyName: profile.company_name,
       preferredLocale: profile.preferred_locale,
       isActive: profile.is_active,
-      verificationStatus: profile.role === "carrier" ? packet?.status ?? "pending" : null,
-      verificationRejectionReason: profile.role === "carrier" ? packet?.rejection_reason ?? null : null,
+      verificationStatus:
+        profile.role === "carrier" ? (packet?.status ?? "pending") : null,
+      verificationRejectionReason:
+        profile.role === "carrier" ? (packet?.rejection_reason ?? null) : null,
       ratingAverage: profile.rating_average,
       ratingCount: profile.rating_count,
       createdAt: profile.created_at,
       updatedAt: profile.updated_at,
     },
-    vehicles: ((vehiclesResult.data ?? []) as VehicleRow[]).map<AdminVehicleSummary>((vehicle) => ({
+    vehicles: (
+      (vehiclesResult.data ?? []) as VehicleRow[]
+    ).map<AdminVehicleSummary>((vehicle) => ({
       id: vehicle.id,
       label: `${vehicle.vehicle_type.toUpperCase()} • ${vehicle.plate_number}`,
       verificationStatus: vehicle.verification_status,
@@ -478,8 +595,12 @@ export async function fetchUserDetail(userId: string): Promise<AdminUserDetail |
       id: shipment.id,
       status: shipment.status,
       description: shipment.description,
-      originLabel: communeMap.get(shipment.origin_commune_id) ?? `Commune #${shipment.origin_commune_id}`,
-      destinationLabel: communeMap.get(shipment.destination_commune_id) ?? `Commune #${shipment.destination_commune_id}`,
+      originLabel:
+        communeMap.get(shipment.origin_commune_id) ??
+        `Commune #${shipment.origin_commune_id}`,
+      destinationLabel:
+        communeMap.get(shipment.destination_commune_id) ??
+        `Commune #${shipment.destination_commune_id}`,
       totalWeightKg: Number(shipment.total_weight_kg),
       createdAt: shipment.created_at,
     })),
@@ -491,20 +612,26 @@ export async function fetchUserDetail(userId: string): Promise<AdminUserDetail |
       paymentStatus: booking.payment_status,
       createdAt: booking.created_at,
     })),
-    supportRequests: ((supportResult.data ?? []) as SupportRequestRow[]).map<AdminSupportSummary>((request) => ({
+    supportRequests: (
+      (supportResult.data ?? []) as SupportRequestRow[]
+    ).map<AdminSupportSummary>((request) => ({
       id: request.id,
       subject: request.subject,
       status: request.status,
       lastMessageAt: request.last_message_at,
     })),
-    documents: ((documentsResult.data ?? []) as VerificationDocumentRow[]).map<AdminDocumentSummary>((document) => ({
+    documents: (
+      (documentsResult.data ?? []) as VerificationDocumentRow[]
+    ).map<AdminDocumentSummary>((document) => ({
       id: document.id,
       documentType: document.document_type,
       entityType: document.entity_type,
       status: document.status,
       updatedAt: document.updated_at,
     })),
-    payoutAccounts: ((payoutAccountsResult.data ?? []) as PayoutAccountRow[]).map<AdminPayoutAccountSummary>((account) => ({
+    payoutAccounts: (
+      (payoutAccountsResult.data ?? []) as PayoutAccountRow[]
+    ).map<AdminPayoutAccountSummary>((account) => ({
       id: account.id,
       accountType: account.account_type,
       identifier: account.account_identifier,

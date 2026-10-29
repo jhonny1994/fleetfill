@@ -19,7 +19,9 @@ const navItems = (
     ["payouts", dictionary.shell.nav.payouts],
     ["support", dictionary.shell.nav.support],
     ["users", dictionary.shell.nav.users],
-    ...(adminRole === "super_admin" ? ([["admins", dictionary.shell.nav.admins]] as const) : []),
+    ...(adminRole === "super_admin"
+      ? ([["admins", dictionary.shell.nav.admins]] as const)
+      : []),
     ["settings", dictionary.shell.nav.settings],
     ["audit-and-health", dictionary.shell.nav.auditAndHealth],
   ] as const;
@@ -63,7 +65,9 @@ export function AdminSidebar({
       ) : (
         <div className="space-y-1.5">
           <p className="eyebrow">{dictionary.shell.eyebrow}</p>
-          <h1 className="text-[1.02rem] font-semibold text-[var(--color-ink-strong)]">{dictionary.shell.title}</h1>
+          <h1 className="text-[1.02rem] font-semibold text-[var(--color-ink-strong)]">
+            {dictionary.shell.title}
+          </h1>
           <p className="text-sm leading-5 text-[var(--color-ink-muted)]">
             {dictionary.shell.body}
           </p>
@@ -90,4 +94,3 @@ export function AdminSidebar({
     </aside>
   );
 }
-

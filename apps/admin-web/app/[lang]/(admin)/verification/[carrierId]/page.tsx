@@ -29,11 +29,18 @@ export default async function VerificationDetailPage({
   const copy = getAdminDetailCopy(locale).verification;
 
   if (!detail) {
-    return <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">{ui.pages.verification.notFound}</div>;
+    return (
+      <div className="panel p-6 text-sm text-[var(--color-ink-muted)]">
+        {ui.pages.verification.notFound}
+      </div>
+    );
   }
 
   const previewDocument = detail.documents[0] ?? null;
-  const carrierName = detail.profile.company_name ?? detail.profile.full_name ?? detail.profile.email;
+  const carrierName =
+    detail.profile.company_name ??
+    detail.profile.full_name ??
+    detail.profile.email;
 
   return (
     <DetailWorkspace
@@ -43,8 +50,18 @@ export default async function VerificationDetailPage({
       facts={[
         { label: ui.labels.carrier, value: carrierName },
         { label: copy.carrierIdLabel, value: detail.profile.id },
-        { label: copy.profileStateLabel, value: getEnumLabel(locale, "verification", detail.profile.verification_status) },
-        { label: copy.packetDocumentsLabel, value: String(detail.documents.length) },
+        {
+          label: copy.profileStateLabel,
+          value: getEnumLabel(
+            locale,
+            "verification",
+            detail.profile.verification_status,
+          ),
+        },
+        {
+          label: copy.packetDocumentsLabel,
+          value: String(detail.documents.length),
+        },
       ]}
       main={
         <>
@@ -61,18 +78,31 @@ export default async function VerificationDetailPage({
             />
           ) : null}
           <section className="panel space-y-4 p-5">
-            <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">{ui.pages.verification.packetDocs}</h2>
+            <h2 className="text-lg font-semibold text-[var(--color-ink-strong)]">
+              {ui.pages.verification.packetDocs}
+            </h2>
             <div className="space-y-3">
               {detail.documents.map((document) => (
-                <div key={document.id} className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4">
+                <div
+                  key={document.id}
+                  className="rounded-[22px] border border-[var(--color-border)] bg-white/55 p-4"
+                >
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="space-y-1">
-                      <p className="font-medium text-[var(--color-ink-strong)]">{getDocumentLabel(locale, document.document_type)}</p>
-                      <p className="text-sm text-[var(--color-ink-muted)]">{getEnumLabel(locale, "verification", document.status)}</p>
+                      <p className="font-medium text-[var(--color-ink-strong)]">
+                        {getDocumentLabel(locale, document.document_type)}
+                      </p>
+                      <p className="text-sm text-[var(--color-ink-muted)]">
+                        {getEnumLabel(locale, "verification", document.status)}
+                      </p>
                     </div>
                     <p className="text-xs text-[var(--color-ink-muted)]">
                       {formatTemplate(copy.packetDocumentStatus, {
-                        entity: getEnumLabel(locale, "entity", document.entity_type),
+                        entity: getEnumLabel(
+                          locale,
+                          "entity",
+                          document.entity_type,
+                        ),
                         date: formatDateTime(document.created_at),
                       })}
                     </p>

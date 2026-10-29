@@ -48,7 +48,9 @@ type AdminVerificationDetail = {
   }>;
 };
 
-export async function fetchVerificationDetail(carrierId: string): Promise<AdminVerificationDetail | null> {
+export async function fetchVerificationDetail(
+  carrierId: string,
+): Promise<AdminVerificationDetail | null> {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const { data: profile, error: profileError } = await supabase
@@ -88,7 +90,9 @@ export async function fetchVerificationDetail(carrierId: string): Promise<AdminV
   const vehicleRows = (vehicles ?? []) as VehicleRow[];
   const entityFilters = [
     `and(entity_type.eq.profile,entity_id.eq.${carrierId})`,
-    ...vehicleRows.map((vehicle) => `and(entity_type.eq.vehicle,entity_id.eq.${vehicle.id})`),
+    ...vehicleRows.map(
+      (vehicle) => `and(entity_type.eq.vehicle,entity_id.eq.${vehicle.id})`,
+    ),
   ];
 
   const { data: documents, error: documentError } = await supabase
@@ -113,7 +117,9 @@ export async function fetchVerificationDetail(carrierId: string): Promise<AdminV
 
   const documentList = [...latestDocumentMap.values()];
   const signedUrls = await Promise.all(
-    documentList.map((document) => createSignedFileUrl("verification-documents", document.storage_path)),
+    documentList.map((document) =>
+      createSignedFileUrl("verification-documents", document.storage_path),
+    ),
   );
 
   const { data: auditLogs } = await supabase
@@ -137,12 +143,14 @@ export async function fetchVerificationDetail(carrierId: string): Promise<AdminV
       ...document,
       signedUrl: signedUrls[index],
     })),
-    auditLogs: ((auditLogs ?? []) as Array<{
-      id: string;
-      action: string;
-      outcome: string;
-      reason: string | null;
-      created_at: string | null;
-    }>).filter((log) => Boolean(log)),
+    auditLogs: (
+      (auditLogs ?? []) as Array<{
+        id: string;
+        action: string;
+        outcome: string;
+        reason: string | null;
+        created_at: string | null;
+      }>
+    ).filter((log) => Boolean(log)),
   };
 }

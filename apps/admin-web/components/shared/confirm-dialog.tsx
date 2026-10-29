@@ -46,7 +46,10 @@ export function ConfirmDialog({
   }, [open]);
 
   return (
-    <Dialog open={open} onOpenChange={(nextOpen) => (!nextOpen ? onCancel() : undefined)}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => (!nextOpen ? onCancel() : undefined)}
+    >
       <DialogContent
         className="panel space-y-4 p-5"
         onCloseAutoFocus={(event) => {
@@ -54,18 +57,26 @@ export function ConfirmDialog({
           previousActiveElementRef.current?.focus();
         }}
       >
-        <DialogTitle>
-          {title}
-        </DialogTitle>
-        <DialogDescription>
-          {body}
-        </DialogDescription>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogDescription>{body}</DialogDescription>
         <div className="flex gap-3">
-          <button className="button-secondary" type="button" onClick={onCancel} disabled={isPending}>
+          <button
+            className="button-secondary"
+            type="button"
+            onClick={onCancel}
+            disabled={isPending}
+          >
             {cancelLabel ?? ui.actions.cancel}
           </button>
-          <button className="button-primary" type="button" onClick={onConfirm} disabled={isPending}>
-            {isPending ? ui.actions.working : (confirmLabel ?? ui.actions.confirm)}
+          <button
+            className="button-primary"
+            type="button"
+            onClick={onConfirm}
+            disabled={isPending}
+          >
+            {isPending
+              ? ui.actions.working
+              : (confirmLabel ?? ui.actions.confirm)}
           </button>
         </div>
       </DialogContent>

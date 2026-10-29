@@ -24,15 +24,22 @@ function localeOf(locale: string | AppLocale): AppLocale {
 }
 
 function humanize(value: string) {
-  return value.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return value
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function getAdminUi(locale: string | AppLocale) {
   return adminUiMessages[localeOf(locale)];
 }
 
-export function formatTemplate(template: string, values: Record<string, string | number | null | undefined>) {
-  return template.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ""));
+export function formatTemplate(
+  template: string,
+  values: Record<string, string | number | null | undefined>,
+) {
+  return template.replace(/\{(\w+)\}/g, (_, key: string) =>
+    String(values[key] ?? ""),
+  );
 }
 
 export function getEnumLabel(
@@ -48,17 +55,29 @@ export function getEnumLabel(
   return labels[value.toLowerCase()] ?? humanize(value);
 }
 
-export function getTimelineEventLabel(locale: string | AppLocale, value: string | null | undefined) {
+export function getTimelineEventLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
   if (!value) {
     return getAdminUi(locale).labels.none;
   }
 
-  const labels = getAdminUi(locale).timelineEventLabels as Record<string, string>;
+  const labels = getAdminUi(locale).timelineEventLabels as Record<
+    string,
+    string
+  >;
   return labels[value.toLowerCase()] ?? humanize(value);
 }
 
-export function getPayoutRequestLabel(locale: string | AppLocale, value: string | null | undefined) {
-  const labels = getAdminUi(locale).payoutRequestLabels as Record<string, string>;
+export function getPayoutRequestLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
+  const labels = getAdminUi(locale).payoutRequestLabels as Record<
+    string,
+    string
+  >;
 
   if (!value) {
     return labels.not_requested;
@@ -67,20 +86,32 @@ export function getPayoutRequestLabel(locale: string | AppLocale, value: string 
   return labels[value.toLowerCase()] ?? humanize(value);
 }
 
-export function getPayoutRequestBlockedReasonLabel(locale: string | AppLocale, value: string | null | undefined) {
+export function getPayoutRequestBlockedReasonLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
   if (!value) {
     return null;
   }
 
-  const labels = getAdminUi(locale).payoutRequestLabels as Record<string, string>;
+  const labels = getAdminUi(locale).payoutRequestLabels as Record<
+    string,
+    string
+  >;
   return labels[value.toLowerCase()] ?? humanize(value);
 }
 
-export function getAdminRoleLabel(locale: string | AppLocale, value: string | null | undefined) {
+export function getAdminRoleLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
   return getEnumLabel(locale, "adminRoles", value);
 }
 
-export function getDocumentLabel(locale: string | AppLocale, value: string | null | undefined) {
+export function getDocumentLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
   return getEnumLabel(locale, "document", value);
 }
 
@@ -100,7 +131,10 @@ export function getAdminDetailCopy(locale: string | AppLocale) {
   return getAdminUi(locale).detail;
 }
 
-export function getAdminActionLabel(locale: string | AppLocale, value: string | null | undefined) {
+export function getAdminActionLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
   if (!value) {
     return getAdminUi(locale).labels.none;
   }
@@ -109,30 +143,48 @@ export function getAdminActionLabel(locale: string | AppLocale, value: string | 
   return labels[value] ?? humanize(value);
 }
 
-export function getAuditTargetTypeLabel(locale: string | AppLocale, value: string | null | undefined) {
+export function getAuditTargetTypeLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
   if (!value) {
     return getAdminUi(locale).labels.none;
   }
 
-  const labels = getAdminUi(locale).auditTargetTypeLabels as Record<string, string>;
+  const labels = getAdminUi(locale).auditTargetTypeLabels as Record<
+    string,
+    string
+  >;
   return labels[value.toLowerCase()] ?? humanize(value);
 }
 
-export function getAuditOutcomeLabel(locale: string | AppLocale, value: string | null | undefined) {
+export function getAuditOutcomeLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
   if (!value) {
     return getAdminUi(locale).labels.none;
   }
 
-  const labels = getAdminUi(locale).auditOutcomeLabels as Record<string, string>;
+  const labels = getAdminUi(locale).auditOutcomeLabels as Record<
+    string,
+    string
+  >;
   return labels[value.toLowerCase()] ?? humanize(value);
 }
 
-export function getNotificationTemplateLabel(locale: string | AppLocale, value: string | null | undefined) {
+export function getNotificationTemplateLabel(
+  locale: string | AppLocale,
+  value: string | null | undefined,
+) {
   if (!value) {
     return getAdminUi(locale).labels.none;
   }
 
-  const labels = getAdminUi(locale).notificationTemplateLabels as Record<string, string>;
+  const labels = getAdminUi(locale).notificationTemplateLabels as Record<
+    string,
+    string
+  >;
   return labels[value.toLowerCase()] ?? humanize(value);
 }
 
@@ -145,7 +197,11 @@ export function getAuditHealthErrorLabel(
   const normalizedCode = errorCode?.toLowerCase() ?? "";
   const normalizedMessage = errorMessage?.toLowerCase() ?? "";
 
-  if (normalizedMessage.includes("firebase_service_account_json is not valid json")) {
+  if (
+    normalizedMessage.includes(
+      "firebase_service_account_json is not valid json",
+    )
+  ) {
     return labels.firebase_service_account_invalid;
   }
 
@@ -153,16 +209,24 @@ export function getAuditHealthErrorLabel(
     return labels.unknown_push_error;
   }
 
-  return errorMessage ?? errorCode ?? getAdminUi(locale).labels.noProviderMessage;
+  return (
+    errorMessage ?? errorCode ?? getAdminUi(locale).labels.noProviderMessage
+  );
 }
 
-export function getSupportMessageTitle(locale: string | AppLocale, sender: string | null | undefined) {
+export function getSupportMessageTitle(
+  locale: string | AppLocale,
+  sender: string | null | undefined,
+) {
   return formatTemplate(getAdminUi(locale).support.messageTitle, {
     sender: getEnumLabel(locale, "sender", sender),
   });
 }
 
-export function getSupportMessagePreview(locale: string | AppLocale, body: string | null | undefined) {
+export function getSupportMessagePreview(
+  locale: string | AppLocale,
+  body: string | null | undefined,
+) {
   const supportCopy = getAdminUi(locale).support;
   const preview = body?.replace(/\s+/g, " ").trim().slice(0, 140);
 
@@ -194,7 +258,10 @@ export function getAdminActionErrorMessage(
     return labels.network;
   }
 
-  if (normalizedMessage.includes("timeout") || normalizedMessage.includes("timed out")) {
+  if (
+    normalizedMessage.includes("timeout") ||
+    normalizedMessage.includes("timed out")
+  ) {
     return labels.timeout;
   }
 

@@ -25,7 +25,8 @@ describe("requireSuperAdmin", () => {
       adminRole: "ops_admin",
     });
 
-    const { requireSuperAdmin } = await import("@/lib/auth/require-super-admin");
+    const { requireSuperAdmin } =
+      await import("@/lib/auth/require-super-admin");
     await requireSuperAdmin("ar");
 
     expect(redirectMock).toHaveBeenCalledWith("/ar/dashboard");
@@ -40,7 +41,8 @@ describe("requireSuperAdmin", () => {
     };
     requireAdminMock.mockResolvedValue(session);
 
-    const { requireSuperAdmin } = await import("@/lib/auth/require-super-admin");
+    const { requireSuperAdmin } =
+      await import("@/lib/auth/require-super-admin");
     await expect(requireSuperAdmin("en")).resolves.toEqual(session);
     expect(redirectMock).not.toHaveBeenCalled();
   });

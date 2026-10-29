@@ -11,7 +11,11 @@ type SearchEntityKind =
   | "payout"
   | "support";
 
-export function buildAdminRoute(locale: AppLocale | string, kind: SearchEntityKind, id: string) {
+export function buildAdminRoute(
+  locale: AppLocale | string,
+  kind: SearchEntityKind,
+  id: string,
+) {
   switch (kind) {
     case "booking":
       return `/${locale}/bookings/${id}`;

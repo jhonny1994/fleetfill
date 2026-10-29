@@ -34,7 +34,11 @@ export default function GlobalError({
             <p className="text-sm text-[var(--color-ink-muted)]">
               {copy.reloadPageHint}
             </p>
-            <button className="button-primary mx-auto" onClick={reset} type="button">
+            <button
+              className="button-primary mx-auto"
+              onClick={reset}
+              type="button"
+            >
               {copy.tryAgain}
             </button>
           </section>

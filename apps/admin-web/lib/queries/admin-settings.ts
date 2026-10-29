@@ -1,8 +1,5 @@
 import { requireServerAdminSession } from "@/lib/auth/require-server-admin-session";
-import {
-  defaultLocale,
-  locales,
-} from "@/lib/i18n/config";
+import { defaultLocale, locales } from "@/lib/i18n/config";
 import {
   resolveRuntimeLocalizationPolicy,
   type RuntimeLocalizationPolicy,
@@ -31,7 +28,9 @@ export async function fetchRuntimeLocalizationPolicy(): Promise<RuntimeLocalizat
     };
   }
 
-  return resolveRuntimeLocalizationPolicy((data?.value ?? {}) as Record<string, unknown>);
+  return resolveRuntimeLocalizationPolicy(
+    (data?.value ?? {}) as Record<string, unknown>,
+  );
 }
 
 export async function fetchPlatformSettingsSnapshot(): Promise<PlatformSettingsSnapshot> {
@@ -40,13 +39,21 @@ export async function fetchPlatformSettingsSnapshot(): Promise<PlatformSettingsS
   const { data, error } = await supabase
     .from("platform_settings")
     .select("key, value, updated_at")
-    .in("key", ["app_runtime", "booking_pricing", "delivery_review", "feature_flags", "localization"]);
+    .in("key", [
+      "app_runtime",
+      "booking_pricing",
+      "delivery_review",
+      "feature_flags",
+      "localization",
+    ]);
 
   if (error) {
     throw error;
   }
 
-  const rows = new Map<string, PlatformSettingRow>(((data ?? []) as PlatformSettingRow[]).map((row) => [row.key, row]));
+  const rows = new Map<string, PlatformSettingRow>(
+    ((data ?? []) as PlatformSettingRow[]).map((row) => [row.key, row]),
+  );
   const appRuntime = rows.get("app_runtime")?.value ?? {};
   const bookingPricing = rows.get("booking_pricing")?.value ?? {};
   const deliveryReview = rows.get("delivery_review")?.value ?? {};
@@ -58,8 +65,12 @@ export async function fetchPlatformSettingsSnapshot(): Promise<PlatformSettingsS
     appRuntime: {
       maintenanceMode: Boolean(appRuntime.maintenance_mode ?? false),
       forceUpdateRequired: Boolean(appRuntime.force_update_required ?? false),
-      minimumSupportedAndroidVersion: Number(appRuntime.minimum_supported_android_version ?? 1),
-      minimumSupportedIosVersion: Number(appRuntime.minimum_supported_ios_version ?? 1),
+      minimumSupportedAndroidVersion: Number(
+        appRuntime.minimum_supported_android_version ?? 1,
+      ),
+      minimumSupportedIosVersion: Number(
+        appRuntime.minimum_supported_ios_version ?? 1,
+      ),
     },
     bookingPricing: {
       platformFeeRate: Number(bookingPricing.platform_fee_rate ?? 0.05),
@@ -67,13 +78,17 @@ export async function fetchPlatformSettingsSnapshot(): Promise<PlatformSettingsS
       insuranceRate: Number(bookingPricing.insurance_rate ?? 0.01),
       insuranceMinFeeDzd: Number(bookingPricing.insurance_min_fee_dzd ?? 100),
       taxRate: Number(bookingPricing.tax_rate ?? 0),
-      paymentResubmissionDeadlineHours: Number(bookingPricing.payment_resubmission_deadline_hours ?? 24),
+      paymentResubmissionDeadlineHours: Number(
+        bookingPricing.payment_resubmission_deadline_hours ?? 24,
+      ),
     },
     deliveryReview: {
       graceWindowHours: Number(deliveryReview.grace_window_hours ?? 24),
     },
     featureFlags: {
-      adminEmailResendEnabled: Boolean(featureFlags.admin_email_resend_enabled ?? true),
+      adminEmailResendEnabled: Boolean(
+        featureFlags.admin_email_resend_enabled ?? true,
+      ),
     },
     localization: {
       fallbackLocale: runtimeLocalization.fallbackLocale,

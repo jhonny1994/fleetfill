@@ -37,15 +37,25 @@ export function AdminFilterBar({
     refreshAriaLabel: string;
   };
 }) {
-  const preservedParams = new URLSearchParams(hiddenFields.map((field) => [field.name, field.value]));
-  const resetHref = preservedParams.size > 0 ? `${pathname}?${preservedParams.toString()}` : pathname;
+  const preservedParams = new URLSearchParams(
+    hiddenFields.map((field) => [field.name, field.value]),
+  );
+  const resetHref =
+    preservedParams.size > 0
+      ? `${pathname}?${preservedParams.toString()}`
+      : pathname;
 
   return (
     <div className="space-y-3">
       <section className="panel toolbar-surface">
         <form className="toolbar-row" action={pathname} method="get">
           {hiddenFields.map((field) => (
-            <input key={`${field.name}-${field.value}`} type="hidden" name={field.name} value={field.value} />
+            <input
+              key={`${field.name}-${field.value}`}
+              type="hidden"
+              name={field.name}
+              value={field.value}
+            />
           ))}
           <div className="toolbar-controls">
             <div className="min-w-0 flex-[1.6]">
@@ -83,7 +93,10 @@ export function AdminFilterBar({
               <Link className="button-secondary" href={resetHref}>
                 {labels.reset}
               </Link>
-              <RefreshButton label={labels.refresh} ariaLabel={labels.refreshAriaLabel} />
+              <RefreshButton
+                label={labels.refresh}
+                ariaLabel={labels.refreshAriaLabel}
+              />
             </div>
           </div>
         </form>

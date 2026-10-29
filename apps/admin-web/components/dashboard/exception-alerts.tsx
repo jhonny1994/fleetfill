@@ -25,7 +25,9 @@ export function ExceptionAlerts({
       <section className="panel p-5">
         <div className="flex items-center gap-3">
           <StatusBadge label={clearLabel} tone="success" />
-          <p className="text-sm text-[var(--color-ink-muted)]">{noExceptionsBody}</p>
+          <p className="text-sm text-[var(--color-ink-muted)]">
+            {noExceptionsBody}
+          </p>
         </div>
       </section>
     );
@@ -36,14 +38,25 @@ export function ExceptionAlerts({
       {alerts.map((alert) => (
         <article key={alert.id} className="panel flex gap-4 p-5">
           <div className="mt-1 rounded-full bg-[var(--color-red-100)] p-2 text-[var(--color-red-700)]">
-            {alert.tone === "danger" ? <ShieldAlert className="size-4" /> : <AlertTriangle className="size-4" />}
+            {alert.tone === "danger" ? (
+              <ShieldAlert className="size-4" />
+            ) : (
+              <AlertTriangle className="size-4" />
+            )}
           </div>
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">{alert.title}</h3>
-              <StatusBadge label={alert.tone === "danger" ? urgentLabel : watchLabel} tone={alert.tone} />
+              <h3 className="text-base font-semibold text-[var(--color-ink-strong)]">
+                {alert.title}
+              </h3>
+              <StatusBadge
+                label={alert.tone === "danger" ? urgentLabel : watchLabel}
+                tone={alert.tone}
+              />
             </div>
-            <p className="text-sm text-[var(--color-ink-muted)]">{alert.body}</p>
+            <p className="text-sm text-[var(--color-ink-muted)]">
+              {alert.body}
+            </p>
           </div>
         </article>
       ))}

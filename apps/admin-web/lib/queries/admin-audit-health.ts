@@ -61,7 +61,9 @@ type PushOutboxRow = {
 };
 
 function clampPage(page: number | undefined) {
-  return Number.isFinite(page) && (page ?? 1) > 0 ? Math.floor(page as number) : 1;
+  return Number.isFinite(page) && (page ?? 1) > 0
+    ? Math.floor(page as number)
+    : 1;
 }
 
 function pageRange(page: number, pageSize: number) {
@@ -144,30 +146,48 @@ export async function fetchAuditAndHealthSnapshot(): Promise<AuditAndHealthSnaps
   ] = await Promise.all([
     supabase
       .from("admin_audit_logs")
-      .select("id, action, target_type, target_id, outcome, reason, metadata, created_at")
+      .select(
+        "id, action, target_type, target_id, outcome, reason, metadata, created_at",
+      )
       .order("created_at", { ascending: false })
       .limit(50),
     supabase
       .from("email_delivery_logs")
-      .select("id, booking_id, recipient_email, template_key, status, provider, error_code, error_message, created_at, last_attempt_at")
+      .select(
+        "id, booking_id, recipient_email, template_key, status, provider, error_code, error_message, created_at, last_attempt_at",
+      )
       .order("created_at", { ascending: false })
       .limit(25),
     supabase
       .from("email_outbox_jobs")
-      .select("id, booking_id, recipient_email, template_key, status, attempt_count, max_attempts, last_error_code, last_error_message, created_at, updated_at")
+      .select(
+        "id, booking_id, recipient_email, template_key, status, attempt_count, max_attempts, last_error_code, last_error_message, created_at, updated_at",
+      )
       .eq("status", "dead_letter")
       .order("updated_at", { ascending: false })
       .limit(20),
     supabase
       .from("push_outbox_jobs")
-      .select("id, profile_id, event_key, title, status, attempt_count, max_attempts, last_error_code, last_error_message, created_at, updated_at")
+      .select(
+        "id, profile_id, event_key, title, status, attempt_count, max_attempts, last_error_code, last_error_message, created_at, updated_at",
+      )
       .eq("status", "dead_letter")
       .order("updated_at", { ascending: false })
       .limit(12),
-    supabase.from("admin_audit_logs").select("id", { count: "exact", head: true }),
-    supabase.from("email_delivery_logs").select("id", { count: "exact", head: true }),
-    supabase.from("email_outbox_jobs").select("id", { count: "exact", head: true }).eq("status", "dead_letter"),
-    supabase.from("push_outbox_jobs").select("id", { count: "exact", head: true }).eq("status", "dead_letter"),
+    supabase
+      .from("admin_audit_logs")
+      .select("id", { count: "exact", head: true }),
+    supabase
+      .from("email_delivery_logs")
+      .select("id", { count: "exact", head: true }),
+    supabase
+      .from("email_outbox_jobs")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "dead_letter"),
+    supabase
+      .from("push_outbox_jobs")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "dead_letter"),
   ]);
 
   if (auditResult.error) throw auditResult.error;
@@ -181,9 +201,15 @@ export async function fetchAuditAndHealthSnapshot(): Promise<AuditAndHealthSnaps
 
   return {
     auditLogs: ((auditResult.data ?? []) as AuditRow[]).map(mapAuditLog),
-    emailDeliveries: ((emailDeliveriesResult.data ?? []) as EmailDeliveryRow[]).map(mapEmailDelivery),
-    deadLetterEmails: ((deadLettersResult.data ?? []) as EmailOutboxRow[]).map(mapDeadLetterEmail),
-    deadLetterPushes: ((pushDeadLettersResult.data ?? []) as PushOutboxRow[]).map(mapDeadLetterPush),
+    emailDeliveries: (
+      (emailDeliveriesResult.data ?? []) as EmailDeliveryRow[]
+    ).map(mapEmailDelivery),
+    deadLetterEmails: ((deadLettersResult.data ?? []) as EmailOutboxRow[]).map(
+      mapDeadLetterEmail,
+    ),
+    deadLetterPushes: (
+      (pushDeadLettersResult.data ?? []) as PushOutboxRow[]
+    ).map(mapDeadLetterPush),
     totals: {
       auditLogs: auditCountResult.count ?? 0,
       emailDeliveries: emailCountResult.count ?? 0,
@@ -200,7 +226,10 @@ export async function fetchAdminAuditTrailPage(page?: number, pageSize = 50) {
   const { from, to } = pageRange(currentPage, pageSize);
   const result = await supabase
     .from("admin_audit_logs")
-    .select("id, action, target_type, target_id, outcome, reason, metadata, created_at", { count: "exact" })
+    .select(
+      "id, action, target_type, target_id, outcome, reason, metadata, created_at",
+      { count: "exact" },
+    )
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -214,14 +243,20 @@ export async function fetchAdminAuditTrailPage(page?: number, pageSize = 50) {
   };
 }
 
-export async function fetchEmailDeliveryHealthPage(page?: number, pageSize = 50) {
+export async function fetchEmailDeliveryHealthPage(
+  page?: number,
+  pageSize = 50,
+) {
   await requireServerAdminSession();
   const supabase = await createSupabaseServerClient();
   const currentPage = clampPage(page);
   const { from, to } = pageRange(currentPage, pageSize);
   const result = await supabase
     .from("email_delivery_logs")
-    .select("id, booking_id, recipient_email, template_key, status, provider, error_code, error_message, created_at, last_attempt_at", { count: "exact" })
+    .select(
+      "id, booking_id, recipient_email, template_key, status, provider, error_code, error_message, created_at, last_attempt_at",
+      { count: "exact" },
+    )
     .order("created_at", { ascending: false })
     .range(from, to);
 
@@ -243,13 +278,19 @@ export async function fetchDeadLetterHealthPage(page?: number, pageSize = 50) {
   const [deadLetterEmailsResult, deadLetterPushesResult] = await Promise.all([
     supabase
       .from("email_outbox_jobs")
-      .select("id, booking_id, recipient_email, template_key, status, attempt_count, max_attempts, last_error_code, last_error_message, created_at, updated_at", { count: "exact" })
+      .select(
+        "id, booking_id, recipient_email, template_key, status, attempt_count, max_attempts, last_error_code, last_error_message, created_at, updated_at",
+        { count: "exact" },
+      )
       .eq("status", "dead_letter")
       .order("updated_at", { ascending: false })
       .range(from, to),
     supabase
       .from("push_outbox_jobs")
-      .select("id, profile_id, event_key, title, status, attempt_count, max_attempts, last_error_code, last_error_message, created_at, updated_at", { count: "exact" })
+      .select(
+        "id, profile_id, event_key, title, status, attempt_count, max_attempts, last_error_code, last_error_message, created_at, updated_at",
+        { count: "exact" },
+      )
       .eq("status", "dead_letter")
       .order("updated_at", { ascending: false })
       .range(from, to),
@@ -259,8 +300,12 @@ export async function fetchDeadLetterHealthPage(page?: number, pageSize = 50) {
   if (deadLetterPushesResult.error) throw deadLetterPushesResult.error;
 
   return {
-    deadLetterEmails: ((deadLetterEmailsResult.data ?? []) as EmailOutboxRow[]).map(mapDeadLetterEmail),
-    deadLetterPushes: ((deadLetterPushesResult.data ?? []) as PushOutboxRow[]).map(mapDeadLetterPush),
+    deadLetterEmails: (
+      (deadLetterEmailsResult.data ?? []) as EmailOutboxRow[]
+    ).map(mapDeadLetterEmail),
+    deadLetterPushes: (
+      (deadLetterPushesResult.data ?? []) as PushOutboxRow[]
+    ).map(mapDeadLetterPush),
     totalDeadLetterEmails: deadLetterEmailsResult.count ?? 0,
     totalDeadLetterPushes: deadLetterPushesResult.count ?? 0,
     page: currentPage,

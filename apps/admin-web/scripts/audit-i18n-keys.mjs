@@ -4,8 +4,18 @@ import ts from "typescript";
 
 const ROOT = process.cwd();
 const EXCLUDED = [".next", "node_modules", "tests"];
-const METHOD_NAMES = new Set(["slice", "toUpperCase", "toLowerCase", "trim", "map", "join", "replace"]);
-const SOURCE_DIRS = ["app", "components", "lib"].map((segment) => path.join(ROOT, segment));
+const METHOD_NAMES = new Set([
+  "slice",
+  "toUpperCase",
+  "toLowerCase",
+  "trim",
+  "map",
+  "join",
+  "replace",
+]);
+const SOURCE_DIRS = ["app", "components", "lib"].map((segment) =>
+  path.join(ROOT, segment),
+);
 const CONFIG_FILE = path.join(ROOT, "lib", "i18n", "config.ts");
 const MESSAGE_LOADERS_FILE = path.join(ROOT, "lib", "i18n", "messages.ts");
 const MESSAGES_DIR = path.join(ROOT, "messages");
@@ -32,12 +42,20 @@ function walk(dir) {
 
 function createSource(file) {
   const source = fs.readFileSync(file, "utf8");
-  return ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+  return ts.createSourceFile(
+    file,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  );
 }
 
 function collectObjectPaths(expression, prefix = []) {
   const results = new Set();
-  const currentExpression = ts.isAsExpression(expression) ? expression.expression : expression;
+  const currentExpression = ts.isAsExpression(expression)
+    ? expression.expression
+    : expression;
   if (!ts.isObjectLiteralExpression(currentExpression)) {
     return results;
   }
@@ -60,8 +78,14 @@ function collectObjectPaths(expression, prefix = []) {
     const nextPrefix = [...prefix, name];
     results.add(nextPrefix.join("."));
 
-    if (ts.isObjectLiteralExpression(property.initializer) || ts.isAsExpression(property.initializer)) {
-      for (const child of collectObjectPaths(property.initializer, nextPrefix)) {
+    if (
+      ts.isObjectLiteralExpression(property.initializer) ||
+      ts.isAsExpression(property.initializer)
+    ) {
+      for (const child of collectObjectPaths(
+        property.initializer,
+        nextPrefix,
+      )) {
         results.add(child);
       }
     }
@@ -80,7 +104,8 @@ function extractDeclaredPaths(file, variableName) {
       ts.isIdentifier(node.name) &&
       node.name.text === variableName &&
       node.initializer &&
-      (ts.isObjectLiteralExpression(node.initializer) || ts.isAsExpression(node.initializer))
+      (ts.isObjectLiteralExpression(node.initializer) ||
+        ts.isAsExpression(node.initializer))
     ) {
       paths = collectObjectPaths(node.initializer);
     }
@@ -102,9 +127,12 @@ function extractTopLevelKeys(file, variableName) {
       ts.isIdentifier(node.name) &&
       node.name.text === variableName &&
       node.initializer &&
-      (ts.isObjectLiteralExpression(node.initializer) || ts.isAsExpression(node.initializer))
+      (ts.isObjectLiteralExpression(node.initializer) ||
+        ts.isAsExpression(node.initializer))
     ) {
-      const expression = ts.isAsExpression(node.initializer) ? node.initializer.expression : node.initializer;
+      const expression = ts.isAsExpression(node.initializer)
+        ? node.initializer.expression
+        : node.initializer;
       if (!ts.isObjectLiteralExpression(expression)) {
         return;
       }
@@ -163,10 +191,18 @@ function collectUsedPaths() {
       function visit(node) {
         if (ts.isPropertyAccessExpression(node)) {
           const chain = getPropertyChain(node);
-          if (chain?.[0] === "dictionary" && chain.length > 1 && !METHOD_NAMES.has(chain.at(-1))) {
+          if (
+            chain?.[0] === "dictionary" &&
+            chain.length > 1 &&
+            !METHOD_NAMES.has(chain.at(-1))
+          ) {
             used.dictionary.add(chain.slice(1).join("."));
           }
-          if (chain?.[0] === "ui" && chain.length > 1 && !METHOD_NAMES.has(chain.at(-1))) {
+          if (
+            chain?.[0] === "ui" &&
+            chain.length > 1 &&
+            !METHOD_NAMES.has(chain.at(-1))
+          ) {
             used.ui.add(chain.slice(1).join("."));
           }
         }
@@ -182,7 +218,10 @@ function collectUsedPaths() {
 }
 
 const configuredLocales = extractTopLevelKeys(CONFIG_FILE, "localeRegistry");
-const loaderLocales = extractTopLevelKeys(MESSAGE_LOADERS_FILE, "localeMessageLoaders");
+const loaderLocales = extractTopLevelKeys(
+  MESSAGE_LOADERS_FILE,
+  "localeMessageLoaders",
+);
 const missing = [];
 
 for (const locale of configuredLocales) {
@@ -197,7 +236,9 @@ for (const locale of configuredLocales) {
 
 for (const locale of loaderLocales) {
   if (!configuredLocales.has(locale)) {
-    missing.push(`message loader "${locale}" is not registered in localeRegistry`);
+    missing.push(
+      `message loader "${locale}" is not registered in localeRegistry`,
+    );
   }
 }
 
@@ -227,7 +268,9 @@ for (const [locale, paths] of localePaths) {
 }
 
 if (missing.length === 0) {
-  console.log("No missing translation keys or locale registration issues detected.");
+  console.log(
+    "No missing translation keys or locale registration issues detected.",
+  );
   process.exit(0);
 }
 
