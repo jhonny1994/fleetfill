@@ -306,16 +306,19 @@ class _WelcomeBenefitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
+    return Material(
+      color: Colors.transparent,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        tileColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: Text(description),
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      tileColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-      leading: Icon(icon),
-      title: Text(title),
-      subtitle: Text(description),
     );
   }
 }
