@@ -112,7 +112,7 @@ jobs:
       performed_work: ${{ steps.plan.outputs.performed_work }}
     steps:
       - name: Checkout target ref
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event_name == 'push' && github.ref || inputs.git_ref }}
 
@@ -207,7 +207,7 @@ jobs:
 
       - name: Set up Java
         if: steps.plan.outputs.performed_work == 'true'
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"

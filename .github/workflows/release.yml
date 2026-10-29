@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout target ref
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.git_ref }}
 
@@ -111,11 +111,10 @@ jobs:
   admin_web:
     if: ${{ always() && inputs.release_admin_web && (needs.validate_release_request.result == 'success') && (needs.supabase.result == 'success' || needs.supabase.result == 'skipped') }}
     needs: [validate_release_request, supabase]
-    uses: ./.github/workflows/production_admin_web.yml
+    uses: ./.github/workflows/production_admin_web_netlify.yml
     with:
       git_ref: ${{ inputs.git_ref }}
       sync_env: ${{ !inputs.validate_only }}
-      build: ${{ !inputs.validate_only }}
       deploy: ${{ !inputs.validate_only }}
     secrets: inherit
 
